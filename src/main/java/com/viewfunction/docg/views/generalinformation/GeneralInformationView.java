@@ -7,7 +7,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.viewfunction.docg.views.MainLayout;
 import com.vaadin.flow.router.RouteAlias;
 
-@PageTitle("General Information")
+@PageTitle("概览 [ General Information ]")
 @Route(value = "general-info", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
 public class GeneralInformationView extends Div {

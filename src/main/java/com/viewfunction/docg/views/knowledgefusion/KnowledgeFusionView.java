@@ -6,7 +6,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
 import com.viewfunction.docg.views.MainLayout;
 
-@PageTitle("Knowledge Fusion")
+@PageTitle("知识融合 [ Knowledge Fusion ]")
 @Route(value = "knowledge-fusion", layout = MainLayout.class)
 public class KnowledgeFusionView extends Div {
 

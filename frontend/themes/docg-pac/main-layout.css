@@ -1,6 +1,7 @@
 .sidemenu-header {
   height: var(--lumo-size-xl);
   box-shadow: var(--lumo-box-shadow-s);
+  background-color:#222222;
 }
 .sidemenu-header h1 {
   font-size: var(--lumo-font-size-l);

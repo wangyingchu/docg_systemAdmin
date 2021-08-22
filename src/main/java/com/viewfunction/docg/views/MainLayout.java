@@ -19,9 +19,7 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
-import com.viewfunction.docg.views.MainLayout;
 import com.viewfunction.docg.views.generalinformation.GeneralInformationView;
 import com.viewfunction.docg.views.corerealm.CoreRealmView;
 import com.viewfunction.docg.views.computegrid.ComputeGridView;
@@ -124,23 +122,22 @@ public class MainLayout extends AppLayout {
 
     private List<Tab> createMenuItems() {
         MenuItemInfo[] menuItems = new MenuItemInfo[]{ //
-                new MenuItemInfo("General Information", "la la-chalkboard", GeneralInformationView.class), //
+                new MenuItemInfo("概览 [ General Information ]", "la la-chalkboard", GeneralInformationView.class), //
 
-                new MenuItemInfo("Core Realm", "la la-cubes", CoreRealmView.class), //
+                new MenuItemInfo("核心领域模型 [ Core Realm ]", "la la-cubes", CoreRealmView.class), //
 
-                new MenuItemInfo("Compute Grid", "la la-calculator", ComputeGridView.class), //
+                new MenuItemInfo("计算网格 [ Compute Grid ]", "la la-calculator", ComputeGridView.class), //
 
-                new MenuItemInfo("Data Analysis", "la la-brain", DataAnalysisView.class), //
+                new MenuItemInfo("数据分析 [ Data Analysis ]", "la la-brain", DataAnalysisView.class), //
 
-                new MenuItemInfo("Knowledge Fusion", "lab la-mendeley", KnowledgeFusionView.class), //
+                new MenuItemInfo("知识融合 [ Knowledge Fusion ]", "lab la-mendeley", KnowledgeFusionView.class), //
 
-                new MenuItemInfo("About", "la la-info-circle", AboutView.class), //
+                new MenuItemInfo("关于 [ About ]", "la la-info-circle", AboutView.class), //
 
         };
         List<Tab> tabs = new ArrayList<>();
         for (MenuItemInfo menuItemInfo : menuItems) {
             tabs.add(createTab(menuItemInfo));
-
         }
         return tabs;
     }

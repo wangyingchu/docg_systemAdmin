@@ -6,7 +6,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
 import com.viewfunction.docg.views.MainLayout;
 
-@PageTitle("Compute Grid")
+@PageTitle("计算网格 [ Compute Grid ]")
 @Route(value = "compute-grid", layout = MainLayout.class)
 public class ComputeGridView extends Div {
 
