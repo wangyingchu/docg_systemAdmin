@@ -43,7 +43,7 @@ public class CoreRealmView extends Div {
         Span coreRealmSpan =new Span();
         Icon coreRealmLogo = new Icon(VaadinIcon.CLUSTER);
         coreRealmLogo.setSize("20px");
-        Label coreRealmLabel = new Label(" CoreRealm领域数据");
+        Label coreRealmLabel = new Label(" CoreRealm-领域数据");
         coreRealmSpan.add(coreRealmLogo,coreRealmLabel);
         Tab coreRealmTab = new Tab(coreRealmSpan);
         coreRealmTab.setId("coreRealmTab");
@@ -51,7 +51,7 @@ public class CoreRealmView extends Div {
         Span conceptionKindSpan =new Span();
         Icon conceptionKindLogo = new Icon(VaadinIcon.CUBE);
         conceptionKindLogo.setSize("20px");
-        Label conceptionKindLabel = new Label(" ConceptionKind概念类型");
+        Label conceptionKindLabel = new Label(" ConceptionKind-概念类型");
         conceptionKindSpan.add(conceptionKindLogo,conceptionKindLabel);
         Tab conceptionKindTab = new Tab(conceptionKindSpan);
         conceptionKindTab.setId("conceptionKindTab");
@@ -59,7 +59,7 @@ public class CoreRealmView extends Div {
         Span relationKindSpan =new Span();
         Icon relationKindLogo = new Icon(VaadinIcon.CONNECT_O);
         relationKindLogo.setSize("20px");
-        Label relationKindLabel = new Label(" RelationKind关系类型");
+        Label relationKindLabel = new Label(" RelationKind-关系类型");
         relationKindSpan.add(relationKindLogo,relationKindLabel);
         Tab relationKindTab = new Tab(relationKindSpan);
         relationKindTab.setId("relationKindTab");
@@ -67,7 +67,7 @@ public class CoreRealmView extends Div {
         Span attributeKindSpan =new Span();
         Icon attributeKindLogo = new Icon(VaadinIcon.INPUT);
         attributeKindLogo.setSize("20px");
-        Label attributeKindLabel = new Label(" AttributeKind属性类型");
+        Label attributeKindLabel = new Label(" AttributeKind-属性类型");
         attributeKindSpan.add(attributeKindLogo,attributeKindLabel);
         Tab attributeKindTab = new Tab(attributeKindSpan);
         attributeKindTab.setId("attributeKindTab");
@@ -75,7 +75,7 @@ public class CoreRealmView extends Div {
         Span attributesViewKindSpan =new Span();
         Icon attributesViewKindLogo = new Icon(VaadinIcon.TASKS);
         attributesViewKindLogo.setSize("20px");
-        Label attributesViewKindLabel = new Label(" AttributesViewKind属性视图类型");
+        Label attributesViewKindLabel = new Label(" AttributesViewKind-属性视图类型");
         attributesViewKindSpan.add(attributesViewKindLogo,attributesViewKindLabel);
         Tab attributesViewKindTab = new Tab(attributesViewKindSpan);
         attributesViewKindTab.setId("attributesViewKindTab");
@@ -83,7 +83,7 @@ public class CoreRealmView extends Div {
         Span classificationSpan =new Span();
         Icon classificationLogo = new Icon(VaadinIcon.TAGS);
         classificationLogo.setSize("20px");
-        Label classificationLabel = new Label(" Classification分类");
+        Label classificationLabel = new Label(" Classification-分类");
         classificationSpan.add(classificationLogo,classificationLabel);
         Tab classificationTab = new Tab(classificationSpan);
         classificationTab.setId("classificationTab");
@@ -91,7 +91,7 @@ public class CoreRealmView extends Div {
         Span geospatialRegionSpan =new Span();
         Icon geospatialRegionLogo = new Icon(VaadinIcon.GLOBE_WIRE);
         geospatialRegionLogo.setSize("20px");
-        Label geospatialRegionLabel = new Label(" GeospatialRegion地理空间区域");
+        Label geospatialRegionLabel = new Label(" GeospatialRegion-地理空间区域");
         geospatialRegionSpan.add(geospatialRegionLogo,geospatialRegionLabel);
         Tab geospatialRegionTab = new Tab(geospatialRegionSpan);
         geospatialRegionTab.setId("geospatialRegionTab");
@@ -99,7 +99,7 @@ public class CoreRealmView extends Div {
         Span timeFlowSpan =new Span();
         Icon timeFlowLogo = new Icon(VaadinIcon.TIMER);
         timeFlowLogo.setSize("20px");
-        Label timeFlowLabel = new Label(" TimeFlow时间流");
+        Label timeFlowLabel = new Label(" TimeFlow-时间流");
         timeFlowSpan.add(timeFlowLogo,timeFlowLabel);
         Tab timeFlowTab = new Tab(timeFlowSpan);
         timeFlowTab.setId("timeFlowTab");
