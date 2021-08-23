@@ -29,8 +29,24 @@ public class CoreRealmDataUI extends VerticalLayout {
         buttonList.add(refreshDataButton);
         buttonList.add(refreshDataButton);
 
-        TitleActionBar titleActionBar = new TitleActionBar("Core Realm 领域模型数据管理",buttonList);
+        TitleActionBar titleActionBar = new TitleActionBar(new Icon(VaadinIcon.COG_O),"Core Realm 领域模型数据管理",buttonList);
 
         add(titleActionBar);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
