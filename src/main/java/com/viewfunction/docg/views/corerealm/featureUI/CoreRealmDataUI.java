@@ -41,6 +41,7 @@ public class CoreRealmDataUI extends VerticalLayout {
 
         VerticalLayout leftSideContentContainerLayout = new VerticalLayout();
         leftSideContentContainerLayout.setWidth(500, Unit.PIXELS);
+        leftSideContentContainerLayout.setHeight(600,Unit.PIXELS);
 
         leftSideContentContainerLayout.getStyle()
                 .set("border-right", "1px solid var(--lumo-contrast-20pct)");
