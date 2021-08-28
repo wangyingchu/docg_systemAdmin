@@ -11,7 +11,7 @@ import java.util.List;
 
 public class TitleActionBar extends HorizontalLayout {
 
-    public TitleActionBar(Icon titleIcon,String titleContent, List<Component> actionComponentsList){
+    public TitleActionBar(Icon titleIcon,String titleContent, List<Component> secondaryTitleComponentsList, List<Component> actionComponentsList){
 
         this.setSpacing(false);
         this.setMargin(false);
@@ -29,13 +29,24 @@ public class TitleActionBar extends HorizontalLayout {
             this.setVerticalComponentAlignment(Alignment.CENTER,titleIcon);
         }
 
+        HorizontalLayout titleElementsContainer = new HorizontalLayout();
+
         Label titleLabel = new Label(titleContent);
         titleLabel.getStyle().set("font-size","var(--lumo-font-size-xl)")
                 .set("color","var(--lumo-primary-color)");
 
-        this.add(titleLabel);
-        this.setFlexGrow(1,titleLabel);
-        this.setVerticalComponentAlignment(Alignment.CENTER,titleLabel);
+        titleElementsContainer.add(titleLabel);
+
+        this.add(titleElementsContainer);
+        this.setFlexGrow(1,titleElementsContainer);
+        this.setVerticalComponentAlignment(Alignment.CENTER,titleElementsContainer);
+        titleElementsContainer.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+
+        if(secondaryTitleComponentsList != null){
+            for(Component currentComponent:secondaryTitleComponentsList){
+                titleElementsContainer.add(currentComponent);
+            }
+        }
 
         if(actionComponentsList != null){
             for(Component currentComponent:actionComponentsList){

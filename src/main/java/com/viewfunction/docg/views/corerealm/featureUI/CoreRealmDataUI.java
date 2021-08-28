@@ -11,6 +11,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 
 import java.util.ArrayList;
@@ -30,9 +31,20 @@ public class CoreRealmDataUI extends VerticalLayout {
 
         List<Component> buttonList = new ArrayList<>();
         buttonList.add(refreshDataButton);
-        buttonList.add(refreshDataButton);
 
-        TitleActionBar titleActionBar = new TitleActionBar(new Icon(VaadinIcon.COG_O),"Core Realm 领域模型数据管理",buttonList);
+        List<Component> secTitleElementsList = new ArrayList<>();
+
+        Label coreRealmNameLabel = new Label(" [ Default CoreRealm ]");
+        coreRealmNameLabel.getStyle().set("font-size","var(--lumo-font-size-xl)")
+                .set("color","var(--lumo-secondary-text-color)");
+        secTitleElementsList.add(coreRealmNameLabel);
+
+        Label coreRealmTechLabel = new Label(" NEO4J 实现");
+        coreRealmTechLabel.getStyle().set("font-size","var(--lumo-font-size-s)")
+                .set("color","var(--lumo-body-text-color)");
+        secTitleElementsList.add(coreRealmTechLabel);
+
+        TitleActionBar titleActionBar = new TitleActionBar(new Icon(VaadinIcon.COG_O),"Core Realm 领域模型数据管理",secTitleElementsList,buttonList);
         add(titleActionBar);
 
         HorizontalLayout contentContainerLayout = new HorizontalLayout();
@@ -48,19 +60,9 @@ public class CoreRealmDataUI extends VerticalLayout {
         contentContainerLayout.add(leftSideContentContainerLayout);
 
         HorizontalLayout coreRealmInfoContainerLayout = new HorizontalLayout();
+        coreRealmInfoContainerLayout.setWidth(100,Unit.PERCENTAGE);
 
-        Label coreRealmNameLabel = new Label("Default CoreRealm");
-        coreRealmNameLabel.getStyle().set("font-size","var(--lumo-font-size-xxl)")
-                .set("color","var(--lumo-secondary-text-color)");
-        coreRealmInfoContainerLayout.add(coreRealmNameLabel);
-
-        Label coreRealmTechLabel = new Label(" NEO4J");
-        coreRealmTechLabel.getStyle().set("font-size","var(--lumo-font-size-s)")
-                .set("color","var(--lumo-body-text-color)");
-        coreRealmInfoContainerLayout.add(coreRealmTechLabel);
-        coreRealmInfoContainerLayout.getStyle()
-                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
-
-        leftSideContentContainerLayout.add(coreRealmInfoContainerLayout);
+        SectionActionBar sectionActionBar = new SectionActionBar(new Icon(VaadinIcon.AUTOMATION),"数据概览信息",null);
+        leftSideContentContainerLayout.add(sectionActionBar);
     }
 }
