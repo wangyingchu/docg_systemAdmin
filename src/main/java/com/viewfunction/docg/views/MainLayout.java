@@ -122,7 +122,7 @@ public class MainLayout extends AppLayout {
 
     private List<Tab> createMenuItems() {
         MenuItemInfo[] menuItems = new MenuItemInfo[]{ //
-                new MenuItemInfo("概览 [ General Information ]", "la la-chalkboard", GeneralInformationView.class), //
+               // new MenuItemInfo("概览 [ General Information ]", "la la-chalkboard", GeneralInformationView.class), //
 
                 new MenuItemInfo("核心领域模型 [ Core Realm ]", "la la-cubes", CoreRealmView.class), //
 

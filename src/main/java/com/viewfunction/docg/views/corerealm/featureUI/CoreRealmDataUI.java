@@ -62,7 +62,12 @@ public class CoreRealmDataUI extends VerticalLayout {
         HorizontalLayout coreRealmInfoContainerLayout = new HorizontalLayout();
         coreRealmInfoContainerLayout.setWidth(100,Unit.PERCENTAGE);
 
-        SectionActionBar sectionActionBar = new SectionActionBar(new Icon(VaadinIcon.AUTOMATION),"数据概览信息",null);
+
+
+        Icon icon = new Icon("lumo", "photo");
+        Icon icon2 = new Icon(VaadinIcon.AUTOMATION);
+        Icon icon3 = new Icon("lineawesome", "chalkboard");
+        SectionActionBar sectionActionBar = new SectionActionBar(icon3,"数据概览信息",null);
         leftSideContentContainerLayout.add(sectionActionBar);
     }
 }

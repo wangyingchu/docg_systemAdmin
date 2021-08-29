@@ -13,12 +13,14 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.views.MainLayout;
 import com.viewfunction.docg.views.corerealm.featureUI.*;
 
 @PageTitle("核心领域模型 [ Core Realm ]")
 @Route(value = "core-realm", layout = MainLayout.class)
+@RouteAlias(value = "", layout = MainLayout.class)
 public class CoreRealmView extends Div {
 
     //https://vaadin.com/directory/component/scrolllayout

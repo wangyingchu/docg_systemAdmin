@@ -9,7 +9,7 @@ import com.vaadin.flow.router.RouteAlias;
 
 @PageTitle("概览 [ General Information ]")
 @Route(value = "general-info", layout = MainLayout.class)
-@RouteAlias(value = "", layout = MainLayout.class)
+//@RouteAlias(value = "", layout = MainLayout.class)
 public class GeneralInformationView extends Div {
 
     public GeneralInformationView() {
