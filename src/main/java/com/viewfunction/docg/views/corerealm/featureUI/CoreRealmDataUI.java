@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.Component;
 
 import com.vaadin.flow.component.Unit;
@@ -11,6 +12,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.theme.lumo.Lumo;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 
@@ -62,12 +64,14 @@ public class CoreRealmDataUI extends VerticalLayout {
         HorizontalLayout coreRealmInfoContainerLayout = new HorizontalLayout();
         coreRealmInfoContainerLayout.setWidth(100,Unit.PERCENTAGE);
 
+        //Icon icon = new Icon("lumo", "photo");
+        Icon icon = new Icon(VaadinIcon.AUTOMATION);
 
+        //Icon icon2 =
+                //FontAwesome.Solid.ADDRESS_CARD.create();
+        //leftSideContentContainerLayout.add(FontAwesome.Solid.ADDRESS_CARD.create());
 
-        Icon icon = new Icon("lumo", "photo");
-        Icon icon2 = new Icon(VaadinIcon.AUTOMATION);
-        Icon icon3 = new Icon("lineawesome", "chalkboard");
-        SectionActionBar sectionActionBar = new SectionActionBar(icon3,"数据概览信息",null);
+        SectionActionBar sectionActionBar = new SectionActionBar(icon,"数据概览信息",null);
         leftSideContentContainerLayout.add(sectionActionBar);
     }
 }

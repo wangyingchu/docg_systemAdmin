@@ -21,7 +21,7 @@ public class SectionActionBar extends HorizontalLayout {
         sectionTitleLabel.getStyle().set("font-size","var(--lumo-font-size-s)");
 
         if(sectionIcon != null){
-            sectionIcon.setSize("15px");
+            sectionIcon.setSize("16px");
             this.add(sectionIcon);
             this.setVerticalComponentAlignment(Alignment.CENTER,sectionIcon);
         }

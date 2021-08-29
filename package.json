@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@flowingcode/font-awesome-iron-iconset": "2.2.1",
     "@polymer/iron-icon": "3.0.1",
     "@polymer/iron-list": "3.1.0",
     "@polymer/polymer": "3.2.0",
@@ -73,6 +74,7 @@
   "name": "no-name",
   "vaadin": {
     "dependencies": {
+      "@flowingcode/font-awesome-iron-iconset": "2.2.1",
       "@polymer/iron-icon": "3.0.1",
       "@polymer/iron-list": "3.1.0",
       "@polymer/polymer": "3.2.0",
@@ -142,6 +144,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "b3a7aec104eaba804cff6ee68cafa9a8caae2c9cd5d1b4021d918c35e1667a09"
+    "hash": "94c61ad2d3383cd6b725b9b57917da8e933362295c5cb87f13285dbd07cb621c"
   }
 }
