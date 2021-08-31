@@ -46,6 +46,8 @@
     "@vaadin/vaadin-upload": "4.4.2",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "construct-style-sheets-polyfill": "2.4.16",
+    "echarts": "5.1.2",
+    "leaflet": "^1.6.0",
     "line-awesome": "1.3.0",
     "lit-element": "2.5.1",
     "lit-html": "1.4.1",
@@ -120,6 +122,8 @@
       "@vaadin/vaadin-upload": "4.4.2",
       "@webcomponents/webcomponentsjs": "^2.2.10",
       "construct-style-sheets-polyfill": "2.4.16",
+      "echarts": "5.1.2",
+      "leaflet": "^1.6.0",
       "line-awesome": "1.3.0",
       "lit-element": "2.5.1",
       "lit-html": "1.4.1",
@@ -144,6 +148,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "94c61ad2d3383cd6b725b9b57917da8e933362295c5cb87f13285dbd07cb621c"
+    "hash": "0d4a50abdb2949d1e3c519fda5d3c49dbd4276fee490b16aab361bf356150c63"
   }
 }

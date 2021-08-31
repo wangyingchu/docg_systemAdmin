@@ -1,6 +1,10 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
+import com.storedobject.chart.SOChart;
+import com.storedobject.chart.Title;
+import com.storedobject.chart.TreeChart;
+import com.storedobject.chart.TreeData;
 import com.vaadin.flow.component.Component;
 
 import com.vaadin.flow.component.Text;
@@ -19,9 +23,16 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.theme.lumo.Lumo;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import org.vaadin.addons.chartjs.ChartJs;
+import org.vaadin.addons.chartjs.config.BarChartConfig;
+import org.vaadin.addons.chartjs.data.BarDataset;
+import org.vaadin.addons.chartjs.data.Dataset;
+import org.vaadin.addons.chartjs.data.LineDataset;
+import org.vaadin.addons.chartjs.options.Position;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class CoreRealmDataUI extends VerticalLayout {
 
@@ -90,8 +101,91 @@ public class CoreRealmDataUI extends VerticalLayout {
         Label lb01 = new Label("ConceptionKind-概念类型");
         lb01.addClassNames("text-xs","font-semibold");
         conceptionKindInfoContainerLayout.add(lb01);
+
+
+
+
+
+
+
+
+        BarChartConfig config = new BarChartConfig();
+        config
+                .data()
+                .labels("January", "February", "March", "April", "May", "June", "July")
+                .addDataset(new BarDataset().type().label("Dataset 1").backgroundColor("rgba(151,187,205,0.5)").borderColor("white").borderWidth(2))
+                .addDataset(new LineDataset().type().label("Dataset 2").backgroundColor("rgba(151,187,205,0.5)").borderColor("white").borderWidth(2))
+                .addDataset(new BarDataset().type().label("Dataset 3").backgroundColor("rgba(220,220,220,0.5)"))
+                .and();
+
+        config.
+                options()
+                .responsive(true)
+                .title()
+                .display(true)
+                .position(Position.LEFT)
+                .text("Chart.js Combo Bar Line Chart")
+                .and()
+                .done();
+
+        List<String> labels = config.data().getLabels();
+        for (Dataset<?, ?> ds : config.data().getDatasets()) {
+            List<Double> data = new ArrayList<>();
+            for (int i = 0; i < labels.size(); i++) {
+                data.add((double) (Math.random() > 0.5 ? 1.0 : -1.0) * Math.round(Math.random() * 100));
+            }
+
+            if (ds instanceof BarDataset) {
+                BarDataset bds = (BarDataset) ds;
+                bds.dataAsList(data);
+            }
+
+            if (ds instanceof LineDataset) {
+                LineDataset lds = (LineDataset) ds;
+                lds.dataAsList(data);
+            }
+        }
+
+        ChartJs chart = new ChartJs(config);
+        chart.setSizeFull();
+
+
+        //chart.setHeight(200,Unit.PIXELS);
+        //chart.setWidth(400,Unit.PIXELS);
+
+
+
+        VerticalLayout verticalLayout1 = new VerticalLayout();
+        verticalLayout1.setWidth(350,Unit.PIXELS);
+        verticalLayout1.setHeight(400,Unit.PIXELS);
+        verticalLayout1.add(chart);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        leftSideContentContainerLayout.add(verticalLayout1);
+
+
+
         Details component = new Details(conceptionKindInfoContainerLayout,
-                new Text("Toggle using mouse, Enter and Space keys."));
+                verticalLayout1);
+        //component.setEnabled(false);
+
         //component.addOpenedChangeListener(e ->
         //        Notification.show(e.isOpened() ? "Opened" : "Closed"));
         component.getStyle().set("width","100%");
@@ -108,10 +202,39 @@ public class CoreRealmDataUI extends VerticalLayout {
         component2.getStyle().set("width","100%");
         component2.setOpened(true);
         component2.addThemeVariants(DetailsVariant.FILLED);
-
+        component2.addClassNames("shadow-xs");
         leftSideContentContainerLayout.add(component2);
 
 
+
+        // Creating a chart display area
+        SOChart soChart = new SOChart();
+        soChart.setSize("800px", "500px");
+
+// Tree chart
+// (By default it assumes circular shape. Otherwise, we can set orientation)
+// All values are randomly generated
+        TreeChart tc = new TreeChart();
+        TreeData td = new TreeData("Root", 1000);
+        tc.setTreeData(td);
+        Random r = new Random();
+        for(int i = 1; i < 21; i++) {
+            td.add(new TreeData("Node " + i, r.nextInt(500)));
+        }
+        TreeData td1 = td.get(13);
+        td = td.get(9);
+        for(int i = 50; i < 56; i++) {
+            td.add(new TreeData("Node " + i, r.nextInt(500)));
+        }
+        for(int i = 30; i < 34; i++) {
+            td1.add(new TreeData("Node " + i, r.nextInt(500)));
+        }
+
+// Add to the chart display area with a simple title
+        soChart.add(tc, new Title("A Circular Tree Chart"));
+
+// Finally, add it to my layout
+        leftSideContentContainerLayout.add(soChart);
 
 
 

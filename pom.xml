@@ -169,6 +169,50 @@
             <artifactId>font-awesome-iron-iconset</artifactId>
             <version>2.2.1</version>
         </dependency>
+
+        <!-- https://vaadin.com/directory/component/chartjs-add-on-for-vaadin-14 -->
+        <dependency>
+            <groupId>org.vaadin.addons.chartjs</groupId>
+            <artifactId>chartjs</artifactId>
+            <version>0.1.37</version>
+        </dependency>
+
+        <!-- https://vaadin.com/directory/component/paged-tabs/ -->
+        <dependency>
+            <groupId>org.vaadin.tabs</groupId>
+            <artifactId>paged-tabs</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <!-- https://vaadin.com/directory/component/so-charts/ -->
+        <dependency>
+            <groupId>com.storedobject.chart</groupId>
+            <artifactId>so-charts</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
+        <!-- https://vaadin.com/directory/component/leafletmap-for-vaadin -->
+        <dependency>
+           <groupId>com.xdev-software</groupId>
+           <artifactId>vaadin-maps-leaflet-flow</artifactId>
+           <version>1.1.0</version>
+        </dependency>
+
+        <!-- https://vaadin.com/directory/component/slidetab/ -->
+        <dependency>
+            <groupId>org.vaadin.erik</groupId>
+            <artifactId>slidetab</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+
+        <!-- https://vaadin.com/directory/component/sparkline -->
+        <dependency>
+            <groupId>com.vaadin.componentfactory</groupId>
+            <artifactId>sparkline-flow</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
