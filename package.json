@@ -3,6 +3,7 @@
     "@flowingcode/font-awesome-iron-iconset": "2.2.1",
     "@polymer/iron-icon": "3.0.1",
     "@polymer/iron-list": "3.1.0",
+    "@polymer/paper-ripple": "3.0.2",
     "@polymer/polymer": "3.2.0",
     "@vaadin/vaadin-accordion": "1.2.0",
     "@vaadin/vaadin-app-layout": "2.2.0",
@@ -45,13 +46,15 @@
     "@vaadin/vaadin-time-picker": "2.4.0",
     "@vaadin/vaadin-upload": "4.4.2",
     "@webcomponents/webcomponentsjs": "^2.2.10",
+    "apexcharts": "3.26.3",
     "construct-style-sheets-polyfill": "2.4.16",
     "echarts": "5.1.2",
     "leaflet": "^1.6.0",
     "line-awesome": "1.3.0",
     "lit-element": "2.5.1",
     "lit-html": "1.4.1",
-    "lumo-css-framework": "^4.0.10"
+    "lumo-css-framework": "^4.0.10",
+    "onecolor": "3.1.0"
   },
   "devDependencies": {
     "chokidar": "^3.5.0",
@@ -79,6 +82,7 @@
       "@flowingcode/font-awesome-iron-iconset": "2.2.1",
       "@polymer/iron-icon": "3.0.1",
       "@polymer/iron-list": "3.1.0",
+      "@polymer/paper-ripple": "3.0.2",
       "@polymer/polymer": "3.2.0",
       "@vaadin/vaadin-accordion": "1.2.0",
       "@vaadin/vaadin-app-layout": "2.2.0",
@@ -121,13 +125,15 @@
       "@vaadin/vaadin-time-picker": "2.4.0",
       "@vaadin/vaadin-upload": "4.4.2",
       "@webcomponents/webcomponentsjs": "^2.2.10",
+      "apexcharts": "3.26.3",
       "construct-style-sheets-polyfill": "2.4.16",
       "echarts": "5.1.2",
       "leaflet": "^1.6.0",
       "line-awesome": "1.3.0",
       "lit-element": "2.5.1",
       "lit-html": "1.4.1",
-      "lumo-css-framework": "^4.0.10"
+      "lumo-css-framework": "^4.0.10",
+      "onecolor": "3.1.0"
     },
     "devDependencies": {
       "chokidar": "^3.5.0",
@@ -148,6 +154,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "0d4a50abdb2949d1e3c519fda5d3c49dbd4276fee490b16aab361bf356150c63"
+    "hash": "be5c149d20886c4b7413ccd8083f3ad768ab525f37259bbcb4518600b7a5d56d"
   }
 }

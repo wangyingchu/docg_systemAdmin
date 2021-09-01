@@ -1,6 +1,25 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
+import com.github.appreciated.apexcharts.ApexCharts;
+import com.github.appreciated.apexcharts.config.*;
+import com.github.appreciated.apexcharts.config.chart.Type;
+import com.github.appreciated.apexcharts.config.chart.Zoom;
+import com.github.appreciated.apexcharts.config.grid.Row;
+import com.github.appreciated.apexcharts.config.subtitle.Align;
+import com.github.appreciated.apexcharts.config.stroke.Curve;
+import com.github.appreciated.apexcharts.helper.Series;
+import com.github.appreciated.card.Card;
+import com.github.appreciated.card.ClickableCard;
+import com.github.appreciated.card.RippleClickableCard;
+import com.github.appreciated.card.action.ActionButton;
+import com.github.appreciated.card.action.Actions;
+import com.github.appreciated.card.content.IconItem;
+import com.github.appreciated.card.content.Item;
+import com.github.appreciated.card.label.PrimaryLabel;
+import com.github.appreciated.card.label.SecondaryLabel;
+import com.github.appreciated.card.label.TitleLabel;
+
 import com.storedobject.chart.SOChart;
 import com.storedobject.chart.Title;
 import com.storedobject.chart.TreeChart;
@@ -31,6 +50,7 @@ import org.vaadin.addons.chartjs.data.LineDataset;
 import org.vaadin.addons.chartjs.options.Position;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -146,8 +166,8 @@ public class CoreRealmDataUI extends VerticalLayout {
             }
         }
 
-        ChartJs chart = new ChartJs(config);
-        chart.setSizeFull();
+        ChartJs chart1 = new ChartJs(config);
+        chart1.setSizeFull();
 
 
         //chart.setHeight(200,Unit.PIXELS);
@@ -158,7 +178,7 @@ public class CoreRealmDataUI extends VerticalLayout {
         VerticalLayout verticalLayout1 = new VerticalLayout();
         verticalLayout1.setWidth(350,Unit.PIXELS);
         verticalLayout1.setHeight(400,Unit.PIXELS);
-        verticalLayout1.add(chart);
+        //verticalLayout1.add(chart1);
 
 
 
@@ -170,6 +190,67 @@ public class CoreRealmDataUI extends VerticalLayout {
 
 
 
+        // Our Apex chart
+        ApexCharts apexChart = new ApexCharts();
+
+        // Series
+        Series<Integer> series = new Series<Integer>();
+        series.setData(new Integer[] {10, 41, 35, 51, 49, 62, 69, 91, 148});
+        series.setName("Desktops");
+
+        // Chart
+        Chart chart = new Chart();
+        chart.setHeight("350");
+        chart.setType(Type.line);
+        Zoom zoom = new Zoom();
+        zoom.setEnabled(false);
+        chart.setZoom(zoom);
+
+        // Labels
+        DataLabels dataLabels = new DataLabels();
+        dataLabels.setEnabled(true);
+
+        // Stroke
+        Stroke stroke = new Stroke();
+        stroke.setCurve(Curve.straight);
+
+        // Title
+        TitleSubtitle titleSubtilte = new TitleSubtitle();
+        titleSubtilte.setText("Product Trends by Month");
+        titleSubtilte.setAlign(Align.left);
+
+        // Grid
+        Grid grid = new Grid();
+        Row row = new Row();
+        row.setColors(Arrays.asList(new String[] {"#f3f3f3", "transparent"}));
+        row.setOpacity(0.5);
+        grid.setRow(row);
+
+        // Xaxis
+        XAxis xaxis = new XAxis();
+        xaxis.setCategories(Arrays.asList(new String[] {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"}));
+
+        // Tooltip
+        Tooltip tooltip = new Tooltip();
+        tooltip.setEnabled(false);
+
+        // Include them all
+        apexChart.setSeries(series);
+        apexChart.setChart(chart);
+        apexChart.setDataLabels(dataLabels);
+        apexChart.setStroke(stroke);
+        apexChart.setTitle(titleSubtilte);
+        apexChart.setGrid(grid);
+        apexChart.setXaxis(xaxis);
+        apexChart.setTooltip(tooltip);
+
+        // Render them and include into the content
+        //leftSideContentContainerLayout.add(apexChart); // AppLayout
+
+
+
+
+        verticalLayout1.add(apexChart);
 
 
 
@@ -191,7 +272,7 @@ public class CoreRealmDataUI extends VerticalLayout {
         component.getStyle().set("width","100%");
         component.setOpened(true);
         component.addThemeVariants(DetailsVariant.FILLED);
-        component.addClassNames("shadow-xs");
+        //component.addClassNames("shadow-xs");
 
         leftSideContentContainerLayout.add(component);
 
@@ -235,6 +316,28 @@ public class CoreRealmDataUI extends VerticalLayout {
 
 // Finally, add it to my layout
         leftSideContentContainerLayout.add(soChart);
+
+
+
+
+        RippleClickableCard rcard = new RippleClickableCard(
+                onClick -> {/* Handle Card click */},
+                new TitleLabel("Example Title") // Follow up with more Components ...
+        );
+
+        ClickableCard ccard = new ClickableCard(
+                onClick -> {/* Handle Card click */},
+                new TitleLabel("Example Title") // Follow up with more Components ...
+        );
+
+
+
+
+        leftSideContentContainerLayout.add(rcard);
+        leftSideContentContainerLayout.add(ccard);
+
+
+
 
 
 

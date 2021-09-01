@@ -212,6 +212,28 @@
             <version>2.0.0</version>
         </dependency>
 
+        <!-- https://vaadin.com/directory/component/apollonav
+        -navigation-component-for-vaadin -->
+        <dependency>
+            <groupId>org.vaadin.addons.apollo</groupId>
+            <artifactId>ApolloNav</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
+        <!-- https://vaadin.com/directory/component/apexchartsjs/ -->
+        <dependency>
+            <groupId>com.github.appreciated</groupId>
+            <artifactId>apexcharts</artifactId>
+            <version>2.0.0-beta12</version>
+        </dependency>
+
+        <!-- https://vaadin.com/directory/component/card/ -->
+        <dependency>
+            <groupId>com.github.appreciated</groupId>
+            <artifactId>card</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
 
     </dependencies>
 
