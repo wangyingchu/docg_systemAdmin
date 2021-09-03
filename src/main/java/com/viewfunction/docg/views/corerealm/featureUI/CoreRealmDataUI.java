@@ -1,6 +1,5 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
-import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.github.appreciated.apexcharts.ApexCharts;
 import com.github.appreciated.apexcharts.config.*;
 import com.github.appreciated.apexcharts.config.chart.Type;
@@ -9,15 +8,8 @@ import com.github.appreciated.apexcharts.config.grid.Row;
 import com.github.appreciated.apexcharts.config.subtitle.Align;
 import com.github.appreciated.apexcharts.config.stroke.Curve;
 import com.github.appreciated.apexcharts.helper.Series;
-import com.github.appreciated.card.Card;
 import com.github.appreciated.card.ClickableCard;
 import com.github.appreciated.card.RippleClickableCard;
-import com.github.appreciated.card.action.ActionButton;
-import com.github.appreciated.card.action.Actions;
-import com.github.appreciated.card.content.IconItem;
-import com.github.appreciated.card.content.Item;
-import com.github.appreciated.card.label.PrimaryLabel;
-import com.github.appreciated.card.label.SecondaryLabel;
 import com.github.appreciated.card.label.TitleLabel;
 
 import com.storedobject.chart.SOChart;
@@ -35,19 +27,20 @@ import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import com.vaadin.flow.theme.lumo.Lumo;
-import com.viewfunction.docg.element.commonComponent.SectionActionBar;
-import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import com.viewfunction.docg.element.commonComponent.SectionWallContainer;
+import com.viewfunction.docg.element.commonComponent.SectionWallTitle;
 import org.vaadin.addons.chartjs.ChartJs;
 import org.vaadin.addons.chartjs.config.BarChartConfig;
 import org.vaadin.addons.chartjs.data.BarDataset;
 import org.vaadin.addons.chartjs.data.Dataset;
 import org.vaadin.addons.chartjs.data.LineDataset;
 import org.vaadin.addons.chartjs.options.Position;
+
+import com.viewfunction.docg.element.commonComponent.SectionActionBar;
+import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,9 +56,6 @@ public class CoreRealmDataUI extends VerticalLayout {
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
-        //Button plusButton3 = new Button("-",new Icon(VaadinIcon.PLUS));
-        //plusButton3.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-
         List<Component> buttonList = new ArrayList<>();
         buttonList.add(refreshDataButton);
 
@@ -77,12 +67,9 @@ public class CoreRealmDataUI extends VerticalLayout {
         secTitleElementsList.add(coreRealmNameLabel);
 
         Label coreRealmTechLabel = new Label(" NEO4J 实现");
-        //coreRealmTechLabel.getStyle()
-        //        .set("font-size","var(--lumo-font-size-xxs)");
         coreRealmTechLabel.addClassName("text-2xs");
         secTitleElementsList.add(coreRealmTechLabel);
         coreRealmTechLabel.getElement().getThemeList().add("badge success");
-
 
         TitleActionBar titleActionBar = new TitleActionBar(new Icon(VaadinIcon.COG_O),"Core Realm 领域模型数据管理",secTitleElementsList,buttonList);
         add(titleActionBar);
@@ -100,31 +87,18 @@ public class CoreRealmDataUI extends VerticalLayout {
         HorizontalLayout coreRealmInfoContainerLayout = new HorizontalLayout();
         coreRealmInfoContainerLayout.setWidth(100,Unit.PERCENTAGE);
 
-        //Icon icon = new Icon("lumo", "photo");
-        Icon icon = new Icon(VaadinIcon.AUTOMATION);
-
-        //Icon icon2 =
-                //FontAwesome.Solid.ADDRESS_CARD.create();
+        Icon icon = new Icon(VaadinIcon.AUTOMATION); //Icon icon = new Icon("lumo", "photo");
         //leftSideContentContainerLayout.add(FontAwesome.Solid.ADDRESS_CARD.create());
-
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"数据概览信息",null);
         leftSideContentContainerLayout.add(sectionActionBar);
 
 
 
-        HorizontalLayout conceptionKindInfoContainerLayout = new HorizontalLayout();
-        conceptionKindInfoContainerLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        Icon icon001 = new Icon(VaadinIcon.CUBE);
-        icon001.setSize("20px");
-        conceptionKindInfoContainerLayout.add(icon001);
 
-        Label lb01 = new Label("ConceptionKind-概念类型");
-        lb01.addClassNames("text-xs","font-semibold");
-        conceptionKindInfoContainerLayout.add(lb01);
-
-
-
-
+        Icon conceptionKindInfoTitleIcon = new Icon(VaadinIcon.CUBE);
+        conceptionKindInfoTitleIcon.setSize("20px");
+        Label conceptionKindInfoTitleLabel = new Label("ConceptionKind-概念类型");
+        SectionWallTitle conceptionKindInfoSectionWallTitle = new SectionWallTitle(conceptionKindInfoTitleIcon,conceptionKindInfoTitleLabel);
 
 
 
@@ -263,18 +237,18 @@ public class CoreRealmDataUI extends VerticalLayout {
 
 
 
-        Details component = new Details(conceptionKindInfoContainerLayout,
-                verticalLayout1);
-        //component.setEnabled(false);
+        //Details component = new Details(conceptionKindInfoContainerLayout,verticalLayout1);
 
-        //component.addOpenedChangeListener(e ->
-        //        Notification.show(e.isOpened() ? "Opened" : "Closed"));
-        component.getStyle().set("width","100%");
-        component.setOpened(true);
-        component.addThemeVariants(DetailsVariant.FILLED);
+        //component.getStyle().set("width","100%");
+        //component.setOpened(true);
+        //component.addThemeVariants(DetailsVariant.FILLED);
         //component.addClassNames("shadow-xs");
 
-        leftSideContentContainerLayout.add(component);
+
+        SectionWallContainer sectionWallContainer1 = new SectionWallContainer(conceptionKindInfoSectionWallTitle,verticalLayout1);
+
+
+        leftSideContentContainerLayout.add(sectionWallContainer1);
 
         Details component2 = new Details("[Conception Kind] 概念类型 ",
                 new Text("Toggle using mouse, Enter and Space keys."));
