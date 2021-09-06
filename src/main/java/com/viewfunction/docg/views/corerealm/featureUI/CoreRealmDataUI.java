@@ -1,20 +1,14 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
 import ch.carnet.kasparscherrer.VerticalScrollLayout;
-import com.github.appreciated.card.ClickableCard;
-import com.github.appreciated.card.RippleClickableCard;
-import com.github.appreciated.card.label.TitleLabel;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.details.Details;
-import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.shared.Registration;
@@ -83,41 +77,25 @@ public class CoreRealmDataUI extends VerticalLayout {
         conceptionKindInfoTitleIcon.setSize("20px");
         Label conceptionKindInfoTitleLabel = new Label("ConceptionKind-概念类型");
         SectionWallTitle conceptionKindInfoSectionWallTitle = new SectionWallTitle(conceptionKindInfoTitleIcon,conceptionKindInfoTitleLabel);
-
         VerticalLayout verticalLayout1 = new VerticalLayout();
         verticalLayout1.setWidth(100,Unit.PERCENTAGE);
         verticalLayout1.setHeight(400,Unit.PIXELS);
         verticalLayout1.add(ChartGenerator.generateApexChartsLineChart());
-        leftSideSectionContainerScrollLayout.add(verticalLayout1);
-
         SectionWallContainer sectionWallContainer1 = new SectionWallContainer(conceptionKindInfoSectionWallTitle,verticalLayout1);
         leftSideSectionContainerScrollLayout.add(sectionWallContainer1);
 
 
-        Details component2 = new Details("[Conception Kind] 概念类型 ",
-                ChartGenerator.generateSOChartTreeChart());
+        Icon relationKindInfoTitleIcon = new Icon(VaadinIcon.CONNECT_O);
+        relationKindInfoTitleIcon.setSize("20px");
+        Label relationKindInfoTitleLabel = new Label("RelationKind-关系类型");
+        SectionWallTitle relationKindInfoSectionWallTitle = new SectionWallTitle(relationKindInfoTitleIcon,relationKindInfoTitleLabel);
+        SectionWallContainer sectionWallContainer2 = new SectionWallContainer(relationKindInfoSectionWallTitle,ChartGenerator.generateSOChartTreeChart());
+        leftSideSectionContainerScrollLayout.add(sectionWallContainer2);
 
-        component2.getStyle().set("width","100%");
-        component2.setOpened(true);
-        component2.addThemeVariants(DetailsVariant.FILLED);
-        component2.addClassNames("shadow-xs");
-        leftSideSectionContainerScrollLayout.add(component2);
 
         VerticalLayout _VerticalLayout = new VerticalLayout();
         _VerticalLayout.add(ChartGenerator.generateChartJSBarChart());
-
         leftSideSectionContainerScrollLayout.add(_VerticalLayout);
-
-        RippleClickableCard rcard = new RippleClickableCard(
-                onClick -> {/* Handle Card click */},
-                new TitleLabel("Example Title") // Follow up with more Components ...
-        );
-
-        ClickableCard ccard = new ClickableCard(
-                onClick -> {/* Handle Card click */},
-                new TitleLabel("Example Title") // Follow up with more Components ...
-        );
-        //leftSideSectionContainerScrollLayout.add(ccard);
     }
 
     @Override
