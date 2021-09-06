@@ -4,9 +4,7 @@ import com.github.appreciated.card.ClickableCard;
 import com.github.appreciated.card.RippleClickableCard;
 import com.github.appreciated.card.label.TitleLabel;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.details.Details;
@@ -17,6 +15,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.element.commonComponent.SectionWallContainer;
 import com.viewfunction.docg.element.commonComponent.SectionWallTitle;
 import com.viewfunction.docg.element.commonComponent.chart.ChartGenerator;
@@ -27,6 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CoreRealmDataUI extends VerticalLayout {
+
+    private Registration listener;
+
+    private VerticalLayout leftSideContentContainerLayout;
 
     public CoreRealmDataUI(){
 
@@ -57,7 +60,7 @@ public class CoreRealmDataUI extends VerticalLayout {
         contentContainerLayout.setWidthFull();
         add(contentContainerLayout);
 
-        VerticalLayout leftSideContentContainerLayout = new VerticalLayout();
+        leftSideContentContainerLayout = new VerticalLayout();
         leftSideContentContainerLayout.setWidth(400, Unit.PIXELS);
         leftSideContentContainerLayout.setHeight(600,Unit.PIXELS);
         leftSideContentContainerLayout.addClassNames("border-r","border-contrast-20");
@@ -106,9 +109,29 @@ public class CoreRealmDataUI extends VerticalLayout {
                 onClick -> {/* Handle Card click */},
                 new TitleLabel("Example Title") // Follow up with more Components ...
         );
-
-
         leftSideContentContainerLayout.add(ChartGenerator.generateChartJSBarChart());
         leftSideContentContainerLayout.add(ccard);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        // Add browser window listener to observe size change
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            this.leftSideContentContainerLayout.setHeight(event.getHeight()-180,Unit.PIXELS);
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            int browserWidth = receiver.getBodyClientWidth();
+            int browserHeight = receiver.getBodyClientHeight();
+            this.leftSideContentContainerLayout.setHeight(browserHeight-180,Unit.PIXELS);
+        }));
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
+        super.onDetach(detachEvent);
     }
 }
