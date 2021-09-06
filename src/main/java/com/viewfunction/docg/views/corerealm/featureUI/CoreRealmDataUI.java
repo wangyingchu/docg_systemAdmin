@@ -64,42 +64,20 @@ public class CoreRealmDataUI extends VerticalLayout {
         add(contentContainerLayout);
 
         leftSideContentContainerLayout = new VerticalLayout();
+        leftSideContentContainerLayout.setSpacing(false);
         leftSideContentContainerLayout.setWidth(400, Unit.PIXELS);
-        leftSideContentContainerLayout.setHeight(600,Unit.PIXELS);
         leftSideContentContainerLayout.addClassNames("border-r","border-contrast-20");
         contentContainerLayout.add(leftSideContentContainerLayout);
 
-/*
-        Scroller scroller = new Scroller();
-        scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
-        scroller.getStyle()
-                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
-                .set("padding", "var(--lumo-space-m)");
-        contentContainerLayout.add(scroller);
-
-        scroller.setContent(leftSideContentContainerLayout);
-*/
-
         HorizontalLayout coreRealmInfoContainerLayout = new HorizontalLayout();
         coreRealmInfoContainerLayout.setWidth(100,Unit.PERCENTAGE);
-
         Icon icon = new Icon(VaadinIcon.AUTOMATION); //Icon icon = new Icon("lumo", "photo");
         //leftSideContentContainerLayout.add(FontAwesome.Solid.ADDRESS_CARD.create());
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"数据概览信息",null);
         leftSideContentContainerLayout.add(sectionActionBar);
 
-        sectionContentContainerLayout = new VerticalLayout();
-
-        sectionContentContainerLayout.setHeight(600,Unit.PIXELS);
-        sectionContentContainerLayout.setWidth(380,Unit.PIXELS);
-        leftSideContentContainerLayout.add(sectionContentContainerLayout);
-
-        //Scroller scroller = new Scroller(sectionContentContainerLayout);
-        //scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
-
-
-        //leftSideContentContainerLayout.add(scroller);
-
+        VerticalScrollLayout leftSideSectionContainerScrollLayout = new VerticalScrollLayout();
+        leftSideContentContainerLayout.add(leftSideSectionContainerScrollLayout);
 
         Icon conceptionKindInfoTitleIcon = new Icon(VaadinIcon.CUBE);
         conceptionKindInfoTitleIcon.setSize("20px");
@@ -110,13 +88,12 @@ public class CoreRealmDataUI extends VerticalLayout {
         verticalLayout1.setWidth(100,Unit.PERCENTAGE);
         verticalLayout1.setHeight(400,Unit.PIXELS);
         verticalLayout1.add(ChartGenerator.generateApexChartsLineChart());
-        sectionContentContainerLayout.add(verticalLayout1);
+        leftSideSectionContainerScrollLayout.add(verticalLayout1);
 
         SectionWallContainer sectionWallContainer1 = new SectionWallContainer(conceptionKindInfoSectionWallTitle,verticalLayout1);
-        sectionContentContainerLayout.add(sectionWallContainer1);
+        leftSideSectionContainerScrollLayout.add(sectionWallContainer1);
 
-        //Details component2 = new Details("[Conception Kind] 概念类型 ",
-                //new Text("Toggle using mouse, Enter and Space keys."));
+
         Details component2 = new Details("[Conception Kind] 概念类型 ",
                 ChartGenerator.generateSOChartTreeChart());
 
@@ -124,9 +101,12 @@ public class CoreRealmDataUI extends VerticalLayout {
         component2.setOpened(true);
         component2.addThemeVariants(DetailsVariant.FILLED);
         component2.addClassNames("shadow-xs");
-        sectionContentContainerLayout.add(component2);
+        leftSideSectionContainerScrollLayout.add(component2);
 
-        sectionContentContainerLayout.add(ChartGenerator.generateChartJSBarChart());
+        VerticalLayout _VerticalLayout = new VerticalLayout();
+        _VerticalLayout.add(ChartGenerator.generateChartJSBarChart());
+
+        leftSideSectionContainerScrollLayout.add(_VerticalLayout);
 
         RippleClickableCard rcard = new RippleClickableCard(
                 onClick -> {/* Handle Card click */},
@@ -137,7 +117,7 @@ public class CoreRealmDataUI extends VerticalLayout {
                 onClick -> {/* Handle Card click */},
                 new TitleLabel("Example Title") // Follow up with more Components ...
         );
-        //leftSideContentContainerLayout.add(ccard);
+        //leftSideSectionContainerScrollLayout.add(ccard);
     }
 
     @Override
