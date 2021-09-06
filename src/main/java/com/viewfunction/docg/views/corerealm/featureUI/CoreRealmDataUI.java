@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
+import ch.carnet.kasparscherrer.VerticalScrollLayout;
 import com.github.appreciated.card.ClickableCard;
 import com.github.appreciated.card.RippleClickableCard;
 import com.github.appreciated.card.label.TitleLabel;
@@ -13,6 +14,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.shared.Registration;
@@ -30,6 +32,7 @@ public class CoreRealmDataUI extends VerticalLayout {
     private Registration listener;
 
     private VerticalLayout leftSideContentContainerLayout;
+    private VerticalLayout sectionContentContainerLayout;
 
     public CoreRealmDataUI(){
 
@@ -66,6 +69,17 @@ public class CoreRealmDataUI extends VerticalLayout {
         leftSideContentContainerLayout.addClassNames("border-r","border-contrast-20");
         contentContainerLayout.add(leftSideContentContainerLayout);
 
+/*
+        Scroller scroller = new Scroller();
+        scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        scroller.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding", "var(--lumo-space-m)");
+        contentContainerLayout.add(scroller);
+
+        scroller.setContent(leftSideContentContainerLayout);
+*/
+
         HorizontalLayout coreRealmInfoContainerLayout = new HorizontalLayout();
         coreRealmInfoContainerLayout.setWidth(100,Unit.PERCENTAGE);
 
@@ -73,6 +87,19 @@ public class CoreRealmDataUI extends VerticalLayout {
         //leftSideContentContainerLayout.add(FontAwesome.Solid.ADDRESS_CARD.create());
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"数据概览信息",null);
         leftSideContentContainerLayout.add(sectionActionBar);
+
+        sectionContentContainerLayout = new VerticalLayout();
+
+        sectionContentContainerLayout.setHeight(600,Unit.PIXELS);
+        sectionContentContainerLayout.setWidth(380,Unit.PIXELS);
+        leftSideContentContainerLayout.add(sectionContentContainerLayout);
+
+        //Scroller scroller = new Scroller(sectionContentContainerLayout);
+        //scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+
+
+        //leftSideContentContainerLayout.add(scroller);
+
 
         Icon conceptionKindInfoTitleIcon = new Icon(VaadinIcon.CUBE);
         conceptionKindInfoTitleIcon.setSize("20px");
@@ -83,10 +110,10 @@ public class CoreRealmDataUI extends VerticalLayout {
         verticalLayout1.setWidth(100,Unit.PERCENTAGE);
         verticalLayout1.setHeight(400,Unit.PIXELS);
         verticalLayout1.add(ChartGenerator.generateApexChartsLineChart());
-        leftSideContentContainerLayout.add(verticalLayout1);
+        sectionContentContainerLayout.add(verticalLayout1);
 
         SectionWallContainer sectionWallContainer1 = new SectionWallContainer(conceptionKindInfoSectionWallTitle,verticalLayout1);
-        leftSideContentContainerLayout.add(sectionWallContainer1);
+        sectionContentContainerLayout.add(sectionWallContainer1);
 
         //Details component2 = new Details("[Conception Kind] 概念类型 ",
                 //new Text("Toggle using mouse, Enter and Space keys."));
@@ -97,8 +124,9 @@ public class CoreRealmDataUI extends VerticalLayout {
         component2.setOpened(true);
         component2.addThemeVariants(DetailsVariant.FILLED);
         component2.addClassNames("shadow-xs");
-        leftSideContentContainerLayout.add(component2);
+        sectionContentContainerLayout.add(component2);
 
+        sectionContentContainerLayout.add(ChartGenerator.generateChartJSBarChart());
 
         RippleClickableCard rcard = new RippleClickableCard(
                 onClick -> {/* Handle Card click */},
@@ -109,8 +137,7 @@ public class CoreRealmDataUI extends VerticalLayout {
                 onClick -> {/* Handle Card click */},
                 new TitleLabel("Example Title") // Follow up with more Components ...
         );
-        leftSideContentContainerLayout.add(ChartGenerator.generateChartJSBarChart());
-        leftSideContentContainerLayout.add(ccard);
+        //leftSideContentContainerLayout.add(ccard);
     }
 
     @Override
@@ -118,13 +145,16 @@ public class CoreRealmDataUI extends VerticalLayout {
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            this.leftSideContentContainerLayout.setHeight(event.getHeight()-180,Unit.PIXELS);
+            this.leftSideContentContainerLayout.setHeight(event.getHeight()-185,Unit.PIXELS);
+            //this.sectionContentContainerLayout.setHeight(event.getHeight()-200,Unit.PIXELS);
+
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserWidth = receiver.getBodyClientWidth();
             int browserHeight = receiver.getBodyClientHeight();
-            this.leftSideContentContainerLayout.setHeight(browserHeight-180,Unit.PIXELS);
+            this.leftSideContentContainerLayout.setHeight(browserHeight-185,Unit.PIXELS);
+            //this.sectionContentContainerLayout.setHeight(browserHeight-200,Unit.PIXELS);
         }));
     }
 
