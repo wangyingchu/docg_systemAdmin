@@ -74,25 +74,29 @@ public class CoreRealmDataUI extends VerticalLayout {
         leftSideContentContainerLayout.add(leftSideSectionContainerScrollLayout);
 
         Icon conceptionKindInfoTitleIcon = new Icon(VaadinIcon.CUBE);
-        conceptionKindInfoTitleIcon.setSize("20px");
+        conceptionKindInfoTitleIcon.setSize("18px");
         Label conceptionKindInfoTitleLabel = new Label("ConceptionKind-概念类型");
         SectionWallTitle conceptionKindInfoSectionWallTitle = new SectionWallTitle(conceptionKindInfoTitleIcon,conceptionKindInfoTitleLabel);
         VerticalLayout verticalLayout1 = new VerticalLayout();
         verticalLayout1.setWidth(100,Unit.PERCENTAGE);
         verticalLayout1.setHeight(400,Unit.PIXELS);
         verticalLayout1.add(ChartGenerator.generateApexChartsLineChart());
-        SectionWallContainer sectionWallContainer1 = new SectionWallContainer(conceptionKindInfoSectionWallTitle,verticalLayout1);
-        leftSideSectionContainerScrollLayout.add(sectionWallContainer1);
+        SectionWallContainer conceptionKindInfoSectionWallContainer = new SectionWallContainer(conceptionKindInfoSectionWallTitle,verticalLayout1);
+        leftSideSectionContainerScrollLayout.add(conceptionKindInfoSectionWallContainer);
 
         Icon relationKindInfoTitleIcon = new Icon(VaadinIcon.CONNECT_O);
-        relationKindInfoTitleIcon.setSize("20px");
+        relationKindInfoTitleIcon.setSize("18px");
         Label relationKindInfoTitleLabel = new Label("RelationKind-关系类型");
         SectionWallTitle relationKindInfoSectionWallTitle = new SectionWallTitle(relationKindInfoTitleIcon,relationKindInfoTitleLabel);
-        SectionWallContainer sectionWallContainer2 = new SectionWallContainer(relationKindInfoSectionWallTitle,ChartGenerator.generateSOChartTreeChart());
-        leftSideSectionContainerScrollLayout.add(sectionWallContainer2);
+        SectionWallContainer relationKindInfoSectionWallContainer = new SectionWallContainer(relationKindInfoSectionWallTitle,ChartGenerator.generateSOChartTreeChart());
+        leftSideSectionContainerScrollLayout.add(relationKindInfoSectionWallContainer);
 
-
-
+        Icon classificationInfoTitleIcon = new Icon(VaadinIcon.TAGS);
+        classificationInfoTitleIcon.setSize("18px");
+        Label classificationInfoTitleLabel = new Label("Classification-分类");
+        SectionWallTitle classificationInfoSectionWallTitle = new SectionWallTitle(classificationInfoTitleIcon,classificationInfoTitleLabel);
+        SectionWallContainer classificationInSectionWallContainer3 = new SectionWallContainer(classificationInfoSectionWallTitle,ChartGenerator.generateSOChartTreeChart());
+        leftSideSectionContainerScrollLayout.add(classificationInSectionWallContainer3);
 
         VerticalLayout _VerticalLayout = new VerticalLayout();
         _VerticalLayout.add(ChartGenerator.generateChartJSBarChart());
