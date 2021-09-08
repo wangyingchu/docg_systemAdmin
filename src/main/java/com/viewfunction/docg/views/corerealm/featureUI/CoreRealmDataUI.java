@@ -84,13 +84,14 @@ public class CoreRealmDataUI extends VerticalLayout {
         SectionWallContainer sectionWallContainer1 = new SectionWallContainer(conceptionKindInfoSectionWallTitle,verticalLayout1);
         leftSideSectionContainerScrollLayout.add(sectionWallContainer1);
 
-
         Icon relationKindInfoTitleIcon = new Icon(VaadinIcon.CONNECT_O);
         relationKindInfoTitleIcon.setSize("20px");
         Label relationKindInfoTitleLabel = new Label("RelationKind-关系类型");
         SectionWallTitle relationKindInfoSectionWallTitle = new SectionWallTitle(relationKindInfoTitleIcon,relationKindInfoTitleLabel);
         SectionWallContainer sectionWallContainer2 = new SectionWallContainer(relationKindInfoSectionWallTitle,ChartGenerator.generateSOChartTreeChart());
         leftSideSectionContainerScrollLayout.add(sectionWallContainer2);
+
+
 
 
         VerticalLayout _VerticalLayout = new VerticalLayout();
