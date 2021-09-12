@@ -134,11 +134,11 @@ public class ChartGenerator {
         // Creating a chart display area
         SOChart soChart = new SOChart();
         //soChart.setSize("800px", "500px");
-        soChart.setWidth(100, Unit.PERCENTAGE);
-        soChart.setHeight(500,Unit.PIXELS);
-// Tree chart
-// (By default it assumes circular shape. Otherwise, we can set orientation)
-// All values are randomly generated
+        soChart.setWidth(330, Unit.PIXELS);
+        soChart.setHeight(400,Unit.PIXELS);
+        // Tree chart
+        // (By default it assumes circular shape. Otherwise, we can set orientation)
+        // All values are randomly generated
         TreeChart tc = new TreeChart();
         TreeData td = new TreeData("Root", 1000);
         tc.setTreeData(td);
@@ -155,7 +155,7 @@ public class ChartGenerator {
             td1.add(new TreeData("Node " + i, r.nextInt(500)));
         }
 
-// Add to the chart display area with a simple title
+        // Add to the chart display area with a simple title
         soChart.add(tc, new Title("A Circular Tree Chart"));
 
         return soChart;

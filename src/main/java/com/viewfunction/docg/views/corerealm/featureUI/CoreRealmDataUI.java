@@ -14,11 +14,9 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.element.commonComponent.SectionWallContainer;
 import com.viewfunction.docg.element.commonComponent.SectionWallTitle;
-import com.viewfunction.docg.element.commonComponent.chart.ChartGenerator;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
-import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.ConceptionKindInfoWidget;
-import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.SystemRuntimeInfoWidget;
+import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +85,8 @@ public class CoreRealmDataUI extends VerticalLayout {
         relationKindInfoTitleIcon.setSize("18px");
         Label relationKindInfoTitleLabel = new Label("RelationKind-关系类型");
         SectionWallTitle relationKindInfoSectionWallTitle = new SectionWallTitle(relationKindInfoTitleIcon,relationKindInfoTitleLabel);
-        SectionWallContainer relationKindInfoSectionWallContainer = new SectionWallContainer(relationKindInfoSectionWallTitle,ChartGenerator.generateSOChartTreeChart());
+        RelationKindInfoWidget relationKindInfoWidget = new RelationKindInfoWidget();
+        SectionWallContainer relationKindInfoSectionWallContainer = new SectionWallContainer(relationKindInfoSectionWallTitle,relationKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(relationKindInfoSectionWallContainer);
         relationKindInfoSectionWallContainer.setOpened(false);
 
@@ -95,7 +94,8 @@ public class CoreRealmDataUI extends VerticalLayout {
         classificationInfoTitleIcon.setSize("18px");
         Label classificationInfoTitleLabel = new Label("Classification-分类");
         SectionWallTitle classificationInfoSectionWallTitle = new SectionWallTitle(classificationInfoTitleIcon,classificationInfoTitleLabel);
-        SectionWallContainer classificationInSectionWallContainer = new SectionWallContainer(classificationInfoSectionWallTitle,ChartGenerator.generateSOChartTreeChart());
+        ClassificationInfoWidget classificationInfoWidget = new ClassificationInfoWidget();
+        SectionWallContainer classificationInSectionWallContainer = new SectionWallContainer(classificationInfoSectionWallTitle,classificationInfoWidget);
         leftSideSectionContainerScrollLayout.add(classificationInSectionWallContainer);
         classificationInSectionWallContainer.setOpened(false);
 
@@ -103,7 +103,8 @@ public class CoreRealmDataUI extends VerticalLayout {
         geospatialRegionInfoTitleIcon.setSize("18px");
         Label geospatialRegionInfoTitleLabel = new Label("GeospatialRegion-地理空间区域");
         SectionWallTitle geospatialRegionInfoSectionWallTitle = new SectionWallTitle(geospatialRegionInfoTitleIcon,geospatialRegionInfoTitleLabel);
-        SectionWallContainer geospatialRegionInSectionWallContainer = new SectionWallContainer(geospatialRegionInfoSectionWallTitle,ChartGenerator.generateSOChartTreeChart());
+        GeospatialRegionInfoWidget geospatialRegionInfoWidget = new GeospatialRegionInfoWidget();
+        SectionWallContainer geospatialRegionInSectionWallContainer = new SectionWallContainer(geospatialRegionInfoSectionWallTitle,geospatialRegionInfoWidget);
         leftSideSectionContainerScrollLayout.add(geospatialRegionInSectionWallContainer);
         geospatialRegionInSectionWallContainer.setOpened(false);
 
@@ -111,7 +112,8 @@ public class CoreRealmDataUI extends VerticalLayout {
         timeFlowInfoTitleIcon.setSize("18px");
         Label timeFlowInfoTitleLabel = new Label("TimeFlow-时间流");
         SectionWallTitle timeFlowInfoSectionWallTitle = new SectionWallTitle(timeFlowInfoTitleIcon,timeFlowInfoTitleLabel);
-        SectionWallContainer timeFlowInSectionWallContainer = new SectionWallContainer(timeFlowInfoSectionWallTitle,ChartGenerator.generateSOChartTreeChart());
+        TimeFlowInfoWidget timeFlowInfoWidget = new TimeFlowInfoWidget();
+        SectionWallContainer timeFlowInSectionWallContainer = new SectionWallContainer(timeFlowInfoSectionWallTitle,timeFlowInfoWidget);
         leftSideSectionContainerScrollLayout.add(timeFlowInSectionWallContainer);
         timeFlowInSectionWallContainer.setOpened(false);
 
@@ -119,7 +121,8 @@ public class CoreRealmDataUI extends VerticalLayout {
         attributesViewKindInfoTitleIcon.setSize("18px");
         Label attributesViewKindInfoTitleLabel = new Label("AttributesViewKind-属性视图类型");
         SectionWallTitle attributesViewKindInfoSectionWallTitle = new SectionWallTitle(attributesViewKindInfoTitleIcon,attributesViewKindInfoTitleLabel);
-        SectionWallContainer attributesViewKindInSectionWallContainer = new SectionWallContainer(attributesViewKindInfoSectionWallTitle,ChartGenerator.generateSOChartTreeChart());
+        AttributesViewKindInfoWidget attributesViewKindInfoWidget = new AttributesViewKindInfoWidget();
+        SectionWallContainer attributesViewKindInSectionWallContainer = new SectionWallContainer(attributesViewKindInfoSectionWallTitle,attributesViewKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(attributesViewKindInSectionWallContainer);
         attributesViewKindInSectionWallContainer.setOpened(false);
 
@@ -127,7 +130,8 @@ public class CoreRealmDataUI extends VerticalLayout {
         attributesKindInfoTitleIcon.setSize("18px");
         Label attributesKindInfoTitleLabel = new Label("AttributesKind-属性类型");
         SectionWallTitle attributesKindInfoSectionWallTitle = new SectionWallTitle(attributesKindInfoTitleIcon,attributesKindInfoTitleLabel);
-        SectionWallContainer attributesKindInSectionWallContainer = new SectionWallContainer(attributesKindInfoSectionWallTitle,ChartGenerator.generateSOChartTreeChart());
+        AttributesKindInfoWidget attributesKindInfoWidget = new AttributesKindInfoWidget();
+        SectionWallContainer attributesKindInSectionWallContainer = new SectionWallContainer(attributesKindInfoSectionWallTitle,attributesKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(attributesKindInSectionWallContainer);
         attributesKindInSectionWallContainer.setOpened(false);
 
