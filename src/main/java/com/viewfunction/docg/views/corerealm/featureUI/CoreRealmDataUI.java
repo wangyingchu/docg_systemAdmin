@@ -10,13 +10,15 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.element.commonComponent.SectionWallContainer;
 import com.viewfunction.docg.element.commonComponent.SectionWallTitle;
 import com.viewfunction.docg.element.commonComponent.chart.ChartGenerator;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.ConceptionKindInfoWidget;
+import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.SystemRuntimeInfoWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,6 @@ public class CoreRealmDataUI extends VerticalLayout {
     private Registration listener;
 
     private VerticalLayout leftSideContentContainerLayout;
-    private VerticalLayout sectionContentContainerLayout;
 
     public CoreRealmDataUI(){
 
@@ -77,11 +78,8 @@ public class CoreRealmDataUI extends VerticalLayout {
         conceptionKindInfoTitleIcon.setSize("18px");
         Label conceptionKindInfoTitleLabel = new Label("ConceptionKind-概念类型");
         SectionWallTitle conceptionKindInfoSectionWallTitle = new SectionWallTitle(conceptionKindInfoTitleIcon,conceptionKindInfoTitleLabel);
-        VerticalLayout verticalLayout1 = new VerticalLayout();
-        verticalLayout1.setWidth(100,Unit.PERCENTAGE);
-        verticalLayout1.setHeight(400,Unit.PIXELS);
-        verticalLayout1.add(ChartGenerator.generateApexChartsLineChart());
-        SectionWallContainer conceptionKindInfoSectionWallContainer = new SectionWallContainer(conceptionKindInfoSectionWallTitle,verticalLayout1);
+        ConceptionKindInfoWidget conceptionKindInfoWidget = new ConceptionKindInfoWidget();
+        SectionWallContainer conceptionKindInfoSectionWallContainer = new SectionWallContainer(conceptionKindInfoSectionWallTitle,conceptionKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(conceptionKindInfoSectionWallContainer);
         conceptionKindInfoSectionWallContainer.setOpened(false);
 
@@ -133,9 +131,8 @@ public class CoreRealmDataUI extends VerticalLayout {
         leftSideSectionContainerScrollLayout.add(attributesKindInSectionWallContainer);
         attributesKindInSectionWallContainer.setOpened(false);
 
-        VerticalLayout _VerticalLayout = new VerticalLayout();
-        _VerticalLayout.add(ChartGenerator.generateChartJSBarChart());
-        leftSideSectionContainerScrollLayout.add(_VerticalLayout);
+        SystemRuntimeInfoWidget systemRuntimeInfoWidget = new SystemRuntimeInfoWidget();
+        leftSideSectionContainerScrollLayout.add(systemRuntimeInfoWidget);
     }
 
     @Override
@@ -144,15 +141,12 @@ public class CoreRealmDataUI extends VerticalLayout {
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             this.leftSideContentContainerLayout.setHeight(event.getHeight()-185,Unit.PIXELS);
-            //this.sectionContentContainerLayout.setHeight(event.getHeight()-200,Unit.PIXELS);
-
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserWidth = receiver.getBodyClientWidth();
             int browserHeight = receiver.getBodyClientHeight();
             this.leftSideContentContainerLayout.setHeight(browserHeight-185,Unit.PIXELS);
-            //this.sectionContentContainerLayout.setHeight(browserHeight-200,Unit.PIXELS);
         }));
     }
 
