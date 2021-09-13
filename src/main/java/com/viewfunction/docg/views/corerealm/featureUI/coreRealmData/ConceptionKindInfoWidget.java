@@ -25,7 +25,7 @@ public class ConceptionKindInfoWidget extends HorizontalLayout {
         conceptionKindNumberText.addClassNames("text-xs","font-semibold","text-secondary");
         leftComponentContainer.add(conceptionKindNumberText);
         Label conceptionKindNumberValue = new Label("500");
-        conceptionKindNumberValue.addClassNames("text-xl","text-primary","font-extrabold","border-b","border-contrast-30");
+        conceptionKindNumberValue.addClassNames("text-xl","text-primary","font-extrabold","border-b","border-contrast-20");
         leftComponentContainer.add(conceptionKindNumberValue);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
@@ -37,7 +37,7 @@ public class ConceptionKindInfoWidget extends HorizontalLayout {
         conceptionEntityNumberText.addClassNames("text-xs","font-semibold","text-secondary");
         leftComponentContainer.add(conceptionEntityNumberText);
         Label conceptionEntityNumberValue = new Label("1,000,000,000");
-        conceptionEntityNumberValue.addClassNames("text-xl","text-primary","font-extrabold","border-b","border-contrast-30");
+        conceptionEntityNumberValue.addClassNames("text-xl","text-primary","font-extrabold","border-b","border-contrast-20");
         leftComponentContainer.add(conceptionEntityNumberValue);
 
         VerticalLayout rightComponentContainer = new VerticalLayout();
