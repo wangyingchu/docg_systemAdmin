@@ -20,7 +20,6 @@ public class ConceptionKindInfoWidget extends HorizontalLayout {
         leftComponentContainer.setMargin(false);
         add(leftComponentContainer);
 
-
         Label conceptionKindNumberText = new Label("概念类型数量:");
         conceptionKindNumberText.addClassNames("text-xs","font-semibold","text-secondary");
         leftComponentContainer.add(conceptionKindNumberText);
@@ -31,7 +30,6 @@ public class ConceptionKindInfoWidget extends HorizontalLayout {
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout);
-
 
         Label conceptionEntityNumberText = new Label("概念实体数量:");
         conceptionEntityNumberText.addClassNames("text-xs","font-semibold","text-secondary");
