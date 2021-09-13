@@ -8,6 +8,6 @@ public class RelationKindInfoWidget extends VerticalLayout {
 
     public RelationKindInfoWidget(){
         this.setWidth(100, Unit.PERCENTAGE);
-        add(ChartGenerator.generateSOChartTreeChart());
+        this.add(ChartGenerator.generateApexChartsLineChart());
     }
 }
