@@ -36,8 +36,11 @@ public class ConceptionKindInfoWidget extends HorizontalLayout {
         this.setFlexGrow(1,rightComponentContainer);
 
         ApexCharts apexCharts = new ConceptionEntityCountChart()
-                .withColors("#0288d1", "#b3e5fc", "#03a9f4", "#f44336", "#ffc107", "#212121", "#757575", "#BDBDBD", "#d32f2f", "#4caf50").build();
+                //.withColors("#0288d1", "#b3e5fc", "#03a9f4", "#f44336", "#ffc107", "#212121", "#757575", "#BDBDBD", "#d32f2f", "#4caf50").build();
+                .withColors("#168eea", "#ee4f4f", "#03a9f4", "#76b852", "#323b43", "#59626a", "#ced7df", "#ffc107", "#d32f2f", "#00d1b2").build();
         //https://www.materialpalette.com/
+        //https://materialui.co/colors/
+        //http://brandcolors.net/
         apexCharts.setWidth("330");
         rightComponentContainer.add(apexCharts);
         rightComponentContainer.setHorizontalComponentAlignment(Alignment.START,apexCharts);
