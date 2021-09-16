@@ -8,6 +8,6 @@ public class ClassificationInfoWidget extends VerticalLayout {
 
     public ClassificationInfoWidget(){
         this.setWidth(100, Unit.PERCENTAGE);
-        add(ChartGenerator.generateSOChartTreeChart());
+        add(ChartGenerator.generateApexChartsLineChart());
     }
 }

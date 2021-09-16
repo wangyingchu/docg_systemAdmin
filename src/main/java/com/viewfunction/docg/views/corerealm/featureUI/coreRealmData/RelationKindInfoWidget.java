@@ -1,13 +1,55 @@
 package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
+import com.github.appreciated.apexcharts.ApexCharts;
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.viewfunction.docg.element.commonComponent.chart.ChartGenerator;
+import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 
-public class RelationKindInfoWidget extends VerticalLayout {
+public class RelationKindInfoWidget extends HorizontalLayout {
 
     public RelationKindInfoWidget(){
-        this.setWidth(100, Unit.PERCENTAGE);
-        this.add(ChartGenerator.generateApexChartsLineChart());
+        this.setSpacing(false);
+        this.setMargin(false);
+        this.addClassNames("bg-base");
+
+        VerticalLayout leftComponentContainer = new VerticalLayout();
+        leftComponentContainer.setWidth(250,Unit.PIXELS);
+        leftComponentContainer.setSpacing(false);
+        leftComponentContainer.setMargin(false);
+        add(leftComponentContainer);
+
+        new PrimaryKeyValueDisplayItem(leftComponentContainer,"关系类型数量:","120");
+
+        HorizontalLayout spaceDivLayout = new HorizontalLayout();
+        spaceDivLayout.setHeight(15,Unit.PIXELS);
+        leftComponentContainer.add(spaceDivLayout);
+
+        new PrimaryKeyValueDisplayItem(leftComponentContainer,"关系实体数量:","50,060,034");
+
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setHeight(25,Unit.PIXELS);
+        leftComponentContainer.add(spaceDivLayout2);
+
+        Label messageText = new Label("Top 10 Relation Types with more entities ->");
+        leftComponentContainer.add(messageText);
+        messageText.addClassNames("text-xs","text-tertiary");
+
+        VerticalLayout rightComponentContainer = new VerticalLayout();
+        rightComponentContainer.setSpacing(false);
+        rightComponentContainer.setMargin(false);
+        add(rightComponentContainer);
+        this.setFlexGrow(1,rightComponentContainer);
+
+        ApexCharts apexCharts = new RelationEntityCountChart()
+                //.withColors("#0288d1", "#b3e5fc", "#03a9f4", "#f44336", "#ffc107", "#212121", "#757575", "#BDBDBD", "#d32f2f", "#4caf50").build();
+                .withColors("#168eea", "#ee4f4f", "#03a9f4", "#76b852", "#323b43", "#59626a", "#0288d1", "#ffc107", "#d32f2f", "#00d1b2","#ced7df").build();
+        //https://www.materialpalette.com/
+        //https://materialui.co/colors/
+        //http://brandcolors.net/
+        apexCharts.setWidth("330");
+        rightComponentContainer.add(apexCharts);
+        rightComponentContainer.setHorizontalComponentAlignment(Alignment.START,apexCharts);
     }
 }
