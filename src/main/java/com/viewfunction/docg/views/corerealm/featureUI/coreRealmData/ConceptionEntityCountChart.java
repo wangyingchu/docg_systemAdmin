@@ -17,11 +17,11 @@ public class ConceptionEntityCountChart extends ApexChartsBuilder {
         stroke.setWidth(0.5);
         withChart(ChartBuilder.get().withType(Type.pie).build())
                 .withStroke(stroke)
-                .withLabels("Team A", "Team B", "Team C", "Team D", "Team E", "Team F","Team G", "Team H", "Team I", "Team J")
+                .withLabels("Team A", "Team B", "Team C", "Team D", "Team E", "Team F","Team G", "Team H", "Team I", "Team J","OTHER")
                 .withLegend(LegendBuilder.get()
                         .withPosition(Position.bottom)
                         .build())
-                .withSeries(44.0, 55.0, 13.0, 43.0, 22.0,16.7,22.1,33.0,56.9,12.5)
+                .withSeries(44.0, 55.0, 13.0, 43.0, 22.0,16.7,22.1,33.0,56.9,12.5,17.0)
                 .withResponsive(ResponsiveBuilder.get()
                         .withBreakpoint(480.0)
                         .withOptions(OptionsBuilder.get()
