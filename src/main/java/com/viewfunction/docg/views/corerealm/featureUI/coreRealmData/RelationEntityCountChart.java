@@ -10,6 +10,7 @@ import com.github.appreciated.apexcharts.helper.Series;
 public class RelationEntityCountChart extends ApexChartsBuilder {
 
     public RelationEntityCountChart(){
+
         Stroke stroke = new Stroke();
         stroke.setWidth(0.5);
         withChart(ChartBuilder.get()

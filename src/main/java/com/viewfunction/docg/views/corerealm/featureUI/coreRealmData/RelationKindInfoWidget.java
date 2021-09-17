@@ -42,12 +42,7 @@ public class RelationKindInfoWidget extends HorizontalLayout {
         add(rightComponentContainer);
         this.setFlexGrow(1,rightComponentContainer);
 
-        ApexCharts apexCharts = new RelationEntityCountChart()
-                //.withColors("#0288d1", "#b3e5fc", "#03a9f4", "#f44336", "#ffc107", "#212121", "#757575", "#BDBDBD", "#d32f2f", "#4caf50").build();
-                .withColors("#168eea", "#ee4f4f", "#03a9f4", "#76b852", "#323b43", "#59626a", "#0288d1", "#ffc107", "#d32f2f", "#00d1b2","#ced7df").build();
-        //https://www.materialpalette.com/
-        //https://materialui.co/colors/
-        //http://brandcolors.net/
+        ApexCharts apexCharts = new RelationEntityCountChart().build();
         apexCharts.setWidth("330");
         rightComponentContainer.add(apexCharts);
         rightComponentContainer.setHorizontalComponentAlignment(Alignment.START,apexCharts);
