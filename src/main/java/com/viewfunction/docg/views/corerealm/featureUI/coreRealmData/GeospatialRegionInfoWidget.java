@@ -8,7 +8,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
 
     public GeospatialRegionInfoWidget(){
         this.setWidth(100, Unit.PERCENTAGE);
-        add(ChartGenerator.generateSOChartTreeChart());
+        add(ChartGenerator.generateApexChartsLineChart());
     }
 
 }
