@@ -7,19 +7,14 @@ import com.storedobject.chart.TreeData;
 
 import java.util.Random;
 
-public class ClassificationsTreeChart {
+public class ClassificationsTreeChart extends SOChart{
 
     public ClassificationsTreeChart(){
 
-
-
-        // Creating a chart display area
-        SOChart soChart = new SOChart();
-        soChart.setSize("800px", "500px");
-
-// Tree chart
-// (By default it assumes circular shape. Otherwise, we can set orientation)
-// All values are randomly generated
+        this.setSize("360px", "400px");
+        // Tree chart
+        // (By default it assumes circular shape. Otherwise, we can set orientation)
+        // All values are randomly generated
         TreeChart tc = new TreeChart();
         TreeData td = new TreeData("Root", 1000);
         tc.setTreeData(td);
@@ -36,10 +31,9 @@ public class ClassificationsTreeChart {
             td1.add(new TreeData("Node " + i, r.nextInt(500)));
         }
 
-// Add to the chart display area with a simple title
-        soChart.add(tc, new Title("A Circular Tree Chart"));
-
-// Finally, add it to my layout
+        // Add to the chart display area with a simple title
+        //add(tc, new Title("A Circular Tree Chart"));
+        add(tc);
 
 
 

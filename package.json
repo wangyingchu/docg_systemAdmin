@@ -54,7 +54,8 @@
     "lit-element": "2.5.1",
     "lit-html": "1.4.1",
     "lumo-css-framework": "^4.0.10",
-    "onecolor": "3.1.0"
+    "onecolor": "3.1.0",
+    "vis-network": "9.0.5"
   },
   "devDependencies": {
     "chokidar": "^3.5.0",
@@ -133,7 +134,8 @@
       "lit-element": "2.5.1",
       "lit-html": "1.4.1",
       "lumo-css-framework": "^4.0.10",
-      "onecolor": "3.1.0"
+      "onecolor": "3.1.0",
+      "vis-network": "9.0.5"
     },
     "devDependencies": {
       "chokidar": "^3.5.0",
@@ -154,6 +156,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "be5c149d20886c4b7413ccd8083f3ad768ab525f37259bbcb4518600b7a5d56d"
+    "hash": "47a73bee28bc62247fc16459a5030e253b8f38ae1b2f44b8e40edc0866b3883c"
   }
 }
