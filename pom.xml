@@ -241,6 +241,13 @@
             <version>1.0.2</version>
         </dependency>
 
+        <!-- https://vaadin.com/directory/component/veaktor -->
+        <dependency>
+            <groupId>org.vaadin.addons.leif</groupId>
+            <artifactId>veaktor</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
