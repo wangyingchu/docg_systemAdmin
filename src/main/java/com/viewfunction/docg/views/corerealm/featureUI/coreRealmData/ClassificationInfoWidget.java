@@ -26,37 +26,37 @@ public class ClassificationInfoWidget extends HorizontalLayout {
         spaceDivLayout.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout);
 
-        new SecondaryKeyValueDisplayItem(leftComponentContainer,"相关概念类型数量:","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(leftComponentContainer,"相关概念类型:","1,000,000,000");
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout2);
 
-        new SecondaryKeyValueDisplayItem(leftComponentContainer,"相关关系类型数量:","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(leftComponentContainer,"相关关系类型:","1,000,000,000");
 
         HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
         spaceDivLayout3.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout3);
 
-        new SecondaryKeyValueDisplayItem(leftComponentContainer,"相关概念实体数量:","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(leftComponentContainer,"相关概念实体:","1,000,000,000");
 
         HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
         spaceDivLayout4.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout4);
 
-        new SecondaryKeyValueDisplayItem(leftComponentContainer,"相关属性视图类型数量:","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(leftComponentContainer,"相关属性视图类型:","1,000,000,000");
 
         HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
         spaceDivLayout5.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout5);
 
-        new SecondaryKeyValueDisplayItem(leftComponentContainer,"相关属性类型数量:","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(leftComponentContainer,"相关属性类型:","1,000,000,000");
 
         HorizontalLayout spaceDivLayout6 = new HorizontalLayout();
         spaceDivLayout6.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout6);
 
-        Label messageText = new Label("Top 10 Conception Types with more entities ->");
+        Label messageText = new Label("Top 3 Levels Classifications ->");
         leftComponentContainer.add(messageText);
         messageText.addClassNames("text-xs","text-tertiary");
 

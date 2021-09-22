@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
-import com.storedobject.chart.SOChart;
-import com.storedobject.chart.Title;
-import com.storedobject.chart.TreeChart;
-import com.storedobject.chart.TreeData;
+import com.storedobject.chart.*;
 
 import java.util.Random;
 
@@ -30,6 +27,7 @@ public class ClassificationsTreeChart extends SOChart{
         for(int i = 30; i < 34; i++) {
             td1.add(new TreeData("Node " + i, r.nextInt(500)));
         }
+        tc.setName("Classification Root");
 
         // Add to the chart display area with a simple title
         //add(tc, new Title("A Circular Tree Chart"));
