@@ -248,6 +248,13 @@
             <version>1.0.1</version>
         </dependency>
 
+        <!-- https://vaadin.com/directory/component/pure-timeline-flow -->
+        <dependency>
+            <groupId>de.nils_bauer</groupId>
+            <artifactId>pure-timeline-flow</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

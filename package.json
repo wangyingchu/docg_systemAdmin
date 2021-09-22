@@ -55,6 +55,7 @@
     "lit-html": "1.4.1",
     "lumo-css-framework": "^4.0.10",
     "onecolor": "3.1.0",
+    "pure-timeline": "^1.2.0",
     "vis-network": "9.0.5"
   },
   "devDependencies": {
@@ -135,6 +136,7 @@
       "lit-html": "1.4.1",
       "lumo-css-framework": "^4.0.10",
       "onecolor": "3.1.0",
+      "pure-timeline": "^1.2.0",
       "vis-network": "9.0.5"
     },
     "devDependencies": {
@@ -156,6 +158,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "47a73bee28bc62247fc16459a5030e253b8f38ae1b2f44b8e40edc0866b3883c"
+    "hash": "970933c4e9674a692138bab2c7cee03d3e34dd1be99d963ce05ca737f5938df1"
   }
 }
