@@ -4,14 +4,12 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.accordion.AccordionPanel;
 import com.vaadin.flow.component.details.DetailsVariant;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
-
 
 public class GeospatialRegionInfoWidget extends VerticalLayout {
 
@@ -34,10 +32,8 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         personalInformationLayout.add(horizontalLayout);
 
         HorizontalLayout horizontalLayout2 = new HorizontalLayout();
-
-
         horizontalLayout2.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        new SecondaryKeyValueDisplayItem(horizontalLayout2,new Icon(VaadinIcon.CHEVRON_RIGHT),"GeospatialScaleEvent 数量:","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(horizontalLayout2,new Icon(VaadinIcon.RHOMBUS),"GeospatialScaleEvent 数量:","1,000,000,000");
         personalInformationLayout.add(horizontalLayout2);
 
         HorizontalLayout horizontalLayout3 = new HorizontalLayout();
@@ -75,12 +71,6 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         new SecondaryKeyValueDisplayItem(horizontalLayout9,"VillageEntity 数量:","1,000,000,000");
         personalInformationLayout.add(horizontalLayout9);
 
-
-
-
-
-
-
         AccordionPanel personalInfoPanel1 =accordion.add("DefaultGeospatialRegion", personalInformationLayout);
         personalInfoPanel1.addThemeVariants(DetailsVariant.SMALL,DetailsVariant.REVERSE);
 
@@ -91,10 +81,6 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         personalInfoPanel3.addThemeVariants(DetailsVariant.SMALL,DetailsVariant.REVERSE);
 
         add(accordion);
-
-
-
-
     }
 
 }
