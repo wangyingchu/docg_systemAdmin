@@ -26,6 +26,7 @@ public class SecondaryKeyValueDisplayItem {
         horizontalLayout.setMargin(false);
         if(icon != null){
             icon.setSize("8px");
+            icon.addClassNames("text-secondary");
             horizontalLayout.add(icon);
             HorizontalLayout spaceDivHorizontalLayout = new HorizontalLayout();
             spaceDivHorizontalLayout.setWidth(3, Unit.PIXELS);
@@ -41,6 +42,7 @@ public class SecondaryKeyValueDisplayItem {
         horizontalLayout.setMargin(false);
         if(icon != null){
             icon.setSize("8px");
+            icon.addClassNames("text-secondary");
             horizontalLayout.add(icon);
             HorizontalLayout spaceDivHorizontalLayout = new HorizontalLayout();
             spaceDivHorizontalLayout.setWidth(3, Unit.PIXELS);

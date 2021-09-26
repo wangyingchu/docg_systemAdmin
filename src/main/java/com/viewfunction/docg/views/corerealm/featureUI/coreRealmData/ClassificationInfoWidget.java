@@ -20,7 +20,7 @@ public class ClassificationInfoWidget extends HorizontalLayout {
         leftComponentContainer.setMargin(false);
         add(leftComponentContainer);
 
-        new PrimaryKeyValueDisplayItem(leftComponentContainer, FontAwesome.Solid.CIRCLE.create(),"分类数量:","300");
+        new PrimaryKeyValueDisplayItem(leftComponentContainer, FontAwesome.Solid.TAG.create(),"分类数量:","300");
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setHeight(15,Unit.PIXELS);
