@@ -8,7 +8,7 @@ public class ClassificationsTreeChart extends SOChart{
 
     public ClassificationsTreeChart(){
 
-        this.setSize("360px", "400px");
+        this.setSize("350px", "400px");
         // Tree chart
         // (By default it assumes circular shape. Otherwise, we can set orientation)
         // All values are randomly generated

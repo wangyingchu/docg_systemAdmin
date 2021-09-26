@@ -4,6 +4,8 @@ import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.IronIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class SecondaryKeyValueDisplayItem {
@@ -19,6 +21,7 @@ public class SecondaryKeyValueDisplayItem {
 
     public SecondaryKeyValueDisplayItem(HasComponents containComponent, Icon icon,String keyText, String valueText){
         HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
         horizontalLayout.setSpacing(false);
         horizontalLayout.setMargin(false);
         if(icon != null){
@@ -28,11 +31,29 @@ public class SecondaryKeyValueDisplayItem {
             spaceDivHorizontalLayout.setWidth(3, Unit.PIXELS);
             horizontalLayout.add(spaceDivHorizontalLayout);
         }
+        addDisplayItemContent(containComponent,horizontalLayout,keyText,valueText);
+    }
 
+    public SecondaryKeyValueDisplayItem(HasComponents containComponent, IronIcon icon, String keyText, String valueText){
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
+        horizontalLayout.setSpacing(false);
+        horizontalLayout.setMargin(false);
+        if(icon != null){
+            icon.setSize("8px");
+            horizontalLayout.add(icon);
+            HorizontalLayout spaceDivHorizontalLayout = new HorizontalLayout();
+            spaceDivHorizontalLayout.setWidth(3, Unit.PIXELS);
+            horizontalLayout.add(spaceDivHorizontalLayout);
+        }
+        addDisplayItemContent(containComponent,horizontalLayout,keyText,valueText);
+    }
+
+    private void addDisplayItemContent(HasComponents containComponent,HorizontalLayout keyHorizontalLayout,String keyText, String valueText){
         Label conceptionEntityNumberText = new Label(keyText);
         conceptionEntityNumberText.addClassNames("text-xs","font-medium","text-secondary");
-        horizontalLayout.add(conceptionEntityNumberText);
-        containComponent.add(horizontalLayout);
+        keyHorizontalLayout.add(conceptionEntityNumberText);
+        containComponent.add(keyHorizontalLayout);
         Label conceptionEntityNumberValue = new Label(valueText);
         conceptionEntityNumberValue.addClassNames("text-s","text-primary","font-extrabold","border-b","border-contrast-20");
         containComponent.add(conceptionEntityNumberValue);

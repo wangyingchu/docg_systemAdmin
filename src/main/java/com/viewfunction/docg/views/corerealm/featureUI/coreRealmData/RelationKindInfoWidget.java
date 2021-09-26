@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.github.appreciated.apexcharts.ApexCharts;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.Label;
@@ -20,13 +21,13 @@ public class RelationKindInfoWidget extends HorizontalLayout {
         leftComponentContainer.setMargin(false);
         add(leftComponentContainer);
 
-        new PrimaryKeyValueDisplayItem(leftComponentContainer,"关系类型数量:","120");
+        new PrimaryKeyValueDisplayItem(leftComponentContainer, FontAwesome.Regular.CIRCLE.create(),"关系类型数量:","120");
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout);
 
-        new PrimaryKeyValueDisplayItem(leftComponentContainer,"关系实体数量:","50,060,034");
+        new PrimaryKeyValueDisplayItem(leftComponentContainer,FontAwesome.Solid.CIRCLE.create(),"关系实体数量:","50,060,034");
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setHeight(25,Unit.PIXELS);

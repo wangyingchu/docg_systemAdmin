@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.github.appreciated.apexcharts.ApexCharts;
 
 import com.vaadin.flow.component.Unit;
@@ -22,13 +23,13 @@ public class ConceptionKindInfoWidget extends HorizontalLayout {
         leftComponentContainer.setMargin(false);
         add(leftComponentContainer);
 
-        new PrimaryKeyValueDisplayItem(leftComponentContainer,"概念类型数量:","500");
+        new PrimaryKeyValueDisplayItem(leftComponentContainer,FontAwesome.Regular.CIRCLE.create(),"概念类型数量:","500");
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout);
 
-        new PrimaryKeyValueDisplayItem(leftComponentContainer,"概念实体数量:","1,000,000,000");
+        new PrimaryKeyValueDisplayItem(leftComponentContainer,FontAwesome.Solid.CIRCLE.create(),"概念实体数量:","1,000,000,000");
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setHeight(25,Unit.PIXELS);
