@@ -71,6 +71,8 @@ public class MainLayout extends AppLayout {
         addToNavbar(true, createHeaderContent());
         menu = createMenu();
         addToDrawer(createDrawerContent(menu));
+        //close the left side drawer by default
+        this.setDrawerOpened(false);
     }
 
     private Component createHeaderContent() {
