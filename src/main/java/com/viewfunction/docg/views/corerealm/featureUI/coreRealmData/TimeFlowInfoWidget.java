@@ -7,7 +7,6 @@ import com.viewfunction.docg.element.commonComponent.chart.ChartGenerator;
 public class TimeFlowInfoWidget extends VerticalLayout {
 
     public TimeFlowInfoWidget(){
-        this.setWidth(100, Unit.PERCENTAGE);
-        add(ChartGenerator.generateApexChartsLineChart());
+
     }
 }

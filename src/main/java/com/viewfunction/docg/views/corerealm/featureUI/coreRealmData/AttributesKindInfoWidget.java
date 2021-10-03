@@ -8,6 +8,6 @@ public class AttributesKindInfoWidget extends VerticalLayout {
 
     public AttributesKindInfoWidget(){
         this.setWidth(100, Unit.PERCENTAGE);
-        add(ChartGenerator.generateSOChartTreeChart());
+        add(ChartGenerator.generateApexChartsLineChart());
     }
 }
