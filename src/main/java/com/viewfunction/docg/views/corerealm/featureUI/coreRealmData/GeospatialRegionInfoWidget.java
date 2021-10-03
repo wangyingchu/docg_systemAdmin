@@ -22,18 +22,18 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         Accordion accordion = new Accordion();
         accordion.setWidth(100, Unit.PERCENTAGE);
 
-        VerticalLayout personalInformationLayout = new VerticalLayout();
-        personalInformationLayout.setPadding(false);
+        VerticalLayout geoSpatialInformationLayout = new VerticalLayout();
+        geoSpatialInformationLayout.setPadding(false);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         new PrimaryKeyValueDisplayItem(horizontalLayout,FontAwesome.Solid.MAP.create(),"GeospatialScaleEntity 数量:","1,000,000,000");
-        personalInformationLayout.add(horizontalLayout);
+        geoSpatialInformationLayout.add(horizontalLayout);
 
         HorizontalLayout horizontalLayout2 = new HorizontalLayout();
         horizontalLayout2.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         new PrimaryKeyValueDisplayItem(horizontalLayout2,FontAwesome.Solid.MAP_MARKER_ALT.create(),"GeospatialScaleEvent 数量:","1,000,000,000");
-        personalInformationLayout.add(horizontalLayout2);
+        geoSpatialInformationLayout.add(horizontalLayout2);
 
         HorizontalLayout horizontalLayout3 = new HorizontalLayout();
         horizontalLayout3.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -42,7 +42,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         horizontalLayout3.add(label3);
         new SecondaryKeyValueDisplayItem(horizontalLayout3,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
         new SecondaryKeyValueDisplayItem(horizontalLayout3,FontAwesome.Solid.MAP_MARKER_ALT.create(),"","1,000,000,000");
-        personalInformationLayout.add(horizontalLayout3);
+        geoSpatialInformationLayout.add(horizontalLayout3);
 
         HorizontalLayout horizontalLayout4 = new HorizontalLayout();
         horizontalLayout4.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -51,7 +51,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         horizontalLayout4.add(label4);
         new SecondaryKeyValueDisplayItem(horizontalLayout4,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
         new SecondaryKeyValueDisplayItem(horizontalLayout4,FontAwesome.Solid.MAP_MARKER_ALT.create(),"","1,000,000,000");
-        personalInformationLayout.add(horizontalLayout4);
+        geoSpatialInformationLayout.add(horizontalLayout4);
 
         HorizontalLayout horizontalLayout5 = new HorizontalLayout();
         horizontalLayout5.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -60,7 +60,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         horizontalLayout5.add(label5);
         new SecondaryKeyValueDisplayItem(horizontalLayout5,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
         new SecondaryKeyValueDisplayItem(horizontalLayout5,FontAwesome.Solid.MAP_MARKER_ALT.create(),"","1,000,000,000");
-        personalInformationLayout.add(horizontalLayout5);
+        geoSpatialInformationLayout.add(horizontalLayout5);
 
         HorizontalLayout horizontalLayout6 = new HorizontalLayout();
         horizontalLayout6.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -69,7 +69,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         horizontalLayout6.add(label6);
         new SecondaryKeyValueDisplayItem(horizontalLayout6,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
         new SecondaryKeyValueDisplayItem(horizontalLayout6,FontAwesome.Solid.MAP_MARKER_ALT.create(),"","1,000,000,000");
-        personalInformationLayout.add(horizontalLayout6);
+        geoSpatialInformationLayout.add(horizontalLayout6);
 
         HorizontalLayout horizontalLayout7 = new HorizontalLayout();
         horizontalLayout7.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -78,7 +78,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         horizontalLayout7.add(label7);
         new SecondaryKeyValueDisplayItem(horizontalLayout7,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
         new SecondaryKeyValueDisplayItem(horizontalLayout7,FontAwesome.Solid.MAP_MARKER_ALT.create(),"","1,000,000,000");
-        personalInformationLayout.add(horizontalLayout7);
+        geoSpatialInformationLayout.add(horizontalLayout7);
 
         HorizontalLayout horizontalLayout8 = new HorizontalLayout();
         horizontalLayout8.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -87,7 +87,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         horizontalLayout8.add(label8);
         new SecondaryKeyValueDisplayItem(horizontalLayout8,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
         new SecondaryKeyValueDisplayItem(horizontalLayout8,FontAwesome.Solid.MAP_MARKER_ALT.create(),"","1,000,000,000");
-        personalInformationLayout.add(horizontalLayout8);
+        geoSpatialInformationLayout.add(horizontalLayout8);
 
         HorizontalLayout horizontalLayout9 = new HorizontalLayout();
         horizontalLayout9.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -96,10 +96,10 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         horizontalLayout9.add(label9);
         new SecondaryKeyValueDisplayItem(horizontalLayout9,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
         new SecondaryKeyValueDisplayItem(horizontalLayout9,FontAwesome.Solid.MAP_MARKER_ALT.create(),"","1,000,000,000");
-        personalInformationLayout.add(horizontalLayout9);
+        geoSpatialInformationLayout.add(horizontalLayout9);
 
-        AccordionPanel personalInfoPanel1 =accordion.add("DefaultGeospatialRegion", personalInformationLayout);
-        personalInfoPanel1.addThemeVariants(DetailsVariant.SMALL,DetailsVariant.REVERSE);
+        AccordionPanel geoSpatialRegionInfoPanel1 =accordion.add("DefaultGeospatialRegion", geoSpatialInformationLayout);
+        geoSpatialRegionInfoPanel1.addThemeVariants(DetailsVariant.SMALL,DetailsVariant.REVERSE);
 
         AccordionPanel personalInfoPanel2 =accordion.add("Geospatial Region 2", new VerticalLayout());
         personalInfoPanel2.addThemeVariants(DetailsVariant.SMALL,DetailsVariant.REVERSE);
