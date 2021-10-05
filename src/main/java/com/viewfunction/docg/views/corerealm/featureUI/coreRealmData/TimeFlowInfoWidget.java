@@ -6,6 +6,8 @@ import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.accordion.AccordionPanel;
 import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
@@ -24,6 +26,21 @@ public class TimeFlowInfoWidget extends VerticalLayout {
 
         VerticalLayout timeFlowInformationLayout = new VerticalLayout();
         timeFlowInformationLayout.setPadding(false);
+
+        HorizontalLayout timeHorizontalLayout = new HorizontalLayout();
+        timeHorizontalLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
+
+        Span fromYear = new Span("1990");
+        fromYear.getElement().getThemeList().add("badge pill");
+        fromYear.addClassNames("text-xl","font-bold");
+        Span toYear = new Span("2050");
+        toYear.getElement().getThemeList().add("badge pill");
+        toYear.addClassNames("text-xl","font-bold");
+        Span yearDiv = new Span(" - ");
+        timeHorizontalLayout.add(fromYear);
+        timeHorizontalLayout.add(yearDiv);
+        timeHorizontalLayout.add(toYear);
+        timeFlowInformationLayout.add(timeHorizontalLayout);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -82,7 +99,6 @@ public class TimeFlowInfoWidget extends VerticalLayout {
 
         AccordionPanel timeFlowInfoPanel1 =accordion.add("DefaultTimeFlow", timeFlowInformationLayout);
         timeFlowInfoPanel1.addThemeVariants(DetailsVariant.SMALL,DetailsVariant.REVERSE);
-
 
         add(accordion);
     }
