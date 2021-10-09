@@ -4,9 +4,9 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.element.commonComponent.chart.ChartGenerator;
 
-public class AttributesViewKindInfoWidget extends VerticalLayout {
+public class AttributeViewKindInfoWidget extends VerticalLayout {
 
-    public AttributesViewKindInfoWidget(){
+    public AttributeViewKindInfoWidget(){
         this.setWidth(100, Unit.PERCENTAGE);
         add(ChartGenerator.generateApexChartsLineChart());
     }

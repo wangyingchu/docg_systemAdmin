@@ -121,8 +121,8 @@ public class CoreRealmDataUI extends VerticalLayout {
         attributesViewKindInfoTitleIcon.setSize("18px");
         Label attributesViewKindInfoTitleLabel = new Label("AttributesViewKind-属性视图类型");
         SectionWallTitle attributesViewKindInfoSectionWallTitle = new SectionWallTitle(attributesViewKindInfoTitleIcon,attributesViewKindInfoTitleLabel);
-        AttributesViewKindInfoWidget attributesViewKindInfoWidget = new AttributesViewKindInfoWidget();
-        SectionWallContainer attributesViewKindInSectionWallContainer = new SectionWallContainer(attributesViewKindInfoSectionWallTitle,attributesViewKindInfoWidget);
+        AttributeViewKindInfoWidget attributeViewKindInfoWidget = new AttributeViewKindInfoWidget();
+        SectionWallContainer attributesViewKindInSectionWallContainer = new SectionWallContainer(attributesViewKindInfoSectionWallTitle, attributeViewKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(attributesViewKindInSectionWallContainer);
         attributesViewKindInSectionWallContainer.setOpened(false);
 
@@ -130,8 +130,8 @@ public class CoreRealmDataUI extends VerticalLayout {
         attributesKindInfoTitleIcon.setSize("18px");
         Label attributesKindInfoTitleLabel = new Label("AttributesKind-属性类型");
         SectionWallTitle attributesKindInfoSectionWallTitle = new SectionWallTitle(attributesKindInfoTitleIcon,attributesKindInfoTitleLabel);
-        AttributesKindInfoWidget attributesKindInfoWidget = new AttributesKindInfoWidget();
-        SectionWallContainer attributesKindInSectionWallContainer = new SectionWallContainer(attributesKindInfoSectionWallTitle,attributesKindInfoWidget);
+        AttributeKindInfoWidget attributeKindInfoWidget = new AttributeKindInfoWidget();
+        SectionWallContainer attributesKindInSectionWallContainer = new SectionWallContainer(attributesKindInfoSectionWallTitle, attributeKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(attributesKindInSectionWallContainer);
         attributesKindInSectionWallContainer.setOpened(false);
 
