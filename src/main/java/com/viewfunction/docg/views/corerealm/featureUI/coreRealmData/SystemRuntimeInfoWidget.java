@@ -7,5 +7,6 @@ public class SystemRuntimeInfoWidget extends VerticalLayout {
 
     public SystemRuntimeInfoWidget(){
         this.add(ChartGenerator.generateChartJSBarChart());
+        add(ChartGenerator.generateApexChartsLineChart());
     }
 }
