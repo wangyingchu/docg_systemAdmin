@@ -21,7 +21,7 @@ public class AttributeViewKindInfoWidget  extends HorizontalLayout {
         leftComponentContainer.setMargin(false);
         add(leftComponentContainer);
 
-        new PrimaryKeyValueDisplayItem(leftComponentContainer, FontAwesome.Regular.CIRCLE.create(),"属性视图类型数量:","500");
+        new PrimaryKeyValueDisplayItem(leftComponentContainer, FontAwesome.Regular.CIRCLE.create(),"属性视图类型数量:","56");
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setHeight(15,Unit.PIXELS);
