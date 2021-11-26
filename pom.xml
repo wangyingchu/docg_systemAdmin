@@ -11,7 +11,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <vaadin.version>14.6.8</vaadin.version>
+        <vaadin.version>14.7.5</vaadin.version>
     </properties>
 
     <parent>
@@ -253,6 +253,14 @@
             <groupId>de.nils_bauer</groupId>
             <artifactId>pure-timeline-flow</artifactId>
             <version>1.0.0</version>
+        </dependency>
+
+        <!-- Need add this dependency to fix lib version conflict -->
+        <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.14.3</version>
         </dependency>
 
     </dependencies>
