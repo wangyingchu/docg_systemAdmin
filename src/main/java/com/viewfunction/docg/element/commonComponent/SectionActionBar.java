@@ -17,27 +17,51 @@ public class SectionActionBar extends HorizontalLayout {
         getStyle().set("padding-bottom", "5px");
         this.addClassNames("border-contrast-20","border-b");
 
-        Label sectionTitleLabel = new Label(sectionTitle);
-        //sectionTitleLabel.getStyle().set("font-size","var(--lumo-font-size-s)");
-        sectionTitleLabel.addClassNames("text-s","font-semibold");
-
         if(sectionIcon != null){
             sectionIcon.setSize("16px");
             this.add(sectionIcon);
             this.setVerticalComponentAlignment(Alignment.CENTER,sectionIcon);
         }
 
-        add(sectionTitleLabel);
 
-        this.setFlexGrow(1,sectionTitleLabel);
+
+
+
+        //add(sectionTitleLabel);
+
+        //this.setFlexGrow(1,sectionTitleLabel);
+
+
+
+
+        HorizontalLayout titleElementsContainer = new HorizontalLayout();
+
+        Label sectionTitleLabel = new Label(sectionTitle);
+        //sectionTitleLabel.getStyle().set("font-size","var(--lumo-font-size-s)");
+        sectionTitleLabel.addClassNames("text-s","font-semibold");
+
+        titleElementsContainer.add(sectionTitleLabel);
+
+        this.add(titleElementsContainer);
+        this.setFlexGrow(1,titleElementsContainer);
+        this.setVerticalComponentAlignment(Alignment.CENTER,titleElementsContainer);
+        titleElementsContainer.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+
+
+
+
+
+
+
 
         if(actionComponentsList != null){
             for(Component currentComponent:actionComponentsList){
                 this.add(currentComponent);
                 this.setVerticalComponentAlignment(Alignment.START,currentComponent);
-                Span spacingSpan = new Span();
+                Span spacingSpan = new Span(" | ");
                 spacingSpan.setWidth(10,Unit.PIXELS);
                 this.add(spacingSpan);
+                this.setVerticalComponentAlignment(Alignment.START,spacingSpan);
             }
         }
     }
