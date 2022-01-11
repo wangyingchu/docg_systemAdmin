@@ -5,6 +5,7 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 import java.util.List;
@@ -58,10 +59,15 @@ public class SectionActionBar extends HorizontalLayout {
             for(Component currentComponent:actionComponentsList){
                 this.add(currentComponent);
                 this.setVerticalComponentAlignment(Alignment.START,currentComponent);
-                Span spacingSpan = new Span(" | ");
-                spacingSpan.setWidth(10,Unit.PIXELS);
-                this.add(spacingSpan);
-                this.setVerticalComponentAlignment(Alignment.START,spacingSpan);
+                //Span spacingSpan = new Span(" | ");
+               // spacingSpan.setWidth(10,Unit.PIXELS);
+                //this.add(spacingSpan);
+
+                Icon divIcon = new Icon(VaadinIcon.ALIGN_CENTER);
+                divIcon.setSize("8px");
+                this.add(divIcon);
+
+                this.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
             }
         }
     }
