@@ -263,6 +263,12 @@
             <version>1.14.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.viewfunction</groupId>
+            <artifactId>docg_coreRealm</artifactId>
+            <version>0.5</version>
+        </dependency>
+
     </dependencies>
 
     <build>
