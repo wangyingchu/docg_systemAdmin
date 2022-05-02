@@ -15,6 +15,9 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 
@@ -113,6 +116,17 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         add(sectionActionBar);
 
 
+        loadConceptionKindsInfo();
+    }
 
+    private void loadConceptionKindsInfo(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        List<EntityStatisticsInfo>  entityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
+        System.out.println(entityStatisticsInfoList);
+
+        for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
+            System.out.println(currentEntityStatisticsInfo.getEntityKindName()+"-"+currentEntityStatisticsInfo.getEntitiesCount());
+            System.out.println("-----------------------------");
+        }
     }
 }
