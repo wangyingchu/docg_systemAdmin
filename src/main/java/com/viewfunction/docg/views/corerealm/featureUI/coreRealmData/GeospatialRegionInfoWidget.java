@@ -32,7 +32,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
 
         HorizontalLayout horizontalLayout2 = new HorizontalLayout();
         horizontalLayout2.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        new PrimaryKeyValueDisplayItem(horizontalLayout2,FontAwesome.Solid.MAP_MARKER_ALT.create(),"GeospatialScaleEvent 数量:","1,000,000,000");
+        new PrimaryKeyValueDisplayItem(horizontalLayout2,FontAwesome.Solid.MAP_LOCATION.create(),"GeospatialScaleEvent 数量:","1,000,000,000");
         geoSpatialInformationLayout.add(horizontalLayout2);
 
         HorizontalLayout horizontalLayout3 = new HorizontalLayout();
@@ -41,7 +41,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         label3.getElement().getThemeList().add("badge success small");
         horizontalLayout3.add(label3);
         new SecondaryKeyValueDisplayItem(horizontalLayout3,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(horizontalLayout3,FontAwesome.Solid.MAP_MARKER_ALT.create(),"","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(horizontalLayout3,FontAwesome.Solid.MAP_LOCATION.create(),"","1,000,000,000");
         geoSpatialInformationLayout.add(horizontalLayout3);
 
         HorizontalLayout horizontalLayout4 = new HorizontalLayout();
@@ -50,7 +50,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         label4.getElement().getThemeList().add("badge success small");
         horizontalLayout4.add(label4);
         new SecondaryKeyValueDisplayItem(horizontalLayout4,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(horizontalLayout4,FontAwesome.Solid.MAP_MARKER_ALT.create(),"","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(horizontalLayout4,FontAwesome.Solid.MAP_LOCATION.create(),"","1,000,000,000");
         geoSpatialInformationLayout.add(horizontalLayout4);
 
         HorizontalLayout horizontalLayout5 = new HorizontalLayout();
@@ -59,7 +59,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         label5.getElement().getThemeList().add("badge success small");
         horizontalLayout5.add(label5);
         new SecondaryKeyValueDisplayItem(horizontalLayout5,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(horizontalLayout5,FontAwesome.Solid.MAP_MARKER_ALT.create(),"","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(horizontalLayout5,FontAwesome.Solid.MAP_LOCATION.create(),"","1,000,000,000");
         geoSpatialInformationLayout.add(horizontalLayout5);
 
         HorizontalLayout horizontalLayout6 = new HorizontalLayout();
@@ -68,7 +68,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         label6.getElement().getThemeList().add("badge success small");
         horizontalLayout6.add(label6);
         new SecondaryKeyValueDisplayItem(horizontalLayout6,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(horizontalLayout6,FontAwesome.Solid.MAP_MARKER_ALT.create(),"","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(horizontalLayout6,FontAwesome.Solid.MAP_LOCATION.create(),"","1,000,000,000");
         geoSpatialInformationLayout.add(horizontalLayout6);
 
         HorizontalLayout horizontalLayout7 = new HorizontalLayout();
@@ -77,7 +77,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         label7.getElement().getThemeList().add("badge success small");
         horizontalLayout7.add(label7);
         new SecondaryKeyValueDisplayItem(horizontalLayout7,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(horizontalLayout7,FontAwesome.Solid.MAP_MARKER_ALT.create(),"","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(horizontalLayout7,FontAwesome.Solid.MAP_LOCATION.create(),"","1,000,000,000");
         geoSpatialInformationLayout.add(horizontalLayout7);
 
         HorizontalLayout horizontalLayout8 = new HorizontalLayout();
@@ -86,7 +86,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         label8.getElement().getThemeList().add("badge success small");
         horizontalLayout8.add(label8);
         new SecondaryKeyValueDisplayItem(horizontalLayout8,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(horizontalLayout8,FontAwesome.Solid.MAP_MARKER_ALT.create(),"","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(horizontalLayout8,FontAwesome.Solid.MAP_LOCATION.create(),"","1,000,000,000");
         geoSpatialInformationLayout.add(horizontalLayout8);
 
         HorizontalLayout horizontalLayout9 = new HorizontalLayout();
@@ -95,7 +95,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         label9.getElement().getThemeList().add("badge success small");
         horizontalLayout9.add(label9);
         new SecondaryKeyValueDisplayItem(horizontalLayout9,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(horizontalLayout9,FontAwesome.Solid.MAP_MARKER_ALT.create(),"","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(horizontalLayout9,FontAwesome.Solid.MAP_LOCATION.create(),"","1,000,000,000");
         geoSpatialInformationLayout.add(horizontalLayout9);
 
         AccordionPanel geoSpatialRegionInfoPanel1 =accordion.add("DefaultGeospatialRegion", geoSpatialInformationLayout);

@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@flowingcode/font-awesome-iron-iconset": "2.2.1",
+    "@flowingcode/font-awesome-iron-iconset": "3.0.0",
     "@polymer/iron-a11y-announcer": "3.0.2",
     "@polymer/iron-a11y-keys-behavior": "3.0.1",
     "@polymer/iron-fit-behavior": "3.0.2",
@@ -65,7 +65,7 @@
     "@vaadin/vaadin-usage-statistics": "2.1.2",
     "@webcomponents/shadycss": "1.8.0",
     "@webcomponents/webcomponentsjs": "^2.2.10",
-    "apexcharts": "3.26.3",
+    "apexcharts": "3.30.0",
     "construct-style-sheets-polyfill": "3.0.4",
     "echarts": "5.1.2",
     "leaflet": "^1.6.0",
@@ -101,7 +101,7 @@
   "name": "no-name",
   "vaadin": {
     "dependencies": {
-      "@flowingcode/font-awesome-iron-iconset": "2.2.1",
+      "@flowingcode/font-awesome-iron-iconset": "3.0.0",
       "@polymer/iron-a11y-announcer": "3.0.2",
       "@polymer/iron-a11y-keys-behavior": "3.0.1",
       "@polymer/iron-fit-behavior": "3.0.2",
@@ -166,7 +166,7 @@
       "@vaadin/vaadin-usage-statistics": "2.1.2",
       "@webcomponents/shadycss": "1.8.0",
       "@webcomponents/webcomponentsjs": "^2.2.10",
-      "apexcharts": "3.26.3",
+      "apexcharts": "3.30.0",
       "construct-style-sheets-polyfill": "3.0.4",
       "echarts": "5.1.2",
       "leaflet": "^1.6.0",
@@ -198,6 +198,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "4fe14aa6c61c49d7a173e8d1f550ecd884f0e64cb52cdb0e0c20167756f4cbe4"
+    "hash": "9131c4cfc408373175cc654b2ea63af4cd1496ef65e06dd01ae4f3ce5bc81e41"
   }
 }
