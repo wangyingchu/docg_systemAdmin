@@ -90,6 +90,8 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
         for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
             System.out.println(currentEntityStatisticsInfo.getEntityKindName()+"-"+currentEntityStatisticsInfo.getEntitiesCount());
+            System.out.println(currentEntityStatisticsInfo.getEntityKindType());
+            System.out.println(currentEntityStatisticsInfo.isSystemKind());
             System.out.println("-----------------------------");
         }
     }
