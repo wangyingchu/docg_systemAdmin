@@ -4,6 +4,7 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Label;
@@ -18,11 +19,13 @@ import com.vaadin.flow.data.renderer.ClickableRenderer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.data.vo.Person;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ConceptionKindManagementUI extends VerticalLayout {
@@ -64,7 +67,6 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         conceptionKindManagementOperationButtonList.add(conceptionKindRelationGuideButton);
 
-
         Button createConceptionKindButton = new Button("创建概念类型定义",new Icon(VaadinIcon.PLUS_SQUARE_O));
         createConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         createConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -73,6 +75,34 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         Icon icon = new Icon(VaadinIcon.LIST);
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"概念类型定义:",conceptionKindManagementOperationButtonList);
         add(sectionActionBar);
+
+
+
+
+
+        List<Person> people = Arrays.asList(
+                new Person("Nicolaus Copernicus", 1543),
+                new Person("Galileo Galilei", 1564),
+                new Person("Johannes Kepler", 1571));
+
+// Create a grid bound to the list
+        Grid<Person> grid = new Grid<>();
+        grid.setItems(people);
+        grid.addColumn(Person::getFirstName).setHeader("Name");
+        grid.addColumn(Person::getId)
+                .setHeader("Year of birth");
+
+        add(grid);
+
+
+
+
+
+
+
+
+
+
     }
 
     @Override

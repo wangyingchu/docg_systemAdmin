@@ -35,13 +35,18 @@ public class SectionActionBar extends HorizontalLayout {
         titleElementsContainer.setDefaultVerticalComponentAlignment(Alignment.CENTER);
 
         if(actionComponentsList != null){
-            for(Component currentComponent:actionComponentsList){
+            for(int i =0; i < actionComponentsList.size(); i++){
+                Component currentComponent = actionComponentsList.get(i);
+
                 this.add(currentComponent);
                 this.setVerticalComponentAlignment(Alignment.START,currentComponent);
-                Icon divIcon = new Icon(VaadinIcon.LINE_V);
-                divIcon.setSize("8px");
-                this.add(divIcon);
-                this.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+                if(i != actionComponentsList.size()-1) {
+                    Icon divIcon = new Icon(VaadinIcon.LINE_V);
+                    divIcon.setSize("8px");
+                    this.add(divIcon);
+                    this.setVerticalComponentAlignment(Alignment.CENTER, divIcon);
+                }
+
             }
         }
     }
