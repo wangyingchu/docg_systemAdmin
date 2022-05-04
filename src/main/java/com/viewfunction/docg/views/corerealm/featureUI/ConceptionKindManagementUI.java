@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -17,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.ClickableRenderer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -35,6 +33,11 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
+        refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
+            System.out.println("buttonClicked");
+            loadConceptionKindsInfo();
+        });
 
         List<Component> buttonList = new ArrayList<>();
         buttonList.add(refreshDataButton);
