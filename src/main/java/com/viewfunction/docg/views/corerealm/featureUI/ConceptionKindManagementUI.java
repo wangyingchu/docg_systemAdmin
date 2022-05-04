@@ -16,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ClickableRenderer;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -29,6 +30,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ConceptionKindManagementUI extends VerticalLayout {
+
+    Grid<Person> conceptionKindMetaInfoGrid;
 
     public ConceptionKindManagementUI(){
 
@@ -76,33 +79,13 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"概念类型定义:",conceptionKindManagementOperationButtonList);
         add(sectionActionBar);
 
+        // Create a grid bound to the list
+        conceptionKindMetaInfoGrid = new Grid<>();
 
-
-
-
-        List<Person> people = Arrays.asList(
-                new Person("Nicolaus Copernicus", 1543),
-                new Person("Galileo Galilei", 1564),
-                new Person("Johannes Kepler", 1571));
-
-// Create a grid bound to the list
-        Grid<Person> grid = new Grid<>();
-        grid.setItems(people);
-        grid.addColumn(Person::getFirstName).setHeader("Name");
-        grid.addColumn(Person::getId)
+        conceptionKindMetaInfoGrid.addColumn(Person::getFirstName).setHeader("Name");
+        conceptionKindMetaInfoGrid.addColumn(Person::getId)
                 .setHeader("Year of birth");
-
-        add(grid);
-
-
-
-
-
-
-
-
-
-
+        add(conceptionKindMetaInfoGrid);
     }
 
     @Override
@@ -118,14 +101,30 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
     private void loadConceptionKindsInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        List<EntityStatisticsInfo>  entityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
-        System.out.println(entityStatisticsInfoList);
+        List<EntityStatisticsInfo>  entityStatisticsInfoList = null;
+        try {
+            entityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
+            System.out.println(entityStatisticsInfoList);
+            //List<Person> people = Arrays.asList();
+            List<Person> people = new ArrayList<>();
 
-        for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
-            System.out.println(currentEntityStatisticsInfo.getEntityKindName()+"-"+currentEntityStatisticsInfo.getEntitiesCount());
-            System.out.println(currentEntityStatisticsInfo.getEntityKindType());
-            System.out.println(currentEntityStatisticsInfo.isSystemKind());
-            System.out.println("-----------------------------");
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
+                System.out.println(currentEntityStatisticsInfo.getEntityKindName()+"-"+currentEntityStatisticsInfo.getEntitiesCount());
+                System.out.println(currentEntityStatisticsInfo.getEntityKindType());
+                System.out.println(currentEntityStatisticsInfo.isSystemKind());
+                System.out.println("-----------------------------");
+                if(!currentEntityStatisticsInfo.isSystemKind()) {
+                    people.add(new Person(currentEntityStatisticsInfo.getEntityKindName(),12345));
+                }
+            }
+            conceptionKindMetaInfoGrid.setItems(people);
+            conceptionKindMetaInfoGrid.recalculateColumnWidths();
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
         }
+
+
+
+
     }
 }
