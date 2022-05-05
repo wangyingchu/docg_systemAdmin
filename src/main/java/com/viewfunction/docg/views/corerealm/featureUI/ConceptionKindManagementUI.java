@@ -17,7 +17,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
-import com.viewfunction.docg.element.commonComponent.SectionWallTitle;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 
 import java.util.ArrayList;
