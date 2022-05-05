@@ -200,9 +200,9 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindMetaInfoGridContainerLayout.setPadding(false);
 
         HorizontalLayout conceptionKindsSearchElementsContainerLayout = new HorizontalLayout();
-        conceptionKindsSearchElementsContainerLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
-        conceptionKindsSearchElementsContainerLayout.setSpacing(true);
-        conceptionKindsSearchElementsContainerLayout.setMargin(true);
+        conceptionKindsSearchElementsContainerLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+        conceptionKindsSearchElementsContainerLayout.setSpacing(false);
+        conceptionKindsSearchElementsContainerLayout.setMargin(false);
 
         conceptionKindMetaInfoGridContainerLayout.add(conceptionKindsSearchElementsContainerLayout);
         SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
@@ -214,7 +214,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         firstName.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
 
         conceptionKindsSearchElementsContainerLayout.add(firstName);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.END,firstName);
+        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.START,firstName);
 
         conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
 
