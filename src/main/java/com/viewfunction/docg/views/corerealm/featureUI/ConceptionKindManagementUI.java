@@ -73,18 +73,23 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindDesc).setHeader("概念类型显示名称").setKey("idx_1");
         conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getCreateDateTime).setHeader("类型创建时间").setKey("idx_2");
         conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getLastModifyDateTime).setHeader("类型最后更新时间").setKey("idx_3");
-        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntitiesCount).setHeader("类型包含实体数量").setKey("idx_4");
+        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntitiesCount).setHeader("类型包含实体数量").setKey("idx_4")
+                .setFlexGrow(0).setWidth("150px").setResizable(false);
 
+        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntitiesCount).setHeader("操作").setKey("idx_5")
+                .setFlexGrow(0).setWidth("100px").setResizable(false);
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"概念类型名称");
         conceptionKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0);
-        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.COMMENT_O,"概念类型显示名称");
+        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"概念类型显示名称");
         conceptionKindMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1);
         GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"类型创建时间");
         conceptionKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2);
         GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"类型最后更新时间");
         conceptionKindMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
-        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.COINS,"类型包含实体数量");
+        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.STOCK,"类型包含实体数量");
         conceptionKindMetaInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4);
+        GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.COG_O,"操作");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5);
 
         conceptionKindMetaInfoGrid.appendFooterRow();
         add(conceptionKindMetaInfoGrid);
