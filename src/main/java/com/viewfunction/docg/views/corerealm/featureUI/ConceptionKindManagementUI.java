@@ -94,7 +94,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
             HorizontalLayout buttons = new HorizontalLayout(configConceptionKind, cleanConceptionKind,removeConceptionKind);
             buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-            buttons.setHeight(20,Unit.PIXELS);
+            buttons.setHeight(15,Unit.PIXELS);
             return new VerticalLayout(buttons);
         });
 
@@ -160,7 +160,6 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindMetaInfoGrid = new Grid<>();
         conceptionKindMetaInfoGrid.setWidth(1300,Unit.PIXELS);
         conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-        conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
         conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindName).setHeader("概念类型名称").setKey("idx_0");
         conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindDesc).setHeader("概念类型显示名称").setKey("idx_1");
         conceptionKindMetaInfoGrid.addColumn(_createDateComponentRenderer).setHeader("类型创建时间").setKey("idx_2")
