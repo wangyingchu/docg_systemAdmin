@@ -23,7 +23,11 @@ import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 
 import java.text.NumberFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ConceptionKindManagementUI extends VerticalLayout {
@@ -94,13 +98,72 @@ public class ConceptionKindManagementUI extends VerticalLayout {
             return new VerticalLayout(buttons);
         });
 
+        ComponentRenderer _createDateComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+            if(entityStatisticsInfo instanceof EntityStatisticsInfo && ((EntityStatisticsInfo)entityStatisticsInfo).getCreateDateTime() != null){
+                ZonedDateTime createZonedDateTime = ((EntityStatisticsInfo)entityStatisticsInfo).getCreateDateTime();
+                return new Label(createZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
+            }else{
+                return new Label("-");
+            }
+        });
+
+        Comparator createDateComparator = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(((EntityStatisticsInfo)o1).getCreateDateTime()!= null && ((EntityStatisticsInfo)o2).getCreateDateTime()!= null){
+                    if(((EntityStatisticsInfo)o1).getCreateDateTime().isBefore(((EntityStatisticsInfo)o2).getCreateDateTime())){
+                        return -1;
+                    }if(((EntityStatisticsInfo)o1).getCreateDateTime().isAfter(((EntityStatisticsInfo)o2).getCreateDateTime())){
+                        return 1;
+                    }
+                }
+                return 0;
+            }
+            @Override
+            public boolean equals(Object obj) {
+                return false;
+            }
+        };
+
+        ComponentRenderer _lastUpdateDateComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+            if(entityStatisticsInfo instanceof EntityStatisticsInfo && ((EntityStatisticsInfo)entityStatisticsInfo).getLastModifyDateTime() != null){
+                ZonedDateTime createZonedDateTime = ((EntityStatisticsInfo)entityStatisticsInfo).getLastModifyDateTime();
+                return new Label(createZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
+            }else{
+                return new Label("-");
+            }
+        });
+
+        Comparator lastUpdateDateComparator = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(((EntityStatisticsInfo)o1).getLastModifyDateTime()!= null && ((EntityStatisticsInfo)o2).getLastModifyDateTime()!= null){
+                    if(((EntityStatisticsInfo)o1).getLastModifyDateTime().isBefore(((EntityStatisticsInfo)o2).getLastModifyDateTime())){
+                        return -1;
+                    }if(((EntityStatisticsInfo)o1).getLastModifyDateTime().isAfter(((EntityStatisticsInfo)o2).getLastModifyDateTime())){
+                        return 1;
+                    }
+                }
+                return 0;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return false;
+            }
+        };
+
         conceptionKindMetaInfoGrid = new Grid<>();
         conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
         conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindName).setHeader("概念类型名称").setKey("idx_0");
         conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindDesc).setHeader("概念类型显示名称").setKey("idx_1");
-        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getCreateDateTime).setHeader("类型创建时间").setKey("idx_2");
-        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getLastModifyDateTime).setHeader("类型最后更新时间").setKey("idx_3");
+        conceptionKindMetaInfoGrid.addColumn(_createDateComponentRenderer).setHeader("类型创建时间").setKey("idx_2")
+                .setComparator(createDateComparator)
+                .setFlexGrow(0).setWidth("210px").setResizable(false);
+        conceptionKindMetaInfoGrid.addColumn(_lastUpdateDateComponentRenderer).setHeader("类型最后更新时间").setKey("idx_3")
+                .setComparator(lastUpdateDateComparator)
+                .setFlexGrow(0).setWidth("210px").setResizable(false);
         conceptionKindMetaInfoGrid.addColumn(new NumberRenderer<>(EntityStatisticsInfo::getEntitiesCount,NumberFormat.getIntegerInstance()))
                 .setComparator((entityStatisticsInfo1, entityStatisticsInfo2) ->
                         (int)(entityStatisticsInfo1.getEntitiesCount() - entityStatisticsInfo2.getEntitiesCount()))
