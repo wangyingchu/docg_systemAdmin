@@ -13,6 +13,8 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.shared.Registration;
@@ -205,6 +207,14 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindMetaInfoGridContainerLayout.add(conceptionKindsSearchElementsContainerLayout);
         SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
         conceptionKindsSearchElementsContainerLayout.add(filterTitle);
+
+        TextField firstName = new TextField();
+        firstName.setPlaceholder("概念类型名称");
+        firstName.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        firstName.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
+
+        conceptionKindsSearchElementsContainerLayout.add(firstName);
+        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.END,firstName);
 
         conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
 
