@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -8,6 +9,7 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -18,9 +20,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServi
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
-import com.viewfunction.docg.element.commonComponent.SectionActionBar;
-import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import com.viewfunction.docg.element.commonComponent.*;
 
 import java.text.NumberFormat;
 import java.time.ZonedDateTime;
@@ -196,6 +196,15 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindMetaInfoGridContainerLayout.setSpacing(false);
         conceptionKindMetaInfoGridContainerLayout.setMargin(false);
         conceptionKindMetaInfoGridContainerLayout.setPadding(false);
+
+        HorizontalLayout conceptionKindsSearchElementsContainerLayout = new HorizontalLayout();
+        conceptionKindsSearchElementsContainerLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
+        conceptionKindsSearchElementsContainerLayout.setSpacing(true);
+        conceptionKindsSearchElementsContainerLayout.setMargin(true);
+
+        conceptionKindMetaInfoGridContainerLayout.add(conceptionKindsSearchElementsContainerLayout);
+        SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
+        conceptionKindsSearchElementsContainerLayout.add(filterTitle);
 
         conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
 
