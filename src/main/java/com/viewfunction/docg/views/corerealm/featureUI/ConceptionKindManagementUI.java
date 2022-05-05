@@ -154,6 +154,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         };
 
         conceptionKindMetaInfoGrid = new Grid<>();
+        conceptionKindMetaInfoGrid.setWidth(1300,Unit.PIXELS);
         conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
         conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindName).setHeader("概念类型名称").setKey("idx_0");
@@ -186,7 +187,11 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindMetaInfoGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5);
 
         conceptionKindMetaInfoGrid.appendFooterRow();
-        add(conceptionKindMetaInfoGrid);
+
+        HorizontalLayout conceptionKindsInfoContainerLayout = new HorizontalLayout();
+        conceptionKindsInfoContainerLayout.add(conceptionKindMetaInfoGrid);
+        conceptionKindsInfoContainerLayout.add(new Label("=======================") );
+        add(conceptionKindsInfoContainerLayout);
     }
 
     @Override
