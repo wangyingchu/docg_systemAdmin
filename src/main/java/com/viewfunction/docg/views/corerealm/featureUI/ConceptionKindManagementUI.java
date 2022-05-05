@@ -189,7 +189,17 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindMetaInfoGrid.appendFooterRow();
 
         HorizontalLayout conceptionKindsInfoContainerLayout = new HorizontalLayout();
-        conceptionKindsInfoContainerLayout.add(conceptionKindMetaInfoGrid);
+        conceptionKindsInfoContainerLayout.setSpacing(false);
+        conceptionKindsInfoContainerLayout.setMargin(false);
+
+        VerticalLayout conceptionKindMetaInfoGridContainerLayout = new VerticalLayout();
+        conceptionKindMetaInfoGridContainerLayout.setSpacing(false);
+        conceptionKindMetaInfoGridContainerLayout.setMargin(false);
+        conceptionKindMetaInfoGridContainerLayout.setPadding(false);
+
+        conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
+
+        conceptionKindsInfoContainerLayout.add(conceptionKindMetaInfoGridContainerLayout);
         conceptionKindsInfoContainerLayout.add(new Label("=======================") );
         add(conceptionKindsInfoContainerLayout);
     }
