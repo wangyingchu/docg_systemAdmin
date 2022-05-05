@@ -1,6 +1,5 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
-import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -9,7 +8,6 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -195,26 +193,26 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindsInfoContainerLayout.setMargin(false);
 
         VerticalLayout conceptionKindMetaInfoGridContainerLayout = new VerticalLayout();
-        conceptionKindMetaInfoGridContainerLayout.setSpacing(false);
+        conceptionKindMetaInfoGridContainerLayout.setSpacing(true);
         conceptionKindMetaInfoGridContainerLayout.setMargin(false);
         conceptionKindMetaInfoGridContainerLayout.setPadding(false);
 
         HorizontalLayout conceptionKindsSearchElementsContainerLayout = new HorizontalLayout();
-        conceptionKindsSearchElementsContainerLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
         conceptionKindsSearchElementsContainerLayout.setSpacing(false);
         conceptionKindsSearchElementsContainerLayout.setMargin(false);
-
         conceptionKindMetaInfoGridContainerLayout.add(conceptionKindsSearchElementsContainerLayout);
+
         SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
         conceptionKindsSearchElementsContainerLayout.add(filterTitle);
+        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
+        filterTitle.setWidth(80,Unit.PIXELS);
 
-        TextField firstName = new TextField();
-        firstName.setPlaceholder("概念类型名称");
-        firstName.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        firstName.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
-
-        conceptionKindsSearchElementsContainerLayout.add(firstName);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.START,firstName);
+        TextField conceptionKindNameField = new TextField();
+        conceptionKindNameField.setPlaceholder("概念类型名称");
+        conceptionKindNameField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        conceptionKindNameField.setWidth(250,Unit.PIXELS);
+        conceptionKindsSearchElementsContainerLayout.add(conceptionKindNameField);
+        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindNameField);
 
         conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
 
@@ -229,13 +227,13 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         loadConceptionKindsInfo();
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            conceptionKindMetaInfoGrid.setHeight(event.getHeight()-240,Unit.PIXELS);
+            conceptionKindMetaInfoGrid.setHeight(event.getHeight()-280,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserWidth = receiver.getBodyClientWidth();
             int browserHeight = receiver.getBodyClientHeight();
-            conceptionKindMetaInfoGrid.setHeight(browserHeight-240,Unit.PIXELS);
+            conceptionKindMetaInfoGrid.setHeight(browserHeight-280,Unit.PIXELS);
         }));
     }
 
