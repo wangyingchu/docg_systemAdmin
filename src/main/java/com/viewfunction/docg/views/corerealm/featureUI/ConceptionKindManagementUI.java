@@ -3,35 +3,25 @@ package com.viewfunction.docg.views.corerealm.featureUI;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.html.Section;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.renderer.ClickableRenderer;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.data.vo.Person;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ConceptionKindManagementUI extends VerticalLayout {
 
-    Grid<Person> conceptionKindMetaInfoGrid;
+    Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
 
     public ConceptionKindManagementUI(){
 
@@ -41,7 +31,6 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
-            System.out.println("buttonClicked");
             loadConceptionKindsInfo();
         });
 
@@ -51,14 +40,8 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         List<Component> secTitleElementsList = new ArrayList<>();
 
         Label coreRealmNameLabel = new Label(" [ Default CoreRealm ]");
-        coreRealmNameLabel.getStyle().set("font-size","var(--lumo-font-size-xl)")
-                .set("color","var(--lumo-secondary-text-color)");
+        coreRealmNameLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","var(--lumo-secondary-text-color)");
         secTitleElementsList.add(coreRealmNameLabel);
-
-        //Label coreRealmTechLabel = new Label(" NEO4J 实现");
-        //coreRealmTechLabel.addClassName("text-2xs");
-        //secTitleElementsList.add(coreRealmTechLabel);
-        //coreRealmTechLabel.getElement().getThemeList().add("badge success");
 
         TitleActionBar titleActionBar = new TitleActionBar(new Icon(VaadinIcon.COG_O),"Conception Kind 概念类型数据管理",secTitleElementsList,buttonList);
         add(titleActionBar);
@@ -79,12 +62,12 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"概念类型定义:",conceptionKindManagementOperationButtonList);
         add(sectionActionBar);
 
-        // Create a grid bound to the list
         conceptionKindMetaInfoGrid = new Grid<>();
-
-        conceptionKindMetaInfoGrid.addColumn(Person::getFirstName).setHeader("Name");
-        conceptionKindMetaInfoGrid.addColumn(Person::getId)
-                .setHeader("Year of birth");
+        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindName).setHeader("概念类型名称");
+        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindDesc).setHeader("概念类型名称描述");
+        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getCreateDateTime).setHeader("类型创建时间");
+        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getLastModifyDateTime).setHeader("类型最后更新时间");
+        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntitiesCount).setHeader("类型包含实体数量");
         add(conceptionKindMetaInfoGrid);
     }
 
@@ -104,27 +87,15 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         List<EntityStatisticsInfo>  entityStatisticsInfoList = null;
         try {
             entityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
-            System.out.println(entityStatisticsInfoList);
-            //List<Person> people = Arrays.asList();
-            List<Person> people = new ArrayList<>();
-
+            List<EntityStatisticsInfo> conceptionKindEntityStatisticsInfoList = new ArrayList<>();
             for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
-                System.out.println(currentEntityStatisticsInfo.getEntityKindName()+"-"+currentEntityStatisticsInfo.getEntitiesCount());
-                System.out.println(currentEntityStatisticsInfo.getEntityKindType());
-                System.out.println(currentEntityStatisticsInfo.isSystemKind());
-                System.out.println("-----------------------------");
                 if(!currentEntityStatisticsInfo.isSystemKind()) {
-                    people.add(new Person(currentEntityStatisticsInfo.getEntityKindName(),12345));
+                    conceptionKindEntityStatisticsInfoList.add(currentEntityStatisticsInfo);
                 }
             }
-            conceptionKindMetaInfoGrid.setItems(people);
-            conceptionKindMetaInfoGrid.recalculateColumnWidths();
+            conceptionKindMetaInfoGrid.setItems(conceptionKindEntityStatisticsInfoList);
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
-
-
-
-
     }
 }
