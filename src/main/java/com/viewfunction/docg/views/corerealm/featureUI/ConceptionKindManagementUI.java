@@ -8,8 +8,11 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
@@ -19,6 +22,7 @@ import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +70,30 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"概念类型定义:",conceptionKindManagementOperationButtonList);
         add(sectionActionBar);
 
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+
+            Button configConceptionKind = new Button(new Icon(VaadinIcon.COG), event -> {
+                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                    System.out.println(((EntityStatisticsInfo)entityStatisticsInfo).getEntityKindUID());
+                }
+            });
+            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
+            Button cleanConceptionKind = new Button(new Icon(VaadinIcon.ERASER), event -> {});
+            cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
+            Button removeConceptionKind = new Button(new Icon(VaadinIcon.TRASH), event -> {});
+            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
+            HorizontalLayout buttons = new HorizontalLayout(configConceptionKind, cleanConceptionKind,removeConceptionKind);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(20,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
+
         conceptionKindMetaInfoGrid = new Grid<>();
         conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
@@ -73,22 +101,25 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindDesc).setHeader("概念类型显示名称").setKey("idx_1");
         conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getCreateDateTime).setHeader("类型创建时间").setKey("idx_2");
         conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getLastModifyDateTime).setHeader("类型最后更新时间").setKey("idx_3");
-        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntitiesCount).setHeader("类型包含实体数量").setKey("idx_4")
+        conceptionKindMetaInfoGrid.addColumn(new NumberRenderer<>(EntityStatisticsInfo::getEntitiesCount,NumberFormat.getIntegerInstance()))
+                .setComparator((entityStatisticsInfo1, entityStatisticsInfo2) ->
+                        (int)(entityStatisticsInfo1.getEntitiesCount() - entityStatisticsInfo2.getEntitiesCount()))
+                .setHeader("类型包含实体数量").setKey("idx_4")
+                .setFlexGrow(0).setWidth("150px").setResizable(false);
+        conceptionKindMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_5")
                 .setFlexGrow(0).setWidth("150px").setResizable(false);
 
-        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntitiesCount).setHeader("操作").setKey("idx_5")
-                .setFlexGrow(0).setWidth("100px").setResizable(false);
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"概念类型名称");
-        conceptionKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0);
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"概念类型显示名称");
-        conceptionKindMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1);
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
         GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"类型创建时间");
-        conceptionKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2);
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
         GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"类型最后更新时间");
-        conceptionKindMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
         GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.STOCK,"类型包含实体数量");
-        conceptionKindMetaInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4);
-        GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.COG_O,"操作");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.AUTOMATION,"操作");
         conceptionKindMetaInfoGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5);
 
         conceptionKindMetaInfoGrid.appendFooterRow();
