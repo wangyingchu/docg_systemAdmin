@@ -238,12 +238,12 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindsSearchElementsContainerLayout.add(conceptionKindDescField);
         conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindDescField);
 
-        Button searchConceptionKindsButton = new Button("查找概念类型定义",new Icon(VaadinIcon.SEARCH));
+        Button searchConceptionKindsButton = new Button("查找概念类型",new Icon(VaadinIcon.SEARCH));
         searchConceptionKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         searchConceptionKindsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         conceptionKindsSearchElementsContainerLayout.add(searchConceptionKindsButton);
         conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchConceptionKindsButton);
-        searchConceptionKindsButton.setWidth(140,Unit.PIXELS);
+        searchConceptionKindsButton.setWidth(115,Unit.PIXELS);
 
         Icon divIcon = new Icon(VaadinIcon.LINE_V);
         divIcon.setSize("8px");
