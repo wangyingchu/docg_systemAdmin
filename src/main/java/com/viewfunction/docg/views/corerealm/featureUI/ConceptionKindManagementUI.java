@@ -217,6 +217,21 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindsSearchElementsContainerLayout.add(conceptionKindNameField);
         conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindNameField);
 
+        Icon plusIcon = new Icon(VaadinIcon.PLUS);
+        plusIcon.setSize("12px");
+        conceptionKindsSearchElementsContainerLayout.add(plusIcon);
+        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
+
+        TextField conceptionKindDescField = new TextField();
+        conceptionKindDescField.setPlaceholder("概念类型显示名称");
+        conceptionKindDescField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        conceptionKindDescField.setWidth(250,Unit.PIXELS);
+        conceptionKindsSearchElementsContainerLayout.add(conceptionKindDescField);
+        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindDescField);
+
+
+
+
         conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
 
         conceptionKindsInfoContainerLayout.add(conceptionKindMetaInfoGridContainerLayout);
