@@ -75,8 +75,9 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         add(sectionActionBar);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
-
-            Button configConceptionKind = new Button(new Icon(VaadinIcon.COG), event -> {
+            Icon configIcon = new Icon(VaadinIcon.COG);
+            configIcon.setSize("21px");
+            Button configConceptionKind = new Button(configIcon, event -> {
                 if(entityStatisticsInfo instanceof EntityStatisticsInfo){
                     System.out.println(((EntityStatisticsInfo)entityStatisticsInfo).getEntityKindUID());
                 }
@@ -84,17 +85,25 @@ public class ConceptionKindManagementUI extends VerticalLayout {
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
-            Button cleanConceptionKind = new Button(new Icon(VaadinIcon.ERASER), event -> {});
+            Icon cleanKindIcon = new Icon(VaadinIcon.RECYCLE);
+            cleanKindIcon.setSize("21px");
+            Button cleanConceptionKind = new Button(cleanKindIcon, event -> {});
             cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
-            Button removeConceptionKind = new Button(new Icon(VaadinIcon.TRASH), event -> {});
+            Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
+            deleteKindIcon.setSize("21px");
+            Button removeConceptionKind = new Button(deleteKindIcon, event -> {});
             removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
             HorizontalLayout buttons = new HorizontalLayout(configConceptionKind, cleanConceptionKind,removeConceptionKind);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
             buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
             buttons.setHeight(15,Unit.PIXELS);
+            buttons.setWidth(80,Unit.PIXELS);
             return new VerticalLayout(buttons);
         });
 
@@ -174,7 +183,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
                 .setHeader("类型包含实体数量").setKey("idx_4")
                 .setFlexGrow(0).setWidth("150px").setResizable(false);
         conceptionKindMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_5")
-                .setFlexGrow(0).setWidth("150px").setResizable(false);
+                .setFlexGrow(0).setWidth("115px").setResizable(false);
 
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"概念类型名称");
         conceptionKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
@@ -229,8 +238,24 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindsSearchElementsContainerLayout.add(conceptionKindDescField);
         conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindDescField);
 
+        Button searchConceptionKindsButton = new Button("查找概念类型定义",new Icon(VaadinIcon.SEARCH));
+        searchConceptionKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        searchConceptionKindsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        conceptionKindsSearchElementsContainerLayout.add(searchConceptionKindsButton);
+        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchConceptionKindsButton);
+        searchConceptionKindsButton.setWidth(140,Unit.PIXELS);
 
+        Icon divIcon = new Icon(VaadinIcon.LINE_V);
+        divIcon.setSize("8px");
+        conceptionKindsSearchElementsContainerLayout.add(divIcon);
+        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
 
+        Button clearSearchCriteriaButton = new Button("清除查询条件",new Icon(VaadinIcon.ERASER));
+        clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        conceptionKindsSearchElementsContainerLayout.add(clearSearchCriteriaButton);
+        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
+        clearSearchCriteriaButton.setWidth(120,Unit.PIXELS);
 
         conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
 
