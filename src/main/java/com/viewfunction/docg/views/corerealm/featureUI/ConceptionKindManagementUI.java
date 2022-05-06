@@ -195,7 +195,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
         GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.STOCK,"类型包含实体数量");
         conceptionKindMetaInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.AUTOMATION,"操作");
+        GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
         conceptionKindMetaInfoGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5);
 
         conceptionKindMetaInfoGrid.appendFooterRow();
@@ -260,7 +260,25 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
 
         conceptionKindsInfoContainerLayout.add(conceptionKindMetaInfoGridContainerLayout);
-        conceptionKindsInfoContainerLayout.add(new Label("=======================") );
+
+        VerticalLayout singleConceptionKindSummaryInfoContainerLayout = new VerticalLayout();
+        singleConceptionKindSummaryInfoContainerLayout.setSpacing(true);
+        singleConceptionKindSummaryInfoContainerLayout.setMargin(false);
+        singleConceptionKindSummaryInfoContainerLayout.setPadding(false);
+
+        HorizontalLayout singleConceptionKindInfoElementsContainerLayout = new HorizontalLayout();
+        singleConceptionKindInfoElementsContainerLayout.setSpacing(false);
+        singleConceptionKindInfoElementsContainerLayout.setMargin(false);
+        singleConceptionKindInfoElementsContainerLayout.setHeight("30px");
+        singleConceptionKindSummaryInfoContainerLayout.add(singleConceptionKindInfoElementsContainerLayout);
+
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"概念类型概览");
+        singleConceptionKindInfoElementsContainerLayout.add(filterTitle2);
+        singleConceptionKindInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
+
+
+        conceptionKindsInfoContainerLayout.add(singleConceptionKindSummaryInfoContainerLayout);
+
         add(conceptionKindsInfoContainerLayout);
     }
 
