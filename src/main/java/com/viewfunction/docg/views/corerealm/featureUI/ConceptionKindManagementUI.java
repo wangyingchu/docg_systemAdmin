@@ -287,6 +287,11 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         singleConceptionKindInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
 
 
+
+        TitleActionBar titleActionBar2 = new TitleActionBar(new Icon(VaadinIcon.COG_O),"Conception Kind 概念类型数据管理",null,null);
+        singleConceptionKindSummaryInfoContainerLayout.add(titleActionBar2);
+
+
         conceptionKindsInfoContainerLayout.add(singleConceptionKindSummaryInfoContainerLayout);
 
         add(conceptionKindsInfoContainerLayout);
