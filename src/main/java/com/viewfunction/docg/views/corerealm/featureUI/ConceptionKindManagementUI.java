@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.ItemClickEvent;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -17,6 +18,8 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -200,6 +203,13 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
         conceptionKindMetaInfoGrid.appendFooterRow();
 
+        conceptionKindMetaInfoGrid.addItemClickListener(new ComponentEventListener<ItemClickEvent<EntityStatisticsInfo>>() {
+            @Override
+            public void onComponentEvent(ItemClickEvent<EntityStatisticsInfo> entityStatisticsInfoItemClickEvent) {
+                renderConceptionKindOverview(entityStatisticsInfoItemClickEvent.getItem());
+            }
+        });
+
         HorizontalLayout conceptionKindsInfoContainerLayout = new HorizontalLayout();
         conceptionKindsInfoContainerLayout.setSpacing(false);
         conceptionKindsInfoContainerLayout.setMargin(false);
@@ -292,7 +302,6 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            int browserWidth = receiver.getBodyClientWidth();
             int browserHeight = receiver.getBodyClientHeight();
             conceptionKindMetaInfoGrid.setHeight(browserHeight-280,Unit.PIXELS);
         }));
@@ -320,5 +329,24 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void renderConceptionKindOverview(EntityStatisticsInfo conceptionKindStatisticsInfo){
+        String conceptionKindName = conceptionKindStatisticsInfo.getEntityKindName();
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+
+        List<AttributeSystemInfo> attributeSystemInfoList = systemMaintenanceOperator.getConceptionKindAttributesSystemInfo(conceptionKindName);
+        for(AttributeSystemInfo currentAttributeSystemInfo : attributeSystemInfoList){
+
+            System.out.println(currentAttributeSystemInfo.getAttributeName());
+            System.out.println(currentAttributeSystemInfo.getDataType());
+            System.out.println("==========================");
+
+        }
+
+
+
+
     }
 }
