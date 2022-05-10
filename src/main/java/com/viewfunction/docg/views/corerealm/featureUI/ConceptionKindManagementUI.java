@@ -37,6 +37,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
     private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
     private Registration listener;
+    private SecondaryTitleActionBar secondaryTitleActionBar;
 
     public ConceptionKindManagementUI(){
 
@@ -289,7 +290,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         singleConceptionKindInfoElementsContainerLayout.add(filterTitle2);
         singleConceptionKindInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
 
-        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null);
+        secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null);
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
         singleConceptionKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
 
@@ -337,9 +338,11 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
     private void renderConceptionKindOverview(EntityStatisticsInfo conceptionKindStatisticsInfo){
         String conceptionKindName = conceptionKindStatisticsInfo.getEntityKindName();
+        String conceptionKindDesc = conceptionKindStatisticsInfo.getEntityKindDesc();
+
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
-
+        /*
         List<AttributeSystemInfo> attributeSystemInfoList = systemMaintenanceOperator.getConceptionKindAttributesSystemInfo(conceptionKindName);
         for(AttributeSystemInfo currentAttributeSystemInfo : attributeSystemInfoList){
 
@@ -348,9 +351,8 @@ public class ConceptionKindManagementUI extends VerticalLayout {
             System.out.println("==========================");
 
         }
-
-
-
-
+        */
+        String conceptionNameText = conceptionKindName+ " ( "+conceptionKindDesc+" )";
+        this.secondaryTitleActionBar.updateTitleContent(conceptionNameText);
     }
 }

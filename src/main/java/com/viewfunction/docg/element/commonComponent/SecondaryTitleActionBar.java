@@ -11,6 +11,8 @@ import java.util.List;
 
 public class SecondaryTitleActionBar extends HorizontalLayout {
 
+    private Label titleLabel;
+
     public SecondaryTitleActionBar(Icon titleIcon, String titleContent, List<Component> secondaryTitleComponentsList, List<Component> actionComponentsList){
 
         this.setSpacing(false);
@@ -31,7 +33,7 @@ public class SecondaryTitleActionBar extends HorizontalLayout {
 
         HorizontalLayout titleElementsContainer = new HorizontalLayout();
 
-        Label titleLabel = new Label(titleContent);
+        titleLabel = new Label(titleContent);
         titleLabel.getStyle().set("font-size","var(--lumo-font-size-m)")
                 .set("color","var(--lumo-primary-color)");
 
@@ -57,5 +59,9 @@ public class SecondaryTitleActionBar extends HorizontalLayout {
                 this.add(spacingSpan);
             }
         }
+    }
+
+    public void updateTitleContent(String titleContent){
+        this.titleLabel.setText(titleContent);
     }
 }
