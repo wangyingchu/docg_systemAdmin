@@ -213,6 +213,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         HorizontalLayout conceptionKindsInfoContainerLayout = new HorizontalLayout();
         conceptionKindsInfoContainerLayout.setSpacing(false);
         conceptionKindsInfoContainerLayout.setMargin(false);
+        conceptionKindsInfoContainerLayout.setWidth(100,Unit.PERCENTAGE);
 
         VerticalLayout conceptionKindMetaInfoGridContainerLayout = new VerticalLayout();
         conceptionKindMetaInfoGridContainerLayout.setSpacing(true);
@@ -273,8 +274,10 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
         VerticalLayout singleConceptionKindSummaryInfoContainerLayout = new VerticalLayout();
         singleConceptionKindSummaryInfoContainerLayout.setSpacing(true);
-        singleConceptionKindSummaryInfoContainerLayout.setMargin(false);
+        singleConceptionKindSummaryInfoContainerLayout.setMargin(true);
         singleConceptionKindSummaryInfoContainerLayout.setPadding(false);
+        conceptionKindsInfoContainerLayout.add(singleConceptionKindSummaryInfoContainerLayout);
+        conceptionKindsInfoContainerLayout.setFlexGrow(1,singleConceptionKindSummaryInfoContainerLayout);
 
         HorizontalLayout singleConceptionKindInfoElementsContainerLayout = new HorizontalLayout();
         singleConceptionKindInfoElementsContainerLayout.setSpacing(false);
@@ -286,13 +289,9 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         singleConceptionKindInfoElementsContainerLayout.add(filterTitle2);
         singleConceptionKindInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
 
-
-
-        TitleActionBar titleActionBar2 = new TitleActionBar(new Icon(VaadinIcon.COG_O),"Conception Kind 概念类型数据管理",null,null);
-        singleConceptionKindSummaryInfoContainerLayout.add(titleActionBar2);
-
-
-        conceptionKindsInfoContainerLayout.add(singleConceptionKindSummaryInfoContainerLayout);
+        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null);
+        secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
+        singleConceptionKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
 
         add(conceptionKindsInfoContainerLayout);
     }
