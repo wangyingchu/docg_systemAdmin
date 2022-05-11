@@ -338,7 +338,8 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
     private void renderConceptionKindOverview(EntityStatisticsInfo conceptionKindStatisticsInfo){
         String conceptionKindName = conceptionKindStatisticsInfo.getEntityKindName();
-        String conceptionKindDesc = conceptionKindStatisticsInfo.getEntityKindDesc();
+        String conceptionKindDesc = conceptionKindStatisticsInfo.getEntityKindDesc() != null ?
+                conceptionKindStatisticsInfo.getEntityKindDesc():"未设置显示名称";
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
