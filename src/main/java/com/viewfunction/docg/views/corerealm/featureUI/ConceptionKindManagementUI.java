@@ -21,6 +21,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServi
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
@@ -342,6 +344,20 @@ public class ConceptionKindManagementUI extends VerticalLayout {
                 conceptionKindStatisticsInfo.getEntityKindDesc():"未设置显示名称";
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+
+        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKindName);
+        List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(10000);
+
+
+        for(KindEntityAttributeRuntimeStatistics currentKindEntityAttributeRuntimeStatistics:kindEntityAttributeRuntimeStatisticsList){
+            System.out.println(currentKindEntityAttributeRuntimeStatistics.getAttributeName());
+            System.out.println(currentKindEntityAttributeRuntimeStatistics.getAttributeDataType());
+            System.out.println(currentKindEntityAttributeRuntimeStatistics.getAttributeHitCount());
+            System.out.println("==========================");
+        }
+
+
+
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         /*
         List<AttributeSystemInfo> attributeSystemInfoList = systemMaintenanceOperator.getConceptionKindAttributesSystemInfo(conceptionKindName);
