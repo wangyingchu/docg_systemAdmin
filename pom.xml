@@ -255,6 +255,13 @@
             <version>1.0.0</version>
         </dependency>
 
+        <!-- https://vaadin.com/directory/component/tooltips4vaadin -->
+        <dependency>
+            <groupId>dev.mett.vaadin</groupId>
+            <artifactId>tooltip</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
         <!-- Need add this dependency to fix lib version conflict -->
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <dependency>

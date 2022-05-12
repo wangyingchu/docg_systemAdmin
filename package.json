@@ -75,6 +75,8 @@
     "lumo-css-framework": "^4.0.10",
     "onecolor": "3.1.0",
     "pure-timeline": "^1.2.0",
+    "retry": "0.12.0",
+    "tippy.js": "6.3.1",
     "vis-network": "9.0.5"
   },
   "devDependencies": {
@@ -176,6 +178,8 @@
       "lumo-css-framework": "^4.0.10",
       "onecolor": "3.1.0",
       "pure-timeline": "^1.2.0",
+      "retry": "0.12.0",
+      "tippy.js": "6.3.1",
       "vis-network": "9.0.5"
     },
     "devDependencies": {
@@ -198,6 +202,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "9131c4cfc408373175cc654b2ea63af4cd1496ef65e06dd01ae4f3ce5bc81e41"
+    "hash": "97e70f25e5d1d4c274a67d99e792376886a8dbf6fb5e4c476b64c7cb70f949f3"
   }
 }

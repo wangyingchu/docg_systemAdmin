@@ -26,6 +26,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
 import java.time.ZonedDateTime;
@@ -90,18 +91,21 @@ public class ConceptionKindManagementUI extends VerticalLayout {
             });
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(configConceptionKind, "配置概念类型定义");
 
             Icon cleanKindIcon = new Icon(VaadinIcon.RECYCLE);
             cleanKindIcon.setSize("21px");
             Button cleanConceptionKind = new Button(cleanKindIcon, event -> {});
             cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(cleanConceptionKind, "清除概念类型所有实例");
 
             Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
             deleteKindIcon.setSize("21px");
             Button removeConceptionKind = new Button(deleteKindIcon, event -> {});
             removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(removeConceptionKind, "删除概念类型");
 
             HorizontalLayout buttons = new HorizontalLayout(configConceptionKind, cleanConceptionKind,removeConceptionKind);
             buttons.setPadding(false);
