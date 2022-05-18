@@ -20,6 +20,7 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
@@ -35,6 +36,7 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 public class ConceptionKindManagementUI extends VerticalLayout {
 
@@ -300,6 +302,12 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
         singleConceptionKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
 
+        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.LIST),"概念类型实时属性分布");
+        singleConceptionKindSummaryInfoContainerLayout.add(infoTitle1);
+
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.LIST),"概念类型实时关联信息");
+        singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
+
         add(conceptionKindsInfoContainerLayout);
     }
 
@@ -351,6 +359,15 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKindName);
         List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(10000);
+
+        Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
+        for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
+            System.out.println(currentConceptionKindCorrelationInfo.getSourceConceptionKindName());
+            System.out.println(currentConceptionKindCorrelationInfo.getTargetConceptionKindName());
+            System.out.println(currentConceptionKindCorrelationInfo.getRelationKindName());
+            System.out.println(currentConceptionKindCorrelationInfo.getRelationEntityCount());
+            System.out.println("------------------");
+        }
 
 
         for(KindEntityAttributeRuntimeStatistics currentKindEntityAttributeRuntimeStatistics:kindEntityAttributeRuntimeStatisticsList){
