@@ -10,6 +10,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.component.textfield.TextField;
@@ -305,6 +306,17 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型实时属性分布 (实体采样数 "+entityAttributesDistributionStatisticSampleRatio+")");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle1);
+
+        VerticalLayout conceptionKindPropertiesContainerLayout = new VerticalLayout();
+        conceptionKindPropertiesContainerLayout.setHeight(900,Unit.PIXELS);
+        Scroller scroller = new Scroller(conceptionKindPropertiesContainerLayout);
+        scroller.setHeight(160,Unit.PIXELS);
+        scroller.setWidth(97,Unit.PERCENTAGE);
+        scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        scroller.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding", "var(--lumo-space-m)");
+        singleConceptionKindSummaryInfoContainerLayout.add(scroller);
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实时实体关联分布");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
