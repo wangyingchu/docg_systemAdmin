@@ -43,6 +43,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
     private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
     private Registration listener;
     private SecondaryTitleActionBar secondaryTitleActionBar;
+    private int entityAttributesDistributionStatisticSampleRatio = 10000;
 
     public ConceptionKindManagementUI(){
 
@@ -302,10 +303,10 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
         singleConceptionKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
 
-        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.LIST),"概念类型实时属性分布");
+        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型实时属性分布 (实体采样数 "+entityAttributesDistributionStatisticSampleRatio+")");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle1);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.LIST),"概念类型实时关联信息");
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实时实体关联分布");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
 
         add(conceptionKindsInfoContainerLayout);
@@ -358,7 +359,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
 
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKindName);
-        List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(10000);
+        List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
 
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
         for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
