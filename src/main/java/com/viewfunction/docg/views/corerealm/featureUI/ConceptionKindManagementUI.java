@@ -304,7 +304,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
         singleConceptionKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
 
-        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型实时属性分布 (实体采样数 "+entityAttributesDistributionStatisticSampleRatio+")");
+        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体采样数 "+entityAttributesDistributionStatisticSampleRatio+")");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle1);
 
         VerticalLayout conceptionKindPropertiesContainerLayout = new VerticalLayout();
@@ -318,7 +318,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
                 .set("padding", "var(--lumo-space-m)");
         singleConceptionKindSummaryInfoContainerLayout.add(scroller);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实时实体关联分布");
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
 
         add(conceptionKindsInfoContainerLayout);
