@@ -312,7 +312,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindAttributesInfoGrid = new Grid<>();
         conceptionKindAttributesInfoGrid.setWidth(100,Unit.PERCENTAGE);
         conceptionKindAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
-        conceptionKindAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER);
+        conceptionKindAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         conceptionKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeName).setHeader("属性名称").setKey("idx_0");
         conceptionKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeDataType).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("150px").setResizable(false);;
         conceptionKindAttributesInfoGrid.addColumn(new NumberRenderer<>(KindEntityAttributeRuntimeStatistics::getAttributeHitCount,NumberFormat.getIntegerInstance()))
@@ -336,7 +336,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         VerticalLayout conceptionKindPropertiesContainerLayout = new VerticalLayout();
         conceptionKindPropertiesContainerLayout.setHeight(900,Unit.PIXELS);
         Scroller scroller = new Scroller(conceptionKindPropertiesContainerLayout);
-        scroller.setHeight(305,Unit.PIXELS);
+        scroller.setHeight(310,Unit.PIXELS);
         scroller.setWidth(97,Unit.PERCENTAGE);
         scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         scroller.getStyle()
