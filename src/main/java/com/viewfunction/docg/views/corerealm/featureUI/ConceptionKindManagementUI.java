@@ -309,25 +309,26 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体采样数 "+entityAttributesDistributionStatisticSampleRatio+")");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle1);
 
-
-
-
-
-
-
         conceptionKindAttributesInfoGrid = new Grid<>();
         conceptionKindAttributesInfoGrid.setWidth(100,Unit.PERCENTAGE);
+        conceptionKindAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
         conceptionKindAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER);
         conceptionKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeName).setHeader("属性名称").setKey("idx_0");
-        conceptionKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeDataType).setHeader("属性数据类型").setKey("idx_1");
-        conceptionKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeHitCount).setHeader("属性命中数").setKey("idx_2");
+        conceptionKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeDataType).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("150px").setResizable(false);;
+        conceptionKindAttributesInfoGrid.addColumn(new NumberRenderer<>(KindEntityAttributeRuntimeStatistics::getAttributeHitCount,NumberFormat.getIntegerInstance()))
+                .setComparator((entityStatisticsInfo1, entityStatisticsInfo2) ->
+                        (int)(entityStatisticsInfo1.getAttributeHitCount() - entityStatisticsInfo2.getAttributeHitCount()))
+                .setHeader("属性命中数").setKey("idx_2")
+                .setFlexGrow(0).setWidth("100px").setResizable(false);
+
+        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
+        conceptionKindAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.PASSWORD,"属性数据类型");
+        conceptionKindAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.CROSSHAIRS,"属性命中数");
+        conceptionKindAttributesInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         conceptionKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
-
         singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindAttributesInfoGrid);
-
-        /*
-
-        */
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
@@ -335,21 +336,13 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         VerticalLayout conceptionKindPropertiesContainerLayout = new VerticalLayout();
         conceptionKindPropertiesContainerLayout.setHeight(900,Unit.PIXELS);
         Scroller scroller = new Scroller(conceptionKindPropertiesContainerLayout);
-        scroller.setHeight(360,Unit.PIXELS);
+        scroller.setHeight(305,Unit.PIXELS);
         scroller.setWidth(97,Unit.PERCENTAGE);
         scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         scroller.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
                 .set("padding", "var(--lumo-space-m)");
         singleConceptionKindSummaryInfoContainerLayout.add(scroller);
-
-
-
-
-
-
-
-
 
         add(conceptionKindsInfoContainerLayout);
     }
