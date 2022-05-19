@@ -45,6 +45,8 @@ public class ConceptionKindManagementUI extends VerticalLayout {
     private Registration listener;
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private int entityAttributesDistributionStatisticSampleRatio = 10000;
+    private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
+
 
     public ConceptionKindManagementUI(){
 
@@ -307,10 +309,33 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体采样数 "+entityAttributesDistributionStatisticSampleRatio+")");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle1);
 
+
+
+
+
+
+
+        conceptionKindAttributesInfoGrid = new Grid<>();
+        conceptionKindAttributesInfoGrid.setWidth(100,Unit.PERCENTAGE);
+        conceptionKindAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER);
+        conceptionKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeName).setHeader("属性名称").setKey("idx_0");
+        conceptionKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeDataType).setHeader("属性数据类型").setKey("idx_1");
+        conceptionKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeHitCount).setHeader("属性命中数").setKey("idx_2");
+        conceptionKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
+
+        singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindAttributesInfoGrid);
+
+        /*
+
+        */
+
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
+        singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
+
         VerticalLayout conceptionKindPropertiesContainerLayout = new VerticalLayout();
         conceptionKindPropertiesContainerLayout.setHeight(900,Unit.PIXELS);
         Scroller scroller = new Scroller(conceptionKindPropertiesContainerLayout);
-        scroller.setHeight(160,Unit.PIXELS);
+        scroller.setHeight(360,Unit.PIXELS);
         scroller.setWidth(97,Unit.PERCENTAGE);
         scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         scroller.getStyle()
@@ -318,8 +343,13 @@ public class ConceptionKindManagementUI extends VerticalLayout {
                 .set("padding", "var(--lumo-space-m)");
         singleConceptionKindSummaryInfoContainerLayout.add(scroller);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
-        singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
+
+
+
+
+
+
+
 
         add(conceptionKindsInfoContainerLayout);
     }
@@ -390,6 +420,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
             System.out.println("==========================");
         }
 
+        conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
 
 
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
