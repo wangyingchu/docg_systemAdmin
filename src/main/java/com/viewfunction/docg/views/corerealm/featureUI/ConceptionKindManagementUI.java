@@ -306,7 +306,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
         singleConceptionKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
 
-        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体采样数 "+entityAttributesDistributionStatisticSampleRatio+")");
+        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体概略采样数 "+entityAttributesDistributionStatisticSampleRatio+")");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle1);
 
         conceptionKindAttributesInfoGrid = new Grid<>();
