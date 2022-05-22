@@ -262,6 +262,13 @@
             <version>3.0.2</version>
         </dependency>
 
+        <!-- https://vaadin.com/directory/component/cytoscape-addon -->
+        <dependency>
+            <groupId>com.github.martinprause.cytoscape</groupId>
+            <artifactId>cytoscape-addon</artifactId>
+            <version>0.0.9</version>
+        </dependency>
+
         <!-- Need add this dependency to fix lib version conflict -->
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <dependency>
