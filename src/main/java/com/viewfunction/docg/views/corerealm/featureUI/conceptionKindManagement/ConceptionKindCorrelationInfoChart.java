@@ -78,24 +78,35 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
         conceptionKindIdList.clear();
         if(conceptionKindCorrelationInfoSet!= null){
             for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
-                Node node=new Node();
-                node.getData().put("shape","ellipse");
-                node.getData().put("background_color","#c00");
                 String sourceConceptionKindId = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
+                String targetConceptionKindId = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
                 if(!conceptionKindIdList.contains(sourceConceptionKindId)){
+                    Node node=new Node();
+                    node.getData().put("shape","ellipse");
+                    node.getData().put("background_color","#c00");
                     if(targetConceptionKind.equals(sourceConceptionKindId)){
                         node.getData().put("shape","pentagon");
                         node.getData().put("background_color","#777777");
+                    }
+                    if(sourceConceptionKindId.startsWith("DOCG_")){
+                        node.getData().put("shape","diamond");
+                        node.getData().put("background_color","#FF8C00");
                     }
                     node.getData().put("id",sourceConceptionKindId);
                     cy.addNode(node);
                     conceptionKindIdList.add(sourceConceptionKindId);
                 }
-                String targetConceptionKindId = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
                 if(!conceptionKindIdList.contains(targetConceptionKindId)){
+                    Node node=new Node();
+                    node.getData().put("shape","ellipse");
+                    node.getData().put("background_color","#c00");
                     if(targetConceptionKind.equals(targetConceptionKindId)){
                         node.getData().put("shape","pentagon");
                         node.getData().put("background_color","#777777");
+                    }
+                    if(targetConceptionKindId.startsWith("DOCG_")){
+                        node.getData().put("shape","diamond");
+                        node.getData().put("background_color","#FF8C00");
                     }
                     node.getData().put("id",targetConceptionKindId);
                     cy.addNode(node);
