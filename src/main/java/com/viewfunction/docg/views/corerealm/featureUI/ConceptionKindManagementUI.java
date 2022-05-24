@@ -333,8 +333,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
 
         ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart();
-        //ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart();
-        conceptionKindCorrelationInfoChart.setHeight(300,Unit.PIXELS);
+        conceptionKindCorrelationInfoChart.setHeight(400,Unit.PIXELS);
         singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
         add(conceptionKindsInfoContainerLayout);
     }
