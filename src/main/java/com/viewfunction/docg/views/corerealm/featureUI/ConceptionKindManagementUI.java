@@ -19,16 +19,15 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.data.vo.TestView;
-import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
+import com.viewfunction.docg.element.commonComponent.*;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -333,9 +332,10 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
 
-        TestView TestView = new TestView();
-        TestView.setHeight(300,Unit.PIXELS);
-        singleConceptionKindSummaryInfoContainerLayout.add(TestView);
+        ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart();
+        //ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart();
+        conceptionKindCorrelationInfoChart.setHeight(300,Unit.PIXELS);
+        singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
         add(conceptionKindsInfoContainerLayout);
     }
 
