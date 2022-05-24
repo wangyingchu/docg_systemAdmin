@@ -18,7 +18,6 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
     private void loadContent() {
         //Create Cytoscape Canvas
         cy = new Cytoscape("ConceptionKindCorrelationInfoChart"+new Date().getTime());
-
         cy.setWidth("100%");
         cy.setHeight("300px");
         cy.addClassName("cy");
@@ -83,7 +82,7 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                 currentEdge.getData().put("target", targetConceptionKindId);
                 cy.addEdge(currentEdge);
             }
-            cy.centerGraph();
+            cy.loadLayout("random");
         }
     }
 }
