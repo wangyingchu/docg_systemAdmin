@@ -30,7 +30,8 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
 
         //Define the style for nodes
         GeneralGraphStyles node=new GeneralGraphStyles.Builder()
-                .background_color("#c00").color("#444444")
+                .background_color("data(background_color)")
+                .color("#444444").shape("data(shape)")
                 .font_size("15")
                 .font_weight("bold")
                 .label("data(id)").build();
@@ -50,7 +51,7 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                 .font_size("11")
                 .font_family("Georgia")
                 .font_weight("bold")
-                .color("#555555").padding("100")
+                .color("#555555")
                 .build();
         gs.addStyle("edge", edge);
 
@@ -72,20 +73,30 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
         loadContent();
     }
 
-    public void loadConceptionKindCorrelationInfo(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet){
+    public void loadConceptionKindCorrelationInfo(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet,String targetConceptionKind){
         cy.deleteAll();
         conceptionKindIdList.clear();
         if(conceptionKindCorrelationInfoSet!= null){
             for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
                 Node node=new Node();
+                node.getData().put("shape","ellipse");
+                node.getData().put("background_color","#c00");
                 String sourceConceptionKindId = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
                 if(!conceptionKindIdList.contains(sourceConceptionKindId)){
+                    if(targetConceptionKind.equals(sourceConceptionKindId)){
+                        node.getData().put("shape","pentagon");
+                        node.getData().put("background_color","#777777");
+                    }
                     node.getData().put("id",sourceConceptionKindId);
                     cy.addNode(node);
                     conceptionKindIdList.add(sourceConceptionKindId);
                 }
                 String targetConceptionKindId = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
                 if(!conceptionKindIdList.contains(targetConceptionKindId)){
+                    if(targetConceptionKind.equals(targetConceptionKindId)){
+                        node.getData().put("shape","pentagon");
+                        node.getData().put("background_color","#777777");
+                    }
                     node.getData().put("id",targetConceptionKindId);
                     cy.addNode(node);
                     conceptionKindIdList.add(targetConceptionKindId);

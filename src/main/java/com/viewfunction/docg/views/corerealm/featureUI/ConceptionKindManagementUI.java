@@ -391,7 +391,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         coreRealm.closeGlobalSession();
 
         conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
-        conceptionKindCorrelationInfoChart.loadConceptionKindCorrelationInfo(conceptionKindCorrelationInfoSet);
+        conceptionKindCorrelationInfoChart.loadConceptionKindCorrelationInfo(conceptionKindCorrelationInfoSet,conceptionKindName);
 
         String conceptionNameText = conceptionKindName+ " ( "+conceptionKindDesc+" )";
         this.secondaryTitleActionBar.updateTitleContent(conceptionNameText);
