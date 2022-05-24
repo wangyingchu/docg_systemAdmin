@@ -1,79 +1,30 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dnd.DragSource;
-import com.vaadin.flow.component.dnd.DropTarget;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
+
 import de.xinblue.cytoscape.Cytoscape;
 import de.xinblue.cytoscape.model.Edge;
 import de.xinblue.cytoscape.model.Node;
 import de.xinblue.cytoscape.styles.GeneralGraphStyles;
 import de.xinblue.cytoscape.styles.GraphStyles;
 
-import java.util.Iterator;
+import java.util.*;
 
 public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
 
-    private void createDashBoardContent() {
+    private Cytoscape cy;
+    private List<String> conceptionKindIdList;
+    private void loadContent() {
         //Create Cytoscape Canvas
-        Cytoscape cy=new Cytoscape("ID0001");
+        cy = new Cytoscape("ConceptionKindCorrelationInfoChart"+new Date().getTime());
+
         cy.setWidth("100%");
         cy.setHeight("300px");
         cy.addClassName("cy");
 
         //Add edge handling
         cy.registerStandardEdgeHandling();
-
-        //Create context menu for nodes and edges. Tap on an edge or node (left mouse down for 1 second)
-        cy.createContextMenu("node",new String[]{"DeleteNode","EditNode"});
-        cy.createContextMenu("edge",new String[]{"ShowEdge"});
-
-        cy.registerEvent("mouseover", "node");
-        cy.addCustomEventListener(e -> {
-            try {
-                JsonNode event = new ObjectMapper().readTree(e.getMessage());
-
-                JsonNode ja=event.get("data");
-                Iterator<JsonNode> iterator = ja.iterator();
-                while (iterator.hasNext()) {
-                    JsonNode js=iterator.next().at("/data/id");
-                    String id=js.asText();
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        cy.addDragListener(e -> {
-            try {
-                JsonNode dragObject = new ObjectMapper().readTree(e.getMessage());
-                Node node=new Node();
-                node.getPosition().put("x", dragObject.get("dragXCoordinate").asInt());
-                node.getPosition().put("y", dragObject.get("dragYCoordinate").asInt());
-                node.getData().put("type", dragObject.get("dragObject").asText());
-                cy.addNode(node);
-
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        DropTarget<Div> dropTarget = DropTarget.create(cy);
-
-        dropTarget.addDropListener(event -> {
-            event.getDragData().ifPresent(data -> {
-
-            });
-        });
 
         //Define an array of styles for different selectors
         GraphStyles gs=new GraphStyles();
@@ -97,15 +48,42 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
         //Set the styles
         cy.loadStyle(gs.getJson(true));
 
-        //Load demo graph
-        cy.loadGraph(cy.getDemoGraph2());
         this.add(cy);
+        conceptionKindIdList = new ArrayList<>();
     }
 
     public ConceptionKindCorrelationInfoChart() {
         this.setSpacing(false);
         this.setMargin(false);
         this.setPadding(false);
-        createDashBoardContent();
+        loadContent();
+    }
+
+    public void loadConceptionKindCorrelationInfo(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet){
+        cy.deleteAll();
+        conceptionKindIdList.clear();
+        if(conceptionKindCorrelationInfoSet!= null){
+            for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
+                Node node=new Node();
+                String sourceConceptionKindId = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
+                if(!conceptionKindIdList.contains(sourceConceptionKindId)){
+                    node.getData().put("id",sourceConceptionKindId);
+                    cy.addNode(node);
+                    conceptionKindIdList.add(sourceConceptionKindId);
+                }
+                String targetConceptionKindId = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
+                if(!conceptionKindIdList.contains(targetConceptionKindId)){
+                    node.getData().put("id",targetConceptionKindId);
+                    cy.addNode(node);
+                    conceptionKindIdList.add(targetConceptionKindId);
+                }
+                Edge currentEdge=new Edge();
+                currentEdge.getData().put("data", currentConceptionKindCorrelationInfo.getRelationKindName());
+                currentEdge.getData().put("source", sourceConceptionKindId);
+                currentEdge.getData().put("target", targetConceptionKindId);
+                cy.addEdge(currentEdge);
+            }
+            cy.centerGraph();
+        }
     }
 }

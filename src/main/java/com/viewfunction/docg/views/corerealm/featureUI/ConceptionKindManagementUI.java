@@ -18,7 +18,6 @@ import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
@@ -46,6 +45,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private int entityAttributesDistributionStatisticSampleRatio = 10000;
     private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
+    private ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
 
     public ConceptionKindManagementUI(){
 
@@ -332,7 +332,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
 
-        ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart();
+        conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart();
         conceptionKindCorrelationInfoChart.setHeight(300,Unit.PIXELS);
         singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
         add(conceptionKindsInfoContainerLayout);
@@ -383,41 +383,16 @@ public class ConceptionKindManagementUI extends VerticalLayout {
                 conceptionKindStatisticsInfo.getEntityKindDesc():"未设置显示名称";
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-
+        coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKindName);
         List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
 
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
-        for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
-            System.out.println(currentConceptionKindCorrelationInfo.getSourceConceptionKindName());
-            System.out.println(currentConceptionKindCorrelationInfo.getTargetConceptionKindName());
-            System.out.println(currentConceptionKindCorrelationInfo.getRelationKindName());
-            System.out.println(currentConceptionKindCorrelationInfo.getRelationEntityCount());
-            System.out.println("------------------");
-        }
-
-
-        for(KindEntityAttributeRuntimeStatistics currentKindEntityAttributeRuntimeStatistics:kindEntityAttributeRuntimeStatisticsList){
-            System.out.println(currentKindEntityAttributeRuntimeStatistics.getAttributeName());
-            System.out.println(currentKindEntityAttributeRuntimeStatistics.getAttributeDataType());
-            System.out.println(currentKindEntityAttributeRuntimeStatistics.getAttributeHitCount());
-            System.out.println("==========================");
-        }
+        coreRealm.closeGlobalSession();
 
         conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
+        conceptionKindCorrelationInfoChart.loadConceptionKindCorrelationInfo(conceptionKindCorrelationInfoSet);
 
-
-        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
-        /*
-        List<AttributeSystemInfo> attributeSystemInfoList = systemMaintenanceOperator.getConceptionKindAttributesSystemInfo(conceptionKindName);
-        for(AttributeSystemInfo currentAttributeSystemInfo : attributeSystemInfoList){
-
-            System.out.println(currentAttributeSystemInfo.getAttributeName());
-            System.out.println(currentAttributeSystemInfo.getDataType());
-            System.out.println("==========================");
-
-        }
-        */
         String conceptionNameText = conceptionKindName+ " ( "+conceptionKindDesc+" )";
         this.secondaryTitleActionBar.updateTitleContent(conceptionNameText);
     }
