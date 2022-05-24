@@ -22,34 +22,11 @@ import java.util.Iterator;
 
 public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
 
-    private VerticalLayout dashboard=new VerticalLayout();
-
-
-
-    private VerticalLayout nodeList=new VerticalLayout();
-
-    private void createDashboard() {
-
-        //add(dashboard);
-    }
-
-
-
-
-
-    private void createNodeList(Cytoscape cy) {
-
-
-        nodeList.setWidth(200, Unit.PIXELS);
-
-    }
-
-
     private void createDashBoardContent() {
         //Create Cytoscape Canvas
         Cytoscape cy=new Cytoscape("ID0001");
         cy.setWidth("100%");
-        cy.setHeight("400px");
+        cy.setHeight("300px");
         cy.addClassName("cy");
 
         //Add edge handling
@@ -58,12 +35,6 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
         //Create context menu for nodes and edges. Tap on an edge or node (left mouse down for 1 second)
         cy.createContextMenu("node",new String[]{"DeleteNode","EditNode"});
         cy.createContextMenu("edge",new String[]{"ShowEdge"});
-
-        cy.addActionListener(e -> {
-
-
-
-        });
 
         cy.registerEvent("mouseover", "node");
         cy.addCustomEventListener(e -> {
@@ -80,8 +51,6 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                 ex.printStackTrace();
             }
         });
-
-
 
         cy.addDragListener(e -> {
             try {
@@ -105,7 +74,6 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
 
             });
         });
-
 
         //Define an array of styles for different selectors
         GraphStyles gs=new GraphStyles();
@@ -131,44 +99,13 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
 
         //Load demo graph
         cy.loadGraph(cy.getDemoGraph2());
-
-        //createButtonLayout(cy);
-        createNodeList(cy);
-        //hl1.add(buttonLayout,nodeList,cy);
-        this.add(nodeList,cy);
+        this.add(cy);
     }
 
     public ConceptionKindCorrelationInfoChart() {
-//this.setWidth(100,Unit.PERCENTAGE);
-        createDashboard();
+        this.setSpacing(false);
+        this.setMargin(false);
+        this.setPadding(false);
         createDashBoardContent();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
