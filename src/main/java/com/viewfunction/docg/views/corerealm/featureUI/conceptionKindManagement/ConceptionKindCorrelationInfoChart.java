@@ -23,22 +23,36 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
         cy.addClassName("cy");
 
         //Add edge handling
-        cy.registerStandardEdgeHandling();
+        //cy.registerStandardEdgeHandling();
 
         //Define an array of styles for different selectors
         GraphStyles gs=new GraphStyles();
 
         //Define the style for nodes
-        GeneralGraphStyles node=new GeneralGraphStyles.Builder().background_color("#c00").label("data(id)").build();
+        GeneralGraphStyles node=new GeneralGraphStyles.Builder()
+                .background_color("#c00").color("#444444")
+                .font_size("15")
+                .font_weight("bold")
+                .label("data(id)").build();
         gs.addStyle("node", node);
 
         //Define the style for edges
-        GeneralGraphStyles edge=new GeneralGraphStyles.Builder().width("2").line_color("#00c").line_style("dotted").build();
+        GeneralGraphStyles edge=new GeneralGraphStyles.Builder()
+                .width("3")
+                .line_color("#CCCCCC")
+                .line_style("solid")
+                .curve_style("unbundled-bezier")
+                .target_arrow_shape("vee")
+                .source_arrow_shape("tee")
+                .arrow_scale("2")
+                .label("data(type)")
+                .text_rotation("autorotate")
+                .font_size("11")
+                .font_family("Georgia")
+                .font_weight("bold")
+                .color("#555555").padding("100")
+                .build();
         gs.addStyle("edge", edge);
-
-        //Define the style for selected nodes
-        GeneralGraphStyles node_selected=new GeneralGraphStyles.Builder().background_color("#0c0").build();
-        gs.addStyle("node:selected", node_selected);
 
         //Define the style for edgeHandling
         GeneralGraphStyles eh_handle=new GeneralGraphStyles.Builder().background_color("#00C").width("8").height("8").text_opacity("0").build();
@@ -77,12 +91,12 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                     conceptionKindIdList.add(targetConceptionKindId);
                 }
                 Edge currentEdge=new Edge();
-                currentEdge.getData().put("data", currentConceptionKindCorrelationInfo.getRelationKindName());
+                currentEdge.getData().put("type", currentConceptionKindCorrelationInfo.getRelationKindName());
                 currentEdge.getData().put("source", sourceConceptionKindId);
                 currentEdge.getData().put("target", targetConceptionKindId);
                 cy.addEdge(currentEdge);
             }
-            cy.loadLayout("random");
+            cy.loadLayout("breadthfirst");
         }
     }
 }
