@@ -143,54 +143,93 @@ public class CoreRealmView extends Div {
     }
 
     private void switchFeatureUI(String activeFeatureID){
-        this.featureContainerLayout.removeAll();
+        if(this.coreRealmDataUI != null){
+            this.coreRealmDataUI.setVisible(false);
+        }
+        if(this.conceptionKindManagementUI != null){
+            this.conceptionKindManagementUI.setVisible(false);
+        }
+        if(this.relationKindManagementUI != null){
+            this.relationKindManagementUI.setVisible(false);
+        }
+        if(this.attributeKindManagementUI != null){
+            this.attributeKindManagementUI.setVisible(false);
+        }
+        if(this.attributesViewKindManagementUI != null){
+            this.attributesViewKindManagementUI.setVisible(false);
+        }
+        if(this.classificationManagementUI != null){
+            this.classificationManagementUI.setVisible(false);
+        }
+        if(this.geospatialRegionManagementUI != null){
+            this.geospatialRegionManagementUI.setVisible(false);
+        }
+        if(this.timeFlowManagementUI != null){
+            this.timeFlowManagementUI.setVisible(false);
+        }
         if(activeFeatureID.equals("coreRealmTab")){
             if(this.coreRealmDataUI == null){
                 this.coreRealmDataUI = new CoreRealmDataUI();
+                this.featureContainerLayout.add(this.coreRealmDataUI);
+            }else{
+                this.coreRealmDataUI.setVisible(true);
             }
-            this.featureContainerLayout.add(this.coreRealmDataUI);
         }
         if(activeFeatureID.equals("conceptionKindTab")){
             if(this.conceptionKindManagementUI == null){
                 this.conceptionKindManagementUI = new ConceptionKindManagementUI();
+                this.featureContainerLayout.add(this.conceptionKindManagementUI);
+            }else{
+                this.conceptionKindManagementUI.setVisible(true);
             }
-            this.featureContainerLayout.add(this.conceptionKindManagementUI);
         }
         if(activeFeatureID.equals("relationKindTab")){
             if(this.relationKindManagementUI == null){
                 this.relationKindManagementUI = new RelationKindManagementUI();
+                this.featureContainerLayout.add(this.relationKindManagementUI);
+            }else{
+                this.relationKindManagementUI.setVisible(true);
             }
-            this.featureContainerLayout.add(this.relationKindManagementUI);
         }
         if(activeFeatureID.equals("attributeKindTab")){
             if(this.attributeKindManagementUI == null){
                 this.attributeKindManagementUI = new AttributeKindManagementUI();
+                this.featureContainerLayout.add(this.attributeKindManagementUI);
+            }else{
+                this.attributeKindManagementUI.setVisible(true);
             }
-            this.featureContainerLayout.add(this.attributeKindManagementUI);
         }
         if(activeFeatureID.equals("attributesViewKindTab")){
             if(this.attributesViewKindManagementUI == null){
                 this.attributesViewKindManagementUI = new AttributesViewKindManagementUI();
+                this.featureContainerLayout.add(this.attributesViewKindManagementUI);
+            }else{
+                this.attributesViewKindManagementUI.setVisible(true);
             }
-            this.featureContainerLayout.add(this.attributesViewKindManagementUI);
         }
         if(activeFeatureID.equals("classificationTab")){
             if(this.classificationManagementUI == null){
                 this.classificationManagementUI = new ClassificationManagementUI();
+                this.featureContainerLayout.add(this.classificationManagementUI);
+            }else{
+                this.classificationManagementUI.setVisible(true);
             }
-            this.featureContainerLayout.add(this.classificationManagementUI);
         }
         if(activeFeatureID.equals("geospatialRegionTab")){
             if(this.geospatialRegionManagementUI == null){
                 this.geospatialRegionManagementUI = new GeospatialRegionManagementUI();
+                this.featureContainerLayout.add(this.geospatialRegionManagementUI);
+            }else{
+                this.geospatialRegionManagementUI.setVisible(true);
             }
-            this.featureContainerLayout.add(this.geospatialRegionManagementUI);
         }
         if(activeFeatureID.equals("timeFlowTab")){
             if(this.timeFlowManagementUI == null){
                 this.timeFlowManagementUI = new TimeFlowManagementUI();
+                this.featureContainerLayout.add(this.timeFlowManagementUI);
+            }else{
+                this.timeFlowManagementUI.setVisible(true);
             }
-            this.featureContainerLayout.add(this.timeFlowManagementUI);
         }
     }
 }
