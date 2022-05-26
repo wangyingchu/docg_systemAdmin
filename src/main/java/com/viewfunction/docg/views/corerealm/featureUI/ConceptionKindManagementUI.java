@@ -5,7 +5,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.grid.ItemClickEvent;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -15,6 +14,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
@@ -47,6 +48,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
     private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
     private ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
     private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
+    private EntityStatisticsInfo lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo;
 
     public ConceptionKindManagementUI(){
 
@@ -185,6 +187,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindMetaInfoGrid = new Grid<>();
         conceptionKindMetaInfoGrid.setWidth(1300,Unit.PIXELS);
         conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        conceptionKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindName).setHeader("概念类型名称").setKey("idx_0");
         conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindDesc).setHeader("概念类型显示名称").setKey("idx_1");
         conceptionKindMetaInfoGrid.addColumn(_createDateComponentRenderer).setHeader("类型创建时间").setKey("idx_2")
@@ -216,10 +219,35 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
         conceptionKindMetaInfoGrid.appendFooterRow();
 
-        conceptionKindMetaInfoGrid.addItemClickListener(new ComponentEventListener<ItemClickEvent<EntityStatisticsInfo>>() {
+        HorizontalLayout selectItemPromptMessage =new HorizontalLayout();
+        selectItemPromptMessage.setSpacing(true);
+        selectItemPromptMessage.setPadding(true);
+        selectItemPromptMessage.setMargin(true);
+        selectItemPromptMessage.setWidth(100,Unit.PERCENTAGE);
+        selectItemPromptMessage.setHeight(300,Unit.PIXELS);
+        Icon messageLogo = new Icon(VaadinIcon.COMMENT_O);
+        messageLogo.getStyle().set("color","var(--lumo-primary-color)")
+                .set("padding-right", "5px");
+        messageLogo.setSize("30px");
+        Label messageLabel = new Label(" 请选择概念类型定义");
+        messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)")
+                .set("color","var(--lumo-primary-color)");
+        selectItemPromptMessage.add(messageLogo,messageLabel);
+
+        conceptionKindMetaInfoGrid.addSelectionListener(new SelectionListener<Grid<EntityStatisticsInfo>, EntityStatisticsInfo>() {
             @Override
-            public void onComponentEvent(ItemClickEvent<EntityStatisticsInfo> entityStatisticsInfoItemClickEvent) {
-                renderConceptionKindOverview(entityStatisticsInfoItemClickEvent.getItem());
+            public void selectionChange(SelectionEvent<Grid<EntityStatisticsInfo>, EntityStatisticsInfo> selectionEvent) {
+                Set<EntityStatisticsInfo> selectedItemSet = selectionEvent.getAllSelectedItems();
+                if(selectedItemSet.size() == 0){
+                    // don't allow to unselect item, just reselect last selected item
+                    conceptionKindMetaInfoGrid.select(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo);
+                }else{
+                    selectItemPromptMessage.setVisible(false);
+                    singleConceptionKindSummaryInfoContainerLayout.setVisible(true);
+                    EntityStatisticsInfo selectedEntityStatisticsInfo = selectedItemSet.iterator().next();
+                    renderConceptionKindOverview(selectedEntityStatisticsInfo);
+                    lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo = selectedEntityStatisticsInfo;
+                }
             }
         });
 
@@ -284,6 +312,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
 
         conceptionKindsInfoContainerLayout.add(conceptionKindMetaInfoGridContainerLayout);
+        conceptionKindsInfoContainerLayout.add(selectItemPromptMessage);
 
         singleConceptionKindSummaryInfoContainerLayout = new VerticalLayout();
         singleConceptionKindSummaryInfoContainerLayout.setSpacing(true);
@@ -332,7 +361,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
-
+        singleConceptionKindSummaryInfoContainerLayout.setVisible(false);
         add(conceptionKindsInfoContainerLayout);
     }
 
