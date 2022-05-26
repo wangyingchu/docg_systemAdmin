@@ -46,6 +46,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
     private int entityAttributesDistributionStatisticSampleRatio = 10000;
     private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
     private ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
+    private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
 
     public ConceptionKindManagementUI(){
 
@@ -284,7 +285,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
         conceptionKindsInfoContainerLayout.add(conceptionKindMetaInfoGridContainerLayout);
 
-        VerticalLayout singleConceptionKindSummaryInfoContainerLayout = new VerticalLayout();
+        singleConceptionKindSummaryInfoContainerLayout = new VerticalLayout();
         singleConceptionKindSummaryInfoContainerLayout.setSpacing(true);
         singleConceptionKindSummaryInfoContainerLayout.setMargin(true);
         singleConceptionKindSummaryInfoContainerLayout.setPadding(false);
@@ -332,9 +333,6 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
 
-        conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart();
-        conceptionKindCorrelationInfoChart.setHeight(300,Unit.PIXELS);
-        singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
         add(conceptionKindsInfoContainerLayout);
     }
 
@@ -350,6 +348,8 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             conceptionKindMetaInfoGrid.setHeight(browserHeight-280,Unit.PIXELS);
+            conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-630);
+            singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
         }));
     }
 

@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement;
 
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 
@@ -15,11 +16,20 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
 
     private Cytoscape cy;
     private List<String> conceptionKindIdList;
-    private void loadContent() {
+
+    public ConceptionKindCorrelationInfoChart(int chartHeight) {
+        this.setSpacing(false);
+        this.setMargin(false);
+        this.setPadding(false);
+        this.setHeight(chartHeight,Unit.PIXELS);
+        loadContent(chartHeight);
+    }
+
+    private void loadContent(int chartHeight) {
         //Create Cytoscape Canvas
         cy = new Cytoscape("ConceptionKindCorrelationInfoChart"+new Date().getTime());
         cy.setWidth("100%");
-        cy.setHeight("300px");
+        cy.setHeight(chartHeight+"px");
         cy.addClassName("cy");
 
         //Add edge handling
@@ -64,13 +74,6 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
 
         this.add(cy);
         conceptionKindIdList = new ArrayList<>();
-    }
-
-    public ConceptionKindCorrelationInfoChart() {
-        this.setSpacing(false);
-        this.setMargin(false);
-        this.setPadding(false);
-        loadContent();
     }
 
     public void loadConceptionKindCorrelationInfo(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet,String targetConceptionKind){
