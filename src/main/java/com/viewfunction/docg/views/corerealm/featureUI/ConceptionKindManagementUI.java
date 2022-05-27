@@ -3,6 +3,8 @@ package com.viewfunction.docg.views.corerealm.featureUI;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.dialog.DialogVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Label;
@@ -94,7 +96,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
             configIcon.setSize("21px");
             Button configConceptionKind = new Button(configIcon, event -> {
                 if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                    System.out.println(((EntityStatisticsInfo)entityStatisticsInfo).getEntityKindUID());
+                    renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
                 }
             });
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -424,5 +426,18 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
         String conceptionNameText = conceptionKindName+ " ( "+conceptionKindDesc+" )";
         this.secondaryTitleActionBar.updateTitleContent(conceptionNameText);
+    }
+
+    private void renderConceptionKindConfigurationUI(EntityStatisticsInfo entityStatisticsInfo){
+        Dialog dialog = new Dialog();
+        dialog.setModal(true);
+        dialog.setResizable(false);
+        dialog.setCloseOnEsc(false);
+        dialog.setCloseOnOutsideClick(false);
+        dialog.setSizeFull();
+        dialog.addThemeVariants(DialogVariant.LUMO_NO_PADDING);
+        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        dialog.add(cancelButton);
+        dialog.open();
     }
 }
