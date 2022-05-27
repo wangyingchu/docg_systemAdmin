@@ -115,6 +115,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
             Button removeConceptionKind = new Button(deleteKindIcon, event -> {});
             removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
             Tooltips.getCurrent().setTooltip(removeConceptionKind, "删除概念类型");
 
             HorizontalLayout buttons = new HorizontalLayout(configConceptionKind, cleanConceptionKind,removeConceptionKind);
