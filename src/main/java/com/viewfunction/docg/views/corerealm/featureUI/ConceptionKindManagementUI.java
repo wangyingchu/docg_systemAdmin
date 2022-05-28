@@ -78,10 +78,16 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
         List<Component> conceptionKindManagementOperationButtonList = new ArrayList<>();
 
-        Button conceptionKindRelationGuideButton = new Button("概念类型定义导览",new Icon(VaadinIcon.SITEMAP));
+        Button conceptionKindRelationGuideButton = new Button("概念类型定义概览",new Icon(VaadinIcon.SITEMAP));
         conceptionKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         conceptionKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         conceptionKindManagementOperationButtonList.add(conceptionKindRelationGuideButton);
+        conceptionKindRelationGuideButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderConceptionKindsCorrelationInfoSummaryUI();
+            }
+        });
 
         Button createConceptionKindButton = new Button("创建概念类型定义",new Icon(VaadinIcon.PLUS_SQUARE_O));
         createConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -447,5 +453,32 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         Button cancelButton = new Button("Cancel", e -> dialog.close());
         dialog.add(cancelButton);
         dialog.open();
+    }
+
+    private void renderConceptionKindsCorrelationInfoSummaryUI(){
+        Dialog dialog = new Dialog();
+        dialog.setModal(false);
+        dialog.setResizable(true);
+        dialog.setCloseOnEsc(false);
+        dialog.setCloseOnOutsideClick(false);
+        //dialog.setSizeFull();
+
+        dialog.setHeight(600,Unit.PIXELS);
+        dialog.setWidth(800,Unit.PIXELS);
+
+        dialog.addThemeVariants(DialogVariant.LUMO_NO_PADDING);
+
+        //dialog.add(cancelButton);
+
+
+
+
+        dialog.open();
+
+        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        SecondaryTitleActionBar windowTitleBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null);
+
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(windowTitleBar,1000,800);
+        fixSizeWindow.show();
     }
 }
