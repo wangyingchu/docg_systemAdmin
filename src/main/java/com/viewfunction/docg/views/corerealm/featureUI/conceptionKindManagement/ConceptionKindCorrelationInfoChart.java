@@ -124,4 +124,10 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
             cy.loadLayout("breadthfirst");
         }
     }
+
+    public void clearGraph(){
+        cy.deleteAll();
+        conceptionKindIdList.clear();
+        cy.loadLayout("breadthfirst");
+    }
 }

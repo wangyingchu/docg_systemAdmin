@@ -61,6 +61,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
             loadConceptionKindsInfo();
+            resetSingleConceptionKindSummaryInfoArea();
         });
 
         List<Component> buttonList = new ArrayList<>();
@@ -427,6 +428,12 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
         String conceptionNameText = conceptionKindName+ " ( "+conceptionKindDesc+" )";
         this.secondaryTitleActionBar.updateTitleContent(conceptionNameText);
+    }
+
+    private void resetSingleConceptionKindSummaryInfoArea(){
+        conceptionKindCorrelationInfoChart.clearGraph();
+        conceptionKindAttributesInfoGrid.setItems(new ArrayList<>());
+        this.secondaryTitleActionBar.updateTitleContent("");
     }
 
     private void renderConceptionKindConfigurationUI(EntityStatisticsInfo entityStatisticsInfo){
