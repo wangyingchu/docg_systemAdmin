@@ -457,6 +457,8 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
     private void renderConceptionKindsCorrelationInfoSummaryUI(){
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念类型实体实时关联分布概览",null,true,1000,800,false);
+        Label xxxx = new Label("XXXXXXXXXXXXXXXXx");
+        fixSizeWindow.setWindowContent(xxxx);
         fixSizeWindow.show();
     }
 }

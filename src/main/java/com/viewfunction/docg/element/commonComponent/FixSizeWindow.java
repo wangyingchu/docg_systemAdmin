@@ -11,12 +11,13 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import java.util.List;
 
 public class FixSizeWindow extends Dialog {
 
-    private SecondaryTitleActionBar titleActionBar;
+    private VerticalLayout windowsContentContainerLayout;
 
     public FixSizeWindow(Icon titleIcon, String titleContent, List<Component> actionComponentsList,boolean displayCloseButton,int windowWidth, int windowHeight,boolean isResizable){
         this.setModal(false);
@@ -74,6 +75,18 @@ public class FixSizeWindow extends Dialog {
             titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.START,closeButton);
         }
         this.add(titleElementsContainer);
+
+        this.windowsContentContainerLayout = new VerticalLayout();
+        this.windowsContentContainerLayout.setWidth(100,Unit.PERCENTAGE);
+        this.windowsContentContainerLayout.setSpacing(false);
+        this.windowsContentContainerLayout.setPadding(false);
+        this.windowsContentContainerLayout.setMargin(false);
+
+        this.add(this.windowsContentContainerLayout);
+    }
+
+    public void setWindowContent(Component windowContent){
+        this.windowsContentContainerLayout.add(windowContent);
     }
 
     public void show(){
