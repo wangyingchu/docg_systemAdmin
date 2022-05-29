@@ -1,6 +1,7 @@
 package com.viewfunction.docg.element.commonComponent;
 
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.dialog.DialogVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -26,18 +27,12 @@ public class FixSizeWindow extends Dialog {
 
 
         HorizontalLayout titleContentContainer = new HorizontalLayout();
+        Button cancelButton = new Button("Cancel", e -> this.close());
+        titleContentContainer.add(cancelButton);
+        this.add(titleContentContainer);
 
 
-
-
-
-
-
-
-
-
-
-        this.add(titleActionBar);
+        //this.add(titleActionBar);
     }
 
     public void show(){

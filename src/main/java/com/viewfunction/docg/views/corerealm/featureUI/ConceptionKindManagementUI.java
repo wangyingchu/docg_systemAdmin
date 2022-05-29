@@ -473,7 +473,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
 
 
-        dialog.open();
+        //dialog.open();
 
         Button cancelButton = new Button("Cancel", e -> dialog.close());
         SecondaryTitleActionBar windowTitleBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null);
