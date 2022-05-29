@@ -456,29 +456,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
     }
 
     private void renderConceptionKindsCorrelationInfoSummaryUI(){
-        Dialog dialog = new Dialog();
-        dialog.setModal(false);
-        dialog.setResizable(true);
-        dialog.setCloseOnEsc(false);
-        dialog.setCloseOnOutsideClick(false);
-        //dialog.setSizeFull();
-
-        dialog.setHeight(600,Unit.PIXELS);
-        dialog.setWidth(800,Unit.PIXELS);
-
-        dialog.addThemeVariants(DialogVariant.LUMO_NO_PADDING);
-
-        //dialog.add(cancelButton);
-
-
-
-
-        //dialog.open();
-
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
-        SecondaryTitleActionBar windowTitleBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null);
-
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(windowTitleBar,1000,800);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.CUBE),"balabalaba",null,true,1000,800,false);
         fixSizeWindow.show();
     }
 }
