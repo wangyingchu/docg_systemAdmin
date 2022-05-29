@@ -78,7 +78,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
         List<Component> conceptionKindManagementOperationButtonList = new ArrayList<>();
 
-        Button conceptionKindRelationGuideButton = new Button("概念类型定义概览",new Icon(VaadinIcon.SITEMAP));
+        Button conceptionKindRelationGuideButton = new Button("概念类型关联分布概览",new Icon(VaadinIcon.SITEMAP));
         conceptionKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         conceptionKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         conceptionKindManagementOperationButtonList.add(conceptionKindRelationGuideButton);
@@ -456,7 +456,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
     }
 
     private void renderConceptionKindsCorrelationInfoSummaryUI(){
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.CUBE),"balabalaba",null,true,1000,800,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念类型实体实时关联分布概览",null,true,1000,800,false);
         fixSizeWindow.show();
     }
 }
