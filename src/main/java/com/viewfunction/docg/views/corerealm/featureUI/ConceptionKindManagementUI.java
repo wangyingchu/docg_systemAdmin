@@ -21,6 +21,7 @@ import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
@@ -456,9 +457,27 @@ public class ConceptionKindManagementUI extends VerticalLayout {
     }
 
     private void renderConceptionKindsCorrelationInfoSummaryUI(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+        Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.
+                getSystemConceptionKindsRelationDistributionStatistics();
+
+        System.out.println(conceptionKindCorrelationInfoSet);
+        System.out.println(conceptionKindCorrelationInfoSet);
+        System.out.println(conceptionKindCorrelationInfoSet);
+        System.out.println(conceptionKindCorrelationInfoSet);
+        System.out.println(conceptionKindCorrelationInfoSet);
+
+
+        //ConceptionKindsCorrelationInfoSummaryChart conceptionKindsCorrelationInfoSummaryChart =
+        //        new ConceptionKindsCorrelationInfoSummaryChart(conceptionKindCorrelationInfoSet,900,600);
+
+
+
+
+
+
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念类型实体实时关联分布概览",null,true,1000,800,false);
-        Label xxxx = new Label("XXXXXXXXXXXXXXXXx");
-        fixSizeWindow.setWindowContent(xxxx);
         fixSizeWindow.show();
     }
 }
