@@ -462,13 +462,6 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.
                 getSystemConceptionKindsRelationDistributionStatistics();
 
-        System.out.println(conceptionKindCorrelationInfoSet);
-        System.out.println(conceptionKindCorrelationInfoSet);
-        System.out.println(conceptionKindCorrelationInfoSet);
-        System.out.println(conceptionKindCorrelationInfoSet);
-        System.out.println(conceptionKindCorrelationInfoSet);
-
-
         //ConceptionKindsCorrelationInfoSummaryChart conceptionKindsCorrelationInfoSummaryChart =
         //        new ConceptionKindsCorrelationInfoSummaryChart(conceptionKindCorrelationInfoSet,900,600);
 
