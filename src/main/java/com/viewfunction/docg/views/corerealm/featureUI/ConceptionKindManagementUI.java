@@ -100,6 +100,17 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         add(sectionActionBar);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+            Icon queryIcon = new Icon(VaadinIcon.RECORDS);
+            queryIcon.setSize("20px");
+            Button queryConceptionKind = new Button(queryIcon, event -> {
+                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                    renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
+                }
+            });
+            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(queryConceptionKind, "查询概念类型实体");
+
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
             Button configConceptionKind = new Button(configIcon, event -> {
@@ -126,7 +137,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
             removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
             Tooltips.getCurrent().setTooltip(removeConceptionKind, "删除概念类型");
 
-            HorizontalLayout buttons = new HorizontalLayout(configConceptionKind, cleanConceptionKind,removeConceptionKind);
+            HorizontalLayout buttons = new HorizontalLayout(queryConceptionKind,configConceptionKind, cleanConceptionKind,removeConceptionKind);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -213,7 +224,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
                 .setHeader("类型包含实体数量").setKey("idx_4")
                 .setFlexGrow(0).setWidth("150px").setResizable(false);
         conceptionKindMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_5")
-                .setFlexGrow(0).setWidth("115px").setResizable(false);
+                .setFlexGrow(0).setWidth("140px").setResizable(false);
 
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"概念类型名称");
         conceptionKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
