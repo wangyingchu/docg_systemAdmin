@@ -31,6 +31,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 import com.viewfunction.docg.element.commonComponent.*;
 
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindsCorrelationInfoSummaryChart;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -472,16 +473,10 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.
                 getSystemConceptionKindsRelationDistributionStatistics();
-
-        //ConceptionKindsCorrelationInfoSummaryChart conceptionKindsCorrelationInfoSummaryChart =
-        //        new ConceptionKindsCorrelationInfoSummaryChart(conceptionKindCorrelationInfoSet,900,600);
-
-
-
-
-
-
+        ConceptionKindsCorrelationInfoSummaryChart conceptionKindsCorrelationInfoSummaryChart =
+                new ConceptionKindsCorrelationInfoSummaryChart(conceptionKindCorrelationInfoSet,900,600);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念类型实体实时关联分布概览",null,true,1000,800,false);
+        fixSizeWindow.setWindowContent(conceptionKindsCorrelationInfoSummaryChart);
         fixSizeWindow.show();
     }
 }

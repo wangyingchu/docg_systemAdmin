@@ -1,13 +1,18 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement;
 
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Page;
+import com.vaadin.flow.server.WebBrowser;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import de.xinblue.cytoscape.Cytoscape;
 import de.xinblue.cytoscape.model.Edge;
 import de.xinblue.cytoscape.model.Node;
 import de.xinblue.cytoscape.styles.GeneralGraphStyles;
 import de.xinblue.cytoscape.styles.GraphStyles;
+import com.vaadin.flow.component.html.IFrame;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +35,17 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends VerticalLayout {
     }
 
     public void loadConceptionKindCorrelationInfo(){
+        IFrame _IFrame = new IFrame();
+        _IFrame.getStyle().set("border","0")
+                .set("color","var(--lumo-primary-color)");
+        _IFrame.setSrc("http://127.0.0.1:7141/instanceRelationsExplore/U3BhY2VOYW1lW0NJTURhdGFEaXNjb3ZlckVuZ2luZVVUXU9iamVjdFR5cGVbQ2ltT2JqZWN0VHlwZVNUQVRfMDAxXUluc3RhbmNlUklEWyMxNTc6N10=");
+        _IFrame.setHeight(550, Unit.PIXELS);
+        _IFrame.setWidth(950,Unit.PIXELS);
 
+
+        add(_IFrame);
+        //WebBrowser webBrowser = get
+        /*
         cy = new Cytoscape("SystemConceptionKindsCorrelationInfoChart"+new Date().getTime());
         cy.setWidth("100%");
         cy.setHeight("900"+"px");
@@ -120,6 +135,9 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends VerticalLayout {
             }
             cy.loadLayout("breadthfirst");
         }
+
+
+ */
     }
 
     @Override
