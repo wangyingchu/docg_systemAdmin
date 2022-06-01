@@ -28,10 +28,6 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends VerticalLayout {
                                                       int windowWidth, int windowHeight){
         this.conceptionKindCorrelationInfoSet = conceptionKindCorrelationInfoSet;
         conceptionKindIdList = new ArrayList<>();
-
-
-
-
     }
 
     public void loadConceptionKindCorrelationInfo(){
