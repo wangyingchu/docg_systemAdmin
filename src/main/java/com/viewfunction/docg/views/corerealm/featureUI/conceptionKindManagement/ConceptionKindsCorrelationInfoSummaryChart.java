@@ -35,10 +35,11 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends VerticalLayout {
     }
 
     public void loadConceptionKindCorrelationInfo(){
+        //UI.getCurrent().getPage();
+
         IFrame _IFrame = new IFrame();
-        _IFrame.getStyle().set("border","0")
-                .set("color","var(--lumo-primary-color)");
-        _IFrame.setSrc("http://127.0.0.1:7141/instanceRelationsExplore/U3BhY2VOYW1lW0NJTURhdGFEaXNjb3ZlckVuZ2luZVVUXU9iamVjdFR5cGVbQ2ltT2JqZWN0VHlwZVNUQVRfMDAxXUluc3RhbmNlUklEWyMxNTc6N10=");
+        _IFrame.getStyle().set("border","0");
+        _IFrame.setSrc("http://192.168.3.7:7141/instanceRelationsExplore/U3BhY2VOYW1lW0NJTURhdGFEaXNjb3ZlckVuZ2luZVVUXU9iamVjdFR5cGVbQ2ltT2JqZWN0VHlwZVNUQVRfMDAxXUluc3RhbmNlUklEWyMxNTc6N10=");
         _IFrame.setHeight(550, Unit.PIXELS);
         _IFrame.setWidth(950,Unit.PIXELS);
 
