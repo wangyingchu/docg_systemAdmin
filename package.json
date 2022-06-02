@@ -431,7 +431,6 @@
     "@vaadin/common-frontend": "$@vaadin/common-frontend",
     "lit": "$lit",
     "chokidar": "$chokidar",
-    "date-fns": "$date-fns",
-    "lumo-css-framework": "$lumo-css-framework"
+    "date-fns": "$date-fns"
   }
 }
