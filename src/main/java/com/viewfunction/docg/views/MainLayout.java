@@ -25,16 +25,11 @@ import com.viewfunction.docg.views.computegrid.ComputeGridView;
 import com.viewfunction.docg.views.dataAnalysis.DataAnalysisView;
 import com.viewfunction.docg.views.knowledgefusion.KnowledgeFusionView;
 import com.viewfunction.docg.views.about.AboutView;
-import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.component.avatar.Avatar;
 
 /**
  * The main view is a top-level placeholder for other views.
  */
-@PWA(name = "DOCG-PAC", shortName = "DOCG-PAC", enableInstallPrompt = false)
-@Theme(themeFolder = "docg-pac")
-@PageTitle("Main")
 public class MainLayout extends AppLayout {
 
     public static class MenuItemInfo {
