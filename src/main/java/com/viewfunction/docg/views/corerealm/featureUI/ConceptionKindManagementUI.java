@@ -7,6 +7,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.dialog.DialogVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.IFrame;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -473,10 +474,20 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.
                 getSystemConceptionKindsRelationDistributionStatistics();
-        ConceptionKindsCorrelationInfoSummaryChart conceptionKindsCorrelationInfoSummaryChart =
-                new ConceptionKindsCorrelationInfoSummaryChart(conceptionKindCorrelationInfoSet,900,600);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念类型实体实时关联分布概览",null,true,1000,800,false);
-        fixSizeWindow.setWindowContent(conceptionKindsCorrelationInfoSummaryChart);
-        fixSizeWindow.show();
+
+        UI.getCurrent().getPage().fetchCurrentURL(currentUrl -> {
+            // This is your own method that you may do something with the url.
+            // Please note that this method runs asynchronously
+            String conceptionKindsCorrelationInfoSummaryViewURL = currentUrl.toString()+"conceptionKindsCorrelationInfoSummary";
+            IFrame _IFrame = new IFrame();
+            _IFrame.getStyle().set("border","0");
+            _IFrame.setSrc(conceptionKindsCorrelationInfoSummaryViewURL);
+            _IFrame.setHeight(700, Unit.PIXELS);
+            _IFrame.setWidth(950,Unit.PIXELS);
+
+            FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念类型实体实时关联分布概览",null,true,1000,800,false);
+            fixSizeWindow.setWindowContent(_IFrame);
+            fixSizeWindow.show();
+        });
     }
 }
