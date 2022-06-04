@@ -470,6 +470,8 @@ public class ConceptionKindManagementUI extends VerticalLayout {
     }
 
     private void renderConceptionKindsCorrelationInfoSummaryUI(){
+        // Method 1 use IFrame to load
+        /*
         UI.getCurrent().getPage().fetchCurrentURL(currentUrl -> {
             // This is your own method that you may do something with the url.
             // Please note that this method runs asynchronously
@@ -484,5 +486,17 @@ public class ConceptionKindManagementUI extends VerticalLayout {
             fixSizeWindow.setWindowContent(_IFrame);
             fixSizeWindow.show();
         });
+        */
+
+        // Method 2 direct use chart
+        ConceptionKindsCorrelationInfoSummaryChart conceptionKindsCorrelationInfoSummaryChart = new ConceptionKindsCorrelationInfoSummaryChart(1180,820);
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+        Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.
+                getSystemConceptionKindsRelationDistributionStatistics();
+        conceptionKindsCorrelationInfoSummaryChart.setData(conceptionKindCorrelationInfoSet);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念类型实体实时关联分布概览",null,true,1200,900,false);
+        fixSizeWindow.setWindowContent(conceptionKindsCorrelationInfoSummaryChart);
+        fixSizeWindow.show();
     }
 }
