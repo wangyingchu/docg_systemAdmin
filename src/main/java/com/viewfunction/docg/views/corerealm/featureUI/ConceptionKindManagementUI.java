@@ -470,23 +470,17 @@ public class ConceptionKindManagementUI extends VerticalLayout {
     }
 
     private void renderConceptionKindsCorrelationInfoSummaryUI(){
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
-        Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.
-                getSystemConceptionKindsRelationDistributionStatistics();
-
         UI.getCurrent().getPage().fetchCurrentURL(currentUrl -> {
             // This is your own method that you may do something with the url.
             // Please note that this method runs asynchronously
-            //String conceptionKindsCorrelationInfoSummaryViewURL = currentUrl.toString()+"conceptionKindsCorrelationInfoSummary";
-            String conceptionKindsCorrelationInfoSummaryViewURL = "https://www.ibm.com";
+            String conceptionKindsCorrelationInfoSummaryViewURL = currentUrl.toString()+"conceptionKindsCorrelationInfoSummary";
             IFrame _IFrame = new IFrame();
             _IFrame.getStyle().set("border","0");
             _IFrame.setSrc(conceptionKindsCorrelationInfoSummaryViewURL);
-            _IFrame.setHeight(720, Unit.PIXELS);
-            _IFrame.setWidth(960,Unit.PIXELS);
+            _IFrame.setHeight(820, Unit.PIXELS);
+            _IFrame.setWidth(1160,Unit.PIXELS);
 
-            FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念类型实体实时关联分布概览",null,true,1000,800,false);
+            FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念类型实体实时关联分布概览",null,true,1200,900,false);
             fixSizeWindow.setWindowContent(_IFrame);
             fixSizeWindow.show();
         });
