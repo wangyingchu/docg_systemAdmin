@@ -478,12 +478,13 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         UI.getCurrent().getPage().fetchCurrentURL(currentUrl -> {
             // This is your own method that you may do something with the url.
             // Please note that this method runs asynchronously
-            String conceptionKindsCorrelationInfoSummaryViewURL = currentUrl.toString()+"conceptionKindsCorrelationInfoSummary";
+            //String conceptionKindsCorrelationInfoSummaryViewURL = currentUrl.toString()+"conceptionKindsCorrelationInfoSummary";
+            String conceptionKindsCorrelationInfoSummaryViewURL = "https://www.ibm.com";
             IFrame _IFrame = new IFrame();
             _IFrame.getStyle().set("border","0");
             _IFrame.setSrc(conceptionKindsCorrelationInfoSummaryViewURL);
-            _IFrame.setHeight(700, Unit.PIXELS);
-            _IFrame.setWidth(950,Unit.PIXELS);
+            _IFrame.setHeight(720, Unit.PIXELS);
+            _IFrame.setWidth(960,Unit.PIXELS);
 
             FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念类型实体实时关联分布概览",null,true,1000,800,false);
             fixSizeWindow.setWindowContent(_IFrame);

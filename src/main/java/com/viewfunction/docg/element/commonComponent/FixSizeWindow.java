@@ -87,6 +87,7 @@ public class FixSizeWindow extends Dialog {
 
     public void setWindowContent(Component windowContent){
         this.windowsContentContainerLayout.add(windowContent);
+        this.windowsContentContainerLayout.setHorizontalComponentAlignment(FlexComponent.Alignment.CENTER,windowContent);
     }
 
     public void show(){
