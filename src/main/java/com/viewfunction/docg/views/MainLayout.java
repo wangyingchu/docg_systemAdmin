@@ -99,8 +99,8 @@ public class MainLayout extends AppLayout {
         HorizontalLayout logoLayout = new HorizontalLayout();
         logoLayout.setId("logo");
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-        logoLayout.add(new Image("images/logo.png", "DOCG-PAC logo"));
-        logoLayout.add(new H1("DOCG-PAC"));
+        logoLayout.add(new Image("images/logo.png", "DOCG-SAC logo"));
+        logoLayout.add(new H1("DOCG-SAC"));
         layout.add(logoLayout, menu);
         return layout;
     }
