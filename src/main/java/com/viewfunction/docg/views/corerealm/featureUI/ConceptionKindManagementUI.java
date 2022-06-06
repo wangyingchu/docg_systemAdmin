@@ -7,7 +7,6 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.dialog.DialogVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.IFrame;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -29,9 +28,10 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttrib
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart_plugin;
 import com.viewfunction.docg.element.commonComponent.*;
 
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindsCorrelationInfoSummaryChart;
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -51,6 +51,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private int entityAttributesDistributionStatisticSampleRatio = 10000;
     private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
+    private ConceptionKindCorrelationInfoChart_plugin conceptionKindCorrelationInfoChart_plugin;
     private ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
     private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
     private EntityStatisticsInfo lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo;
@@ -401,6 +402,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             conceptionKindMetaInfoGrid.setHeight(browserHeight-280,Unit.PIXELS);
+            conceptionKindCorrelationInfoChart_plugin = new ConceptionKindCorrelationInfoChart_plugin(browserHeight-630);
             conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-630);
             singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
         }));
@@ -444,14 +446,14 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         coreRealm.closeGlobalSession();
 
         conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
-        conceptionKindCorrelationInfoChart.loadConceptionKindCorrelationInfo(conceptionKindCorrelationInfoSet,conceptionKindName);
+        conceptionKindCorrelationInfoChart_plugin.loadConceptionKindCorrelationInfo(conceptionKindCorrelationInfoSet,conceptionKindName);
 
         String conceptionNameText = conceptionKindName+ " ( "+conceptionKindDesc+" )";
         this.secondaryTitleActionBar.updateTitleContent(conceptionNameText);
     }
 
     private void resetSingleConceptionKindSummaryInfoArea(){
-        conceptionKindCorrelationInfoChart.clearGraph();
+        conceptionKindCorrelationInfoChart_plugin.clearGraph();
         conceptionKindAttributesInfoGrid.setItems(new ArrayList<>());
         this.secondaryTitleActionBar.updateTitleContent(" - ");
     }
