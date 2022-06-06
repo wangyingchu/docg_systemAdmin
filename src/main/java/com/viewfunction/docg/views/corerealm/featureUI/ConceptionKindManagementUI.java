@@ -403,7 +403,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
             int browserHeight = receiver.getBodyClientHeight();
             conceptionKindMetaInfoGrid.setHeight(browserHeight-280,Unit.PIXELS);
             conceptionKindCorrelationInfoChart_plugin = new ConceptionKindCorrelationInfoChart_plugin(browserHeight-630);
-            conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-630);
+            conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-600);
             singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
         }));
     }

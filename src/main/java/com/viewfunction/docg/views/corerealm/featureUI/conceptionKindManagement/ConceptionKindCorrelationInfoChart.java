@@ -3,21 +3,19 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
 @JavaScript("./visualization/feature/conceptionKindCorrelationInfoChart-connector.js")
-public class ConceptionKindCorrelationInfoChart extends Div {
+public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
 
     public ConceptionKindCorrelationInfoChart(int chartHeight){
         UI.getCurrent().getPage().addJavaScript("js/cytoscape/3.21.1/dist/cytoscape.min.js");
-
-        setWidth(500, Unit.PIXELS);
-        //setHeight(700,Unit.PIXELS);
-
-
+        this.setWidthFull();
+        this.setSpacing(false);
+        this.setMargin(false);
+        this.setPadding(false);
         this.setHeight(chartHeight,Unit.PIXELS);
-
         initConnector();
     }
 
