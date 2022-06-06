@@ -4,7 +4,23 @@ window.Vaadin.Flow.feature_ConceptionKindCorrelationInfoChart = {
         if (c.$connector) {
             return;
         }
-        c.$connector = cytoscape({
+        c.$connector = {
+            // functions
+            setData : function(data) {
+                console.log(cy);
+                cy.add(data);
+                console.log(cy.nodes());
+            },
+            clearData : function() {
+                console.log(cy);
+                cy.removeData();
+            },
+            layout: function(layoutType){
+                cy.loadLayout(layoutType);
+            }
+        };
+
+        let cy = cytoscape({
             container: c,
             style: cytoscape.stylesheet()
                 .selector('node')
@@ -40,6 +56,8 @@ window.Vaadin.Flow.feature_ConceptionKindCorrelationInfoChart = {
 
             elements: {
                 nodes: [
+
+                    /*
                     {
                         data: { id: 'core', name: 'Core'},
                         position: { x: 0, y: 0 }
@@ -96,8 +114,10 @@ window.Vaadin.Flow.feature_ConceptionKindCorrelationInfoChart = {
                             data: { id: 'app', name: 'Client' },
                             position: { x: 0, y: 480 }
                         }
+                        */
                     ],
                 edges: [
+                        /*
                         { data: { source: 'core', target: 'eles' } },
                         { data: { source: 'core', target: 'ext' } },
                         { data: { source: 'core', target: 'style' } },
@@ -109,14 +129,12 @@ window.Vaadin.Flow.feature_ConceptionKindCorrelationInfoChart = {
                         { data: { source: 'renderer', target: 'api' }},
                         { data: { source: 'app', target: 'api', name: 'use' }},
                         { data: { source: 'app', target: 'ext', name: 'register' }}
+                        */
                     ]
                 },
             layout: {
                 name: 'breadthfirst'
             }
         });
-        console.log(c.$connector)
-        //c.$connector.loadLayout("breadthfirst")
-
     }
 }

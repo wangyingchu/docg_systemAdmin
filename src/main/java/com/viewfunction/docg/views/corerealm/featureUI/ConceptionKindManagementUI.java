@@ -448,6 +448,9 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
         conceptionKindCorrelationInfoChart_plugin.loadConceptionKindCorrelationInfo(conceptionKindCorrelationInfoSet,conceptionKindName);
 
+        conceptionKindCorrelationInfoChart.clearData();
+        conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,conceptionKindName);
+
         String conceptionNameText = conceptionKindName+ " ( "+conceptionKindDesc+" )";
         this.secondaryTitleActionBar.updateTitleContent(conceptionNameText);
     }
