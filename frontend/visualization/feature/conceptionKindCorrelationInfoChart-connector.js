@@ -14,7 +14,7 @@ window.Vaadin.Flow.feature_ConceptionKindCorrelationInfoChart = {
             },
             layoutGraph: function(){
                 let layout = cy.layout({
-                    name: 'breadthfirst'
+                    name: 'grid'
                 });
                 layout.run();
                 cy.fit();
@@ -60,7 +60,7 @@ window.Vaadin.Flow.feature_ConceptionKindCorrelationInfoChart = {
                 edges: []
                 },
             layout: {
-                name: 'breadthfirst'
+                name: 'grid'
             }
         });
     }
