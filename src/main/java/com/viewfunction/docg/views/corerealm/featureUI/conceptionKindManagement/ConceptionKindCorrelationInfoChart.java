@@ -108,13 +108,14 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                     }
                 });
             }
-            runBeforeClientResponse(ui -> {
-                try {
-                    getElement().callJsFunction("$connector.layout", new Serializable[]{(new ObjectMapper()).writeValueAsString("breadthfirst")});
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            });
         }
+
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.layoutGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }

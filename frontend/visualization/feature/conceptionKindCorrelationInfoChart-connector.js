@@ -12,10 +12,8 @@ window.Vaadin.Flow.feature_ConceptionKindCorrelationInfoChart = {
             clearData : function() {
                 cy.remove(cy.elements());
             },
-            layout: function(layoutType){
-                cy.layout({
-                    name: 'random'
-                });
+            layoutGraph: function(){
+                cy.center();
             }
         };
 
