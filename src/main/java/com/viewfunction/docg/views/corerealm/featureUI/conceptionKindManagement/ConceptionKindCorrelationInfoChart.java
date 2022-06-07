@@ -10,8 +10,6 @@ import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import de.xinblue.cytoscape.model.Edge;
 import de.xinblue.cytoscape.model.Node;
-import elemental.json.Json;
-import elemental.json.JsonObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,11 +47,6 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
     }
 
     public void setData(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet, String targetConceptionKind){
-        //clearData();
-        //JsonObject obj = Json.createObject();
-
-
-
         conceptionKindIdList.clear();
         if(conceptionKindCorrelationInfoSet!= null){
             for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
@@ -72,7 +65,6 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                         node.getData().put("background_color","#FF8C00");
                     }
                     node.getData().put("id",sourceConceptionKindId);
-                    //cy.addNode(node);
                     runBeforeClientResponse(ui -> {
                         try {
                             getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(node)});
@@ -95,7 +87,6 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                         node.getData().put("background_color","#FF8C00");
                     }
                     node.getData().put("id",targetConceptionKindId);
-                    //cy.addNode(node);
                     runBeforeClientResponse(ui -> {
                         try {
                             getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(node)});
@@ -109,7 +100,6 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                 currentEdge.getData().put("type", currentConceptionKindCorrelationInfo.getRelationKindName());
                 currentEdge.getData().put("source", sourceConceptionKindId);
                 currentEdge.getData().put("target", targetConceptionKindId);
-                //cy.addEdge(currentEdge);
                 runBeforeClientResponse(ui -> {
                     try {
                         getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(currentEdge)});
@@ -118,28 +108,13 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                     }
                 });
             }
-
-
-
-            //runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.layout", "breadthfirst"));
-
+            runBeforeClientResponse(ui -> {
+                try {
+                    getElement().callJsFunction("$connector.layout", new Serializable[]{(new ObjectMapper()).writeValueAsString("breadthfirst")});
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(node)}));
     }
 }
