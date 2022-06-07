@@ -13,6 +13,11 @@ window.Vaadin.Flow.feature_ConceptionKindCorrelationInfoChart = {
                 cy.remove(cy.elements());
             },
             layoutGraph: function(){
+                let layout = cy.layout({
+                    name: 'breadthfirst'
+                });
+                layout.run();
+                cy.fit();
                 cy.center();
             }
         };
