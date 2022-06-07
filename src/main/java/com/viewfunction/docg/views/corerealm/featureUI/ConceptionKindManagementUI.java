@@ -451,8 +451,9 @@ public class ConceptionKindManagementUI extends VerticalLayout {
     }
 
     private void resetSingleConceptionKindSummaryInfoArea(){
-        conceptionKindAttributesInfoGrid.setItems(new ArrayList<>());
+        this.conceptionKindAttributesInfoGrid.setItems(new ArrayList<>());
         this.secondaryTitleActionBar.updateTitleContent(" - ");
+        this.conceptionKindCorrelationInfoChart.clearData();
     }
 
     private void renderConceptionKindConfigurationUI(EntityStatisticsInfo entityStatisticsInfo){
