@@ -81,13 +81,14 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         List<Component> conceptionKindManagementOperationButtonList = new ArrayList<>();
 
         Button conceptionKindRelationGuideButton = new Button("概念类型关联分布概览",new Icon(VaadinIcon.SITEMAP));
+        conceptionKindRelationGuideButton.setDisableOnClick(true);
         conceptionKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         conceptionKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         conceptionKindManagementOperationButtonList.add(conceptionKindRelationGuideButton);
         conceptionKindRelationGuideButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderConceptionKindsCorrelationInfoSummaryUI();
+                renderConceptionKindsCorrelationInfoSummaryUI(conceptionKindRelationGuideButton);
             }
         });
 
@@ -469,7 +470,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         dialog.open();
     }
 
-    private void renderConceptionKindsCorrelationInfoSummaryUI(){
+    private void renderConceptionKindsCorrelationInfoSummaryUI(Button conceptionKindRelationGuideButton){
         // Method 1 use IFrame to load
         /*
         UI.getCurrent().getPage().fetchCurrentURL(currentUrl -> {
@@ -498,5 +499,11 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念类型实体实时关联分布概览",null,true,1200,900,false);
         fixSizeWindow.setWindowContent(conceptionKindsCorrelationInfoSummaryChart);
         fixSizeWindow.show();
+        fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
+            @Override
+            public void onComponentEvent(DetachEvent detachEvent) {
+                conceptionKindRelationGuideButton.setEnabled(true);
+            }
+        });
     }
 }
