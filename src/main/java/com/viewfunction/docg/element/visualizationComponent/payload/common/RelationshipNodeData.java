@@ -6,7 +6,7 @@ import elemental.json.JsonObject;
 
 public class RelationshipNodeData  implements JsonSerializable {
 
-    private int weight;
+    private long weight;
     private String name;
     private String desc;
     private String category;
@@ -14,7 +14,7 @@ public class RelationshipNodeData  implements JsonSerializable {
 
     public RelationshipNodeData(){}
 
-    public RelationshipNodeData(String name,String desc,String id,String category,int weight){
+    public RelationshipNodeData(String name,String desc,String id,String category,long weight){
         setName(name);
         setDesc(desc);
         setId(id);
@@ -22,21 +22,21 @@ public class RelationshipNodeData  implements JsonSerializable {
         setWeight(weight);
     }
 
-    public int increaseWeight(){
+    public long increaseWeight(){
         weight++;
         return getWeight();
     }
 
-    public int decreaseWeight(){
+    public long decreaseWeight(){
         weight--;
         return getWeight();
     }
 
-    public int getWeight() {
+    public long getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(long weight) {
         this.weight = weight;
     }
 

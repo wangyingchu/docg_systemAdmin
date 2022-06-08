@@ -8,7 +8,11 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.function.SerializableConsumer;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.RelationshipEdgeData;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.RelationshipNodeData;
 
@@ -16,9 +20,7 @@ import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @JavaScript("./visualization/widget/echarts/circulargraphchart-connector.js")
 public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
@@ -48,6 +50,17 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
     }
 
     public void setData(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet) {
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        Map<String,Long> conceptionKindDataCountMap = new HashMap<>();
+        try {
+            List<EntityStatisticsInfo> entityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
+                conceptionKindDataCountMap.put(currentEntityStatisticsInfo.getEntityKindName(),currentEntityStatisticsInfo.getEntitiesCount());
+            }
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+
         JsonObject obj = Json.createObject();
         JsonArray linkDataArray = Json.createArray();
         JsonArray nodeDataArray = Json.createArray();
@@ -59,25 +72,30 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
             String targetKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
             String relationKindName = currentConceptionKindCorrelationInfo.getRelationKindName();
             long relationCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
-            RelationshipEdgeData currentRelationshipEdgeData = new RelationshipEdgeData(relationKindName,"",relationKindName+"_ID",sourceKindName+"_ID",targetKindName+"_ID",(int)relationCount);
+            RelationshipEdgeData currentRelationshipEdgeData = new RelationshipEdgeData(relationKindName,"",relationKindName+"_ID",sourceKindName+"_ID",targetKindName+"_ID",relationCount);
             JsonObject childJsonObject = currentRelationshipEdgeData.toJson();
             linkDataArray.set(idx_relation, childJsonObject);
             idx_relation++;
-
             if(!conceptionKindList.contains(sourceKindName)){
-                RelationshipNodeData currentRelationshipNodeData = new RelationshipNodeData(sourceKindName,"",sourceKindName+"_ID","",1);
-                JsonObject childJsonObject2 = currentRelationshipNodeData.toJson();
-                nodeDataArray.set(idx_node, childJsonObject2);
-                idx_node++;
-                conceptionKindList.add(sourceKindName);
+                if(conceptionKindDataCountMap.containsKey(sourceKindName) && conceptionKindDataCountMap.get(sourceKindName) > 0){
+                    long nodeWeight = (long)(Math.log(conceptionKindDataCountMap.get(sourceKindName))*1.5);
+                    RelationshipNodeData currentRelationshipNodeData = new RelationshipNodeData(sourceKindName,"",sourceKindName+"_ID","",nodeWeight);
+                    JsonObject childJsonObject2 = currentRelationshipNodeData.toJson();
+                    nodeDataArray.set(idx_node, childJsonObject2);
+                    idx_node++;
+                    conceptionKindList.add(sourceKindName);
+                }
             }
 
             if(!conceptionKindList.contains(targetKindName)){
-                RelationshipNodeData currentRelationshipNodeData = new RelationshipNodeData(targetKindName,"",targetKindName+"_ID","",1);
-                JsonObject childJsonObject2 = currentRelationshipNodeData.toJson();
-                nodeDataArray.set(idx_node, childJsonObject2);
-                idx_node++;
-                conceptionKindList.add(targetKindName);
+                if(conceptionKindDataCountMap.containsKey(targetKindName) && conceptionKindDataCountMap.get(targetKindName) > 0){
+                    long nodeWeight = (long)(Math.log(conceptionKindDataCountMap.get(targetKindName))*1.5);
+                    RelationshipNodeData currentRelationshipNodeData = new RelationshipNodeData(targetKindName,"",targetKindName+"_ID","",nodeWeight);
+                    JsonObject childJsonObject2 = currentRelationshipNodeData.toJson();
+                    nodeDataArray.set(idx_node, childJsonObject2);
+                    idx_node++;
+                    conceptionKindList.add(targetKindName);
+                }
             }
         }
         obj.put("links", linkDataArray);
