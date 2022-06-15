@@ -22,7 +22,7 @@ import elemental.json.JsonObject;
 
 import java.util.*;
 
-@JavaScript("./visualization/widget/echarts/circulargraphchart-connector.js")
+@JavaScript("./visualization/feature/conceptionKindsCorrelationInfoSummaryChart-connector.js")
 public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
 
     public ConceptionKindsCorrelationInfoSummaryChart(int windowWidth, int windowHeight){
@@ -41,7 +41,7 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
 
     private void initConnector(Element layout) {
         runBeforeClientResponse(ui -> ui.getPage().executeJs(
-                "window.Vaadin.Flow.eCharts_CircularGraphChartConnector.initLazy($0)", getElement()));
+                "window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart.initLazy($0)", getElement()));
     }
 
     private void runBeforeClientResponse(SerializableConsumer<UI> command) {
