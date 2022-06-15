@@ -100,6 +100,12 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
         }
         obj.put("links", linkDataArray);
         obj.put("nodes", nodeDataArray);
+
+        setNodeNameLabel("概念类型");
+        setEdgeNameLabel("关系类型");
+        setNodeWeightLabel("概念实体数量");
+        setEdgeSourceLabel("源概念类型");
+        setEdgeTargetLabel("目标概念类型");
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", obj));
     }
 
