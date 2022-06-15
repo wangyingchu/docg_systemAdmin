@@ -79,8 +79,7 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
                 formatter: function (params) {
                     var labelData = params.data;
                     if(params.dataType==='node'){
-                        var res='<div>'+ c.$connector.nodeNameLabel+': '+labelData.name+'</div>'+
-                            '<div>'+ c.$connector.nodeDescLabel+': '+labelData.desc+'</div>';
+                        var res='<div>'+ c.$connector.nodeNameLabel+': '+labelData.name+'( - )</div>';
                         if(labelData.weight) {
                             res = res + '<div>'+ c.$connector.nodeWeightLabel+': '+labelData.weight+'</div>';
                         }
@@ -120,8 +119,8 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
                     itemStyle: {
                         borderColor: '#FFF',
                         borderWidth: 0.5,
-                        //shadowBlur: 2,
-                        shadowColor: 'rgba(0, 0, 0, 0.3)'
+                        shadowBlur: 2,
+                        shadowColor: 'rgba(0, 0, 0, 0.1)'
                     },
                     label: {
                         position: 'right',
