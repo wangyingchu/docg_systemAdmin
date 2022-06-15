@@ -78,7 +78,7 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
             idx_relation++;
             if(!conceptionKindList.contains(sourceKindName)){
                 if(conceptionKindDataCountMap.containsKey(sourceKindName) && conceptionKindDataCountMap.get(sourceKindName) > 0){
-                    long nodeWeight = (long)(Math.log(conceptionKindDataCountMap.get(sourceKindName))*1.5);
+                    long nodeWeight = (long)(Math.log(conceptionKindDataCountMap.get(sourceKindName))*2.5);
                     RelationshipNodeData currentRelationshipNodeData = new RelationshipNodeData(sourceKindName,"",sourceKindName+"_ID","",nodeWeight);
                     JsonObject childJsonObject2 = currentRelationshipNodeData.toJson();
                     nodeDataArray.set(idx_node, childJsonObject2);
@@ -89,7 +89,7 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
 
             if(!conceptionKindList.contains(targetKindName)){
                 if(conceptionKindDataCountMap.containsKey(targetKindName) && conceptionKindDataCountMap.get(targetKindName) > 0){
-                    long nodeWeight = (long)(Math.log(conceptionKindDataCountMap.get(targetKindName))*1.5);
+                    long nodeWeight = (long)(Math.log(conceptionKindDataCountMap.get(targetKindName))*2.5);
                     RelationshipNodeData currentRelationshipNodeData = new RelationshipNodeData(targetKindName,"",targetKindName+"_ID","",nodeWeight);
                     JsonObject childJsonObject2 = currentRelationshipNodeData.toJson();
                     nodeDataArray.set(idx_node, childJsonObject2);
