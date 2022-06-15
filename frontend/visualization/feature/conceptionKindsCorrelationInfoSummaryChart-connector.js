@@ -118,9 +118,9 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
                     roam: true,
                     focusNodeAdjacency: true,
                     itemStyle: {
-                        borderColor: '#fff',
-                        borderWidth: 1,
-                        shadowBlur: 10,
+                        borderColor: '#FFF',
+                        borderWidth: 0.5,
+                        //shadowBlur: 2,
                         shadowColor: 'rgba(0, 0, 0, 0.3)'
                     },
                     label: {
