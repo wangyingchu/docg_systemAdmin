@@ -4,6 +4,9 @@ import com.vaadin.flow.component.JsonSerializable;
 import elemental.json.Json;
 import elemental.json.JsonObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class EchartsRelationshipNodePayload implements JsonSerializable {
 
     private long weight;
@@ -11,6 +14,7 @@ public class EchartsRelationshipNodePayload implements JsonSerializable {
     private String desc;
     private String category;
     private String id;
+    private HashMap<String, Object> data = new HashMap();
 
     public EchartsRelationshipNodePayload(){}
 
@@ -72,6 +76,14 @@ public class EchartsRelationshipNodePayload implements JsonSerializable {
         this.id = id;
     }
 
+    public HashMap<String, Object> getData() {
+        return this.data;
+    }
+
+    public void setData(HashMap<String, Object> data) {
+        this.data = data;
+    }
+
     @Override
     public JsonObject toJson() {
         JsonObject obj = Json.createObject();
@@ -88,6 +100,29 @@ public class EchartsRelationshipNodePayload implements JsonSerializable {
             obj.put("id", getId());
         }
         obj.put("weight", getWeight());
+
+        JsonObject dataObject = Json.createObject();
+        if(getData().size() >0) {
+            for(Map.Entry<String,Object> entry:getData().entrySet()){
+                String propKey = entry.getKey();
+                Object propValueObj = entry.getValue();
+                if(propValueObj instanceof Boolean){
+                    dataObject.put(propKey,(Boolean)propValueObj);
+                }
+                else if(propValueObj instanceof Long){
+                    dataObject.put(propKey,(Long)propValueObj);
+                }
+                else if(propValueObj instanceof Double){
+                    dataObject.put(propKey,(Double)propValueObj);
+                }
+                else if(propValueObj instanceof Integer){
+                    dataObject.put(propKey,(Integer)propValueObj);
+                }else{
+                    dataObject.put(propKey,propValueObj.toString());
+                }
+            }
+        }
+        obj.put("data",dataObject);
         return obj;
     }
 

@@ -79,18 +79,16 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
                 formatter: function (params) {
                     var labelData = params.data;
                     if(params.dataType==='node'){
-                        var res='<div>'+ c.$connector.nodeNameLabel+': '+labelData.name+'( - )</div>';
+                        var res='<div>'+ c.$connector.nodeNameLabel+': '+labelData.name+'( '+labelData.desc+' )</div>';
                         if(labelData.weight) {
-                            res = res + '<div>'+ c.$connector.nodeWeightLabel+': '+labelData.weight+'</div>';
+                            res = res + '<div>'+ c.$connector.nodeWeightLabel+': '+labelData.data.entityCount+'</div>';
                         }
                     }
                     if(params.dataType==='edge'){
                         var res=
-                           // '<div>'+ c.$connector.edgeDescLabel+': '+labelData.desc+'</div>'+
+                            //'<div>'+ c.$connector.edgeDescLabel+': '+labelData.desc+'</div>'+
                             '<div>'+ c.$connector.edgeNameLabel+': '+labelData.name+'</div>'+
-                           // '<div>'+ c.$connector.edgeIdLabel+': '+labelData.id+'</div>'+
-                            '<div>'+ c.$connector.edgeSourceLabel+': '+labelData.source+'</div>'+
-                            '<div>'+ c.$connector.edgeTargetLabel+': '+labelData.target+'</div>';
+                            '<div> 关联概念: '+ labelData.data.sourceConceptionKind+' 》'+labelData.data.targetConceptionKind+'</div>';
                     }
                     return res;
                 }

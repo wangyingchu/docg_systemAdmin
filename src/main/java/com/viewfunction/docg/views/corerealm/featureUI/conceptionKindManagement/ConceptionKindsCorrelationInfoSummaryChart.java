@@ -52,10 +52,12 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
     public void setData(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet) {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         Map<String,Long> conceptionKindDataCountMap = new HashMap<>();
+        Map<String,String> conceptionKindDescMap = new HashMap<>();
         try {
             List<EntityStatisticsInfo> entityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
             for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
                 conceptionKindDataCountMap.put(currentEntityStatisticsInfo.getEntityKindName(),currentEntityStatisticsInfo.getEntitiesCount());
+                conceptionKindDescMap.put(currentEntityStatisticsInfo.getEntityKindName(),currentEntityStatisticsInfo.getEntityKindDesc());
             }
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
@@ -71,15 +73,21 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
             String sourceKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
             String targetKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
             String relationKindName = currentConceptionKindCorrelationInfo.getRelationKindName();
+
             long relationCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
             EchartsRelationshipEdgePayload currentEchartsRelationshipEdgePayload = new EchartsRelationshipEdgePayload(relationKindName,"",relationKindName+"_ID",sourceKindName+"_ID",targetKindName+"_ID",relationCount);
+            currentEchartsRelationshipEdgePayload.getData().put("sourceConceptionKind",sourceKindName);
+            currentEchartsRelationshipEdgePayload.getData().put("targetConceptionKind",targetKindName);
+
             JsonObject childJsonObject = currentEchartsRelationshipEdgePayload.toJson();
             linkDataArray.set(idx_relation, childJsonObject);
             idx_relation++;
             if(!conceptionKindList.contains(sourceKindName)){
                 if(conceptionKindDataCountMap.containsKey(sourceKindName) && conceptionKindDataCountMap.get(sourceKindName) > 0){
+                    String conceptionKindDesc = conceptionKindDescMap.get(sourceKindName) != null ? conceptionKindDescMap.get(sourceKindName):"";
                     long nodeWeight = (long)(Math.log(conceptionKindDataCountMap.get(sourceKindName))*2.5);
-                    EchartsRelationshipNodePayload currentEchartsRelationshipNodePayload = new EchartsRelationshipNodePayload(sourceKindName,"",sourceKindName+"_ID","",nodeWeight);
+                    EchartsRelationshipNodePayload currentEchartsRelationshipNodePayload = new EchartsRelationshipNodePayload(sourceKindName,conceptionKindDesc,sourceKindName+"_ID","",nodeWeight);
+                    currentEchartsRelationshipNodePayload.getData().put("entityCount",conceptionKindDataCountMap.get(sourceKindName));
                     JsonObject childJsonObject2 = currentEchartsRelationshipNodePayload.toJson();
                     nodeDataArray.set(idx_node, childJsonObject2);
                     idx_node++;
@@ -89,8 +97,10 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
 
             if(!conceptionKindList.contains(targetKindName)){
                 if(conceptionKindDataCountMap.containsKey(targetKindName) && conceptionKindDataCountMap.get(targetKindName) > 0){
+                    String conceptionKindDesc = conceptionKindDescMap.get(targetKindName) != null ? conceptionKindDescMap.get(targetKindName):"";
                     long nodeWeight = (long)(Math.log(conceptionKindDataCountMap.get(targetKindName))*2.5);
-                    EchartsRelationshipNodePayload currentEchartsRelationshipNodePayload = new EchartsRelationshipNodePayload(targetKindName,"",targetKindName+"_ID","",nodeWeight);
+                    EchartsRelationshipNodePayload currentEchartsRelationshipNodePayload = new EchartsRelationshipNodePayload(targetKindName,conceptionKindDesc,targetKindName+"_ID","",nodeWeight);
+                    currentEchartsRelationshipNodePayload.getData().put("entityCount",conceptionKindDataCountMap.get(targetKindName));
                     JsonObject childJsonObject2 = currentEchartsRelationshipNodePayload.toJson();
                     nodeDataArray.set(idx_node, childJsonObject2);
                     idx_node++;
@@ -103,7 +113,7 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
 
         setNodeNameLabel("概念类型");
         setEdgeNameLabel("关系类型");
-        setNodeWeightLabel("概念实体数量");
+        setNodeWeightLabel("实体数量");
         setEdgeSourceLabel("源概念类型");
         setEdgeTargetLabel("目标概念类型");
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", obj));
