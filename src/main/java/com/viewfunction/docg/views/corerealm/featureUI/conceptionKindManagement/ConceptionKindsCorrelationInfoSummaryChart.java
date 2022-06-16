@@ -11,6 +11,7 @@ import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsRelationshipEdgePayload;
@@ -60,9 +61,9 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
                 conceptionKindDataCountMap.put(currentEntityStatisticsInfo.getEntityKindName(),currentEntityStatisticsInfo.getEntitiesCount());
                 conceptionKindDescMap.put(currentEntityStatisticsInfo.getEntityKindName(),currentEntityStatisticsInfo.getEntityKindDesc());
             }
-            List<EntityStatisticsInfo> relationEntityStatisticsInfoList = coreRealm.getRelationEntitiesStatistics();
-            for(EntityStatisticsInfo currentEntityStatisticsInfo:relationEntityStatisticsInfoList){
-                relationKindDescMap.put(currentEntityStatisticsInfo.getEntityKindName(),currentEntityStatisticsInfo.getEntityKindDesc());
+            List<KindMetaInfo> relationKindsMetaInfoList = coreRealm.getRelationKindsMetaInfo();
+            for(KindMetaInfo currentEntityStatisticsInfo:relationKindsMetaInfoList){
+                relationKindDescMap.put(currentEntityStatisticsInfo.getKindName(),currentEntityStatisticsInfo.getKindDesc());
             }
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
@@ -117,43 +118,6 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
         obj.put("links", linkDataArray);
         obj.put("nodes", nodeDataArray);
 
-        setNodeNameLabel("概念类型");
-        setEdgeNameLabel("关系类型");
-        setNodeWeightLabel("实体数量");
-        setEdgeSourceLabel("源概念类型");
-        setEdgeTargetLabel("目标概念类型");
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", obj));
-    }
-
-    public void setNodeNameLabel(String labelValue){
-        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setNodeNameLabel", labelValue));
-    }
-
-    public void setNodeDescLabel(String labelValue){
-        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setNodeDescLabel", labelValue));
-    }
-
-    public void setNodeWeightLabel(String labelValue){
-        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setNodeWeightLabel", labelValue));
-    }
-
-    public void setEdgeDescLabel(String labelValue){
-        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setEdgeDescLabel", labelValue));
-    }
-
-    public void setEdgeNameLabel(String labelValue){
-        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setEdgeNameLabel", labelValue));
-    }
-
-    public void setEdgeIdLabel(String labelValue){
-        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setEdgeIdLabel", labelValue));
-    }
-
-    public void setEdgeSourceLabel(String labelValue){
-        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setEdgeSourceLabel", labelValue));
-    }
-
-    public void setEdgeTargetLabel(String labelValue){
-        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setEdgeTargetLabel", labelValue));
     }
 }

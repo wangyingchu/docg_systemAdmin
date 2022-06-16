@@ -79,15 +79,15 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
                 formatter: function (params) {
                     var labelData = params.data;
                     if(params.dataType==='node'){
-                        var res='<div>'+ c.$connector.nodeNameLabel+': '+labelData.name+'( '+labelData.desc+' )</div>';
+                        var res='<div> 概念类型: '+ labelData.name+'( '+labelData.desc+' )</div>';
                         if(labelData.weight) {
-                            res = res + '<div>'+ c.$connector.nodeWeightLabel+': '+labelData.data.entityCount+'</div>';
+                            res = res + '<div> 实体数量: '+labelData.data.entityCount+'</div>';
                         }
                     }
                     if(params.dataType==='edge'){
                         var res=
-                            '<div>'+ c.$connector.edgeNameLabel+': '+labelData.name+'( '+labelData.desc+' )</div>'+
-                            '<div> 关联概念: '+ labelData.data.sourceConceptionKind+' -> '+labelData.data.targetConceptionKind+'</div>';
+                            '<div> 关系类型: '+labelData.name+'( '+labelData.desc+' )</div>'+
+                            '<div> 关联的概念: '+ labelData.data.sourceConceptionKind+' -> '+labelData.data.targetConceptionKind+'</div>';
                     }
                     return res;
                 }
