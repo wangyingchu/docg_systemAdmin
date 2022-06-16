@@ -8,8 +8,8 @@ import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
-import de.xinblue.cytoscape.model.Edge;
-import de.xinblue.cytoscape.model.Node;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.EdgePayload;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.NodePayload;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,21 +53,21 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                 String sourceConceptionKindId = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
                 String targetConceptionKindId = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
                 if(!conceptionKindIdList.contains(sourceConceptionKindId)){
-                    Node node=new Node();
-                    node.getData().put("shape","ellipse");
-                    node.getData().put("background_color","#c00");
+                    NodePayload nodePayload=new NodePayload();
+                    nodePayload.getData().put("shape","ellipse");
+                    nodePayload.getData().put("background_color","#c00");
                     if(targetConceptionKind.equals(sourceConceptionKindId)){
-                        node.getData().put("shape","pentagon");
-                        node.getData().put("background_color","#777777");
+                        nodePayload.getData().put("shape","pentagon");
+                        nodePayload.getData().put("background_color","#777777");
                     }
                     if(sourceConceptionKindId.startsWith("DOCG_")){
-                        node.getData().put("shape","diamond");
-                        node.getData().put("background_color","#FF8C00");
+                        nodePayload.getData().put("shape","diamond");
+                        nodePayload.getData().put("background_color","#FF8C00");
                     }
-                    node.getData().put("id",sourceConceptionKindId);
+                    nodePayload.getData().put("id",sourceConceptionKindId);
                     runBeforeClientResponse(ui -> {
                         try {
-                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(node)});
+                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(nodePayload)});
                         } catch (JsonProcessingException e) {
                             throw new RuntimeException(e);
                         }
@@ -75,34 +75,34 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                     conceptionKindIdList.add(sourceConceptionKindId);
                 }
                 if(!conceptionKindIdList.contains(targetConceptionKindId)){
-                    Node node=new Node();
-                    node.getData().put("shape","ellipse");
-                    node.getData().put("background_color","#c00");
+                    NodePayload nodePayload=new NodePayload();
+                    nodePayload.getData().put("shape","ellipse");
+                    nodePayload.getData().put("background_color","#c00");
                     if(targetConceptionKind.equals(targetConceptionKindId)){
-                        node.getData().put("shape","pentagon");
-                        node.getData().put("background_color","#777777");
+                        nodePayload.getData().put("shape","pentagon");
+                        nodePayload.getData().put("background_color","#777777");
                     }
                     if(targetConceptionKindId.startsWith("DOCG_")){
-                        node.getData().put("shape","diamond");
-                        node.getData().put("background_color","#FF8C00");
+                        nodePayload.getData().put("shape","diamond");
+                        nodePayload.getData().put("background_color","#FF8C00");
                     }
-                    node.getData().put("id",targetConceptionKindId);
+                    nodePayload.getData().put("id",targetConceptionKindId);
                     runBeforeClientResponse(ui -> {
                         try {
-                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(node)});
+                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(nodePayload)});
                         } catch (JsonProcessingException e) {
                             throw new RuntimeException(e);
                         }
                     });
                     conceptionKindIdList.add(targetConceptionKindId);
                 }
-                Edge currentEdge=new Edge();
-                currentEdge.getData().put("type", currentConceptionKindCorrelationInfo.getRelationKindName());
-                currentEdge.getData().put("source", sourceConceptionKindId);
-                currentEdge.getData().put("target", targetConceptionKindId);
+                EdgePayload edgePayload=new EdgePayload();
+                edgePayload.getData().put("type", currentConceptionKindCorrelationInfo.getRelationKindName());
+                edgePayload.getData().put("source", sourceConceptionKindId);
+                edgePayload.getData().put("target", targetConceptionKindId);
                 runBeforeClientResponse(ui -> {
                     try {
-                        getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(currentEdge)});
+                        getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(edgePayload)});
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
