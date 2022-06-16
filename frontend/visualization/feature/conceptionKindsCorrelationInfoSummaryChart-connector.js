@@ -86,9 +86,8 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
                     }
                     if(params.dataType==='edge'){
                         var res=
-                            //'<div>'+ c.$connector.edgeDescLabel+': '+labelData.desc+'</div>'+
-                            '<div>'+ c.$connector.edgeNameLabel+': '+labelData.name+'</div>'+
-                            '<div> 关联概念: '+ labelData.data.sourceConceptionKind+' 》'+labelData.data.targetConceptionKind+'</div>';
+                            '<div>'+ c.$connector.edgeNameLabel+': '+labelData.name+'( '+labelData.desc+' )</div>'+
+                            '<div> 关联概念: '+ labelData.data.sourceConceptionKind+' -> '+labelData.data.targetConceptionKind+'</div>';
                     }
                     return res;
                 }
@@ -130,7 +129,7 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
                     },
                     emphasis: {
                         lineStyle: {
-                            width: 10
+                            width: 5
                         }
                     },
                     edgeSymbol: ['none', 'arrow'],

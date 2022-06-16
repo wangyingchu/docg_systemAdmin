@@ -53,11 +53,16 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         Map<String,Long> conceptionKindDataCountMap = new HashMap<>();
         Map<String,String> conceptionKindDescMap = new HashMap<>();
+        Map<String,String> relationKindDescMap = new HashMap<>();
         try {
             List<EntityStatisticsInfo> entityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
             for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
                 conceptionKindDataCountMap.put(currentEntityStatisticsInfo.getEntityKindName(),currentEntityStatisticsInfo.getEntitiesCount());
                 conceptionKindDescMap.put(currentEntityStatisticsInfo.getEntityKindName(),currentEntityStatisticsInfo.getEntityKindDesc());
+            }
+            List<EntityStatisticsInfo> relationEntityStatisticsInfoList = coreRealm.getRelationEntitiesStatistics();
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:relationEntityStatisticsInfoList){
+                relationKindDescMap.put(currentEntityStatisticsInfo.getEntityKindName(),currentEntityStatisticsInfo.getEntityKindDesc());
             }
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
@@ -75,7 +80,8 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
             String relationKindName = currentConceptionKindCorrelationInfo.getRelationKindName();
 
             long relationCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
-            EchartsRelationshipEdgePayload currentEchartsRelationshipEdgePayload = new EchartsRelationshipEdgePayload(relationKindName,"",relationKindName+"_ID",sourceKindName+"_ID",targetKindName+"_ID",relationCount);
+            String relationKindDesc = relationKindDescMap.get(relationKindName) != null ? relationKindDescMap.get(relationKindName):"";
+            EchartsRelationshipEdgePayload currentEchartsRelationshipEdgePayload = new EchartsRelationshipEdgePayload(relationKindName,relationKindDesc,relationKindName+"_ID",sourceKindName+"_ID",targetKindName+"_ID",relationCount);
             currentEchartsRelationshipEdgePayload.getData().put("sourceConceptionKind",sourceKindName);
             currentEchartsRelationshipEdgePayload.getData().put("targetConceptionKind",targetKindName);
 
