@@ -32,42 +32,8 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
                     c.$connector.myChart.setOption(c.$connector.option, true);
                 }
             },
-            setNodeNameLabel: function (nodeNameLabel) {
-                c.$connector.nodeNameLabel = nodeNameLabel;
-            },
-            setNodeDescLabel: function (nodeDescLabel) {
-                c.$connector.nodeDescLabel = nodeDescLabel;
-            },
-            setNodeWeightLabel: function (nodeWeightLabel) {
-                c.$connector.nodeWeightLabel = nodeWeightLabel;
-            },
-            setEdgeDescLabel: function (edgeDescLabel) {
-                c.$connector.edgeDescLabel = edgeDescLabel;
-            },
-            setEdgeNameLabel: function (edgeNameLabel) {
-                c.$connector.edgeNameLabel = edgeNameLabel;
-            },
-            setEdgeIdLabel: function (edgeIdLabel) {
-                c.$connector.edgeIdLabel = edgeIdLabel;
-            },
-            setEdgeSourceLabel: function (edgeSourceLabel) {
-                c.$connector.edgeSourceLabel = edgeSourceLabel;
-            },
-            setEdgeTargetLabel: function (edgeTargetLabel) {
-                c.$connector.edgeTargetLabel = edgeTargetLabel;
-            }
         };
         c.$connector.myChart = echarts.init(c);
-
-        c.$connector.nodeNameLabel = "nodeNameLabel";
-        c.$connector.nodeDescLabel = "nodeDescLabel";
-        c.$connector.nodeWeightLabel = "nodeWeightLabel";
-        c.$connector.edgeDescLabel = "edgeDescLabel";
-        c.$connector.edgeNameLabel = "edgeNameLabel";
-        //c.$connector.edgeWeightLabel = "";
-        c.$connector.edgeIdLabel = "edgeIdLabel";
-        c.$connector.edgeSourceLabel = "edgeSourceLabel";
-        c.$connector.edgeTargetLabel = "edgeTargetLabel";
 
         let categories = [];
         let data = [];
@@ -121,7 +87,8 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
                     },
                     label: {
                         position: 'right',
-                        formatter: '{b}'
+                        formatter: '{b}',
+                        fontSize: 10
                     },
                     lineStyle: {
                         color: 'source',
@@ -140,7 +107,7 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
                             var res=labelData.desc
                             return res;
                         },
-                        fontSize: 8
+                        fontSize: 7
                     }
                 }
             ]
