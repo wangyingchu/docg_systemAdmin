@@ -2,11 +2,11 @@ package com.viewfunction.docg.element.visualizationComponent.payload.common;
 
 import java.util.HashMap;
 
-public class EdgePayload {
+public class CytoscapeEdgePayload {
     String group = "edges";
     HashMap<String, String> data = new HashMap();
 
-    public EdgePayload() {
+    public CytoscapeEdgePayload() {
     }
 
     public String getGroup() {

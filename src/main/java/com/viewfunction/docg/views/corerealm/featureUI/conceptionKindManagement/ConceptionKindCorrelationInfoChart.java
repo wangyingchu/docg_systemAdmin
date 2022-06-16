@@ -8,8 +8,8 @@ import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
-import com.viewfunction.docg.element.visualizationComponent.payload.common.EdgePayload;
-import com.viewfunction.docg.element.visualizationComponent.payload.common.NodePayload;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeEdgePayload;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeNodePayload;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,21 +53,21 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                 String sourceConceptionKindId = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
                 String targetConceptionKindId = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
                 if(!conceptionKindIdList.contains(sourceConceptionKindId)){
-                    NodePayload nodePayload=new NodePayload();
-                    nodePayload.getData().put("shape","ellipse");
-                    nodePayload.getData().put("background_color","#c00");
+                    CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
+                    cytoscapeNodePayload.getData().put("shape","ellipse");
+                    cytoscapeNodePayload.getData().put("background_color","#c00");
                     if(targetConceptionKind.equals(sourceConceptionKindId)){
-                        nodePayload.getData().put("shape","pentagon");
-                        nodePayload.getData().put("background_color","#777777");
+                        cytoscapeNodePayload.getData().put("shape","pentagon");
+                        cytoscapeNodePayload.getData().put("background_color","#777777");
                     }
                     if(sourceConceptionKindId.startsWith("DOCG_")){
-                        nodePayload.getData().put("shape","diamond");
-                        nodePayload.getData().put("background_color","#FF8C00");
+                        cytoscapeNodePayload.getData().put("shape","diamond");
+                        cytoscapeNodePayload.getData().put("background_color","#FF8C00");
                     }
-                    nodePayload.getData().put("id",sourceConceptionKindId);
+                    cytoscapeNodePayload.getData().put("id",sourceConceptionKindId);
                     runBeforeClientResponse(ui -> {
                         try {
-                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(nodePayload)});
+                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
                         } catch (JsonProcessingException e) {
                             throw new RuntimeException(e);
                         }
@@ -75,34 +75,34 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                     conceptionKindIdList.add(sourceConceptionKindId);
                 }
                 if(!conceptionKindIdList.contains(targetConceptionKindId)){
-                    NodePayload nodePayload=new NodePayload();
-                    nodePayload.getData().put("shape","ellipse");
-                    nodePayload.getData().put("background_color","#c00");
+                    CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
+                    cytoscapeNodePayload.getData().put("shape","ellipse");
+                    cytoscapeNodePayload.getData().put("background_color","#c00");
                     if(targetConceptionKind.equals(targetConceptionKindId)){
-                        nodePayload.getData().put("shape","pentagon");
-                        nodePayload.getData().put("background_color","#777777");
+                        cytoscapeNodePayload.getData().put("shape","pentagon");
+                        cytoscapeNodePayload.getData().put("background_color","#777777");
                     }
                     if(targetConceptionKindId.startsWith("DOCG_")){
-                        nodePayload.getData().put("shape","diamond");
-                        nodePayload.getData().put("background_color","#FF8C00");
+                        cytoscapeNodePayload.getData().put("shape","diamond");
+                        cytoscapeNodePayload.getData().put("background_color","#FF8C00");
                     }
-                    nodePayload.getData().put("id",targetConceptionKindId);
+                    cytoscapeNodePayload.getData().put("id",targetConceptionKindId);
                     runBeforeClientResponse(ui -> {
                         try {
-                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(nodePayload)});
+                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
                         } catch (JsonProcessingException e) {
                             throw new RuntimeException(e);
                         }
                     });
                     conceptionKindIdList.add(targetConceptionKindId);
                 }
-                EdgePayload edgePayload=new EdgePayload();
-                edgePayload.getData().put("type", currentConceptionKindCorrelationInfo.getRelationKindName());
-                edgePayload.getData().put("source", sourceConceptionKindId);
-                edgePayload.getData().put("target", targetConceptionKindId);
+                CytoscapeEdgePayload cytoscapeEdgePayload =new CytoscapeEdgePayload();
+                cytoscapeEdgePayload.getData().put("type", currentConceptionKindCorrelationInfo.getRelationKindName());
+                cytoscapeEdgePayload.getData().put("source", sourceConceptionKindId);
+                cytoscapeEdgePayload.getData().put("target", targetConceptionKindId);
                 runBeforeClientResponse(ui -> {
                     try {
-                        getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(edgePayload)});
+                        getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }

@@ -2,12 +2,12 @@ package com.viewfunction.docg.element.visualizationComponent.payload.common;
 
 import java.util.HashMap;
 
-public class NodePayload {
+public class CytoscapeNodePayload {
     String group = "nodes";
     HashMap<String, String> data = new HashMap();
     HashMap<String, Integer> position = new HashMap();
 
-    public NodePayload() {
+    public CytoscapeNodePayload() {
     }
 
     public String getGroup() {
