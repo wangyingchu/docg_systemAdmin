@@ -42,11 +42,11 @@ public class FixSizeWindow extends Dialog {
                 .set("padding-bottom", "var(--lumo-space-m)");
 
         if(titleIcon != null){
-            titleIcon.setSize("14px");
+            titleIcon.setSize("18px");
             titleIcon.getStyle().set("color","var(--lumo-primary-color)")
                     .set("padding-right", "5px");
             titleElementsContainer.add(titleIcon);
-            titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER,titleIcon);
+            titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.AUTO,titleIcon);
         }
 
         Label titleLabel = new Label(titleContent);
@@ -88,6 +88,10 @@ public class FixSizeWindow extends Dialog {
     public void setWindowContent(Component windowContent){
         this.windowsContentContainerLayout.add(windowContent);
         this.windowsContentContainerLayout.setHorizontalComponentAlignment(FlexComponent.Alignment.CENTER,windowContent);
+    }
+
+    public void setModel(boolean isModelWindow){
+        this.setModal(isModelWindow);
     }
 
     public void show(){

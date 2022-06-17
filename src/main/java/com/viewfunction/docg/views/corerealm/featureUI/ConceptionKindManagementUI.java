@@ -32,6 +32,7 @@ import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindsCorrelationInfoSummaryChart;
 
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CreateConceptionKindView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -92,14 +93,14 @@ public class ConceptionKindManagementUI extends VerticalLayout {
             }
         });
 
-        Button createConceptionKindButton = new Button("创建概念类型定义",new Icon(VaadinIcon.PLUS_SQUARE_O));
+        Button createConceptionKindButton = new Button("创建概念类型",new Icon(VaadinIcon.PLUS_SQUARE_O));
         createConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         createConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         conceptionKindManagementOperationButtonList.add(createConceptionKindButton);
         createConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-
+                renderCreateConceptionKindUI();
             }
         });
 
@@ -511,5 +512,13 @@ public class ConceptionKindManagementUI extends VerticalLayout {
                 conceptionKindRelationGuideButton.setEnabled(true);
             }
         });
+    }
+
+    private void renderCreateConceptionKindUI(){
+        CreateConceptionKindView createConceptionKindView = new CreateConceptionKindView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建概念类型",null,true,600,330,false);
+        fixSizeWindow.setWindowContent(createConceptionKindView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }
