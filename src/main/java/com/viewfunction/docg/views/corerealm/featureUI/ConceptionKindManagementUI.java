@@ -96,6 +96,12 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         createConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         createConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         conceptionKindManagementOperationButtonList.add(createConceptionKindButton);
+        createConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+
+            }
+        });
 
         Icon icon = new Icon(VaadinIcon.LIST);
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"概念类型定义:",conceptionKindManagementOperationButtonList);
