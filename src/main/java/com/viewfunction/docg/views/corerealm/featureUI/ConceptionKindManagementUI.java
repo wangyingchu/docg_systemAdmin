@@ -516,7 +516,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
 
     private void renderCreateConceptionKindUI(){
         CreateConceptionKindView createConceptionKindView = new CreateConceptionKindView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建概念类型",null,true,600,330,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建概念类型",null,true,600,335,false);
         fixSizeWindow.setWindowContent(createConceptionKindView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
