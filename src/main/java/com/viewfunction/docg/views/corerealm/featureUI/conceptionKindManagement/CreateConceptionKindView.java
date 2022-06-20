@@ -89,6 +89,12 @@ public class CreateConceptionKindView extends VerticalLayout {
             if(targetConceptionKind != null){
                 this.conceptionKindNameField.setInvalid(true);
                 showErrorMessage("概念类型 "+conceptionKindName+" 已经存在");
+            }else{
+                targetConceptionKind = coreRealm.createConceptionKind(conceptionKindName,conceptionKindDesc);
+                if(targetConceptionKind != null){
+
+
+                }
             }
         }else{
             showErrorMessage("请输入概念类型名称和概念类型描述");
