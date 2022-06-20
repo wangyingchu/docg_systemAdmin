@@ -5,6 +5,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -22,6 +23,8 @@ public class CreateConceptionKindView extends VerticalLayout {
     private TextField conceptionKindNameField;
     private TextField conceptionKindDescField;
     private H6 errorMessage;
+
+    private Dialog containerDialog;
 
     public CreateConceptionKindView(){
         this.setWidthFull();
@@ -93,24 +96,17 @@ public class CreateConceptionKindView extends VerticalLayout {
                 targetConceptionKind = coreRealm.createConceptionKind(conceptionKindName,conceptionKindDesc);
                 if(targetConceptionKind != null){
 
+                    if(this.containerDialog != null){
+                        this.containerDialog.close();
 
+                    }
+
+                    showPopupNotification("概念类型 "+conceptionKindName+" 创建成功",NotificationVariant.LUMO_SUCCESS);
                 }
             }
         }else{
             showErrorMessage("请输入概念类型名称和概念类型描述");
-            Notification notification = new Notification();
-            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-            Div text = new Div(new Text("概念类型信息输入错误"));
-            Button closeButton = new Button(new Icon("lumo", "cross"));
-            closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-            closeButton.addClickListener(event -> {
-                notification.close();
-            });
-
-            HorizontalLayout layout = new HorizontalLayout(text, closeButton);
-            layout.setAlignItems(Alignment.CENTER);
-            notification.add(layout);
-            notification.open();
+            showPopupNotification("概念类型信息输入错误",NotificationVariant.LUMO_ERROR);
         }
     }
 
@@ -121,5 +117,25 @@ public class CreateConceptionKindView extends VerticalLayout {
 
     private void hideErrorMessage(){
         this.errorMessage.setVisible(false);
+    }
+
+    private void showPopupNotification(String notificationMessage,NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text(notificationMessage));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setAlignItems(Alignment.CENTER);
+        notification.add(layout);
+        notification.open();
+    }
+
+    public void setContainerDialog(Dialog containerDialog) {
+        this.containerDialog = containerDialog;
     }
 }
