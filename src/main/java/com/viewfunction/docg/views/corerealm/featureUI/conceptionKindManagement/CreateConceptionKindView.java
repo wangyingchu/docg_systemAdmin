@@ -13,6 +13,9 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
 public class CreateConceptionKindView extends VerticalLayout {
 
@@ -29,7 +32,7 @@ public class CreateConceptionKindView extends VerticalLayout {
         H6 viewTitle = new H6("概念类型信息");
         messageContainerLayout.add(viewTitle);
 
-        errorMessage = new H6("请输入概念类型名称和概念类型描述");
+        errorMessage = new H6("-");
         errorMessage.getStyle().set("color","#CE0000");
         messageContainerLayout.add(errorMessage);
         errorMessage.setVisible(false);
@@ -74,7 +77,21 @@ public class CreateConceptionKindView extends VerticalLayout {
         if(conceptionKindName.equals("")){
             inputValidateResult = false;
             this.conceptionKindNameField.setInvalid(true);
-
+        }
+        if(conceptionKindDesc.equals("")){
+            inputValidateResult = false;
+            this.conceptionKindDescField.setInvalid(true);
+        }
+        if(inputValidateResult){
+            hideErrorMessage();
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKindName);
+            if(targetConceptionKind != null){
+                this.conceptionKindNameField.setInvalid(true);
+                showErrorMessage("概念类型 "+conceptionKindName+" 已经存在");
+            }
+        }else{
+            showErrorMessage("请输入概念类型名称和概念类型描述");
             Notification notification = new Notification();
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             Div text = new Div(new Text("概念类型信息输入错误"));
@@ -89,15 +106,14 @@ public class CreateConceptionKindView extends VerticalLayout {
             notification.add(layout);
             notification.open();
         }
+    }
 
-        if(conceptionKindDesc.equals("")){
-            inputValidateResult = false;
-            this.conceptionKindDescField.setInvalid(true);
-        }
-        if(inputValidateResult){
-            errorMessage.setVisible(false);
-        }else{
-            errorMessage.setVisible(true);
-        }
+    private void showErrorMessage(String errorMessageTxt){
+        this.errorMessage.setText(errorMessageTxt);
+        this.errorMessage.setVisible(true);
+    }
+
+    private void hideErrorMessage(){
+        this.errorMessage.setVisible(false);
     }
 }
