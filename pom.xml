@@ -170,49 +170,42 @@
             <artifactId>font-awesome-iron-iconset</artifactId>
             <version>3.0.0</version>
         </dependency>
-
         <!-- https://vaadin.com/directory/component/chartjs-add-on-for-vaadin-14 -->
         <dependency>
             <groupId>org.vaadin.addons.chartjs</groupId>
             <artifactId>chartjs</artifactId>
             <version>0.1.37</version>
         </dependency>
-
         <!-- https://vaadin.com/directory/component/paged-tabs/ -->
         <dependency>
             <groupId>org.vaadin.tabs</groupId>
             <artifactId>paged-tabs</artifactId>
             <version>3.0.0</version>
         </dependency>
-
         <!-- https://vaadin.com/directory/component/so-charts/ -->
         <dependency>
             <groupId>com.storedobject.chart</groupId>
             <artifactId>so-charts</artifactId>
             <version>2.3.0</version>
         </dependency>
-
         <!-- https://vaadin.com/directory/component/leafletmap-for-vaadin -->
         <dependency>
            <groupId>com.xdev-software</groupId>
            <artifactId>vaadin-maps-leaflet-flow</artifactId>
            <version>1.1.0</version>
         </dependency>
-
         <!-- https://vaadin.com/directory/component/slidetab/ -->
         <dependency>
             <groupId>org.vaadin.erik</groupId>
             <artifactId>slidetab</artifactId>
             <version>4.0.2</version>
         </dependency>
-
         <!-- https://vaadin.com/directory/component/sparkline -->
         <dependency>
             <groupId>com.vaadin.componentfactory</groupId>
             <artifactId>sparkline-flow</artifactId>
             <version>2.0.0</version>
         </dependency>
-
         <!-- https://vaadin.com/directory/component/apollonav
         -navigation-component-for-vaadin -->
         <dependency>
@@ -220,47 +213,49 @@
             <artifactId>ApolloNav</artifactId>
             <version>1.2.0</version>
         </dependency>
-
         <!-- https://vaadin.com/directory/component/apexchartsjs/ -->
         <dependency>
             <groupId>com.github.appreciated</groupId>
             <artifactId>apexcharts</artifactId>
             <version>2.0.0-beta13</version>
         </dependency>
-
         <!-- https://vaadin.com/directory/component/card/ -->
         <dependency>
             <groupId>com.github.appreciated</groupId>
             <artifactId>card</artifactId>
             <version>2.0.0</version>
         </dependency>
-
         <!-- https://vaadin.com/directory/component/vis-network-vaadin/ -->
         <dependency>
             <groupId>org.vaadin.addons.visjs.network</groupId>
             <artifactId>vis-network-vaadin</artifactId>
             <version>1.0.2</version>
         </dependency>
-
         <!-- https://vaadin.com/directory/component/veaktor -->
         <dependency>
             <groupId>org.vaadin.addons.leif</groupId>
             <artifactId>veaktor</artifactId>
             <version>1.0.1</version>
         </dependency>
-
         <!-- https://vaadin.com/directory/component/pure-timeline-flow -->
         <dependency>
             <groupId>de.nils_bauer</groupId>
             <artifactId>pure-timeline-flow</artifactId>
             <version>1.0.0</version>
         </dependency>
-
         <!-- https://vaadin.com/directory/component/tooltips4vaadin -->
         <dependency>
             <groupId>dev.mett.vaadin</groupId>
             <artifactId>tooltip</artifactId>
             <version>3.0.2</version>
+        </dependency>
+
+        <!-- https://vaadin.com/directory/component/blackboard -->
+        <!-- https://mvnrepository.com/artifact/org.vaadin.addons/blackboard -->
+        <dependency>
+            <groupId>org.vaadin.addons</groupId>
+            <artifactId>blackboard</artifactId>
+            <version>2.2.0</version>
         </dependency>
 
         <!-- Need add this dependency to fix lib version conflict -->

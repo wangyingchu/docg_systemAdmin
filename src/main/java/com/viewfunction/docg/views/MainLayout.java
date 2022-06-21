@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.github.wolfie.blackboard.Blackboard;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.Text;
@@ -20,6 +22,8 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.router.PageTitle;
+import com.viewfunction.docg.element.eventHandling.ConceptionKindCreatedEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.CoreRealmView;
 import com.viewfunction.docg.views.computegrid.ComputeGridView;
 import com.viewfunction.docg.views.dataAnalysis.DataAnalysisView;
@@ -168,5 +172,17 @@ public class MainLayout extends AppLayout {
     private String getCurrentPageTitle() {
         PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
         return title == null ? "" : title.value();
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        Blackboard _BLACKBOARD = new Blackboard();
+        _BLACKBOARD.enableLogging();
+
+        _BLACKBOARD.register(ConceptionKindCreatedEvent.ConceptionKindCreatedListener.class,
+                ConceptionKindCreatedEvent.class);
+
+        ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }
 }

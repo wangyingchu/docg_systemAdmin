@@ -29,6 +29,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.eventHandling.ConceptionKindCreatedEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindsCorrelationInfoSummaryChart;
 
@@ -44,7 +46,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-public class ConceptionKindManagementUI extends VerticalLayout {
+public class ConceptionKindManagementUI extends VerticalLayout implements ConceptionKindCreatedEvent.ConceptionKindCreatedListener{
 
     private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
     private Registration listener;
@@ -56,7 +58,6 @@ public class ConceptionKindManagementUI extends VerticalLayout {
     private EntityStatisticsInfo lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo;
 
     public ConceptionKindManagementUI(){
-
         Button refreshDataButton = new Button("刷新概念类型数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -399,6 +400,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         loadConceptionKindsInfo();
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
@@ -418,6 +420,7 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     private void loadConceptionKindsInfo(){
@@ -521,5 +524,17 @@ public class ConceptionKindManagementUI extends VerticalLayout {
         fixSizeWindow.setModel(true);
         createConceptionKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    @Override
+    public void receivedConceptionKindCreatedEvent(ConceptionKindCreatedEvent event) {
+        System.out.println("=========================");
+        System.out.println(event);
+        System.out.println(event);
+        System.out.println(event);
+        System.out.println(event);
+        System.out.println(event);
+        System.out.println(event);
+        System.out.println("=========================");
     }
 }

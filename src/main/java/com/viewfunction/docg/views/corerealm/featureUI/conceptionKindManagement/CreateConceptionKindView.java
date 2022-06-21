@@ -17,6 +17,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.eventHandling.ConceptionKindCreatedEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 
 public class CreateConceptionKindView extends VerticalLayout {
 
@@ -93,16 +95,22 @@ public class CreateConceptionKindView extends VerticalLayout {
                 this.conceptionKindNameField.setInvalid(true);
                 showErrorMessage("概念类型 "+conceptionKindName+" 已经存在");
             }else{
+
+                ConceptionKindCreatedEvent conceptionKindCreatedEvent = new ConceptionKindCreatedEvent();
+                conceptionKindCreatedEvent.setConceptionKindName(conceptionKindName);
+                conceptionKindCreatedEvent.setConceptionKindName(conceptionKindDesc);
+                ResourceHolder.getApplicationBlackboard().fire(conceptionKindCreatedEvent);
+
+                /*
                 targetConceptionKind = coreRealm.createConceptionKind(conceptionKindName,conceptionKindDesc);
                 if(targetConceptionKind != null){
-
                     if(this.containerDialog != null){
                         this.containerDialog.close();
-
                     }
-
                     showPopupNotification("概念类型 "+conceptionKindName+" 创建成功",NotificationVariant.LUMO_SUCCESS);
                 }
+                */
+
             }
         }else{
             showErrorMessage("请输入概念类型名称和概念类型描述");
