@@ -81,7 +81,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements Concep
 
         List<Component> conceptionKindManagementOperationButtonList = new ArrayList<>();
 
-        Button conceptionKindRelationGuideButton = new Button("概念类型关联分布概览",new Icon(VaadinIcon.SITEMAP));
+        Button conceptionKindRelationGuideButton = new Button("概念实体关联分布概览",new Icon(VaadinIcon.SITEMAP));
         conceptionKindRelationGuideButton.setDisableOnClick(true);
         conceptionKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         conceptionKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
