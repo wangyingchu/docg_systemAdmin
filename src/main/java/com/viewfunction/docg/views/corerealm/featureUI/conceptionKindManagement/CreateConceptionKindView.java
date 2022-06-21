@@ -95,22 +95,21 @@ public class CreateConceptionKindView extends VerticalLayout {
                 this.conceptionKindNameField.setInvalid(true);
                 showErrorMessage("概念类型 "+conceptionKindName+" 已经存在");
             }else{
-
-                ConceptionKindCreatedEvent conceptionKindCreatedEvent = new ConceptionKindCreatedEvent();
-                conceptionKindCreatedEvent.setConceptionKindName(conceptionKindName);
-                conceptionKindCreatedEvent.setConceptionKindName(conceptionKindDesc);
-                ResourceHolder.getApplicationBlackboard().fire(conceptionKindCreatedEvent);
-
-                /*
                 targetConceptionKind = coreRealm.createConceptionKind(conceptionKindName,conceptionKindDesc);
                 if(targetConceptionKind != null){
+                    ConceptionKindCreatedEvent conceptionKindCreatedEvent = new ConceptionKindCreatedEvent();
+                    conceptionKindCreatedEvent.setConceptionKindName(targetConceptionKind.getConceptionKindName());
+                    conceptionKindCreatedEvent.setConceptionKindDesc(targetConceptionKind.getConceptionKindDesc());
+                    conceptionKindCreatedEvent.setCreateDateTime(targetConceptionKind.getCreateDateTime());
+                    conceptionKindCreatedEvent.setLastModifyDateTime(targetConceptionKind.getLastModifyDateTime());
+                    conceptionKindCreatedEvent.setCreatorId(targetConceptionKind.getCreatorId());
+                    conceptionKindCreatedEvent.setDataOrigin(targetConceptionKind.getDataOrigin());
+                    ResourceHolder.getApplicationBlackboard().fire(conceptionKindCreatedEvent);
                     if(this.containerDialog != null){
                         this.containerDialog.close();
                     }
                     showPopupNotification("概念类型 "+conceptionKindName+" 创建成功",NotificationVariant.LUMO_SUCCESS);
                 }
-                */
-
             }
         }else{
             showErrorMessage("请输入概念类型名称和概念类型描述");

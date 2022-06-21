@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
@@ -38,13 +39,11 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ConceptionKindManagementUI extends VerticalLayout implements ConceptionKindCreatedEvent.ConceptionKindCreatedListener{
 
@@ -56,7 +55,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements Concep
     private ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
     private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
     private EntityStatisticsInfo lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo;
-
+    final ZoneId id = ZoneId.systemDefault();
     public ConceptionKindManagementUI(){
         Button refreshDataButton = new Button("刷新概念类型数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -528,13 +527,16 @@ public class ConceptionKindManagementUI extends VerticalLayout implements Concep
 
     @Override
     public void receivedConceptionKindCreatedEvent(ConceptionKindCreatedEvent event) {
-        System.out.println("=========================");
-        System.out.println(event);
-        System.out.println(event);
-        System.out.println(event);
-        System.out.println(event);
-        System.out.println(event);
-        System.out.println(event);
-        System.out.println("=========================");
+        Date createDateTime = event.getCreateDateTime();
+        Date lastModifyDateTime = event.getLastModifyDateTime();
+        EntityStatisticsInfo newConceptionKindEntityStatisticsInfo = new EntityStatisticsInfo(
+                event.getConceptionKindName(), EntityStatisticsInfo.kindType.ConceptionKind,false,
+                0,event.getConceptionKindDesc(),event.getConceptionKindName(),
+                ZonedDateTime.ofInstant(createDateTime.toInstant(), id),ZonedDateTime.ofInstant(lastModifyDateTime.toInstant(), id),
+                        event.getCreatorId(),event.getDataOrigin()
+        );
+        ListDataProvider dtaProvider=(ListDataProvider)conceptionKindMetaInfoGrid.getDataProvider();
+        dtaProvider.getItems().add(newConceptionKindEntityStatisticsInfo);
+        dtaProvider.refreshAll();
     }
 }
