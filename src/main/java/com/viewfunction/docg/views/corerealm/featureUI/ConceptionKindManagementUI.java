@@ -30,6 +30,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCreatedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
@@ -46,7 +47,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
 
-public class ConceptionKindManagementUI extends VerticalLayout implements ConceptionKindCreatedEvent.ConceptionKindCreatedListener{
+public class ConceptionKindManagementUI extends VerticalLayout implements
+        ConceptionKindCreatedEvent.ConceptionKindCreatedListener,
+        ConceptionKindCleanedEvent.ConceptionKindCleanedListener{
 
     private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
     private Registration listener;
@@ -557,5 +560,15 @@ public class ConceptionKindManagementUI extends VerticalLayout implements Concep
         fixSizeWindow.setModel(true);
         cleanConceptionKindEntitiesView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    @Override
+    public void receivedConceptionKindCleanedEvent(ConceptionKindCleanedEvent event) {
+        if(event.getConceptionKindName() != null){
+            if(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo != null &&
+                    lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo.getEntityKindName().equals(event.getConceptionKindName())){
+                renderConceptionKindOverview(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo);
+            }
+        }
     }
 }

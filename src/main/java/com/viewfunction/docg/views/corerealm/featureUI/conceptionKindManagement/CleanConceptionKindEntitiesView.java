@@ -22,6 +22,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperatio
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 
 public class CleanConceptionKindEntitiesView extends VerticalLayout {
 
@@ -69,7 +71,6 @@ public class CleanConceptionKindEntitiesView extends VerticalLayout {
                 }
             }
         });
-
     }
 
     public void setContainerDialog(Dialog containerDialog) {
@@ -80,7 +81,12 @@ public class CleanConceptionKindEntitiesView extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         ConceptionKind targetConceptionKind =coreRealm.getConceptionKind(this.conceptionKind);
         try {
-            EntitiesOperationResult entitiesOperationResult =targetConceptionKind.purgeAllEntities();
+            EntitiesOperationResult entitiesOperationResult = targetConceptionKind.purgeAllEntities();
+
+            ConceptionKindCleanedEvent conceptionKindCleanedEvent = new ConceptionKindCleanedEvent();
+            conceptionKindCleanedEvent.setConceptionKindName(this.conceptionKind);
+            ResourceHolder.getApplicationBlackboard().fire(conceptionKindCleanedEvent);
+
             EntitiesOperationStatistics entitiesOperationStatistics = entitiesOperationResult.getOperationStatistics();
             entitiesOperationStatistics.getStartTime();
             entitiesOperationStatistics.getFinishTime();

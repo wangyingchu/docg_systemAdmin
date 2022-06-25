@@ -22,6 +22,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.router.PageTitle;
+import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCreatedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.CoreRealmView;
@@ -182,6 +183,8 @@ public class MainLayout extends AppLayout {
 
         _BLACKBOARD.register(ConceptionKindCreatedEvent.ConceptionKindCreatedListener.class,
                 ConceptionKindCreatedEvent.class);
+        _BLACKBOARD.register(ConceptionKindCleanedEvent.ConceptionKindCleanedListener.class,
+                ConceptionKindCleanedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }
