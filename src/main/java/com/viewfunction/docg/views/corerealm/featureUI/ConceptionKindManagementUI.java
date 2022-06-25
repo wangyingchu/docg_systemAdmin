@@ -32,6 +32,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCreatedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindsCorrelationInfoSummaryChart;
 
@@ -141,7 +142,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements Concep
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                        renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
+                        renderCleanConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
                     }
                 }
             });
@@ -553,16 +554,75 @@ public class ConceptionKindManagementUI extends VerticalLayout implements Concep
         String conceptionKindName = entityStatisticsInfo.getEntityKindName();
 
 
-        Dialog dialog = new Dialog();
-        dialog.setModal(true);
-        dialog.setResizable(false);
-        dialog.setCloseOnEsc(false);
-        dialog.setCloseOnOutsideClick(false);
-        dialog.setSizeFull();
-        //dialog.addThemeVariants(DialogVariant.LUMO_NO_PADDING);
-        dialog.addThemeVariants(DialogVariant.MATERIAL_NO_PADDING);
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
-        dialog.add(cancelButton);
-        dialog.open();
+/*
+        Icon titleIcon = new Icon(VaadinIcon.RECYCLE);
+
+        HorizontalLayout titleElementsContainer = new HorizontalLayout();
+        titleElementsContainer.setSpacing(false);
+        titleElementsContainer.setMargin(false);
+        titleElementsContainer.setWidth(100, Unit.PERCENTAGE);
+        titleElementsContainer.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-m)");
+
+        if(titleIcon != null){
+            titleIcon.setSize("18px");
+            titleIcon.getStyle().set("color","var(--lumo-primary-color)")
+                    .set("padding-right", "5px");
+            titleElementsContainer.add(titleIcon);
+            titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.AUTO,titleIcon);
+        }
+
+        Label titleLabel = new Label("清除概念类型所有实例");
+        titleLabel.getStyle().set("font-size","var(--lumo-font-size-m)").set("color","var(--lumo-primary-color)");
+
+        titleElementsContainer.add(titleLabel);
+        titleElementsContainer.setFlexGrow(1,titleLabel);
+        titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER,titleElementsContainer);
+        titleElementsContainer.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+
+
+
+
+
+        Dialog cleanConceptionEntitiesDialog = new Dialog();
+        cleanConceptionEntitiesDialog.setWidth(900,Unit.PIXELS);
+        cleanConceptionEntitiesDialog.setHeight(400,Unit.PIXELS);
+
+
+        cleanConceptionEntitiesDialog.getHeader().add(titleElementsContainer);
+        cleanConceptionEntitiesDialog.open();
+*/
+
+
+
+
+        CleanConceptionKindEntitiesView cleanConceptionKindEntitiesView = new CleanConceptionKindEntitiesView(conceptionKindName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"清除概念类型所有实例",null,true,600,335,false);
+        fixSizeWindow.setWindowContent(cleanConceptionKindEntitiesView);
+        fixSizeWindow.setModel(true);
+        //createConceptionKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+
+
+
+
+
+
+
+
+
+
+
+        /*
+        CreateConceptionKindView createConceptionKindView = new CreateConceptionKindView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建概念类型",null,true,600,335,false);
+        fixSizeWindow.setWindowContent(createConceptionKindView);
+        fixSizeWindow.setModel(true);
+        createConceptionKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+        */
+
+
     }
 }
