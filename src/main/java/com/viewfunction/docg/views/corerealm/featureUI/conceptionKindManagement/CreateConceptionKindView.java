@@ -18,6 +18,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCreatedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 
 public class CreateConceptionKindView extends VerticalLayout {
@@ -108,12 +109,12 @@ public class CreateConceptionKindView extends VerticalLayout {
                     if(this.containerDialog != null){
                         this.containerDialog.close();
                     }
-                    showPopupNotification("概念类型 "+conceptionKindName+" 创建成功",NotificationVariant.LUMO_SUCCESS);
+                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKindName+" 创建成功",NotificationVariant.LUMO_SUCCESS);
                 }
             }
         }else{
             showErrorMessage("请输入概念类型名称和概念类型描述");
-            showPopupNotification("概念类型信息输入错误",NotificationVariant.LUMO_ERROR);
+            CommonUIOperationUtil.showPopupNotification("概念类型信息输入错误",NotificationVariant.LUMO_ERROR);
         }
     }
 
@@ -124,22 +125,6 @@ public class CreateConceptionKindView extends VerticalLayout {
 
     private void hideErrorMessage(){
         this.errorMessage.setVisible(false);
-    }
-
-    private void showPopupNotification(String notificationMessage,NotificationVariant notificationVariant){
-        Notification notification = new Notification();
-        notification.addThemeVariants(notificationVariant);
-        Div text = new Div(new Text(notificationMessage));
-        Button closeButton = new Button(new Icon("lumo", "cross"));
-        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-        closeButton.addClickListener(event -> {
-            notification.close();
-        });
-
-        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
-        layout.setAlignItems(Alignment.CENTER);
-        notification.add(layout);
-        notification.open();
     }
 
     public void setContainerDialog(Dialog containerDialog) {

@@ -23,6 +23,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 
 public class CleanConceptionKindEntitiesView extends VerticalLayout {
@@ -98,7 +99,7 @@ public class CleanConceptionKindEntitiesView extends VerticalLayout {
             }
             showPopupNotification(entitiesOperationResult,NotificationVariant.LUMO_SUCCESS);
         } catch (CoreRealmServiceRuntimeException e) {
-            showPopupNotification("概念类型 "+conceptionKind+" 实例清除操作发生服务器端错误",NotificationVariant.LUMO_ERROR);
+            CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 实例清除操作发生服务器端错误",NotificationVariant.LUMO_ERROR);
             throw new RuntimeException(e);
         }
     }
@@ -124,22 +125,6 @@ public class CleanConceptionKindEntitiesView extends VerticalLayout {
         notificationMessageContainer.add(new Div(new Text("操作开始时间: "+entitiesOperationResult.getOperationStatistics().getStartTime())));
         notificationMessageContainer.add(new Div(new Text("操作结束时间: "+entitiesOperationResult.getOperationStatistics().getFinishTime())));
         notification.add(notificationMessageContainer);
-        notification.open();
-    }
-
-    private void showPopupNotification(String notificationMessage,NotificationVariant notificationVariant){
-        Notification notification = new Notification();
-        notification.addThemeVariants(notificationVariant);
-        Div text = new Div(new Text(notificationMessage));
-        Button closeButton = new Button(new Icon("lumo", "cross"));
-        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-        closeButton.addClickListener(event -> {
-            notification.close();
-        });
-
-        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
-        layout.setAlignItems(Alignment.CENTER);
-        notification.add(layout);
         notification.open();
     }
 }
