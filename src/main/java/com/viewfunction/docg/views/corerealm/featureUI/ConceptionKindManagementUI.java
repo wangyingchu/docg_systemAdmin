@@ -137,6 +137,14 @@ public class ConceptionKindManagementUI extends VerticalLayout implements Concep
             cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
             Tooltips.getCurrent().setTooltip(cleanConceptionKind, "清除概念类型所有实例");
+            cleanConceptionKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                        renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
+                    }
+                }
+            });
 
             Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
             deleteKindIcon.setSize("21px");
@@ -538,5 +546,23 @@ public class ConceptionKindManagementUI extends VerticalLayout implements Concep
         ListDataProvider dtaProvider=(ListDataProvider)conceptionKindMetaInfoGrid.getDataProvider();
         dtaProvider.getItems().add(newConceptionKindEntityStatisticsInfo);
         dtaProvider.refreshAll();
+    }
+
+    private void renderCleanConceptionKindEntitiesUI(EntityStatisticsInfo entityStatisticsInfo){
+
+        String conceptionKindName = entityStatisticsInfo.getEntityKindName();
+
+
+        Dialog dialog = new Dialog();
+        dialog.setModal(true);
+        dialog.setResizable(false);
+        dialog.setCloseOnEsc(false);
+        dialog.setCloseOnOutsideClick(false);
+        dialog.setSizeFull();
+        //dialog.addThemeVariants(DialogVariant.LUMO_NO_PADDING);
+        dialog.addThemeVariants(DialogVariant.MATERIAL_NO_PADDING);
+        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        dialog.add(cancelButton);
+        dialog.open();
     }
 }
