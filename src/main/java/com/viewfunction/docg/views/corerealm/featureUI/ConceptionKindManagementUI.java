@@ -551,7 +551,6 @@ public class ConceptionKindManagementUI extends VerticalLayout implements Concep
 
     private void renderCleanConceptionKindEntitiesUI(EntityStatisticsInfo entityStatisticsInfo){
         String conceptionKindName = entityStatisticsInfo.getEntityKindName();
-
         CleanConceptionKindEntitiesView cleanConceptionKindEntitiesView = new CleanConceptionKindEntitiesView(conceptionKindName);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"清除概念类型所有实例",null,true,600,210,false);
         fixSizeWindow.setWindowContent(cleanConceptionKindEntitiesView);
