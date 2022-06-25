@@ -32,12 +32,10 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCreatedEvent;
+import com.viewfunction.docg.element.eventHandling.ConceptionKindRemovedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindsCorrelationInfoSummaryChart;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.*;
 
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CreateConceptionKindView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -49,7 +47,8 @@ import java.util.*;
 
 public class ConceptionKindManagementUI extends VerticalLayout implements
         ConceptionKindCreatedEvent.ConceptionKindCreatedListener,
-        ConceptionKindCleanedEvent.ConceptionKindCleanedListener{
+        ConceptionKindCleanedEvent.ConceptionKindCleanedListener,
+        ConceptionKindRemovedEvent.ConceptionKindRemovedListener{
 
     private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
     private Registration listener;
@@ -157,6 +156,14 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
             removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
             Tooltips.getCurrent().setTooltip(removeConceptionKind, "删除概念类型");
+            removeConceptionKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                        renderRemoveConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
+                    }
+                }
+            });
 
             HorizontalLayout buttons = new HorizontalLayout(queryConceptionKind,configConceptionKind, cleanConceptionKind,removeConceptionKind);
             buttons.setPadding(false);
@@ -568,6 +575,39 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
             if(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo != null &&
                     lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo.getEntityKindName().equals(event.getConceptionKindName())){
                 renderConceptionKindOverview(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo);
+            }
+        }
+    }
+
+    private void renderRemoveConceptionKindEntitiesUI(EntityStatisticsInfo entityStatisticsInfo){
+        String conceptionKindName = entityStatisticsInfo.getEntityKindName();
+        RemoveConceptionKindView removeConceptionKindView = new RemoveConceptionKindView(conceptionKindName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除概念类型",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(removeConceptionKindView);
+        fixSizeWindow.setModel(true);
+        removeConceptionKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    @Override
+    public void receivedConceptionKindRemovedEvent(ConceptionKindRemovedEvent event) {
+        if(event.getConceptionKindName() != null){
+            ListDataProvider dtaProvider=(ListDataProvider)conceptionKindMetaInfoGrid.getDataProvider();
+            Collection<EntityStatisticsInfo> entityStatisticsInfoList = dtaProvider.getItems();
+            EntityStatisticsInfo removeTargetElement = null;
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
+                if(currentEntityStatisticsInfo.getEntityKindName().equals(event.getConceptionKindName())){
+                    removeTargetElement = currentEntityStatisticsInfo;
+                }
+            }
+            if(removeTargetElement != null){
+                dtaProvider.getItems().remove(removeTargetElement);
+            }
+            dtaProvider.refreshAll();
+
+            if(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo != null &&
+                    lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo.getEntityKindName().equals(event.getConceptionKindName())){
+                resetSingleConceptionKindSummaryInfoArea();
             }
         }
     }

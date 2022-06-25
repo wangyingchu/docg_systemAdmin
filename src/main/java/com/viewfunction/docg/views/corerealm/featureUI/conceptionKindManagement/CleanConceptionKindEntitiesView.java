@@ -80,7 +80,7 @@ public class CleanConceptionKindEntitiesView extends VerticalLayout {
 
     private void doCleanConceptionKindEntities(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        ConceptionKind targetConceptionKind =coreRealm.getConceptionKind(this.conceptionKind);
+        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
         try {
             EntitiesOperationResult entitiesOperationResult = targetConceptionKind.purgeAllEntities();
 

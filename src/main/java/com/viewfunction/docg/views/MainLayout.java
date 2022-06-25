@@ -24,6 +24,7 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.router.PageTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCreatedEvent;
+import com.viewfunction.docg.element.eventHandling.ConceptionKindRemovedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.CoreRealmView;
 import com.viewfunction.docg.views.computegrid.ComputeGridView;
@@ -185,6 +186,8 @@ public class MainLayout extends AppLayout {
                 ConceptionKindCreatedEvent.class);
         _BLACKBOARD.register(ConceptionKindCleanedEvent.ConceptionKindCleanedListener.class,
                 ConceptionKindCleanedEvent.class);
+        _BLACKBOARD.register(ConceptionKindRemovedEvent.ConceptionKindRemovedListener.class,
+                ConceptionKindRemovedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

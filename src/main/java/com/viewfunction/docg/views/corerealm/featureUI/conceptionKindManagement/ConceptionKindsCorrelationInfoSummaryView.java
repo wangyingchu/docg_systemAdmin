@@ -33,5 +33,4 @@ public class ConceptionKindsCorrelationInfoSummaryView extends VerticalLayout {
                 getSystemConceptionKindsRelationDistributionStatistics();
         conceptionKindsCorrelationInfoSummaryChart.setData(conceptionKindCorrelationInfoSet);
     }
-
 }
