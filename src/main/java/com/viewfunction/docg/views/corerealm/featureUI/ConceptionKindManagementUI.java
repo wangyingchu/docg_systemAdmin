@@ -10,6 +10,7 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -33,6 +34,7 @@ import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCreatedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindRemovedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.*;
 
@@ -59,6 +61,8 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
     private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
     private EntityStatisticsInfo lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo;
     final ZoneId id = ZoneId.systemDefault();
+    private TextField conceptionKindNameFilterField;
+    private TextField conceptionKindDescFilterField;
     public ConceptionKindManagementUI(){
         Button refreshDataButton = new Button("刷新概念类型数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -321,24 +325,24 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
         filterTitle.setWidth(80,Unit.PIXELS);
 
-        TextField conceptionKindNameField = new TextField();
-        conceptionKindNameField.setPlaceholder("概念类型名称");
-        conceptionKindNameField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        conceptionKindNameField.setWidth(250,Unit.PIXELS);
-        conceptionKindsSearchElementsContainerLayout.add(conceptionKindNameField);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindNameField);
+        conceptionKindNameFilterField = new TextField();
+        conceptionKindNameFilterField.setPlaceholder("概念类型名称");
+        conceptionKindNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        conceptionKindNameFilterField.setWidth(250,Unit.PIXELS);
+        conceptionKindsSearchElementsContainerLayout.add(conceptionKindNameFilterField);
+        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindNameFilterField);
 
         Icon plusIcon = new Icon(VaadinIcon.PLUS);
         plusIcon.setSize("12px");
         conceptionKindsSearchElementsContainerLayout.add(plusIcon);
         conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
 
-        TextField conceptionKindDescField = new TextField();
-        conceptionKindDescField.setPlaceholder("概念类型显示名称");
-        conceptionKindDescField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        conceptionKindDescField.setWidth(250,Unit.PIXELS);
-        conceptionKindsSearchElementsContainerLayout.add(conceptionKindDescField);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindDescField);
+        conceptionKindDescFilterField = new TextField();
+        conceptionKindDescFilterField.setPlaceholder("概念类型显示名称");
+        conceptionKindDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        conceptionKindDescFilterField.setWidth(250,Unit.PIXELS);
+        conceptionKindsSearchElementsContainerLayout.add(conceptionKindDescFilterField);
+        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindDescFilterField);
 
         Button searchConceptionKindsButton = new Button("查找概念类型",new Icon(VaadinIcon.SEARCH));
         searchConceptionKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -346,6 +350,12 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         conceptionKindsSearchElementsContainerLayout.add(searchConceptionKindsButton);
         conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchConceptionKindsButton);
         searchConceptionKindsButton.setWidth(115,Unit.PIXELS);
+        searchConceptionKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                filterConceptionKinds();
+            }
+        });
 
         Icon divIcon = new Icon(VaadinIcon.LINE_V);
         divIcon.setSize("8px");
@@ -358,6 +368,12 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         conceptionKindsSearchElementsContainerLayout.add(clearSearchCriteriaButton);
         conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
         clearSearchCriteriaButton.setWidth(120,Unit.PIXELS);
+        clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                cancelFilterConceptionKinds();
+            }
+        });
 
         conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
 
@@ -610,5 +626,20 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
                 resetSingleConceptionKindSummaryInfoArea();
             }
         }
+    }
+
+    private void filterConceptionKinds(){
+        String conceptionKindFilterValue = conceptionKindNameFilterField.getValue();
+        String conceptionKindDescFilterValue = conceptionKindDescFilterField.getValue();
+        if(conceptionKindFilterValue.equals("")&conceptionKindDescFilterValue.equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入概念类型名称 和/或 概念类型显示名称", NotificationVariant.LUMO_ERROR);
+        }else{
+
+
+        }
+    }
+
+    private void cancelFilterConceptionKinds(){
+
     }
 }
