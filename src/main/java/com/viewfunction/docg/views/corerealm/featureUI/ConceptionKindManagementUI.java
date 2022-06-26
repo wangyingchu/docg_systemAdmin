@@ -7,6 +7,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.dialog.DialogVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -63,6 +64,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
     final ZoneId id = ZoneId.systemDefault();
     private TextField conceptionKindNameFilterField;
     private TextField conceptionKindDescFilterField;
+    private GridListDataView<EntityStatisticsInfo> conceptionKindsMetaInfoView;
     public ConceptionKindManagementUI(){
         Button refreshDataButton = new Button("刷新概念类型数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -468,7 +470,33 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
                     conceptionKindEntityStatisticsInfoList.add(currentEntityStatisticsInfo);
                 }
             }
-            conceptionKindMetaInfoGrid.setItems(conceptionKindEntityStatisticsInfoList);
+            this.conceptionKindsMetaInfoView = conceptionKindMetaInfoGrid.setItems(conceptionKindEntityStatisticsInfoList);
+
+            //logic to filter ConceptionKinds already loaded from server
+            this.conceptionKindsMetaInfoView.addFilter(item->{
+                String entityKindName = item.getEntityKindName();
+                String entityKindDesc = item.getEntityKindDesc();
+
+                boolean conceptionKindNameFilterResult = true;
+                if(!conceptionKindNameFilterField.getValue().trim().equals("")){
+                    if(entityKindName.contains(conceptionKindNameFilterField.getValue().trim())){
+                        conceptionKindNameFilterResult = true;
+                    }else{
+                        conceptionKindNameFilterResult = false;
+                    }
+                }
+
+                boolean conceptionKindDescFilterResult = true;
+                if(!conceptionKindDescFilterField.getValue().trim().equals("")){
+                    if(entityKindDesc.contains(conceptionKindDescFilterField.getValue().trim())){
+                        conceptionKindDescFilterResult = true;
+                    }else{
+                        conceptionKindDescFilterResult = false;
+                    }
+                }
+                return conceptionKindNameFilterResult & conceptionKindDescFilterResult;
+            });
+
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
@@ -629,17 +657,18 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
     }
 
     private void filterConceptionKinds(){
-        String conceptionKindFilterValue = conceptionKindNameFilterField.getValue();
-        String conceptionKindDescFilterValue = conceptionKindDescFilterField.getValue();
+        String conceptionKindFilterValue = conceptionKindNameFilterField.getValue().trim();
+        String conceptionKindDescFilterValue = conceptionKindDescFilterField.getValue().trim();
         if(conceptionKindFilterValue.equals("")&conceptionKindDescFilterValue.equals("")){
             CommonUIOperationUtil.showPopupNotification("请输入概念类型名称 和/或 概念类型显示名称", NotificationVariant.LUMO_ERROR);
         }else{
-
-
+            this.conceptionKindsMetaInfoView.refreshAll();
         }
     }
 
     private void cancelFilterConceptionKinds(){
-
+        conceptionKindNameFilterField.setValue("");
+        conceptionKindDescFilterField.setValue("");
+        this.conceptionKindsMetaInfoView.refreshAll();
     }
 }
