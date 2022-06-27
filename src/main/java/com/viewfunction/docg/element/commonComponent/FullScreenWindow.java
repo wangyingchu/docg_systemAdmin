@@ -5,6 +5,7 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.dialog.DialogVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -26,11 +27,14 @@ public class FullScreenWindow extends Dialog {
         this.setCloseOnOutsideClick(false);
         this.setDraggable(false);
         this.setSizeFull();
-        //this.addThemeVariants(DialogVariant.LUMO_NO_PADDING);
+        this.addThemeVariants(DialogVariant.LUMO_NO_PADDING);
 
         HorizontalLayout titleElementsContainer = new HorizontalLayout();
         titleElementsContainer.setSpacing(false);
-        titleElementsContainer.setMargin(false);
+        titleElementsContainer.setMargin(true);
+        //titleElementsContainer.setPadding(false);
+
+
         titleElementsContainer.setWidth(100, Unit.PERCENTAGE);
         titleElementsContainer.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
