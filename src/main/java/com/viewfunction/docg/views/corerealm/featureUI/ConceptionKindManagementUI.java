@@ -621,6 +621,18 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
                     lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo.getEntityKindName().equals(event.getConceptionKindName())){
                 renderConceptionKindOverview(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo);
             }
+            ListDataProvider dtaProvider=(ListDataProvider)conceptionKindMetaInfoGrid.getDataProvider();
+            Collection<EntityStatisticsInfo> entityStatisticsInfoList = dtaProvider.getItems();
+            EntityStatisticsInfo cleanedTargetElement = null;
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
+                if(currentEntityStatisticsInfo.getEntityKindName().equals(event.getConceptionKindName())){
+                    cleanedTargetElement = currentEntityStatisticsInfo;
+                }
+            }
+            if(cleanedTargetElement != null){
+                cleanedTargetElement.setEntitiesCount(0);
+            }
+            dtaProvider.refreshAll();
         }
     }
 
