@@ -470,8 +470,9 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
                     conceptionKindEntityStatisticsInfoList.add(currentEntityStatisticsInfo);
                 }
             }
+            this.conceptionKindNameFilterField.setValue("");
+            this.conceptionKindDescFilterField.setValue("");
             this.conceptionKindsMetaInfoView = conceptionKindMetaInfoGrid.setItems(conceptionKindEntityStatisticsInfoList);
-
             //logic to filter ConceptionKinds already loaded from server
             this.conceptionKindsMetaInfoView.addFilter(item->{
                 String entityKindName = item.getEntityKindName();
