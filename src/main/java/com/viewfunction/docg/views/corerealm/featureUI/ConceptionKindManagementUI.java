@@ -39,6 +39,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.*;
 
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -122,7 +123,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
             queryIcon.setSize("20px");
             Button queryConceptionKind = new Button(queryIcon, event -> {
                 if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                    renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
+                    renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
                 }
             });
             queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -541,6 +542,13 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         Button cancelButton = new Button("Cancel", e -> dialog.close());
         dialog.add(cancelButton);
         dialog.open();
+    }
+
+    private void renderConceptionKindQueryUI(EntityStatisticsInfo entityStatisticsInfo){
+        ConceptionKindQueryUI conceptionKindQueryUI = new ConceptionKindQueryUI();
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念类型 "+entityStatisticsInfo.getEntityKindName()+ " 实体数据查询",null,true);
+        fullScreenWindow.setWindowContent(conceptionKindQueryUI);
+        fullScreenWindow.show();
     }
 
     private void renderConceptionKindsCorrelationInfoSummaryUI(Button conceptionKindRelationGuideButton){
