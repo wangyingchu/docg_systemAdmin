@@ -22,15 +22,16 @@ public class ConceptionKindQueryUI extends VerticalLayout {
         queryFieldsContainer.setPadding(false);
         queryFieldsContainer.setSpacing(false);
         queryFieldsContainer.setMargin(false);
-        queryFieldsContainer.add(new Label("la"));
+        ConceptionKindQueryParametersView conceptionKindQueryParametersView = new ConceptionKindQueryParametersView(this.conceptionKindName);
+        queryFieldsContainer.add(conceptionKindQueryParametersView);
+        queryFieldsContainer.setMinWidth(200,Unit.PIXELS);
+        queryFieldsContainer.setMaxWidth(400,Unit.PIXELS);
 
         queryResultContainer= new VerticalLayout();
         queryResultContainer.setPadding(false);
         queryResultContainer.setSpacing(false);
         queryResultContainer.setMargin(false);
         queryResultContainer.add(new Label("lb"));
-        queryFieldsContainer.setMinWidth(200,Unit.PIXELS);
-        queryFieldsContainer.setMaxWidth(400,Unit.PIXELS);
 
         SplitLayout splitLayout = new SplitLayout(queryFieldsContainer, queryResultContainer);
         splitLayout.setSplitterPosition(10);
