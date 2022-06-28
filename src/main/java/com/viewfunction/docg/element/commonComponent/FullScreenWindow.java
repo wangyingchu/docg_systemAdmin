@@ -30,20 +30,18 @@ public class FullScreenWindow extends Dialog {
         this.addThemeVariants(DialogVariant.LUMO_NO_PADDING);
 
         HorizontalLayout titleElementsContainer = new HorizontalLayout();
-        titleElementsContainer.setSpacing(false);
-        titleElementsContainer.setMargin(true);
-        //titleElementsContainer.setPadding(false);
-
-
+        HorizontalLayout firstSpaceDivContainer = new HorizontalLayout();
+        firstSpaceDivContainer.setWidth(5,Unit.PIXELS);
+        titleElementsContainer.add(firstSpaceDivContainer);
         titleElementsContainer.setWidth(100, Unit.PERCENTAGE);
         titleElementsContainer.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
-                .set("padding-bottom", "var(--lumo-space-m)");
+                .set("padding-bottom", "var(--lumo-space-s)")
+                .set("padding-top", "var(--lumo-space-s)");
 
         if(titleIcon != null){
-            titleIcon.setSize("18px");
-            titleIcon.getStyle().set("color","var(--lumo-primary-color)")
-                    .set("padding-right", "5px");
+            titleIcon.setSize("16px");
+            titleIcon.getStyle().set("color","var(--lumo-primary-color)");
             titleElementsContainer.add(titleIcon);
             titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.AUTO,titleIcon);
         }
