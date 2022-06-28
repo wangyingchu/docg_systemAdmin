@@ -3,7 +3,6 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
@@ -31,7 +30,8 @@ public class ConceptionKindQueryUI extends VerticalLayout {
         queryResultContainer.setPadding(false);
         queryResultContainer.setSpacing(false);
         queryResultContainer.setMargin(false);
-        queryResultContainer.add(new Label("lb"));
+        ConceptionKindQueryResultsView conceptionKindQueryResultsView = new ConceptionKindQueryResultsView(this.conceptionKindName);
+        queryResultContainer.add(conceptionKindQueryResultsView);
 
         SplitLayout splitLayout = new SplitLayout(queryFieldsContainer, queryResultContainer);
         splitLayout.setSplitterPosition(10);
