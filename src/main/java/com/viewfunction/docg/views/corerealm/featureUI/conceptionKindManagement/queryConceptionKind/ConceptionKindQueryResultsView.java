@@ -23,7 +23,12 @@ import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayIte
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ConceptionKindQueryResultsView extends VerticalLayout implements
@@ -34,6 +39,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     private SecondaryKeyValueDisplayItem startTimeDisplayItem;
     private SecondaryKeyValueDisplayItem finishTimeDisplayItem;
     private SecondaryKeyValueDisplayItem dataCountDisplayItem;
+    private final ZoneId id = ZoneId.systemDefault();
     public ConceptionKindQueryResultsView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
         this.setPadding(true);
@@ -43,9 +49,9 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         add(titleLayout);
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.HARDDRIVE_O),"查询结果");
         titleLayout.add(filterTitle2);
-        startTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询开始时间","1,000,000,000");
-        finishTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询结束时间","1,000,000,000");
-        dataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"结果集数据量","1,000,000,000");
+        startTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询开始时间"," ");
+        finishTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询结束时间"," ");
+        dataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"结果集数据量"," ");
 
         queryResultGrid = new Grid<>();
         queryResultGrid.setWidth(100,Unit.PERCENTAGE);
@@ -65,15 +71,19 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                 attributesList.add(RealmConstant._lastModifyDateProperty);
                 attributesList.add(RealmConstant._creatorIdProperty);
                 attributesList.add(RealmConstant._dataOriginProperty);
-
                 ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
                         targetConception.getSingleValueEntityAttributesByAttributeNames(attributesList,queryParameters);
-                System.out.println(conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount());
-
-                startTimeDisplayItem.updateDisplayValue(conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime().toString());
-                finishTimeDisplayItem.updateDisplayValue(conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getFinishTime().toString());
-                dataCountDisplayItem.updateDisplayValue(""+conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount());
-
+                if(conceptionEntitiesAttributesRetrieveResult != null && conceptionEntitiesAttributesRetrieveResult.getOperationStatistics() != null){
+                    Date startDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime();
+                    ZonedDateTime startZonedDateTime = ZonedDateTime.ofInstant(startDateTime.toInstant(), id);
+                    String startTimeStr = startZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
+                    startTimeDisplayItem.updateDisplayValue(startTimeStr);
+                    Date finishDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime();
+                    ZonedDateTime finishZonedDateTime = ZonedDateTime.ofInstant(finishDateTime.toInstant(), id);
+                    String finishTimeStr = finishZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
+                    finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
+                    dataCountDisplayItem.updateDisplayValue(""+conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount());
+                }
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
             }
