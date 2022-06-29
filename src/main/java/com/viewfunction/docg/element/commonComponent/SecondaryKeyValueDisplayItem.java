@@ -10,13 +10,15 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class SecondaryKeyValueDisplayItem {
 
+    private Label displayValue;
+
     public SecondaryKeyValueDisplayItem(HasComponents containComponent, String keyText, String valueText){
         Label conceptionEntityNumberText = new Label(keyText);
         conceptionEntityNumberText.addClassNames("text-xs","font-medium","text-secondary");
         containComponent.add(conceptionEntityNumberText);
-        Label conceptionEntityNumberValue = new Label(valueText);
-        conceptionEntityNumberValue.addClassNames("text-s","text-primary","font-extrabold","border-b","border-contrast-20");
-        containComponent.add(conceptionEntityNumberValue);
+        displayValue = new Label(valueText);
+        displayValue.addClassNames("text-s","text-primary","font-extrabold","border-b","border-contrast-20");
+        containComponent.add(displayValue);
     }
 
     public SecondaryKeyValueDisplayItem(HasComponents containComponent, Icon icon,String keyText, String valueText){
@@ -56,8 +58,12 @@ public class SecondaryKeyValueDisplayItem {
         conceptionEntityNumberText.addClassNames("text-xs","font-medium","text-secondary");
         keyHorizontalLayout.add(conceptionEntityNumberText);
         containComponent.add(keyHorizontalLayout);
-        Label conceptionEntityNumberValue = new Label(valueText);
-        conceptionEntityNumberValue.addClassNames("text-s","text-primary","font-extrabold","border-b","border-contrast-20");
-        containComponent.add(conceptionEntityNumberValue);
+        displayValue = new Label(valueText);
+        displayValue.addClassNames("text-s","text-primary","font-extrabold","border-b","border-contrast-20");
+        containComponent.add(displayValue);
+    }
+
+    public void updateDisplayValue(String newValue){
+        displayValue.setText(newValue);
     }
 }

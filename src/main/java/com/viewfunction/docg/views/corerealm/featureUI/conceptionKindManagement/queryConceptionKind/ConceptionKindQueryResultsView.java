@@ -12,21 +12,28 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesRetrieveResult;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ConceptionKindQueryResultsView extends VerticalLayout implements
         ConceptionKindQueriedEvent.ConceptionKindQueriedListener {
     private String conceptionKindName;
     private Registration listener;
-    private Grid<ConceptionEntity> queryResultGrid;
+    private Grid<ConceptionEntityValue> queryResultGrid;
+    private SecondaryKeyValueDisplayItem startTimeDisplayItem;
+    private SecondaryKeyValueDisplayItem finishTimeDisplayItem;
+    private SecondaryKeyValueDisplayItem dataCountDisplayItem;
     public ConceptionKindQueryResultsView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
         this.setPadding(true);
@@ -36,9 +43,9 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         add(titleLayout);
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.HARDDRIVE_O),"查询结果");
         titleLayout.add(filterTitle2);
-        new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询开始时间","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询结束时间","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"结果集数据量","1,000,000,000");
+        startTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询开始时间","1,000,000,000");
+        finishTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询结束时间","1,000,000,000");
+        dataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"结果集数据量","1,000,000,000");
 
         queryResultGrid = new Grid<>();
         queryResultGrid.setWidth(100,Unit.PERCENTAGE);
@@ -53,8 +60,20 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             ConceptionKind targetConception = coreRealm.getConceptionKind(conceptionKindName);
             QueryParameters queryParameters = new QueryParameters();
             try {
-                ConceptionEntitiesRetrieveResult conceptionEntitiesRetrieveResult = targetConception.getEntities(queryParameters);
-                System.out.println(conceptionEntitiesRetrieveResult.getOperationStatistics().getResultEntitiesCount());
+                List<String> attributesList = new ArrayList<>();
+                attributesList.add(RealmConstant._createDateProperty);
+                attributesList.add(RealmConstant._lastModifyDateProperty);
+                attributesList.add(RealmConstant._creatorIdProperty);
+                attributesList.add(RealmConstant._dataOriginProperty);
+
+                ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
+                        targetConception.getSingleValueEntityAttributesByAttributeNames(attributesList,queryParameters);
+                System.out.println(conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount());
+
+                startTimeDisplayItem.updateDisplayValue(conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime().toString());
+                finishTimeDisplayItem.updateDisplayValue(conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getFinishTime().toString());
+                dataCountDisplayItem.updateDisplayValue(""+conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount());
+
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
             }
