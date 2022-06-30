@@ -7,6 +7,7 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -62,7 +63,8 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
         queryResultGrid = new Grid<>();
         queryResultGrid.setWidth(100,Unit.PERCENTAGE);
-
+        queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        queryResultGrid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
         queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
             @Override
             public Object apply(ConceptionEntityValue conceptionEntityValue) {
