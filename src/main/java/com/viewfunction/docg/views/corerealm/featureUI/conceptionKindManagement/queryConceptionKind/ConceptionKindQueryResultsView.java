@@ -13,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
@@ -26,6 +27,7 @@ import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -42,6 +44,9 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     private SecondaryKeyValueDisplayItem finishTimeDisplayItem;
     private SecondaryKeyValueDisplayItem dataCountDisplayItem;
     private final ZoneId id = ZoneId.systemDefault();
+    private final String _rowIndexPropertyName = "ROW_INDEX";
+
+    private List<String> currentRowKeyList;
     public ConceptionKindQueryResultsView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
         this.setPadding(true);
@@ -61,9 +66,9 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
             @Override
             public Object apply(ConceptionEntityValue conceptionEntityValue) {
-                return conceptionEntityValue.getEntityAttributesValue().get("ROW_INDEX");
+                return conceptionEntityValue.getEntityAttributesValue().get(_rowIndexPropertyName);
             }
-        }).setHeader("").setHeader("IDX").setKey("idx").setFlexGrow(0).setWidth("70px").setResizable(false);
+        }).setHeader("").setHeader("IDX").setKey("idx").setFlexGrow(0).setWidth("60px").setResizable(false);
         queryResultGrid.addComponentColumn(new ConceptionEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("110px").setResizable(false);
         queryResultGrid.addColumn(ConceptionEntityValue::getConceptionEntityUID).setHeader(" EntityUID").setKey("idx_1").setFlexGrow(1).setWidth("150px").setResizable(false);
 
@@ -72,12 +77,19 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
         queryResultGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx1).setSortable(false);
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.KEY_O,"概念实体UID");
-        queryResultGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx0).setSortable(true);
+        queryResultGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx0).setSortable(false);
         add(queryResultGrid);
+
+        this.currentRowKeyList = new ArrayList<>();
     }
 
     @Override
     public void receivedConceptionKindQueriedEvent(ConceptionKindQueriedEvent event) {
+        for(String currentExistingRowKey:this.currentRowKeyList){
+            queryResultGrid.removeColumnByKey(currentExistingRowKey);
+        }
+        queryResultGrid.setItems(new ArrayList<>());
+        this.currentRowKeyList.clear();
         String conceptionKindName = event.getConceptionKindName();
         if(conceptionKindName.equals(this.conceptionKindName)){
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -110,7 +122,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
                     for(int i=0 ; i<conceptionEntityValueList.size();i++){
                         ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
-                        currentConceptionEntityValue.getEntityAttributesValue().put("ROW_INDEX",i+1);
+                        currentConceptionEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName,i+1);
                         currentConceptionEntityValue.getEntityAttributesValue().put("Prop001",1);
                         currentConceptionEntityValue.getEntityAttributesValue().put("Prop002","sssssssss");
                         currentConceptionEntityValue.getEntityAttributesValue().put("Prop003",new Date());
@@ -118,15 +130,17 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
                     if (entityAttributeNamesList != null && entityAttributeNamesList.size() > 0) {
                         for (String currentProperty : entityAttributeNamesList) {
-                            //if (!currentProperty.equals(BusinessLogicConstant.ID_PROPERTY_TYPE_NAME)) {
+                            if (!currentProperty.equals(_rowIndexPropertyName)) {
                             queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
                                     @Override
                                     public Object apply(ConceptionEntityValue conceptionEntityValue) {
                                         return conceptionEntityValue.getEntityAttributesValue().get(currentProperty);
                                     }
-                                }).setHeader(" " + currentProperty).setId(currentProperty + "_ID");
-                               // this.currentDisplayPropertiesList.add(currentProperty + "_ID");
-                            //}
+                                }).setHeader(" " + currentProperty).setKey(currentProperty + "_KEY");
+                                queryResultGrid.getColumnByKey(currentProperty + "_KEY").setSortable(true);
+                            }
+
+                            this.currentRowKeyList.add(currentProperty + "_KEY");
                         }
                     }
                     queryResultGrid.setItems(conceptionEntityValueList);
@@ -171,21 +185,21 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             linkButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             linkButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             linkButton.setIcon(VaadinIcon.EYE.create());
-            //linkButton.setDescription("显示对象实例数据详情");
+            Tooltips.getCurrent().setTooltip(linkButton, "显示概念实体详情");
             actionButtonContainerLayout.add(linkButton);
 
             Button infoButton = new Button();
             infoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             infoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             infoButton.setIcon(VaadinIcon.INBOX.create());
-            //infoButton.setDescription("加入待处理数据列表");
+            Tooltips.getCurrent().setTooltip(infoButton, "加入待处理数据列表");
             actionButtonContainerLayout.add(infoButton);
 
             Button deleteButton = new Button();
             deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             deleteButton.setIcon(VaadinIcon.TRASH.create());
-            //deleteButton.setDescription("删除对象实例数据");
+            Tooltips.getCurrent().setTooltip(deleteButton, "删除概念实体");
             actionButtonContainerLayout.add(deleteButton);
 
             return actionButtonContainerLayout;
