@@ -23,7 +23,7 @@ public class ConceptionKindQueryUI extends VerticalLayout {
         queryFieldsContainer.setMargin(false);
         ConceptionKindQueryCriteriaView conceptionKindQueryCriteriaView = new ConceptionKindQueryCriteriaView(this.conceptionKindName);
         queryFieldsContainer.add(conceptionKindQueryCriteriaView);
-        queryFieldsContainer.setMinWidth(200,Unit.PIXELS);
+        queryFieldsContainer.setMinWidth(250,Unit.PIXELS);
         queryFieldsContainer.setMaxWidth(400,Unit.PIXELS);
 
         queryResultContainer= new VerticalLayout();
