@@ -9,6 +9,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -82,9 +83,12 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
         List<Component> secTitleElementsList = new ArrayList<>();
 
-        Label coreRealmNameLabel = new Label(" [ Default CoreRealm ]");
-        coreRealmNameLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","var(--lumo-secondary-text-color)");
-        secTitleElementsList.add(coreRealmNameLabel);
+        Icon realmIcon = VaadinIcon.LIST.create();
+        realmIcon.getStyle().set("padding", "var(--lumo-space-xs");
+        //Span realmNameSpan = new Span( realmIcon,new Span("Default CoreRealm"));
+        Span realmNameSpan = new Span(new Span("Default CoreRealm"));
+        realmNameSpan.getElement().getThemeList().add("badge contrast");
+        secTitleElementsList.add(realmNameSpan);
 
         TitleActionBar titleActionBar = new TitleActionBar(new Icon(VaadinIcon.COG_O),"Conception Kind 概念类型数据管理",secTitleElementsList,buttonList);
         add(titleActionBar);

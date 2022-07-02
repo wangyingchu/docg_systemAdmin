@@ -6,6 +6,7 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -39,10 +40,9 @@ public class CoreRealmDataUI extends VerticalLayout {
 
         List<Component> secTitleElementsList = new ArrayList<>();
 
-        Label coreRealmNameLabel = new Label(" [ Default CoreRealm ]");
-        coreRealmNameLabel.getStyle().set("font-size","var(--lumo-font-size-xl)")
-                .set("color","var(--lumo-secondary-text-color)");
-        secTitleElementsList.add(coreRealmNameLabel);
+        Span realmNameSpan = new Span(new Span("Default CoreRealm"));
+        realmNameSpan.getElement().getThemeList().add("badge contrast");
+        secTitleElementsList.add(realmNameSpan);
 
         Label coreRealmTechLabel = new Label(" NEO4J 实现");
         coreRealmTechLabel.addClassName("text-2xs");
