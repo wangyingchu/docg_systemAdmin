@@ -82,7 +82,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
             }
         });
         queryCriteriaFilterSelect.setRenderer(createRenderer());
-        queryCriteriaFilterSelect.getStyle().set("--vaadin-combo-box-overlay-width", "300px");
+        queryCriteriaFilterSelect.getStyle().set("--vaadin-combo-box-overlay-width", "270px");
 
         buttonSpaceDivLayout.add(queryCriteriaFilterSelect);
         buttonSpaceDivLayout.setFlexGrow(1,queryCriteriaFilterSelect);
@@ -152,7 +152,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
     }
 
     private void loadQueryCriteriaComboBox(){
-        int entityAttributesDistributionStatisticSampleRatio = 50000;
+        int entityAttributesDistributionStatisticSampleRatio = 20000;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKindName);
