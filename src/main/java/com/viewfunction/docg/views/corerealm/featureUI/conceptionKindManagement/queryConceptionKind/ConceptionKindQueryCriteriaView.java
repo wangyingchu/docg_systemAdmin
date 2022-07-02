@@ -10,16 +10,26 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.LitRenderer;
+import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.shared.Registration;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+
 import dev.mett.vaadin.tooltip.Tooltips;
+
+import java.util.List;
 
 public class ConceptionKindQueryCriteriaView extends VerticalLayout {
     private String conceptionKindName;
-    private ComboBox queryCriteriaFilterSelect;
+    private ComboBox<KindEntityAttributeRuntimeStatistics> queryCriteriaFilterSelect;
     private VerticalLayout criteriaItemsContainer;
     private Registration listener;
     public ConceptionKindQueryCriteriaView(String conceptionKindName){
@@ -38,7 +48,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
         filterDropdownSelectorContainerLayout.setMargin(false);
         add(filterDropdownSelectorContainerLayout);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.COMBOBOX),"添加查询条件或显示属性");
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.COMBOBOX),"设定查询条件或显示属性");
         filterDropdownSelectorContainerLayout.add(infoTitle2);
 
         HorizontalLayout buttonSpaceDivLayout = new HorizontalLayout();
@@ -46,9 +56,29 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
 
         queryCriteriaFilterSelect = new ComboBox();
         queryCriteriaFilterSelect.setPageSize(30);
-        queryCriteriaFilterSelect.setPlaceholder("添加采样查询条件/显示属性");
+        queryCriteriaFilterSelect.setPlaceholder("选择查询条件或显示属性");
         queryCriteriaFilterSelect.setMinWidth(220,Unit.PIXELS);
         queryCriteriaFilterSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+
+        queryCriteriaFilterSelect.setItemLabelGenerator(new ItemLabelGenerator<KindEntityAttributeRuntimeStatistics>() {
+            @Override
+            public String apply(KindEntityAttributeRuntimeStatistics kindEntityAttributeRuntimeStatistics) {
+                String itemLabelValue = kindEntityAttributeRuntimeStatistics.getAttributeName()+ " ("+
+                        kindEntityAttributeRuntimeStatistics.getAttributeDataType()+")";
+                return itemLabelValue;
+            }
+        });
+
+        queryCriteriaFilterSelect.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<KindEntityAttributeRuntimeStatistics>,
+                KindEntityAttributeRuntimeStatistics>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<KindEntityAttributeRuntimeStatistics>,
+                    KindEntityAttributeRuntimeStatistics> comboBoxKindEntityAttributeRuntimeStatisticsComponentValueChangeEvent) {
+
+            }
+        });
+        queryCriteriaFilterSelect.setRenderer(createRenderer());
+        queryCriteriaFilterSelect.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
 
         buttonSpaceDivLayout.add(queryCriteriaFilterSelect);
         buttonSpaceDivLayout.setFlexGrow(1,queryCriteriaFilterSelect);
@@ -108,6 +138,8 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
             int browserHeight = receiver.getBodyClientHeight();
             criteriaItemsContainer.setHeight(browserHeight-280,Unit.PIXELS);
         }));
+
+        loadQueryCriteriaComboBox();
     }
 
     @Override
@@ -115,5 +147,31 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
+    }
+
+    private void loadQueryCriteriaComboBox(){
+        int entityAttributesDistributionStatisticSampleRatio = 50000;
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKindName);
+        List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
+        coreRealm.closeGlobalSession();
+        queryCriteriaFilterSelect.setItems(kindEntityAttributeRuntimeStatisticsList);
+    }
+
+
+    private Renderer<KindEntityAttributeRuntimeStatistics> createRenderer() {
+        StringBuilder tpl = new StringBuilder();
+        tpl.append("<div style=\"display: flex;\">");
+        tpl.append("  <img style=\"height: var(--lumo-size-m); margin-right: var(--lumo-space-s);\" src=\"${item.pictureUrl}\" alt=\"Portrait of ${item.firstName} ${item.lastName}\" />");
+        tpl.append("  <div>");
+        tpl.append("    ${item.firstName} ${item.lastName}");
+        tpl.append("    <div style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">${item.profession}</div>");
+        tpl.append("  </div>");
+        tpl.append("</div>");
+
+        return LitRenderer.<KindEntityAttributeRuntimeStatistics>of(tpl.toString()).withProperty("pictureUrl", KindEntityAttributeRuntimeStatistics::getAttributeName)
+                .withProperty("firstName", KindEntityAttributeRuntimeStatistics::getAttributeName).withProperty("lastName", KindEntityAttributeRuntimeStatistics::getAttributeName)
+                .withProperty("profession", KindEntityAttributeRuntimeStatistics::getAttributeName);
     }
 }
