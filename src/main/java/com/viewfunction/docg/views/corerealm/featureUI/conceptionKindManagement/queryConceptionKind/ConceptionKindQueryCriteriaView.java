@@ -1,8 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -10,7 +8,9 @@ import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
@@ -20,6 +20,8 @@ import dev.mett.vaadin.tooltip.Tooltips;
 public class ConceptionKindQueryCriteriaView extends VerticalLayout {
     private String conceptionKindName;
     private ComboBox queryCriteriaFilterSelect;
+    private VerticalLayout criteriaItemsContainer;
+    private Registration listener;
     public ConceptionKindQueryCriteriaView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.SEARCH),"查询条件");
@@ -44,7 +46,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
 
         queryCriteriaFilterSelect = new ComboBox();
         queryCriteriaFilterSelect.setPageSize(30);
-        queryCriteriaFilterSelect.setPlaceholder("添加预定义查询条件/显示属性");
+        queryCriteriaFilterSelect.setPlaceholder("添加采样查询条件/显示属性");
         queryCriteriaFilterSelect.setMinWidth(220,Unit.PIXELS);
         queryCriteriaFilterSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
 
@@ -63,6 +65,19 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
 
         filterDropdownSelectorContainerLayout.add(buttonSpaceDivLayout);
 
+        criteriaItemsContainer = new VerticalLayout();
+        criteriaItemsContainer.setWidth(100,Unit.PERCENTAGE);
+
+        Scroller scroller = new Scroller(criteriaItemsContainer);
+        scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        //scroller.getStyle().set("padding", "var(--lumo-space-m)");
+        add(scroller);
+
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidthFull();
+        spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        add(spaceDivLayout2);
+
         Button executeQueryButton = new Button("查询概念实体");
         executeQueryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -78,5 +93,27 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
         ConceptionKindQueriedEvent conceptionKindQueriedEvent = new ConceptionKindQueriedEvent();
         conceptionKindQueriedEvent.setConceptionKindName(this.conceptionKindName);
         ResourceHolder.getApplicationBlackboard().fire(conceptionKindQueriedEvent);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+
+        // Add browser window listener to observe size change
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            criteriaItemsContainer.setHeight(event.getHeight()-280,Unit.PIXELS);
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            int browserHeight = receiver.getBodyClientHeight();
+            criteriaItemsContainer.setHeight(browserHeight-280,Unit.PIXELS);
+        }));
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
+        super.onDetach(detachEvent);
     }
 }
