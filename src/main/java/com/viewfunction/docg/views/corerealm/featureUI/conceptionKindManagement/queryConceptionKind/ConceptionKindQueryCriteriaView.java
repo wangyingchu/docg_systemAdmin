@@ -69,16 +69,20 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
             }
         });
 
-        queryCriteriaFilterSelect.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<KindEntityAttributeRuntimeStatistics>,
+        queryCriteriaFilterSelect.addValueChangeListener(new HasValue.
+                ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<KindEntityAttributeRuntimeStatistics>,
                 KindEntityAttributeRuntimeStatistics>>() {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<KindEntityAttributeRuntimeStatistics>,
                     KindEntityAttributeRuntimeStatistics> comboBoxKindEntityAttributeRuntimeStatisticsComponentValueChangeEvent) {
-
+                KindEntityAttributeRuntimeStatistics changedItem = comboBoxKindEntityAttributeRuntimeStatisticsComponentValueChangeEvent.getValue();
+                if(changedItem != null){
+                    queryCriteriaFilterSelect.setValue(null);
+                }
             }
         });
         queryCriteriaFilterSelect.setRenderer(createRenderer());
-        queryCriteriaFilterSelect.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
+        queryCriteriaFilterSelect.getStyle().set("--vaadin-combo-box-overlay-width", "300px");
 
         buttonSpaceDivLayout.add(queryCriteriaFilterSelect);
         buttonSpaceDivLayout.setFlexGrow(1,queryCriteriaFilterSelect);
@@ -128,7 +132,6 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             criteriaItemsContainer.setHeight(event.getHeight()-280,Unit.PIXELS);
@@ -138,7 +141,6 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
             int browserHeight = receiver.getBodyClientHeight();
             criteriaItemsContainer.setHeight(browserHeight-280,Unit.PIXELS);
         }));
-
         loadQueryCriteriaComboBox();
     }
 
@@ -154,24 +156,23 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKindName);
-        List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
+        List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList =
+                targetConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
         coreRealm.closeGlobalSession();
         queryCriteriaFilterSelect.setItems(kindEntityAttributeRuntimeStatisticsList);
     }
 
-
     private Renderer<KindEntityAttributeRuntimeStatistics> createRenderer() {
         StringBuilder tpl = new StringBuilder();
         tpl.append("<div style=\"display: flex;\">");
-        tpl.append("  <img style=\"height: var(--lumo-size-m); margin-right: var(--lumo-space-s);\" src=\"${item.pictureUrl}\" alt=\"Portrait of ${item.firstName} ${item.lastName}\" />");
         tpl.append("  <div>");
-        tpl.append("    ${item.firstName} ${item.lastName}");
-        tpl.append("    <div style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">${item.profession}</div>");
+        tpl.append("    ${item.attributeName}");
+        tpl.append("    <div style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">${item.attributeDataType}</div>");
         tpl.append("  </div>");
         tpl.append("</div>");
 
-        return LitRenderer.<KindEntityAttributeRuntimeStatistics>of(tpl.toString()).withProperty("pictureUrl", KindEntityAttributeRuntimeStatistics::getAttributeName)
-                .withProperty("firstName", KindEntityAttributeRuntimeStatistics::getAttributeName).withProperty("lastName", KindEntityAttributeRuntimeStatistics::getAttributeName)
-                .withProperty("profession", KindEntityAttributeRuntimeStatistics::getAttributeName);
+        return LitRenderer.<KindEntityAttributeRuntimeStatistics>of(tpl.toString())
+                .withProperty("attributeName", KindEntityAttributeRuntimeStatistics::getAttributeName)
+                .withProperty("attributeDataType", KindEntityAttributeRuntimeStatistics::getAttributeDataType);
     }
 }
