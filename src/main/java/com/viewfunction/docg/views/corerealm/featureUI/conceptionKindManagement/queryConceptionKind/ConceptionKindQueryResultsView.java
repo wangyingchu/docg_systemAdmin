@@ -3,13 +3,17 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.ValueProvider;
@@ -106,6 +110,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                 ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
                         targetConception.getSingleValueEntityAttributesByAttributeNames(attributesList,queryParameters);
                 if(conceptionEntitiesAttributesRetrieveResult != null && conceptionEntitiesAttributesRetrieveResult.getOperationStatistics() != null){
+                    showPopupNotification(conceptionEntitiesAttributesRetrieveResult,NotificationVariant.LUMO_SUCCESS);
                     Date startDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime();
                     ZonedDateTime startZonedDateTime = ZonedDateTime.ofInstant(startDateTime.toInstant(), id);
                     String startTimeStr = startZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
@@ -206,5 +211,28 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
             return actionButtonContainerLayout;
         }
+    }
+
+    private void showPopupNotification(ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult, NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text("概念类型 "+conceptionKindName+" 实例查询操作成功"));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
+
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        notificationMessageContainer.add(new Div(new Text("查询返回实体数: "+conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount())));
+        notificationMessageContainer.add(new Div(new Text("操作开始时间: "+conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime())));
+        notificationMessageContainer.add(new Div(new Text("操作结束时间: "+conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getFinishTime())));
+        notification.add(notificationMessageContainer);
+        notification.setDuration(3000);
+        notification.open();
     }
 }
