@@ -83,7 +83,9 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
                 if(changedItem != null){
                     queryCriteriaFilterSelect.setValue(null);
                     String selectedAttribute = changedItem.getAttributeName();
-                    resultAttributesList.add(selectedAttribute);
+                    if(!resultAttributesList.contains(selectedAttribute)){
+                        resultAttributesList.add(selectedAttribute);
+                    }
                 }
             }
         });
