@@ -105,13 +105,13 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             QueryParameters queryParameters = new QueryParameters();
             try {
                 List<String> attributesList = new ArrayList<>();
-                attributesList.add(RealmConstant._createDateProperty);
-                attributesList.add(RealmConstant._lastModifyDateProperty);
-                attributesList.add(RealmConstant._creatorIdProperty);
-                attributesList.add(RealmConstant._dataOriginProperty);
-
                 if(resultAttributesList != null && resultAttributesList.size() > 0){
                     attributesList.addAll(resultAttributesList);
+                }else{
+                    attributesList.add(RealmConstant._createDateProperty);
+                    attributesList.add(RealmConstant._lastModifyDateProperty);
+                    attributesList.add(RealmConstant._creatorIdProperty);
+                    attributesList.add(RealmConstant._dataOriginProperty);
                 }
 
                 ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
@@ -203,6 +203,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             Button deleteButton = new Button();
             deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
             deleteButton.setIcon(VaadinIcon.TRASH.create());
             Tooltips.getCurrent().setTooltip(deleteButton, "删除概念实体");
             actionButtonContainerLayout.add(deleteButton);
