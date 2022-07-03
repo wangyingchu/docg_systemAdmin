@@ -7,6 +7,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 
 public class QueryConditionItemWidget extends VerticalLayout {
 
@@ -61,10 +62,10 @@ public class QueryConditionItemWidget extends VerticalLayout {
     private TextField similarToConditionValueTextField;
     private boolean isFromBaseDataset;
 
-    public QueryConditionItemWidget(){
+    public QueryConditionItemWidget(String attributeName, AttributeDataType attributeDataType){
         this.setWidth(320, Unit.PIXELS);
 
-add(new Label("sscscs99999999"));
+        add(new Label(attributeName));
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(100,Unit.PERCENTAGE);

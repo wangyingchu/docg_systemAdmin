@@ -84,7 +84,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
         queryResultGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx1).setSortable(false);
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.KEY_O,"概念实体UID");
-        queryResultGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx0).setSortable(false);
+        queryResultGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx0).setSortable(false).setResizable(true);
         add(queryResultGrid);
 
         this.currentRowKeyList = new ArrayList<>();
@@ -142,7 +142,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                                         return conceptionEntityValue.getEntityAttributesValue().get(currentProperty);
                                     }
                                 }).setHeader(" " + currentProperty).setKey(currentProperty + "_KEY");
-                                queryResultGrid.getColumnByKey(currentProperty + "_KEY").setSortable(true);
+                                queryResultGrid.getColumnByKey(currentProperty + "_KEY").setSortable(true).setResizable(true);
                             }
 
                             this.currentRowKeyList.add(currentProperty + "_KEY");
