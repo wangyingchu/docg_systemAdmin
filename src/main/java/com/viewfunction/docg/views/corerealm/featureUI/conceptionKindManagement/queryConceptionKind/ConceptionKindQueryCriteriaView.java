@@ -121,6 +121,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
         add(spaceDivLayout2);
 
         Button executeQueryButton = new Button("查询概念实体");
+        executeQueryButton.setIcon(new Icon(VaadinIcon.SEARCH));
         executeQueryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
