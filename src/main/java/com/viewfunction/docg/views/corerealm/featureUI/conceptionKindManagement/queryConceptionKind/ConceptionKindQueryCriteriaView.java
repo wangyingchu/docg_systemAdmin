@@ -25,6 +25,7 @@ import com.viewfunction.docg.util.ResourceHolder;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConceptionKindQueryCriteriaView extends VerticalLayout {
@@ -32,6 +33,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
     private ComboBox<KindEntityAttributeRuntimeStatistics> queryCriteriaFilterSelect;
     private VerticalLayout criteriaItemsContainer;
     private Registration listener;
+    private List<String> resultAttributesList;
     public ConceptionKindQueryCriteriaView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.SEARCH),"查询条件");
@@ -53,6 +55,8 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
 
         HorizontalLayout buttonSpaceDivLayout = new HorizontalLayout();
         buttonSpaceDivLayout.setWidth(99, Unit.PERCENTAGE);
+
+        resultAttributesList=new ArrayList<>();
 
         queryCriteriaFilterSelect = new ComboBox();
         queryCriteriaFilterSelect.setPageSize(30);
@@ -78,6 +82,8 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
                 KindEntityAttributeRuntimeStatistics changedItem = comboBoxKindEntityAttributeRuntimeStatisticsComponentValueChangeEvent.getValue();
                 if(changedItem != null){
                     queryCriteriaFilterSelect.setValue(null);
+                    String selectedAttribute = changedItem.getAttributeName();
+                    resultAttributesList.add(selectedAttribute);
                 }
             }
         });
@@ -126,6 +132,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
     private void queryConceptionEntities(){
         ConceptionKindQueriedEvent conceptionKindQueriedEvent = new ConceptionKindQueriedEvent();
         conceptionKindQueriedEvent.setConceptionKindName(this.conceptionKindName);
+        conceptionKindQueriedEvent.setResultAttributesList(this.resultAttributesList);
         ResourceHolder.getApplicationBlackboard().fire(conceptionKindQueriedEvent);
     }
 

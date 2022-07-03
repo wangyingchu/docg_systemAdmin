@@ -32,6 +32,7 @@ import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.time.ZoneId;
@@ -97,6 +98,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         queryResultGrid.setItems(new ArrayList<>());
         this.currentRowKeyList.clear();
         String conceptionKindName = event.getConceptionKindName();
+        List<String> resultAttributesList = event.getResultAttributesList();
         if(conceptionKindName.equals(this.conceptionKindName)){
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             ConceptionKind targetConception = coreRealm.getConceptionKind(conceptionKindName);
@@ -107,6 +109,11 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                 attributesList.add(RealmConstant._lastModifyDateProperty);
                 attributesList.add(RealmConstant._creatorIdProperty);
                 attributesList.add(RealmConstant._dataOriginProperty);
+
+                if(resultAttributesList != null && resultAttributesList.size() > 0){
+                    attributesList.addAll(resultAttributesList);
+                }
+
                 ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
                         targetConception.getSingleValueEntityAttributesByAttributeNames(attributesList,queryParameters);
                 if(conceptionEntitiesAttributesRetrieveResult != null && conceptionEntitiesAttributesRetrieveResult.getOperationStatistics() != null){
@@ -122,21 +129,12 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                     dataCountDisplayItem.updateDisplayValue(""+conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount());
 
                     List<ConceptionEntityValue> conceptionEntityValueList = conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
-                    List<String> entityAttributeNamesList = new ArrayList<>();
-                    entityAttributeNamesList.add("Prop001");
-                    entityAttributeNamesList.add("Prop002");
-                    entityAttributeNamesList.add("Prop003");
-
                     for(int i=0 ; i<conceptionEntityValueList.size();i++){
                         ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
                         currentConceptionEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName,i+1);
-                        currentConceptionEntityValue.getEntityAttributesValue().put("Prop001",1);
-                        currentConceptionEntityValue.getEntityAttributesValue().put("Prop002","sssssssss");
-                        currentConceptionEntityValue.getEntityAttributesValue().put("Prop003",new Date());
                     }
-
-                    if (entityAttributeNamesList != null && entityAttributeNamesList.size() > 0) {
-                        for (String currentProperty : entityAttributeNamesList) {
+                    if (resultAttributesList != null && resultAttributesList.size() > 0) {
+                        for (String currentProperty : resultAttributesList) {
                             if (!currentProperty.equals(_rowIndexPropertyName)) {
                             queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
                                     @Override
