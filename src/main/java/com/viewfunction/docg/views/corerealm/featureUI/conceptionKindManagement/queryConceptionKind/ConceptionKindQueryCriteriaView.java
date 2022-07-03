@@ -56,7 +56,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
         HorizontalLayout buttonSpaceDivLayout = new HorizontalLayout();
         buttonSpaceDivLayout.setWidth(99, Unit.PERCENTAGE);
 
-        resultAttributesList=new ArrayList<>();
+        resultAttributesList = new ArrayList<>();
 
         queryCriteriaFilterSelect = new ComboBox();
         queryCriteriaFilterSelect.setPageSize(30);
@@ -86,6 +86,8 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
                     if(!resultAttributesList.contains(selectedAttribute)){
                         resultAttributesList.add(selectedAttribute);
                     }
+                    QueryConditionItemWidget queryConditionItemWidget = new QueryConditionItemWidget();
+                    criteriaItemsContainer.add(queryConditionItemWidget);
                 }
             }
         });
@@ -108,12 +110,15 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
         filterDropdownSelectorContainerLayout.add(buttonSpaceDivLayout);
 
         criteriaItemsContainer = new VerticalLayout();
+        criteriaItemsContainer.setMargin(false);
+        criteriaItemsContainer.setSpacing(false);
+        criteriaItemsContainer.setPadding(false);
         criteriaItemsContainer.setWidth(100,Unit.PERCENTAGE);
 
-        Scroller scroller = new Scroller(criteriaItemsContainer);
-        scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        Scroller queryConditionItemsScroller = new Scroller(criteriaItemsContainer);
+        queryConditionItemsScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         //scroller.getStyle().set("padding", "var(--lumo-space-m)");
-        add(scroller);
+        add(queryConditionItemsScroller);
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidthFull();

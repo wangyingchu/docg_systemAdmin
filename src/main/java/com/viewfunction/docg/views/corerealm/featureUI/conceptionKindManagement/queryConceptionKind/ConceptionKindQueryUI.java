@@ -23,8 +23,8 @@ public class ConceptionKindQueryUI extends VerticalLayout {
         queryFieldsContainer.setMargin(false);
         ConceptionKindQueryCriteriaView conceptionKindQueryCriteriaView = new ConceptionKindQueryCriteriaView(this.conceptionKindName);
         queryFieldsContainer.add(conceptionKindQueryCriteriaView);
-        queryFieldsContainer.setMinWidth(250,Unit.PIXELS);
-        queryFieldsContainer.setMaxWidth(400,Unit.PIXELS);
+        queryFieldsContainer.setMinWidth(330,Unit.PIXELS);
+        queryFieldsContainer.setMaxWidth(330,Unit.PIXELS);
 
         queryResultContainer= new VerticalLayout();
         queryResultContainer.setPadding(false);
@@ -34,7 +34,7 @@ public class ConceptionKindQueryUI extends VerticalLayout {
         queryResultContainer.add(conceptionKindQueryResultsView);
 
         SplitLayout splitLayout = new SplitLayout(queryFieldsContainer, queryResultContainer);
-        splitLayout.setSplitterPosition(15);
+        //splitLayout.setSplitterPosition(15);
         splitLayout.setSizeFull();
         splitLayout.addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
         add(splitLayout);
