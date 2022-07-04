@@ -8,10 +8,12 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
+import dev.mett.vaadin.tooltip.Tooltips;
 
 public class QueryConditionItemWidget extends VerticalLayout {
 
@@ -74,8 +76,10 @@ public class QueryConditionItemWidget extends VerticalLayout {
         attributeMetaLayout.setSpacing(false);
         attributeMetaLayout.setMargin(false);
         attributeMetaLayout.setPadding(false);
-        attributeMetaLayout.setWidth(100, Unit.PERCENTAGE);
-        add(attributeMetaLayout);
+        attributeMetaLayout.setWidth(320, Unit.PIXELS);
+
+        Scroller queryConditionItemScroller = new Scroller(attributeMetaLayout);
+        add(queryConditionItemScroller);
 
         VerticalLayout attributeMetaInfoContainer = new VerticalLayout();
         attributeMetaInfoContainer.setSpacing(false);
@@ -124,18 +128,22 @@ public class QueryConditionItemWidget extends VerticalLayout {
         Button _ANDButton = new Button();
         _ANDButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
         _ANDButton.setIcon(VaadinIcon.PLUS.create());
+        Tooltips.getCurrent().setTooltip(_ANDButton, "AND");
         controlButtonsContainer.add(_ANDButton);
         Button _ORButton = new Button();
         _ORButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
         _ORButton.setIcon(VaadinIcon.CLOSE.create());
+        Tooltips.getCurrent().setTooltip(_ORButton, "OR");
         controlButtonsContainer.add(_ORButton);
         Button _NOTButton = new Button();
         _NOTButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
         _NOTButton.setIcon(VaadinIcon.BAN.create());
+        Tooltips.getCurrent().setTooltip(_NOTButton, "NOT");
         controlButtonsContainer.add(_NOTButton);
         Button _CLEARButton = new Button();
         _CLEARButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
         _CLEARButton.setIcon(VaadinIcon.ERASER.create());
+        Tooltips.getCurrent().setTooltip(_CLEARButton, "CLEAR");
         controlButtonsContainer.add(_CLEARButton);
 
         controlButtonsContainer.setVerticalComponentAlignment(Alignment.START,_ANDButton,_ORButton,_NOTButton,_CLEARButton);
@@ -148,6 +156,4 @@ public class QueryConditionItemWidget extends VerticalLayout {
         spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(spaceDivLayout2);
     }
-
-
 }
