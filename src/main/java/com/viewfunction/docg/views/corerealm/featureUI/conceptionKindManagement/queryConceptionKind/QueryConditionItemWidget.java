@@ -68,7 +68,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
 
     public QueryConditionItemWidget(String attributeName, AttributeDataType attributeDataType){
         this.setPadding(true);
-        this.setWidth(350, Unit.PIXELS);
+        this.setWidth(340, Unit.PIXELS);
 
         HorizontalLayout attributeMetaLayout = new HorizontalLayout();
         attributeMetaLayout.setSpacing(false);
@@ -102,19 +102,17 @@ public class QueryConditionItemWidget extends VerticalLayout {
 
         propertyTypeIcon.setSize("10px");
         attributeNameInfoContainer.add(propertyTypeIcon);
+        attributeNameInfoContainer.setVerticalComponentAlignment(Alignment.STRETCH,propertyTypeIcon);
+
         Label attributeNameLabel = new Label(attributeName);
+        attributeNameLabel.getStyle().set("font-size","0.7rem").set("font-weight","bold");
         attributeNameInfoContainer.add(attributeNameLabel);
         attributeNameInfoContainer.setFlexGrow(1,attributeNameLabel);
 
         Label attributeTypeLabel = new Label(attributeDataType.toString());
         attributeTypeLabel.addClassNames("text-tertiary");
-
-        attributeTypeLabel.getStyle().set("font-size","0.6rem")
-                .set("color","var(--lumo-contrast-70pct)");
-
-
+        attributeTypeLabel.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-70pct)");
         attributeMetaInfoContainer.add(attributeTypeLabel);
-
 
         attributeMetaLayout.setVerticalComponentAlignment(Alignment.CENTER,attributeMetaInfoContainer);
 
@@ -123,24 +121,24 @@ public class QueryConditionItemWidget extends VerticalLayout {
         controlButtonsContainer.setMargin(false);
         controlButtonsContainer.setSpacing(false);
 
-        Button linkButton = new Button();
-        linkButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
-        linkButton.setIcon(VaadinIcon.EYE.create());
-        controlButtonsContainer.add(linkButton);
-        Button linkButton2 = new Button();
-        linkButton2.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
-        linkButton2.setIcon(VaadinIcon.EYE.create());
-        controlButtonsContainer.add(linkButton2);
-        Button linkButton3 = new Button();
-        linkButton3.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
-        linkButton3.setIcon(VaadinIcon.EYE.create());
-        controlButtonsContainer.add(linkButton3);
-        Button linkButton4 = new Button();
-        linkButton4.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
-        linkButton4.setIcon(VaadinIcon.EYE.create());
-        controlButtonsContainer.add(linkButton4);
+        Button _ANDButton = new Button();
+        _ANDButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        _ANDButton.setIcon(VaadinIcon.PLUS.create());
+        controlButtonsContainer.add(_ANDButton);
+        Button _ORButton = new Button();
+        _ORButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        _ORButton.setIcon(VaadinIcon.CLOSE.create());
+        controlButtonsContainer.add(_ORButton);
+        Button _NOTButton = new Button();
+        _NOTButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        _NOTButton.setIcon(VaadinIcon.BAN.create());
+        controlButtonsContainer.add(_NOTButton);
+        Button _CLEARButton = new Button();
+        _CLEARButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        _CLEARButton.setIcon(VaadinIcon.ERASER.create());
+        controlButtonsContainer.add(_CLEARButton);
 
-        controlButtonsContainer.setVerticalComponentAlignment(Alignment.START,linkButton,linkButton2,linkButton3,linkButton4);
+        controlButtonsContainer.setVerticalComponentAlignment(Alignment.START,_ANDButton,_ORButton,_NOTButton,_CLEARButton);
 
         attributeMetaLayout.add(controlButtonsContainer);
         attributeMetaLayout.setVerticalComponentAlignment(Alignment.START,controlButtonsContainer);
