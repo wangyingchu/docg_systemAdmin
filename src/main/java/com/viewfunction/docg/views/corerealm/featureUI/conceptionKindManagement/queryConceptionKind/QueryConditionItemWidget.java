@@ -2,12 +2,16 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 
 public class QueryConditionItemWidget extends VerticalLayout {
 
@@ -63,9 +67,83 @@ public class QueryConditionItemWidget extends VerticalLayout {
     private boolean isFromBaseDataset;
 
     public QueryConditionItemWidget(String attributeName, AttributeDataType attributeDataType){
-        this.setWidth(320, Unit.PIXELS);
+        this.setPadding(true);
+        this.setWidth(350, Unit.PIXELS);
 
-        add(new Label(attributeName));
+        HorizontalLayout attributeMetaLayout = new HorizontalLayout();
+        attributeMetaLayout.setSpacing(false);
+        attributeMetaLayout.setMargin(false);
+        attributeMetaLayout.setPadding(false);
+        attributeMetaLayout.setWidth(100, Unit.PERCENTAGE);
+        add(attributeMetaLayout);
+
+        VerticalLayout attributeMetaInfoContainer = new VerticalLayout();
+        attributeMetaInfoContainer.setSpacing(false);
+        attributeMetaInfoContainer.setMargin(false);
+        attributeMetaInfoContainer.setPadding(false);
+
+        attributeMetaLayout.add(attributeMetaInfoContainer);
+
+        HorizontalLayout attributeNameInfoContainer = new HorizontalLayout();
+        attributeNameInfoContainer.setWidth(100,Unit.PERCENTAGE);
+        attributeMetaInfoContainer.add(attributeNameInfoContainer);
+
+        Icon propertyTypeIcon = null;
+        if(attributeName.startsWith(RealmConstant.RealmInnerTypePerFix) ||
+                attributeName.equals(RealmConstant._createDateProperty) ||
+                attributeName.equals(RealmConstant._lastModifyDateProperty) ||
+                attributeName.equals(RealmConstant._creatorIdProperty)||
+                attributeName.equals(RealmConstant._dataOriginProperty)
+        ){
+            propertyTypeIcon = VaadinIcon.ELLIPSIS_CIRCLE_O.create();
+        }else{
+            propertyTypeIcon = VaadinIcon.ELLIPSIS_CIRCLE.create();
+        }
+
+        propertyTypeIcon.setSize("10px");
+        attributeNameInfoContainer.add(propertyTypeIcon);
+        Label attributeNameLabel = new Label(attributeName);
+        attributeNameInfoContainer.add(attributeNameLabel);
+        attributeNameInfoContainer.setFlexGrow(1,attributeNameLabel);
+
+        Label attributeTypeLabel = new Label(attributeDataType.toString());
+        attributeTypeLabel.addClassNames("text-tertiary");
+
+        attributeTypeLabel.getStyle().set("font-size","0.6rem")
+                .set("color","var(--lumo-contrast-70pct)");
+
+
+        attributeMetaInfoContainer.add(attributeTypeLabel);
+
+
+        attributeMetaLayout.setVerticalComponentAlignment(Alignment.CENTER,attributeMetaInfoContainer);
+
+        HorizontalLayout controlButtonsContainer = new HorizontalLayout();
+        controlButtonsContainer.setPadding(false);
+        controlButtonsContainer.setMargin(false);
+        controlButtonsContainer.setSpacing(false);
+
+        Button linkButton = new Button();
+        linkButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        linkButton.setIcon(VaadinIcon.EYE.create());
+        controlButtonsContainer.add(linkButton);
+        Button linkButton2 = new Button();
+        linkButton2.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        linkButton2.setIcon(VaadinIcon.EYE.create());
+        controlButtonsContainer.add(linkButton2);
+        Button linkButton3 = new Button();
+        linkButton3.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        linkButton3.setIcon(VaadinIcon.EYE.create());
+        controlButtonsContainer.add(linkButton3);
+        Button linkButton4 = new Button();
+        linkButton4.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        linkButton4.setIcon(VaadinIcon.EYE.create());
+        controlButtonsContainer.add(linkButton4);
+
+        controlButtonsContainer.setVerticalComponentAlignment(Alignment.START,linkButton,linkButton2,linkButton3,linkButton4);
+
+        attributeMetaLayout.add(controlButtonsContainer);
+        attributeMetaLayout.setVerticalComponentAlignment(Alignment.START,controlButtonsContainer);
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(100,Unit.PERCENTAGE);
