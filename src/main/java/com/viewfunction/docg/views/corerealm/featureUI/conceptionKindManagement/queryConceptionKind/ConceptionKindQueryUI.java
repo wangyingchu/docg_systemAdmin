@@ -6,6 +6,8 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
+import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.server.WebBrowser;
 import com.vaadin.flow.shared.Registration;
 
 public class ConceptionKindQueryUI extends VerticalLayout {
@@ -23,8 +25,15 @@ public class ConceptionKindQueryUI extends VerticalLayout {
         queryFieldsContainer.setMargin(false);
         ConceptionKindQueryCriteriaView conceptionKindQueryCriteriaView = new ConceptionKindQueryCriteriaView(this.conceptionKindName);
         queryFieldsContainer.add(conceptionKindQueryCriteriaView);
-        queryFieldsContainer.setMinWidth(350,Unit.PIXELS);
-        queryFieldsContainer.setMaxWidth(350,Unit.PIXELS);
+
+        WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
+        if(webBrowser.isChrome()){
+            queryFieldsContainer.setMinWidth(360,Unit.PIXELS);
+            queryFieldsContainer.setMaxWidth(360,Unit.PIXELS);
+        }else{
+            queryFieldsContainer.setMinWidth(350,Unit.PIXELS);
+            queryFieldsContainer.setMaxWidth(350,Unit.PIXELS);
+        }
 
         queryResultContainer= new VerticalLayout();
         queryResultContainer.setPadding(false);
