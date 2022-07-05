@@ -1,15 +1,22 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind;
 
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.select.SelectVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
@@ -24,6 +31,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
     private final String PropertyTypeClassification_FLOAT = "FLOAT";
     private final String PropertyTypeClassification_DOUBLE = "DOUBLE";
     private final String PropertyTypeClassification_DATE = "DATE";
+    private final String PropertyTypeClassification_TIMESTAMP = "TIMESTAMP";
     private final String PropertyTypeClassification_STRING = "STRING";
     private final String PropertyTypeClassification_BINARY = "BINARY";
     private final String PropertyTypeClassification_BYTE = "BYTE";
@@ -68,8 +76,13 @@ public class QueryConditionItemWidget extends VerticalLayout {
     private TextField similarToConditionValueTextField;
     private boolean isFromBaseDataset;
 
+    private AttributeDataType attributeDataType;
+
     public QueryConditionItemWidget(String attributeName, AttributeDataType attributeDataType){
+        this.attributeDataType = attributeDataType;
         this.setPadding(true);
+        this.setMargin(false);
+        this.setSpacing(false);
         this.setWidth(340, Unit.PIXELS);
 
         HorizontalLayout attributeMetaLayout = new HorizontalLayout();
@@ -109,13 +122,13 @@ public class QueryConditionItemWidget extends VerticalLayout {
         attributeNameInfoContainer.setVerticalComponentAlignment(Alignment.STRETCH,propertyTypeIcon);
 
         Label attributeNameLabel = new Label(attributeName);
-        attributeNameLabel.getStyle().set("font-size","0.7rem").set("font-weight","bold");
+        attributeNameLabel.getStyle().set("font-size","0.75rem").set("font-weight","bold").set("padding-right","5px");
         attributeNameInfoContainer.add(attributeNameLabel);
         attributeNameInfoContainer.setFlexGrow(1,attributeNameLabel);
 
         Label attributeTypeLabel = new Label(attributeDataType.toString());
         attributeTypeLabel.addClassNames("text-tertiary");
-        attributeTypeLabel.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-70pct)");
+        attributeTypeLabel.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-70pct)").set("padding-left","20px");
         attributeMetaInfoContainer.add(attributeTypeLabel);
 
         attributeMetaLayout.setVerticalComponentAlignment(Alignment.CENTER,attributeMetaInfoContainer);
@@ -151,9 +164,186 @@ public class QueryConditionItemWidget extends VerticalLayout {
         attributeMetaLayout.add(controlButtonsContainer);
         attributeMetaLayout.setVerticalComponentAlignment(Alignment.START,controlButtonsContainer);
 
+        HorizontalLayout filterItemsContainer = new HorizontalLayout();
+        filterItemsContainer.setPadding(false);
+        filterItemsContainer.setMargin(false);
+        filterItemsContainer.setSpacing(false);
+        add(filterItemsContainer);
+
+        //Icon filterItemsIcon = VaadinIcon.INPUT.create();
+        //filterItemsContainer.add(filterItemsIcon);
+        //filterItemsIcon.setSize("12px");
+        //filterItemsIcon.getStyle().set("padding-right","3px");
+        //filterItemsContainer.setVerticalComponentAlignment(Alignment.CENTER,filterItemsIcon);
+
+        this.filteringItemTypeSelection = new ComboBox();
+        this.filteringItemTypeSelection.setPlaceholder("属性过滤条件");
+        this.filteringItemTypeSelection.setRequiredIndicatorVisible(false);
+        this.filteringItemTypeSelection.setWidth(125,Unit.PIXELS);
+        this.filteringItemTypeSelection.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+        this.filteringItemTypeSelection.setPageSize(11);
+        this.filteringItemTypeSelection.setAllowCustomValue(false);
+        this.filteringItemTypeSelection.setPreventInvalidInput(true);
+
+
+        /*
+        this.filteringItemTypeSelection.addValueChangeListener(new HasValue.ValueChangeListener() {
+            @Override
+            public void valueChange(HasValue.ValueChangeEvent valueChangeEvent) {
+                if(valueChangeEvent.getValue() != null) {
+                    String filteringItemType = valueChangeEvent.getValue().toString();
+                    renderFilteringItemInputElements(filteringItemType);
+                }else{
+                    cleanFilteringItemInputElements();
+                }
+            }
+        });
+        */
+        filterItemsContainer.add(filteringItemTypeSelection);
+
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(100,Unit.PERCENTAGE);
-        spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)").set("padding-top","5px");
         add(spaceDivLayout2);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        setQueryConditionSelectionByDataType();
+    }
+
+    private void setQueryConditionSelectionByDataType(){
+        if(this.attributeDataType !=null) {
+            String propertyDataType = this.attributeDataType.toString();
+            switch (propertyDataType) {
+                case PropertyTypeClassification_STRING:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_SimilarTo,
+                            FilteringItemType_RegularMatch,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case PropertyTypeClassification_BOOLEAN:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case PropertyTypeClassification_DATE:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case PropertyTypeClassification_TIMESTAMP:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case PropertyTypeClassification_INT:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case PropertyTypeClassification_LONG:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case PropertyTypeClassification_DOUBLE:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case PropertyTypeClassification_FLOAT:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case PropertyTypeClassification_SHORT:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case PropertyTypeClassification_DECIMAL:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case PropertyTypeClassification_BYTE:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case PropertyTypeClassification_BINARY:
+                    break;
+            }
+        }
     }
 }
