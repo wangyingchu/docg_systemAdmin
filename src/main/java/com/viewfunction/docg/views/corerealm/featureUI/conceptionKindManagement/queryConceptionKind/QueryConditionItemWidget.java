@@ -16,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -115,7 +116,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
             propertyTypeIcon = VaadinIcon.ELLIPSIS_CIRCLE.create();
         }
 
-        propertyTypeIcon.setSize("10px");
+        propertyTypeIcon.setSize("12px");
         attributeNameInfoContainer.add(propertyTypeIcon);
         attributeNameInfoContainer.setVerticalComponentAlignment(Alignment.STRETCH,propertyTypeIcon);
 
@@ -152,7 +153,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
         Tooltips.getCurrent().setTooltip(_NOTButton, "非逻辑过滤");
         controlButtonsContainer.add(_NOTButton);
         Button _CLEARButton = new Button();
-        _CLEARButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        _CLEARButton.addThemeVariants(ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL);
         _CLEARButton.setIcon(VaadinIcon.ERASER.create());
         Tooltips.getCurrent().setTooltip(_CLEARButton, "撤销此过滤（显示）条件");
         controlButtonsContainer.add(_CLEARButton);
@@ -177,11 +178,31 @@ public class QueryConditionItemWidget extends VerticalLayout {
         this.filteringItemTypeSelection.setPlaceholder("属性过滤条件");
         this.filteringItemTypeSelection.setRequiredIndicatorVisible(false);
         this.filteringItemTypeSelection.setWidth(95,Unit.PIXELS);
-        this.filteringItemTypeSelection.getStyle().set("--vaadin-combo-box-overlay-width", "180px").set("font-size","0.65rem");
+        this.filteringItemTypeSelection.getStyle()
+                .set("--vaadin-combo-box-overlay-width", "180px")
+                .set("font-size","0.65rem")
+                .set("padding-right","5px");
         this.filteringItemTypeSelection.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         this.filteringItemTypeSelection.setPageSize(11);
         this.filteringItemTypeSelection.setAllowCustomValue(false);
         this.filteringItemTypeSelection.setPreventInvalidInput(true);
+
+        this.filteringItemTypeSelection.addValueChangeListener(new HasValue.ValueChangeListener<
+                AbstractField.ComponentValueChangeEvent<ComboBox<String>,String>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>,String> valueChangeEvent) {
+                String changedItem = valueChangeEvent.getValue();
+                if(changedItem != null){
+                    TextField textField = new TextField();
+                    textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                    textField.setWidth(210,Unit.PIXELS);
+                    conditionValueInputElementsLayout.add(textField);
+                }else{
+                    conditionValueInputElementsLayout.removeAll();
+                }
+            }
+        });
+
         /*
         this.filteringItemTypeSelection.addValueChangeListener(new HasValue.ValueChangeListener() {
             @Override
@@ -202,7 +223,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(100,Unit.PERCENTAGE);
-        spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)").set("padding-top","5px");
+        spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)").set("padding-top","3px");
         add(spaceDivLayout2);
     }
 
