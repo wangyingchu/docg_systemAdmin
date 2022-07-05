@@ -75,6 +75,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
     private AttributeDataType attributeDataType;
     private Icon plusIcon;
     private Icon multiIcon;
+    private Icon notIcon;
     public QueryConditionItemWidget(String attributeName, AttributeDataType attributeDataType){
         this.attributeDataType = attributeDataType;
         this.setPadding(true);
@@ -138,7 +139,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
         filteringLogicAndButton = new Button();
         filteringLogicAndButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS,ButtonVariant.LUMO_SMALL);
         plusIcon = VaadinIcon.PLUS.create();
-        plusIcon.setSize("26px");
+        plusIcon.setSize("24px");
         filteringLogicAndButton.setIcon(plusIcon);
         Tooltips.getCurrent().setTooltip(filteringLogicAndButton, "与逻辑过滤");
         filteringLogicAndButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -164,10 +165,19 @@ public class QueryConditionItemWidget extends VerticalLayout {
         controlButtonsContainer.add(filteringLogicOrButton);
 
         filteringLogicNotButton = new Button();
-        filteringLogicNotButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        filteringLogicNotButton.setIcon(VaadinIcon.BAN.create());
+        filteringLogicNotButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        notIcon = VaadinIcon.BAN.create();
+        notIcon.setSize("20px");
+        filteringLogicNotButton.setIcon(notIcon);
         Tooltips.getCurrent().setTooltip(filteringLogicNotButton, "非逻辑过滤");
+        filteringLogicNotButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                setReverseConditionLogic();
+            }
+        });
         controlButtonsContainer.add(filteringLogicNotButton);
+
         clearFilteringLogicButton = new Button();
         clearFilteringLogicButton.addThemeVariants(ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL);
         clearFilteringLogicButton.setIcon(VaadinIcon.ERASER.create());
@@ -390,16 +400,27 @@ public class QueryConditionItemWidget extends VerticalLayout {
         this.filteringLogicOrButton.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
         this.filteringLogicAndButton.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
         if(this.filteringLogic.equals(filteringLogic_OR)){
-            multiIcon.setSize("22px");
+            multiIcon.setSize("20px");
             plusIcon.setSize("20px");
             this.filteringLogicOrButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
             this.filteringLogicAndButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         }
         if(this.filteringLogic.equals(filteringLogic_AND)){
-            plusIcon.setSize("26px");
+            plusIcon.setSize("24px");
             multiIcon.setSize("16px");
             this.filteringLogicAndButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
             this.filteringLogicOrButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        }
+    }
+
+    private void setReverseConditionLogic(){
+        this.reverseCondition=!this.reverseCondition;
+        this.filteringLogicNotButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS);
+        this.filteringLogicNotButton.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        if(this.reverseCondition){
+            this.filteringLogicNotButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+        }else{
+            this.filteringLogicNotButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         }
     }
 }
