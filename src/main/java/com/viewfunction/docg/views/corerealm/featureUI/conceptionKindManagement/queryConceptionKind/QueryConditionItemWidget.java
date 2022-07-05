@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind;
 
-import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.HasValue;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 
@@ -76,7 +73,8 @@ public class QueryConditionItemWidget extends VerticalLayout {
     private boolean isFromBaseDataset;
 
     private AttributeDataType attributeDataType;
-
+    private Icon plusIcon;
+    private Icon multiIcon;
     public QueryConditionItemWidget(String attributeName, AttributeDataType attributeDataType){
         this.attributeDataType = attributeDataType;
         this.setPadding(true);
@@ -139,16 +137,34 @@ public class QueryConditionItemWidget extends VerticalLayout {
 
         filteringLogicAndButton = new Button();
         filteringLogicAndButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS,ButtonVariant.LUMO_SMALL);
-        filteringLogicAndButton.setIcon(VaadinIcon.PLUS.create());
+        plusIcon = VaadinIcon.PLUS.create();
+        plusIcon.setSize("26px");
+        filteringLogicAndButton.setIcon(plusIcon);
         Tooltips.getCurrent().setTooltip(filteringLogicAndButton, "与逻辑过滤");
+        filteringLogicAndButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                setFilteringLogic(filteringLogic_AND);
+            }
+        });
         controlButtonsContainer.add(filteringLogicAndButton);
+
         filteringLogicOrButton = new Button();
         filteringLogicOrButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
-        filteringLogicOrButton.setIcon(VaadinIcon.CLOSE.create());
+        multiIcon = VaadinIcon.CLOSE.create();
+        multiIcon.setSize("16px");
+        filteringLogicOrButton.setIcon(multiIcon);
         Tooltips.getCurrent().setTooltip(filteringLogicOrButton, "或逻辑过滤");
+        filteringLogicOrButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                setFilteringLogic(filteringLogic_OR);
+            }
+        });
         controlButtonsContainer.add(filteringLogicOrButton);
+
         filteringLogicNotButton = new Button();
-        filteringLogicNotButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        filteringLogicNotButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         filteringLogicNotButton.setIcon(VaadinIcon.BAN.create());
         Tooltips.getCurrent().setTooltip(filteringLogicNotButton, "非逻辑过滤");
         controlButtonsContainer.add(filteringLogicNotButton);
@@ -364,6 +380,26 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 case PropertyTypeClassification_BINARY:
                     break;
             }
+        }
+    }
+
+    private void setFilteringLogic(String filteringLogicValue){
+        this.filteringLogic = filteringLogicValue;
+        this.filteringLogicOrButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS);
+        this.filteringLogicAndButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS);
+        this.filteringLogicOrButton.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        this.filteringLogicAndButton.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        if(this.filteringLogic.equals(filteringLogic_OR)){
+            multiIcon.setSize("22px");
+            plusIcon.setSize("20px");
+            this.filteringLogicOrButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+            this.filteringLogicAndButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        }
+        if(this.filteringLogic.equals(filteringLogic_AND)){
+            plusIcon.setSize("26px");
+            multiIcon.setSize("16px");
+            this.filteringLogicAndButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+            this.filteringLogicOrButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         }
     }
 }
