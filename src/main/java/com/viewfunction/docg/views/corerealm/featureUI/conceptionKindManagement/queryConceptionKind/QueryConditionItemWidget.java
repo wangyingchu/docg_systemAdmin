@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind;
 
+import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.Unit;
@@ -11,12 +12,9 @@ import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.select.SelectVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
@@ -141,26 +139,25 @@ public class QueryConditionItemWidget extends VerticalLayout {
         Button _ANDButton = new Button();
         _ANDButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
         _ANDButton.setIcon(VaadinIcon.PLUS.create());
-        Tooltips.getCurrent().setTooltip(_ANDButton, "AND");
+        Tooltips.getCurrent().setTooltip(_ANDButton, "与逻辑过滤");
         controlButtonsContainer.add(_ANDButton);
         Button _ORButton = new Button();
         _ORButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
         _ORButton.setIcon(VaadinIcon.CLOSE.create());
-        Tooltips.getCurrent().setTooltip(_ORButton, "OR");
+        Tooltips.getCurrent().setTooltip(_ORButton, "或逻辑过滤");
         controlButtonsContainer.add(_ORButton);
         Button _NOTButton = new Button();
         _NOTButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
         _NOTButton.setIcon(VaadinIcon.BAN.create());
-        Tooltips.getCurrent().setTooltip(_NOTButton, "NOT");
+        Tooltips.getCurrent().setTooltip(_NOTButton, "非逻辑过滤");
         controlButtonsContainer.add(_NOTButton);
         Button _CLEARButton = new Button();
         _CLEARButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
         _CLEARButton.setIcon(VaadinIcon.ERASER.create());
-        Tooltips.getCurrent().setTooltip(_CLEARButton, "CLEAR");
+        Tooltips.getCurrent().setTooltip(_CLEARButton, "撤销此过滤（显示）条件");
         controlButtonsContainer.add(_CLEARButton);
 
         controlButtonsContainer.setVerticalComponentAlignment(Alignment.START,_ANDButton,_ORButton,_NOTButton,_CLEARButton);
-
         attributeMetaLayout.add(controlButtonsContainer);
         attributeMetaLayout.setVerticalComponentAlignment(Alignment.START,controlButtonsContainer);
 
@@ -170,22 +167,21 @@ public class QueryConditionItemWidget extends VerticalLayout {
         filterItemsContainer.setSpacing(false);
         add(filterItemsContainer);
 
-        //Icon filterItemsIcon = VaadinIcon.INPUT.create();
-        //filterItemsContainer.add(filterItemsIcon);
-        //filterItemsIcon.setSize("12px");
-        //filterItemsIcon.getStyle().set("padding-right","3px");
-        //filterItemsContainer.setVerticalComponentAlignment(Alignment.CENTER,filterItemsIcon);
+        Icon filterItemsIcon = VaadinIcon.FILTER.create();
+        filterItemsContainer.add(filterItemsIcon);
+        filterItemsIcon.setSize("10px");
+        filterItemsIcon.getStyle().set("padding-right","3px");
+        filterItemsContainer.setVerticalComponentAlignment(Alignment.CENTER,filterItemsIcon);
 
         this.filteringItemTypeSelection = new ComboBox();
         this.filteringItemTypeSelection.setPlaceholder("属性过滤条件");
         this.filteringItemTypeSelection.setRequiredIndicatorVisible(false);
-        this.filteringItemTypeSelection.setWidth(125,Unit.PIXELS);
+        this.filteringItemTypeSelection.setWidth(95,Unit.PIXELS);
+        this.filteringItemTypeSelection.getStyle().set("--vaadin-combo-box-overlay-width", "180px").set("font-size","0.65rem");
         this.filteringItemTypeSelection.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         this.filteringItemTypeSelection.setPageSize(11);
         this.filteringItemTypeSelection.setAllowCustomValue(false);
         this.filteringItemTypeSelection.setPreventInvalidInput(true);
-
-
         /*
         this.filteringItemTypeSelection.addValueChangeListener(new HasValue.ValueChangeListener() {
             @Override
@@ -199,7 +195,10 @@ public class QueryConditionItemWidget extends VerticalLayout {
             }
         });
         */
-        filterItemsContainer.add(filteringItemTypeSelection);
+        filterItemsContainer.add(this.filteringItemTypeSelection);
+
+        this.conditionValueInputElementsLayout = new HorizontalLayout();
+        filterItemsContainer.add(this.conditionValueInputElementsLayout);
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(100,Unit.PERCENTAGE);
