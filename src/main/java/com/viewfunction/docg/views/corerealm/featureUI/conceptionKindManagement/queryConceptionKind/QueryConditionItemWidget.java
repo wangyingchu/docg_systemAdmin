@@ -222,6 +222,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                     TextField textField = new TextField();
                     textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
                     textField.setWidth(210,Unit.PIXELS);
+                    textField.getStyle().set("font-size","1.0rem");
                     conditionValueInputElementsLayout.add(textField);
                 }else{
                     conditionValueInputElementsLayout.removeAll();
