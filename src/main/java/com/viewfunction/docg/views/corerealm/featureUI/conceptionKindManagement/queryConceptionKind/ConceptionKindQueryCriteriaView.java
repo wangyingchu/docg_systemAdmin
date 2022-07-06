@@ -73,6 +73,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
             }
         });
 
+        ConceptionKindQueryCriteriaView containerConceptionKindQueryCriteriaView = this;
         queryCriteriaFilterSelect.addValueChangeListener(new HasValue.
                 ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<KindEntityAttributeRuntimeStatistics>,
                 KindEntityAttributeRuntimeStatistics>>() {
@@ -86,6 +87,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
                     if(!resultAttributesList.contains(selectedAttribute)){
                         resultAttributesList.add(selectedAttribute);
                         QueryConditionItemWidget queryConditionItemWidget = new QueryConditionItemWidget(selectedAttribute,changedItem.getAttributeDataType());
+                        queryConditionItemWidget.setContainerDataInstanceQueryCriteriaView(containerConceptionKindQueryCriteriaView);
                         criteriaItemsContainer.add(queryConditionItemWidget);
                     }
                 }
@@ -189,5 +191,11 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
         return LitRenderer.<KindEntityAttributeRuntimeStatistics>of(tpl.toString())
                 .withProperty("attributeName", KindEntityAttributeRuntimeStatistics::getAttributeName)
                 .withProperty("attributeDataType", KindEntityAttributeRuntimeStatistics::getAttributeDataType);
+    }
+
+    public void removeCriteriaFilterItem(QueryConditionItemWidget queryConditionItemWidget){
+        String removedAttributeName = queryConditionItemWidget.getAttributeName();
+        resultAttributesList.remove(removedAttributeName);
+        criteriaItemsContainer.remove(queryConditionItemWidget);
     }
 }

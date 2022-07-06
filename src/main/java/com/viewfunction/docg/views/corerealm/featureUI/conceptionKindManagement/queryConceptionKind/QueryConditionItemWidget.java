@@ -73,10 +73,13 @@ public class QueryConditionItemWidget extends VerticalLayout {
     private boolean isFromBaseDataset;
 
     private AttributeDataType attributeDataType;
+    private String attributeName;
     private Icon plusIcon;
     private Icon multiIcon;
     private Icon notIcon;
+    private ConceptionKindQueryCriteriaView containerDataInstanceQueryCriteriaView;
     public QueryConditionItemWidget(String attributeName, AttributeDataType attributeDataType){
+        this.attributeName = attributeName;
         this.attributeDataType = attributeDataType;
         this.setPadding(true);
         this.setMargin(false);
@@ -182,6 +185,12 @@ public class QueryConditionItemWidget extends VerticalLayout {
         clearFilteringLogicButton.addThemeVariants(ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL);
         clearFilteringLogicButton.setIcon(VaadinIcon.ERASER.create());
         Tooltips.getCurrent().setTooltip(clearFilteringLogicButton, "撤销此过滤（显示）条件");
+        clearFilteringLogicButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                removeCurrentConditionLogic();
+            }
+        });
         controlButtonsContainer.add(clearFilteringLogicButton);
 
         controlButtonsContainer.setVerticalComponentAlignment(Alignment.START,filteringLogicAndButton,filteringLogicOrButton,filteringLogicNotButton,clearFilteringLogicButton);
@@ -225,7 +234,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                     textField.getStyle().set("font-size","1.0rem");
                     conditionValueInputElementsLayout.add(textField);
                 }else{
-                    conditionValueInputElementsLayout.removeAll();
+                    cleanFilteringItemInputElements();
                 }
             }
         });
@@ -261,8 +270,8 @@ public class QueryConditionItemWidget extends VerticalLayout {
     }
 
     private void setQueryConditionSelectionByDataType(){
-        if(this.attributeDataType !=null) {
-            String propertyDataType = this.attributeDataType.toString();
+        if(this.getAttributeDataType() !=null) {
+            String propertyDataType = this.getAttributeDataType().toString();
             switch (propertyDataType) {
                 case PropertyTypeClassification_STRING:
                     this.filteringItemTypeSelection.setItems(
@@ -423,5 +432,32 @@ public class QueryConditionItemWidget extends VerticalLayout {
         }else{
             this.filteringLogicNotButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         }
+    }
+
+    private void cleanFilteringItemInputElements(){
+        //this.currentSelectedFilteringItemType = null;
+        this.conditionValueInputElementsLayout.removeAll();
+    }
+
+    private void removeCurrentConditionLogic(){
+        if(this.getContainerDataInstanceQueryCriteriaView() != null){
+            this.getContainerDataInstanceQueryCriteriaView().removeCriteriaFilterItem(this);
+        }
+    }
+
+    public ConceptionKindQueryCriteriaView getContainerDataInstanceQueryCriteriaView() {
+        return containerDataInstanceQueryCriteriaView;
+    }
+
+    public void setContainerDataInstanceQueryCriteriaView(ConceptionKindQueryCriteriaView containerDataInstanceQueryCriteriaView) {
+        this.containerDataInstanceQueryCriteriaView = containerDataInstanceQueryCriteriaView;
+    }
+
+    private AttributeDataType getAttributeDataType() {
+        return attributeDataType;
+    }
+
+    public String getAttributeName(){
+        return this.attributeName;
     }
 }
