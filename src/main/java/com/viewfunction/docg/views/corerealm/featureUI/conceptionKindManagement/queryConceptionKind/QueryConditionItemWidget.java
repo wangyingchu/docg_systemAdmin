@@ -35,8 +35,8 @@ public class QueryConditionItemWidget extends VerticalLayout {
 
     private Label propertyNameLabel;
 
-    private boolean reverseCondition=false;
-    private boolean isFirstQueryCondition=false;
+    private boolean reverseCondition = false;
+    private boolean isFirstQueryCondition = false;
     private String filteringLogic_AND="AND";
     private String filteringLogic_OR="OR";
     private String filteringLogic;
@@ -70,7 +70,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
     //private AbstractComponent betweenQueryToValueTextField;
     private ComboBox similarToMatchingTypeSelector;
     private TextField similarToConditionValueTextField;
-    private boolean isFromBaseDataset;
+
 
     private AttributeDataType attributeDataType;
     private String attributeName;
@@ -238,20 +238,6 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 }
             }
         });
-
-        /*
-        this.filteringItemTypeSelection.addValueChangeListener(new HasValue.ValueChangeListener() {
-            @Override
-            public void valueChange(HasValue.ValueChangeEvent valueChangeEvent) {
-                if(valueChangeEvent.getValue() != null) {
-                    String filteringItemType = valueChangeEvent.getValue().toString();
-                    renderFilteringItemInputElements(filteringItemType);
-                }else{
-                    cleanFilteringItemInputElements();
-                }
-            }
-        });
-        */
         filterItemsContainer.add(this.filteringItemTypeSelection);
 
         this.conditionValueInputElementsLayout = new HorizontalLayout();
@@ -424,7 +410,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
     }
 
     private void setReverseConditionLogic(){
-        this.reverseCondition=!this.reverseCondition;
+        this.reverseCondition = !this.reverseCondition;
         this.filteringLogicNotButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS);
         this.filteringLogicNotButton.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
         if(this.reverseCondition){
@@ -470,5 +456,10 @@ public class QueryConditionItemWidget extends VerticalLayout {
         this.filteringLogicAndButton.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
         this.filteringLogicOrButton.setEnabled(false);
         this.filteringLogicAndButton.setEnabled(false);
+        this.isFirstQueryCondition = true;
+    }
+
+    public boolean isDefaultQueryConditionItem(){
+        return this.isFirstQueryCondition;
     }
 }

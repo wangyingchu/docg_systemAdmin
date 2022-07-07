@@ -88,7 +88,10 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
                         resultAttributesList.add(selectedAttribute);
                         QueryConditionItemWidget queryConditionItemWidget = new QueryConditionItemWidget(selectedAttribute,changedItem.getAttributeDataType());
                         queryConditionItemWidget.setContainerDataInstanceQueryCriteriaView(containerConceptionKindQueryCriteriaView);
-                        queryConditionItemWidget.setAsDefaultQueryConditionItem();
+                        if(resultAttributesList.size()==1){
+                            //this one is the default query condition
+                            queryConditionItemWidget.setAsDefaultQueryConditionItem();
+                        }
                         criteriaItemsContainer.add(queryConditionItemWidget);
                     }
                 }
@@ -196,7 +199,15 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
 
     public void removeCriteriaFilterItem(QueryConditionItemWidget queryConditionItemWidget){
         String removedAttributeName = queryConditionItemWidget.getAttributeName();
+        boolean isDefaultCondition = queryConditionItemWidget.isDefaultQueryConditionItem();
         resultAttributesList.remove(removedAttributeName);
         criteriaItemsContainer.remove(queryConditionItemWidget);
+        if(isDefaultCondition){
+            boolean hasSecondItem = criteriaItemsContainer.getChildren().findFirst().isPresent();
+            if(hasSecondItem){
+                Component currentNewDefaultItem = criteriaItemsContainer.getChildren().findFirst().get();
+                ((QueryConditionItemWidget)currentNewDefaultItem).setAsDefaultQueryConditionItem();
+            }
+        }
     }
 }
