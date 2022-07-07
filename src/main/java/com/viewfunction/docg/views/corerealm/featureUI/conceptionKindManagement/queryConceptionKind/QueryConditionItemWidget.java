@@ -78,6 +78,10 @@ public class QueryConditionItemWidget extends VerticalLayout {
     private Icon multiIcon;
     private Icon notIcon;
     private ConceptionKindQueryCriteriaView containerDataInstanceQueryCriteriaView;
+    private Label isDefaultLabel;
+    private Label joinTypeLabel;
+    private Label isConvertedLabel;
+
     public QueryConditionItemWidget(String attributeName, AttributeDataType attributeDataType){
         this.attributeName = attributeName;
         this.attributeDataType = attributeDataType;
@@ -127,10 +131,35 @@ public class QueryConditionItemWidget extends VerticalLayout {
         attributeNameInfoContainer.add(attributeNameLabel);
         attributeNameInfoContainer.setFlexGrow(1,attributeNameLabel);
 
+        HorizontalLayout conditionStatusContainer = new HorizontalLayout();
+        conditionStatusContainer.setPadding(false);
+        conditionStatusContainer.setMargin(false);
+        conditionStatusContainer.setSpacing(false);
+        attributeMetaInfoContainer.add(conditionStatusContainer);
+
         Label attributeTypeLabel = new Label(attributeDataType.toString());
         attributeTypeLabel.addClassNames("text-tertiary");
         attributeTypeLabel.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-70pct)").set("padding-left","20px");
-        attributeMetaInfoContainer.add(attributeTypeLabel);
+        conditionStatusContainer.add(attributeTypeLabel);
+
+        isDefaultLabel = new Label("D");
+        isDefaultLabel.addClassNames("text-tertiary");
+        isDefaultLabel.getStyle().set("font-size","0.5rem").set("color","var(--lumo-contrast-50pct)").set("padding-left","10px");
+        conditionStatusContainer.add(isDefaultLabel);
+
+        joinTypeLabel = new Label("AND");
+        joinTypeLabel.addClassNames("text-tertiary");
+        joinTypeLabel.getStyle().set("font-size","0.5rem").set("color","var(--lumo-contrast-50pct)").set("padding-left","5px");
+        conditionStatusContainer.add(joinTypeLabel);
+
+        isConvertedLabel = new Label("| NOT");
+        isConvertedLabel.addClassNames("text-tertiary");
+        isConvertedLabel.getStyle().set("font-size","0.5rem").set("color","var(--lumo-contrast-50pct)").set("padding-left","5px");
+        conditionStatusContainer.add(isConvertedLabel);
+
+        conditionStatusContainer.setVerticalComponentAlignment(Alignment.CENTER,isDefaultLabel,joinTypeLabel,isConvertedLabel);
+        isConvertedLabel.setVisible(reverseCondition);
+        isDefaultLabel.setVisible(isFirstQueryCondition);
 
         attributeMetaLayout.setVerticalComponentAlignment(Alignment.CENTER,attributeMetaInfoContainer);
 
@@ -400,17 +429,20 @@ public class QueryConditionItemWidget extends VerticalLayout {
             plusIcon.setSize("20px");
             this.filteringLogicOrButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
             this.filteringLogicAndButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+            this.joinTypeLabel.setText("OR");
         }
         if(this.filteringLogic.equals(filteringLogic_AND)){
             plusIcon.setSize("24px");
             multiIcon.setSize("16px");
             this.filteringLogicAndButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
             this.filteringLogicOrButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+            this.joinTypeLabel.setText("AND");
         }
     }
 
     private void setReverseConditionLogic(){
         this.reverseCondition = !this.reverseCondition;
+        this.isConvertedLabel.setVisible(this.reverseCondition);
         this.filteringLogicNotButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS);
         this.filteringLogicNotButton.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
         if(this.reverseCondition){
@@ -448,8 +480,8 @@ public class QueryConditionItemWidget extends VerticalLayout {
     }
 
     public void setAsDefaultQueryConditionItem(){
-        plusIcon.setSize("20px");
-        multiIcon.setSize("16px");
+        this.plusIcon.setSize("20px");
+        this.multiIcon.setSize("16px");
         this.filteringLogicOrButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS);
         this.filteringLogicAndButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS);
         this.filteringLogicOrButton.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
@@ -457,6 +489,8 @@ public class QueryConditionItemWidget extends VerticalLayout {
         this.filteringLogicOrButton.setEnabled(false);
         this.filteringLogicAndButton.setEnabled(false);
         this.isFirstQueryCondition = true;
+        this.isDefaultLabel.setVisible(true);
+        this.joinTypeLabel.setVisible(false);
     }
 
     public boolean isDefaultQueryConditionItem(){
