@@ -144,12 +144,12 @@ public class QueryConditionItemWidget extends VerticalLayout {
 
         isDefaultLabel = new Label("D");
         isDefaultLabel.addClassNames("text-tertiary");
-        isDefaultLabel.getStyle().set("font-size","0.5rem").set("color","var(--lumo-contrast-50pct)").set("padding-left","10px");
+        isDefaultLabel.getStyle().set("font-size","0.5rem").set("color","var(--lumo-contrast-50pct)").set("padding-left","15px");
         conditionStatusContainer.add(isDefaultLabel);
 
         joinTypeLabel = new Label("AND");
         joinTypeLabel.addClassNames("text-tertiary");
-        joinTypeLabel.getStyle().set("font-size","0.5rem").set("color","var(--lumo-contrast-50pct)").set("padding-left","5px");
+        joinTypeLabel.getStyle().set("font-size","0.5rem").set("color","var(--lumo-contrast-50pct)").set("padding-left","15px");
         conditionStatusContainer.add(joinTypeLabel);
 
         isConvertedLabel = new Label("| NOT");

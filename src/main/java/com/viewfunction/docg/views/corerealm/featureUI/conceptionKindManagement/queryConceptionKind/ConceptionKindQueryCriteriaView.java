@@ -18,6 +18,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttrib
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
@@ -131,6 +132,12 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
         spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(spaceDivLayout2);
 
+        HorizontalLayout buttonsContainerLayout = new HorizontalLayout();
+        buttonsContainerLayout.setMargin(false);
+        buttonsContainerLayout.setSpacing(false);
+        buttonsContainerLayout.setPadding(false);
+        add(buttonsContainerLayout);
+
         Button executeQueryButton = new Button("查询概念实体");
         executeQueryButton.setIcon(new Icon(VaadinIcon.SEARCH));
         executeQueryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -140,7 +147,21 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
                 queryConceptionEntities();
             }
         });
-        add(executeQueryButton);
+        buttonsContainerLayout.add(executeQueryButton);
+
+        Button resultSetConfigButton = new Button("设置查询结果集参数",new Icon(VaadinIcon.COG_O));
+        resultSetConfigButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
+        resultSetConfigButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderQueryResultSetConfigUI();
+            }
+        });
+        resultSetConfigButton.getStyle()
+                .set("font-size","0.7rem")
+                .set("padding-left","20px");
+        buttonsContainerLayout.add(resultSetConfigButton);
+        buttonsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,resultSetConfigButton);
     }
 
     private void queryConceptionEntities(){
@@ -209,5 +230,15 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
                 ((QueryConditionItemWidget)currentNewDefaultItem).setAsDefaultQueryConditionItem();
             }
         }
+    }
+
+    private void renderQueryResultSetConfigUI(){
+        QueryResultSetConfigView queryResultSetConfigView = new QueryResultSetConfigView();
+
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"查询结果集参数",null,true,630,335,false);
+        fixSizeWindow.setWindowContent(queryResultSetConfigView);
+        fixSizeWindow.setModel(true);
+        queryResultSetConfigView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }
