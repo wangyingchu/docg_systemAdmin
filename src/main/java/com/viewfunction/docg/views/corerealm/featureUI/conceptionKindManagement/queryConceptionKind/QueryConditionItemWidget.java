@@ -460,4 +460,15 @@ public class QueryConditionItemWidget extends VerticalLayout {
     public String getAttributeName(){
         return this.attributeName;
     }
+
+    public void setAsDefaultQueryConditionItem(){
+        plusIcon.setSize("20px");
+        multiIcon.setSize("16px");
+        this.filteringLogicOrButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS);
+        this.filteringLogicAndButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS);
+        this.filteringLogicOrButton.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        this.filteringLogicAndButton.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        this.filteringLogicOrButton.setEnabled(false);
+        this.filteringLogicAndButton.setEnabled(false);
+    }
 }

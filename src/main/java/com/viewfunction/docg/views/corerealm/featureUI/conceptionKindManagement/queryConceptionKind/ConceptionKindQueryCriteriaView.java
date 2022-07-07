@@ -88,6 +88,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
                         resultAttributesList.add(selectedAttribute);
                         QueryConditionItemWidget queryConditionItemWidget = new QueryConditionItemWidget(selectedAttribute,changedItem.getAttributeDataType());
                         queryConditionItemWidget.setContainerDataInstanceQueryCriteriaView(containerConceptionKindQueryCriteriaView);
+                        queryConditionItemWidget.setAsDefaultQueryConditionItem();
                         criteriaItemsContainer.add(queryConditionItemWidget);
                     }
                 }
