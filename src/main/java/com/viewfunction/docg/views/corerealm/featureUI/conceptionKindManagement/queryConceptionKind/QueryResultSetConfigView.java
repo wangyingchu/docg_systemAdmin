@@ -12,12 +12,11 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.textfield.TextFieldVariant;
 
 public class QueryResultSetConfigView extends VerticalLayout {
 
     private Dialog containerDialog;
-    TextField conceptionKindNameField;
+    TextField pageSizeField;
     TextField conceptionKindDescField;
   //  TextField conceptionKindNameField;
 
@@ -47,17 +46,18 @@ public class QueryResultSetConfigView extends VerticalLayout {
         messageTitleLayout.add(attributeTypeLabel);
         add(messageTitleLayout);
 
-        this.conceptionKindNameField = new TextField("查询单页返回结果数 - Page Size");
-        this.conceptionKindNameField.setPreventInvalidInput(true);
-        this.conceptionKindNameField.setSuffixComponent(new Label("HAHAH"));
+        this.pageSizeField = new TextField("查询单页返回结果数 - Page Size");
+        this.pageSizeField.setPreventInvalidInput(true);
+        this.pageSizeField.setPrefixComponent(new Button("DefaultValue"));
+        //this.pageSizeField.setSuffixComponent(new Label("HAHAH"));
         //this.conceptionKindNameField.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
 
-        this.conceptionKindNameField.setWidthFull();
-        this.conceptionKindNameField.setRequired(true);
-        this.conceptionKindNameField.setRequiredIndicatorVisible(true);
-        this.conceptionKindNameField.setTitle("请输入概念类型名称");
-        this.conceptionKindNameField.setValue("100");
-        add(conceptionKindNameField);
+        this.pageSizeField.setWidthFull();
+        this.pageSizeField.setRequired(true);
+        this.pageSizeField.setRequiredIndicatorVisible(true);
+        this.pageSizeField.setTitle("请输入概念类型名称");
+        this.pageSizeField.setValue("100");
+        add(pageSizeField);
 
         this.conceptionKindDescField = new TextField("查询起始页 - Start Page");
         this.conceptionKindDescField.setWidthFull();
