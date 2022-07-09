@@ -239,7 +239,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
 
     private void renderQueryResultSetConfigUI(){
         QueryResultSetConfigView queryResultSetConfigView = new QueryResultSetConfigView(this.queryParameters);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"查询结果集参数",null,true,350,530,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"查询结果集参数",null,true,350,560,false);
         fixSizeWindow.setWindowContent(queryResultSetConfigView);
         fixSizeWindow.setModel(true);
         queryResultSetConfigView.setContainerDialog(fixSizeWindow);
