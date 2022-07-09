@@ -172,6 +172,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
         ConceptionKindQueriedEvent conceptionKindQueriedEvent = new ConceptionKindQueriedEvent();
         conceptionKindQueriedEvent.setConceptionKindName(this.conceptionKindName);
         conceptionKindQueriedEvent.setResultAttributesList(this.resultAttributesList);
+        conceptionKindQueriedEvent.setQueryParameters(this.queryParameters);
         ResourceHolder.getApplicationBlackboard().fire(conceptionKindQueriedEvent);
     }
 

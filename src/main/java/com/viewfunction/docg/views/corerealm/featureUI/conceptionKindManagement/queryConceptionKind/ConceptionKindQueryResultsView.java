@@ -99,10 +99,11 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         this.currentRowKeyList.clear();
         String conceptionKindName = event.getConceptionKindName();
         List<String> resultAttributesList = event.getResultAttributesList();
+        QueryParameters eventQueryParameters = event.getQueryParameters();
         if(conceptionKindName.equals(this.conceptionKindName)){
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             ConceptionKind targetConception = coreRealm.getConceptionKind(conceptionKindName);
-            QueryParameters queryParameters = new QueryParameters();
+            QueryParameters queryParameters = eventQueryParameters != null ? eventQueryParameters : new QueryParameters();
             try {
                 List<String> attributesList = new ArrayList<>();
                 if(resultAttributesList != null && resultAttributesList.size() > 0){

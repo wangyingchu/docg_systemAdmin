@@ -51,17 +51,18 @@ public class QueryResultSetConfigView extends VerticalLayout {
         messageTitleLayout.add(attributeTypeLabel);
         add(messageTitleLayout);
 
+        int initPageSize = this.queryParameters.getPageSize() > 1 ? this.queryParameters.getPageSize() : 100;
         this.pageSizeField = new IntegerField("查询单页返回结果数 - Page Size");
         this.pageSizeField.setWidthFull();
         this.pageSizeField.setTitle("请输入单页包含数据数");
-        this.pageSizeField.setValue(100);
+        this.pageSizeField.setValue(initPageSize);
         this.pageSizeField.setMin(1);
         add(pageSizeField);
         Button resetToDefaultButton1 = new Button();
         resetToDefaultButton1.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                pageSizeField.setValue(100);
+                pageSizeField.setValue(initPageSize);
             }
         });
         Tooltips.getCurrent().setTooltip(resetToDefaultButton1, "重置为默认值");
@@ -72,17 +73,18 @@ public class QueryResultSetConfigView extends VerticalLayout {
         resetToDefaultButton1.setIcon(buttonIcon);
         this.pageSizeField.setPrefixComponent(resetToDefaultButton1);
 
+        int initStartPage = this.queryParameters.getStartPage() > 1 ? this.queryParameters.getStartPage() : 1;
         this.startPageField = new IntegerField("查询起始页 - Start Page");
         this.startPageField.setWidthFull();
         this.startPageField.setTitle("请输入查询起始页");
-        this.startPageField.setValue(1);
+        this.startPageField.setValue(initStartPage);
         this.startPageField.setMin(1);
         add(this.startPageField);
         Button resetToDefaultButton2 = new Button();
         resetToDefaultButton2.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                startPageField.setValue(1);
+                startPageField.setValue(initStartPage);
             }
         });
         Tooltips.getCurrent().setTooltip(resetToDefaultButton2, "重置为默认值");
@@ -93,16 +95,17 @@ public class QueryResultSetConfigView extends VerticalLayout {
         resetToDefaultButton2.setIcon(buttonIcon2);
         this.startPageField.setPrefixComponent(resetToDefaultButton2);
 
+        int initEndPage = this.queryParameters.getEndPage() > 1 ? this.queryParameters.getEndPage() : 101;
         this.endPageField = new IntegerField("查询结束页 - End Page");
         this.endPageField.setWidthFull();
         this.endPageField.setTitle("请输入查询结束页");
-        this.endPageField.setValue(101);
+        this.endPageField.setValue(initEndPage);
         add(this.endPageField);
         Button resetToDefaultButton3 = new Button();
         resetToDefaultButton3.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                endPageField.setValue(101);
+                endPageField.setValue(initEndPage);
             }
         });
         Tooltips.getCurrent().setTooltip(resetToDefaultButton3, "重置为默认值");
@@ -118,6 +121,9 @@ public class QueryResultSetConfigView extends VerticalLayout {
         this.resultNumberField.setClearButtonVisible(true);
         this.resultNumberField.setTitle("请输入查询最大返回结果数");
         this.resultNumberField.setMin(1);
+        if(this.queryParameters.getResultNumber() > 0){
+            this.resultNumberField.setValue(this.queryParameters.getResultNumber());
+        }
         add(resultNumberField);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
