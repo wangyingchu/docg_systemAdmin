@@ -11,17 +11,20 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
+import dev.mett.vaadin.tooltip.Tooltips;
 
 public class QueryResultSetConfigView extends VerticalLayout {
 
     private Dialog containerDialog;
-    TextField pageSizeField;
-    TextField conceptionKindDescField;
-  //  TextField conceptionKindNameField;
+    private IntegerField pageSizeField;
+    private IntegerField startPageField;
+    private IntegerField endPageField;
+    private IntegerField resultNumberField;
 
     public QueryResultSetConfigView(){
-
         HorizontalLayout messageContainerLayout = new HorizontalLayout();
         add(messageContainerLayout);
 
@@ -32,7 +35,6 @@ public class QueryResultSetConfigView extends VerticalLayout {
         errorMessage.getStyle().set("color","#CE0000");
         messageContainerLayout.add(errorMessage);
         errorMessage.setVisible(false);
-
 
         HorizontalLayout messageTitleLayout = new HorizontalLayout();
         messageTitleLayout.setPadding(false);
@@ -46,41 +48,56 @@ public class QueryResultSetConfigView extends VerticalLayout {
         messageTitleLayout.add(attributeTypeLabel);
         add(messageTitleLayout);
 
-        this.pageSizeField = new TextField("查询单页返回结果数 - Page Size");
-        this.pageSizeField.setPreventInvalidInput(true);
-        this.pageSizeField.setPrefixComponent(new Button("DefaultValue"));
-        //this.pageSizeField.setSuffixComponent(new Label("HAHAH"));
-        //this.conceptionKindNameField.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
-
+        this.pageSizeField = new IntegerField("查询单页返回结果数 - Page Size");
         this.pageSizeField.setWidthFull();
-        this.pageSizeField.setRequired(true);
-        this.pageSizeField.setRequiredIndicatorVisible(true);
-        this.pageSizeField.setTitle("请输入概念类型名称");
-        this.pageSizeField.setValue("100");
+        this.pageSizeField.setTitle("请输入单页包含数据数");
+        this.pageSizeField.setValue(100);
+        this.pageSizeField.setMin(10);
         add(pageSizeField);
+        Button resetToDefaultButton1 = new Button();
+        Tooltips.getCurrent().setTooltip(resetToDefaultButton1, "重置为默认值");
+        resetToDefaultButton1.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        resetToDefaultButton1.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        Icon buttonIcon = VaadinIcon.ROTATE_LEFT.create();
+        buttonIcon.setSize("18px");
+        resetToDefaultButton1.setIcon(buttonIcon);
+        this.pageSizeField.setPrefixComponent(resetToDefaultButton1);
 
-        this.conceptionKindDescField = new TextField("查询起始页 - Start Page");
-        this.conceptionKindDescField.setWidthFull();
-        this.conceptionKindDescField.setRequired(true);
-        this.conceptionKindDescField.setRequiredIndicatorVisible(true);
-        this.conceptionKindDescField.setTitle("请输入概念类型描述");
-        this.conceptionKindDescField.setValue("1");
-        add(conceptionKindDescField);
+        this.startPageField = new IntegerField("查询起始页 - Start Page");
+        this.startPageField.setWidthFull();
+        this.startPageField.setTitle("请输入查询起始页");
+        this.startPageField.setValue(1);
+        this.startPageField.setMin(1);
+        add(this.startPageField);
+        Button resetToDefaultButton2 = new Button();
+        Tooltips.getCurrent().setTooltip(resetToDefaultButton2, "重置为默认值");
+        resetToDefaultButton2.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        resetToDefaultButton2.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        Icon buttonIcon2 = VaadinIcon.ROTATE_LEFT.create();
+        buttonIcon2.setSize("18px");
+        resetToDefaultButton2.setIcon(buttonIcon2);
+        this.startPageField.setPrefixComponent(resetToDefaultButton2);
 
-        TextField conceptionKindDescField2 = new TextField("查询结束页 - End Page");
-        conceptionKindDescField2.setWidthFull();
-        conceptionKindDescField2.setRequired(true);
-        conceptionKindDescField2.setRequiredIndicatorVisible(true);
-        conceptionKindDescField2.setTitle("请输入概念类型描述");
-        conceptionKindDescField2.setValue("101");
-        add(conceptionKindDescField2);
+        this.endPageField = new IntegerField("查询结束页 - End Page");
+        this.endPageField.setWidthFull();
+        this.endPageField.setTitle("请输入查询结束页");
+        this.endPageField.setValue(101);
+        add(this.endPageField);
+        Button resetToDefaultButton3 = new Button();
+        Tooltips.getCurrent().setTooltip(resetToDefaultButton3, "重置为默认值");
+        resetToDefaultButton3.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        resetToDefaultButton3.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        Icon buttonIcon3 = VaadinIcon.ROTATE_LEFT.create();
+        buttonIcon3.setSize("18px");
+        resetToDefaultButton3.setIcon(buttonIcon3);
+        this.endPageField.setPrefixComponent(resetToDefaultButton3);
 
-        TextField conceptionKindDescField3 = new TextField("查询最大返回结果数 - Result Number");
-        conceptionKindDescField3.setWidthFull();
-        conceptionKindDescField3.setRequired(true);
-        conceptionKindDescField3.setRequiredIndicatorVisible(true);
-        conceptionKindDescField3.setTitle("请输入概念类型描述");
-        add(conceptionKindDescField3);
+        this.resultNumberField = new IntegerField("查询最大返回结果数 - Result Number");
+        this.resultNumberField.setWidthFull();
+        this.resultNumberField.setClearButtonVisible(true);
+        this.resultNumberField.setTitle("请输入查询最大返回结果数");
+        this.resultNumberField.setMin(1);
+        add(resultNumberField);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setWidthFull();
