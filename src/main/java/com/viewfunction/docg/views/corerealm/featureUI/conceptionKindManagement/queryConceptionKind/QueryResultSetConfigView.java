@@ -4,6 +4,7 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H6;
 import com.vaadin.flow.component.html.Label;
@@ -25,7 +26,7 @@ public class QueryResultSetConfigView extends VerticalLayout {
     private IntegerField endPageField;
     private IntegerField resultNumberField;
     private QueryParameters queryParameters;
-    private H6 errorMessage;
+    private Checkbox distinctModeCheckbox;
     public QueryResultSetConfigView(QueryParameters queryParameters){
         this.queryParameters = queryParameters;
         HorizontalLayout messageContainerLayout = new HorizontalLayout();
@@ -55,6 +56,10 @@ public class QueryResultSetConfigView extends VerticalLayout {
         resetToDefaultButton0.setIcon(buttonIcon0);
         this.resultNumberField.setPrefixComponent(resetToDefaultButton0);
 
+        this.distinctModeCheckbox = new Checkbox("不返回重复数据");
+        this.distinctModeCheckbox.getStyle().set("font-size","0.75rem").set("color","var(--lumo-contrast-80pct)");
+        this.distinctModeCheckbox.setValue(this.queryParameters.isDistinctMode());
+        add(this.distinctModeCheckbox);
 
         HorizontalLayout spaceDivLayout0 = new HorizontalLayout();
         spaceDivLayout0.setWidthFull();
@@ -101,6 +106,7 @@ public class QueryResultSetConfigView extends VerticalLayout {
         this.endPageField.setWidthFull();
         this.endPageField.setTitle("请输入查询结束页");
         this.endPageField.setValue(initEndPage);
+        this.endPageField.setMin(0);
         add(this.endPageField);
         Button resetToDefaultButton3 = new Button();
         resetToDefaultButton3.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -122,7 +128,7 @@ public class QueryResultSetConfigView extends VerticalLayout {
         this.pageSizeField.setWidthFull();
         this.pageSizeField.setTitle("请输入单页包含数据数");
         this.pageSizeField.setValue(initPageSize);
-        this.pageSizeField.setMin(1);
+        this.pageSizeField.setMin(0);
         add(pageSizeField);
         Button resetToDefaultButton1 = new Button();
         resetToDefaultButton1.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -171,7 +177,7 @@ public class QueryResultSetConfigView extends VerticalLayout {
         if(this.resultNumberField.isInvalid() ||
                 this.pageSizeField.isInvalid() ||
                 this.startPageField.isInvalid() ||
-                this.endPageField.isInvalid() ){
+                this.endPageField.isInvalid()){
             CommonUIOperationUtil.showPopupNotification("请输入合法的数值", NotificationVariant.LUMO_ERROR);
         }else{
             if(this.resultNumberField.getValue() != null){
@@ -182,7 +188,7 @@ public class QueryResultSetConfigView extends VerticalLayout {
             if(this.pageSizeField.getValue() != null){
                 this.queryParameters.setPageSize(this.pageSizeField.getValue());
             }else{
-                this.queryParameters.setPageSize(100);
+                this.queryParameters.setPageSize(0);
             }
             if(this.startPageField.getValue() != null){
                 this.queryParameters.setStartPage(this.startPageField.getValue());
@@ -194,7 +200,7 @@ public class QueryResultSetConfigView extends VerticalLayout {
             }else{
                 this.queryParameters.setEndPage(0);
             }
-
+            this.queryParameters.setDistinctMode(this.distinctModeCheckbox.getValue());
             Integer pageSize = this.pageSizeField.getValue();
             Integer startPage = this.startPageField.getValue();
             Integer endPage = this.endPageField.getValue();
