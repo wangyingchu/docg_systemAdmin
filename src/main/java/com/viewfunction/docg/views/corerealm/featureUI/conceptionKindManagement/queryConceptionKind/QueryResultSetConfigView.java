@@ -9,11 +9,12 @@ import com.vaadin.flow.component.html.H6;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextField;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 public class QueryResultSetConfigView extends VerticalLayout {
@@ -23,16 +24,18 @@ public class QueryResultSetConfigView extends VerticalLayout {
     private IntegerField startPageField;
     private IntegerField endPageField;
     private IntegerField resultNumberField;
-
-    public QueryResultSetConfigView(){
+    private QueryParameters queryParameters;
+    private H6 errorMessage;
+    public QueryResultSetConfigView(QueryParameters queryParameters){
+        this.queryParameters = queryParameters;
         HorizontalLayout messageContainerLayout = new HorizontalLayout();
         add(messageContainerLayout);
 
         H6 viewTitle = new H6("结果集配置参数");
         messageContainerLayout.add(viewTitle);
 
-        H6 errorMessage = new H6("-");
-        errorMessage.getStyle().set("color","#CE0000");
+        errorMessage = new H6("-");
+        errorMessage.getStyle().set("color","#CE0000").set("font-size","0.6rem");
         messageContainerLayout.add(errorMessage);
         errorMessage.setVisible(false);
 
@@ -52,9 +55,15 @@ public class QueryResultSetConfigView extends VerticalLayout {
         this.pageSizeField.setWidthFull();
         this.pageSizeField.setTitle("请输入单页包含数据数");
         this.pageSizeField.setValue(100);
-        this.pageSizeField.setMin(10);
+        this.pageSizeField.setMin(1);
         add(pageSizeField);
         Button resetToDefaultButton1 = new Button();
+        resetToDefaultButton1.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                pageSizeField.setValue(100);
+            }
+        });
         Tooltips.getCurrent().setTooltip(resetToDefaultButton1, "重置为默认值");
         resetToDefaultButton1.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         resetToDefaultButton1.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -70,6 +79,12 @@ public class QueryResultSetConfigView extends VerticalLayout {
         this.startPageField.setMin(1);
         add(this.startPageField);
         Button resetToDefaultButton2 = new Button();
+        resetToDefaultButton2.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                startPageField.setValue(1);
+            }
+        });
         Tooltips.getCurrent().setTooltip(resetToDefaultButton2, "重置为默认值");
         resetToDefaultButton2.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         resetToDefaultButton2.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -84,6 +99,12 @@ public class QueryResultSetConfigView extends VerticalLayout {
         this.endPageField.setValue(101);
         add(this.endPageField);
         Button resetToDefaultButton3 = new Button();
+        resetToDefaultButton3.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                endPageField.setValue(101);
+            }
+        });
         Tooltips.getCurrent().setTooltip(resetToDefaultButton3, "重置为默认值");
         resetToDefaultButton3.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         resetToDefaultButton3.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -113,7 +134,7 @@ public class QueryResultSetConfigView extends VerticalLayout {
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //doCreateNewConceptionKind();
+                doConfigQueryParameters();
             }
         });
     }
@@ -124,5 +145,39 @@ public class QueryResultSetConfigView extends VerticalLayout {
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
+    }
+
+    private void doConfigQueryParameters(){
+        boolean isValidInput = false;
+        if(this.resultNumberField.isInvalid() ||
+                this.pageSizeField.isInvalid() ||
+                this.startPageField.isInvalid() ||
+                this.endPageField.isInvalid() ){
+            CommonUIOperationUtil.showPopupNotification("请输入合法的数值", NotificationVariant.LUMO_ERROR);
+        }else{
+            if(this.resultNumberField.getValue() != null){
+                this.queryParameters.setResultNumber(this.resultNumberField.getValue());
+                isValidInput = true;
+            }else{
+                Integer pageSize = this.pageSizeField.getValue();
+                Integer startPage = this.startPageField.getValue();
+                Integer endPage = this.endPageField.getValue();
+                if(pageSize == null || startPage == null || endPage == null){
+                    CommonUIOperationUtil.showPopupNotification("Page Size,Start Page, End Page 三项参数均需要输入", NotificationVariant.LUMO_ERROR);
+                }else if(endPage <= startPage){
+                    CommonUIOperationUtil.showPopupNotification("End Page 必须大于 Start Page", NotificationVariant.LUMO_ERROR);
+                }else{
+                    this.queryParameters.setPageSize(pageSize);
+                    this.queryParameters.setStartPage(startPage);
+                    this.queryParameters.setEndPage(endPage);
+                    isValidInput = true;
+                }
+            }
+            if(isValidInput){
+                if(getContainerDialog() != null){
+                    getContainerDialog().close();
+                }
+            }
+        }
     }
 }
