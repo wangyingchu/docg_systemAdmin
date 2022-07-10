@@ -111,6 +111,12 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
         addCustomQueryCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         addCustomQueryCriteriaButton.addThemeVariants(ButtonVariant.LUMO_LARGE);
         addCustomQueryCriteriaButton.setIcon(VaadinIcon.KEYBOARD_O.create());
+        addCustomQueryCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //renderAddCustomQueryCriteriaUI();
+            }
+        });
 
         buttonSpaceDivLayout.add(addCustomQueryCriteriaButton);
         buttonSpaceDivLayout.setVerticalComponentAlignment(Alignment.CENTER,queryCriteriaFilterSelect);
