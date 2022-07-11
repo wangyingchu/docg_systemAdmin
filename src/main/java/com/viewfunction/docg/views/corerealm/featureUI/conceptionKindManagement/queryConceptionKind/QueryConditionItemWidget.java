@@ -18,8 +18,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import dev.mett.vaadin.tooltip.Tooltips;
 
-import static com.viewfunction.docg.element.userInterfaceUtil.CommonConstant.*;
-
 public class QueryConditionItemWidget extends VerticalLayout {
 
     private Label propertyNameLabel;
@@ -275,9 +273,8 @@ public class QueryConditionItemWidget extends VerticalLayout {
 
     private void setQueryConditionSelectionByDataType(){
         if(this.getAttributeDataType() !=null) {
-            String propertyDataType = this.getAttributeDataType().toString();
-            switch (propertyDataType) {
-                case PropertyTypeClassification_STRING:
+            switch (this.getAttributeDataType()) {
+                case STRING:
                     this.filteringItemTypeSelection.setItems(
                             FilteringItemType_Equal,
                             FilteringItemType_NotEqual,
@@ -286,26 +283,14 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             FilteringItemType_InValue,
                             FilteringItemType_NullValue);
                     break;
-                case PropertyTypeClassification_BOOLEAN:
+                case BOOLEAN:
                     this.filteringItemTypeSelection.setItems(
                             FilteringItemType_Equal,
                             FilteringItemType_NotEqual,
                             FilteringItemType_InValue,
                             FilteringItemType_NullValue);
                     break;
-                case PropertyTypeClassification_DATE:
-                    this.filteringItemTypeSelection.setItems(
-                            FilteringItemType_Equal,
-                            FilteringItemType_NotEqual,
-                            FilteringItemType_Between,
-                            FilteringItemType_GreatThan,
-                            FilteringItemType_GreatThanEqual,
-                            FilteringItemType_LessThan,
-                            FilteringItemType_LessThanEqual,
-                            FilteringItemType_InValue,
-                            FilteringItemType_NullValue);
-                    break;
-                case PropertyTypeClassification_TIMESTAMP:
+                case DATE:
                     this.filteringItemTypeSelection.setItems(
                             FilteringItemType_Equal,
                             FilteringItemType_NotEqual,
@@ -317,7 +302,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             FilteringItemType_InValue,
                             FilteringItemType_NullValue);
                     break;
-                case PropertyTypeClassification_INT:
+                case TIMESTAMP:
                     this.filteringItemTypeSelection.setItems(
                             FilteringItemType_Equal,
                             FilteringItemType_NotEqual,
@@ -329,7 +314,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             FilteringItemType_InValue,
                             FilteringItemType_NullValue);
                     break;
-                case PropertyTypeClassification_LONG:
+                case INT:
                     this.filteringItemTypeSelection.setItems(
                             FilteringItemType_Equal,
                             FilteringItemType_NotEqual,
@@ -341,7 +326,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             FilteringItemType_InValue,
                             FilteringItemType_NullValue);
                     break;
-                case PropertyTypeClassification_DOUBLE:
+                case LONG:
                     this.filteringItemTypeSelection.setItems(
                             FilteringItemType_Equal,
                             FilteringItemType_NotEqual,
@@ -353,7 +338,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             FilteringItemType_InValue,
                             FilteringItemType_NullValue);
                     break;
-                case PropertyTypeClassification_FLOAT:
+                case DOUBLE:
                     this.filteringItemTypeSelection.setItems(
                             FilteringItemType_Equal,
                             FilteringItemType_NotEqual,
@@ -365,7 +350,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             FilteringItemType_InValue,
                             FilteringItemType_NullValue);
                     break;
-                case PropertyTypeClassification_SHORT:
+                case FLOAT:
                     this.filteringItemTypeSelection.setItems(
                             FilteringItemType_Equal,
                             FilteringItemType_NotEqual,
@@ -377,7 +362,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             FilteringItemType_InValue,
                             FilteringItemType_NullValue);
                     break;
-                case PropertyTypeClassification_DECIMAL:
+                case SHORT:
                     this.filteringItemTypeSelection.setItems(
                             FilteringItemType_Equal,
                             FilteringItemType_NotEqual,
@@ -389,7 +374,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             FilteringItemType_InValue,
                             FilteringItemType_NullValue);
                     break;
-                case PropertyTypeClassification_BYTE:
+                case DECIMAL:
                     this.filteringItemTypeSelection.setItems(
                             FilteringItemType_Equal,
                             FilteringItemType_NotEqual,
@@ -401,7 +386,19 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             FilteringItemType_InValue,
                             FilteringItemType_NullValue);
                     break;
-                case PropertyTypeClassification_BINARY:
+                case BYTE:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case BINARY:
                     break;
             }
         }
