@@ -18,20 +18,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import dev.mett.vaadin.tooltip.Tooltips;
 
-public class QueryConditionItemWidget extends VerticalLayout {
+import static com.viewfunction.docg.element.userInterfaceUtil.CommonConstant.*;
 
-    private final String PropertyTypeClassification_BOOLEAN = "BOOLEAN";
-    private final String PropertyTypeClassification_INT = "INT";
-    private final String PropertyTypeClassification_SHORT = "SHORT";
-    private final String PropertyTypeClassification_LONG = "LONG";
-    private final String PropertyTypeClassification_FLOAT = "FLOAT";
-    private final String PropertyTypeClassification_DOUBLE = "DOUBLE";
-    private final String PropertyTypeClassification_DATE = "DATE";
-    private final String PropertyTypeClassification_TIMESTAMP = "TIMESTAMP";
-    private final String PropertyTypeClassification_STRING = "STRING";
-    private final String PropertyTypeClassification_BINARY = "BINARY";
-    private final String PropertyTypeClassification_BYTE = "BYTE";
-    private final String PropertyTypeClassification_DECIMAL = "DECIMAL";
+public class QueryConditionItemWidget extends VerticalLayout {
 
     private Label propertyNameLabel;
 

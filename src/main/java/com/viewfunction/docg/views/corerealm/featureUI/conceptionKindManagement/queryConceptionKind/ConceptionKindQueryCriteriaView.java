@@ -114,7 +114,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
         addCustomQueryCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAddCustomQueryCriteriaUI();
+                renderAddCustomQueryCriteriaUI();
             }
         });
 
@@ -249,6 +249,15 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
         fixSizeWindow.setWindowContent(queryResultSetConfigView);
         fixSizeWindow.setModel(true);
         queryResultSetConfigView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderAddCustomQueryCriteriaUI(){
+        AddCustomQueryCriteriaUI addCustomQueryCriteriaUI = new AddCustomQueryCriteriaUI();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"添加自定义查询/显示属性",null,true,470,180,false);
+        fixSizeWindow.setWindowContent(addCustomQueryCriteriaUI);
+        fixSizeWindow.setModel(true);
+        addCustomQueryCriteriaUI.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 }
