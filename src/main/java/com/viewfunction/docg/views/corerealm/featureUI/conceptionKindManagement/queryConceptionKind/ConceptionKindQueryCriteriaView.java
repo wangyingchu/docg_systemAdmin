@@ -16,6 +16,7 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -87,16 +88,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
                 if(changedItem != null){
                     queryCriteriaFilterSelect.setValue(null);
                     String selectedAttribute = changedItem.getAttributeName();
-                    if(!resultAttributesList.contains(selectedAttribute)){
-                        resultAttributesList.add(selectedAttribute);
-                        QueryConditionItemWidget queryConditionItemWidget = new QueryConditionItemWidget(selectedAttribute,changedItem.getAttributeDataType());
-                        queryConditionItemWidget.setContainerDataInstanceQueryCriteriaView(containerConceptionKindQueryCriteriaView);
-                        if(resultAttributesList.size()==1){
-                            //this one is the default query condition
-                            queryConditionItemWidget.setAsDefaultQueryConditionItem();
-                        }
-                        criteriaItemsContainer.add(queryConditionItemWidget);
-                    }
+                    addQueryConditionItem(selectedAttribute,changedItem.getAttributeDataType());
                 }
             }
         });
@@ -254,10 +246,24 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
 
     private void renderAddCustomQueryCriteriaUI(){
         AddCustomQueryCriteriaUI addCustomQueryCriteriaUI = new AddCustomQueryCriteriaUI();
+        addCustomQueryCriteriaUI.setConceptionKindQueryCriteriaView(this);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"添加自定义查询/显示属性",null,true,470,180,false);
         fixSizeWindow.setWindowContent(addCustomQueryCriteriaUI);
         fixSizeWindow.setModel(true);
         addCustomQueryCriteriaUI.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    public void addQueryConditionItem(String attributeName, AttributeDataType attributeDataType){
+        if(!resultAttributesList.contains(attributeName)){
+            resultAttributesList.add(attributeName);
+            QueryConditionItemWidget queryConditionItemWidget = new QueryConditionItemWidget(attributeName,attributeDataType);
+            queryConditionItemWidget.setContainerDataInstanceQueryCriteriaView(this);
+            if(resultAttributesList.size()==1){
+                //this one is the default query condition
+                queryConditionItemWidget.setAsDefaultQueryConditionItem();
+            }
+            criteriaItemsContainer.add(queryConditionItemWidget);
+        }
     }
 }

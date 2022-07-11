@@ -1,5 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind;
 
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -11,13 +13,14 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-
-import static com.viewfunction.docg.element.userInterfaceUtil.CommonConstant.*;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 
 public class AddCustomQueryCriteriaUI extends VerticalLayout {
-
     private Dialog containerDialog;
     private H6 errorMessage;
+    private TextField propertyNameField;
+    private ComboBox<AttributeDataType> propertyDataTypeFilterSelect;
+    private ConceptionKindQueryCriteriaView conceptionKindQueryCriteriaView;
 
     public AddCustomQueryCriteriaUI(){
         HorizontalLayout messageContainerLayout = new HorizontalLayout();
@@ -34,33 +37,63 @@ public class AddCustomQueryCriteriaUI extends VerticalLayout {
         HorizontalLayout criteriaFieldContainerLayout = new HorizontalLayout();
         add(criteriaFieldContainerLayout);
 
-        TextField conceptionKindNameField = new TextField();
-        criteriaFieldContainerLayout.add(conceptionKindNameField);
-        conceptionKindNameField.setPlaceholder("属性名称");
-        conceptionKindNameField.setWidth(150,Unit.PIXELS);
+        propertyNameField = new TextField();
+        criteriaFieldContainerLayout.add(propertyNameField);
+        propertyNameField.setPlaceholder("属性名称");
+        propertyNameField.setWidth(150,Unit.PIXELS);
 
-        ComboBox queryCriteriaFilterSelect = new ComboBox();
-        queryCriteriaFilterSelect.setPageSize(30);
-        queryCriteriaFilterSelect.setPlaceholder("属性数据类型");
-        queryCriteriaFilterSelect.setMinWidth(70, Unit.PIXELS);
-        queryCriteriaFilterSelect.setItems(
-                PropertyTypeClassification_BOOLEAN,
-                PropertyTypeClassification_INT,
-                PropertyTypeClassification_SHORT,
-                PropertyTypeClassification_LONG,
-                PropertyTypeClassification_FLOAT,
-                PropertyTypeClassification_DOUBLE,
-                PropertyTypeClassification_DATE,
-                PropertyTypeClassification_TIMESTAMP,
-                PropertyTypeClassification_STRING,
-                PropertyTypeClassification_BINARY,
-                PropertyTypeClassification_BYTE,
-                PropertyTypeClassification_DECIMAL
+        propertyDataTypeFilterSelect = new ComboBox();
+        propertyDataTypeFilterSelect.setPageSize(30);
+        propertyDataTypeFilterSelect.setPlaceholder("属性数据类型");
+        propertyDataTypeFilterSelect.setWidth(170, Unit.PIXELS);
+        propertyDataTypeFilterSelect.setItems(
+                AttributeDataType.BINARY,
+                AttributeDataType.BOOLEAN,
+                AttributeDataType.INT,
+                AttributeDataType.SHORT,
+                AttributeDataType.LONG,
+                AttributeDataType.FLOAT,
+                AttributeDataType.DOUBLE,
+                AttributeDataType.TIMESTAMP,
+                AttributeDataType.DATE,
+                AttributeDataType.DATETIME,
+                AttributeDataType.TIME,
+                AttributeDataType.STRING,
+                AttributeDataType.BYTE,
+                AttributeDataType.DECIMAL,
+                AttributeDataType.BOOLEAN_ARRAY,
+                AttributeDataType.INT_ARRAY,
+                AttributeDataType.SHORT_ARRAY,
+                AttributeDataType.LONG_ARRAY,
+                AttributeDataType. FLOAT_ARRAY,
+                AttributeDataType.DOUBLE_ARRAY,
+                AttributeDataType.TIMESTAMP_ARRAY,
+                AttributeDataType.DATE_ARRAY,
+                AttributeDataType.DATETIME_ARRAY,
+                AttributeDataType.TIME_ARRAY,
+                AttributeDataType.STRING_ARRAY,
+                AttributeDataType.BYTE_ARRAY,
+                AttributeDataType.DECIMAL_ARRAY
+                //,AttributeDataType.BINARY
         );
-        criteriaFieldContainerLayout.add(queryCriteriaFilterSelect);
+        criteriaFieldContainerLayout.add(propertyDataTypeFilterSelect);
 
         Button confirmButton = new Button("确定",new Icon(VaadinIcon.CHECK));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                if(propertyNameField.getValue().equals("")||propertyDataTypeFilterSelect.getValue()==null){
+                    errorMessage.setText("属性名称与数据类型是必填项");
+                    errorMessage.setVisible(true);
+                }else{
+                    getConceptionKindQueryCriteriaView().addQueryConditionItem(propertyNameField.getValue(),propertyDataTypeFilterSelect.getValue());
+                    if(getContainerDialog() != null){
+                        getContainerDialog().close();
+                    }
+                }
+            }
+        });
         criteriaFieldContainerLayout.add(confirmButton);
     }
 
@@ -70,5 +103,13 @@ public class AddCustomQueryCriteriaUI extends VerticalLayout {
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
+    }
+
+    public ConceptionKindQueryCriteriaView getConceptionKindQueryCriteriaView() {
+        return conceptionKindQueryCriteriaView;
+    }
+
+    public void setConceptionKindQueryCriteriaView(ConceptionKindQueryCriteriaView conceptionKindQueryCriteriaView) {
+        this.conceptionKindQueryCriteriaView = conceptionKindQueryCriteriaView;
     }
 }
