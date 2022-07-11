@@ -69,6 +69,12 @@ public class QueryConditionItemWidget extends VerticalLayout {
     private Label joinTypeLabel;
     private Label isConvertedLabel;
 
+
+    private Component singleQueryValueTextField;
+    private Component multiValuePropertyInput;
+    private Component betweenQueryFromValueTextField;
+    private Component betweenQueryToValueTextField;
+
     public QueryConditionItemWidget(String attributeName, AttributeDataType attributeDataType){
         this.attributeName = attributeName;
         this.attributeDataType = attributeDataType;
@@ -242,15 +248,14 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 AbstractField.ComponentValueChangeEvent<ComboBox<String>,String>>() {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>,String> valueChangeEvent) {
+                cleanFilteringItemInputElements();
                 String changedItem = valueChangeEvent.getValue();
                 if(changedItem != null){
-                    TextField textField = new TextField();
-                    textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-                    textField.setWidth(210,Unit.PIXELS);
-                    textField.getStyle().set("font-size","1.0rem");
-                    conditionValueInputElementsLayout.add(textField);
-                }else{
-                    cleanFilteringItemInputElements();
+
+                    //renderFilteringItemInputElements(changedItem);
+
+                    AbstractField filteringItem = generateFilteringItemInput(changedItem);
+                    conditionValueInputElementsLayout.add(filteringItem);
                 }
             }
         });
@@ -481,5 +486,119 @@ public class QueryConditionItemWidget extends VerticalLayout {
 
     public boolean isDefaultQueryConditionItem(){
         return this.isFirstQueryCondition;
+    }
+
+    private void renderFilteringItemInputElements(String filteringItemType){
+        this.currentSelectedFilteringItemType=filteringItemType;
+        this.conditionValueInputElementsLayout.removeAll();
+        if(this.singleQueryValueTextField!=null){
+            this.singleQueryValueTextField=null;
+        }
+        this.multiValuePropertyInput=null;
+        if(this.betweenQueryFromValueTextField!=null){
+            this.betweenQueryFromValueTextField=null;
+        }
+        if(this.similarToConditionValueTextField !=null){
+            this.similarToConditionValueTextField =null;
+        }
+        if(this.similarToMatchingTypeSelector !=null){
+            this.similarToMatchingTypeSelector =null;
+        }
+        switch(filteringItemType){
+            case FilteringItemType_Equal:
+                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                this.singleQueryValueTextField= generateSingleQueryValueTextField(180);
+                this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
+                break;
+            case FilteringItemType_NotEqual:
+                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                this.singleQueryValueTextField= generateSingleQueryValueTextField(180);
+                this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
+                break;
+            case FilteringItemType_RegularMatch:
+                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                this.singleQueryValueTextField= generateSingleQueryValueTextField(180);
+                this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
+                break;
+            case FilteringItemType_GreatThan:
+                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                this.singleQueryValueTextField= generateSingleQueryValueTextField(180);
+                this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
+                break;
+            case FilteringItemType_GreatThanEqual:
+                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                this.singleQueryValueTextField= generateSingleQueryValueTextField(180);
+                this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
+                break;
+            case FilteringItemType_LessThan:
+                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                this.singleQueryValueTextField= generateSingleQueryValueTextField(180);
+                this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
+                break;
+            case FilteringItemType_LessThanEqual:
+                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                this.singleQueryValueTextField= generateSingleQueryValueTextField(180);
+                this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
+                break;
+            case FilteringItemType_SimilarTo:
+                this.filteringItemTypeSelection.setWidth(105,Unit.PIXELS);
+                HorizontalLayout fieldLayout=generateSimilarToQueryValueInputElements();
+                this.conditionValueInputElementsLayout.add(fieldLayout);
+                break;
+            case FilteringItemType_Between:
+                this.filteringItemTypeSelection.setWidth(95,Unit.PIXELS);
+                HorizontalLayout betweenFieldLayout=generateBetweenQueryValueInputElements();
+                this.conditionValueInputElementsLayout.add(betweenFieldLayout);
+                break;
+            case FilteringItemType_InValue:
+                this.filteringItemTypeSelection.setWidth(95,Unit.PIXELS);
+                this.multiValuePropertyInput=generateInValueQueryValueInputElements();
+                this.conditionValueInputElementsLayout.add(this.multiValuePropertyInput);
+                break;
+            case FilteringItemType_NullValue:
+                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                break;
+        }
+    }
+
+    public Component generateSingleQueryValueTextField(int textFieldWidth) {
+        return null;
+    }
+
+    public HorizontalLayout generateBetweenQueryValueInputElements(){
+        return null;
+    }
+
+    public HorizontalLayout generateSimilarToQueryValueInputElements(){
+        return null;
+    }
+
+    public Component generateInValueQueryValueInputElements(){
+        return null;
+    }
+
+    public AbstractField generateFilteringItemInput(String filterItemType){
+        switch (filterItemType) {
+            case FilteringItemType_Equal:
+                AbstractField resultAbstractField = new TextField();
+                ((TextField)resultAbstractField).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                ((TextField)resultAbstractField).setWidth(210,Unit.PIXELS);
+                ((TextField)resultAbstractField).getStyle().set("font-size","1.0rem");
+                break;
+        }
+
+
+
+
+
+
+
+
+
+        TextField textField = new TextField();
+        textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        textField.setWidth(210,Unit.PIXELS);
+        textField.getStyle().set("font-size","1.0rem");
+        return textField;
     }
 }
