@@ -14,6 +14,11 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.Setter;
+import com.vaadin.flow.data.converter.StringToIntegerConverter;
+import com.vaadin.flow.data.validator.IntegerRangeValidator;
+import com.vaadin.flow.function.ValueProvider;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -75,9 +80,12 @@ public class QueryConditionItemWidget extends VerticalLayout {
     private Component betweenQueryFromValueTextField;
     private Component betweenQueryToValueTextField;
 
-    public QueryConditionItemWidget(String attributeName, AttributeDataType attributeDataType){
+    private Binder<String> binder;
+
+    public QueryConditionItemWidget(String attributeName, AttributeDataType attributeDataType,Binder<String> binder){
         this.attributeName = attributeName;
         this.attributeDataType = attributeDataType;
+        this.binder = binder;
         this.setPadding(true);
         this.setMargin(false);
         this.setSpacing(false);
@@ -252,10 +260,15 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 String changedItem = valueChangeEvent.getValue();
                 if(changedItem != null){
 
-                    //renderFilteringItemInputElements(changedItem);
+                    renderFilteringItemInputElements(changedItem);
 
-                    AbstractField filteringItem = generateFilteringItemInput(changedItem);
-                    conditionValueInputElementsLayout.add(filteringItem);
+
+
+                    //AbstractField filteringItem = generateFilteringItemInput(changedItem);
+                    //conditionValueInputElementsLayout.add(filteringItem);
+
+
+
                 }
             }
         });
@@ -489,80 +502,120 @@ public class QueryConditionItemWidget extends VerticalLayout {
     }
 
     private void renderFilteringItemInputElements(String filteringItemType){
-        this.currentSelectedFilteringItemType=filteringItemType;
+        this.currentSelectedFilteringItemType = filteringItemType;
         this.conditionValueInputElementsLayout.removeAll();
-        if(this.singleQueryValueTextField!=null){
-            this.singleQueryValueTextField=null;
+        if(this.singleQueryValueTextField != null){
+            this.singleQueryValueTextField = null;
         }
-        this.multiValuePropertyInput=null;
-        if(this.betweenQueryFromValueTextField!=null){
-            this.betweenQueryFromValueTextField=null;
+        this.multiValuePropertyInput = null;
+        if(this.betweenQueryFromValueTextField != null){
+            this.betweenQueryFromValueTextField = null;
         }
-        if(this.similarToConditionValueTextField !=null){
-            this.similarToConditionValueTextField =null;
+        if(this.similarToConditionValueTextField != null){
+            this.similarToConditionValueTextField = null;
         }
-        if(this.similarToMatchingTypeSelector !=null){
-            this.similarToMatchingTypeSelector =null;
+        if(this.similarToMatchingTypeSelector != null){
+            this.similarToMatchingTypeSelector = null;
         }
         switch(filteringItemType){
             case FilteringItemType_Equal:
-                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
-                this.singleQueryValueTextField= generateSingleQueryValueTextField(180);
+                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
             case FilteringItemType_NotEqual:
-                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
-                this.singleQueryValueTextField= generateSingleQueryValueTextField(180);
+                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
             case FilteringItemType_RegularMatch:
-                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
-                this.singleQueryValueTextField= generateSingleQueryValueTextField(180);
+                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
             case FilteringItemType_GreatThan:
-                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
-                this.singleQueryValueTextField= generateSingleQueryValueTextField(180);
+                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
             case FilteringItemType_GreatThanEqual:
-                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
-                this.singleQueryValueTextField= generateSingleQueryValueTextField(180);
+                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
             case FilteringItemType_LessThan:
-                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
-                this.singleQueryValueTextField= generateSingleQueryValueTextField(180);
+                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
             case FilteringItemType_LessThanEqual:
-                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
-                this.singleQueryValueTextField= generateSingleQueryValueTextField(180);
+                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
             case FilteringItemType_SimilarTo:
-                this.filteringItemTypeSelection.setWidth(105,Unit.PIXELS);
-                HorizontalLayout fieldLayout=generateSimilarToQueryValueInputElements();
+                //this.filteringItemTypeSelection.setWidth(105,Unit.PIXELS);
+                HorizontalLayout fieldLayout = generateSimilarToQueryValueInputElements();
                 this.conditionValueInputElementsLayout.add(fieldLayout);
                 break;
             case FilteringItemType_Between:
-                this.filteringItemTypeSelection.setWidth(95,Unit.PIXELS);
-                HorizontalLayout betweenFieldLayout=generateBetweenQueryValueInputElements();
+                //this.filteringItemTypeSelection.setWidth(95,Unit.PIXELS);
+                HorizontalLayout betweenFieldLayout = generateBetweenQueryValueInputElements();
                 this.conditionValueInputElementsLayout.add(betweenFieldLayout);
                 break;
             case FilteringItemType_InValue:
-                this.filteringItemTypeSelection.setWidth(95,Unit.PIXELS);
-                this.multiValuePropertyInput=generateInValueQueryValueInputElements();
+                //this.filteringItemTypeSelection.setWidth(95,Unit.PIXELS);
+                this.multiValuePropertyInput = generateInValueQueryValueInputElements();
                 this.conditionValueInputElementsLayout.add(this.multiValuePropertyInput);
                 break;
             case FilteringItemType_NullValue:
-                this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
+                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
                 break;
         }
     }
 
     public Component generateSingleQueryValueTextField(int textFieldWidth) {
-        return null;
+        Component currentConditionValueEditor = null;
+        switch(this.attributeDataType){
+            case INT:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                binder.forField((TextField)currentConditionValueEditor).withConverter(new StringToIntegerConverter("该项属性值必须为INT类型"))
+                        .withValidator(new IntegerRangeValidator("该项属性值必须为INT类型", null, null))
+                        .bind(new ValueProvider<String, Integer>() {
+                            @Override
+                            public Integer apply(String s) {
+                                return new Integer(s);
+                            }
+                        }, new Setter<String, Integer>() {
+                            @Override
+                            public void accept(String s, Integer intValue) {}
+                        });
+                ((TextField) currentConditionValueEditor).setValue("0");
+                break;
+            case BYTE:break;
+            case DATE:break;
+            case LONG:break;
+            case FLOAT:break;
+            case SHORT:break;
+            case BINARY:break;
+            case DOUBLE:break;
+            case STRING:break;
+            case BOOLEAN:break;
+            case DECIMAL:break;
+            case TIMESTAMP:break;
+            case TIME:break;
+            case DATETIME:
+        }
+
+
+
+
+
+
+        return currentConditionValueEditor;
     }
 
     public HorizontalLayout generateBetweenQueryValueInputElements(){

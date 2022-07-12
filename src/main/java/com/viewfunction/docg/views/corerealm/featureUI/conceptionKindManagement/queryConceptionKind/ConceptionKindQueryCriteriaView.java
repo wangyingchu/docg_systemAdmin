@@ -10,6 +10,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.shared.Registration;
@@ -38,6 +39,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
     private Registration listener;
     private List<String> resultAttributesList;
     private QueryParameters queryParameters;
+    private Binder<String> queryConditionDataBinder;
     public ConceptionKindQueryCriteriaView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.SEARCH),"查询条件");
@@ -164,6 +166,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
         buttonsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,resultSetConfigButton);
 
         this.queryParameters = new QueryParameters();
+        this.queryConditionDataBinder = new Binder<>();
     }
 
     private void queryConceptionEntities(){
@@ -257,7 +260,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
     public void addQueryConditionItem(String attributeName, AttributeDataType attributeDataType){
         if(!resultAttributesList.contains(attributeName)){
             resultAttributesList.add(attributeName);
-            QueryConditionItemWidget queryConditionItemWidget = new QueryConditionItemWidget(attributeName,attributeDataType);
+            QueryConditionItemWidget queryConditionItemWidget = new QueryConditionItemWidget(attributeName,attributeDataType,this.queryConditionDataBinder);
             queryConditionItemWidget.setContainerDataInstanceQueryCriteriaView(this);
             if(resultAttributesList.size()==1){
                 //this one is the default query condition
