@@ -6,6 +6,10 @@ import com.vaadin.flow.component.button.ButtonVariant;
 
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.ComboBoxVariant;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.datepicker.DatePickerVariant;
+import com.vaadin.flow.component.datetimepicker.DateTimePicker;
+import com.vaadin.flow.component.datetimepicker.DateTimePickerVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -14,8 +18,11 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.component.timepicker.TimePicker;
+import com.vaadin.flow.component.timepicker.TimePickerVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.Setter;
+import com.vaadin.flow.data.binder.Validator;
 import com.vaadin.flow.data.converter.*;
 import com.vaadin.flow.data.validator.*;
 import com.vaadin.flow.function.ValueProvider;
@@ -334,6 +341,30 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             FilteringItemType_InValue,
                             FilteringItemType_NullValue);
                     break;
+                case DATETIME:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case TIME:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
                 case INT:
                     this.filteringItemTypeSelection.setItems(
                             FilteringItemType_Equal,
@@ -597,8 +628,18 @@ public class QueryConditionItemWidget extends VerticalLayout {
                         });
                 ((TextField) currentConditionValueEditor).setValue("0");
                 break;
-            case BYTE:break;
-            case DATE:break;
+            case BYTE:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                break;
+            case DATE:
+                currentConditionValueEditor = new DatePicker();
+                ((DatePicker)currentConditionValueEditor).addThemeVariants(DatePickerVariant.LUMO_SMALL);
+                ((DatePicker)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((DatePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                break;
             case LONG:
                 currentConditionValueEditor = new TextField();
                 ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
@@ -659,7 +700,12 @@ public class QueryConditionItemWidget extends VerticalLayout {
                         });
                 ((TextField) currentConditionValueEditor).setValue("0");
                 break;
-            case BINARY:break;
+            case BINARY:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                break;
             case DOUBLE:
                 currentConditionValueEditor = new TextField();
                 ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
@@ -686,7 +732,15 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
                 ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 break;
-            case BOOLEAN:break;
+            case BOOLEAN:
+                currentConditionValueEditor = new ComboBox();
+                ((ComboBox) currentConditionValueEditor).addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+                ((ComboBox) currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((ComboBox) currentConditionValueEditor).setPreventInvalidInput(true);
+                ((ComboBox) currentConditionValueEditor).setAllowCustomValue(false);
+                ((ComboBox) currentConditionValueEditor).setItems("true","false");
+                ((ComboBox) currentConditionValueEditor).setValue("true");
+                break;
             case DECIMAL:
                 currentConditionValueEditor = new TextField();
                 ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
@@ -707,9 +761,37 @@ public class QueryConditionItemWidget extends VerticalLayout {
                         });
                 ((TextField) currentConditionValueEditor).setValue("0.0");
                 break;
-            case TIMESTAMP:break;
-            case TIME:break;
+            case TIMESTAMP:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                binder.forField((TextField)currentConditionValueEditor)
+                        .withConverter(
+                                new StringToDateConverter())
+                        .withValidator((Validator)new DateTimeRangeValidator("该项属性值必须为TIMESTAMP类型",null,null) )
+                        .bind(new ValueProvider<String, Double>() {
+                            @Override
+                            public Double apply(String s) {
+                                return new Double(s);
+                            }
+                        }, new Setter<String, Double>() {
+                            @Override
+                            public void accept(String s, Double doubleValue) {}
+                        });
+                //((TextField) currentConditionValueEditor).setValue("0.0");
+                break;
+            case TIME:
+                currentConditionValueEditor = new TimePicker();
+                ((TimePicker)currentConditionValueEditor).addThemeVariants(TimePickerVariant.LUMO_SMALL);
+                ((TimePicker)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TimePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                break;
             case DATETIME:
+                currentConditionValueEditor = new DateTimePicker();
+                ((DateTimePicker)currentConditionValueEditor).addThemeVariants(DateTimePickerVariant.LUMO_SMALL);
+                ((DateTimePicker)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((DateTimePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
         }
         return currentConditionValueEditor;
     }
@@ -724,30 +806,5 @@ public class QueryConditionItemWidget extends VerticalLayout {
 
     public Component generateInValueQueryValueInputElements(){
         return null;
-    }
-
-    public AbstractField generateFilteringItemInput(String filterItemType){
-        switch (filterItemType) {
-            case FilteringItemType_Equal:
-                AbstractField resultAbstractField = new TextField();
-                ((TextField)resultAbstractField).addThemeVariants(TextFieldVariant.LUMO_SMALL);
-                ((TextField)resultAbstractField).setWidth(210,Unit.PIXELS);
-                ((TextField)resultAbstractField).getStyle().set("font-size","1.0rem");
-                break;
-        }
-
-
-
-
-
-
-
-
-
-        TextField textField = new TextField();
-        textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        textField.setWidth(210,Unit.PIXELS);
-        textField.getStyle().set("font-size","1.0rem");
-        return textField;
     }
 }
