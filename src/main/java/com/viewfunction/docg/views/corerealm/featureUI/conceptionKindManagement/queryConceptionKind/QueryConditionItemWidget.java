@@ -779,7 +779,6 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             @Override
                             public void accept(String s, Double doubleValue) {}
                         });
-                //((TextField) currentConditionValueEditor).setValue("0.0");
                 break;
             case TIME:
                 currentConditionValueEditor = new TimePicker();
