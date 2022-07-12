@@ -16,12 +16,14 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.Setter;
-import com.vaadin.flow.data.converter.StringToIntegerConverter;
-import com.vaadin.flow.data.validator.IntegerRangeValidator;
+import com.vaadin.flow.data.converter.*;
+import com.vaadin.flow.data.validator.*;
 import com.vaadin.flow.function.ValueProvider;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import dev.mett.vaadin.tooltip.Tooltips;
+
+import java.math.BigDecimal;
 
 public class QueryConditionItemWidget extends VerticalLayout {
 
@@ -597,24 +599,118 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 break;
             case BYTE:break;
             case DATE:break;
-            case LONG:break;
-            case FLOAT:break;
-            case SHORT:break;
+            case LONG:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                binder.forField((TextField)currentConditionValueEditor)
+                        .withConverter(
+                                new StringToLongConverter("该项属性值必须为LONG类型"))
+                        .withValidator(new LongRangeValidator("该项属性值必须为LONG类型", null, null))
+                        .bind(new ValueProvider<String, Long>() {
+                            @Override
+                            public Long apply(String s) {
+                                return new Long(s);
+                            }
+                        }, new Setter<String, Long>() {
+                            @Override
+                            public void accept(String s, Long longValue) {}
+                        });
+                ((TextField) currentConditionValueEditor).setValue("0");
+                break;
+            case FLOAT:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                binder.forField((TextField)currentConditionValueEditor)
+                        .withConverter(
+                                new StringToFloatConverter("该项属性值必须为FLOAT类型"))
+                        .withValidator(new FloatRangeValidator("该项属性值必须为FLOAT类型", null, null))
+                        .bind(new ValueProvider<String, Float>() {
+                            @Override
+                            public Float apply(String s) {
+                                return new Float(s);
+                            }
+                        }, new Setter<String, Float>() {
+                            @Override
+                            public void accept(String s, Float floatValue) {}
+                        });
+                ((TextField) currentConditionValueEditor).setValue("0.0");
+                break;
+            case SHORT:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                binder.forField((TextField)currentConditionValueEditor)
+                        .withConverter(
+                                new StringToIntegerConverter("该项属性值必须为SHORT类型"))
+                        .withValidator(new IntegerRangeValidator("该项属性值必须为SHORT类型", null, null))
+                        .bind(new ValueProvider<String, Integer>() {
+                            @Override
+                            public Integer apply(String s) {
+                                return new Integer(s);
+                            }
+                        }, new Setter<String, Integer>() {
+                            @Override
+                            public void accept(String s, Integer shortValue) {}
+                        });
+                ((TextField) currentConditionValueEditor).setValue("0");
+                break;
             case BINARY:break;
-            case DOUBLE:break;
-            case STRING:break;
+            case DOUBLE:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                binder.forField((TextField)currentConditionValueEditor)
+                        .withConverter(
+                                new StringToDoubleConverter("该项属性值必须为DOUBLE类型"))
+                        .withValidator(new DoubleRangeValidator("该项属性值必须为DOUBLE类型", null, null))
+                        .bind(new ValueProvider<String, Double>() {
+                            @Override
+                            public Double apply(String s) {
+                                return new Double(s);
+                            }
+                        }, new Setter<String, Double>() {
+                            @Override
+                            public void accept(String s, Double doubleValue) {}
+                        });
+                ((TextField) currentConditionValueEditor).setValue("0.0");
+                break;
+            case STRING:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                break;
             case BOOLEAN:break;
-            case DECIMAL:break;
+            case DECIMAL:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                binder.forField((TextField)currentConditionValueEditor)
+                        .withConverter(
+                                new StringToBigDecimalConverter("该项属性值必须为DECIMAL类型"))
+                        .withValidator(new BigDecimalRangeValidator("该项属性值必须为DECIMAL类型", null, null))
+                        .bind(new ValueProvider<String, BigDecimal>() {
+                            @Override
+                            public BigDecimal apply(String s) {
+                                return new BigDecimal(s);
+                            }
+                        }, new Setter<String, BigDecimal>() {
+                            @Override
+                            public void accept(String s, BigDecimal bigDecimalValue) {}
+                        });
+                ((TextField) currentConditionValueEditor).setValue("0.0");
+                break;
             case TIMESTAMP:break;
             case TIME:break;
             case DATETIME:
         }
-
-
-
-
-
-
         return currentConditionValueEditor;
     }
 
