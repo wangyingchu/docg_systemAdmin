@@ -268,16 +268,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 cleanFilteringItemInputElements();
                 String changedItem = valueChangeEvent.getValue();
                 if(changedItem != null){
-
                     renderFilteringItemInputElements(changedItem);
-
-
-
-                    //AbstractField filteringItem = generateFilteringItemInput(changedItem);
-                    //conditionValueInputElementsLayout.add(filteringItem);
-
-
-
                 }
             }
         });
@@ -796,14 +787,48 @@ public class QueryConditionItemWidget extends VerticalLayout {
     }
 
     public HorizontalLayout generateBetweenQueryValueInputElements(){
-        return null;
+        HorizontalLayout containerHorizontalLayout = new HorizontalLayout();
+        containerHorizontalLayout.setSpacing(false);
+        this.betweenQueryFromValueTextField = generateSingleQueryValueTextField(100);
+        containerHorizontalLayout.add(this.betweenQueryFromValueTextField);
+        Icon divIcon = VaadinIcon.MINUS.create();
+        divIcon.setSize("10px");
+        divIcon.getStyle().set("padding-left","3px").set("padding-right","3px");
+        containerHorizontalLayout.add(divIcon);
+        containerHorizontalLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+        this.betweenQueryToValueTextField = generateSingleQueryValueTextField(100);
+        containerHorizontalLayout.add(this.betweenQueryToValueTextField);
+        return containerHorizontalLayout;
     }
 
     public HorizontalLayout generateSimilarToQueryValueInputElements(){
-        return null;
+        HorizontalLayout containerHorizontalLayout=new HorizontalLayout();
+        containerHorizontalLayout.setSpacing(false);
+        this.similarToMatchingTypeSelector = new ComboBox();
+        this.similarToMatchingTypeSelector.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+        this.similarToMatchingTypeSelector.setWidth(65,Unit.PIXELS);
+        this.similarToMatchingTypeSelector.getStyle()
+                .set("--vaadin-combo-box-overlay-width", "130px")
+                .set("font-size","0.65rem")
+                .set("padding-right","5px");
+        this.similarToMatchingTypeSelector.setAllowCustomValue(false);
+        this.similarToMatchingTypeSelector.setItems(
+                SimilarToMatchingType_BeginWith,
+                SimilarToMatchingType_EndWith,
+                SimilarToMatchingType_Contain);
+        this.similarToMatchingTypeSelector.setValue(SimilarToMatchingType_BeginWith);
+        containerHorizontalLayout.add(this.similarToMatchingTypeSelector);
+        this.similarToConditionValueTextField = new TextField();
+        this.similarToConditionValueTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        this.similarToConditionValueTextField.setWidth(140,Unit.PIXELS);
+        this.similarToConditionValueTextField.getStyle().set("font-size","1.0rem");
+        containerHorizontalLayout.add(this.similarToConditionValueTextField);
+        return containerHorizontalLayout;
     }
 
     public Component generateInValueQueryValueInputElements(){
-        return null;
+        MultiValuePropertyInputWidget multiValuePropertyInput =new MultiValuePropertyInputWidget(215);
+        //multiValuePropertyInput.setQueryConditionItemView(this);
+        return multiValuePropertyInput;
     }
 }
