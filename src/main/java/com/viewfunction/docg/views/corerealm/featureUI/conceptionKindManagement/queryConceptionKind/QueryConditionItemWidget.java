@@ -82,13 +82,10 @@ public class QueryConditionItemWidget extends VerticalLayout {
     private Label isDefaultLabel;
     private Label joinTypeLabel;
     private Label isConvertedLabel;
-
-
     private Component singleQueryValueTextField;
     private Component multiValuePropertyInput;
     private Component betweenQueryFromValueTextField;
     private Component betweenQueryToValueTextField;
-
     private Binder<String> binder;
 
     public QueryConditionItemWidget(String attributeName, AttributeDataType attributeDataType,Binder<String> binder){
@@ -499,7 +496,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
         this.containerDataInstanceQueryCriteriaView = containerDataInstanceQueryCriteriaView;
     }
 
-    private AttributeDataType getAttributeDataType() {
+    public AttributeDataType getAttributeDataType() {
         return attributeDataType;
     }
 
@@ -600,7 +597,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
 
     public Component generateSingleQueryValueTextField(int textFieldWidth) {
         Component currentConditionValueEditor = null;
-        switch(this.attributeDataType){
+        switch(this.getAttributeDataType()){
             case INT:
                 currentConditionValueEditor = new TextField();
                 ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
@@ -828,7 +825,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
 
     public Component generateInValueQueryValueInputElements(){
         MultiValuePropertyInputWidget multiValuePropertyInput =new MultiValuePropertyInputWidget(215);
-        //multiValuePropertyInput.setQueryConditionItemView(this);
+        multiValuePropertyInput.setQueryConditionItemWidget(this);
         return multiValuePropertyInput;
     }
 }
