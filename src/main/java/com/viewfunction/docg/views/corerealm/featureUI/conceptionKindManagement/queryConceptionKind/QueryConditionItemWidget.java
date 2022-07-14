@@ -28,6 +28,7 @@ import com.vaadin.flow.data.validator.*;
 import com.vaadin.flow.function.ValueProvider;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
+import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.math.BigDecimal;
@@ -478,7 +479,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
     }
 
     private void cleanFilteringItemInputElements(){
-        //this.currentSelectedFilteringItemType = null;
+        this.currentSelectedFilteringItemType = null;
         this.conditionValueInputElementsLayout.removeAll();
     }
 
@@ -756,7 +757,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 binder.forField((TextField)currentConditionValueEditor)
                         .withConverter(
-                                new StringToDateConverter())
+                                new StringToTimeStampConverter())
                         .withValidator((Validator)new DateTimeRangeValidator("该项属性值必须为TIMESTAMP类型",null,null) )
                         .bind(new ValueProvider<String, Double>() {
                             @Override
