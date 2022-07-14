@@ -5,16 +5,19 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
+import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,52 +25,34 @@ import java.util.List;
 import java.util.Map;
 
 public class MultiValuePropertyInputWidget extends HorizontalLayout {
-
     private HorizontalLayout valuesDisplayContainer;
     private QueryConditionItemWidget queryConditionItemWidget;
     private AbstractField currentValueInputField;
     private List<Object> valuesList;
-
     private Map<Object,HorizontalLayout> valueDisplaySectionMap;
 
     public MultiValuePropertyInputWidget(int valueDisplayFieldWidth){
         this.valuesList=new ArrayList<Object>();
         this.valueDisplaySectionMap=new HashMap<Object,HorizontalLayout>();
 
-        Button addNewValueButton=new Button();
-        //addNewValueButton.setIcon(FontAwesome.PLUS_CIRCLE);
-        //addNewValueButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        //addNewValueButton.addStyleName(ValoTheme.BUTTON_TINY);
-
+        Button addNewValueButton = new Button();
+        addNewValueButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        addNewValueButton.setIcon(VaadinIcon.PLUS_CIRCLE.create());
+        Tooltips.getCurrent().setTooltip(addNewValueButton, "添加查询值");
         addNewValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 displayNewValueInput();
             }
         });
-
         add(addNewValueButton);
 
-        HorizontalLayout spacingDiv=new HorizontalLayout();
-        spacingDiv.setWidth(5, Unit.PIXELS);
-        add(spacingDiv);
-
-        //Panel valuesDisplayPanel=new Panel();
-        //valuesDisplayPanel.setWidth(valueDisplayFieldWidth,Unit.PIXELS);
-        //valuesDisplayPanel.addStyleName(ValoTheme.PANEL_BORDERLESS);
-        //addComponent(valuesDisplayPanel);
-
-        this.valuesDisplayContainer=new HorizontalLayout();
-        //valuesDisplayPanel.setContent(this.valuesDisplayContainer);
-add(this.valuesDisplayContainer);
-
-
-
+        this.valuesDisplayContainer = new HorizontalLayout();
+        this.valuesDisplayContainer.setWidth(valueDisplayFieldWidth,Unit.PIXELS);
+        Scroller queryConditionItemScroller = new Scroller(this.valuesDisplayContainer);
+        queryConditionItemScroller.setScrollDirection(Scroller.ScrollDirection.HORIZONTAL);
+        add(queryConditionItemScroller);
     }
-
-
-
-
 
     private void displayNewValueInput(){
         /*
@@ -175,16 +160,16 @@ add(this.valuesDisplayContainer);
     }
 
     private HorizontalLayout generateValueDisplaySection(final Object valueObject){
-        HorizontalLayout displayContainer=new HorizontalLayout();
-        Label newValueLabel=new Label(valueObject.toString());
-        //newValueLabel.addStyleName(ValoTheme.LABEL_BOLD);
-        Button removeValueButton=new Button();
-        //removeValueButton.setIcon(FontAwesome.REMOVE);
-        //removeValueButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        //removeValueButton.addStyleName(ValoTheme.BUTTON_LINK);
-       // removeValueButton.addStyleName(ValoTheme.BUTTON_TINY);
+        HorizontalLayout displayContainer = new HorizontalLayout();
+        displayContainer.setSpacing(false);
 
-
+        Label newValueLabel = new Label(valueObject.toString());
+        Button removeValueButton = new Button();
+        removeValueButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL);
+        Icon removeIcon = VaadinIcon.DEL_A.create();
+        removeIcon.setSize("18px");
+        removeValueButton.setIcon(removeIcon);
+        Tooltips.getCurrent().setTooltip(removeValueButton, "撤销该值");
         removeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -194,6 +179,7 @@ add(this.valuesDisplayContainer);
 
         displayContainer.add(newValueLabel);
         displayContainer.add(removeValueButton);
+        displayContainer.setVerticalComponentAlignment(Alignment.CENTER,newValueLabel);
         this.valueDisplaySectionMap.put(valueObject,displayContainer);
         return displayContainer;
     }

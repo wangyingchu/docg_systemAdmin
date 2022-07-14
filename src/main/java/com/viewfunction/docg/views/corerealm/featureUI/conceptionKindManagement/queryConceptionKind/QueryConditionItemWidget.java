@@ -824,7 +824,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
     }
 
     public Component generateInValueQueryValueInputElements(){
-        MultiValuePropertyInputWidget multiValuePropertyInput =new MultiValuePropertyInputWidget(215);
+        MultiValuePropertyInputWidget multiValuePropertyInput =new MultiValuePropertyInputWidget(165);
         multiValuePropertyInput.setQueryConditionItemWidget(this);
         return multiValuePropertyInput;
     }
