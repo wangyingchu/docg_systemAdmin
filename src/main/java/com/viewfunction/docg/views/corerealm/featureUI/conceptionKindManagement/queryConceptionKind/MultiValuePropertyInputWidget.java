@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -16,6 +17,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.timepicker.TimePicker;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -129,6 +131,18 @@ public class MultiValuePropertyInputWidget extends HorizontalLayout {
                 propertyValueObj=((TextField)this.currentValueInputField).getValue();
                 break;
             case SHORT:
+                propertyValueObj=((TextField)this.currentValueInputField).getValue();
+                break;
+            case TIME:
+                propertyValueObj=((TimePicker)this.currentValueInputField).getValue();
+                break;
+            case DATETIME:
+                propertyValueObj=((DateTimePicker)this.currentValueInputField).getValue();
+                break;
+            case TIMESTAMP:
+                propertyValueObj=((TextField)this.currentValueInputField).getValue();
+                break;
+            case DECIMAL:
                 propertyValueObj=((TextField)this.currentValueInputField).getValue();
                 break;
         }
