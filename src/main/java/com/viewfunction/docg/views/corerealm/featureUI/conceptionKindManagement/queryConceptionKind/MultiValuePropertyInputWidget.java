@@ -11,12 +11,14 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -55,64 +57,41 @@ public class MultiValuePropertyInputWidget extends HorizontalLayout {
     }
 
     private void displayNewValueInput(){
-        /*
-        final Window window = new Window();
-        window.setWidth(310.0f, Unit.PIXELS);
-        window.setResizable(false);
-        window.center();
-        window.setModal(true);
-        */
-
         VerticalLayout containerLayout=new VerticalLayout();
-        containerLayout.setSpacing(true);
-        containerLayout.setMargin(true);
-
-        Label inputValueSectionTitle=new Label("添加新的值");
-        //inputValueSectionTitle.addStyleName(ValoTheme.LABEL_COLORED);
-        //inputValueSectionTitle.addStyleName(ValoTheme.LABEL_BOLD);
-        containerLayout.add(inputValueSectionTitle);
+        containerLayout.setSpacing(false);
+        containerLayout.setMargin(false);
 
         HorizontalLayout valueInputFieldLayout=new HorizontalLayout();
         containerLayout.add(valueInputFieldLayout);
-        if(this.currentValueInputField!=null){
-            //this.currentValueInputField.discard();
-        }
-        this.currentValueInputField=(AbstractField)this.getQueryConditionItemWidget().generateSingleQueryValueTextField(170);
+        this.currentValueInputField = (AbstractField)this.getQueryConditionItemWidget().generateSingleQueryValueTextField(200);
         valueInputFieldLayout.add(this.currentValueInputField);
 
         HorizontalLayout spacingDiv=new HorizontalLayout();
-        spacingDiv.setWidth(20,Unit.PIXELS);
+        spacingDiv.setWidth(5,Unit.PIXELS);
         valueInputFieldLayout.add(spacingDiv);
 
         Button addNewButton=new Button("确定");
-        //addNewButton.addStyleName(ValoTheme.BUTTON_SMALL);
-        //addNewButton.setIcon(FontAwesome.CHECK_CIRCLE);
+        addNewButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addNewButton.setIcon(VaadinIcon.CHECK_SQUARE.create());
         addNewButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //boolean currentEditorValidateResult=currentValueInputField.isValid();
-
-                boolean currentEditorValidateResult = true;
-                if(!currentEditorValidateResult){
-                    /*
-                    Notification errorNotification = new Notification("数据校验错误",
-                            "当前输入值非法", Notification.Type.ERROR_MESSAGE);
-                    errorNotification.setPosition(Position.MIDDLE_CENTER);
-                    errorNotification.show(Page.getCurrent());
-                    errorNotification.setIcon(FontAwesome.WARNING);
-                    */
-                    return;
+                boolean currentEditorInValidateResult = false;
+                if(currentValueInputField instanceof TextField){
+                    currentEditorInValidateResult = ((TextField)currentValueInputField).isInvalid();
                 }
-                addNewValue();
-                //window.close();
+                if(currentEditorInValidateResult){
+                    CommonUIOperationUtil.showPopupNotification("数据校验错误,当前输入值非法", NotificationVariant.LUMO_ERROR);
+                }else{
+                    addNewValue();
+                }
             }
         });
         valueInputFieldLayout.add(addNewButton);
 
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"添加自定义查询/显示属性",null,true,310,180,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"添加自定义查询值",null,true,350,140,false);
         fixSizeWindow.setWindowContent(containerLayout);
         fixSizeWindow.setModel(true);
-        //addCustomQueryCriteriaUI.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 
