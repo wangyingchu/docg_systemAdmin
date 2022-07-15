@@ -759,25 +759,27 @@ public class QueryConditionItemWidget extends VerticalLayout {
                         .withConverter(
                                 new StringToTimeStampConverter())
                         .withValidator((Validator)new DateTimeRangeValidator("该项属性值必须为TIMESTAMP类型",null,null) )
-                        .bind(new ValueProvider<String, Double>() {
+                        .bind(new ValueProvider<String, Long>() {
                             @Override
-                            public Double apply(String s) {
-                                return new Double(s);
+                            public Long apply(String s) {
+                                return new Long(s);
                             }
-                        }, new Setter<String, Double>() {
+                        }, new Setter<String, Long>() {
                             @Override
-                            public void accept(String s, Double doubleValue) {}
+                            public void accept(String s, Long longValue) {}
                         });
                 break;
             case TIME:
                 currentConditionValueEditor = new TimePicker();
                 ((TimePicker)currentConditionValueEditor).addThemeVariants(TimePickerVariant.LUMO_SMALL);
+                //((TimePicker)currentConditionValueEditor).setStep(Duration.ofSeconds(1));
                 ((TimePicker)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
                 ((TimePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 break;
             case DATETIME:
                 currentConditionValueEditor = new DateTimePicker();
                 ((DateTimePicker)currentConditionValueEditor).addThemeVariants(DateTimePickerVariant.LUMO_SMALL);
+                //((DateTimePicker)currentConditionValueEditor).setStep(Duration.ofSeconds(1));
                 ((DateTimePicker)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
                 ((DateTimePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
         }
