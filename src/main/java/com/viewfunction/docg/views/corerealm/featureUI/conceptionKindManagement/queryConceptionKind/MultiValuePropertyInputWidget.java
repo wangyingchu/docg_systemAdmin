@@ -9,7 +9,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -160,7 +160,10 @@ public class MultiValuePropertyInputWidget extends HorizontalLayout {
         HorizontalLayout displayContainer = new HorizontalLayout();
         displayContainer.setSpacing(false);
 
-        Label newValueLabel = new Label(valueObject.toString());
+        Span propertyValueSpan = new Span(new Span(valueObject.toString()));
+        propertyValueSpan.addClassName("text-2xs");
+        propertyValueSpan.getElement().getThemeList().add("badge contrast");
+
         Button removeValueButton = new Button();
         removeValueButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL);
         Icon removeIcon = VaadinIcon.DEL_A.create();
@@ -174,9 +177,9 @@ public class MultiValuePropertyInputWidget extends HorizontalLayout {
             }
         });
 
-        displayContainer.add(newValueLabel);
+        displayContainer.add(propertyValueSpan);
         displayContainer.add(removeValueButton);
-        displayContainer.setVerticalComponentAlignment(Alignment.CENTER,newValueLabel);
+        displayContainer.setVerticalComponentAlignment(Alignment.CENTER,propertyValueSpan);
         this.valueDisplaySectionMap.put(valueObject,displayContainer);
         return displayContainer;
     }
