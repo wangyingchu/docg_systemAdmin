@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MultiValuePropertyInputWidget extends HorizontalLayout {
-    private HorizontalLayout valuesDisplayContainer;
+    private VerticalLayout valuesDisplayContainer;
     private QueryConditionItemWidget queryConditionItemWidget;
     private AbstractField currentValueInputField;
     private List<Object> valuesList;
@@ -51,8 +51,12 @@ public class MultiValuePropertyInputWidget extends HorizontalLayout {
         });
         add(addNewValueButton);
 
-        this.valuesDisplayContainer = new HorizontalLayout();
+        this.valuesDisplayContainer = new VerticalLayout();
+        this.valuesDisplayContainer.setMargin(false);
+        this.valuesDisplayContainer.setPadding(false);
+        this.valuesDisplayContainer.setSpacing(false);
         this.valuesDisplayContainer.setWidth(valueDisplayFieldWidth,Unit.PIXELS);
+
         Scroller queryConditionItemScroller = new Scroller(this.valuesDisplayContainer);
         queryConditionItemScroller.setScrollDirection(Scroller.ScrollDirection.HORIZONTAL);
         add(queryConditionItemScroller);
