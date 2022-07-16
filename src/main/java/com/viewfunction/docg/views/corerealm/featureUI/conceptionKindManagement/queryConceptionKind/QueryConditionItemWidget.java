@@ -541,57 +541,46 @@ public class QueryConditionItemWidget extends VerticalLayout {
         }
         switch(filteringItemType){
             case FilteringItemType_Equal:
-                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
                 this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
             case FilteringItemType_NotEqual:
-                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
                 this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
             case FilteringItemType_RegularMatch:
-                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
                 this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
             case FilteringItemType_GreatThan:
-                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
                 this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
             case FilteringItemType_GreatThanEqual:
-                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
                 this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
             case FilteringItemType_LessThan:
-                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
                 this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
             case FilteringItemType_LessThanEqual:
-                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
                 this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
             case FilteringItemType_SimilarTo:
-                //this.filteringItemTypeSelection.setWidth(105,Unit.PIXELS);
                 HorizontalLayout fieldLayout = generateSimilarToQueryValueInputElements();
                 this.conditionValueInputElementsLayout.add(fieldLayout);
                 break;
             case FilteringItemType_Between:
-                //this.filteringItemTypeSelection.setWidth(95,Unit.PIXELS);
-                HorizontalLayout betweenFieldLayout = generateBetweenQueryValueInputElements();
+                Component betweenFieldLayout = generateBetweenQueryValueInputElements();
                 this.conditionValueInputElementsLayout.add(betweenFieldLayout);
                 break;
             case FilteringItemType_InValue:
-                //this.filteringItemTypeSelection.setWidth(95,Unit.PIXELS);
                 this.multiValuePropertyInput = generateInValueQueryValueInputElements();
                 this.conditionValueInputElementsLayout.add(this.multiValuePropertyInput);
                 break;
             case FilteringItemType_NullValue:
-                //this.filteringItemTypeSelection.setWidth(155,Unit.PIXELS);
                 break;
         }
     }
@@ -785,7 +774,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
         return currentConditionValueEditor;
     }
 
-    public HorizontalLayout generateBetweenQueryValueInputElements(){
+    public Component generateBetweenQueryValueInputElements(){
         HorizontalLayout containerHorizontalLayout = new HorizontalLayout();
         containerHorizontalLayout.setSpacing(false);
         this.betweenQueryFromValueTextField = generateSingleQueryValueTextField(100);
