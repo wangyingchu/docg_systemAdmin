@@ -244,7 +244,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
         filterItemsContainer.add(filterItemsIcon);
         filterItemsIcon.setSize("10px");
         filterItemsIcon.getStyle().set("padding-right","3px");
-        filterItemsContainer.setVerticalComponentAlignment(Alignment.CENTER,filterItemsIcon);
+        filterItemsContainer.setVerticalComponentAlignment(Alignment.START,filterItemsIcon);
 
         this.filteringItemTypeSelection = new ComboBox();
         this.filteringItemTypeSelection.setPlaceholder("属性过滤条件");
@@ -775,18 +775,35 @@ public class QueryConditionItemWidget extends VerticalLayout {
     }
 
     public Component generateBetweenQueryValueInputElements(){
-        HorizontalLayout containerHorizontalLayout = new HorizontalLayout();
-        containerHorizontalLayout.setSpacing(false);
-        this.betweenQueryFromValueTextField = generateSingleQueryValueTextField(100);
-        containerHorizontalLayout.add(this.betweenQueryFromValueTextField);
-        Icon divIcon = VaadinIcon.MINUS.create();
-        divIcon.setSize("10px");
-        divIcon.getStyle().set("padding-left","3px").set("padding-right","3px");
-        containerHorizontalLayout.add(divIcon);
-        containerHorizontalLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
-        this.betweenQueryToValueTextField = generateSingleQueryValueTextField(100);
-        containerHorizontalLayout.add(this.betweenQueryToValueTextField);
-        return containerHorizontalLayout;
+        if(this.getAttributeDataType().equals(AttributeDataType.DATETIME)){
+            VerticalLayout containerHorizontalLayout = new VerticalLayout();
+            containerHorizontalLayout.setSpacing(false);
+            containerHorizontalLayout.setPadding(false);
+            containerHorizontalLayout.setMargin(false);
+            this.betweenQueryFromValueTextField = generateSingleQueryValueTextField(210);
+            containerHorizontalLayout.add(this.betweenQueryFromValueTextField);
+            Icon divIcon = VaadinIcon.MINUS.create();
+            divIcon.setSize("10px");
+            divIcon.getStyle().set("padding-left","3px").set("padding-right","3px");
+            containerHorizontalLayout.add(divIcon);
+            containerHorizontalLayout.add(divIcon);
+            this.betweenQueryToValueTextField = generateSingleQueryValueTextField(210);
+            containerHorizontalLayout.add(this.betweenQueryToValueTextField);
+            return containerHorizontalLayout;
+        }else{
+            HorizontalLayout containerHorizontalLayout = new HorizontalLayout();
+            containerHorizontalLayout.setSpacing(false);
+            this.betweenQueryFromValueTextField = generateSingleQueryValueTextField(100);
+            containerHorizontalLayout.add(this.betweenQueryFromValueTextField);
+            Icon divIcon = VaadinIcon.MINUS.create();
+            divIcon.setSize("10px");
+            divIcon.getStyle().set("padding-left","3px").set("padding-right","3px");
+            containerHorizontalLayout.add(divIcon);
+            containerHorizontalLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+            this.betweenQueryToValueTextField = generateSingleQueryValueTextField(100);
+            containerHorizontalLayout.add(this.betweenQueryToValueTextField);
+            return containerHorizontalLayout;
+        }
     }
 
     public HorizontalLayout generateSimilarToQueryValueInputElements(){
