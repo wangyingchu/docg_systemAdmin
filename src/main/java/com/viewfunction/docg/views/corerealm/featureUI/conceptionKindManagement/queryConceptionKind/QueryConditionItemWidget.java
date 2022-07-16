@@ -627,7 +627,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 currentConditionValueEditor = new DatePicker();
                 ((DatePicker)currentConditionValueEditor).addThemeVariants(DatePickerVariant.LUMO_SMALL);
                 ((DatePicker)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
-                ((DatePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                //((DatePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 break;
             case LONG:
                 currentConditionValueEditor = new TextField();
@@ -772,16 +772,15 @@ public class QueryConditionItemWidget extends VerticalLayout {
             case TIME:
                 currentConditionValueEditor = new TimePicker();
                 ((TimePicker)currentConditionValueEditor).addThemeVariants(TimePickerVariant.LUMO_SMALL);
-                //((TimePicker)currentConditionValueEditor).setStep(Duration.ofSeconds(1));
+                ((TimePicker)currentConditionValueEditor).setAutoOpen(true);
                 ((TimePicker)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
-                ((TimePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                //((TimePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 break;
             case DATETIME:
                 currentConditionValueEditor = new DateTimePicker();
                 ((DateTimePicker)currentConditionValueEditor).addThemeVariants(DateTimePickerVariant.LUMO_SMALL);
-                //((DateTimePicker)currentConditionValueEditor).setStep(Duration.ofSeconds(1));
                 ((DateTimePicker)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
-                ((DateTimePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                //((DateTimePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
         }
         return currentConditionValueEditor;
     }
