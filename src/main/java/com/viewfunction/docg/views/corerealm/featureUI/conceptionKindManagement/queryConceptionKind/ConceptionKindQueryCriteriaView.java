@@ -16,6 +16,7 @@ import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.FilteringItem;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
@@ -30,7 +31,10 @@ import com.viewfunction.docg.util.ResourceHolder;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 
 public class ConceptionKindQueryCriteriaView extends VerticalLayout {
     private String conceptionKindName;
@@ -170,6 +174,26 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
     }
 
     private void queryConceptionEntities(){
+
+
+        boolean isValidInput = queryConditionDataBinder.isValid();
+        Set<String> displayPropertiesSet = new HashSet<>();
+
+
+        criteriaItemsContainer.getChildren().forEach(new Consumer<Component>() {
+            @Override
+            public void accept(Component component) {
+                QueryConditionItemWidget currentQueryConditionItemWidget = (QueryConditionItemWidget)component;
+                FilteringItem currentFilteringItem = currentQueryConditionItemWidget.getFilteringItem();
+                QueryParameters.FilteringLogic currentFilteringLogic = currentQueryConditionItemWidget.getFilteringLogic();
+                if(currentQueryConditionItemWidget.isDefaultQueryConditionItem()){
+                    queryParameters.setDefaultFilteringItem(currentFilteringItem);
+                }else{
+                    queryParameters.addFilteringItem(currentFilteringItem, currentFilteringLogic);
+                }
+            }
+        });
+
         ConceptionKindQueriedEvent conceptionKindQueriedEvent = new ConceptionKindQueriedEvent();
         conceptionKindQueriedEvent.setConceptionKindName(this.conceptionKindName);
         conceptionKindQueriedEvent.setResultAttributesList(this.resultAttributesList);
