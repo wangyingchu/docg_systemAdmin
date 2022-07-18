@@ -36,9 +36,6 @@ import dev.mett.vaadin.tooltip.Tooltips;
 import java.math.BigDecimal;
 
 public class QueryConditionItemWidget extends VerticalLayout {
-
-    private Label propertyNameLabel;
-
     private boolean reverseCondition = false;
     private boolean isFirstQueryCondition = false;
     private String filteringLogic_AND="AND";
@@ -62,19 +59,13 @@ public class QueryConditionItemWidget extends VerticalLayout {
     private final String FilteringItemType_LessThanEqual="Less Than Equal";
     private final String FilteringItemType_InValue="In Value";
     private final String FilteringItemType_NullValue="Null Value";
-
     private final String SimilarToMatchingType_BeginWith="Begin With";
     private final String SimilarToMatchingType_EndWith="End With";
     private final String SimilarToMatchingType_Contain="Contain";
 
     private String currentSelectedFilteringItemType;
-    //private AbstractComponent singleQueryValueTextField;
-    //private MultiValuePropertyInput multiValuePropertyInput;
-    //private AbstractComponent betweenQueryFromValueTextField;
-    //private AbstractComponent betweenQueryToValueTextField;
     private ComboBox similarToMatchingTypeSelector;
     private TextField similarToConditionValueTextField;
-
 
     private AttributeDataType attributeDataType;
     private String attributeName;
@@ -608,7 +599,6 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             @Override
                             public void accept(String s, Integer intValue) {}
                         });
-                ((TextField) currentConditionValueEditor).setValue("0");
                 break;
             case BYTE:
                 currentConditionValueEditor = new TextField();
@@ -640,7 +630,6 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             @Override
                             public void accept(String s, Long longValue) {}
                         });
-                ((TextField) currentConditionValueEditor).setValue("0");
                 break;
             case FLOAT:
                 currentConditionValueEditor = new TextField();
@@ -660,7 +649,6 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             @Override
                             public void accept(String s, Float floatValue) {}
                         });
-                ((TextField) currentConditionValueEditor).setValue("0.0");
                 break;
             case SHORT:
                 currentConditionValueEditor = new TextField();
@@ -680,7 +668,6 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             @Override
                             public void accept(String s, Integer shortValue) {}
                         });
-                ((TextField) currentConditionValueEditor).setValue("0");
                 break;
             case BINARY:
                 currentConditionValueEditor = new TextField();
@@ -706,7 +693,6 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             @Override
                             public void accept(String s, Double doubleValue) {}
                         });
-                ((TextField) currentConditionValueEditor).setValue("0.0");
                 break;
             case STRING:
                 currentConditionValueEditor = new TextField();
@@ -716,12 +702,13 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 break;
             case BOOLEAN:
                 currentConditionValueEditor = new ComboBox();
-                ((ComboBox) currentConditionValueEditor).addThemeVariants(ComboBoxVariant.LUMO_SMALL);
-                ((ComboBox) currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
-                ((ComboBox) currentConditionValueEditor).setPreventInvalidInput(true);
-                ((ComboBox) currentConditionValueEditor).setAllowCustomValue(false);
-                ((ComboBox) currentConditionValueEditor).setItems("true","false");
-                ((ComboBox) currentConditionValueEditor).setValue("true");
+                ((ComboBox)currentConditionValueEditor).addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+                ((ComboBox)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((ComboBox)currentConditionValueEditor).setPreventInvalidInput(true);
+                ((ComboBox)currentConditionValueEditor).setAllowCustomValue(false);
+                ((ComboBox)currentConditionValueEditor).setItems("true","false");
+                ((ComboBox)currentConditionValueEditor).setValue("true");
+                ((ComboBox)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 break;
             case DECIMAL:
                 currentConditionValueEditor = new TextField();
@@ -741,7 +728,6 @@ public class QueryConditionItemWidget extends VerticalLayout {
                             @Override
                             public void accept(String s, BigDecimal bigDecimalValue) {}
                         });
-                ((TextField) currentConditionValueEditor).setValue("0.0");
                 break;
             case TIMESTAMP:
                 currentConditionValueEditor = new TextField();

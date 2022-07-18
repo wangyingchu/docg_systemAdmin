@@ -30,10 +30,7 @@ import com.viewfunction.docg.util.ResourceHolder;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class ConceptionKindQueryCriteriaView extends VerticalLayout {
@@ -174,21 +171,22 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
     }
 
     private void queryConceptionEntities(){
-
-
+        /*
         boolean isValidInput = queryConditionDataBinder.isValid();
         Set<String> displayPropertiesSet = new HashSet<>();
-
-
+        */
+        queryParameters.getAndFilteringItemsList().clear();
+        queryParameters.getOrFilteringItemsList().clear();
+        queryParameters.setDefaultFilteringItem(null);
         criteriaItemsContainer.getChildren().forEach(new Consumer<Component>() {
             @Override
             public void accept(Component component) {
                 QueryConditionItemWidget currentQueryConditionItemWidget = (QueryConditionItemWidget)component;
                 FilteringItem currentFilteringItem = currentQueryConditionItemWidget.getFilteringItem();
-                QueryParameters.FilteringLogic currentFilteringLogic = currentQueryConditionItemWidget.getFilteringLogic();
                 if(currentQueryConditionItemWidget.isDefaultQueryConditionItem()){
                     queryParameters.setDefaultFilteringItem(currentFilteringItem);
                 }else{
+                    QueryParameters.FilteringLogic currentFilteringLogic = currentQueryConditionItemWidget.getFilteringLogic();
                     queryParameters.addFilteringItem(currentFilteringItem, currentFilteringLogic);
                 }
             }
