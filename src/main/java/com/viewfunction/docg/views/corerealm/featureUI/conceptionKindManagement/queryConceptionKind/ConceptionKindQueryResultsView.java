@@ -1,10 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
@@ -27,11 +24,13 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
-import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
-import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
+import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.AddConceptionEntityToProcessingListView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.DeleteConceptionEntityView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.showConceptionEntity.ConceptionEntityDetailView;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -187,19 +186,33 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             HorizontalLayout actionButtonContainerLayout = new HorizontalLayout();
             actionButtonContainerLayout.setMargin(false);
             actionButtonContainerLayout.setSpacing(false);
-            Button linkButton = new Button();
-            linkButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            linkButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            linkButton.setIcon(VaadinIcon.EYE.create());
-            Tooltips.getCurrent().setTooltip(linkButton, "显示概念实体详情");
-            actionButtonContainerLayout.add(linkButton);
+            Button showDetailButton = new Button();
+            showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            showDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            showDetailButton.setIcon(VaadinIcon.EYE.create());
+            Tooltips.getCurrent().setTooltip(showDetailButton, "显示概念实体详情");
+            actionButtonContainerLayout.add(showDetailButton);
+            showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
 
-            Button infoButton = new Button();
-            infoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            infoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            infoButton.setIcon(VaadinIcon.INBOX.create());
-            Tooltips.getCurrent().setTooltip(infoButton, "加入待处理数据列表");
-            actionButtonContainerLayout.add(infoButton);
+                    renderConceptionEntityUI();
+                }
+            });
+
+
+            Button addToProcessListButton = new Button();
+            addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            addToProcessListButton.setIcon(VaadinIcon.INBOX.create());
+            Tooltips.getCurrent().setTooltip(addToProcessListButton, "加入待处理数据列表");
+            actionButtonContainerLayout.add(addToProcessListButton);
+            addToProcessListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    addConceptionEntityToProcessingList();
+                }
+            });
 
             Button deleteButton = new Button();
             deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -208,6 +221,13 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             deleteButton.setIcon(VaadinIcon.TRASH.create());
             Tooltips.getCurrent().setTooltip(deleteButton, "删除概念实体");
             actionButtonContainerLayout.add(deleteButton);
+            deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    deleteConceptionEntity();
+                }
+            });
+
 
             return actionButtonContainerLayout;
         }
@@ -234,5 +254,31 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         notification.add(notificationMessageContainer);
         notification.setDuration(3000);
         notification.open();
+    }
+
+    private void renderConceptionEntityUI(){
+        ConceptionEntityDetailView conceptionEntityDetailView = new ConceptionEntityDetailView();
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念类型 "+conceptionKindName+ " 实体数据查询",null,true);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailView);
+        conceptionEntityDetailView.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
+    }
+
+    private void addConceptionEntityToProcessingList(){
+        AddConceptionEntityToProcessingListView addConceptionEntityToProcessingListView = new AddConceptionEntityToProcessingListView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"将概念实例添加入待处理数据列表",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(addConceptionEntityToProcessingListView);
+        fixSizeWindow.setModel(true);
+        addConceptionEntityToProcessingListView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void deleteConceptionEntity(){
+        DeleteConceptionEntityView deleteConceptionEntityView = new DeleteConceptionEntityView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"删除概念实例",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(deleteConceptionEntityView);
+        fixSizeWindow.setModel(true);
+        deleteConceptionEntityView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }
