@@ -183,11 +183,15 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
             public void accept(Component component) {
                 QueryConditionItemWidget currentQueryConditionItemWidget = (QueryConditionItemWidget)component;
                 FilteringItem currentFilteringItem = currentQueryConditionItemWidget.getFilteringItem();
-                if(currentQueryConditionItemWidget.isDefaultQueryConditionItem()){
-                    queryParameters.setDefaultFilteringItem(currentFilteringItem);
+                if(currentFilteringItem != null){
+                    if(currentQueryConditionItemWidget.isDefaultQueryConditionItem()){
+                        queryParameters.setDefaultFilteringItem(currentFilteringItem);
+                    }else{
+                        QueryParameters.FilteringLogic currentFilteringLogic = currentQueryConditionItemWidget.getFilteringLogic();
+                        queryParameters.addFilteringItem(currentFilteringItem, currentFilteringLogic);
+                    }
                 }else{
-                    QueryParameters.FilteringLogic currentFilteringLogic = currentQueryConditionItemWidget.getFilteringLogic();
-                    queryParameters.addFilteringItem(currentFilteringItem, currentFilteringLogic);
+                    currentQueryConditionItemWidget.resetQueryConditionItem();
                 }
             }
         });

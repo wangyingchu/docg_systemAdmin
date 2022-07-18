@@ -143,7 +143,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
         attributeTypeLabel.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-70pct)").set("padding-left","20px");
         conditionStatusContainer.add(attributeTypeLabel);
 
-        isDefaultLabel = new Label("D");
+        isDefaultLabel = new Label("DEFAULT");
         isDefaultLabel.addClassNames("text-tertiary");
         isDefaultLabel.getStyle().set("font-size","0.5rem").set("color","var(--lumo-contrast-50pct)").set("padding-left","15px");
         conditionStatusContainer.add(isDefaultLabel);
@@ -473,9 +473,13 @@ public class QueryConditionItemWidget extends VerticalLayout {
         }
     }
 
-    private void cleanFilteringItemInputElements(){
+    public void cleanFilteringItemInputElements(){
         this.currentSelectedFilteringItemType = null;
         this.conditionValueInputElementsLayout.removeAll();
+    }
+
+    public void resetQueryConditionItem(){
+        this.filteringItemTypeSelection.setValue(null);
     }
 
     private void removeCurrentConditionLogic(){
@@ -830,7 +834,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
     public FilteringItem getFilteringItem(){
         String propertyName = this.attributeName;
         String propertyDataType = this.attributeDataType.toString();
-        FilteringItem targetFilteringItem=null;
+        FilteringItem targetFilteringItem = null;
         if(this.currentSelectedFilteringItemType == null){
             return null;
         }
@@ -914,7 +918,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 betweenQueryToValueObj = new Boolean(betweenQueryToValue.toString());
             }
         }else if(propertyDataType.equals(""+AttributeDataType.INT)){
-            if (singleQueryValue != null) {
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new Integer(singleQueryValue.toString());
             }
             if(betweenQueryFromValue != null) {
@@ -924,7 +928,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 betweenQueryToValueObj = new Integer(betweenQueryToValue.toString());
             }
         }else if(propertyDataType.equals(""+AttributeDataType.SHORT)){
-            if (singleQueryValue != null) {
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new Short(singleQueryValue.toString());
             }
             if(betweenQueryFromValue != null) {
@@ -934,7 +938,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 betweenQueryToValueObj = new Short(betweenQueryToValue.toString());
             }
         }else if(propertyDataType.equals(""+AttributeDataType.LONG)){
-            if (singleQueryValue != null) {
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new Long(singleQueryValue.toString());
             }
             if(betweenQueryFromValue != null) {
@@ -944,7 +948,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 betweenQueryToValueObj = new Long(betweenQueryToValue.toString());
             }
         }else if(propertyDataType.equals(""+AttributeDataType.FLOAT)){
-            if (singleQueryValue != null) {
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new Float(singleQueryValue.toString());
             }
             if(betweenQueryFromValue != null) {
@@ -954,7 +958,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 betweenQueryToValueObj = new Float(betweenQueryToValue.toString());
             }
         }else if(propertyDataType.equals(""+AttributeDataType.DOUBLE)){
-            if (singleQueryValue != null) {
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new Double(singleQueryValue.toString());
             }
             if(betweenQueryFromValue != null) {
@@ -1016,7 +1020,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
         }else if(propertyDataType.equals(""+AttributeDataType.BINARY)){
 
         }else if(propertyDataType.equals(""+AttributeDataType.BYTE)){
-            if (singleQueryValue != null) {
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new Byte(singleQueryValue.toString());
             }
             if(betweenQueryFromValue != null) {
@@ -1026,7 +1030,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 betweenQueryToValueObj = new Byte(betweenQueryToValue.toString());
             }
         }else if(propertyDataType.equals(""+AttributeDataType.DECIMAL)){
-            if (singleQueryValue != null) {
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new BigDecimal(singleQueryValue.toString());
             }
             if(betweenQueryFromValue != null) {
@@ -1039,14 +1043,14 @@ public class QueryConditionItemWidget extends VerticalLayout {
 
         switch(this.currentSelectedFilteringItemType){
             case FilteringItemType_Equal:
-                if(singleQueryValue != null){
+                if(singleQueryValueObj != null){
                     targetFilteringItem = new EqualFilteringItem(propertyName,singleQueryValueObj);
                     break;
                 }else{
                     return null;
                 }
             case FilteringItemType_NotEqual:
-                if(singleQueryValue != null){
+                if(singleQueryValueObj != null){
                     targetFilteringItem = new NotEqualFilteringItem(propertyName,singleQueryValueObj);
                     break;
                 }else{
@@ -1060,28 +1064,28 @@ public class QueryConditionItemWidget extends VerticalLayout {
                     return null;
                 }
             case FilteringItemType_GreatThan:
-                if(singleQueryValue != null){
+                if(singleQueryValueObj != null){
                     targetFilteringItem  = new GreaterThanFilteringItem(propertyName,singleQueryValueObj);
                     break;
                 }else{
                     return null;
                 }
             case FilteringItemType_GreatThanEqual:
-                if(singleQueryValue != null){
+                if(singleQueryValueObj != null){
                     targetFilteringItem = new GreaterThanEqualFilteringItem(propertyName,singleQueryValueObj);
                     break;
                 }else{
                     return null;
                 }
             case FilteringItemType_LessThan:
-                if(singleQueryValue != null){
+                if(singleQueryValueObj != null){
                     targetFilteringItem = new LessThanFilteringItem(propertyName,singleQueryValueObj);
                     break;
                 }else{
                     return null;
                 }
             case FilteringItemType_LessThanEqual:
-                if(singleQueryValue != null){
+                if(singleQueryValueObj != null){
                     targetFilteringItem = new LessThanEqualFilteringItem(propertyName,singleQueryValueObj);
                     break;
                 }else{
