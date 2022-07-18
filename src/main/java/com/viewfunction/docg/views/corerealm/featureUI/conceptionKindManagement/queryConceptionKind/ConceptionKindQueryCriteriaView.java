@@ -7,6 +7,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -26,6 +27,7 @@ import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -41,6 +43,9 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
     private List<String> resultAttributesList;
     private QueryParameters queryParameters;
     private Binder<String> queryConditionDataBinder;
+    private boolean defaultQueryConditionIsSet = true;
+    private boolean otherQueryConditionsAreSet = false;
+
     public ConceptionKindQueryCriteriaView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.SEARCH),"查询条件");
@@ -171,36 +176,42 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
     }
 
     private void queryConceptionEntities(){
-        /*
-        boolean isValidInput = queryConditionDataBinder.isValid();
-        Set<String> displayPropertiesSet = new HashSet<>();
-        */
         queryParameters.getAndFilteringItemsList().clear();
         queryParameters.getOrFilteringItemsList().clear();
         queryParameters.setDefaultFilteringItem(null);
+        setDefaultQueryConditionIsSet(true);
+        setOtherQueryConditionsAreSet(false);
+
         criteriaItemsContainer.getChildren().forEach(new Consumer<Component>() {
             @Override
             public void accept(Component component) {
                 QueryConditionItemWidget currentQueryConditionItemWidget = (QueryConditionItemWidget)component;
                 FilteringItem currentFilteringItem = currentQueryConditionItemWidget.getFilteringItem();
-                if(currentFilteringItem != null){
-                    if(currentQueryConditionItemWidget.isDefaultQueryConditionItem()){
-                        queryParameters.setDefaultFilteringItem(currentFilteringItem);
-                    }else{
+                if(currentQueryConditionItemWidget.isDefaultQueryConditionItem() & currentFilteringItem == null){
+                    setDefaultQueryConditionIsSet(false);
+                }
+                if(currentQueryConditionItemWidget.isDefaultQueryConditionItem()){
+                    queryParameters.setDefaultFilteringItem(currentFilteringItem);
+                }else{
+                    if(currentFilteringItem != null){
                         QueryParameters.FilteringLogic currentFilteringLogic = currentQueryConditionItemWidget.getFilteringLogic();
                         queryParameters.addFilteringItem(currentFilteringItem, currentFilteringLogic);
+                        setOtherQueryConditionsAreSet(true);
+                    }else{
+                        currentQueryConditionItemWidget.resetQueryConditionItem();
                     }
-                }else{
-                    currentQueryConditionItemWidget.resetQueryConditionItem();
                 }
             }
         });
-
-        ConceptionKindQueriedEvent conceptionKindQueriedEvent = new ConceptionKindQueriedEvent();
-        conceptionKindQueriedEvent.setConceptionKindName(this.conceptionKindName);
-        conceptionKindQueriedEvent.setResultAttributesList(this.resultAttributesList);
-        conceptionKindQueriedEvent.setQueryParameters(this.queryParameters);
-        ResourceHolder.getApplicationBlackboard().fire(conceptionKindQueriedEvent);
+        if(!defaultQueryConditionIsSet & otherQueryConditionsAreSet){
+            CommonUIOperationUtil.showPopupNotification("请设定默认查询条件的属性过滤值", NotificationVariant.LUMO_ERROR);
+        }else{
+            ConceptionKindQueriedEvent conceptionKindQueriedEvent = new ConceptionKindQueriedEvent();
+            conceptionKindQueriedEvent.setConceptionKindName(this.conceptionKindName);
+            conceptionKindQueriedEvent.setResultAttributesList(this.resultAttributesList);
+            conceptionKindQueriedEvent.setQueryParameters(this.queryParameters);
+            ResourceHolder.getApplicationBlackboard().fire(conceptionKindQueriedEvent);
+        }
     }
 
     @Override
@@ -294,5 +305,13 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout {
             }
             criteriaItemsContainer.add(queryConditionItemWidget);
         }
+    }
+
+    private void setDefaultQueryConditionIsSet(boolean defaultQueryConditionIsSet) {
+        this.defaultQueryConditionIsSet = defaultQueryConditionIsSet;
+    }
+
+    private void setOtherQueryConditionsAreSet(boolean otherQueryConditionsAreSet) {
+        this.otherQueryConditionsAreSet = otherQueryConditionsAreSet;
     }
 }
