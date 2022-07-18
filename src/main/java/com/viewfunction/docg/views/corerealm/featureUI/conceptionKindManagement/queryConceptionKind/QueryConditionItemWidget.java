@@ -921,50 +921,50 @@ public class QueryConditionItemWidget extends VerticalLayout {
             if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new Integer(singleQueryValue.toString());
             }
-            if(betweenQueryFromValue != null) {
+            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
                 betweenQueryFromValueObj = new Integer(betweenQueryFromValue.toString());
             }
-            if(betweenQueryToValue != null) {
+            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
                 betweenQueryToValueObj = new Integer(betweenQueryToValue.toString());
             }
         }else if(propertyDataType.equals(""+AttributeDataType.SHORT)){
             if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new Short(singleQueryValue.toString());
             }
-            if(betweenQueryFromValue != null) {
+            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
                 betweenQueryFromValueObj = new Short(betweenQueryFromValue.toString());
             }
-            if(betweenQueryToValue != null) {
+            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
                 betweenQueryToValueObj = new Short(betweenQueryToValue.toString());
             }
         }else if(propertyDataType.equals(""+AttributeDataType.LONG)){
             if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new Long(singleQueryValue.toString());
             }
-            if(betweenQueryFromValue != null) {
+            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
                 betweenQueryFromValueObj = new Long(betweenQueryFromValue.toString());
             }
-            if(betweenQueryToValue != null) {
+            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
                 betweenQueryToValueObj = new Long(betweenQueryToValue.toString());
             }
         }else if(propertyDataType.equals(""+AttributeDataType.FLOAT)){
             if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new Float(singleQueryValue.toString());
             }
-            if(betweenQueryFromValue != null) {
+            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
                 betweenQueryFromValueObj = new Float(betweenQueryFromValue.toString());
             }
-            if(betweenQueryToValue != null) {
+            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
                 betweenQueryToValueObj = new Float(betweenQueryToValue.toString());
             }
         }else if(propertyDataType.equals(""+AttributeDataType.DOUBLE)){
             if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new Double(singleQueryValue.toString());
             }
-            if(betweenQueryFromValue != null) {
+            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
                 betweenQueryFromValueObj = new Double(betweenQueryFromValue.toString());
             }
-            if(betweenQueryToValue != null) {
+            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
                 betweenQueryToValueObj = new Double(betweenQueryToValue.toString());
             }
         }else if(propertyDataType.equals(""+AttributeDataType.DATE)){
@@ -1012,7 +1012,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 singleQueryValueObj = singleQueryValue.toString();
             }
             if(betweenQueryFromValue != null) {
-                betweenQueryFromValueObj =betweenQueryFromValue.toString();
+                betweenQueryFromValueObj = betweenQueryFromValue.toString();
             }
             if(betweenQueryToValue != null) {
                 betweenQueryToValueObj = betweenQueryToValue.toString();
@@ -1023,20 +1023,20 @@ public class QueryConditionItemWidget extends VerticalLayout {
             if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new Byte(singleQueryValue.toString());
             }
-            if(betweenQueryFromValue != null) {
+            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
                 betweenQueryFromValueObj = new Byte(betweenQueryFromValue.toString());
             }
-            if(betweenQueryToValue != null) {
+            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
                 betweenQueryToValueObj = new Byte(betweenQueryToValue.toString());
             }
         }else if(propertyDataType.equals(""+AttributeDataType.DECIMAL)){
             if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new BigDecimal(singleQueryValue.toString());
             }
-            if(betweenQueryFromValue != null) {
+            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
                 betweenQueryFromValueObj = new BigDecimal(betweenQueryFromValue.toString());
             }
-            if(betweenQueryToValue != null) {
+            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
                 betweenQueryToValueObj = new BigDecimal(betweenQueryToValue.toString());
             }
         }
@@ -1092,7 +1092,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                     return null;
                 }
             case FilteringItemType_SimilarTo:
-                SimilarFilteringItem.MatchingType matchingType=null;
+                SimilarFilteringItem.MatchingType matchingType = null;
                 String matchingTypeValue=this.similarToMatchingTypeSelector.getValue().toString();
                 if(matchingTypeValue.equals(SimilarToMatchingType_BeginWith)){
                     matchingType= SimilarFilteringItem.MatchingType.BeginWith;
@@ -1104,14 +1104,14 @@ public class QueryConditionItemWidget extends VerticalLayout {
                     matchingType= SimilarFilteringItem.MatchingType.Contain;
                 }
                 if(this.similarToConditionValueTextField.getValue()!=null){
-                    targetFilteringItem=new SimilarFilteringItem(propertyName, this.similarToConditionValueTextField.getValue().toString(),matchingType);
+                    targetFilteringItem = new SimilarFilteringItem(propertyName, this.similarToConditionValueTextField.getValue().toString(),matchingType);
                     break;
                 }else{
                     return null;
                 }
             case FilteringItemType_Between:
-                if(betweenQueryFromValue != null && betweenQueryToValue != null){
-                    targetFilteringItem=new BetweenFilteringItem(propertyName,betweenQueryFromValueObj,betweenQueryToValueObj);
+                if(betweenQueryFromValueObj != null && betweenQueryToValueObj != null){
+                    targetFilteringItem = new BetweenFilteringItem(propertyName,betweenQueryFromValueObj,betweenQueryToValueObj);
                     break;
                 }else{
                     return null;
