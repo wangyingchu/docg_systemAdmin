@@ -11,15 +11,18 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindRemovedEvent;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntityDeletedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
+
+import java.util.List;
 
 public class DeleteConceptionEntityView extends VerticalLayout {
 
@@ -73,14 +76,21 @@ public class DeleteConceptionEntityView extends VerticalLayout {
         try {
             ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
             if(targetConceptionKind != null){
-                boolean operationResult = targetConceptionKind.deleteEntity(conceptionEntityValue.getConceptionEntityUID());
-                if(operationResult){
-                    ConceptionKindRemovedEvent conceptionKindRemovedEvent = new ConceptionKindRemovedEvent();
-                    conceptionKindRemovedEvent.setConceptionKindName(this.conceptionKind);
-                    ResourceHolder.getApplicationBlackboard().fire(conceptionKindRemovedEvent);
-                    CommonUIOperationUtil.showPopupNotification("概念实体 "+conceptionKind+" - "+conceptionEntityValue.getConceptionEntityUID()+" 删除操作成功", NotificationVariant.LUMO_SUCCESS);
-                }else{
+                ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(conceptionEntityValue.getConceptionEntityUID());
+                if(targetConceptionEntity == null){
                     CommonUIOperationUtil.showPopupNotification("概念实体 "+conceptionKind+" - "+conceptionEntityValue.getConceptionEntityUID()+" 删除操作失败",NotificationVariant.LUMO_ERROR);
+                }else{
+                    List<String> entityBelongedConceptionKinds =targetConceptionEntity.getAllConceptionKindNames();
+                    boolean operationResult = targetConceptionKind.deleteEntity(conceptionEntityValue.getConceptionEntityUID());
+                    if(operationResult){
+                        ConceptionEntityDeletedEvent conceptionEntityDeletedEvent = new ConceptionEntityDeletedEvent();
+                        conceptionEntityDeletedEvent.setConceptionEntityUID(conceptionEntityValue.getConceptionEntityUID());
+                        conceptionEntityDeletedEvent.setEntityAllConceptionKindNames(entityBelongedConceptionKinds);
+                        ResourceHolder.getApplicationBlackboard().fire(conceptionEntityDeletedEvent);
+                        CommonUIOperationUtil.showPopupNotification("概念实体 "+conceptionKind+" - "+conceptionEntityValue.getConceptionEntityUID()+" 删除操作成功", NotificationVariant.LUMO_SUCCESS);
+                    }else{
+                        CommonUIOperationUtil.showPopupNotification("概念实体 "+conceptionKind+" - "+conceptionEntityValue.getConceptionEntityUID()+" 删除操作失败",NotificationVariant.LUMO_ERROR);
+                    }
                 }
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念实体 "+conceptionKind+" - "+conceptionEntityValue.getConceptionEntityUID()+" 删除操作失败",NotificationVariant.LUMO_ERROR);
@@ -93,10 +103,6 @@ public class DeleteConceptionEntityView extends VerticalLayout {
             throw new RuntimeException(e);
         }
     }
-
-
-
-
 
     public Dialog getContainerDialog() {
         return containerDialog;

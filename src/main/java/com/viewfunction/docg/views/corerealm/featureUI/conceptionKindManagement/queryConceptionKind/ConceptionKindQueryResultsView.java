@@ -276,7 +276,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
     private void deleteConceptionEntity(ConceptionEntityValue conceptionEntityValue){
         DeleteConceptionEntityView deleteConceptionEntityView = new DeleteConceptionEntityView(conceptionKindName,conceptionEntityValue);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除概念实例",null,true,600,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除概念实体",null,true,600,210,false);
         fixSizeWindow.setWindowContent(deleteConceptionEntityView);
         fixSizeWindow.setModel(true);
         deleteConceptionEntityView.setContainerDialog(fixSizeWindow);
