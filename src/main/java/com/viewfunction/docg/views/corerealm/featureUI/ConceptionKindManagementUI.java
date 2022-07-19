@@ -33,6 +33,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntityDeletedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCreatedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindRemovedEvent;
@@ -53,7 +54,8 @@ import java.util.*;
 public class ConceptionKindManagementUI extends VerticalLayout implements
         ConceptionKindCreatedEvent.ConceptionKindCreatedListener,
         ConceptionKindCleanedEvent.ConceptionKindCleanedListener,
-        ConceptionKindRemovedEvent.ConceptionKindRemovedListener{
+        ConceptionKindRemovedEvent.ConceptionKindRemovedListener,
+        ConceptionEntityDeletedEvent.ConceptionEntityDeletedListener{
 
     private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
     private Registration listener;
@@ -695,5 +697,23 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         conceptionKindNameFilterField.setValue("");
         conceptionKindDescFilterField.setValue("");
         this.conceptionKindsMetaInfoView.refreshAll();
+    }
+
+    @Override
+    public void receivedConceptionEntityDeletedEvent(ConceptionEntityDeletedEvent event) {
+        if(event.getEntityAllConceptionKindNames() != null){
+            List<String> entityAllConceptionKindNamesList = event.getEntityAllConceptionKindNames();
+            ListDataProvider dtaProvider=(ListDataProvider)conceptionKindMetaInfoGrid.getDataProvider();
+            Collection<EntityStatisticsInfo> entityStatisticsInfoList = dtaProvider.getItems();
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
+                if(entityAllConceptionKindNamesList.contains(currentEntityStatisticsInfo.getEntityKindName())){
+                    long orgEntitiesCount = currentEntityStatisticsInfo.getEntitiesCount();
+                    if(orgEntitiesCount >=1){
+                        currentEntityStatisticsInfo.setEntitiesCount(orgEntitiesCount-1);
+                    }
+                }
+            }
+            dtaProvider.refreshAll();
+        }
     }
 }

@@ -44,7 +44,7 @@ import java.util.*;
 
 public class ConceptionKindQueryResultsView extends VerticalLayout implements
         ConceptionKindQueriedEvent.ConceptionKindQueriedListener,
-        ConceptionEntityDeletedEvent.ConceptionEntityDeletedListener{
+        ConceptionEntityDeletedEvent.ConceptionEntityDeletedListener {
     private String conceptionKindName;
     private Registration listener;
     private Grid<ConceptionEntityValue> queryResultGrid;
