@@ -13,6 +13,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
@@ -25,6 +26,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntityDeletedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
@@ -41,7 +43,8 @@ import java.time.format.FormatStyle;
 import java.util.*;
 
 public class ConceptionKindQueryResultsView extends VerticalLayout implements
-        ConceptionKindQueriedEvent.ConceptionKindQueriedListener {
+        ConceptionKindQueriedEvent.ConceptionKindQueriedListener,
+        ConceptionEntityDeletedEvent.ConceptionEntityDeletedListener{
     private String conceptionKindName;
     private Registration listener;
     private Grid<ConceptionEntityValue> queryResultGrid;
@@ -177,6 +180,27 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         listener.remove();
         super.onDetach(detachEvent);
         ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
+
+    @Override
+    public void receivedConceptionEntityDeletedEvent(ConceptionEntityDeletedEvent event) {
+        List<String> deletedEntityAllConceptionKinds = event.getEntityAllConceptionKindNames();
+        if(deletedEntityAllConceptionKinds.contains(conceptionKindName)){
+            String conceptionEntityUID = event.getConceptionEntityUID();
+            ListDataProvider dtaProvider=(ListDataProvider)queryResultGrid.getDataProvider();
+            ConceptionEntityValue conceptionEntityValueToDelete = null;
+            Collection<ConceptionEntityValue> conceptionEntityValueList = dtaProvider.getItems();
+            for(ConceptionEntityValue currentConceptionEntityValue:conceptionEntityValueList){
+                if(currentConceptionEntityValue.getConceptionEntityUID().equals(conceptionEntityUID)){
+                    conceptionEntityValueToDelete = currentConceptionEntityValue;
+                    break;
+                }
+            }
+            if(conceptionEntityValueToDelete != null){
+                dtaProvider.getItems().remove(conceptionEntityValueToDelete);
+            }
+            dtaProvider.refreshAll();
+        }
     }
 
     private class ConceptionEntityActionButtonsValueProvider implements ValueProvider<ConceptionEntityValue,HorizontalLayout>{
