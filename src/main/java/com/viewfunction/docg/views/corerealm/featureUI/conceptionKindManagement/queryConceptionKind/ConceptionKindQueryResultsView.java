@@ -180,9 +180,8 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     }
 
     private class ConceptionEntityActionButtonsValueProvider implements ValueProvider<ConceptionEntityValue,HorizontalLayout>{
-
         @Override
-        public HorizontalLayout apply(ConceptionEntityValue o) {
+        public HorizontalLayout apply(ConceptionEntityValue conceptionEntityValue) {
             HorizontalLayout actionButtonContainerLayout = new HorizontalLayout();
             actionButtonContainerLayout.setMargin(false);
             actionButtonContainerLayout.setSpacing(false);
@@ -195,11 +194,11 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-
-                    renderConceptionEntityUI();
+                    if(conceptionEntityValue != null){
+                        renderConceptionEntityUI(conceptionEntityValue);
+                    }
                 }
             });
-
 
             Button addToProcessListButton = new Button();
             addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -210,7 +209,9 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             addToProcessListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    addConceptionEntityToProcessingList();
+                    if(conceptionEntityValue != null){
+                        addConceptionEntityToProcessingList(conceptionEntityValue);
+                    }
                 }
             });
 
@@ -224,11 +225,11 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    deleteConceptionEntity();
+                    if(conceptionEntityValue != null){
+                        deleteConceptionEntity(conceptionEntityValue);
+                    }
                 }
             });
-
-
             return actionButtonContainerLayout;
         }
     }
@@ -256,7 +257,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         notification.open();
     }
 
-    private void renderConceptionEntityUI(){
+    private void renderConceptionEntityUI(ConceptionEntityValue conceptionEntityValue){
         ConceptionEntityDetailView conceptionEntityDetailView = new ConceptionEntityDetailView();
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念类型 "+conceptionKindName+ " 实体数据查询",null,true);
         fullScreenWindow.setWindowContent(conceptionEntityDetailView);
@@ -264,7 +265,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         fullScreenWindow.show();
     }
 
-    private void addConceptionEntityToProcessingList(){
+    private void addConceptionEntityToProcessingList(ConceptionEntityValue conceptionEntityValue){
         AddConceptionEntityToProcessingListView addConceptionEntityToProcessingListView = new AddConceptionEntityToProcessingListView();
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"将概念实例添加入待处理数据列表",null,true,600,210,false);
         fixSizeWindow.setWindowContent(addConceptionEntityToProcessingListView);
@@ -273,9 +274,9 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         fixSizeWindow.show();
     }
 
-    private void deleteConceptionEntity(){
-        DeleteConceptionEntityView deleteConceptionEntityView = new DeleteConceptionEntityView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"删除概念实例",null,true,600,210,false);
+    private void deleteConceptionEntity(ConceptionEntityValue conceptionEntityValue){
+        DeleteConceptionEntityView deleteConceptionEntityView = new DeleteConceptionEntityView(conceptionKindName,conceptionEntityValue);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除概念实例",null,true,600,210,false);
         fixSizeWindow.setWindowContent(deleteConceptionEntityView);
         fixSizeWindow.setModel(true);
         deleteConceptionEntityView.setContainerDialog(fixSizeWindow);
