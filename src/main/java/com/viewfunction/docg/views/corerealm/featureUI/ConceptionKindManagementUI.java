@@ -552,7 +552,15 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
     private void renderConceptionKindQueryUI(EntityStatisticsInfo entityStatisticsInfo){
         ConceptionKindQueryUI conceptionKindQueryUI = new ConceptionKindQueryUI(entityStatisticsInfo.getEntityKindName());
-        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念类型 "+entityStatisticsInfo.getEntityKindName()+ " 实体数据查询",null,true);
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("12px");
+        conceptionKindIcon.getStyle().set("padding-right","3px");
+        List<Component> actionComponentList = new ArrayList<>();
+        actionComponentList.add(conceptionKindIcon);
+        Label conceptionKindName = new Label(entityStatisticsInfo.getEntityKindName());
+        actionComponentList.add(conceptionKindName);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念类型实体数据查询",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(conceptionKindQueryUI);
         fullScreenWindow.show();
     }

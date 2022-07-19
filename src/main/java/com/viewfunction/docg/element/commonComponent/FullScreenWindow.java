@@ -20,7 +20,7 @@ public class FullScreenWindow extends Dialog {
 
     private VerticalLayout windowsContentContainerLayout;
 
-    public FullScreenWindow(Icon titleIcon, String titleContent, List<Component> actionComponentsList, boolean displayCloseButton){
+    public FullScreenWindow(Icon titleIcon, String titleContent,List<Component> titleComponentsList, List<Component> actionComponentsList, boolean displayCloseButton){
         this.setModal(false);
         this.setResizable(false);
         this.setCloseOnEsc(false);
@@ -46,13 +46,26 @@ public class FullScreenWindow extends Dialog {
             titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.AUTO,titleIcon);
         }
 
-        Label titleLabel = new Label(titleContent);
-        titleLabel.getStyle().set("font-size","var(--lumo-font-size-m)").set("color","var(--lumo-primary-color)");
+        HorizontalLayout titleElementsLeftContainer = new HorizontalLayout();
+        titleElementsLeftContainer.setSpacing(false);
+        titleElementsLeftContainer.setPadding(false);
+        titleElementsLeftContainer.setMargin(false);
 
-        titleElementsContainer.add(titleLabel);
-        titleElementsContainer.setFlexGrow(1,titleLabel);
+        Label titleLabel = new Label(titleContent);
+        titleLabel.getStyle().set("font-size","var(--lumo-font-size-m)").set("color","var(--lumo-primary-color)").set("padding-right","10px");
+        titleElementsLeftContainer.add(titleLabel);
+
+        titleElementsContainer.add(titleElementsLeftContainer);
+        titleElementsContainer.setFlexGrow(1,titleElementsLeftContainer);
         titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER,titleElementsContainer);
         titleElementsContainer.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+
+        if(titleComponentsList != null){
+            for(Component currentComponent:titleComponentsList){
+                titleElementsLeftContainer.add(currentComponent);
+                titleElementsLeftContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER,currentComponent);
+            }
+        }
 
         if(actionComponentsList != null){
             for(Component currentComponent:actionComponentsList){

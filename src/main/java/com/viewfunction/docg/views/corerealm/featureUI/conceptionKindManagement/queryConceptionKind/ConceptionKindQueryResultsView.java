@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -283,7 +284,24 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
     private void renderConceptionEntityUI(ConceptionEntityValue conceptionEntityValue){
         ConceptionEntityDetailView conceptionEntityDetailView = new ConceptionEntityDetailView();
-        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念类型 "+conceptionKindName+ " 实体数据查询",null,true);
+
+        List<Component> actionComponentList = new ArrayList<>();
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("12px");
+        conceptionKindIcon.getStyle().set("padding-right","3px");
+        actionComponentList.add(conceptionKindIcon);
+        Label conceptionKindNameLabel = new Label(conceptionKindName+" / ");
+        actionComponentList.add(conceptionKindNameLabel);
+
+        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+        conceptionEntityIcon.setSize("18px");
+        conceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
+        actionComponentList.add(conceptionEntityIcon);
+
+        Label conceptionEntityUIDLabel = new Label(conceptionEntityValue.getConceptionEntityUID());
+        actionComponentList.add(conceptionEntityUIDLabel);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(conceptionEntityDetailView);
         conceptionEntityDetailView.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
