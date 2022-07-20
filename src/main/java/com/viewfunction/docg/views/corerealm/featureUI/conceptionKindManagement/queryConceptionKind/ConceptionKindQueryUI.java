@@ -43,7 +43,7 @@ public class ConceptionKindQueryUI extends VerticalLayout {
         queryResultContainer.add(conceptionKindQueryResultsView);
 
         SplitLayout splitLayout = new SplitLayout(queryFieldsContainer, queryResultContainer);
-        //splitLayout.setSplitterPosition(15);
+        splitLayout.setSplitterPosition(0);
         splitLayout.setSizeFull();
         splitLayout.addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
         add(splitLayout);
