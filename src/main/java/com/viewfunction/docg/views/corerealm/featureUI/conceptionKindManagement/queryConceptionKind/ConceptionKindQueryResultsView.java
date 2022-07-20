@@ -283,7 +283,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     }
 
     private void renderConceptionEntityUI(ConceptionEntityValue conceptionEntityValue){
-        ConceptionEntityDetailView conceptionEntityDetailView = new ConceptionEntityDetailView();
+        ConceptionEntityDetailView conceptionEntityDetailView = new ConceptionEntityDetailView(conceptionKindName,conceptionEntityValue.getConceptionEntityUID());
 
         List<Component> actionComponentList = new ArrayList<>();
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
