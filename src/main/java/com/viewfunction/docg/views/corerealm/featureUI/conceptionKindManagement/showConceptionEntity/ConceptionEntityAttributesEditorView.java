@@ -5,6 +5,7 @@ import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
@@ -24,11 +25,25 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
         SecondaryIconTitle viewTitle = new SecondaryIconTitle(new Icon(VaadinIcon.COMBOBOX),"实体属性");
         add(viewTitle);
 
+        HorizontalLayout spaceDivLayout = new HorizontalLayout();
+        spaceDivLayout.setWidthFull();
+        spaceDivLayout.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        add(spaceDivLayout);
+
         attributeEditorsContainer = new VerticalLayout();
         attributeEditorsContainer.setMargin(false);
         attributeEditorsContainer.setSpacing(false);
         attributeEditorsContainer.setPadding(false);
         attributeEditorsContainer.setWidth(100, Unit.PERCENTAGE);
+
+        for(int i=0;i<10;i++){
+
+            AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget();
+            attributeEditorsContainer.add(attributeEditorItemWidget);
+
+        }
+
+
 
         Scroller queryConditionItemsScroller = new Scroller(attributeEditorsContainer);
         queryConditionItemsScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);

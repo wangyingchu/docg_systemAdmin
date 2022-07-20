@@ -290,9 +290,12 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         conceptionKindIcon.setSize("12px");
         conceptionKindIcon.getStyle().set("padding-right","3px");
         actionComponentList.add(conceptionKindIcon);
-        Label conceptionKindNameLabel = new Label(conceptionKindName+" / ");
+        Label conceptionKindNameLabel = new Label(conceptionKindName);
         actionComponentList.add(conceptionKindNameLabel);
-
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("12px");
+        divIcon.getStyle().set("padding-left","5px");
+        actionComponentList.add(divIcon);
         Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
         conceptionEntityIcon.setSize("18px");
         conceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
