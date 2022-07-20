@@ -10,19 +10,27 @@ import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 public class ConceptionEntityDetailView extends VerticalLayout {
 
     private Dialog containerDialog;
-
     private VerticalLayout entityFieldsContainer;
     private VerticalLayout entityDetailContainer;
+    private String conceptionKind;
+    private String conceptionEntityUID;
 
     public ConceptionEntityDetailView(String conceptionKind,String conceptionEntityUID){
+        this.conceptionKind = conceptionKind;
+        this.conceptionEntityUID = conceptionEntityUID;
+
         this.entityFieldsContainer = new VerticalLayout();
+        this.entityFieldsContainer.setPadding(false);
+        this.entityFieldsContainer.setSpacing(false);
+        this.entityFieldsContainer.setMargin(false);
+        this.entityFieldsContainer.setMinWidth(250, Unit.PIXELS);
         this.entityDetailContainer = new VerticalLayout();
 
+        ConceptionEntityAttributesEditorView conceptionEntityAttributesEditorView =
+                new ConceptionEntityAttributesEditorView(this.conceptionKind,this.conceptionEntityUID);
 
-        this.entityFieldsContainer.add(new Label("entityFieldsContainer"));
+        this.entityFieldsContainer.add(conceptionEntityAttributesEditorView);
         this.entityDetailContainer.add(new Label("entityDetailContainer"));
-
-        this.entityFieldsContainer.setMinWidth(250, Unit.PIXELS);
 
         SplitLayout splitLayout = new SplitLayout(this.entityFieldsContainer, this.entityDetailContainer);
         splitLayout.setSplitterPosition(0);
