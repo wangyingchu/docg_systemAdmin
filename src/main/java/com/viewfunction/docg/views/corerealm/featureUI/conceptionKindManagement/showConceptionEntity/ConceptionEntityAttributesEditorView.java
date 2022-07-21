@@ -3,6 +3,8 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -10,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import dev.mett.vaadin.tooltip.Tooltips;
 
 public class ConceptionEntityAttributesEditorView extends VerticalLayout {
 
@@ -22,7 +25,11 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
 
-        SecondaryIconTitle viewTitle = new SecondaryIconTitle(new Icon(VaadinIcon.COMBOBOX),"实体属性");
+        Button addAttributeButton= new Button();
+        addAttributeButton.setIcon(VaadinIcon.PLUS.create());
+        addAttributeButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        Tooltips.getCurrent().setTooltip(addAttributeButton, "添加新的实体属性");
+        SecondaryIconTitle viewTitle = new SecondaryIconTitle(new Icon(VaadinIcon.COMBOBOX),"实体属性",addAttributeButton);
         add(viewTitle);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
@@ -35,7 +42,7 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
         attributeEditorsContainer.setSpacing(false);
         attributeEditorsContainer.setPadding(false);
         attributeEditorsContainer.setWidthFull();
-        for(int i=0;i<10;i++){
+        for(int i=0;i<100;i++){
             AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget();
             attributeEditorsContainer.add(attributeEditorItemWidget);
         }
@@ -52,12 +59,12 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            attributeEditorsContainer.setHeight(event.getHeight()-150,Unit.PIXELS);
+            attributeEditorsContainer.setHeight(event.getHeight()-160,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            attributeEditorsContainer.setHeight(browserHeight-150,Unit.PIXELS);
+            attributeEditorsContainer.setHeight(browserHeight-160,Unit.PIXELS);
         }));
         //loadQueryCriteriaComboBox();
     }
