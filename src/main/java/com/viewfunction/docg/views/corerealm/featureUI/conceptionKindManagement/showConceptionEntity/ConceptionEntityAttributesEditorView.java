@@ -24,6 +24,9 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
     public ConceptionEntityAttributesEditorView(String conceptionKind,String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
+        this.setPadding(false);
+        this.setMargin(false);
+        this.setSpacing(false);
 
         Button addAttributeButton= new Button();
         addAttributeButton.setIcon(VaadinIcon.PLUS.create());
