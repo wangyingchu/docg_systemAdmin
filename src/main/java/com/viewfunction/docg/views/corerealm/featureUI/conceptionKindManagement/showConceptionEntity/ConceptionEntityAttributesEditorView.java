@@ -34,21 +34,17 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
         attributeEditorsContainer.setMargin(false);
         attributeEditorsContainer.setSpacing(false);
         attributeEditorsContainer.setPadding(false);
-        attributeEditorsContainer.setWidth(100, Unit.PERCENTAGE);
-
+        attributeEditorsContainer.setWidthFull();
         for(int i=0;i<10;i++){
-
             AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget();
             attributeEditorsContainer.add(attributeEditorItemWidget);
-
         }
 
-
-
-        Scroller queryConditionItemsScroller = new Scroller(attributeEditorsContainer);
-        queryConditionItemsScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
-        //scroller.getStyle().set("padding", "var(--lumo-space-m)");
-        add(queryConditionItemsScroller);
+        Scroller attributeEditorItemsScroller = new Scroller(attributeEditorsContainer);
+        attributeEditorItemsScroller.setWidth(100,Unit.PERCENTAGE);
+        attributeEditorItemsScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        //attributeEditorItemsScroller.getStyle().set("padding", "var(--lumo-space-m)");
+        add(attributeEditorItemsScroller);
     }
 
     @Override
@@ -56,12 +52,12 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            attributeEditorsContainer.setHeight(event.getHeight()-140,Unit.PIXELS);
+            attributeEditorsContainer.setHeight(event.getHeight()-150,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            attributeEditorsContainer.setHeight(browserHeight-140,Unit.PIXELS);
+            attributeEditorsContainer.setHeight(browserHeight-150,Unit.PIXELS);
         }));
         //loadQueryCriteriaComboBox();
     }
