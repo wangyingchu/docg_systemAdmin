@@ -6,8 +6,12 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.Route;
 
-public class ConceptionEntityDetailView extends VerticalLayout {
+@Route("conceptionEntityDetailInfo/:conceptionKind/:conceptionEntityUID")
+public class ConceptionEntityDetailView extends VerticalLayout implements BeforeEnterObserver {
 
     private Dialog containerDialog;
     private VerticalLayout entityFieldsContainer;
@@ -15,10 +19,23 @@ public class ConceptionEntityDetailView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
 
+    public ConceptionEntityDetailView(){
+        renderView();
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        this.conceptionKind = beforeEnterEvent.getRouteParameters().get("conceptionKind").get();
+        this.conceptionEntityUID = beforeEnterEvent.getRouteParameters().get("conceptionEntityUID").get();;
+    }
+
     public ConceptionEntityDetailView(String conceptionKind,String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
+        renderView();
+    }
 
+    private void renderView(){
         this.entityFieldsContainer = new VerticalLayout();
         this.entityFieldsContainer.setPadding(false);
         this.entityFieldsContainer.setSpacing(false);
