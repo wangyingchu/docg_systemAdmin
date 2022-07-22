@@ -1,15 +1,22 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.showConceptionEntity;
 
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.spreadsheet.shared.ContentMode;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
+import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,147 +35,150 @@ public class AttributeEditorItemWidget extends VerticalLayout {
     private Component valueEditor;
     private Object propertyValue;
 
-    private String cimSpaceName;
-    private String infoObjectType;
-    private String objectInstanceRID;
-
     private AttributeValue attributeValue;
-
+    private String attributeName;
+    private AttributeDataType attributeDataType;
     public AttributeEditorItemWidget(AttributeValue attributeValue){
-        this.attributeValue = attributeValue;
-        this.setWidth(100, Unit.PERCENTAGE);
-        this.add(new Label("##########"));
 
-
-
-
-
-
-
-
-
-
+        this.attributeName = attributeValue.getAttributeName();
+        this.attributeDataType = attributeValue.getAttributeDataType();
+        //this.binder = binder;
         this.propertyValueDataBinder = new Binder<>();
-        this.cimSpaceName=cimSpaceName;
-        this.infoObjectType=infoObjectType;
-        this.objectInstanceRID=objectInstanceRID;
 
-        this.propertyValue = propertyValue;
-        setSpacing(true);
-        setMargin(true);
-        //this.addStyleName("ui_appSection_Top_LightDiv");
+        this.setPadding(true);
+        this.setMargin(false);
+        this.setSpacing(false);
+        this.setWidth(100, Unit.PERCENTAGE);
 
-        HorizontalLayout queryPropertyAndGroupIngInfoContainerLayout=new HorizontalLayout();
-        this.add(queryPropertyAndGroupIngInfoContainerLayout);
+        HorizontalLayout attributeMetaLayout = new HorizontalLayout();
+        attributeMetaLayout.setSpacing(false);
+        attributeMetaLayout.setMargin(false);
+        attributeMetaLayout.setPadding(false);
+        attributeMetaLayout.setWidth(100, Unit.PERCENTAGE);
+        add(attributeMetaLayout);
 
-        this.propertyNameLabel=new Label("-");
-        //propertyNameLabel.addStyleName(ValoTheme.LABEL_BOLD);
-        //propertyNameLabel.addStyleName(ValoTheme.LABEL_TINY);
-        queryPropertyAndGroupIngInfoContainerLayout.add(propertyNameLabel);
+        VerticalLayout attributeMetaInfoContainer = new VerticalLayout();
+        attributeMetaInfoContainer.setSpacing(false);
+        attributeMetaInfoContainer.setMargin(false);
+        attributeMetaInfoContainer.setPadding(false);
 
-        HorizontalLayout propertyConditionControllerContainerLayout=new HorizontalLayout();
-        queryPropertyAndGroupIngInfoContainerLayout.add(propertyConditionControllerContainerLayout);
-        //queryPropertyAndGroupIngInfoContainerLayout.setComponentAlignment(propertyConditionControllerContainerLayout, Alignment.MIDDLE_RIGHT);
-        //queryPropertyAndGroupIngInfoContainerLayout.setExpandRatio(propertyNameLabel,1.0f);
+        attributeMetaLayout.add(attributeMetaInfoContainer);
 
-        this.updatePropertyValueButton=new Button();
-        //this.updatePropertyValueButton.setDescription("更新属性值");
-        //this.updatePropertyValueButton.setIcon(VaadinIcons.EDIT);
-       // this.updatePropertyValueButton.addStyleName(ValoTheme.BUTTON_TINY);
-       // this.updatePropertyValueButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        /*
-        this.updatePropertyValueButton.addClickListener(new Button.ClickListener() {
+        HorizontalLayout attributeNameInfoContainer = new HorizontalLayout();
+        attributeNameInfoContainer.setWidth(100,Unit.PERCENTAGE);
+        attributeMetaInfoContainer.add(attributeNameInfoContainer);
+
+        Icon propertyTypeIcon = null;
+        if(attributeName.startsWith(RealmConstant.RealmInnerTypePerFix) ||
+                attributeName.equals(RealmConstant._createDateProperty) ||
+                attributeName.equals(RealmConstant._lastModifyDateProperty) ||
+                attributeName.equals(RealmConstant._creatorIdProperty)||
+                attributeName.equals(RealmConstant._dataOriginProperty)
+        ){
+            propertyTypeIcon = VaadinIcon.ELLIPSIS_CIRCLE_O.create();
+        }else{
+            propertyTypeIcon = VaadinIcon.ELLIPSIS_CIRCLE.create();
+        }
+
+        propertyTypeIcon.setSize("12px");
+        attributeNameInfoContainer.add(propertyTypeIcon);
+        attributeNameInfoContainer.setVerticalComponentAlignment(Alignment.STRETCH,propertyTypeIcon);
+
+        Label attributeNameLabel = new Label(attributeName);
+        attributeNameLabel.getStyle().set("font-size","0.75rem").set("font-weight","bold").set("padding-right","5px");
+        attributeNameInfoContainer.add(attributeNameLabel);
+        attributeNameInfoContainer.setFlexGrow(1,attributeNameLabel);
+
+        HorizontalLayout conditionStatusContainer = new HorizontalLayout();
+        conditionStatusContainer.setPadding(false);
+        conditionStatusContainer.setMargin(false);
+        conditionStatusContainer.setSpacing(false);
+        attributeMetaInfoContainer.add(conditionStatusContainer);
+
+        Label attributeTypeLabel = new Label(attributeDataType.toString());
+        attributeTypeLabel.addClassNames("text-tertiary");
+        attributeTypeLabel.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-70pct)").set("padding-left","20px");
+        conditionStatusContainer.add(attributeTypeLabel);
+        conditionStatusContainer.setVerticalComponentAlignment(Alignment.CENTER);
+
+        attributeMetaLayout.setVerticalComponentAlignment(Alignment.CENTER,attributeMetaInfoContainer);
+
+        HorizontalLayout controlButtonsContainer = new HorizontalLayout();
+        controlButtonsContainer.setPadding(false);
+        controlButtonsContainer.setMargin(false);
+        controlButtonsContainer.setSpacing(false);
+
+        Button filteringLogicAndButton = new Button();
+        filteringLogicAndButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS,ButtonVariant.LUMO_SMALL);
+        Icon plusIcon = VaadinIcon.EDIT.create();
+        plusIcon.setSize("18px");
+        filteringLogicAndButton.setIcon(plusIcon);
+        Tooltips.getCurrent().setTooltip(filteringLogicAndButton, "更新属性值");
+        filteringLogicAndButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                enableEditValue();
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //setFilteringLogic(filteringLogic_AND);
             }
         });
-        */
-        propertyConditionControllerContainerLayout.add(this.updatePropertyValueButton);
+        controlButtonsContainer.add(filteringLogicAndButton);
 
-        this.confirmUpdateButton=new Button();
-        /*
-        this.confirmUpdateButton.setDescription("确认更新");
-        this.confirmUpdateButton.setIcon(VaadinIcons.CHECK_CIRCLE_O);
-        this.confirmUpdateButton.addStyleName(ValoTheme.BUTTON_TINY);
-        this.confirmUpdateButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        this.confirmUpdateButton.addClickListener(new Button.ClickListener() {
+        Button filteringLogicOrButton = new Button();
+        filteringLogicOrButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        Icon multiIcon = VaadinIcon.CHECK_CIRCLE_O.create();
+        multiIcon.setSize("16px");
+        filteringLogicOrButton.setIcon(multiIcon);
+        Tooltips.getCurrent().setTooltip(filteringLogicOrButton, "确认更新");
+        filteringLogicOrButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                confirmUpdateValue();
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //setFilteringLogic(filteringLogic_OR);
             }
         });
-        */
-        propertyConditionControllerContainerLayout.add(this.confirmUpdateButton);
-        this.confirmUpdateButton.setVisible(false);
+        controlButtonsContainer.add(filteringLogicOrButton);
 
-        this.cancelUpdateButton=new Button();
-        /*
-        this.cancelUpdateButton.setDescription("取消更新");
-        this.cancelUpdateButton.setIcon(VaadinIcons.ARROW_BACKWARD);
-        this.cancelUpdateButton.addStyleName(ValoTheme.BUTTON_TINY);
-        this.cancelUpdateButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        this.cancelUpdateButton.addClickListener(new Button.ClickListener() {
+        Button filteringLogicNotButton = new Button();
+        filteringLogicNotButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        Icon notIcon = VaadinIcon.ARROW_BACKWARD.create();
+        notIcon.setSize("20px");
+        filteringLogicNotButton.setIcon(notIcon);
+        Tooltips.getCurrent().setTooltip(filteringLogicNotButton, "取消更新");
+        filteringLogicNotButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                setPropertyValue(propertyValue);
-                disableEditValue();
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+               // setReverseConditionLogic();
             }
         });
+        controlButtonsContainer.add(filteringLogicNotButton);
 
-         */
-        propertyConditionControllerContainerLayout.add(this.cancelUpdateButton);
-        this.cancelUpdateButton.setVisible(false);
-
-        this.deletePropertyValueButton=new Button();
-        /*
-        this.deletePropertyValueButton.setDescription("删除属性值");
-        this.deletePropertyValueButton.setIcon(VaadinIcons.ERASER);
-        this.deletePropertyValueButton.addStyleName(ValoTheme.BUTTON_TINY);
-        this.deletePropertyValueButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        this.deletePropertyValueButton.addClickListener(new Button.ClickListener() {
+        Button clearFilteringLogicButton = new Button();
+        clearFilteringLogicButton.addThemeVariants(ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL);
+        clearFilteringLogicButton.setIcon(VaadinIcon.ERASER.create());
+        Tooltips.getCurrent().setTooltip(clearFilteringLogicButton, "删除属性值");
+        clearFilteringLogicButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                removePropertyValue();
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //removeCurrentConditionLogic();
             }
         });
-        */
+        controlButtonsContainer.add(clearFilteringLogicButton);
 
-        propertyConditionControllerContainerLayout.add(this.deletePropertyValueButton);
+        controlButtonsContainer.setVerticalComponentAlignment(Alignment.START,filteringLogicAndButton,filteringLogicOrButton,filteringLogicNotButton,clearFilteringLogicButton);
+        attributeMetaLayout.add(controlButtonsContainer);
+        attributeMetaLayout.setVerticalComponentAlignment(Alignment.START,controlButtonsContainer);
 
         HorizontalLayout conditionValueInfoContainerLayout = new HorizontalLayout();
-        Label inputIconLabel=new Label();
-        //Label inputIconLabel=new Label(VaadinIcons.INPUT., ContentMode.HTML);
-        conditionValueInfoContainerLayout.add(inputIconLabel);
+        conditionValueInfoContainerLayout.setWidth(100,Unit.PERCENTAGE);
+        Icon inputIcon = VaadinIcon.INPUT.create();
+        inputIcon.setSize("10px");
+        conditionValueInfoContainerLayout.add(inputIcon);
 
         this.valueEditor = generateValueEditorTextField(320);
         //this.valueEditor.setEnabled(false);
         conditionValueInfoContainerLayout.add(valueEditor);
         this.add(conditionValueInfoContainerLayout);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         this.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
     }
-
-
-
-
-
-
-
 
     private Component generateValueEditorTextField(int textFieldWidth) {
         /*
@@ -355,6 +365,8 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         }
         return null;
         */
-        return new TextField();
+        TextField textField = new TextField();
+        textField.setWidth(100,Unit.PERCENTAGE);
+        return textField;
     }
 }

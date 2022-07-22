@@ -44,7 +44,8 @@ public class ConceptionEntityDetailView extends VerticalLayout implements Before
         this.entityFieldsContainer.setPadding(false);
         this.entityFieldsContainer.setSpacing(false);
         this.entityFieldsContainer.setMargin(false);
-        this.entityFieldsContainer.setMinWidth(250, Unit.PIXELS);
+        this.entityFieldsContainer.setMinWidth(350, Unit.PIXELS);
+        this.entityFieldsContainer.setMaxWidth(500, Unit.PIXELS);
         this.entityDetailContainer = new VerticalLayout();
 
         ConceptionEntityAttributesEditorView conceptionEntityAttributesEditorView =
