@@ -53,7 +53,6 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
         Scroller attributeEditorItemsScroller = new Scroller(attributeEditorsContainer);
         attributeEditorItemsScroller.setWidth(100,Unit.PERCENTAGE);
         attributeEditorItemsScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
-        //attributeEditorItemsScroller.getStyle().set("padding", "var(--lumo-space-m)");
         add(attributeEditorItemsScroller);
     }
 
@@ -62,14 +61,13 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            attributeEditorsContainer.setHeight(event.getHeight()-160,Unit.PIXELS);
+            attributeEditorsContainer.setHeight(event.getHeight()-135,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            attributeEditorsContainer.setHeight(browserHeight-160,Unit.PIXELS);
+            attributeEditorsContainer.setHeight(browserHeight-135,Unit.PIXELS);
         }));
-        //loadQueryCriteriaComboBox();
     }
 
     @Override
