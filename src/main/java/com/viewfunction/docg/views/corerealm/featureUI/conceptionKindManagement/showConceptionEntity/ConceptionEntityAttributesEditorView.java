@@ -11,8 +11,15 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import dev.mett.vaadin.tooltip.Tooltips;
+
+import java.util.List;
 
 public class ConceptionEntityAttributesEditorView extends VerticalLayout {
 
@@ -45,15 +52,28 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
         attributeEditorsContainer.setSpacing(false);
         attributeEditorsContainer.setPadding(false);
         attributeEditorsContainer.setWidthFull();
-        for(int i=0;i<100;i++){
-            AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget();
-            attributeEditorsContainer.add(attributeEditorItemWidget);
-        }
 
         Scroller attributeEditorItemsScroller = new Scroller(attributeEditorsContainer);
         attributeEditorItemsScroller.setWidth(100,Unit.PERCENTAGE);
         attributeEditorItemsScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         add(attributeEditorItemsScroller);
+    }
+
+    private void renderAttributesEditorItems(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        if(targetConceptionKind != null){
+            ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+            if(targetEntity != null){
+                List<AttributeValue> allAttributesList = targetEntity.getAttributes();
+                if(allAttributesList != null){
+                    for(AttributeValue currentAttributeValue:allAttributesList){
+                        AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(currentAttributeValue);
+                        attributeEditorsContainer.add(attributeEditorItemWidget);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -68,6 +88,7 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
             int browserHeight = receiver.getBodyClientHeight();
             attributeEditorsContainer.setHeight(browserHeight-135,Unit.PIXELS);
         }));
+        renderAttributesEditorItems();
     }
 
     @Override

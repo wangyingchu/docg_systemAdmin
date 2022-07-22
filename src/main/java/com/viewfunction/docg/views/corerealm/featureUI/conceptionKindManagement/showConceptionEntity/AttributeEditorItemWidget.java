@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.spreadsheet.shared.ContentMode;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,7 +32,10 @@ public class AttributeEditorItemWidget extends VerticalLayout {
     private String infoObjectType;
     private String objectInstanceRID;
 
-    public AttributeEditorItemWidget(){
+    private AttributeValue attributeValue;
+
+    public AttributeEditorItemWidget(AttributeValue attributeValue){
+        this.attributeValue = attributeValue;
         this.setWidth(100, Unit.PERCENTAGE);
         this.add(new Label("##########"));
 

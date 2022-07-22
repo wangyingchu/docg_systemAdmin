@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.showConceptionEntity;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Label;
@@ -19,9 +20,7 @@ public class ConceptionEntityDetailView extends VerticalLayout implements Before
     private String conceptionKind;
     private String conceptionEntityUID;
 
-    public ConceptionEntityDetailView(){
-        renderView();
-    }
+    public ConceptionEntityDetailView(){}
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
@@ -32,6 +31,11 @@ public class ConceptionEntityDetailView extends VerticalLayout implements Before
     public ConceptionEntityDetailView(String conceptionKind,String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
         renderView();
     }
 
