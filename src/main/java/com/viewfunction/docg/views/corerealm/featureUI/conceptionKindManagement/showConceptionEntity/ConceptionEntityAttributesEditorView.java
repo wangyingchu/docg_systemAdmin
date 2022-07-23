@@ -17,7 +17,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.List;
 
@@ -35,10 +34,9 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
         this.setMargin(false);
         this.setSpacing(false);
 
-        Button addAttributeButton= new Button();
+        Button addAttributeButton= new Button("添加实体属性");
         addAttributeButton.setIcon(VaadinIcon.PLUS.create());
         addAttributeButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        Tooltips.getCurrent().setTooltip(addAttributeButton, "添加新的实体属性");
         SecondaryIconTitle viewTitle = new SecondaryIconTitle(new Icon(VaadinIcon.COMBOBOX),"实体属性",addAttributeButton);
         add(viewTitle);
 
