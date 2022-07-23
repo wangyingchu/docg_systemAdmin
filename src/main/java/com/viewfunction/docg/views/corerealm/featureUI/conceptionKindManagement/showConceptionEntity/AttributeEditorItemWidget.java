@@ -18,6 +18,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.Setter;
+import com.vaadin.flow.data.converter.*;
+import com.vaadin.flow.data.validator.*;
+import com.vaadin.flow.function.ValueProvider;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
@@ -36,7 +40,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
     private Button confirmUpdateButton;
     private Button cancelUpdateButton;
     private Button deletePropertyValueButton;
-    private Binder<String> propertyValueDataBinder;
+
     private Component valueEditor;
     private Object propertyValue;
 
@@ -47,12 +51,13 @@ public class AttributeEditorItemWidget extends VerticalLayout {
     private Button cancelUpdateValueButton;
     private Button confirmUpdateAttributeValueButton;
     private Button deleteAttributeButton;
+    private Binder<String> attributeValueDataBinder;
     public AttributeEditorItemWidget(AttributeValue attributeValue){
         this.attributeValue = attributeValue;
         this.attributeName = attributeValue.getAttributeName();
         this.attributeDataType = attributeValue.getAttributeDataType();
         //this.binder = binder;
-        this.propertyValueDataBinder = new Binder<>();
+        this.attributeValueDataBinder = new Binder<>();
 
         this.setPadding(true);
         this.setMargin(false);
@@ -198,9 +203,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                     currentConditionValueEditor = new TextField();
                     ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
                     ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
-
                     ((TextField)currentConditionValueEditor).setValue(this.attributeValue.getAttributeValue().toString());
-
                     break;
                 case BOOLEAN:
                     currentConditionValueEditor = new ComboBox();
@@ -237,10 +240,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                     currentConditionValueEditor = new TextField();
                     ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
                     ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
-                    /*
-                    this.propertyValueDataBinder.forField((TextField)currentConditionValueEditor)
-                            .withConverter(
-                                    new StringToIntegerConverter("该项属性值必须为INT类型"))
+                    attributeValueDataBinder.forField((TextField)currentConditionValueEditor).withConverter(new StringToIntegerConverter("该项属性值必须为INT类型"))
                             .withValidator(new IntegerRangeValidator("该项属性值必须为INT类型", null, null))
                             .bind(new ValueProvider<String, Integer>() {
                                 @Override
@@ -251,17 +251,13 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                                 @Override
                                 public void accept(String s, Integer intValue) {}
                             });
-                    if(this.propertyValue != null){
-                        ((TextField)currentConditionValueEditor).setValue(this.propertyValue.toString());
-                    }
-                    */
+                    ((TextField)currentConditionValueEditor).setValue(this.attributeValue.getAttributeValue().toString());
                     break;
                 case LONG:
                     currentConditionValueEditor = new TextField();
                     ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
                     ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
-                    /*
-                    this.propertyValueDataBinder.forField((TextField)currentConditionValueEditor)
+                    attributeValueDataBinder.forField((TextField)currentConditionValueEditor)
                             .withConverter(
                                     new StringToLongConverter("该项属性值必须为LONG类型"))
                             .withValidator(new LongRangeValidator("该项属性值必须为LONG类型", null, null))
@@ -274,18 +270,13 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                                 @Override
                                 public void accept(String s, Long longValue) {}
                             });
-                    if(this.propertyValue != null){
-                        ((TextField)currentConditionValueEditor).setValue(this.propertyValue.toString());
-                    }
-
-                     */
+                    ((TextField)currentConditionValueEditor).setValue(this.attributeValue.getAttributeValue().toString());
                     break;
                 case DOUBLE:
                     currentConditionValueEditor = new TextField();
                     ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
                     ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
-                    /*
-                    this.propertyValueDataBinder.forField((TextField)currentConditionValueEditor)
+                    attributeValueDataBinder.forField((TextField)currentConditionValueEditor)
                             .withConverter(
                                     new StringToDoubleConverter("该项属性值必须为DOUBLE类型"))
                             .withValidator(new DoubleRangeValidator("该项属性值必须为DOUBLE类型", null, null))
@@ -298,18 +289,13 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                                 @Override
                                 public void accept(String s, Double doubleValue) {}
                             });
-                    if(this.propertyValue != null){
-                        ((TextField)currentConditionValueEditor).setValue(this.propertyValue.toString());
-                    }
-
-                     */
+                    ((TextField)currentConditionValueEditor).setValue(this.attributeValue.getAttributeValue().toString());
                     break;
                 case FLOAT:
                     currentConditionValueEditor = new TextField();
                     ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
                     ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
-                    /*
-                    this.propertyValueDataBinder.forField((TextField)currentConditionValueEditor)
+                    attributeValueDataBinder.forField((TextField)currentConditionValueEditor)
                             .withConverter(
                                     new StringToFloatConverter("该项属性值必须为FLOAT类型"))
                             .withValidator(new FloatRangeValidator("该项属性值必须为FLOAT类型", null, null))
@@ -322,18 +308,13 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                                 @Override
                                 public void accept(String s, Float floatValue) {}
                             });
-                    if(this.propertyValue != null){
-                        ((TextField)currentConditionValueEditor).setValue(this.propertyValue.toString());
-                    }
-
-                     */
+                    ((TextField)currentConditionValueEditor).setValue(this.attributeValue.getAttributeValue().toString());
                     break;
                 case DECIMAL:
                     currentConditionValueEditor = new TextField();
                     ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
                     ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
-                    /*
-                    this.propertyValueDataBinder.forField((TextField)currentConditionValueEditor)
+                    attributeValueDataBinder.forField((TextField)currentConditionValueEditor)
                             .withConverter(
                                     new StringToBigDecimalConverter("该项属性值必须为DECIMAL类型"))
                             .withValidator(new BigDecimalRangeValidator("该项属性值必须为DECIMAL类型", null, null))
@@ -346,19 +327,13 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                                 @Override
                                 public void accept(String s, BigDecimal bigDecimalValue) {}
                             });
-                    if(this.propertyValue != null){
-                        BigDecimal valueBigDecimal = (BigDecimal)this.propertyValue;
-                        ((TextField)currentConditionValueEditor).setValue(valueBigDecimal.toString());
-                    }
-
-                     */
+                    ((TextField)currentConditionValueEditor).setValue(this.attributeValue.getAttributeValue().toString());
                     break;
                 case SHORT:
                     currentConditionValueEditor = new TextField();
                     ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
                     ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
-                    /*
-                    this.propertyValueDataBinder.forField((TextField)currentConditionValueEditor)
+                    attributeValueDataBinder.forField((TextField)currentConditionValueEditor)
                             .withConverter(
                                     new StringToIntegerConverter("该项属性值必须为SHORT类型"))
                             .withValidator(new IntegerRangeValidator("该项属性值必须为SHORT类型", null, null))
@@ -371,21 +346,19 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                                 @Override
                                 public void accept(String s, Integer shortValue) {}
                             });
-                    if(this.propertyValue != null){
-                        ((TextField)currentConditionValueEditor).setValue(this.propertyValue.toString());
-                    }
-
-                     */
+                    ((TextField)currentConditionValueEditor).setValue(this.attributeValue.getAttributeValue().toString());
                     break;
                 case BYTE:
                     currentConditionValueEditor = new TextField();
                     ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
                     ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
+                    ((TextField)currentConditionValueEditor).setValue(this.attributeValue.getAttributeValue().toString());
                     break;
                 case BINARY:
                     currentConditionValueEditor = new TextField();
                     ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
                     ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
+                    ((TextField)currentConditionValueEditor).setValue(this.attributeValue.getAttributeValue().toString());
                     break;
             }
             return currentConditionValueEditor;
