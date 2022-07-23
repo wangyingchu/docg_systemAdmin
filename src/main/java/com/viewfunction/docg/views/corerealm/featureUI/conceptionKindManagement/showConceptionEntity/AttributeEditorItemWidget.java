@@ -38,6 +38,10 @@ public class AttributeEditorItemWidget extends VerticalLayout {
     private AttributeValue attributeValue;
     private String attributeName;
     private AttributeDataType attributeDataType;
+    private Button updateAttributeValueButton;
+    private Button cancelUpdateValueButton;
+    private Button confirmUpdateAttributeValueButton;
+    private Button deleteAttributeButton;
     public AttributeEditorItemWidget(AttributeValue attributeValue){
 
         this.attributeName = attributeValue.getAttributeName();
@@ -97,7 +101,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
 
         Label attributeTypeLabel = new Label(attributeDataType.toString());
         attributeTypeLabel.addClassNames("text-tertiary");
-        attributeTypeLabel.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-70pct)").set("padding-left","20px");
+        attributeTypeLabel.getStyle().set("font-size","0.7rem").set("color","var(--lumo-contrast-70pct)").set("padding-left","20px");
         conditionStatusContainer.add(attributeTypeLabel);
         conditionStatusContainer.setVerticalComponentAlignment(Alignment.CENTER);
 
@@ -108,61 +112,61 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         controlButtonsContainer.setMargin(false);
         controlButtonsContainer.setSpacing(false);
 
-        Button filteringLogicAndButton = new Button();
-        filteringLogicAndButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS,ButtonVariant.LUMO_SMALL);
+        updateAttributeValueButton = new Button();
+        updateAttributeValueButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS,ButtonVariant.LUMO_SMALL);
         Icon plusIcon = VaadinIcon.EDIT.create();
         plusIcon.setSize("18px");
-        filteringLogicAndButton.setIcon(plusIcon);
-        Tooltips.getCurrent().setTooltip(filteringLogicAndButton, "更新属性值");
-        filteringLogicAndButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        updateAttributeValueButton.setIcon(plusIcon);
+        Tooltips.getCurrent().setTooltip(updateAttributeValueButton, "更新属性值");
+        updateAttributeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 //setFilteringLogic(filteringLogic_AND);
             }
         });
-        controlButtonsContainer.add(filteringLogicAndButton);
+        controlButtonsContainer.add(updateAttributeValueButton);
 
-        Button filteringLogicOrButton = new Button();
-        filteringLogicOrButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        confirmUpdateAttributeValueButton = new Button();
+        confirmUpdateAttributeValueButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
         Icon multiIcon = VaadinIcon.CHECK_CIRCLE_O.create();
-        multiIcon.setSize("16px");
-        filteringLogicOrButton.setIcon(multiIcon);
-        Tooltips.getCurrent().setTooltip(filteringLogicOrButton, "确认更新");
-        filteringLogicOrButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        multiIcon.setSize("20px");
+        confirmUpdateAttributeValueButton.setIcon(multiIcon);
+        Tooltips.getCurrent().setTooltip(confirmUpdateAttributeValueButton, "确认更新");
+        confirmUpdateAttributeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 //setFilteringLogic(filteringLogic_OR);
             }
         });
-        controlButtonsContainer.add(filteringLogicOrButton);
+        controlButtonsContainer.add(confirmUpdateAttributeValueButton);
 
-        Button filteringLogicNotButton = new Button();
-        filteringLogicNotButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        cancelUpdateValueButton = new Button();
+        cancelUpdateValueButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
         Icon notIcon = VaadinIcon.ARROW_BACKWARD.create();
         notIcon.setSize("20px");
-        filteringLogicNotButton.setIcon(notIcon);
-        Tooltips.getCurrent().setTooltip(filteringLogicNotButton, "取消更新");
-        filteringLogicNotButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        cancelUpdateValueButton.setIcon(notIcon);
+        Tooltips.getCurrent().setTooltip(cancelUpdateValueButton, "取消更新");
+        cancelUpdateValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                // setReverseConditionLogic();
             }
         });
-        controlButtonsContainer.add(filteringLogicNotButton);
+        controlButtonsContainer.add(cancelUpdateValueButton);
 
-        Button clearFilteringLogicButton = new Button();
-        clearFilteringLogicButton.addThemeVariants(ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL);
-        clearFilteringLogicButton.setIcon(VaadinIcon.ERASER.create());
-        Tooltips.getCurrent().setTooltip(clearFilteringLogicButton, "删除属性值");
-        clearFilteringLogicButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        deleteAttributeButton = new Button();
+        deleteAttributeButton.addThemeVariants(ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL);
+        deleteAttributeButton.setIcon(VaadinIcon.ERASER.create());
+        Tooltips.getCurrent().setTooltip(deleteAttributeButton, "删除属性值");
+        deleteAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 //removeCurrentConditionLogic();
             }
         });
-        controlButtonsContainer.add(clearFilteringLogicButton);
+        controlButtonsContainer.add(deleteAttributeButton);
 
-        controlButtonsContainer.setVerticalComponentAlignment(Alignment.START,filteringLogicAndButton,filteringLogicOrButton,filteringLogicNotButton,clearFilteringLogicButton);
+        controlButtonsContainer.setVerticalComponentAlignment(Alignment.START,updateAttributeValueButton,confirmUpdateAttributeValueButton,cancelUpdateValueButton,deleteAttributeButton);
         attributeMetaLayout.add(controlButtonsContainer);
         attributeMetaLayout.setVerticalComponentAlignment(Alignment.START,controlButtonsContainer);
 
