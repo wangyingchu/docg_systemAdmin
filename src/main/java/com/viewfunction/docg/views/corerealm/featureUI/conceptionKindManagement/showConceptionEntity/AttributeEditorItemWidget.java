@@ -384,6 +384,6 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         cancelUpdateValueButton.setVisible(false);
         confirmUpdateAttributeValueButton.setVisible(false);
         ((AbstractField)valueEditor).setReadOnly(true);
-        ((AbstractField)valueEditor).setValue(this.attributeValue.getAttributeValue()); //don't work for number
+        ((AbstractField)valueEditor).setValue(this.attributeValue.getAttributeValue().toString());
     }
 }
