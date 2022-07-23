@@ -6,12 +6,17 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.ComboBoxVariant;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.datepicker.DatePickerVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
@@ -43,7 +48,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
     private Button confirmUpdateAttributeValueButton;
     private Button deleteAttributeButton;
     public AttributeEditorItemWidget(AttributeValue attributeValue){
-
+        this.attributeValue = attributeValue;
         this.attributeName = attributeValue.getAttributeName();
         this.attributeDataType = attributeValue.getAttributeDataType();
         //this.binder = binder;
@@ -93,17 +98,17 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         attributeNameInfoContainer.add(attributeNameLabel);
         attributeNameInfoContainer.setFlexGrow(1,attributeNameLabel);
 
-        HorizontalLayout conditionStatusContainer = new HorizontalLayout();
-        conditionStatusContainer.setPadding(false);
-        conditionStatusContainer.setMargin(false);
-        conditionStatusContainer.setSpacing(false);
-        attributeMetaInfoContainer.add(conditionStatusContainer);
+        HorizontalLayout attributeStatusContainer = new HorizontalLayout();
+        attributeStatusContainer.setPadding(false);
+        attributeStatusContainer.setMargin(false);
+        attributeStatusContainer.setSpacing(false);
+        attributeMetaInfoContainer.add(attributeStatusContainer);
 
         Label attributeTypeLabel = new Label(attributeDataType.toString());
         attributeTypeLabel.addClassNames("text-tertiary");
         attributeTypeLabel.getStyle().set("font-size","0.7rem").set("color","var(--lumo-contrast-70pct)").set("padding-left","20px");
-        conditionStatusContainer.add(attributeTypeLabel);
-        conditionStatusContainer.setVerticalComponentAlignment(Alignment.CENTER);
+        attributeStatusContainer.add(attributeTypeLabel);
+        attributeStatusContainer.setVerticalComponentAlignment(Alignment.CENTER);
 
         attributeMetaLayout.setVerticalComponentAlignment(Alignment.CENTER,attributeMetaInfoContainer);
 
@@ -170,67 +175,69 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         attributeMetaLayout.add(controlButtonsContainer);
         attributeMetaLayout.setVerticalComponentAlignment(Alignment.START,controlButtonsContainer);
 
-        HorizontalLayout conditionValueInfoContainerLayout = new HorizontalLayout();
-        conditionValueInfoContainerLayout.setWidth(100,Unit.PERCENTAGE);
+        HorizontalLayout attributeValueInfoContainerLayout = new HorizontalLayout();
+        attributeValueInfoContainerLayout.setWidth(100,Unit.PERCENTAGE);
         Icon inputIcon = VaadinIcon.INPUT.create();
         inputIcon.setSize("10px");
-        conditionValueInfoContainerLayout.add(inputIcon);
+        attributeValueInfoContainerLayout.add(inputIcon);
 
-        this.valueEditor = generateValueEditorTextField(320);
+        this.valueEditor = generateValueEditorTextField();
         //this.valueEditor.setEnabled(false);
-        conditionValueInfoContainerLayout.add(valueEditor);
-        this.add(conditionValueInfoContainerLayout);
+        attributeValueInfoContainerLayout.add(valueEditor);
+        this.add(attributeValueInfoContainerLayout);
 
         this.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
     }
 
-    private Component generateValueEditorTextField(int textFieldWidth) {
-        /*
-        if (propertyTypeVO != null) {
-            String propertyDataType = propertyTypeVO.getPropertyFieldDataClassify();
-            AbstractComponent currentConditionValueEditor = null;
-            switch (propertyDataType) {
-                case PropertyTypeClassification_STRING:
+    private Component generateValueEditorTextField() {
+
+        if (this.attributeValue != null && this.attributeDataType != null) {
+            Component currentConditionValueEditor = null;
+            switch (this.attributeDataType) {
+                case STRING:
                     currentConditionValueEditor = new TextField();
-                    currentConditionValueEditor.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-                    currentConditionValueEditor.setWidth(textFieldWidth,Unit.PIXELS);
-                    if(this.propertyValue != null){
-                        ((TextField)currentConditionValueEditor).setValue(this.propertyValue.toString());
-                    }
+                    ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                    ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
+
+                    ((TextField)currentConditionValueEditor).setValue(this.attributeValue.getAttributeValue().toString());
+
                     break;
-                case PropertyTypeClassification_BOOLEAN:
+                case BOOLEAN:
                     currentConditionValueEditor = new ComboBox();
-                    currentConditionValueEditor.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-                    currentConditionValueEditor.setWidth(textFieldWidth,Unit.PIXELS);
-                    ((ComboBox) currentConditionValueEditor).setTextInputAllowed(false);
-                    ((ComboBox) currentConditionValueEditor).setEmptySelectionAllowed(false);
-                    ((ComboBox) currentConditionValueEditor).setItems("-","true","false");
-                    ((ComboBox) currentConditionValueEditor).setValue("-");
-                    if(this.propertyValue != null){
-                        if((Boolean)this.propertyValue){
+                    ((ComboBox)currentConditionValueEditor).addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+                    ((ComboBox)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
+                    ((ComboBox)currentConditionValueEditor).setAllowCustomValue(false);
+                    ((ComboBox)currentConditionValueEditor).setItems("-","true","false");
+                    ((ComboBox)currentConditionValueEditor).setValue("-");
+                    if(this.attributeValue != null){
+                        if((Boolean)this.attributeValue.getAttributeValue()){
                             ((ComboBox)currentConditionValueEditor).setValue("true");
                         }else{
                             ((ComboBox)currentConditionValueEditor).setValue("false");
                         }
                     }
                     break;
-                case PropertyTypeClassification_DATE:
-                    currentConditionValueEditor = new DateTimeField();
-                    currentConditionValueEditor.addStyleName(ValoTheme.DATEFIELD_SMALL);
-                    currentConditionValueEditor.setWidth(textFieldWidth,Unit.PIXELS);
-                    ((DateTimeField) currentConditionValueEditor).setDateFormat("yyyy-MM-dd hh:mm:ss");
-                    ((DateTimeField) currentConditionValueEditor).setTextFieldEnabled(false);
+                case DATE:
+                    currentConditionValueEditor = new DatePicker();
+                    ((DatePicker)currentConditionValueEditor).addThemeVariants(DatePickerVariant.LUMO_SMALL);
+                    ((DatePicker)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
 
-                    if(this.propertyValue != null){
-                        Date valueDate = (Date)this.propertyValue;
+
+
+                    //((DateTimeField) currentConditionValueEditor).setDateFormat("yyyy-MM-dd hh:mm:ss");
+                    //((DateTimeField) currentConditionValueEditor).setTextFieldEnabled(false);
+
+                    if(this.attributeValue != null){
+                        Date valueDate = (Date)this.attributeValue.getAttributeValue();
                         LocalDateTime ldt = valueDate.toInstant().atZone( ZoneId.systemDefault()).toLocalDateTime();
-                        ((DateTimeField)currentConditionValueEditor).setValue(ldt);
+                       // ((DatePicker)currentConditionValueEditor).setValue(valueDate);
                     }
                     break;
-                case PropertyTypeClassification_INT:
+                case INT:
                     currentConditionValueEditor = new TextField();
-                    currentConditionValueEditor.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-                    currentConditionValueEditor.setWidth(textFieldWidth,Unit.PIXELS);
+                    ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                    ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
+                    /*
                     this.propertyValueDataBinder.forField((TextField)currentConditionValueEditor)
                             .withConverter(
                                     new StringToIntegerConverter("该项属性值必须为INT类型"))
@@ -247,11 +254,13 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                     if(this.propertyValue != null){
                         ((TextField)currentConditionValueEditor).setValue(this.propertyValue.toString());
                     }
+                    */
                     break;
-                case PropertyTypeClassification_LONG:
+                case LONG:
                     currentConditionValueEditor = new TextField();
-                    currentConditionValueEditor.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-                    currentConditionValueEditor.setWidth(textFieldWidth,Unit.PIXELS);
+                    ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                    ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
+                    /*
                     this.propertyValueDataBinder.forField((TextField)currentConditionValueEditor)
                             .withConverter(
                                     new StringToLongConverter("该项属性值必须为LONG类型"))
@@ -268,11 +277,14 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                     if(this.propertyValue != null){
                         ((TextField)currentConditionValueEditor).setValue(this.propertyValue.toString());
                     }
+
+                     */
                     break;
-                case PropertyTypeClassification_DOUBLE:
+                case DOUBLE:
                     currentConditionValueEditor = new TextField();
-                    currentConditionValueEditor.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-                    currentConditionValueEditor.setWidth(textFieldWidth,Unit.PIXELS);
+                    ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                    ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
+                    /*
                     this.propertyValueDataBinder.forField((TextField)currentConditionValueEditor)
                             .withConverter(
                                     new StringToDoubleConverter("该项属性值必须为DOUBLE类型"))
@@ -289,11 +301,14 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                     if(this.propertyValue != null){
                         ((TextField)currentConditionValueEditor).setValue(this.propertyValue.toString());
                     }
+
+                     */
                     break;
-                case PropertyTypeClassification_FLOAT:
+                case FLOAT:
                     currentConditionValueEditor = new TextField();
-                    currentConditionValueEditor.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-                    currentConditionValueEditor.setWidth(textFieldWidth,Unit.PIXELS);
+                    ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                    ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
+                    /*
                     this.propertyValueDataBinder.forField((TextField)currentConditionValueEditor)
                             .withConverter(
                                     new StringToFloatConverter("该项属性值必须为FLOAT类型"))
@@ -310,11 +325,14 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                     if(this.propertyValue != null){
                         ((TextField)currentConditionValueEditor).setValue(this.propertyValue.toString());
                     }
+
+                     */
                     break;
-                case PropertyTypeClassification_DECIMAL:
+                case DECIMAL:
                     currentConditionValueEditor = new TextField();
-                    currentConditionValueEditor.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-                    currentConditionValueEditor.setWidth(textFieldWidth,Unit.PIXELS);
+                    ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                    ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
+                    /*
                     this.propertyValueDataBinder.forField((TextField)currentConditionValueEditor)
                             .withConverter(
                                     new StringToBigDecimalConverter("该项属性值必须为DECIMAL类型"))
@@ -332,11 +350,14 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                         BigDecimal valueBigDecimal = (BigDecimal)this.propertyValue;
                         ((TextField)currentConditionValueEditor).setValue(valueBigDecimal.toString());
                     }
+
+                     */
                     break;
-                case PropertyTypeClassification_SHORT:
+                case SHORT:
                     currentConditionValueEditor = new TextField();
-                    currentConditionValueEditor.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-                    currentConditionValueEditor.setWidth(textFieldWidth,Unit.PIXELS);
+                    ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                    ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
+                    /*
                     this.propertyValueDataBinder.forField((TextField)currentConditionValueEditor)
                             .withConverter(
                                     new StringToIntegerConverter("该项属性值必须为SHORT类型"))
@@ -353,24 +374,26 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                     if(this.propertyValue != null){
                         ((TextField)currentConditionValueEditor).setValue(this.propertyValue.toString());
                     }
+
+                     */
                     break;
-                case PropertyTypeClassification_BYTE:
+                case BYTE:
                     currentConditionValueEditor = new TextField();
-                    currentConditionValueEditor.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-                    currentConditionValueEditor.setWidth(textFieldWidth,Unit.PIXELS);
+                    ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                    ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
                     break;
-                case PropertyTypeClassification_BINARY:
+                case BINARY:
                     currentConditionValueEditor = new TextField();
-                    currentConditionValueEditor.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-                    currentConditionValueEditor.setWidth(textFieldWidth,Unit.PIXELS);
+                    ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                    ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
                     break;
             }
             return currentConditionValueEditor;
         }
         return null;
-        */
-        TextField textField = new TextField();
-        textField.setWidth(100,Unit.PERCENTAGE);
-        return textField;
+
+        //TextField textField = new TextField();
+        //textField.setWidth(100,Unit.PERCENTAGE);
+        //return textField;
     }
 }
