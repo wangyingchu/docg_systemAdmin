@@ -7,6 +7,8 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.datepicker.DatePickerVariant;
+import com.vaadin.flow.component.datetimepicker.DateTimePicker;
+import com.vaadin.flow.component.datetimepicker.DateTimePickerVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -14,6 +16,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.component.timepicker.TimePicker;
+import com.vaadin.flow.component.timepicker.TimePickerVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.Setter;
 import com.vaadin.flow.data.converter.*;
@@ -25,22 +29,14 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
 
 public class AttributeEditorItemWidget extends VerticalLayout {
-
-    private Label propertyNameLabel;
-    //private PropertyTypeVO propertyTypeVO;
-    private Button updatePropertyValueButton;
-    private Button confirmUpdateButton;
-    private Button cancelUpdateButton;
-    private Button deletePropertyValueButton;
-
     private Component valueEditor;
-    private Object propertyValue;
-
     private AttributeValue attributeValue;
     private String attributeName;
     private AttributeDataType attributeDataType;
@@ -53,7 +49,6 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         this.attributeValue = attributeValue;
         this.attributeName = attributeValue.getAttributeName();
         this.attributeDataType = attributeValue.getAttributeDataType();
-        //this.binder = binder;
         this.attributeValueDataBinder = new Binder<>();
 
         this.setPadding(true);
@@ -222,16 +217,29 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                     currentConditionValueEditor = new DatePicker();
                     ((DatePicker)currentConditionValueEditor).addThemeVariants(DatePickerVariant.LUMO_SMALL);
                     ((DatePicker)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
-
-
-
-
-
-                    if(this.attributeValue != null){
-                        Date valueDate = (Date)this.attributeValue.getAttributeValue();
-                        LocalDateTime ldt = valueDate.toInstant().atZone( ZoneId.systemDefault()).toLocalDateTime();
-                       // ((DatePicker)currentConditionValueEditor).setValue(valueDate);
-                    }
+                    ((DatePicker)currentConditionValueEditor).setValue((LocalDate)this.attributeValue.getAttributeValue());
+                    ((DatePicker)currentConditionValueEditor).setReadOnly(true);
+                    break;
+                case TIME:
+                    currentConditionValueEditor = new TimePicker();
+                    ((TimePicker)currentConditionValueEditor).addThemeVariants(TimePickerVariant.LUMO_SMALL);
+                    ((TimePicker)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
+                    ((TimePicker)currentConditionValueEditor).setValue((LocalTime)this.attributeValue.getAttributeValue());
+                    ((TimePicker)currentConditionValueEditor).setReadOnly(true);
+                    break;
+                case DATETIME:
+                    currentConditionValueEditor = new DateTimePicker();
+                    ((DateTimePicker)currentConditionValueEditor).addThemeVariants(DateTimePickerVariant.LUMO_SMALL);
+                    ((DateTimePicker)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
+                    ((DateTimePicker)currentConditionValueEditor).setValue((LocalDateTime)this.attributeValue.getAttributeValue());
+                    ((DateTimePicker)currentConditionValueEditor).setReadOnly(true);
+                    break;
+                case TIMESTAMP:
+                    currentConditionValueEditor = new TextField();
+                    ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                    ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
+                    ((TextField)currentConditionValueEditor).setValue(this.attributeValue.getAttributeValue().toString());
+                    ((TextField)currentConditionValueEditor).setReadOnly(true);
                     break;
                 case INT:
                     currentConditionValueEditor = new TextField();
@@ -376,7 +384,6 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         cancelUpdateValueButton.setVisible(true);
         confirmUpdateAttributeValueButton.setVisible(true);
         ((AbstractField)valueEditor).setReadOnly(false);
-
     }
 
     private void cancelEditAttributeValue(){

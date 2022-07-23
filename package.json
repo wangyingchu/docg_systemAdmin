@@ -426,7 +426,6 @@
     "construct-style-sheets-polyfill": "$construct-style-sheets-polyfill",
     "echarts": "$echarts",
     "leaflet": "$leaflet",
-    "line-awesome": "$line-awesome",
     "onecolor": "$onecolor",
     "pure-timeline": "$pure-timeline",
     "retry": "$retry",
@@ -436,7 +435,8 @@
     "lit": "$lit",
     "chokidar": "$chokidar",
     "date-fns": "$date-fns",
-    "lumo-css-framework": "$lumo-css-framework",
-    "@vaadin/lit-renderer": "$@vaadin/lit-renderer"
+    "@vaadin/lit-renderer": "$@vaadin/lit-renderer",
+    "line-awesome": "$line-awesome",
+    "lumo-css-framework": "$lumo-css-framework"
   }
 }
