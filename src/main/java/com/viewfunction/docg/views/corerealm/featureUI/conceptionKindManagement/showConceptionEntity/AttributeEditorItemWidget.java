@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.showConceptionEntity;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -145,7 +142,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         confirmUpdateAttributeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //setFilteringLogic(filteringLogic_OR);
+                //cancelEditAttributeValue();
             }
         });
         controlButtonsContainer.add(confirmUpdateAttributeValueButton);
@@ -160,7 +157,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         cancelUpdateValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-               // setReverseConditionLogic();
+                cancelEditAttributeValue();
             }
         });
         controlButtonsContainer.add(cancelUpdateValueButton);
@@ -378,5 +375,15 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         updateAttributeValueButton.setVisible(false);
         cancelUpdateValueButton.setVisible(true);
         confirmUpdateAttributeValueButton.setVisible(true);
+        ((AbstractField)valueEditor).setReadOnly(false);
+
+    }
+
+    private void cancelEditAttributeValue(){
+        updateAttributeValueButton.setVisible(true);
+        cancelUpdateValueButton.setVisible(false);
+        confirmUpdateAttributeValueButton.setVisible(false);
+        ((AbstractField)valueEditor).setReadOnly(true);
+        ((AbstractField)valueEditor).setValue(this.attributeValue.getAttributeValue()); //don't work for number
     }
 }
