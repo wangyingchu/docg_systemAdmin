@@ -364,9 +364,5 @@ public class AttributeEditorItemWidget extends VerticalLayout {
             return currentConditionValueEditor;
         }
         return null;
-
-        //TextField textField = new TextField();
-        //textField.setWidth(100,Unit.PERCENTAGE);
-        //return textField;
     }
 }
