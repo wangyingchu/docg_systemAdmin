@@ -33,7 +33,7 @@ import com.viewfunction.docg.util.ResourceHolder;
 
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.AddConceptionEntityToProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.DeleteConceptionEntityView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.showConceptionEntity.ConceptionEntityDetailView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailView;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
