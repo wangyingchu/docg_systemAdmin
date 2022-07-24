@@ -286,6 +286,11 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         ConceptionEntityDetailView conceptionEntityDetailView = new ConceptionEntityDetailView(conceptionKindName,conceptionEntityValue.getConceptionEntityUID());
 
         List<Component> actionComponentList = new ArrayList<>();
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("22px");
+        footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
+        actionComponentList.add(footPrintStartIcon);
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
         conceptionKindIcon.setSize("12px");
         conceptionKindIcon.getStyle().set("padding-right","3px");

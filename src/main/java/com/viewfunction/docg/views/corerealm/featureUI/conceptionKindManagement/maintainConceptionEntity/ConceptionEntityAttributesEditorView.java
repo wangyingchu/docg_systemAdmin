@@ -1,8 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
@@ -16,6 +14,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 
 import java.util.List;
@@ -39,6 +38,13 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
         addAttributeButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         SecondaryIconTitle viewTitle = new SecondaryIconTitle(new Icon(VaadinIcon.COMBOBOX),"实体属性",addAttributeButton);
         add(viewTitle);
+        addAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderAddNewAttributeUI();
+            }
+        });
+
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setWidthFull();
@@ -72,6 +78,15 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
                 }
             }
         }
+    }
+
+    private void renderAddNewAttributeUI(){
+        AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.conceptionKind,this.conceptionEntityUID);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"添加实体属性",null,true,470,180,false);
+        fixSizeWindow.setWindowContent(addEntityAttributeView);
+        fixSizeWindow.setModel(true);
+        addEntityAttributeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 
     @Override

@@ -552,10 +552,15 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
     private void renderConceptionKindQueryUI(EntityStatisticsInfo entityStatisticsInfo){
         ConceptionKindQueryUI conceptionKindQueryUI = new ConceptionKindQueryUI(entityStatisticsInfo.getEntityKindName());
+        List<Component> actionComponentList = new ArrayList<>();
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("22px");
+        footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
+        actionComponentList.add(footPrintStartIcon);
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
         conceptionKindIcon.setSize("12px");
         conceptionKindIcon.getStyle().set("padding-right","3px");
-        List<Component> actionComponentList = new ArrayList<>();
         actionComponentList.add(conceptionKindIcon);
         Label conceptionKindName = new Label(entityStatisticsInfo.getEntityKindName());
         actionComponentList.add(conceptionKindName);
