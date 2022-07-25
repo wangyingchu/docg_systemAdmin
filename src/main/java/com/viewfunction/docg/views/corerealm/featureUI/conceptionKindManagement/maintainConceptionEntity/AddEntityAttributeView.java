@@ -64,7 +64,7 @@ public class AddEntityAttributeView extends VerticalLayout {
         errorMessageContainer.add(viewTitle);
 
         errorMessage = new Label("-");
-        errorMessage.getStyle().set("color","var(--lumo-contrast-50pct)").set("font-size","0.8rem");
+        errorMessage.getStyle().set("color","var(--lumo-error-text-color)").set("font-size","0.8rem");
         errorMessage.setVisible(false);
         errorMessageContainer.add(errorMessage);
         add(errorMessageContainer);
@@ -116,10 +116,8 @@ public class AddEntityAttributeView extends VerticalLayout {
         this.attributeDataTypeFilterSelect.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<AttributeDataType>, AttributeDataType>>() {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<AttributeDataType>, AttributeDataType> comboBoxAttributeDataTypeComponentValueChangeEvent) {
-
                 attributeValueInputContainer.removeAll();
-
-                //cleanFilteringItemInputElements();
+                errorMessage.setVisible(false);
                 AttributeDataType changedAttributeDataType = comboBoxAttributeDataTypeComponentValueChangeEvent.getValue();
                 if(changedAttributeDataType != null){
                     Component inputComponent = renderAttributeValueInputElement(changedAttributeDataType,340);
@@ -128,40 +126,30 @@ public class AddEntityAttributeView extends VerticalLayout {
             }
         });
 
-
         HorizontalLayout attributeValueFieldContainerLayout = new HorizontalLayout();
         add(attributeValueFieldContainerLayout);
-
         attributeValueInputContainer  = new HorizontalLayout();
         attributeValueInputContainer.setSpacing(false);
         attributeValueInputContainer.setMargin(false);
         attributeValueInputContainer.setPadding(false);
         attributeValueFieldContainerLayout.add(attributeValueInputContainer);
 
-
-
-        //Component inputComponent = renderAttributeValueInputElement(AttributeDataType.STRING,340);
-        //attributeValueInputContainer.add(inputComponent);
-
-        //TextField attributeValueField = new TextField();
-        //attributeValueField.setWidth(340,Unit.PIXELS);
-        //attributeValueFieldContainerLayout.add(attributeValueField);
-
         Button confirmButton = new Button("确定",new Icon(VaadinIcon.CHECK));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                if(attributeNameField.getValue().equals("")|| attributeDataTypeFilterSelect.getValue()==null){
+                errorMessage.setVisible(false);
+                if(attributeNameField.getValue().equals("") || attributeDataTypeFilterSelect.getValue()==null){
                     errorMessage.setText("属性名称与数据类型是必填项");
                     errorMessage.setVisible(true);
                 }else{
-                    /*
-                    getConceptionKindQueryCriteriaView().addQueryConditionItem(propertyNameField.getValue(),propertyDataTypeFilterSelect.getValue());
-                    if(getContainerDialog() != null){
-                        getContainerDialog().close();
+                    if(validateAttributeValue()){
+                        errorMessage.setText("输入的属性值为空或格式不合法");
+                        errorMessage.setVisible(true);
+                    }else{
+                        addEntityAttribute();
                     }
-                   */
                 }
             }
         });
@@ -336,6 +324,153 @@ public class AddEntityAttributeView extends VerticalLayout {
                 ((DateTimePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
         }
         return currentConditionValueEditor;
+    }
+
+    private boolean validateAttributeValue() {
+        if (attributeValueInputContainer.getComponentAt(0) != null) {
+            Component currentConditionValueEditor = attributeValueInputContainer.getComponentAt(0);
+            switch (attributeDataTypeFilterSelect.getValue()) {
+                case INT:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case BYTE:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case DATE:
+                    if(((DatePicker) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((DatePicker) currentConditionValueEditor).getValue() == null){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case LONG:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case FLOAT:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case SHORT:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case BINARY:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case DOUBLE:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case STRING:
+                    return ((TextField) currentConditionValueEditor).isInvalid();
+                case BOOLEAN:
+                    if(((ComboBox) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((ComboBox) currentConditionValueEditor).getValue() == null){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case DECIMAL:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case TIMESTAMP:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case TIME:
+                    if(((TimePicker) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TimePicker) currentConditionValueEditor).getValue() == null){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case DATETIME:
+                    if(((DateTimePicker) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((DateTimePicker) currentConditionValueEditor).getValue() == null){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+            }
+        }
+        return false;
+    }
+
+    private void addEntityAttribute(){
+        if(containerDialog != null){
+            containerDialog.close();
+        }
     }
 
     @Override
