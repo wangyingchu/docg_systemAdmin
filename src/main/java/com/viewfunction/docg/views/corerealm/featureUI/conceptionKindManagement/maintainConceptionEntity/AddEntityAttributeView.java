@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H6;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -27,6 +28,9 @@ public class AddEntityAttributeView extends VerticalLayout {
     private TextField attributeNameField;
     private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
     public AddEntityAttributeView(String conceptionKind,String conceptionEntityUID){
+        this.setMargin(false);
+        this.setSpacing(false);
+
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
         conceptionKindIcon.setSize("12px");
         conceptionKindIcon.getStyle().set("padding-right","3px");
@@ -39,13 +43,28 @@ public class AddEntityAttributeView extends VerticalLayout {
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
 
+        HorizontalLayout errorMessageContainer = new HorizontalLayout();
+        errorMessageContainer.setSpacing(false);
+        errorMessageContainer.setPadding(false);
+        errorMessageContainer.setMargin(false);
+        errorMessageContainer.getStyle().set("padding-top","3px").set("padding-bottom","3px");
+
+        Label viewTitle = new Label("新属性信息:");
+        viewTitle.getStyle().set("color","var(--lumo-contrast-50pct)").set("font-size","0.8rem");
+        errorMessageContainer.add(viewTitle);
+
+        Label errorMessage = new Label("-");
+        errorMessage.setVisible(false);
+        errorMessageContainer.add(errorMessage);
+        add(errorMessageContainer);
+
         HorizontalLayout attributeMetaInfoFieldContainerLayout = new HorizontalLayout();
         add(attributeMetaInfoFieldContainerLayout);
 
         attributeNameField = new TextField();
         attributeMetaInfoFieldContainerLayout.add(attributeNameField);
         attributeNameField.setPlaceholder("属性名称");
-        attributeNameField.setWidth(150, Unit.PIXELS);
+        attributeNameField.setWidth(250, Unit.PIXELS);
 
         attributeDataTypeFilterSelect = new ComboBox();
         attributeDataTypeFilterSelect.setPageSize(30);
@@ -84,7 +103,11 @@ public class AddEntityAttributeView extends VerticalLayout {
         attributeMetaInfoFieldContainerLayout.add(attributeDataTypeFilterSelect);
 
         HorizontalLayout attributeValueFieldContainerLayout = new HorizontalLayout();
-        add(attributeMetaInfoFieldContainerLayout);
+        add(attributeValueFieldContainerLayout);
+
+        TextField attributeValueField = new TextField();
+        attributeValueField.setWidth(340,Unit.PIXELS);
+        attributeValueFieldContainerLayout.add(attributeValueField);
 
         Button confirmButton = new Button("确定",new Icon(VaadinIcon.CHECK));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
