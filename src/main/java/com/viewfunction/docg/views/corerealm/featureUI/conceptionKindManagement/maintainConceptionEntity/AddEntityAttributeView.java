@@ -10,10 +10,10 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-
 import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.Setter;
@@ -21,12 +21,24 @@ import com.vaadin.flow.data.binder.Validator;
 import com.vaadin.flow.data.converter.*;
 import com.vaadin.flow.data.validator.*;
 import com.vaadin.flow.function.ValueProvider;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AddEntityAttributeView extends VerticalLayout {
@@ -37,10 +49,14 @@ public class AddEntityAttributeView extends VerticalLayout {
     private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
     private Binder<String> binder;
     private HorizontalLayout attributeValueInputContainer;
+    private String conceptionKind;
+    private String conceptionEntityUID;
     public AddEntityAttributeView(String conceptionKind,String conceptionEntityUID){
         this.setMargin(false);
         this.setSpacing(false);
         this.binder = new Binder<>();
+        this.conceptionKind = conceptionKind;
+        this.conceptionEntityUID = conceptionEntityUID;
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
         conceptionKindIcon.setSize("12px");
         conceptionKindIcon.getStyle().set("padding-right","3px");
@@ -468,8 +484,118 @@ public class AddEntityAttributeView extends VerticalLayout {
     }
 
     private void addEntityAttribute(){
-        if(containerDialog != null){
-            containerDialog.close();
+        String attributeValueString = null;
+        Object newEntityAttributeValue = null;
+        String attributeName = attributeNameField.getValue();
+        if (attributeValueInputContainer.getComponentAt(0) != null) {
+            Component currentConditionValueEditor = attributeValueInputContainer.getComponentAt(0);
+            switch (attributeDataTypeFilterSelect.getValue()) {
+                case INT:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = Integer.valueOf(attributeValueString);
+                    break;
+                case BYTE:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = Byte.valueOf(attributeValueString);
+                    break;
+                case DATE:
+                    newEntityAttributeValue = ((DatePicker) currentConditionValueEditor).getValue();
+                    break;
+                case LONG:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = Long.valueOf(attributeValueString);
+                    break;
+                case FLOAT:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = Float.valueOf(attributeValueString);
+                    break;
+                case SHORT:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = Short.valueOf(attributeValueString);
+                    break;
+                case BINARY:
+                    break;
+                case DOUBLE:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = Double.valueOf(attributeValueString);
+                    break;
+                case STRING:
+                    newEntityAttributeValue = ((TextField) currentConditionValueEditor).getValue();
+                    break;
+                case BOOLEAN:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = Boolean.valueOf(attributeValueString);
+                    break;
+                case DECIMAL:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = new BigDecimal(attributeValueString);
+                    break;
+                case TIMESTAMP:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = new Date(Long.valueOf(attributeValueString));
+                    break;
+                case TIME:
+                    newEntityAttributeValue = ((TimePicker) currentConditionValueEditor).getValue();
+                    break;
+                case DATETIME:
+                    newEntityAttributeValue = ((DateTimePicker) currentConditionValueEditor).getValue();
+                    break;
+            }
+            if(newEntityAttributeValue != null){
+                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+                if(targetConceptionKind == null){
+                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
+                }else{
+                    ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+                    if(targetConceptionEntity == null){
+                        CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
+                    }else{
+                        if(targetConceptionEntity.hasAttribute(attributeName)){
+                            CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中已经存在属性 "+attributeName, NotificationVariant.LUMO_ERROR);
+                        }else{
+                            try {
+                                AttributeValue attributeValue = null;
+                                if (newEntityAttributeValue instanceof Boolean) {
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Boolean) newEntityAttributeValue).booleanValue());
+                                }else if (newEntityAttributeValue instanceof Integer) {
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Integer) newEntityAttributeValue).intValue());
+                                }else if (newEntityAttributeValue instanceof Short) {
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Short) newEntityAttributeValue).shortValue());
+                                }else if (newEntityAttributeValue instanceof Long) {
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Long) newEntityAttributeValue).longValue());
+                                }else if (newEntityAttributeValue instanceof Float) {
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Float) newEntityAttributeValue).floatValue());
+                                }else if (newEntityAttributeValue instanceof Double) {
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Double) newEntityAttributeValue).doubleValue());
+                                }else if (newEntityAttributeValue instanceof Byte) {
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Byte) newEntityAttributeValue).byteValue());
+                                }else if (newEntityAttributeValue instanceof Date){
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(Date)newEntityAttributeValue);
+                                }else if (newEntityAttributeValue instanceof LocalDateTime){
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(LocalDateTime)newEntityAttributeValue);
+                                }else if (newEntityAttributeValue instanceof LocalDate){
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(LocalDate)newEntityAttributeValue);
+                                }else if (newEntityAttributeValue instanceof LocalTime){
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(LocalTime)newEntityAttributeValue);
+                                }else if (newEntityAttributeValue instanceof BigDecimal){
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(BigDecimal)newEntityAttributeValue);
+                                }else if (newEntityAttributeValue instanceof String){
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,newEntityAttributeValue.toString());
+                                }
+                                if(attributeValue != null){
+                                    CommonUIOperationUtil.showPopupNotification("在 UID 为 "+conceptionEntityUID+" 的概念实体中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
+                                    if(containerDialog != null){
+                                        containerDialog.close();
+                                    }
+                                }
+                            } catch (CoreRealmServiceRuntimeException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
