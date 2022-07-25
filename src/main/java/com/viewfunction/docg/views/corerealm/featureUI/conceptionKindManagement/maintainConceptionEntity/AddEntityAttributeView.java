@@ -24,8 +24,8 @@ public class AddEntityAttributeView extends VerticalLayout {
 
     private Dialog containerDialog;
     private H6 errorMessage;
-    private TextField propertyNameField;
-    private ComboBox<AttributeDataType> propertyDataTypeFilterSelect;
+    private TextField attributeNameField;
+    private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
     public AddEntityAttributeView(String conceptionKind,String conceptionEntityUID){
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
         conceptionKindIcon.setSize("12px");
@@ -39,19 +39,19 @@ public class AddEntityAttributeView extends VerticalLayout {
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
 
-        HorizontalLayout criteriaFieldContainerLayout = new HorizontalLayout();
-        add(criteriaFieldContainerLayout);
+        HorizontalLayout attributeMetaInfoFieldContainerLayout = new HorizontalLayout();
+        add(attributeMetaInfoFieldContainerLayout);
 
-        propertyNameField = new TextField();
-        criteriaFieldContainerLayout.add(propertyNameField);
-        propertyNameField.setPlaceholder("属性名称");
-        propertyNameField.setWidth(150, Unit.PIXELS);
+        attributeNameField = new TextField();
+        attributeMetaInfoFieldContainerLayout.add(attributeNameField);
+        attributeNameField.setPlaceholder("属性名称");
+        attributeNameField.setWidth(150, Unit.PIXELS);
 
-        propertyDataTypeFilterSelect = new ComboBox();
-        propertyDataTypeFilterSelect.setPageSize(30);
-        propertyDataTypeFilterSelect.setPlaceholder("属性数据类型");
-        propertyDataTypeFilterSelect.setWidth(170, Unit.PIXELS);
-        propertyDataTypeFilterSelect.setItems(
+        attributeDataTypeFilterSelect = new ComboBox();
+        attributeDataTypeFilterSelect.setPageSize(30);
+        attributeDataTypeFilterSelect.setPlaceholder("属性数据类型");
+        attributeDataTypeFilterSelect.setWidth(170, Unit.PIXELS);
+        attributeDataTypeFilterSelect.setItems(
                 AttributeDataType.BINARY,
                 AttributeDataType.BOOLEAN,
                 AttributeDataType.INT,
@@ -81,14 +81,17 @@ public class AddEntityAttributeView extends VerticalLayout {
                 AttributeDataType.DECIMAL_ARRAY
                 //,AttributeDataType.BINARY
         );
-        criteriaFieldContainerLayout.add(propertyDataTypeFilterSelect);
+        attributeMetaInfoFieldContainerLayout.add(attributeDataTypeFilterSelect);
+
+        HorizontalLayout attributeValueFieldContainerLayout = new HorizontalLayout();
+        add(attributeMetaInfoFieldContainerLayout);
 
         Button confirmButton = new Button("确定",new Icon(VaadinIcon.CHECK));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                if(propertyNameField.getValue().equals("")||propertyDataTypeFilterSelect.getValue()==null){
+                if(attributeNameField.getValue().equals("")|| attributeDataTypeFilterSelect.getValue()==null){
                     errorMessage.setText("属性名称与数据类型是必填项");
                     errorMessage.setVisible(true);
                 }else{
@@ -101,7 +104,7 @@ public class AddEntityAttributeView extends VerticalLayout {
                 }
             }
         });
-        criteriaFieldContainerLayout.add(confirmButton);
+        attributeValueFieldContainerLayout.add(confirmButton);
     }
 
     public void setContainerDialog(Dialog containerDialog) {
