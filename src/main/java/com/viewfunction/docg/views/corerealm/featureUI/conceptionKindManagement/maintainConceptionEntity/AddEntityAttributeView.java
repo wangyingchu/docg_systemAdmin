@@ -1,7 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
 import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -9,13 +8,14 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H6;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
+import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,46 +27,20 @@ public class AddEntityAttributeView extends VerticalLayout {
     private TextField propertyNameField;
     private ComboBox<AttributeDataType> propertyDataTypeFilterSelect;
     public AddEntityAttributeView(String conceptionKind,String conceptionEntityUID){
-
-        HorizontalLayout infoFootPrintContainer = new HorizontalLayout();
-        infoFootPrintContainer.setMargin(false);
-        infoFootPrintContainer.setSpacing(false);
-        infoFootPrintContainer.setPadding(false);
-
-        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
-        footPrintStartIcon.setSize("22px");
-        footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
-        infoFootPrintContainer.add(footPrintStartIcon);
-
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
         conceptionKindIcon.setSize("12px");
         conceptionKindIcon.getStyle().set("padding-right","3px");
-        infoFootPrintContainer.add(conceptionKindIcon);
-        Label conceptionKindNameLabel = new Label(conceptionKind);
-        infoFootPrintContainer.add(conceptionKindNameLabel);
-        Icon divIcon = VaadinIcon.ITALIC.create();
-        divIcon.setSize("12px");
-        divIcon.getStyle().set("padding-left","5px");
-        infoFootPrintContainer.add(divIcon);
         Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
         conceptionEntityIcon.setSize("18px");
         conceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
-        infoFootPrintContainer.add(conceptionEntityIcon);
-
-        Label conceptionEntityUIDLabel = new Label(conceptionEntityUID);
-        infoFootPrintContainer.add(conceptionEntityUIDLabel);
-
-add(infoFootPrintContainer);
-
-
-
-
+        List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,conceptionKind));
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,conceptionEntityUID));
+        FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
+        add(entityInfoFootprintMessageBar);
 
         HorizontalLayout criteriaFieldContainerLayout = new HorizontalLayout();
         add(criteriaFieldContainerLayout);
-
-
-
 
         propertyNameField = new TextField();
         criteriaFieldContainerLayout.add(propertyNameField);
@@ -123,26 +97,12 @@ add(infoFootPrintContainer);
                     if(getContainerDialog() != null){
                         getContainerDialog().close();
                     }
-
-                     */
+                   */
                 }
             }
         });
         criteriaFieldContainerLayout.add(confirmButton);
-
-
-
-
-
-
-
-
     }
-
-
-
-
-
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
