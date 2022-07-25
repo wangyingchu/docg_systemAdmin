@@ -1,13 +1,12 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.H6;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -15,22 +14,33 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
+import com.vaadin.flow.component.timepicker.TimePicker;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.Setter;
+import com.vaadin.flow.data.binder.Validator;
+import com.vaadin.flow.data.converter.*;
+import com.vaadin.flow.data.validator.*;
+import com.vaadin.flow.function.ValueProvider;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddEntityAttributeView extends VerticalLayout {
 
     private Dialog containerDialog;
-    private H6 errorMessage;
+    private Label errorMessage;
     private TextField attributeNameField;
     private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
+    private Binder<String> binder;
+    private HorizontalLayout attributeValueInputContainer;
     public AddEntityAttributeView(String conceptionKind,String conceptionEntityUID){
         this.setMargin(false);
         this.setSpacing(false);
-
+        this.binder = new Binder<>();
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
         conceptionKindIcon.setSize("12px");
         conceptionKindIcon.getStyle().set("padding-right","3px");
@@ -53,7 +63,8 @@ public class AddEntityAttributeView extends VerticalLayout {
         viewTitle.getStyle().set("color","var(--lumo-contrast-50pct)").set("font-size","0.8rem");
         errorMessageContainer.add(viewTitle);
 
-        Label errorMessage = new Label("-");
+        errorMessage = new Label("-");
+        errorMessage.getStyle().set("color","var(--lumo-contrast-50pct)").set("font-size","0.8rem");
         errorMessage.setVisible(false);
         errorMessageContainer.add(errorMessage);
         add(errorMessageContainer);
@@ -102,12 +113,39 @@ public class AddEntityAttributeView extends VerticalLayout {
         );
         attributeMetaInfoFieldContainerLayout.add(attributeDataTypeFilterSelect);
 
+        this.attributeDataTypeFilterSelect.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<AttributeDataType>, AttributeDataType>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<AttributeDataType>, AttributeDataType> comboBoxAttributeDataTypeComponentValueChangeEvent) {
+
+                attributeValueInputContainer.removeAll();
+
+                //cleanFilteringItemInputElements();
+                AttributeDataType changedAttributeDataType = comboBoxAttributeDataTypeComponentValueChangeEvent.getValue();
+                if(changedAttributeDataType != null){
+                    Component inputComponent = renderAttributeValueInputElement(changedAttributeDataType,340);
+                    attributeValueInputContainer.add(inputComponent);
+                }
+            }
+        });
+
+
         HorizontalLayout attributeValueFieldContainerLayout = new HorizontalLayout();
         add(attributeValueFieldContainerLayout);
 
-        TextField attributeValueField = new TextField();
-        attributeValueField.setWidth(340,Unit.PIXELS);
-        attributeValueFieldContainerLayout.add(attributeValueField);
+        attributeValueInputContainer  = new HorizontalLayout();
+        attributeValueInputContainer.setSpacing(false);
+        attributeValueInputContainer.setMargin(false);
+        attributeValueInputContainer.setPadding(false);
+        attributeValueFieldContainerLayout.add(attributeValueInputContainer);
+
+
+
+        //Component inputComponent = renderAttributeValueInputElement(AttributeDataType.STRING,340);
+        //attributeValueInputContainer.add(inputComponent);
+
+        //TextField attributeValueField = new TextField();
+        //attributeValueField.setWidth(340,Unit.PIXELS);
+        //attributeValueFieldContainerLayout.add(attributeValueField);
 
         Button confirmButton = new Button("确定",new Icon(VaadinIcon.CHECK));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -128,6 +166,182 @@ public class AddEntityAttributeView extends VerticalLayout {
             }
         });
         attributeValueFieldContainerLayout.add(confirmButton);
+    }
+
+    private Component renderAttributeValueInputElement(AttributeDataType attributeDataType,int textFieldWidth){
+        Component currentConditionValueEditor = null;
+        switch(attributeDataType){
+            case INT:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                binder.forField((TextField)currentConditionValueEditor).withConverter(new StringToIntegerConverter("该项属性值必须为INT类型"))
+                        .withValidator(new IntegerRangeValidator("该项属性值必须为INT类型", null, null))
+                        .bind(new ValueProvider<String, Integer>() {
+                            @Override
+                            public Integer apply(String s) {
+                                return new Integer(s);
+                            }
+                        }, new Setter<String, Integer>() {
+                            @Override
+                            public void accept(String s, Integer intValue) {}
+                        });
+                break;
+            case BYTE:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                break;
+            case DATE:
+                currentConditionValueEditor = new DatePicker();
+                ((DatePicker)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((DatePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                break;
+            case LONG:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                binder.forField((TextField)currentConditionValueEditor)
+                        .withConverter(
+                                new StringToLongConverter("该项属性值必须为LONG类型"))
+                        .withValidator(new LongRangeValidator("该项属性值必须为LONG类型", null, null))
+                        .bind(new ValueProvider<String, Long>() {
+                            @Override
+                            public Long apply(String s) {
+                                return new Long(s);
+                            }
+                        }, new Setter<String, Long>() {
+                            @Override
+                            public void accept(String s, Long longValue) {}
+                        });
+                break;
+            case FLOAT:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                binder.forField((TextField)currentConditionValueEditor)
+                        .withConverter(
+                                new StringToFloatConverter("该项属性值必须为FLOAT类型"))
+                        .withValidator(new FloatRangeValidator("该项属性值必须为FLOAT类型", null, null))
+                        .bind(new ValueProvider<String, Float>() {
+                            @Override
+                            public Float apply(String s) {
+                                return new Float(s);
+                            }
+                        }, new Setter<String, Float>() {
+                            @Override
+                            public void accept(String s, Float floatValue) {}
+                        });
+                break;
+            case SHORT:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                binder.forField((TextField)currentConditionValueEditor)
+                        .withConverter(
+                                new StringToIntegerConverter("该项属性值必须为SHORT类型"))
+                        .withValidator(new IntegerRangeValidator("该项属性值必须为SHORT类型", null, null))
+                        .bind(new ValueProvider<String, Integer>() {
+                            @Override
+                            public Integer apply(String s) {
+                                return new Integer(s);
+                            }
+                        }, new Setter<String, Integer>() {
+                            @Override
+                            public void accept(String s, Integer shortValue) {}
+                        });
+                break;
+            case BINARY:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                break;
+            case DOUBLE:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                binder.forField((TextField)currentConditionValueEditor)
+                        .withConverter(
+                                new StringToDoubleConverter("该项属性值必须为DOUBLE类型"))
+                        .withValidator(new DoubleRangeValidator("该项属性值必须为DOUBLE类型", null, null))
+                        .bind(new ValueProvider<String, Double>() {
+                            @Override
+                            public Double apply(String s) {
+                                return new Double(s);
+                            }
+                        }, new Setter<String, Double>() {
+                            @Override
+                            public void accept(String s, Double doubleValue) {}
+                        });
+                break;
+            case STRING:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                break;
+            case BOOLEAN:
+                currentConditionValueEditor = new ComboBox();
+                ((ComboBox)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((ComboBox)currentConditionValueEditor).setPreventInvalidInput(true);
+                ((ComboBox)currentConditionValueEditor).setAllowCustomValue(false);
+                ((ComboBox)currentConditionValueEditor).setItems("true","false");
+                ((ComboBox)currentConditionValueEditor).setValue("true");
+                ((ComboBox)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                break;
+            case DECIMAL:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                binder.forField((TextField)currentConditionValueEditor)
+                        .withConverter(
+                                new StringToBigDecimalConverter("该项属性值必须为DECIMAL类型"))
+                        .withValidator(new BigDecimalRangeValidator("该项属性值必须为DECIMAL类型", null, null))
+                        .bind(new ValueProvider<String, BigDecimal>() {
+                            @Override
+                            public BigDecimal apply(String s) {
+                                return new BigDecimal(s);
+                            }
+                        }, new Setter<String, BigDecimal>() {
+                            @Override
+                            public void accept(String s, BigDecimal bigDecimalValue) {}
+                        });
+                break;
+            case TIMESTAMP:
+                currentConditionValueEditor = new TextField();
+                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                binder.forField((TextField)currentConditionValueEditor)
+                        .withConverter(
+                                new StringToTimeStampConverter())
+                        .withValidator((Validator)new DateTimeRangeValidator("该项属性值必须为TIMESTAMP类型",null,null) )
+                        .bind(new ValueProvider<String, Long>() {
+                            @Override
+                            public Long apply(String s) {
+                                return new Long(s);
+                            }
+                        }, new Setter<String, Long>() {
+                            @Override
+                            public void accept(String s, Long longValue) {}
+                        });
+                break;
+            case TIME:
+                currentConditionValueEditor = new TimePicker();
+                ((TimePicker)currentConditionValueEditor).setAutoOpen(true);
+                ((TimePicker)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TimePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+                break;
+            case DATETIME:
+                currentConditionValueEditor = new DateTimePicker();
+                ((DateTimePicker)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((DateTimePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
+        }
+        return currentConditionValueEditor;
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        attributeDataTypeFilterSelect.setValue(AttributeDataType.STRING);
     }
 
     public void setContainerDialog(Dialog containerDialog) {
