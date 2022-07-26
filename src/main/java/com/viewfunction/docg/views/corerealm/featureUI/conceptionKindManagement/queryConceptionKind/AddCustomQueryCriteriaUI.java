@@ -60,8 +60,7 @@ public class AddCustomQueryCriteriaUI extends VerticalLayout {
                         AttributeDataType.DATE,
                         AttributeDataType.DATETIME,
                         AttributeDataType.TIME,
-                        AttributeDataType.STRING,
-                        AttributeDataType.DECIMAL
+                        AttributeDataType.STRING
                         /*,
                         AttributeDataType.BOOLEAN_ARRAY,
                         AttributeDataType.INT_ARRAY,
