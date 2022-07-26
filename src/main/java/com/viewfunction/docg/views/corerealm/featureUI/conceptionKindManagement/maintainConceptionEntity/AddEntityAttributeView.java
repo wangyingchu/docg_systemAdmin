@@ -525,7 +525,7 @@ public class AddEntityAttributeView extends VerticalLayout {
                     newEntityAttributeValue = ((TextField) currentConditionValueEditor).getValue();
                     break;
                 case BOOLEAN:
-                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    attributeValueString = ((ComboBox) currentConditionValueEditor).getValue().toString();
                     newEntityAttributeValue = Boolean.valueOf(attributeValueString);
                     break;
                 case DECIMAL:
