@@ -14,6 +14,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
 public class AddCustomQueryCriteriaUI extends VerticalLayout {
     private Dialog containerDialog;
@@ -46,36 +49,69 @@ public class AddCustomQueryCriteriaUI extends VerticalLayout {
         propertyDataTypeFilterSelect.setPageSize(30);
         propertyDataTypeFilterSelect.setPlaceholder("属性数据类型");
         propertyDataTypeFilterSelect.setWidth(170, Unit.PIXELS);
-        propertyDataTypeFilterSelect.setItems(
-                AttributeDataType.BINARY,
-                AttributeDataType.BOOLEAN,
-                AttributeDataType.INT,
-                AttributeDataType.SHORT,
-                AttributeDataType.LONG,
-                AttributeDataType.FLOAT,
-                AttributeDataType.DOUBLE,
-                AttributeDataType.TIMESTAMP,
-                AttributeDataType.DATE,
-                AttributeDataType.DATETIME,
-                AttributeDataType.TIME,
-                AttributeDataType.STRING,
-                AttributeDataType.BYTE,
-                AttributeDataType.DECIMAL,
-                AttributeDataType.BOOLEAN_ARRAY,
-                AttributeDataType.INT_ARRAY,
-                AttributeDataType.SHORT_ARRAY,
-                AttributeDataType.LONG_ARRAY,
-                AttributeDataType. FLOAT_ARRAY,
-                AttributeDataType.DOUBLE_ARRAY,
-                AttributeDataType.TIMESTAMP_ARRAY,
-                AttributeDataType.DATE_ARRAY,
-                AttributeDataType.DATETIME_ARRAY,
-                AttributeDataType.TIME_ARRAY,
-                AttributeDataType.STRING_ARRAY,
-                AttributeDataType.BYTE_ARRAY,
-                AttributeDataType.DECIMAL_ARRAY
-                //,AttributeDataType.BINARY
-        );
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        AttributeDataType[] attributeDataTypesArray = coreRealm.getStorageImplTech().equals(CoreRealmStorageImplTech.NEO4J) ?
+                new AttributeDataType[]{
+                        AttributeDataType.BOOLEAN,
+                        AttributeDataType.LONG,
+                        AttributeDataType.DOUBLE,
+                        AttributeDataType.TIMESTAMP,
+                        AttributeDataType.DATE,
+                        AttributeDataType.DATETIME,
+                        AttributeDataType.TIME,
+                        AttributeDataType.STRING,
+                        AttributeDataType.DECIMAL
+                        /*,
+                        AttributeDataType.BOOLEAN_ARRAY,
+                        AttributeDataType.INT_ARRAY,
+                        AttributeDataType.SHORT_ARRAY,
+                        AttributeDataType.LONG_ARRAY,
+                        AttributeDataType. FLOAT_ARRAY,
+                        AttributeDataType.DOUBLE_ARRAY,
+                        AttributeDataType.TIMESTAMP_ARRAY,
+                        AttributeDataType.DATE_ARRAY,
+                        AttributeDataType.DATETIME_ARRAY,
+                        AttributeDataType.TIME_ARRAY,
+                        AttributeDataType.STRING_ARRAY,
+                        AttributeDataType.BYTE_ARRAY,
+                        AttributeDataType.DECIMAL_ARRAY
+                        //,AttributeDataType.BINARY
+                        */
+                }
+                :
+                new AttributeDataType[]{
+                        AttributeDataType.BOOLEAN,
+                        AttributeDataType.INT,
+                        AttributeDataType.SHORT,
+                        AttributeDataType.LONG,
+                        AttributeDataType.FLOAT,
+                        AttributeDataType.DOUBLE,
+                        AttributeDataType.TIMESTAMP,
+                        AttributeDataType.DATE,
+                        AttributeDataType.DATETIME,
+                        AttributeDataType.TIME,
+                        AttributeDataType.STRING,
+                        AttributeDataType.BYTE,
+                        AttributeDataType.DECIMAL
+                        /* ,
+                        AttributeDataType.BOOLEAN_ARRAY,
+                        AttributeDataType.INT_ARRAY,
+                        AttributeDataType.SHORT_ARRAY,
+                        AttributeDataType.LONG_ARRAY,
+                        AttributeDataType. FLOAT_ARRAY,
+                        AttributeDataType.DOUBLE_ARRAY,
+                        AttributeDataType.TIMESTAMP_ARRAY,
+                        AttributeDataType.DATE_ARRAY,
+                        AttributeDataType.DATETIME_ARRAY,
+                        AttributeDataType.TIME_ARRAY,
+                        AttributeDataType.STRING_ARRAY,
+                        AttributeDataType.BYTE_ARRAY,
+                        AttributeDataType.DECIMAL_ARRAY
+                        //,AttributeDataType.BINARY
+                        */
+                };
+        propertyDataTypeFilterSelect.setItems(attributeDataTypesArray);
         criteriaFieldContainerLayout.add(propertyDataTypeFilterSelect);
 
         Button confirmButton = new Button("确定",new Icon(VaadinIcon.CHECK));

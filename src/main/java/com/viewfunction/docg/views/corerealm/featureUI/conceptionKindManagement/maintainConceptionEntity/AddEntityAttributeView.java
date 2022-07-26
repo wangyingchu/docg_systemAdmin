@@ -28,6 +28,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeAddedEvent;
@@ -99,21 +100,20 @@ public class AddEntityAttributeView extends VerticalLayout {
         attributeDataTypeFilterSelect.setPageSize(30);
         attributeDataTypeFilterSelect.setPlaceholder("属性数据类型");
         attributeDataTypeFilterSelect.setWidth(170, Unit.PIXELS);
-        attributeDataTypeFilterSelect.setItems(
-                AttributeDataType.BINARY,
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        AttributeDataType[] attributeDataTypesArray = coreRealm.getStorageImplTech().equals(CoreRealmStorageImplTech.NEO4J) ?
+                new AttributeDataType[]{
                 AttributeDataType.BOOLEAN,
-                AttributeDataType.INT,
-                AttributeDataType.SHORT,
                 AttributeDataType.LONG,
-                AttributeDataType.FLOAT,
                 AttributeDataType.DOUBLE,
                 AttributeDataType.TIMESTAMP,
                 AttributeDataType.DATE,
                 AttributeDataType.DATETIME,
                 AttributeDataType.TIME,
                 AttributeDataType.STRING,
-                AttributeDataType.BYTE,
-                AttributeDataType.DECIMAL,
+                AttributeDataType.DECIMAL
+                /*,
                 AttributeDataType.BOOLEAN_ARRAY,
                 AttributeDataType.INT_ARRAY,
                 AttributeDataType.SHORT_ARRAY,
@@ -128,7 +128,41 @@ public class AddEntityAttributeView extends VerticalLayout {
                 AttributeDataType.BYTE_ARRAY,
                 AttributeDataType.DECIMAL_ARRAY
                 //,AttributeDataType.BINARY
-        );
+                */
+                }
+                :
+                new AttributeDataType[]{
+                AttributeDataType.BOOLEAN,
+                AttributeDataType.INT,
+                AttributeDataType.SHORT,
+                AttributeDataType.LONG,
+                AttributeDataType.FLOAT,
+                AttributeDataType.DOUBLE,
+                AttributeDataType.TIMESTAMP,
+                AttributeDataType.DATE,
+                AttributeDataType.DATETIME,
+                AttributeDataType.TIME,
+                AttributeDataType.STRING,
+                AttributeDataType.BYTE,
+                AttributeDataType.DECIMAL
+                /* ,
+                AttributeDataType.BOOLEAN_ARRAY,
+                AttributeDataType.INT_ARRAY,
+                AttributeDataType.SHORT_ARRAY,
+                AttributeDataType.LONG_ARRAY,
+                AttributeDataType. FLOAT_ARRAY,
+                AttributeDataType.DOUBLE_ARRAY,
+                AttributeDataType.TIMESTAMP_ARRAY,
+                AttributeDataType.DATE_ARRAY,
+                AttributeDataType.DATETIME_ARRAY,
+                AttributeDataType.TIME_ARRAY,
+                AttributeDataType.STRING_ARRAY,
+                AttributeDataType.BYTE_ARRAY,
+                AttributeDataType.DECIMAL_ARRAY
+                //,AttributeDataType.BINARY
+                */
+        };
+        attributeDataTypeFilterSelect.setItems(attributeDataTypesArray);
         attributeMetaInfoFieldContainerLayout.add(attributeDataTypeFilterSelect);
 
         this.attributeDataTypeFilterSelect.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<AttributeDataType>, AttributeDataType>>() {
