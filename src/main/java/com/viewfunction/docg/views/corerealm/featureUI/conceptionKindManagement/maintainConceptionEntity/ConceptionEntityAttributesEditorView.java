@@ -27,10 +27,11 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
     private String conceptionEntityUID;
     private VerticalLayout attributeEditorsContainer;
     private Registration listener;
-
-    public ConceptionEntityAttributesEditorView(String conceptionKind,String conceptionEntityUID){
+    private int conceptionEntityAttributesEditorHeightOffset;
+    public ConceptionEntityAttributesEditorView(String conceptionKind,String conceptionEntityUID,int conceptionEntityAttributesEditorHeightOffset){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
+        this.conceptionEntityAttributesEditorHeightOffset = conceptionEntityAttributesEditorHeightOffset;
         this.setPadding(false);
         this.setMargin(false);
         this.setSpacing(false);
@@ -96,12 +97,12 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
         ResourceHolder.getApplicationBlackboard().addListener(this);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            attributeEditorsContainer.setHeight(event.getHeight()-135,Unit.PIXELS);
+            attributeEditorsContainer.setHeight(event.getHeight()-conceptionEntityAttributesEditorHeightOffset,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            attributeEditorsContainer.setHeight(browserHeight-135,Unit.PIXELS);
+            attributeEditorsContainer.setHeight(browserHeight-conceptionEntityAttributesEditorHeightOffset,Unit.PIXELS);
         }));
         renderAttributesEditorItems();
     }

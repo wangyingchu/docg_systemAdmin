@@ -19,13 +19,15 @@ public class ConceptionEntityDetailView extends VerticalLayout implements Before
     private VerticalLayout entityDetailContainer;
     private String conceptionKind;
     private String conceptionEntityUID;
+    private int conceptionEntityAttributesEditorHeightOffset = 135;
 
     public ConceptionEntityDetailView(){}
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.conceptionKind = beforeEnterEvent.getRouteParameters().get("conceptionKind").get();
-        this.conceptionEntityUID = beforeEnterEvent.getRouteParameters().get("conceptionEntityUID").get();;
+        this.conceptionEntityUID = beforeEnterEvent.getRouteParameters().get("conceptionEntityUID").get();
+        this.conceptionEntityAttributesEditorHeightOffset = 70;
     }
 
     public ConceptionEntityDetailView(String conceptionKind,String conceptionEntityUID){
@@ -49,7 +51,7 @@ public class ConceptionEntityDetailView extends VerticalLayout implements Before
         this.entityDetailContainer = new VerticalLayout();
 
         ConceptionEntityAttributesEditorView conceptionEntityAttributesEditorView =
-                new ConceptionEntityAttributesEditorView(this.conceptionKind,this.conceptionEntityUID);
+                new ConceptionEntityAttributesEditorView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityAttributesEditorHeightOffset);
 
         this.entityFieldsContainer.add(conceptionEntityAttributesEditorView);
         this.entityDetailContainer.add(new Label("entityDetailContainer"));
