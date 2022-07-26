@@ -32,6 +32,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 
 public class AttributeEditorItemWidget extends VerticalLayout {
     private Component valueEditor;
@@ -135,7 +136,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         confirmUpdateAttributeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //cancelEditAttributeValue();
+                updateAttributeValue();
             }
         });
         controlButtonsContainer.add(confirmUpdateAttributeValueButton);
@@ -201,8 +202,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                     ((ComboBox)currentConditionValueEditor).addThemeVariants(ComboBoxVariant.LUMO_SMALL);
                     ((ComboBox)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
                     ((ComboBox)currentConditionValueEditor).setAllowCustomValue(false);
-                    ((ComboBox)currentConditionValueEditor).setItems("-","true","false");
-                    ((ComboBox)currentConditionValueEditor).setValue("-");
+                    ((ComboBox)currentConditionValueEditor).setItems("true","false");
                     if(this.attributeValue != null){
                         if((Boolean)this.attributeValue.getAttributeValue()){
                             ((ComboBox)currentConditionValueEditor).setValue("true");
@@ -237,7 +237,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                     currentConditionValueEditor = new TextField();
                     ((TextField)currentConditionValueEditor).addThemeVariants(TextFieldVariant.LUMO_SMALL);
                     ((TextField)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
-                    ((TextField)currentConditionValueEditor).setValue(this.attributeValue.getAttributeValue().toString());
+                    ((TextField)currentConditionValueEditor).setValue(""+((Date)this.attributeValue.getAttributeValue()).getTime());
                     ((TextField)currentConditionValueEditor).setReadOnly(true);
                     break;
                 case INT:
@@ -390,6 +390,25 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         cancelUpdateValueButton.setVisible(false);
         confirmUpdateAttributeValueButton.setVisible(false);
         ((AbstractField)valueEditor).setReadOnly(true);
-        ((AbstractField)valueEditor).setValue(this.attributeValue.getAttributeValue().toString());
+        AttributeDataType attributeDataType = this.attributeValue.getAttributeDataType();
+        if(AttributeDataType.DATETIME.equals(attributeDataType)){
+            LocalDateTime orgDateTime = (LocalDateTime)this.attributeValue.getAttributeValue();
+            ((DateTimePicker)valueEditor).setValue(orgDateTime);
+        }else if(AttributeDataType.DATE.equals(attributeDataType)){
+            LocalDate orgDate = (LocalDate)this.attributeValue.getAttributeValue();
+            ((DatePicker)valueEditor).setValue(orgDate);
+        }else if(AttributeDataType.TIME.equals(attributeDataType)){
+            LocalTime orgTime = (LocalTime)this.attributeValue.getAttributeValue();
+            ((TimePicker)valueEditor).setValue(orgTime);
+        }else if(AttributeDataType.TIMESTAMP.equals(attributeDataType)){
+            Date orgTimestamp = (Date)this.attributeValue.getAttributeValue();
+            ((TextField)valueEditor).setValue(""+orgTimestamp.getTime());
+        }else{
+            ((AbstractField)valueEditor).setValue(this.attributeValue.getAttributeValue().toString());
+        }
+    }
+
+    private void updateAttributeValue(){
+
     }
 }
