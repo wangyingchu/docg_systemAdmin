@@ -12,6 +12,7 @@ import com.vaadin.flow.component.datetimepicker.DateTimePickerVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -23,9 +24,17 @@ import com.vaadin.flow.data.binder.Setter;
 import com.vaadin.flow.data.converter.*;
 import com.vaadin.flow.data.validator.*;
 import com.vaadin.flow.function.ValueProvider;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeAddedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.math.BigDecimal;
@@ -409,6 +418,276 @@ public class AttributeEditorItemWidget extends VerticalLayout {
     }
 
     private void updateAttributeValue(){
+        if(validateAttributeValue()){
+            //show errorMessage
+        }else{
+            //do update logic
+            updateEntityAttribute();
+        }
+    }
 
+    private void updateEntityAttribute(){
+        String attributeValueString = null;
+        Object newEntityAttributeValue = null;
+
+        if (valueEditor != null) {
+            Component currentConditionValueEditor = valueEditor;
+            AttributeDataType attributeDataType = this.attributeValue.getAttributeDataType();
+            switch (attributeDataType) {
+                case INT:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = Integer.valueOf(attributeValueString);
+                    break;
+                case BYTE:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = Byte.valueOf(attributeValueString);
+                    break;
+                case DATE:
+                    newEntityAttributeValue = ((DatePicker) currentConditionValueEditor).getValue();
+                    break;
+                case LONG:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = Long.valueOf(attributeValueString);
+                    break;
+                case FLOAT:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = Float.valueOf(attributeValueString);
+                    break;
+                case SHORT:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = Short.valueOf(attributeValueString);
+                    break;
+                case BINARY:
+                    break;
+                case DOUBLE:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = Double.valueOf(attributeValueString);
+                    break;
+                case STRING:
+                    newEntityAttributeValue = ((TextField) currentConditionValueEditor).getValue();
+                    break;
+                case BOOLEAN:
+                    attributeValueString = ((ComboBox) currentConditionValueEditor).getValue().toString();
+                    newEntityAttributeValue = Boolean.valueOf(attributeValueString);
+                    break;
+                case DECIMAL:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = new BigDecimal(attributeValueString);
+                    break;
+                case TIMESTAMP:
+                    attributeValueString = ((TextField) currentConditionValueEditor).getValue();
+                    newEntityAttributeValue = new Date(Long.valueOf(attributeValueString));
+                    break;
+                case TIME:
+                    newEntityAttributeValue = ((TimePicker) currentConditionValueEditor).getValue();
+                    break;
+                case DATETIME:
+                    newEntityAttributeValue = ((DateTimePicker) currentConditionValueEditor).getValue();
+                    break;
+            }
+
+            /*
+            if(newEntityAttributeValue != null){
+                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+                if(targetConceptionKind == null){
+                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
+                }else{
+                    ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+                    if(targetConceptionEntity == null){
+                        CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
+                    }else{
+                        if(targetConceptionEntity.hasAttribute(attributeName)){
+                            CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中已经存在属性 "+attributeName, NotificationVariant.LUMO_ERROR);
+                        }else{
+                            try {
+                                AttributeValue attributeValue = null;
+                                if (newEntityAttributeValue instanceof Boolean) {
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Boolean) newEntityAttributeValue).booleanValue());
+                                }else if (newEntityAttributeValue instanceof Integer) {
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Integer) newEntityAttributeValue).intValue());
+                                }else if (newEntityAttributeValue instanceof Short) {
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Short) newEntityAttributeValue).shortValue());
+                                }else if (newEntityAttributeValue instanceof Long) {
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Long) newEntityAttributeValue).longValue());
+                                }else if (newEntityAttributeValue instanceof Float) {
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Float) newEntityAttributeValue).floatValue());
+                                }else if (newEntityAttributeValue instanceof Double) {
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Double) newEntityAttributeValue).doubleValue());
+                                }else if (newEntityAttributeValue instanceof Byte) {
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Byte) newEntityAttributeValue).byteValue());
+                                }else if (newEntityAttributeValue instanceof Date){
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(Date)newEntityAttributeValue);
+                                }else if (newEntityAttributeValue instanceof LocalDateTime){
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(LocalDateTime)newEntityAttributeValue);
+                                }else if (newEntityAttributeValue instanceof LocalDate){
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(LocalDate)newEntityAttributeValue);
+                                }else if (newEntityAttributeValue instanceof LocalTime){
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(LocalTime)newEntityAttributeValue);
+                                }else if (newEntityAttributeValue instanceof BigDecimal){
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(BigDecimal)newEntityAttributeValue);
+                                }else if (newEntityAttributeValue instanceof String){
+                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,newEntityAttributeValue.toString());
+                                }
+                                if(attributeValue != null){
+                                    ConceptionEntityAttributeAddedEvent conceptionEntityAttributeAddedEvent = new ConceptionEntityAttributeAddedEvent();
+                                    conceptionEntityAttributeAddedEvent.setConceptionEntityUID(this.conceptionEntityUID);
+                                    conceptionEntityAttributeAddedEvent.setConceptionKindName(this.conceptionKind);
+                                    conceptionEntityAttributeAddedEvent.setAttributeValue(attributeValue);
+                                    ResourceHolder.getApplicationBlackboard().fire(conceptionEntityAttributeAddedEvent);
+                                    CommonUIOperationUtil.showPopupNotification("在 UID 为 "+conceptionEntityUID+" 的概念实体中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
+                                }
+                            } catch (CoreRealmServiceRuntimeException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+
+                    */
+
+
+        }
+    }
+
+    private boolean validateAttributeValue() {
+        if (valueEditor != null) {
+            Component currentConditionValueEditor = valueEditor;
+            AttributeDataType attributeDataType = this.attributeValue.getAttributeDataType();
+            switch (attributeDataType) {
+                case INT:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case BYTE:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case DATE:
+                    if(((DatePicker) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((DatePicker) currentConditionValueEditor).getValue() == null){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case LONG:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case FLOAT:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case SHORT:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case BINARY:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case DOUBLE:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case STRING:
+                    return ((TextField) currentConditionValueEditor).isInvalid();
+                case BOOLEAN:
+                    if(((ComboBox) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((ComboBox) currentConditionValueEditor).getValue() == null){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case DECIMAL:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case TIMESTAMP:
+                    if(((TextField) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TextField) currentConditionValueEditor).getValue().equals("")){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case TIME:
+                    if(((TimePicker) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((TimePicker) currentConditionValueEditor).getValue() == null){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                case DATETIME:
+                    if(((DateTimePicker) currentConditionValueEditor).isInvalid()){
+                        return true;
+                    }else{
+                        if(((DateTimePicker) currentConditionValueEditor).getValue() == null){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+            }
+        }
+        return false;
     }
 }
