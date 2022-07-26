@@ -16,11 +16,13 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeAddedEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.List;
 
-public class ConceptionEntityAttributesEditorView extends VerticalLayout {
-
+public class ConceptionEntityAttributesEditorView extends VerticalLayout implements
+        ConceptionEntityAttributeAddedEvent.ConceptionEntityAttributeAddedListener {
     private String conceptionKind;
     private String conceptionEntityUID;
     private VerticalLayout attributeEditorsContainer;
@@ -91,6 +93,7 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             attributeEditorsContainer.setHeight(event.getHeight()-135,Unit.PIXELS);
@@ -108,5 +111,18 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
+
+    @Override
+    public void receivedConceptionEntityAttributeAddedEvent(ConceptionEntityAttributeAddedEvent event) {
+        String entityUID = event.getConceptionEntityUID();
+        AttributeValue attributeValue = event.getAttributeValue();
+        if(entityUID != null && attributeValue != null ){
+            if(this.conceptionEntityUID.equals(entityUID)){
+                AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(attributeValue);
+                attributeEditorsContainer.add(attributeEditorItemWidget);
+            }
+        }
     }
 }

@@ -30,8 +30,10 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeAddedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -584,6 +586,11 @@ public class AddEntityAttributeView extends VerticalLayout {
                                     attributeValue = targetConceptionEntity.addAttribute(attributeName,newEntityAttributeValue.toString());
                                 }
                                 if(attributeValue != null){
+                                    ConceptionEntityAttributeAddedEvent conceptionEntityAttributeAddedEvent = new ConceptionEntityAttributeAddedEvent();
+                                    conceptionEntityAttributeAddedEvent.setConceptionEntityUID(this.conceptionEntityUID);
+                                    conceptionEntityAttributeAddedEvent.setConceptionKindName(this.conceptionKind);
+                                    conceptionEntityAttributeAddedEvent.setAttributeValue(attributeValue);
+                                    ResourceHolder.getApplicationBlackboard().fire(conceptionEntityAttributeAddedEvent);
                                     CommonUIOperationUtil.showPopupNotification("在 UID 为 "+conceptionEntityUID+" 的概念实体中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
                                     if(containerDialog != null){
                                         containerDialog.close();
