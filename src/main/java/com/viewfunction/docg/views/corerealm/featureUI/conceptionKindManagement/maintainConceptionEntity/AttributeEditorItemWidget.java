@@ -210,6 +210,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                             ((ComboBox)currentConditionValueEditor).setValue("false");
                         }
                     }
+                    ((ComboBox)currentConditionValueEditor).setReadOnly(true);
                     break;
                 case DATE:
                     currentConditionValueEditor = new DatePicker();
