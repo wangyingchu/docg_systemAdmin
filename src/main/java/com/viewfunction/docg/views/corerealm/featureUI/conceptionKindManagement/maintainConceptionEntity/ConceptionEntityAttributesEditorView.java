@@ -74,7 +74,7 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
                 List<AttributeValue> allAttributesList = targetEntity.getAttributes();
                 if(allAttributesList != null){
                     for(AttributeValue currentAttributeValue:allAttributesList){
-                        AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(currentAttributeValue);
+                        AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.conceptionKind,this.conceptionEntityUID,currentAttributeValue);
                         attributeEditorsContainer.add(attributeEditorItemWidget);
                     }
                 }
@@ -121,7 +121,7 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
         AttributeValue attributeValue = event.getAttributeValue();
         if(entityUID != null && attributeValue != null ){
             if(this.conceptionEntityUID.equals(entityUID)){
-                AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(attributeValue);
+                AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.conceptionKind,this.conceptionEntityUID,attributeValue);
                 attributeEditorsContainer.add(attributeEditorItemWidget);
             }
         }
