@@ -194,6 +194,8 @@ public class MainLayout extends AppLayout {
                 ConceptionEntityAttributeAddedEvent.class);
         _BLACKBOARD.register(ConceptionEntityAttributeUpdatedEvent.ConceptionEntityAttributeUpdatedListener.class,
                 ConceptionEntityAttributeUpdatedEvent.class);
+        _BLACKBOARD.register(ConceptionEntityAttributeDeletedEvent.ConceptionEntityAttributeDeletedListener.class,
+                ConceptionEntityAttributeDeletedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

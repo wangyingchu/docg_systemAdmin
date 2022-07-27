@@ -32,6 +32,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeUpdatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
@@ -177,7 +178,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         deleteAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //removeCurrentConditionLogic();
+                deleteAttribute();
             }
         });
         controlButtonsContainer.add(deleteAttributeButton);
@@ -197,6 +198,10 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         this.add(attributeValueInfoContainerLayout);
 
         this.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+    }
+
+    public String getAttributeName(){
+        return this.attributeName;
     }
 
     private Component generateValueEditorTextField() {
@@ -694,5 +699,14 @@ public class AttributeEditorItemWidget extends VerticalLayout {
             }
         }
         return false;
+    }
+
+    private void deleteAttribute(){
+        DeleteConceptionEntityAttributeView deleteConceptionEntityAttributeView = new DeleteConceptionEntityAttributeView(this.conceptionKind,this.conceptionEntityUID,this.attributeName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除概念实体属性",null,true,550,210,false);
+        fixSizeWindow.setWindowContent(deleteConceptionEntityAttributeView);
+        fixSizeWindow.setModel(true);
+        deleteConceptionEntityAttributeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }

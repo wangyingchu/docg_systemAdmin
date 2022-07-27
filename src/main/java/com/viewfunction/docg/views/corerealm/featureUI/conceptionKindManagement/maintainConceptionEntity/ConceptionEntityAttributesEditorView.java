@@ -17,12 +17,14 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeAddedEvent;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeDeletedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.List;
 
 public class ConceptionEntityAttributesEditorView extends VerticalLayout implements
-        ConceptionEntityAttributeAddedEvent.ConceptionEntityAttributeAddedListener {
+        ConceptionEntityAttributeAddedEvent.ConceptionEntityAttributeAddedListener,
+        ConceptionEntityAttributeDeletedEvent.ConceptionEntityAttributeDeletedListener {
     private String conceptionKind;
     private String conceptionEntityUID;
     private VerticalLayout attributeEditorsContainer;
@@ -119,10 +121,30 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
     public void receivedConceptionEntityAttributeAddedEvent(ConceptionEntityAttributeAddedEvent event) {
         String entityUID = event.getConceptionEntityUID();
         AttributeValue attributeValue = event.getAttributeValue();
-        if(entityUID != null && attributeValue != null ){
+        if(entityUID != null && attributeValue != null){
             if(this.conceptionEntityUID.equals(entityUID)){
                 AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.conceptionKind,this.conceptionEntityUID,attributeValue);
                 attributeEditorsContainer.add(attributeEditorItemWidget);
+            }
+        }
+    }
+
+    @Override
+    public void receivedConceptionEntityAttributeDeletedEvent(ConceptionEntityAttributeDeletedEvent event) {
+        String entityUID = event.getConceptionEntityUID();
+        if(entityUID != null){
+            if(this.conceptionEntityUID.equals(entityUID)){
+                String attributeName = event.getAttributeName();
+
+                int attributeEditorItemWidgetCount = attributeEditorsContainer.getComponentCount();
+                for(int i=0;i<attributeEditorItemWidgetCount;i++){
+                    AttributeEditorItemWidget currentAttributeEditorItemWidget = (AttributeEditorItemWidget)attributeEditorsContainer.getComponentAt(i);
+                    String currentAttributeName = currentAttributeEditorItemWidget.getAttributeName();
+                    if(attributeName.equals(currentAttributeName)){
+                        attributeEditorsContainer.remove(currentAttributeEditorItemWidget);
+                        return;
+                    }
+                }
             }
         }
     }
