@@ -3,7 +3,6 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
@@ -53,14 +52,19 @@ public class ConceptionEntityDetailView extends VerticalLayout implements Before
         ConceptionEntityAttributesEditorView conceptionEntityAttributesEditorView =
                 new ConceptionEntityAttributesEditorView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityAttributesEditorHeightOffset);
 
+        ConceptionEntityIntegratedInfoView conceptionEntityIntegratedInfoView =
+                new ConceptionEntityIntegratedInfoView(this.conceptionKind,this.conceptionEntityUID);
+
         this.entityFieldsContainer.add(conceptionEntityAttributesEditorView);
-        this.entityDetailContainer.add(new Label("entityDetailContainer"));
+        this.entityDetailContainer.add(conceptionEntityIntegratedInfoView);
 
         SplitLayout splitLayout = new SplitLayout(this.entityFieldsContainer, this.entityDetailContainer);
         splitLayout.setSplitterPosition(0);
         splitLayout.setSizeFull();
         splitLayout.addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
         add(splitLayout);
+
+        splitLayout.getSecondaryComponent().getElement().getStyle().set("padding-top","0px");
     }
 
     public Dialog getContainerDialog() {

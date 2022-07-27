@@ -38,10 +38,19 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
         this.setMargin(false);
         this.setSpacing(false);
 
+        HorizontalLayout actionButtonBarContainer = new HorizontalLayout();
+        actionButtonBarContainer.setSpacing(false);
+
+        Button metaInfoButton= new Button("实体元数据");
+        metaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
+        metaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        actionButtonBarContainer.add(metaInfoButton);
+
         Button addAttributeButton= new Button("添加实体属性");
         addAttributeButton.setIcon(VaadinIcon.PLUS.create());
         addAttributeButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        SecondaryIconTitle viewTitle = new SecondaryIconTitle(new Icon(VaadinIcon.COMBOBOX),"实体属性",addAttributeButton);
+        actionButtonBarContainer.add(addAttributeButton);
+        SecondaryIconTitle viewTitle = new SecondaryIconTitle(new Icon(VaadinIcon.COMBOBOX),"实体属性",actionButtonBarContainer);
         add(viewTitle);
         addAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
