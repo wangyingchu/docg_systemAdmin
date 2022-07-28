@@ -45,6 +45,12 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
         metaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
         metaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         actionButtonBarContainer.add(metaInfoButton);
+        metaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderShowMetaInfoUI();
+            }
+        });
 
         Button addAttributeButton= new Button("添加实体属性");
         addAttributeButton.setIcon(VaadinIcon.PLUS.create());
@@ -101,6 +107,14 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderShowMetaInfoUI(){
+        ConceptionEntityMetaInfoView conceptionEntityMetaInfoView = new ConceptionEntityMetaInfoView(this.conceptionKind,this.conceptionEntityUID);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"概念实体元数据信息",null,true,500,380,false);
+        fixSizeWindow.setWindowContent(conceptionEntityMetaInfoView);
+        fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
 
