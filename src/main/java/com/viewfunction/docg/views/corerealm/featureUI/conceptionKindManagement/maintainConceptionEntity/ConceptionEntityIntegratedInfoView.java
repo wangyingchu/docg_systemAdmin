@@ -20,8 +20,9 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         this.setMargin(false);
         this.setSpacing(false);
         VerticalLayout container = new VerticalLayout();
+
         PagedTabs tabs = new PagedTabs(container);
-        //tabs.
+        tabs.getElement().getStyle().set("width","100%");
 
         Span coreRealmSpan =new Span();
         Icon coreRealmLogo = new Icon(VaadinIcon.CLUSTER);
@@ -32,7 +33,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         tab0.add(coreRealmSpan);
 
         tabs.add("实体数据关联网络图", new Label("2"),false);
-        tabs.add("实体数据地理空间信息", new Label("3"),false);
+        tabs.add("实体地理空间相关信息", new Label("3"),false);
         tabs.add("实体时间序列相关信息", new Label("4"),false);
 
         add(tabs,container);

@@ -51,6 +51,8 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
         addAttributeButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         actionButtonBarContainer.add(addAttributeButton);
         SecondaryIconTitle viewTitle = new SecondaryIconTitle(new Icon(VaadinIcon.COMBOBOX),"实体属性",actionButtonBarContainer);
+        //set height to 39 in order to make ConceptionEntityAttributesEditorView and ConceptionEntityIntegratedInfoView have the same tab bottom line align
+        viewTitle.setHeight(39,Unit.PIXELS);
         add(viewTitle);
         addAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
