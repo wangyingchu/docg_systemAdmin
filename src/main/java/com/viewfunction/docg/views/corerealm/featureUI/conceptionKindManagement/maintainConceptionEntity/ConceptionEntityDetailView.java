@@ -64,7 +64,7 @@ public class ConceptionEntityDetailView extends VerticalLayout implements Before
         splitLayout.addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
         add(splitLayout);
 
-        splitLayout.getSecondaryComponent().getElement().getStyle().set("padding-top","0px");
+        splitLayout.getSecondaryComponent().getElement().getStyle().set("padding-top","0px").set("padding-right","0px");
     }
 
     public Dialog getContainerDialog() {
