@@ -289,12 +289,15 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         selectItemPromptMessage.setWidth(100,Unit.PERCENTAGE);
         selectItemPromptMessage.setHeight(300,Unit.PIXELS);
         Icon messageLogo = new Icon(VaadinIcon.COMMENT_O);
-        messageLogo.getStyle().set("color","var(--lumo-primary-color)")
+        messageLogo.getStyle()
+                .set("color","#2e4e7e")
+                //.set("color","var(--lumo-primary-color)")
                 .set("padding-right", "5px");
         messageLogo.setSize("30px");
         Label messageLabel = new Label(" 请选择概念类型定义");
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)")
-                .set("color","var(--lumo-primary-color)");
+                .set("color","#2e4e7e");
+                //.set("color","var(--lumo-primary-color)");
         selectItemPromptMessage.add(messageLogo,messageLabel);
 
         conceptionKindMetaInfoGrid.addSelectionListener(new SelectionListener<Grid<EntityStatisticsInfo>, EntityStatisticsInfo>() {

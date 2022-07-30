@@ -16,6 +16,7 @@ public class PrimaryKeyValueDisplayItem {
         containComponent.add(conceptionEntityNumberText);
         Label conceptionEntityNumberValue = new Label(valueText);
         conceptionEntityNumberValue.addClassNames("text-xl","text-primary","font-extrabold","border-b","border-contrast-20");
+        conceptionEntityNumberValue.getStyle().set("color","#2e4e7e");
         containComponent.add(conceptionEntityNumberValue);
     }
 
@@ -58,6 +59,7 @@ public class PrimaryKeyValueDisplayItem {
         containComponent.add(keyHorizontalLayout);
         Label conceptionEntityNumberValue = new Label(valueText);
         conceptionEntityNumberValue.addClassNames("text-xl","text-primary","font-extrabold","border-b","border-contrast-20");
+        conceptionEntityNumberValue.getStyle().set("color","#2e4e7e");
         containComponent.add(conceptionEntityNumberValue);
     }
 }

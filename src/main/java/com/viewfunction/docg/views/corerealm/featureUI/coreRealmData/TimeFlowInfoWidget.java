@@ -33,9 +33,11 @@ public class TimeFlowInfoWidget extends VerticalLayout {
         Span fromYear = new Span("1990");
         fromYear.getElement().getThemeList().add("badge pill");
         fromYear.addClassNames("text-xl","font-bold");
+        fromYear.getStyle().set("color","#2e4e7e");
         Span toYear = new Span("2050");
         toYear.getElement().getThemeList().add("badge pill");
         toYear.addClassNames("text-xl","font-bold");
+        toYear.getStyle().set("color","#2e4e7e");
         Span yearDiv = new Span(" - ");
         timeHorizontalLayout.add(fromYear);
         timeHorizontalLayout.add(yearDiv);

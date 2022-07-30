@@ -23,7 +23,9 @@ public class TitleActionBar extends HorizontalLayout {
 
         if(titleIcon != null){
             titleIcon.setSize("22px");
-            titleIcon.getStyle().set("color","var(--lumo-primary-color)")
+            titleIcon.getStyle()
+                    .set("color","#2e4e7e")
+                    //.set("color","var(--lumo-primary-color)")
                     .set("padding-right", "5px");
             this.add(titleIcon);
             this.setVerticalComponentAlignment(Alignment.CENTER,titleIcon);
@@ -33,7 +35,8 @@ public class TitleActionBar extends HorizontalLayout {
 
         Label titleLabel = new Label(titleContent);
         titleLabel.getStyle().set("font-size","var(--lumo-font-size-xl)")
-                .set("color","var(--lumo-primary-color)");
+                .set("color","#2e4e7e");
+                //.set("color","var(--lumo-primary-color)");
 
         titleElementsContainer.add(titleLabel);
 

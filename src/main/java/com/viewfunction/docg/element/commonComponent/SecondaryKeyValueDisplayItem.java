@@ -17,7 +17,8 @@ public class SecondaryKeyValueDisplayItem {
         conceptionEntityNumberText.addClassNames("text-xs","font-medium","text-secondary");
         containComponent.add(conceptionEntityNumberText);
         displayValue = new Label(valueText);
-        displayValue.addClassNames("text-s","text-primary","font-extrabold","border-b","border-contrast-20");
+        displayValue.addClassNames("text-s","font-extrabold","border-b","border-contrast-20");
+        displayValue.getStyle().set("color","#2e4e7e");
         containComponent.add(displayValue);
     }
 
@@ -59,7 +60,8 @@ public class SecondaryKeyValueDisplayItem {
         keyHorizontalLayout.add(conceptionEntityNumberText);
         containComponent.add(keyHorizontalLayout);
         displayValue = new Label(valueText);
-        displayValue.addClassNames("text-s","text-primary","font-extrabold","border-b","border-contrast-20");
+        displayValue.addClassNames("text-s","font-extrabold","border-b","border-contrast-20");
+        displayValue.getStyle().set("color","#2e4e7e");
         containComponent.add(displayValue);
     }
 
