@@ -9,9 +9,11 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
@@ -66,7 +68,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         actionComponentsList.add(reloadRelationInfoButton);
 
         Icon relationsIcon = VaadinIcon.RANDOM.create();
-        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon,"关联关系概要",secondaryTitleComponentsList,actionComponentsList);
+        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon,"关联关系概要: ",secondaryTitleComponentsList,actionComponentsList);
         add(secondaryTitleActionBar);
     }
 
@@ -102,20 +104,29 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
 
     private void loadEntityRelationsInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
         if(targetConceptionKind != null){
             ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
             if(targetEntity != null){
                 //List<RelationEntity> relationEntityList = targetEntity.getAllRelations();
                 long allRelationsCount = targetEntity.countAllRelations();
+                try {
+                    long inDegree = targetEntity.countAllSpecifiedRelations(null, RelationDirection.TO);
+                    long outDegree = targetEntity.countAllSpecifiedRelations(null, RelationDirection.FROM);
+                    inDegreeDisplayItem.updateDisplayValue(""+inDegree);
+                    outDegreeDisplayItem.updateDisplayValue(""+outDegree);
+                } catch (CoreRealmServiceRuntimeException e) {
+                    throw new RuntimeException(e);
+                }
                 relationCountDisplayItem.updateDisplayValue(""+allRelationsCount);
-                targetEntity.isDense();
-
+                isDenseDisplayItem.updateDisplayValue(""+targetEntity.isDense());
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
             }
         }else{
             CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
         }
+        coreRealm.closeGlobalSession();
     }
 }
