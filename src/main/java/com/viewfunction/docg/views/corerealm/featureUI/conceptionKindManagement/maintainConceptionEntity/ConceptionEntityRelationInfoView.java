@@ -3,6 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -28,6 +29,7 @@ import java.util.List;
 public class ConceptionEntityRelationInfoView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
+    private Label allRelationsCountLabel;
     public ConceptionEntityRelationInfoView(String conceptionKind,String conceptionEntityUID){
         this.setPadding(false);
         this.conceptionKind = conceptionKind;
@@ -44,6 +46,10 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                 //renderShowMetaInfoUI();
             }
         });
+
+        allRelationsCountLabel = new Label("-");
+        allRelationsCountLabel.addClassNames("text-s","font-extrabold","border-b","border-contrast-20");
+        secondaryTitleComponentsList.add(allRelationsCountLabel);
 
         Button reloadRelationInfoButton= new Button("重新获取数据");
         reloadRelationInfoButton.setIcon(VaadinIcon.REFRESH.create());
@@ -95,12 +101,13 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
 
     private void loadEntityRelationsInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
         if(targetConceptionKind != null){
             ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
             if(targetEntity != null){
-                List<RelationEntity> relationEntityList = targetEntity.getAllRelations();
+                //List<RelationEntity> relationEntityList = targetEntity.getAllRelations();
+                long allRelationsCount = targetEntity.countAllRelations();
+                allRelationsCountLabel.setText(""+allRelationsCount);
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
             }
