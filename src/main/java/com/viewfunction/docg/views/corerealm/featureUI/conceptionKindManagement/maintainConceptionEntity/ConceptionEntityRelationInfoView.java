@@ -3,39 +3,44 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
-import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+
+import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
-import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 
-import java.time.Instant;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ConceptionEntityRelationInfoView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
-    private Label allRelationsCountLabel;
+    private SecondaryKeyValueDisplayItem relationCountDisplayItem;
+    private SecondaryKeyValueDisplayItem inDegreeDisplayItem;
+    private SecondaryKeyValueDisplayItem outDegreeDisplayItem;
+    private SecondaryKeyValueDisplayItem isDenseDisplayItem;
     public ConceptionEntityRelationInfoView(String conceptionKind,String conceptionEntityUID){
         this.setPadding(false);
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
         List<Component> secondaryTitleComponentsList = new ArrayList<>();
         List<Component> actionComponentsList = new ArrayList<>();
+
+        HorizontalLayout titleLayout = new HorizontalLayout();
+        secondaryTitleComponentsList.add(titleLayout);
+        relationCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"关联关系总量","-");
+        inDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_LEFT.create(),"关系入度","-");
+        outDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_RIGHT.create(),"关系出度","-");
+        isDenseDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.BULLSEYE.create(),"是否稠密实体","-");
 
         Button createRelationButton= new Button("新建数据关联");
         createRelationButton.setIcon(VaadinIcon.LINK.create());
@@ -46,10 +51,6 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                 //renderShowMetaInfoUI();
             }
         });
-
-        allRelationsCountLabel = new Label("-");
-        allRelationsCountLabel.addClassNames("text-s","font-extrabold","border-b","border-contrast-20");
-        secondaryTitleComponentsList.add(allRelationsCountLabel);
 
         Button reloadRelationInfoButton= new Button("重新获取数据");
         reloadRelationInfoButton.setIcon(VaadinIcon.REFRESH.create());
@@ -65,7 +66,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         actionComponentsList.add(reloadRelationInfoButton);
 
         Icon relationsIcon = VaadinIcon.RANDOM.create();
-        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon,"关联关系总量:",secondaryTitleComponentsList,actionComponentsList);
+        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon,"关联关系概要",secondaryTitleComponentsList,actionComponentsList);
         add(secondaryTitleActionBar);
     }
 
@@ -107,7 +108,9 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
             if(targetEntity != null){
                 //List<RelationEntity> relationEntityList = targetEntity.getAllRelations();
                 long allRelationsCount = targetEntity.countAllRelations();
-                allRelationsCountLabel.setText(""+allRelationsCount);
+                relationCountDisplayItem.updateDisplayValue(""+allRelationsCount);
+                targetEntity.isDense();
+
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
             }
