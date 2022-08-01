@@ -1,5 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
+import com.github.appreciated.apexcharts.ApexCharts;
+
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -19,6 +21,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.ConceptionEntityCountChart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +73,13 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         Icon relationsIcon = VaadinIcon.RANDOM.create();
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon,"关联关系概要: ",secondaryTitleComponentsList,actionComponentsList);
         add(secondaryTitleActionBar);
+
+        HorizontalLayout relationKindsInfoLayout = new HorizontalLayout();
+        add(relationKindsInfoLayout);
+
+        ApexCharts  conceptionEntityCountChart = new ConceptionEntityCountChart().build();
+        conceptionEntityCountChart.setWidth("300");
+        relationKindsInfoLayout.add(conceptionEntityCountChart);
     }
 
     @Override
