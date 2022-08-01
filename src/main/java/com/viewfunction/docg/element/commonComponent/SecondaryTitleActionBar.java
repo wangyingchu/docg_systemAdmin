@@ -21,7 +21,7 @@ public class SecondaryTitleActionBar extends HorizontalLayout {
         this.setWidth(100, Unit.PERCENTAGE);
         this.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
-                .set("padding-bottom", "var(--lumo-space-m)");
+                .set("padding-bottom", "var(--lumo-space-s)");
 
         if(titleIcon != null){
             titleIcon.setSize("14px");
