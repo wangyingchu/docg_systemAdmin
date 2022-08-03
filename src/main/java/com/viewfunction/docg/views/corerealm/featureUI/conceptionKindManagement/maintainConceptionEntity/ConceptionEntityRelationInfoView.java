@@ -21,10 +21,10 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
-import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.ConceptionEntityCountChart;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ConceptionEntityRelationInfoView extends VerticalLayout {
     private String conceptionKind;
@@ -33,6 +33,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
     private SecondaryKeyValueDisplayItem inDegreeDisplayItem;
     private SecondaryKeyValueDisplayItem outDegreeDisplayItem;
     private SecondaryKeyValueDisplayItem isDenseDisplayItem;
+    private HorizontalLayout relationKindsInfoLayout;
     public ConceptionEntityRelationInfoView(String conceptionKind,String conceptionEntityUID){
         this.setPadding(false);
         this.conceptionKind = conceptionKind;
@@ -74,12 +75,12 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon,"关联关系概要: ",secondaryTitleComponentsList,actionComponentsList);
         add(secondaryTitleActionBar);
 
-        HorizontalLayout relationKindsInfoLayout = new HorizontalLayout();
+        relationKindsInfoLayout = new HorizontalLayout();
         add(relationKindsInfoLayout);
 
-        ApexCharts  conceptionEntityCountChart = new ConceptionEntityCountChart().build();
-        conceptionEntityCountChart.setWidth("300");
-        relationKindsInfoLayout.add(conceptionEntityCountChart);
+        //ApexCharts  conceptionEntityCountChart = new ConceptionEntityCountChart().build();
+        //conceptionEntityCountChart.setWidth("300");
+        //relationKindsInfoLayout.add(conceptionEntityCountChart);
     }
 
     @Override
@@ -131,6 +132,13 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                 }
                 relationCountDisplayItem.updateDisplayValue(""+allRelationsCount);
                 isDenseDisplayItem.updateDisplayValue(""+targetEntity.isDense());
+
+                Map<String,Long> attachedRelationKindCountInfo = targetEntity.countAttachedRelationKinds();
+                ApexCharts entityAttachedRelationKindsCountChart = new EntityAttachedRelationKindsCountChart(attachedRelationKindCountInfo)
+                        .withColors("#168eea", "#ee4f4f", "#03a9f4", "#76b852", "#323b43", "#59626a", "#0288d1", "#ffc107", "#d32f2f", "#00d1b2","#ced7df").build();
+                entityAttachedRelationKindsCountChart.setWidth(130,Unit.PIXELS);
+                entityAttachedRelationKindsCountChart.setHeight(130,Unit.PIXELS);
+                relationKindsInfoLayout.add(entityAttachedRelationKindsCountChart);
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
             }

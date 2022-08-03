@@ -435,6 +435,8 @@
     "lit": "$lit",
     "chokidar": "$chokidar",
     "date-fns": "$date-fns",
-    "@vaadin/lit-renderer": "$@vaadin/lit-renderer"
+    "@vaadin/lit-renderer": "$@vaadin/lit-renderer",
+    "line-awesome": "$line-awesome",
+    "lumo-css-framework": "$lumo-css-framework"
   }
 }
