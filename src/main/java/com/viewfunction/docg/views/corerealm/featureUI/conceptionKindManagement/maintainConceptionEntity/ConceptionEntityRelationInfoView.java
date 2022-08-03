@@ -86,7 +86,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         relationKindsInfoLayout.setHeight(600,Unit.PIXELS);
         relationEntitiesDetailLayout.add(relationKindsInfoLayout);
 
-        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.CONTROLLER.create(),"关系类型分布");
+        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.CONNECT_O.create(),"关系类型分布");
         relationKindsInfoLayout.add(secondaryIconTitle);
 
         VerticalLayout relationEntitiesListContainerLayout = new VerticalLayout();
