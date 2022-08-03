@@ -5,6 +5,8 @@ import com.github.appreciated.apexcharts.ApexCharts;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -18,6 +20,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
+import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -25,6 +28,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ConceptionEntityRelationInfoView extends VerticalLayout {
     private String conceptionKind;
@@ -33,7 +37,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
     private SecondaryKeyValueDisplayItem inDegreeDisplayItem;
     private SecondaryKeyValueDisplayItem outDegreeDisplayItem;
     private SecondaryKeyValueDisplayItem isDenseDisplayItem;
-    private HorizontalLayout relationKindsInfoLayout;
+    private VerticalLayout relationKindsInfoLayout;
     public ConceptionEntityRelationInfoView(String conceptionKind,String conceptionEntityUID){
         this.setPadding(false);
         this.conceptionKind = conceptionKind;
@@ -75,8 +79,20 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon,"关联关系概要: ",secondaryTitleComponentsList,actionComponentsList);
         add(secondaryTitleActionBar);
 
-        relationKindsInfoLayout = new HorizontalLayout();
-        add(relationKindsInfoLayout);
+        HorizontalLayout relationEntitiesDetailLayout = new HorizontalLayout();
+        add(relationEntitiesDetailLayout);
+
+        relationKindsInfoLayout = new VerticalLayout();
+        relationKindsInfoLayout.setHeight(600,Unit.PIXELS);
+        relationEntitiesDetailLayout.add(relationKindsInfoLayout);
+
+        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.CONTROLLER.create(),"关系类型分布");
+        relationKindsInfoLayout.add(secondaryIconTitle);
+
+        VerticalLayout relationEntitiesListContainerLayout = new VerticalLayout();
+        relationEntitiesListContainerLayout.add(new Label("relationEntities list"));
+        relationEntitiesDetailLayout.add(relationEntitiesListContainerLayout);
+
 
         //ApexCharts  conceptionEntityCountChart = new ConceptionEntityCountChart().build();
         //conceptionEntityCountChart.setWidth("300");
@@ -136,9 +152,25 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                 Map<String,Long> attachedRelationKindCountInfo = targetEntity.countAttachedRelationKinds();
                 ApexCharts entityAttachedRelationKindsCountChart = new EntityAttachedRelationKindsCountChart(attachedRelationKindCountInfo)
                         .withColors("#168eea", "#ee4f4f", "#03a9f4", "#76b852", "#323b43", "#59626a", "#0288d1", "#ffc107", "#d32f2f", "#00d1b2","#ced7df").build();
-                entityAttachedRelationKindsCountChart.setWidth(130,Unit.PIXELS);
+                entityAttachedRelationKindsCountChart.setWidth(250,Unit.PIXELS);
                 entityAttachedRelationKindsCountChart.setHeight(130,Unit.PIXELS);
                 relationKindsInfoLayout.add(entityAttachedRelationKindsCountChart);
+
+                Set<String> relationKindsSet = attachedRelationKindCountInfo.keySet();
+                for(String relationKindName : relationKindsSet){
+                    HorizontalLayout relationKindInfoItem = new HorizontalLayout();
+                    relationKindInfoItem.setSpacing(false);
+                    relationKindsInfoLayout.add(relationKindInfoItem);
+                    Button currentRelationKindButton = new Button(relationKindName);
+                    currentRelationKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+                    relationKindInfoItem.add(currentRelationKindButton);
+
+                    Span relationEntityCountSpan = new Span(""+attachedRelationKindCountInfo.get(relationKindName).toString());
+                    relationEntityCountSpan.setHeight(30,Unit.PIXELS);
+                    relationEntityCountSpan.addClassName("text-2xs");
+                    relationEntityCountSpan.getElement().getThemeList().add("badge error");
+                    relationKindInfoItem.add(relationEntityCountSpan);
+                }
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
             }
