@@ -86,17 +86,12 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         relationKindsInfoLayout.setHeight(600,Unit.PIXELS);
         relationEntitiesDetailLayout.add(relationKindsInfoLayout);
 
-        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.CONNECT_O.create(),"关系类型分布");
+        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.PIE_CHART.create(),"关系类型分布");
         relationKindsInfoLayout.add(secondaryIconTitle);
 
         VerticalLayout relationEntitiesListContainerLayout = new VerticalLayout();
         relationEntitiesListContainerLayout.add(new Label("relationEntities list"));
         relationEntitiesDetailLayout.add(relationEntitiesListContainerLayout);
-
-
-        //ApexCharts  conceptionEntityCountChart = new ConceptionEntityCountChart().build();
-        //conceptionEntityCountChart.setWidth("300");
-        //relationKindsInfoLayout.add(conceptionEntityCountChart);
     }
 
     @Override
@@ -161,12 +156,17 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                     HorizontalLayout relationKindInfoItem = new HorizontalLayout();
                     relationKindInfoItem.setSpacing(false);
                     relationKindsInfoLayout.add(relationKindInfoItem);
+
+                    Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+                    relationKindIcon.setSize("10px");
+                    relationKindInfoItem.add(relationKindIcon);
+                    relationKindInfoItem.setVerticalComponentAlignment(Alignment.CENTER,relationKindIcon);
                     Button currentRelationKindButton = new Button(relationKindName);
                     currentRelationKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
                     relationKindInfoItem.add(currentRelationKindButton);
 
                     Span relationEntityCountSpan = new Span(""+attachedRelationKindCountInfo.get(relationKindName).toString());
-                    relationEntityCountSpan.getStyle().set("font-size","var(--lumo-font-size-xxs)");
+                    relationEntityCountSpan.getStyle().set("font-size","var(--lumo-font-size-xxs)").set("font-weight","bold");
                     relationEntityCountSpan.setHeight(20,Unit.PIXELS);
                     relationEntityCountSpan.getElement().getThemeList().add("badge contrast");
                     relationKindInfoItem.add(relationEntityCountSpan);
