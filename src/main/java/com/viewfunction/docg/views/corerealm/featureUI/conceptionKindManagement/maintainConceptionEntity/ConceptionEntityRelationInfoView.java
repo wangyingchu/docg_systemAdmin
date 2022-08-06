@@ -165,26 +165,11 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                     currentRelationKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
                     relationKindInfoItem.add(currentRelationKindButton);
 
-
                     Span relationEntityCountSpan = new Span(""+attachedRelationKindCountInfo.get(relationKindName).toString());
-                    //relationEntityCountSpan.setHeight(30,Unit.PIXELS);
-                    relationEntityCountSpan.addClassName("text-2xs");
                     relationEntityCountSpan.getStyle().set("font-size","var(--lumo-font-size-xxs)");
-
+                    relationEntityCountSpan.setHeight(20,Unit.PIXELS);
                     relationEntityCountSpan.getElement().getThemeList().add("badge contrast");
                     relationKindInfoItem.add(relationEntityCountSpan);
-
-
-                    /*
-                    Span relationEntityCountSpan = new Span( VaadinIcon.CLIPBOARD_TEXT.create(),new Span(attachedRelationKindCountInfo.get(relationKindName).toString()));
-                    relationEntityCountSpan.addClassName("text-2xs");
-                    relationEntityCountSpan.getElement().getThemeList().add("badge contrast");
-                    relationKindInfoItem.add(relationEntityCountSpan);
-                    */
-
-
-
-
                 }
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
