@@ -166,6 +166,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                         .withColors("#168eea", "#ee4f4f", "#03a9f4", "#76b852", "#323b43", "#59626a", "#0288d1", "#ffc107", "#d32f2f", "#00d1b2","#ced7df").build();
                 entityAttachedRelationKindsCountChart.setWidth(250,Unit.PIXELS);
                 entityAttachedRelationKindsCountChart.setHeight(130,Unit.PIXELS);
+                entityAttachedRelationKindsCountChart.getStyle().set("padding-left","30px");
                 relationKindsInfoLayout.add(entityAttachedRelationKindsCountChart);
 
                 Set<String> relationKindsSet = attachedRelationKindCountInfo.keySet();

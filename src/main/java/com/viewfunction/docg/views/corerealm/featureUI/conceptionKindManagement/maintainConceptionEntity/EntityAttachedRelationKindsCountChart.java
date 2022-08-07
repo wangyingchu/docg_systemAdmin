@@ -4,10 +4,8 @@ import com.github.appreciated.apexcharts.ApexChartsBuilder;
 import com.github.appreciated.apexcharts.config.Stroke;
 import com.github.appreciated.apexcharts.config.builder.ChartBuilder;
 import com.github.appreciated.apexcharts.config.builder.LegendBuilder;
-import com.github.appreciated.apexcharts.config.builder.ResponsiveBuilder;
 import com.github.appreciated.apexcharts.config.chart.Type;
 import com.github.appreciated.apexcharts.config.legend.Position;
-import com.github.appreciated.apexcharts.config.responsive.builder.OptionsBuilder;
 
 import java.util.Map;
 import java.util.Set;
@@ -34,12 +32,5 @@ public class EntityAttachedRelationKindsCountChart extends ApexChartsBuilder {
                 .withLegend(LegendBuilder.get().withFloating(true).withPosition(Position.right).withOffsetX(800.0).build())
                 .withSeries(relationEntityCountArray)
                 .build();
-
-                //.withResponsive(ResponsiveBuilder.get().withBreakpoint(10.0).withOptions(OptionsBuilder.get()
-                //               .withLegend(LegendBuilder.get().withPosition(Position.bottom).build())
-                //                .build())
-                //        .build());
-
-
     }
 }
