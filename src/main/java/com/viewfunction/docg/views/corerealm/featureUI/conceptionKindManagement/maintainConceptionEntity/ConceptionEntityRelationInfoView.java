@@ -12,6 +12,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.shared.Registration;
@@ -39,10 +40,12 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
     private VerticalLayout relationKindsInfoLayout;
     private Grid<RelationEntity> relationEntitiesGrid;
     private Registration listener;
-    public ConceptionEntityRelationInfoView(String conceptionKind,String conceptionEntityUID) {
+    private int conceptionEntityRelationInfoViewHeightOffset;
+    public ConceptionEntityRelationInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
+        this.conceptionEntityRelationInfoViewHeightOffset = conceptionEntityIntegratedInfoViewHeightOffset+100;
         List<Component> secondaryTitleComponentsList = new ArrayList<>();
         List<Component> actionComponentsList = new ArrayList<>();
 
@@ -85,9 +88,11 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         add(relationEntitiesDetailLayout);
 
         relationKindsInfoLayout = new VerticalLayout();
-        relationKindsInfoLayout.setWidth(430, Unit.PIXELS);
         relationKindsInfoLayout.setPadding(false);
-        relationEntitiesDetailLayout.add(relationKindsInfoLayout);
+        Scroller relationKindsInfoScroller = new Scroller(relationKindsInfoLayout);
+        relationKindsInfoScroller.setWidth(430,Unit.PIXELS);
+        relationKindsInfoScroller.setScrollDirection(Scroller.ScrollDirection.HORIZONTAL);
+        relationEntitiesDetailLayout.add(relationKindsInfoScroller);
 
         SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.PIE_CHART.create(), "关系类型分布");
         relationKindsInfoLayout.add(secondaryIconTitle);
@@ -106,6 +111,9 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         relationEntitiesGrid.addColumn(RelationEntity::getRelationEntityUID).setHeader("关系实体 UID").setKey("idx_1");
 
 
+
+
+
         relationEntitiesListContainerLayout.add(relationEntitiesGrid);
         relationEntitiesDetailLayout.add(relationEntitiesListContainerLayout);
     }
@@ -117,13 +125,12 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         //ResourceHolder.getApplicationBlackboard().addListener(this);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            relationEntitiesGrid.setHeight(event.getHeight()-170, Unit.PIXELS);
+            relationEntitiesGrid.setHeight(event.getHeight()-this.conceptionEntityRelationInfoViewHeightOffset, Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            int browserWidth = receiver.getBodyClientWidth();
-            relationEntitiesGrid.setHeight(browserHeight-170,Unit.PIXELS);
+            relationEntitiesGrid.setHeight(browserHeight-this.conceptionEntityRelationInfoViewHeightOffset,Unit.PIXELS);
         }));
     }
 

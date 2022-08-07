@@ -14,7 +14,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
     private String conceptionEntityUID;
     private ConceptionEntityRelationInfoView conceptionEntityRelationInfoView;
 
-    public ConceptionEntityIntegratedInfoView(String conceptionKind,String conceptionEntityUID){
+    public ConceptionEntityIntegratedInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
         this.setPadding(false);
@@ -24,7 +24,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
 
         PagedTabs tabs = new PagedTabs(container);
         tabs.getElement().getStyle().set("width","100%");
-        conceptionEntityRelationInfoView = new ConceptionEntityRelationInfoView(this.conceptionKind,this.conceptionEntityUID);
+        this.conceptionEntityRelationInfoView = new ConceptionEntityRelationInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
 
         Tab tab0 = tabs.add("", conceptionEntityRelationInfoView,false);
         Span relationInfoSpan =new Span();
@@ -59,7 +59,5 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         tab3.add(timeChartSpan);
 
         add(tabs,container);
-
-        this.conceptionEntityRelationInfoView = new ConceptionEntityRelationInfoView(this.conceptionKind,this.conceptionEntityUID);
     }
 }

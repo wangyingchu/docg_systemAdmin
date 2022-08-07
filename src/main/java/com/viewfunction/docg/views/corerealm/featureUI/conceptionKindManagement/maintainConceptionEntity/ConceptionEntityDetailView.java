@@ -53,7 +53,7 @@ public class ConceptionEntityDetailView extends VerticalLayout implements Before
                 new ConceptionEntityAttributesEditorView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityAttributesEditorHeightOffset);
 
         ConceptionEntityIntegratedInfoView conceptionEntityIntegratedInfoView =
-                new ConceptionEntityIntegratedInfoView(this.conceptionKind,this.conceptionEntityUID);
+                new ConceptionEntityIntegratedInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityAttributesEditorHeightOffset);
 
         this.entityFieldsContainer.add(conceptionEntityAttributesEditorView);
         this.entityDetailContainer.add(conceptionEntityIntegratedInfoView);
