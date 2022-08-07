@@ -39,7 +39,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
     private VerticalLayout relationKindsInfoLayout;
     private Grid<RelationEntity> relationEntitiesGrid;
     private Registration listener;
-    public ConceptionEntityRelationInfoView(String conceptionKind,String conceptionEntityUID){
+    public ConceptionEntityRelationInfoView(String conceptionKind,String conceptionEntityUID) {
         this.setPadding(false);
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
@@ -48,14 +48,14 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
 
         HorizontalLayout titleLayout = new HorizontalLayout();
         secondaryTitleComponentsList.add(titleLayout);
-        relationCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"关联关系总量","-");
-        inDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_LEFT.create(),"关系入度","-");
-        outDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_RIGHT.create(),"关系出度","-");
-        isDenseDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.BULLSEYE.create(),"是否稠密实体","-");
+        relationCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(), "关联关系总量", "-");
+        inDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_LEFT.create(), "关系入度", "-");
+        outDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_RIGHT.create(), "关系出度", "-");
+        isDenseDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.BULLSEYE.create(), "是否稠密实体", "-");
 
-        Button createRelationButton= new Button("新建数据关联");
+        Button createRelationButton = new Button("新建数据关联");
         createRelationButton.setIcon(VaadinIcon.LINK.create());
-        createRelationButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        createRelationButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         createRelationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -63,9 +63,9 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
             }
         });
 
-        Button reloadRelationInfoButton= new Button("重新获取数据");
+        Button reloadRelationInfoButton = new Button("重新获取数据");
         reloadRelationInfoButton.setIcon(VaadinIcon.REFRESH.create());
-        reloadRelationInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        reloadRelationInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         reloadRelationInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -77,33 +77,33 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         actionComponentsList.add(reloadRelationInfoButton);
 
         Icon relationsIcon = VaadinIcon.RANDOM.create();
-        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon,"关联关系概要: ",secondaryTitleComponentsList,actionComponentsList);
+        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon, "关联关系概要: ", secondaryTitleComponentsList, actionComponentsList);
         add(secondaryTitleActionBar);
 
         HorizontalLayout relationEntitiesDetailLayout = new HorizontalLayout();
+        relationEntitiesDetailLayout.setWidthFull();
         add(relationEntitiesDetailLayout);
 
         relationKindsInfoLayout = new VerticalLayout();
+        relationKindsInfoLayout.setWidth(430, Unit.PIXELS);
         relationKindsInfoLayout.setPadding(false);
         relationEntitiesDetailLayout.add(relationKindsInfoLayout);
 
-        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.PIE_CHART.create(),"关系类型分布");
+        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.PIE_CHART.create(), "关系类型分布");
         relationKindsInfoLayout.add(secondaryIconTitle);
 
         VerticalLayout relationEntitiesListContainerLayout = new VerticalLayout();
         relationEntitiesListContainerLayout.setPadding(false);
 
-        SecondaryIconTitle secondaryIconTitle2 = new SecondaryIconTitle(VaadinIcon.MENU.create(),"关系实体列表");
+        SecondaryIconTitle secondaryIconTitle2 = new SecondaryIconTitle(VaadinIcon.MENU.create(), "关系实体列表");
         relationEntitiesListContainerLayout.add(secondaryIconTitle2);
 
         relationEntitiesGrid = new Grid<>();
-        relationEntitiesGrid.setWidth(700,Unit.PIXELS);
+        relationEntitiesGrid.setWidth(100, Unit.PERCENTAGE);
         relationEntitiesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         relationEntitiesGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         relationEntitiesGrid.addColumn(RelationEntity::getRelationKindName).setHeader("关系实体类型名称").setKey("idx_0");
         relationEntitiesGrid.addColumn(RelationEntity::getRelationEntityUID).setHeader("关系实体 UID").setKey("idx_1");
-
-
 
 
         relationEntitiesListContainerLayout.add(relationEntitiesGrid);
@@ -122,8 +122,8 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
+            int browserWidth = receiver.getBodyClientWidth();
             relationEntitiesGrid.setHeight(browserHeight-170,Unit.PIXELS);
-
         }));
     }
 
