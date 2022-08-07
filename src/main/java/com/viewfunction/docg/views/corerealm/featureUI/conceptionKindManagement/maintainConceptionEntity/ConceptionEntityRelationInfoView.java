@@ -5,7 +5,8 @@ import com.github.appreciated.apexcharts.ApexCharts;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -13,11 +14,9 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
@@ -38,6 +37,8 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
     private SecondaryKeyValueDisplayItem outDegreeDisplayItem;
     private SecondaryKeyValueDisplayItem isDenseDisplayItem;
     private VerticalLayout relationKindsInfoLayout;
+    private Grid<RelationEntity> relationEntitiesGrid;
+    private Registration listener;
     public ConceptionEntityRelationInfoView(String conceptionKind,String conceptionEntityUID){
         this.setPadding(false);
         this.conceptionKind = conceptionKind;
@@ -83,14 +84,29 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         add(relationEntitiesDetailLayout);
 
         relationKindsInfoLayout = new VerticalLayout();
-        relationKindsInfoLayout.setHeight(600,Unit.PIXELS);
+        relationKindsInfoLayout.setPadding(false);
         relationEntitiesDetailLayout.add(relationKindsInfoLayout);
 
         SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.PIE_CHART.create(),"关系类型分布");
         relationKindsInfoLayout.add(secondaryIconTitle);
 
         VerticalLayout relationEntitiesListContainerLayout = new VerticalLayout();
-        relationEntitiesListContainerLayout.add(new Label("relationEntities list"));
+        relationEntitiesListContainerLayout.setPadding(false);
+
+        SecondaryIconTitle secondaryIconTitle2 = new SecondaryIconTitle(VaadinIcon.MENU.create(),"关系实体列表");
+        relationEntitiesListContainerLayout.add(secondaryIconTitle2);
+
+        relationEntitiesGrid = new Grid<>();
+        relationEntitiesGrid.setWidth(700,Unit.PIXELS);
+        relationEntitiesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        relationEntitiesGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        relationEntitiesGrid.addColumn(RelationEntity::getRelationKindName).setHeader("关系实体类型名称").setKey("idx_0");
+        relationEntitiesGrid.addColumn(RelationEntity::getRelationEntityUID).setHeader("关系实体 UID").setKey("idx_1");
+
+
+
+
+        relationEntitiesListContainerLayout.add(relationEntitiesGrid);
         relationEntitiesDetailLayout.add(relationEntitiesListContainerLayout);
     }
 
@@ -98,28 +114,23 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         loadEntityRelationsInfo();
-        /*
-        ResourceHolder.getApplicationBlackboard().addListener(this);
-
+        //ResourceHolder.getApplicationBlackboard().addListener(this);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            conceptionKindMetaInfoGrid.setHeight(event.getHeight()-280, Unit.PIXELS);
+            relationEntitiesGrid.setHeight(event.getHeight()-170, Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            conceptionKindMetaInfoGrid.setHeight(browserHeight-280,Unit.PIXELS);
-            conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-600);
-            singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
-        }));
-        */
+            relationEntitiesGrid.setHeight(browserHeight-170,Unit.PIXELS);
 
+        }));
     }
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
         // Listener needs to be eventually removed in order to avoid resource leak
-        //listener.remove();
+        listener.remove();
         super.onDetach(detachEvent);
         //ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
@@ -131,7 +142,6 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         if(targetConceptionKind != null){
             ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
             if(targetEntity != null){
-                //List<RelationEntity> relationEntityList = targetEntity.getAllRelations();
                 long allRelationsCount = targetEntity.countAllRelations();
                 try {
                     long inDegree = targetEntity.countAllSpecifiedRelations(null, RelationDirection.TO);
@@ -171,6 +181,9 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                     relationEntityCountSpan.getElement().getThemeList().add("badge contrast");
                     relationKindInfoItem.add(relationEntityCountSpan);
                 }
+
+                List<RelationEntity> relationEntityList = targetEntity.getAllRelations();
+                relationEntitiesGrid.setItems(relationEntityList);
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
             }
