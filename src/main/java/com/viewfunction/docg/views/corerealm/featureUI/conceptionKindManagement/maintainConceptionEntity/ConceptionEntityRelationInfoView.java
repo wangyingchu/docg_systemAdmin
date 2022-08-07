@@ -56,7 +56,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         outDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_RIGHT.create(), "关系出度", "-");
         isDenseDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.BULLSEYE.create(), "是否稠密实体", "-");
 
-        Button createRelationButton = new Button("新建数据关联");
+        Button createRelationButton = new Button("新建实体关联");
         createRelationButton.setIcon(VaadinIcon.LINK.create());
         createRelationButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         createRelationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
