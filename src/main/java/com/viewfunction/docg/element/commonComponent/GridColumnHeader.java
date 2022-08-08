@@ -15,4 +15,13 @@ public class GridColumnHeader extends HorizontalLayout {
         headerTitleLabel.addClassNames("text-xs","font-semibold");
         this.add(headerTitleLabel);
     }
+
+    public GridColumnHeader(com.flowingcode.vaadin.addons.fontawesome.FontAwesome.Solid.Icon titleIcon, String titleContent){
+        this.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleIcon.setSize("12px");
+        this.add(titleIcon);
+        Label headerTitleLabel = new Label(titleContent);
+        headerTitleLabel.addClassNames("text-xs","font-semibold");
+        this.add(headerTitleLabel);
+    }
 }

@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.github.appreciated.apexcharts.ApexCharts;
 
 import com.vaadin.flow.component.*;
@@ -7,6 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -110,24 +112,22 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
 
         relationEntitiesGrid = new Grid<>();
         relationEntitiesGrid.setWidth(100, Unit.PERCENTAGE);
-        relationEntitiesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        relationEntitiesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_COLUMN_BORDERS);
         relationEntitiesGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        relationEntitiesGrid.addComponentColumn(new RelationDirectionIconValueProvider()).setHeader("").setKey("idx_0").setFlexGrow(0).setWidth("25px").setResizable(false);
+        relationEntitiesGrid.addComponentColumn(new RelationDirectionIconValueProvider()).setHeader("").setKey("idx_0").setFlexGrow(0).setWidth("35px").setResizable(false);
         relationEntitiesGrid.addComponentColumn(new RelationEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_1").setFlexGrow(0).setWidth("110px").setResizable(false);
         relationEntitiesGrid.addColumn(RelationEntity::getRelationEntityUID).setHeader("关系实体 UID").setKey("idx_2").setFlexGrow(0).setWidth("150px").setResizable(false);
         relationEntitiesGrid.addColumn(RelationEntity::getRelationKindName).setHeader("关系实体类型名称").setKey("idx_3").setResizable(true);
+        relationEntitiesGrid.addComponentColumn(new RelatedConceptionEntityValueProvider()).setHeader("相关概念实体").setKey("idx_4").setFlexGrow(1).setResizable(true);
 
-        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.WRENCH,"");
-        relationEntitiesGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(false);
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
         relationEntitiesGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(false);
         GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.KEY_O,"关系实体 UID");
         relationEntitiesGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
         GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.CONNECT_O,"关系实体类型名称");
-        relationEntitiesGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(false);
-
-
-
+        relationEntitiesGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(FontAwesome.Solid.STETHOSCOPE.create(),"相关概念实体");
+        relationEntitiesGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(false);
 
         relationEntitiesListContainerLayout.add(relationEntitiesGrid);
         relationEntitiesDetailLayout.add(relationEntitiesListContainerLayout);
@@ -229,7 +229,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                 relationDirectionIcon = VaadinIcon.ANGLE_DOUBLE_LEFT.create();
             }
             if(relationDirectionIcon != null){
-                relationDirectionIcon.setSize("16px");
+                relationDirectionIcon.setSize("14px");
             }
             return relationDirectionIcon;
         }
@@ -286,6 +286,26 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                 }
             });
             return actionButtonContainerLayout;
+        }
+    }
+
+    private class RelatedConceptionEntityValueProvider implements ValueProvider<RelationEntity,HorizontalLayout>{
+        @Override
+        public HorizontalLayout apply(RelationEntity relationEntity) {
+            HorizontalLayout relatedEntityInfoContainerLayout = new HorizontalLayout();
+            String fromConceptionEntityUID = relationEntity.getFromConceptionEntityUID();
+            String toConceptionEntityUID = relationEntity.getToConceptionEntityUID();
+            Label relatedEntityUID = null;
+            if(conceptionEntityUID.equals(fromConceptionEntityUID)){
+                relatedEntityUID = new Label(toConceptionEntityUID);
+            }
+            if(conceptionEntityUID.equals(toConceptionEntityUID)){
+                relatedEntityUID = new Label(fromConceptionEntityUID);
+            }
+            if(relatedEntityUID != null){
+                relatedEntityInfoContainerLayout.add(relatedEntityUID);
+            }
+            return relatedEntityInfoContainerLayout;
         }
     }
 }
