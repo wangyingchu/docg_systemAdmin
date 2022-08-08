@@ -45,7 +45,6 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
     private Grid<RelationEntity> relationEntitiesGrid;
     private Registration listener;
     private int conceptionEntityRelationInfoViewHeightOffset;
-    private final String _rowIndexPropertyName = "ROW_INDEX";
 
     public ConceptionEntityRelationInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
