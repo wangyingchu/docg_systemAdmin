@@ -180,6 +180,11 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                 entityAttachedRelationKindsCountChart.getStyle().set("padding-left","50px");
                 relationKindsInfoLayout.add(entityAttachedRelationKindsCountChart);
 
+                Icon filterIcon = new Icon(VaadinIcon.FILTER);
+                filterIcon.setSize("8px");
+                Tooltips.getCurrent().setTooltip(filterIcon, "按类型过滤关系实体");
+                relationKindsInfoLayout.add(filterIcon);
+
                 Set<String> relationKindsSet = attachedRelationKindCountInfo.keySet();
                 for(String relationKindName : relationKindsSet){
                     HorizontalLayout relationKindInfoItem = new HorizontalLayout();
@@ -200,6 +205,28 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                     relationEntityCountSpan.getElement().getThemeList().add("badge contrast");
                     relationKindInfoItem.add(relationEntityCountSpan);
                 }
+
+
+                HorizontalLayout relationKindInfoItem = new HorizontalLayout();
+                relationKindInfoItem.setSpacing(false);
+                relationKindsInfoLayout.add(relationKindInfoItem);
+
+                Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+                relationKindIcon.setSize("10px");
+                relationKindInfoItem.add(relationKindIcon);
+                relationKindInfoItem.setVerticalComponentAlignment(Alignment.CENTER,relationKindIcon);
+                Button currentRelationKindButton = new Button("所有关系类型");
+                currentRelationKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+                relationKindInfoItem.add(currentRelationKindButton);
+                currentRelationKindButton.setEnabled(false);
+                Span relationEntityCountSpan = new Span(""+allRelationsCount);
+                relationEntityCountSpan.getStyle().set("font-size","var(--lumo-font-size-xxs)").set("font-weight","bold");
+                relationEntityCountSpan.setHeight(20,Unit.PIXELS);
+                relationEntityCountSpan.getElement().getThemeList().add("badge contrast");
+                relationKindInfoItem.add(relationEntityCountSpan);
+
+
+
 
                 List<RelationEntity> relationEntityList = targetEntity.getAllRelations();
                 relationEntitiesGrid.setItems(relationEntityList);
