@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -44,6 +45,9 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
     private Grid<RelationEntity> relationEntitiesGrid;
     private Registration listener;
     private int conceptionEntityRelationInfoViewHeightOffset;
+    private GridListDataView<RelationEntity> relationEntitiesView;
+    private String currentDisplayRelationKind;
+    private List<Button> relationKindFilterButtonList;
 
     public ConceptionEntityRelationInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
@@ -128,6 +132,8 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
 
         relationEntitiesListContainerLayout.add(relationEntitiesGrid);
         relationEntitiesDetailLayout.add(relationEntitiesListContainerLayout);
+
+        this.relationKindFilterButtonList = new ArrayList<>();
     }
 
     @Override
@@ -196,6 +202,14 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                     relationKindInfoItem.add(relationKindIcon);
                     relationKindInfoItem.setVerticalComponentAlignment(Alignment.CENTER,relationKindIcon);
                     Button currentRelationKindButton = new Button(relationKindName);
+                    this.relationKindFilterButtonList.add(currentRelationKindButton);
+                    currentRelationKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                        @Override
+                        public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                            filterRelationEntities(relationKindName,currentRelationKindButton);
+                        }
+                    });
+
                     currentRelationKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
                     relationKindInfoItem.add(currentRelationKindButton);
 
@@ -206,7 +220,6 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                     relationKindInfoItem.add(relationEntityCountSpan);
                 }
 
-
                 HorizontalLayout relationKindInfoItem = new HorizontalLayout();
                 relationKindInfoItem.setSpacing(false);
                 relationKindsInfoLayout.add(relationKindInfoItem);
@@ -216,6 +229,14 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                 relationKindInfoItem.add(relationKindIcon);
                 relationKindInfoItem.setVerticalComponentAlignment(Alignment.CENTER,relationKindIcon);
                 Button currentRelationKindButton = new Button("所有关系类型");
+                this.relationKindFilterButtonList.add(currentRelationKindButton);
+                currentRelationKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                        filterRelationEntities(null,currentRelationKindButton);
+                    }
+                });
+
                 currentRelationKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
                 relationKindInfoItem.add(currentRelationKindButton);
                 currentRelationKindButton.setEnabled(false);
@@ -225,11 +246,19 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                 relationEntityCountSpan.getElement().getThemeList().add("badge contrast");
                 relationKindInfoItem.add(relationEntityCountSpan);
 
-
-
-
                 List<RelationEntity> relationEntityList = targetEntity.getAllRelations();
-                relationEntitiesGrid.setItems(relationEntityList);
+                this.relationEntitiesView = relationEntitiesGrid.setItems(relationEntityList);
+                this.relationEntitiesView.addFilter(item->{
+                    if(currentDisplayRelationKind != null){
+                        if(currentDisplayRelationKind.equals(item.getRelationKindName())){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }else{
+                        return true;
+                    }
+                });
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
             }
@@ -336,5 +365,14 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
 
             return entityInfoFootprintMessageBar;
         }
+    }
+
+    private void filterRelationEntities(String displayRelationKind,Button launchButton){
+        this.currentDisplayRelationKind = displayRelationKind;
+        this.relationEntitiesView.refreshAll();
+        for(Button currentButton:this.relationKindFilterButtonList){
+            currentButton.setEnabled(true);
+        }
+        launchButton.setEnabled(false);
     }
 }
