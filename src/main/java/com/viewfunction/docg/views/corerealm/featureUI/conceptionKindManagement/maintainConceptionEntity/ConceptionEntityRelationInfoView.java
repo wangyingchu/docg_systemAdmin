@@ -354,11 +354,22 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
             conceptionEntityIcon.setSize("18px");
             conceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
             List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
-            footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,"NOT-KNOWN-KIND"));
             if(conceptionEntityUID.equals(fromConceptionEntityUID)){
+                String conceptionKind = "";
+                List<String> conceptionKindList = relationEntity.getToConceptionEntityKinds();
+                if(conceptionKindList !=null &&conceptionKindList.size()>0){
+                    conceptionKind = conceptionKindList.get(0);
+                }
+                footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,conceptionKind));
                 footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,toConceptionEntityUID));
             }
             if(conceptionEntityUID.equals(toConceptionEntityUID)){
+                String conceptionKind = "";
+                List<String> conceptionKindList = relationEntity.getFromConceptionEntityKinds();
+                if(conceptionKindList !=null &&conceptionKindList.size()>0){
+                    conceptionKind = conceptionKindList.get(0);
+                }
+                footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,conceptionKind));
                 footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,fromConceptionEntityUID));
             }
             FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList,true);
