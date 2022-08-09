@@ -176,9 +176,8 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                 Map<String,Long> attachedRelationKindCountInfo = targetEntity.countAttachedRelationKinds();
                 ApexCharts entityAttachedRelationKindsCountChart = new EntityAttachedRelationKindsCountChart(attachedRelationKindCountInfo)
                         .withColors("#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a").build();
-                entityAttachedRelationKindsCountChart.setWidth(250,Unit.PIXELS);
-                entityAttachedRelationKindsCountChart.setHeight(130,Unit.PIXELS);
-                entityAttachedRelationKindsCountChart.getStyle().set("padding-left","30px");
+                entityAttachedRelationKindsCountChart.setWidth(200,Unit.PIXELS);
+                entityAttachedRelationKindsCountChart.getStyle().set("padding-left","50px");
                 relationKindsInfoLayout.add(entityAttachedRelationKindsCountChart);
 
                 Set<String> relationKindsSet = attachedRelationKindCountInfo.keySet();
