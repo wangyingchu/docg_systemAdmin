@@ -46,4 +46,33 @@ public class FootprintMessageBar extends HorizontalLayout {
             }
         }
     }
+
+    public FootprintMessageBar(List<FootprintMessageVO> messageFootprints,boolean hideStartIcon){
+        this.setMargin(false);
+        this.setSpacing(false);
+        this.setPadding(false);
+        if(!hideStartIcon) {
+            Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+            footPrintStartIcon.setSize("22px");
+            footPrintStartIcon.getStyle().set("padding-right", "8px").set("color", "var(--lumo-contrast-50pct)");
+            this.add(footPrintStartIcon);
+        }
+        if(messageFootprints != null){
+            for(int i = 0; i< messageFootprints.size(); i++){
+                FootprintMessageVO currentFootprintMessageVO = messageFootprints.get(i);
+                this.add(currentFootprintMessageVO.messageIcon);
+                this.setVerticalComponentAlignment(Alignment.CENTER,currentFootprintMessageVO.messageIcon);
+                Label messageContentLabel = new Label(currentFootprintMessageVO.messageContent);
+                this.add(messageContentLabel);
+                this.setVerticalComponentAlignment(Alignment.CENTER,messageContentLabel);
+                if(i<messageFootprints.size()-1){
+                    Icon divIcon = VaadinIcon.ITALIC.create();
+                    divIcon.setSize("12px");
+                    divIcon.getStyle().set("padding-left","5px");
+                    this.add(divIcon);
+                    this.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+                }
+            }
+        }
+    }
 }

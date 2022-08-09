@@ -8,7 +8,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -19,14 +18,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
-import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
-import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
-import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
-import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -259,7 +256,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
             addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             addToProcessListButton.setIcon(VaadinIcon.INBOX.create());
-            Tooltips.getCurrent().setTooltip(addToProcessListButton, "加入待处理数据列表");
+            Tooltips.getCurrent().setTooltip(addToProcessListButton, "将关联概念实体加入待处理数据列表");
             actionButtonContainerLayout.add(addToProcessListButton);
             addToProcessListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
@@ -292,20 +289,26 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
     private class RelatedConceptionEntityValueProvider implements ValueProvider<RelationEntity,HorizontalLayout>{
         @Override
         public HorizontalLayout apply(RelationEntity relationEntity) {
-            HorizontalLayout relatedEntityInfoContainerLayout = new HorizontalLayout();
             String fromConceptionEntityUID = relationEntity.getFromConceptionEntityUID();
             String toConceptionEntityUID = relationEntity.getToConceptionEntityUID();
-            Label relatedEntityUID = null;
+
+            Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+            conceptionKindIcon.setSize("12px");
+            conceptionKindIcon.getStyle().set("padding-right","3px");
+            Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+            conceptionEntityIcon.setSize("18px");
+            conceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
+            List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
+            footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,"NOT-KNOWN-KIND"));
             if(conceptionEntityUID.equals(fromConceptionEntityUID)){
-                relatedEntityUID = new Label(toConceptionEntityUID);
+                footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,toConceptionEntityUID));
             }
             if(conceptionEntityUID.equals(toConceptionEntityUID)){
-                relatedEntityUID = new Label(fromConceptionEntityUID);
+                footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,fromConceptionEntityUID));
             }
-            if(relatedEntityUID != null){
-                relatedEntityInfoContainerLayout.add(relatedEntityUID);
-            }
-            return relatedEntityInfoContainerLayout;
+            FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList,true);
+
+            return entityInfoFootprintMessageBar;
         }
     }
 }
