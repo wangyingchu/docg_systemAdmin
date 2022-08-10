@@ -346,6 +346,8 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         public HorizontalLayout apply(RelationEntity relationEntity) {
             String fromConceptionEntityUID = relationEntity.getFromConceptionEntityUID();
             String toConceptionEntityUID = relationEntity.getToConceptionEntityUID();
+            List<String> fromConceptionKindList = relationEntity.getFromConceptionEntityKinds();
+            List<String> toConceptionKindList = relationEntity.getToConceptionEntityKinds();
 
             Icon conceptionKindIcon = VaadinIcon.CUBE.create();
             conceptionKindIcon.setSize("12px");
@@ -356,18 +358,16 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
             List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
             if(conceptionEntityUID.equals(fromConceptionEntityUID)){
                 String conceptionKind = "";
-                List<String> conceptionKindList = relationEntity.getToConceptionEntityKinds();
-                if(conceptionKindList !=null &&conceptionKindList.size()>0){
-                    conceptionKind = conceptionKindList.get(0);
+                if(toConceptionKindList !=null &&toConceptionKindList.size()>0){
+                    conceptionKind = toConceptionKindList.get(0);
                 }
                 footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,conceptionKind));
                 footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,toConceptionEntityUID));
             }
             if(conceptionEntityUID.equals(toConceptionEntityUID)){
                 String conceptionKind = "";
-                List<String> conceptionKindList = relationEntity.getFromConceptionEntityKinds();
-                if(conceptionKindList !=null &&conceptionKindList.size()>0){
-                    conceptionKind = conceptionKindList.get(0);
+                if(fromConceptionKindList !=null && fromConceptionKindList.size()>0){
+                    conceptionKind = fromConceptionKindList.get(0);
                 }
                 footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,conceptionKind));
                 footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,fromConceptionEntityUID));
