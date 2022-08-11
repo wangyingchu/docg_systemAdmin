@@ -78,7 +78,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             public Object apply(ConceptionEntityValue conceptionEntityValue) {
                 return conceptionEntityValue.getEntityAttributesValue().get(_rowIndexPropertyName);
             }
-        }).setHeader("").setHeader("IDX").setKey("idx").setFlexGrow(0).setWidth("60px").setResizable(false);
+        }).setHeader("").setHeader("IDX").setKey("idx").setFlexGrow(0).setWidth("75px").setResizable(false);
         queryResultGrid.addComponentColumn(new ConceptionEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("110px").setResizable(false);
         queryResultGrid.addColumn(ConceptionEntityValue::getConceptionEntityUID).setHeader(" EntityUID").setKey("idx_1").setFlexGrow(1).setWidth("150px").setResizable(false);
 
