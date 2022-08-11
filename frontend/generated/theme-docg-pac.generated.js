@@ -1,4 +1,5 @@
 import 'construct-style-sheets-polyfill';
+import { unsafeCSS, registerStyles } from '@vaadin/vaadin-themable-mixin/register-styles';
 
 const createLinkReferences = (css, target) => {
   // Unresolved urls are written as '@import url(text);' to the css
@@ -51,6 +52,7 @@ import { typography } from '@vaadin/vaadin-lumo-styles/typography.js';
 import { color } from '@vaadin/vaadin-lumo-styles/color.js';
 import { spacing } from '@vaadin/vaadin-lumo-styles/spacing.js';
 import { badge } from '@vaadin/vaadin-lumo-styles/badge.js';
+import vaadinGridCss from 'themes/docg-pac/components/vaadin-grid.css?inline';
 
 window.Vaadin = window.Vaadin || {};
 window.Vaadin.theme = window.Vaadin.theme || {};
@@ -94,6 +96,10 @@ export const applyTheme = (target) => {
     
   
   if (!document['_vaadintheme_docg-pac_componentCss']) {
+    registerStyles(
+      'vaadin-grid',
+      unsafeCSS(vaadinGridCss.toString())
+    );
     
     document['_vaadintheme_docg-pac_componentCss'] = true;
   }
