@@ -456,7 +456,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             conceptionKindMetaInfoGrid.setHeight(browserHeight-280,Unit.PIXELS);
-            conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-580);
+            conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-600);
             singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
         }));
     }
