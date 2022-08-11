@@ -29,6 +29,7 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
     private DateTimePicker lastUpdateDate;
     private TextField dataSource;
     private TextField creator;
+    private TextField entityBelongedConceptionKinds;
     public ConceptionEntityMetaInfoView(String conceptionKind,String conceptionEntityUID){
         this.setMargin(false);
         this.setSpacing(false);
@@ -45,6 +46,11 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
         footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,conceptionEntityUID));
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
+
+        entityBelongedConceptionKinds = new TextField("实体所属概念类型");
+        entityBelongedConceptionKinds.setWidthFull();
+        entityBelongedConceptionKinds.setReadOnly(true);
+        add(entityBelongedConceptionKinds);
 
         createDate = new DateTimePicker("创建时间");
         createDate.setReadOnly(true);
@@ -75,6 +81,8 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
         if(targetConceptionKind != null){
             ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
             if(targetEntity != null){
+                List<String> belongedKinds = targetEntity.getAllConceptionKindNames();
+                entityBelongedConceptionKinds.setValue(belongedKinds.toString());
                 ZoneId zoneId = ZoneId.systemDefault();
                 if(targetEntity.hasAttribute(RealmConstant._createDateProperty)){
                     Date createdDateValue = (Date)targetEntity.getAttribute(RealmConstant._createDateProperty).getAttributeValue();
