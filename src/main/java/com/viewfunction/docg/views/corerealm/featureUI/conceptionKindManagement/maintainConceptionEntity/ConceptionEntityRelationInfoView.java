@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -129,6 +130,16 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         relationEntitiesGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
         GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(FontAwesome.Solid.STETHOSCOPE.create(),"相关概念实体");
         relationEntitiesGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(false);
+
+        relationEntitiesGrid.addItemDoubleClickListener(new ComponentEventListener<ItemDoubleClickEvent<RelationEntity>>() {
+            @Override
+            public void onComponentEvent(ItemDoubleClickEvent<RelationEntity> relationEntityItemDoubleClickEvent) {
+                RelationEntity targetRelationEntity = relationEntityItemDoubleClickEvent.getItem();
+                if(targetRelationEntity != null){
+                    renderRelatedConceptionEntityUI(targetRelationEntity);
+                }
+            }
+        });
 
         relationEntitiesListContainerLayout.add(relationEntitiesGrid);
         relationEntitiesDetailLayout.add(relationEntitiesListContainerLayout);
