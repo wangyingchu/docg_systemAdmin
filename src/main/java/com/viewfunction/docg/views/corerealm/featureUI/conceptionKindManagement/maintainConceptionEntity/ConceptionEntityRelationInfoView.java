@@ -359,7 +359,12 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
             if(conceptionEntityUID.equals(fromConceptionEntityUID)){
                 String conceptionKind = "";
                 if(toConceptionKindList !=null &&toConceptionKindList.size()>0){
-                    conceptionKind = toConceptionKindList.get(0);
+                    for(int i=0; i<toConceptionKindList.size(); i++){
+                        conceptionKind = conceptionKind+toConceptionKindList.get(i);
+                        if(i<toConceptionKindList.size()-1){
+                            conceptionKind = conceptionKind+" | ";
+                        }
+                    }
                 }
                 footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,conceptionKind));
                 footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,toConceptionEntityUID));
@@ -367,7 +372,12 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
             if(conceptionEntityUID.equals(toConceptionEntityUID)){
                 String conceptionKind = "";
                 if(fromConceptionKindList !=null && fromConceptionKindList.size()>0){
-                    conceptionKind = fromConceptionKindList.get(0);
+                    for(int i=0; i<fromConceptionKindList.size(); i++){
+                        conceptionKind = conceptionKind+fromConceptionKindList.get(i);
+                        if(i<fromConceptionKindList.size()-1){
+                            conceptionKind = conceptionKind+" | ";
+                        }
+                    }
                 }
                 footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,conceptionKind));
                 footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,fromConceptionEntityUID));
