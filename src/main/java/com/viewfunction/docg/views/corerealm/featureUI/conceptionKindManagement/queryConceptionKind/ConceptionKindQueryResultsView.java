@@ -199,9 +199,9 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         List<String> deletedEntityAllConceptionKinds = event.getEntityAllConceptionKindNames();
         if(deletedEntityAllConceptionKinds.contains(conceptionKindName)){
             String conceptionEntityUID = event.getConceptionEntityUID();
-            ListDataProvider dtaProvider=(ListDataProvider)queryResultGrid.getDataProvider();
+            ListDataProvider dataProvider=(ListDataProvider)queryResultGrid.getDataProvider();
             ConceptionEntityValue conceptionEntityValueToDelete = null;
-            Collection<ConceptionEntityValue> conceptionEntityValueList = dtaProvider.getItems();
+            Collection<ConceptionEntityValue> conceptionEntityValueList = dataProvider.getItems();
             for(ConceptionEntityValue currentConceptionEntityValue:conceptionEntityValueList){
                 if(currentConceptionEntityValue.getConceptionEntityUID().equals(conceptionEntityUID)){
                     conceptionEntityValueToDelete = currentConceptionEntityValue;
@@ -209,9 +209,9 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                 }
             }
             if(conceptionEntityValueToDelete != null){
-                dtaProvider.getItems().remove(conceptionEntityValueToDelete);
+                dataProvider.getItems().remove(conceptionEntityValueToDelete);
+                dataProvider.refreshAll();
             }
-            dtaProvider.refreshAll();
         }
     }
 

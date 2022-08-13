@@ -18,6 +18,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
@@ -26,17 +27,18 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.eventHandling.RelationEntityDeletedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+
+import com.viewfunction.docg.util.ResourceHolder;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 import relationKindManagement.DeleteRelationEntityView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class ConceptionEntityRelationInfoView extends VerticalLayout {
+public class ConceptionEntityRelationInfoView extends VerticalLayout implements
+        RelationEntityDeletedEvent.RelationEntityDeletedListener{
     private String conceptionKind;
     private String conceptionEntityUID;
     private SecondaryKeyValueDisplayItem relationCountDisplayItem;
@@ -152,7 +154,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         loadEntityRelationsInfo();
-        //ResourceHolder.getApplicationBlackboard().addListener(this);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             relationEntitiesGrid.setHeight(event.getHeight()-this.conceptionEntityRelationInfoViewHeightOffset, Unit.PIXELS);
@@ -169,7 +171,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     private void loadEntityRelationsInfo(){
@@ -278,6 +280,29 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
             CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
         }
         coreRealm.closeGlobalSession();
+    }
+
+    @Override
+    public void receivedRelationEntityDeletedEvent(RelationEntityDeletedEvent event) {
+        String relationEntityUID = event.getRelationEntityUID();
+        String relationKindName = event.getRelationKindName();
+        if(relationEntityUID != null && relationKindName!= null){
+            boolean needUpdateRelationInfo= false;
+            ListDataProvider dataProvider=(ListDataProvider)relationEntitiesGrid.getDataProvider();
+            Collection<RelationEntity> relationEntityValueList = dataProvider.getItems();
+            RelationEntity targetRelationEntityToDelete = null;
+            for(RelationEntity currentRelationEntityValue:relationEntityValueList){
+                if(currentRelationEntityValue.getRelationEntityUID().equals(relationEntityUID)){
+                    targetRelationEntityToDelete = currentRelationEntityValue;
+                    break;
+                }
+            }
+            if(targetRelationEntityToDelete != null){
+                dataProvider.getItems().remove(targetRelationEntityToDelete);
+                dataProvider.refreshAll();
+                needUpdateRelationInfo = true;
+            }
+        }
     }
 
     private class RelationDirectionIconValueProvider implements ValueProvider<RelationEntity,Icon>{
