@@ -12,13 +12,13 @@ import java.util.Set;
 
 public class EntityAttachedRelationKindsCountChart extends ApexChartsBuilder {
 
-    public EntityAttachedRelationKindsCountChart(Map<String,Long> attachedRelationKindCountInfo){
+    public EntityAttachedRelationKindsCountChart(Map<String, Long> attachedRelationKindCountInfo) {
         Set<String> relationKindsSet = attachedRelationKindCountInfo.keySet();
 
         String[] relationKindNameArray = new String[relationKindsSet.size()];
         Double[] relationEntityCountArray = new Double[relationKindsSet.size()];
-        int idx =0;
-        for(String currentRelationKind:relationKindsSet){
+        int idx = 0;
+        for (String currentRelationKind : relationKindsSet) {
             relationKindNameArray[idx] = currentRelationKind;
             relationEntityCountArray[idx] = attachedRelationKindCountInfo.get(currentRelationKind).doubleValue();
             idx++;

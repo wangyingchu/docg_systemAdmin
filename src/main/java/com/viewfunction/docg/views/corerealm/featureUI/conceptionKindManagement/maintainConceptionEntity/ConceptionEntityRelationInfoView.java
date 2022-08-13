@@ -58,6 +58,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
     private Map<String,Long> attachedRelationKindCountInfo;
     private Map<String,Span> relationEntityCountSpanMap;
     private Span relationEntityCountSpan;
+    private VerticalLayout chartContainer;
 
     public ConceptionEntityRelationInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
@@ -204,11 +205,18 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
                 isDenseDisplayItem.updateDisplayValue(""+targetEntity.isDense());
 
                 attachedRelationKindCountInfo = targetEntity.countAttachedRelationKinds();
+
+                chartContainer = new VerticalLayout();
+                chartContainer.setPadding(false);
+                chartContainer.setMargin(false);
+                chartContainer.setSpacing(false);
+                relationKindsInfoLayout.add(chartContainer);
+
                 ApexCharts entityAttachedRelationKindsCountChart = new EntityAttachedRelationKindsCountChart(attachedRelationKindCountInfo)
                         .withColors("#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a").build();
                 entityAttachedRelationKindsCountChart.setWidth(200,Unit.PIXELS);
                 entityAttachedRelationKindsCountChart.getStyle().set("padding-left","50px");
-                relationKindsInfoLayout.add(entityAttachedRelationKindsCountChart);
+                chartContainer.add(entityAttachedRelationKindsCountChart);
 
                 Icon filterIcon = new Icon(VaadinIcon.FILTER);
                 filterIcon.setSize("8px");
@@ -330,6 +338,12 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
                 attachedRelationKindCountInfo.put(relationKindName,newRelationEntityCount);
                 relationEntityCountSpanMap.get(relationKindName).setText(""+newRelationEntityCount.longValue());
 
+                chartContainer.removeAll();
+                ApexCharts entityAttachedRelationKindsCountChart = new EntityAttachedRelationKindsCountChart(attachedRelationKindCountInfo)
+                        .withColors("#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a").build();
+                entityAttachedRelationKindsCountChart.setWidth(200,Unit.PIXELS);
+                entityAttachedRelationKindsCountChart.getStyle().set("padding-left","50px");
+                chartContainer.add(entityAttachedRelationKindsCountChart);
             }
         }
     }
