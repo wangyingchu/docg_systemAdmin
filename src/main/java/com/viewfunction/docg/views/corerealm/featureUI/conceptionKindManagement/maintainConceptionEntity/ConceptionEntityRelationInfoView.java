@@ -29,6 +29,7 @@ import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import dev.mett.vaadin.tooltip.Tooltips;
+import relationKindManagement.DeleteRelationEntityView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -344,7 +345,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(relationEntity != null){
-                        //deleteConceptionEntity(conceptionEntityValue);
+                        deleteRelationEntity(relationEntity);
                     }
                 }
             });
@@ -441,5 +442,14 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout {
         fullScreenWindow.setWindowContent(conceptionEntityDetailView);
         conceptionEntityDetailView.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
+    }
+
+    private void deleteRelationEntity(RelationEntity relationEntity){
+        DeleteRelationEntityView deleteRelationEntityView = new DeleteRelationEntityView(relationEntity);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除关系实体",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(deleteRelationEntityView);
+        fixSizeWindow.setModel(true);
+        deleteRelationEntityView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }
