@@ -55,6 +55,9 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
     private long allRelationsNumber;
     private long inDegreeCountNumber;
     private long outDegreeCountNumber;
+    private Map<String,Long> attachedRelationKindCountInfo;
+    private Map<String,Span> relationEntityCountSpanMap;
+    private Span relationEntityCountSpan;
 
     public ConceptionEntityRelationInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
@@ -151,6 +154,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         relationEntitiesDetailLayout.add(relationEntitiesListContainerLayout);
 
         this.relationKindFilterButtonList = new ArrayList<>();
+        this.relationEntityCountSpanMap = new HashMap<>();
     }
 
     @Override
@@ -199,7 +203,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
                 relationCountDisplayItem.updateDisplayValue(""+allRelationsNumber);
                 isDenseDisplayItem.updateDisplayValue(""+targetEntity.isDense());
 
-                Map<String,Long> attachedRelationKindCountInfo = targetEntity.countAttachedRelationKinds();
+                attachedRelationKindCountInfo = targetEntity.countAttachedRelationKinds();
                 ApexCharts entityAttachedRelationKindsCountChart = new EntityAttachedRelationKindsCountChart(attachedRelationKindCountInfo)
                         .withColors("#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a").build();
                 entityAttachedRelationKindsCountChart.setWidth(200,Unit.PIXELS);
@@ -238,6 +242,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
                     relationEntityCountSpan.setHeight(20,Unit.PIXELS);
                     relationEntityCountSpan.getElement().getThemeList().add("badge contrast");
                     relationKindInfoItem.add(relationEntityCountSpan);
+                    this.relationEntityCountSpanMap.put(relationKindName,relationEntityCountSpan);
                 }
 
                 HorizontalLayout relationKindInfoItem = new HorizontalLayout();
@@ -260,7 +265,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
                 currentRelationKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
                 relationKindInfoItem.add(currentRelationKindButton);
                 currentRelationKindButton.setEnabled(false);
-                Span relationEntityCountSpan = new Span(""+allRelationsCount);
+                relationEntityCountSpan = new Span(""+allRelationsCount);
                 relationEntityCountSpan.getStyle().set("font-size","var(--lumo-font-size-xxs)").set("font-weight","bold");
                 relationEntityCountSpan.setHeight(20,Unit.PIXELS);
                 relationEntityCountSpan.getElement().getThemeList().add("badge contrast");
@@ -319,12 +324,12 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
                     inDegreeCountNumber--;
                     inDegreeDisplayItem.updateDisplayValue(""+inDegreeCountNumber);
                 }
+                relationEntityCountSpan.setText(""+allRelationsNumber);
 
+                Long newRelationEntityCount = attachedRelationKindCountInfo.get(relationKindName) -1;
+                attachedRelationKindCountInfo.put(relationKindName,newRelationEntityCount);
+                relationEntityCountSpanMap.get(relationKindName).setText(""+newRelationEntityCount.longValue());
 
-
-
-
-                //..................
             }
         }
     }
