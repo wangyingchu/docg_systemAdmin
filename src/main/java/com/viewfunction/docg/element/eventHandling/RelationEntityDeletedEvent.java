@@ -7,7 +7,8 @@ public class RelationEntityDeletedEvent implements Event {
 
     private String relationEntityUID;
     private String relationKindName;
-
+    private String fromConceptionEntityUID;
+    private String toConceptionEntityUID;
 
     public String getRelationEntityUID() {
         return relationEntityUID;
@@ -23,6 +24,22 @@ public class RelationEntityDeletedEvent implements Event {
 
     public void setRelationKindName(String relationKindName) {
         this.relationKindName = relationKindName;
+    }
+
+    public String getFromConceptionEntityUID() {
+        return fromConceptionEntityUID;
+    }
+
+    public void setFromConceptionEntityUID(String fromConceptionEntityUID) {
+        this.fromConceptionEntityUID = fromConceptionEntityUID;
+    }
+
+    public String getToConceptionEntityUID() {
+        return toConceptionEntityUID;
+    }
+
+    public void setToConceptionEntityUID(String toConceptionEntityUID) {
+        this.toConceptionEntityUID = toConceptionEntityUID;
     }
 
     public interface RelationEntityDeletedListener extends Listener {

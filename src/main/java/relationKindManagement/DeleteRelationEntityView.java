@@ -77,6 +77,8 @@ public class DeleteRelationEntityView extends VerticalLayout {
                         RelationEntityDeletedEvent relationEntityDeletedEvent = new RelationEntityDeletedEvent();
                         relationEntityDeletedEvent.setRelationEntityUID(this.relationEntity.getRelationEntityUID());
                         relationEntityDeletedEvent.setRelationKindName(this.relationEntity.getRelationKindName());
+                        relationEntityDeletedEvent.setToConceptionEntityUID(this.relationEntity.getToConceptionEntityUID());
+                        relationEntityDeletedEvent.setFromConceptionEntityUID(this.relationEntity.getFromConceptionEntityUID());
                         ResourceHolder.getApplicationBlackboard().fire(relationEntityDeletedEvent);
                         CommonUIOperationUtil.showPopupNotification("关系实体 "+this.relationEntity.getRelationKindName()+" - "+this.relationEntity.getRelationEntityUID()+" 删除操作成功", NotificationVariant.LUMO_SUCCESS);
                     }else{

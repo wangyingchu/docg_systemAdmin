@@ -52,6 +52,9 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
     private GridListDataView<RelationEntity> relationEntitiesView;
     private String currentDisplayRelationKind;
     private List<Button> relationKindFilterButtonList;
+    private long allRelationsNumber;
+    private long inDegreeCountNumber;
+    private long outDegreeCountNumber;
 
     public ConceptionEntityRelationInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
@@ -182,15 +185,18 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
             ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
             if(targetEntity != null){
                 long allRelationsCount = targetEntity.countAllRelations();
+                allRelationsNumber = allRelationsCount;
                 try {
                     long inDegree = targetEntity.countAllSpecifiedRelations(null, RelationDirection.TO);
                     long outDegree = targetEntity.countAllSpecifiedRelations(null, RelationDirection.FROM);
-                    inDegreeDisplayItem.updateDisplayValue(""+inDegree);
-                    outDegreeDisplayItem.updateDisplayValue(""+outDegree);
+                    inDegreeCountNumber = inDegree;
+                    outDegreeCountNumber = outDegree;
+                    inDegreeDisplayItem.updateDisplayValue(""+inDegreeCountNumber);
+                    outDegreeDisplayItem.updateDisplayValue(""+outDegreeCountNumber);
                 } catch (CoreRealmServiceRuntimeException e) {
                     throw new RuntimeException(e);
                 }
-                relationCountDisplayItem.updateDisplayValue(""+allRelationsCount);
+                relationCountDisplayItem.updateDisplayValue(""+allRelationsNumber);
                 isDenseDisplayItem.updateDisplayValue(""+targetEntity.isDense());
 
                 Map<String,Long> attachedRelationKindCountInfo = targetEntity.countAttachedRelationKinds();
@@ -301,6 +307,24 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
                 dataProvider.getItems().remove(targetRelationEntityToDelete);
                 dataProvider.refreshAll();
                 needUpdateRelationInfo = true;
+            }
+            if(needUpdateRelationInfo){
+                allRelationsNumber--;
+                relationCountDisplayItem.updateDisplayValue(""+allRelationsNumber);
+                if(this.conceptionEntityUID.equals(event.getFromConceptionEntityUID())){
+                    outDegreeCountNumber--;
+                    outDegreeDisplayItem.updateDisplayValue(""+outDegreeCountNumber);
+                }
+                if(this.conceptionEntityUID.equals(event.getToConceptionEntityUID())){
+                    inDegreeCountNumber--;
+                    inDegreeDisplayItem.updateDisplayValue(""+inDegreeCountNumber);
+                }
+
+
+
+
+
+                //..................
             }
         }
     }
