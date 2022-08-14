@@ -8,12 +8,16 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import org.vaadin.tabs.PagedTabs;
 
+import java.util.function.Consumer;
+
 public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
 
     private String conceptionKind;
     private String conceptionEntityUID;
     private ConceptionEntityRelationInfoView conceptionEntityRelationInfoView;
     private ConceptionEntityRelationTopologyView conceptionEntityRelationTopologyView;
+    private boolean conceptionEntityRelationTopologyViewFirstRendered = false;
+
     public ConceptionEntityIntegratedInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
@@ -60,5 +64,17 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         tab3.add(timeChartSpan);
 
         add(tabs,container);
+
+        tabs.addSelectedChangeListener(new Consumer<Tab>() {
+            @Override
+            public void accept(Tab tab) {
+                if(tab.equals(tab1)){
+                    if(!conceptionEntityRelationTopologyViewFirstRendered){
+                        conceptionEntityRelationTopologyViewFirstRendered = true;
+                        conceptionEntityRelationTopologyView.loadEntityRelationNetworks();
+                    }
+                }
+            }
+        });
     }
 }

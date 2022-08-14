@@ -16,7 +16,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
-import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +72,6 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        loadEntityRelationNetworks();
     }
 
     @Override
@@ -82,21 +80,13 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         super.onDetach(detachEvent);
     }
 
-    private void loadEntityRelationNetworks(){
+    public void loadEntityRelationNetworks(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
         if(targetConceptionKind != null) {
             try {
                 ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
-
-                System.out.println(targetEntity);
-                System.out.println(targetEntity);
-                System.out.println(targetEntity);
-                System.out.println(targetEntity);
-                System.out.println(targetEntity);
-                System.out.println(targetEntity);
-
                 if (targetEntity != null) {
                     List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
                     List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
