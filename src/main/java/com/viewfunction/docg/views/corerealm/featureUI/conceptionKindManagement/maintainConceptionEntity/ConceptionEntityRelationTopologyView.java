@@ -1,17 +1,22 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,5 +68,60 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         this.conceptionEntityRelationsChart = new ConceptionEntityRelationsChart();
         add(this.conceptionEntityRelationsChart);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        loadEntityRelationNetworks();
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        super.onDetach(detachEvent);
+    }
+
+    private void loadEntityRelationNetworks(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        if(targetConceptionKind != null) {
+            try {
+                ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+
+                System.out.println(targetEntity);
+                System.out.println(targetEntity);
+                System.out.println(targetEntity);
+                System.out.println(targetEntity);
+                System.out.println(targetEntity);
+                System.out.println(targetEntity);
+
+                if (targetEntity != null) {
+                    List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
+                    List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
+                    QueryParameters relationshipQueryParameters = new QueryParameters();
+                    relationshipQueryParameters.setStartPage(1);
+                    relationshipQueryParameters.setEndPage(2);
+                    relationshipQueryParameters.setPageSize(10);
+                    for (String currentRelationKind : attachedRelationKinds) {
+                        relationshipQueryParameters.setEntityKind(currentRelationKind);
+                        List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
+                        totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
+                    }
+
+                    System.out.println(totalKindsRelationEntitiesList);
+                    System.out.println(totalKindsRelationEntitiesList);
+
+                }else{
+                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
+                }
+            } catch (CoreRealmServiceRuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
+        }
+        coreRealm.closeGlobalSession();
     }
 }
