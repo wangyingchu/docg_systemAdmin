@@ -100,8 +100,9 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
                         totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
                     }
 
-                    System.out.println(totalKindsRelationEntitiesList);
-                    System.out.println(totalKindsRelationEntitiesList);
+
+
+
 
                 }else{
                     CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
