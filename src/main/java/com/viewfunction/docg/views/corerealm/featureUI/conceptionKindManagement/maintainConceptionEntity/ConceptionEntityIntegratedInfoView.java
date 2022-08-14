@@ -13,7 +13,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
     private ConceptionEntityRelationInfoView conceptionEntityRelationInfoView;
-
+    private ConceptionEntityRelationTopologyView conceptionEntityRelationTopologyView;
     public ConceptionEntityIntegratedInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
@@ -25,6 +25,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         PagedTabs tabs = new PagedTabs(container);
         tabs.getElement().getStyle().set("width","100%");
         this.conceptionEntityRelationInfoView = new ConceptionEntityRelationInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
+        this.conceptionEntityRelationTopologyView = new ConceptionEntityRelationTopologyView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
 
         Tab tab0 = tabs.add("", conceptionEntityRelationInfoView,false);
         Span relationInfoSpan =new Span();
@@ -34,7 +35,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         relationInfoSpan.add(relationInfoIcon,relationInfoLabel);
         tab0.add(relationInfoSpan);
 
-        Tab tab1 = tabs.add("", new Label("2"),false);
+        Tab tab1 = tabs.add("", conceptionEntityRelationTopologyView,false);
         Span networkGraphSpan =new Span();
         Icon networkGraphIcon = new Icon(VaadinIcon.CLUSTER);
         networkGraphIcon.setSize("20px");
