@@ -110,7 +110,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
                         totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
                     }
 
-
+                    this.conceptionEntityRelationsChart.setData(totalKindsRelationEntitiesList);
 
 
 
