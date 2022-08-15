@@ -45,16 +45,26 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         outDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_RIGHT.create(), "关系出度", "-");
         isDenseDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.BULLSEYE.create(), "是否稠密实体", "-");
 
+        Button reloadConceptionEntitiesInfoButton = new Button("关联概念实体类型分布");
+        reloadConceptionEntitiesInfoButton.setIcon(VaadinIcon.PIE_CHART.create());
+        reloadConceptionEntitiesInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        reloadConceptionEntitiesInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+
+            }
+        });
+        actionComponentsList.add(reloadConceptionEntitiesInfoButton);
+
         Button reloadRelationInfoButton = new Button("重新获取数据");
         reloadRelationInfoButton.setIcon(VaadinIcon.REFRESH.create());
         reloadRelationInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         reloadRelationInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAddNewAttributeUI();
+
             }
         });
-
         actionComponentsList.add(reloadRelationInfoButton);
 
         Icon relationsIcon = VaadinIcon.RANDOM.create();
