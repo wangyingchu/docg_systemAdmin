@@ -14,7 +14,7 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
             },
             layoutGraph: function(){
                 let layout = cy.layout({
-                    name: 'grid'
+                    name: 'concentric'
                 });
                 layout.run();
                 cy.fit();
@@ -27,28 +27,28 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
             style: cytoscape.stylesheet()
                 .selector('node')
                 .css({
-                    'font-size': 10,
+                    'font-size': 1.1,
                     'font-weight': 'bold',
                     'background-color': 'data(background_color)',
-                    'content': 'data(id)',
+                    'content': 'data(desc)',
                     'text-valign': 'center',
                     'color': '#333333',
                     'shape': 'data(shape)',
-                    'text-outline-width': 2 ,
+                    'text-outline-width': 0.5 ,
                     'text-outline-color': '#EEE',
-                    'width': 40,
-                    'height': 40
+                    'width': 4,
+                    'height': 4
                 })
                 .selector('edge')
                 .css({
                     'content': 'data(type)',
-                    'width': 3,
+                    'width': 0.4,
                     'line-color': '#CCCCCC',
-                    'arrow-scale': 2,
+                    'arrow-scale': 0.2,
                     'line-style': 'solid',
                     'curve-style': 'unbundled-bezier',
                     'text-rotation': 'autorotate',
-                    'font-size': 8,
+                    'font-size': 1.1,
                     'font-family': 'Georgia',
                     'font-weight': 'bold',
                     'color': '#555555',
@@ -60,7 +60,7 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                 edges: []
             },
             layout: {
-                name: 'cose'
+                name: 'concentric'
             }
         });
     }

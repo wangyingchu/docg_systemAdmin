@@ -75,7 +75,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         relationEntitiesDetailLayout.setWidthFull();
         add(relationEntitiesDetailLayout);
 
-        this.conceptionEntityRelationsChart = new ConceptionEntityRelationsChart();
+        this.conceptionEntityRelationsChart = new ConceptionEntityRelationsChart(this.conceptionEntityUID);
         add(this.conceptionEntityRelationsChart);
     }
 
@@ -109,11 +109,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
                         List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
                         totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
                     }
-
                     this.conceptionEntityRelationsChart.setData(totalKindsRelationEntitiesList);
-
-
-
                 }else{
                     CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
                 }
