@@ -193,8 +193,10 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                         List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
                         totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
                     }
-                    setData(totalKindsRelationEntitiesList);
-                    currentRelationQueryPage++;
+                    if(totalKindsRelationEntitiesList.size()>0){
+                        setData(totalKindsRelationEntitiesList);
+                        currentRelationQueryPage++;
+                    }
                 }else{
                     CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
                 }
@@ -232,9 +234,11 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                         List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
                         totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
                     }
-                    setData(totalKindsRelationEntitiesList);
-                    currentEntityQueryPage++;
-                    additionalTargetConceptionEntityRelationCurrentQueryPageMap.put(conceptionEntityUID,currentEntityQueryPage);
+                    if(totalKindsRelationEntitiesList.size()>0){
+                        setData(totalKindsRelationEntitiesList);
+                        currentEntityQueryPage++;
+                        additionalTargetConceptionEntityRelationCurrentQueryPageMap.put(conceptionEntityUID,currentEntityQueryPage);
+                    }
                 }else{
                     CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
                 }
