@@ -66,6 +66,7 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
         cy.on('click', 'node', function(evt){
             var node = evt.target;
             console.log( 'clicked ' + node.id() );
+            c.$server.addConceptionEntityRelations(node.id());
         });
 
         cy.on('dblclick', 'node', function(evt){

@@ -3,12 +3,11 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.dom.DomEvent;
-import com.vaadin.flow.dom.DomEventListener;
 import com.vaadin.flow.function.SerializableConsumer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
@@ -40,19 +39,6 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         this.setHeight(750, Unit.PIXELS);
         //this.setHeight(chartHeight, Unit.PIXELS);
         initConnector();
-
-        /*
-        getElement().addEventListener("click", new DomEventListener() {
-            @Override
-            public void handleEvent(DomEvent domEvent) {
-                System.out.println(domEvent.getSource());
-                System.out.println(domEvent.getPhase());
-                System.out.println(domEvent.getEventTarget());
-                System.out.println(domEvent.getType());
-            }
-        });
-        */
-
     }
 
     private void initConnector() {
@@ -160,5 +146,10 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
 
     public void setConceptionKindColorMap(Map<String, String> conceptionKindColorMap) {
         this.conceptionKindColorMap = conceptionKindColorMap;
+    }
+
+    @ClientCallable
+    public void addConceptionEntityRelations(String entityUID) {
+        System.out.println("addConceptionEntityRelations, " + entityUID);
     }
 }
