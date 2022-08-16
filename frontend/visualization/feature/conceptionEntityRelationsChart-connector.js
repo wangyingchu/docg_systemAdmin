@@ -63,5 +63,14 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                 name: 'concentric'
             }
         });
+        cy.on('click', 'node', function(evt){
+            var node = evt.target;
+            console.log( 'clicked ' + node.id() );
+        });
+
+        cy.on('dblclick', 'node', function(evt){
+            var node = evt.target;
+            console.log( 'dblclicked ' + node.id() );
+        });
     }
 }
