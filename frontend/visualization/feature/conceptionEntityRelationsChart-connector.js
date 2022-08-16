@@ -34,7 +34,7 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                     'text-valign': 'center',
                     'color': '#333333',
                     'shape': 'data(shape)',
-                    'text-outline-width': 0.5 ,
+                    'text-outline-width': 0.2 ,
                     'text-outline-color': '#EEE',
                     'width': 4,
                     'height': 4

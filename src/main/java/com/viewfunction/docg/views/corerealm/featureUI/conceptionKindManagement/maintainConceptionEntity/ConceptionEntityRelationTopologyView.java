@@ -18,7 +18,9 @@ import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private String conceptionKind;
@@ -100,10 +102,12 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
                 if (targetEntity != null) {
                     List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
                     List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
+                    List<String> attachedConceptionKinds = targetEntity.listAttachedConceptionKinds();
+                    this.conceptionEntityRelationsChart.setConceptionKindColorMap(generateConceptionKindColorMap(attachedConceptionKinds));
                     QueryParameters relationshipQueryParameters = new QueryParameters();
                     relationshipQueryParameters.setStartPage(1);
                     relationshipQueryParameters.setEndPage(2);
-                    relationshipQueryParameters.setPageSize(10);
+                    relationshipQueryParameters.setPageSize(30);
                     for (String currentRelationKind : attachedRelationKinds) {
                         relationshipQueryParameters.setEntityKind(currentRelationKind);
                         List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
@@ -120,5 +124,20 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
             CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
         }
         coreRealm.closeGlobalSession();
+    }
+
+    private Map<String,String> generateConceptionKindColorMap(List<String> attachedConceptionKinds){
+        String[] colorList =new String[]{"#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"};
+        Map<String,String> conceptionKindColorMap = new HashMap<>();
+        int colorIndex = 0;
+        for(int i=0;i<attachedConceptionKinds.size();i++){
+            if(colorIndex>=colorList.length){
+                colorIndex = 0;
+            }
+            String currentConceptionKindName = attachedConceptionKinds.get(i);
+            conceptionKindColorMap.put(currentConceptionKindName,colorList[colorIndex]);
+            colorIndex++;
+        }
+        return conceptionKindColorMap;
     }
 }

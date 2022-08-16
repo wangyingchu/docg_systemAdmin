@@ -16,6 +16,7 @@ import com.viewfunction.docg.element.visualizationComponent.payload.common.Cytos
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @JavaScript("./visualization/feature/conceptionEntityRelationsChart-connector.js")
 public class ConceptionEntityRelationsChart extends VerticalLayout {
@@ -23,6 +24,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     private List<String> conceptionEntityUIDList;
     private List<String> relationEntityUIDList;
     private String conceptionEntityUID;
+    private Map<String,String> conceptionKindColorMap;
 
     public ConceptionEntityRelationsChart(String conceptionEntityUID){
         conceptionEntityUIDList = new ArrayList<>();
@@ -69,6 +71,9 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
                     cytoscapeNodePayload.getData().put("shape","ellipse");
                     cytoscapeNodePayload.getData().put("background_color","#c00");
+                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0))!=null){
+                        cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0)));
+                    }
                     if(this.conceptionEntityUID.equals(fromConceptionEntityUID)){
                         cytoscapeNodePayload.getData().put("shape","pentagon");
                         cytoscapeNodePayload.getData().put("background_color","#555555");
@@ -92,14 +97,17 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
                     cytoscapeNodePayload.getData().put("shape","ellipse");
                     cytoscapeNodePayload.getData().put("background_color","#c00");
-                     if(this.conceptionEntityUID.equals(toConceptionEntityUID)){
+                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(toConceptionEntityKind.get(0))!=null){
+                        cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(toConceptionEntityKind.get(0)));
+                    }
+                    if(this.conceptionEntityUID.equals(toConceptionEntityUID)){
                         cytoscapeNodePayload.getData().put("shape","pentagon");
                         cytoscapeNodePayload.getData().put("background_color","#555555");
-                      }
-                     if(toConceptionEntityKind.get(0).startsWith("DOCG_")){
+                    }
+                    if(toConceptionEntityKind.get(0).startsWith("DOCG_")){
                          cytoscapeNodePayload.getData().put("shape","diamond");
                          cytoscapeNodePayload.getData().put("background_color","#FF8C00");
-                     }
+                    }
                     cytoscapeNodePayload.getData().put("id",toConceptionEntityUID);
                     cytoscapeNodePayload.getData().put("desc",toConceptionEntityKind.get(0)+":"+toConceptionEntityUID);
                     runBeforeClientResponse(ui -> {
@@ -133,5 +141,9 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                 }
             });
         }
+    }
+
+    public void setConceptionKindColorMap(Map<String, String> conceptionKindColorMap) {
+        this.conceptionKindColorMap = conceptionKindColorMap;
     }
 }
