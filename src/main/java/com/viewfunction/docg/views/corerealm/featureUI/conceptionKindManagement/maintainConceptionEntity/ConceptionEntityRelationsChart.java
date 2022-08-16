@@ -34,11 +34,13 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     private String conceptionKind;
     private Map<String,String> conceptionKindColorMap;
     private int currentRelationQueryPage = 1;
-    private int currentQueryPageSize = 20;
+    private int currentQueryPageSize = 10;
+    private Map<String,Integer> additionalTargetConceptionEntityRelationCurrentQueryPageMap;
 
     public ConceptionEntityRelationsChart(String conceptionKind,String conceptionEntityUID){
-        conceptionEntityUIDList = new ArrayList<>();
-        relationEntityUIDList = new ArrayList<>();
+        this.conceptionEntityUIDList = new ArrayList<>();
+        this.relationEntityUIDList = new ArrayList<>();
+        this.additionalTargetConceptionEntityRelationCurrentQueryPageMap = new HashMap<>();
         this.conceptionEntityUID = conceptionEntityUID;
         this.conceptionKind = conceptionKind;
         UI.getCurrent().getPage().addJavaScript("js/cytoscape/3.22.1/dist/cytoscape.min.js");
@@ -94,6 +96,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                         cytoscapeNodePayload.getData().put("background_color","#FF8C00");
                     }
                     cytoscapeNodePayload.getData().put("id",fromConceptionEntityUID);
+                    cytoscapeNodePayload.getData().put("kind",fromConceptionEntityKind.get(0));
                     cytoscapeNodePayload.getData().put("desc",fromConceptionEntityKind.get(0)+":"+fromConceptionEntityUID);
                     runBeforeClientResponse(ui -> {
                         try {
@@ -120,6 +123,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                          cytoscapeNodePayload.getData().put("background_color","#FF8C00");
                     }
                     cytoscapeNodePayload.getData().put("id",toConceptionEntityUID);
+                    cytoscapeNodePayload.getData().put("kind",toConceptionEntityKind.get(0));
                     cytoscapeNodePayload.getData().put("desc",toConceptionEntityKind.get(0)+":"+toConceptionEntityUID);
                     runBeforeClientResponse(ui -> {
                         try {
@@ -159,12 +163,16 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     }
 
     @ClientCallable
-    public void addConceptionEntityRelations(String entityUID) {
+    public void addConceptionEntityRelations(String entityType,String entityUID) {
         System.out.println("addConceptionEntityRelations, " + entityUID);
-        initLoadRelationData();
+        if(this.conceptionEntityUID.equals(entityUID)){
+            loadTargetConceptionEntityRelationData();
+        }else{
+            loadAdditionalTargetConceptionEntityRelationData(entityType,entityUID);
+        }
     }
 
-    public void initLoadRelationData(){
+    public void loadTargetConceptionEntityRelationData(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
@@ -187,6 +195,46 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     }
                     setData(totalKindsRelationEntitiesList);
                     currentRelationQueryPage++;
+                }else{
+                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
+                }
+            } catch (CoreRealmServiceRuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
+        }
+        coreRealm.closeGlobalSession();
+    }
+
+    public void loadAdditionalTargetConceptionEntityRelationData(String conceptionKind,String conceptionEntityUID){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
+        if(targetConceptionKind != null) {
+            try {
+                ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(conceptionEntityUID);
+                if (targetEntity != null) {
+                    int currentEntityQueryPage = 1;
+                    if(additionalTargetConceptionEntityRelationCurrentQueryPageMap.containsKey(conceptionEntityUID)){
+                        currentEntityQueryPage = additionalTargetConceptionEntityRelationCurrentQueryPageMap.get(conceptionEntityUID);
+                    }
+                    List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
+                    List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
+                    List<String> attachedConceptionKinds = targetEntity.listAttachedConceptionKinds();
+                    setConceptionKindColorMap(generateConceptionKindColorMap(attachedConceptionKinds));
+                    QueryParameters relationshipQueryParameters = new QueryParameters();
+                    relationshipQueryParameters.setStartPage(currentEntityQueryPage);
+                    relationshipQueryParameters.setEndPage(currentEntityQueryPage+1);
+                    relationshipQueryParameters.setPageSize(currentQueryPageSize);
+                    for (String currentRelationKind : attachedRelationKinds) {
+                        relationshipQueryParameters.setEntityKind(currentRelationKind);
+                        List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
+                        totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
+                    }
+                    setData(totalKindsRelationEntitiesList);
+                    currentEntityQueryPage++;
+                    additionalTargetConceptionEntityRelationCurrentQueryPageMap.put(conceptionEntityUID,currentEntityQueryPage);
                 }else{
                     CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
                 }
