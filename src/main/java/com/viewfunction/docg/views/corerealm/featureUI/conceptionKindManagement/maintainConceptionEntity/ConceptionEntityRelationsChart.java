@@ -7,15 +7,21 @@ import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeEdgePayload;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeNodePayload;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,12 +31,16 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     private List<String> conceptionEntityUIDList;
     private List<String> relationEntityUIDList;
     private String conceptionEntityUID;
+    private String conceptionKind;
     private Map<String,String> conceptionKindColorMap;
+    private int currentRelationQueryPage = 1;
+    private int currentQueryPageSize = 20;
 
-    public ConceptionEntityRelationsChart(String conceptionEntityUID){
+    public ConceptionEntityRelationsChart(String conceptionKind,String conceptionEntityUID){
         conceptionEntityUIDList = new ArrayList<>();
         relationEntityUIDList = new ArrayList<>();
         this.conceptionEntityUID = conceptionEntityUID;
+        this.conceptionKind = conceptionKind;
         UI.getCurrent().getPage().addJavaScript("js/cytoscape/3.22.1/dist/cytoscape.min.js");
         this.setWidthFull();
         this.setSpacing(false);
@@ -151,5 +161,58 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     @ClientCallable
     public void addConceptionEntityRelations(String entityUID) {
         System.out.println("addConceptionEntityRelations, " + entityUID);
+        initLoadRelationData();
+    }
+
+    public void initLoadRelationData(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        if(targetConceptionKind != null) {
+            try {
+                ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+                if (targetEntity != null) {
+                    List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
+                    List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
+                    List<String> attachedConceptionKinds = targetEntity.listAttachedConceptionKinds();
+                    setConceptionKindColorMap(generateConceptionKindColorMap(attachedConceptionKinds));
+                    QueryParameters relationshipQueryParameters = new QueryParameters();
+                    relationshipQueryParameters.setStartPage(currentRelationQueryPage);
+                    relationshipQueryParameters.setEndPage(currentRelationQueryPage+1);
+                    relationshipQueryParameters.setPageSize(currentQueryPageSize);
+                    for (String currentRelationKind : attachedRelationKinds) {
+                        relationshipQueryParameters.setEntityKind(currentRelationKind);
+                        List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
+                        totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
+                    }
+                    setData(totalKindsRelationEntitiesList);
+                    currentRelationQueryPage++;
+                }else{
+                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
+                }
+            } catch (CoreRealmServiceRuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
+        }
+        coreRealm.closeGlobalSession();
+    }
+
+    private Map<String,String> generateConceptionKindColorMap(List<String> attachedConceptionKinds){
+        String[] colorList =new String[]{
+                "#EA2027","#006266","#1B1464","#5758BB","#6F1E51","#EE5A24","#009432","##0652DD","#9980FA","#833471",
+                "#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67"};
+        Map<String,String> conceptionKindColorMap = new HashMap<>();
+        int colorIndex = 0;
+        for(int i=0;i<attachedConceptionKinds.size();i++){
+            if(colorIndex>=colorList.length){
+                colorIndex = 0;
+            }
+            String currentConceptionKindName = attachedConceptionKinds.get(i);
+            conceptionKindColorMap.put(currentConceptionKindName,colorList[colorIndex]);
+            colorIndex++;
+        }
+        return conceptionKindColorMap;
     }
 }

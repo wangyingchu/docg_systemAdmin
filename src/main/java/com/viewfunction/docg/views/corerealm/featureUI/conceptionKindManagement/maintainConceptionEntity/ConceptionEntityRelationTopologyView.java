@@ -5,22 +5,14 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
-import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
-import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
-import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private String conceptionKind;
@@ -77,7 +69,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         relationEntitiesDetailLayout.setWidthFull();
         add(relationEntitiesDetailLayout);
 
-        this.conceptionEntityRelationsChart = new ConceptionEntityRelationsChart(this.conceptionEntityUID);
+        this.conceptionEntityRelationsChart = new ConceptionEntityRelationsChart(this.conceptionKind,this.conceptionEntityUID);
         add(this.conceptionEntityRelationsChart);
     }
 
@@ -93,51 +85,6 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     }
 
     public void loadEntityRelationNetworks(){
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        coreRealm.openGlobalSession();
-        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
-        if(targetConceptionKind != null) {
-            try {
-                ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
-                if (targetEntity != null) {
-                    List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
-                    List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
-                    List<String> attachedConceptionKinds = targetEntity.listAttachedConceptionKinds();
-                    this.conceptionEntityRelationsChart.setConceptionKindColorMap(generateConceptionKindColorMap(attachedConceptionKinds));
-                    QueryParameters relationshipQueryParameters = new QueryParameters();
-                    relationshipQueryParameters.setStartPage(1);
-                    relationshipQueryParameters.setEndPage(2);
-                    relationshipQueryParameters.setPageSize(30);
-                    for (String currentRelationKind : attachedRelationKinds) {
-                        relationshipQueryParameters.setEntityKind(currentRelationKind);
-                        List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
-                        totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
-                    }
-                    this.conceptionEntityRelationsChart.setData(totalKindsRelationEntitiesList);
-                }else{
-                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
-                }
-            } catch (CoreRealmServiceRuntimeException e) {
-                throw new RuntimeException(e);
-            }
-        }else{
-            CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
-        }
-        coreRealm.closeGlobalSession();
-    }
-
-    private Map<String,String> generateConceptionKindColorMap(List<String> attachedConceptionKinds){
-        String[] colorList =new String[]{"#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"};
-        Map<String,String> conceptionKindColorMap = new HashMap<>();
-        int colorIndex = 0;
-        for(int i=0;i<attachedConceptionKinds.size();i++){
-            if(colorIndex>=colorList.length){
-                colorIndex = 0;
-            }
-            String currentConceptionKindName = attachedConceptionKinds.get(i);
-            conceptionKindColorMap.put(currentConceptionKindName,colorList[colorIndex]);
-            colorIndex++;
-        }
-        return conceptionKindColorMap;
+        this.conceptionEntityRelationsChart.initLoadRelationData();
     }
 }
