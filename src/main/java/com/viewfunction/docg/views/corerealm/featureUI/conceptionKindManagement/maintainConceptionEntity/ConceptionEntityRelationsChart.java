@@ -148,14 +148,17 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     });
                 }
             }
-            runBeforeClientResponse(ui -> {
-                try {
-                    getElement().callJsFunction("$connector.layoutGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            });
         }
+    }
+
+    private void layoutGraph(){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.layoutGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public void setConceptionKindColorMap(Map<String, String> conceptionKindColorMap) {
@@ -195,6 +198,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     }
                     if(totalKindsRelationEntitiesList.size()>0){
                         setData(totalKindsRelationEntitiesList);
+                        layoutGraph();
                         currentRelationQueryPage++;
                     }
                 }else{

@@ -14,7 +14,14 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
             },
             layoutGraph: function(){
                 let layout = cy.layout({
-                    name: 'concentric'
+                    name: 'concentric',
+                    fit:false,
+                    padding: 30, // the padding on fit
+                    startAngle:4/ 2 * Math.PI, // where nodes start in radians
+                    sweep: undefined, // how many radians should be between the first and last node (defaults to full circle)
+                    clockwise: true, // whether the layout should go clockwise (true) or counterclockwise/anticlockwise (false)
+                    equidistant: false, // whether levels have an equal radial distance betwen them, may cause bounding box overflow
+                    minNodeSpacing: 8 // min spacing between outside of nodes (used for radius adjustment)
                 });
                 layout.run();
                 cy.fit();
@@ -47,6 +54,7 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                     'arrow-scale': 0.2,
                     'line-style': 'solid',
                     'curve-style': 'unbundled-bezier',
+                   // 'curve-style': 'segments',
                     'text-rotation': 'autorotate',
                     'font-size': 1.1,
                     'font-family': 'Georgia',
