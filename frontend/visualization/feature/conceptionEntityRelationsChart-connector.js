@@ -137,12 +137,12 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
         });
         cy.on('click', 'node', function(evt){
             var node = evt.target;
-            c.$server.addConceptionEntityRelations(node.data().kind,node.id());
+            c.$server.showConceptionEntityInfo(node.data().kind,node.id());
         });
 
         cy.on('dblclick', 'node', function(evt){
             var node = evt.target;
-            console.log( 'dblclicked ' + node.id() );
+            c.$server.addConceptionEntityRelations(node.data().kind,node.id());
         });
     }
 }

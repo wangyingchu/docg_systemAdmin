@@ -96,11 +96,11 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEventClass)){
                         cytoscapeNodePayload.getData().put("shape","round-diamond");
                         cytoscapeNodePayload.getData().put("size","3");
-                        cytoscapeNodePayload.getData().put("background_color","#A239CA");
+                        cytoscapeNodePayload.getData().put("background_color","#984B43");
                     }
                     if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEntityClass)){
                         cytoscapeNodePayload.getData().put("shape","barrel");
-                        cytoscapeNodePayload.getData().put("background_color","#A239CA");
+                        cytoscapeNodePayload.getData().put("background_color","#984B43");
                     }
                     if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEventClass)){
                         cytoscapeNodePayload.getData().put("shape","round-diamond");
@@ -140,11 +140,11 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     if(toConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEventClass)){
                         cytoscapeNodePayload.getData().put("shape","round-diamond");
                         cytoscapeNodePayload.getData().put("size","3");
-                        cytoscapeNodePayload.getData().put("background_color","#A239CA");
+                        cytoscapeNodePayload.getData().put("background_color","#984B43");
                     }
                     if(toConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEntityClass)){
                         cytoscapeNodePayload.getData().put("shape","barrel");
-                        cytoscapeNodePayload.getData().put("background_color","#A239CA");
+                        cytoscapeNodePayload.getData().put("background_color","#984B43");
                     }
                     if(toConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEventClass)){
                         cytoscapeNodePayload.getData().put("shape","round-diamond");
@@ -221,6 +221,11 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     @ClientCallable
     public void addConceptionEntityRelations(String entityType,String entityUID) {
         loadAdditionalTargetConceptionEntityRelationData(entityType,entityUID);
+    }
+
+    @ClientCallable
+    public void showConceptionEntityInfo(String entityType,String entityUID) {
+        System.out.println("show conceptionEntity info");
     }
 
     public void initLoadTargetConceptionEntityRelationData(){
