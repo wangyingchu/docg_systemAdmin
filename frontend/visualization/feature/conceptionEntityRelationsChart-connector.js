@@ -114,6 +114,8 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                     'content': 'data(type)',
                     'width': 0.3,
                     'line-color': '#DDDDDD',
+                    'source-arrow-color':'#DDDDDD',
+                    'target-arrow-color':'#DDDDDD',
                     'arrow-scale': 0.1,
                     'line-style': 'solid',
                     //'curve-style': 'unbundled-bezier',
@@ -126,7 +128,20 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                     'color': '#666666',
                     'target-arrow-shape': 'vee',
                     'source-arrow-shape': 'tee'
-                }),
+                })
+                .selector('node:selected')
+                .style({
+                    'border-color': '#1E90CC',
+                    'border-width': "1px",
+                    'width':6,'height':6})
+                .selector('edge:selected')
+                .style({
+                    'line-color': '#1E90CC',
+                    'width': 0.4,
+                    'source-arrow-color':'#1E90CC',
+                    'target-arrow-color':'#1E90CC',
+                    'color': '#333333'})
+            ,
             elements: {
                 nodes: [],
                 edges: []
