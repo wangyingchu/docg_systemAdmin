@@ -10,29 +10,14 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                 cy.nodes().forEach(node => {
                     node.lock();
                 })
-
-
             },
-
-            unlockGraph:function(data){
-                cy.layout.on("layoutready", () => {
-                    this.nodes().forEach(node => {
-                        node.unlock();
-                    })
-                });
-
-            },
-
-
-
-
             setData : function(data) {
                 cy.add(eval("(" + data + ")"));
             },
             clearData : function() {
                 cy.remove(cy.elements());
             },
-            layoutGraph: function(){
+            initLayoutGraph: function(){
                 let layout = cy.layout({
                     name: 'cose',
                     fit:true,
@@ -42,7 +27,7 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                 cy.fit();
                 cy.center();
             },
-            layoutGraph2: function(){
+            layoutGraph: function(){
                 let layout = cy.layout({
                     name: 'cose',
                     // Whether to animate while running the layout
@@ -63,55 +48,44 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                     animationThreshold: 250,
                     // Number of iterations between consecutive screen positions update
                     refresh: 20,
-
                     // Whether to fit the network view after when done
                     fit: true,
-
                     // Padding on fit
                     padding: 10,
-
                     // Constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
                     boundingBox: undefined,
-
                     // Excludes the label when calculating node bounding boxes for the layout algorithm
                     nodeDimensionsIncludeLabels: false,
-
                     // Randomize the initial positions of the nodes (true) or use existing positions (false)
                     randomize: true,
-
                     // Extra spacing between components in non-compound graphs
                     componentSpacing: 40,
-
                     // Node repulsion (non overlapping) multiplier
                     nodeRepulsion: function( node ){ return 2048; },
-
                     // Node repulsion (overlapping) multiplier
                     nodeOverlap: 1,
-
                     // Ideal edge (non nested) length
                     idealEdgeLength: function( edge ){ return 32; },
-
                     // Divisor to compute edge forces
                     edgeElasticity: function( edge ){ return 32; },
-
                     // Nesting factor (multiplier) to compute ideal edge length for nested edges
                     nestingFactor: 1.2,
-
                     // Gravity force (constant)
                     gravity: 1,
-
                     // Maximum number of iterations to perform
                     numIter: 1000,
-
                     // Initial temperature (maximum node displacement)
                     initialTemp: 1000,
-
                     // Cooling factor (how the temperature is reduced between consecutive iterations
                     coolingFactor: 0.99,
-
                     // Lower temperature threshold (below this point the layout will end)
                     minTemp: 1.0
                 });
+                layout.on("layoutready", () => {
+                    cy.nodes().forEach(node => {
+                        node.unlock();
+                    })
+                })
                 layout.run();
                 // cy.fit();
                 // cy.center();

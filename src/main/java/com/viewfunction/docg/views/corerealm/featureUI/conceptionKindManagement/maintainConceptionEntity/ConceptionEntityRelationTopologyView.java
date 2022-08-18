@@ -85,6 +85,6 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     }
 
     public void loadEntityRelationNetworks(){
-        this.conceptionEntityRelationsChart.loadTargetConceptionEntityRelationData();
+        this.conceptionEntityRelationsChart.initLoadTargetConceptionEntityRelationData();
     }
 }

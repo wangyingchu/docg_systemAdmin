@@ -33,10 +33,8 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     private String conceptionEntityUID;
     private String conceptionKind;
     private Map<String,String> conceptionKindColorMap;
-    private int currentRelationQueryPage = 1;
     private int currentQueryPageSize = 10;
     private Map<String,Integer> additionalTargetConceptionEntityRelationCurrentQueryPageMap;
-    private boolean graphChartLoaded = false;
 
     public ConceptionEntityRelationsChart(String conceptionKind,String conceptionEntityUID){
         this.conceptionEntityUIDList = new ArrayList<>();
@@ -152,138 +150,15 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-    public void insertData(List<RelationEntity> conceptionEntityRelationEntityList){
-        if(conceptionEntityRelationEntityList != null){
-
-
-            runBeforeClientResponse(ui -> {
-                try {
-                    getElement().callJsFunction("$connector.lockGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-
-            for(RelationEntity currentRelationEntity:conceptionEntityRelationEntityList){
-                String relationKind = currentRelationEntity.getRelationKindName();
-                String relationEntityUID = currentRelationEntity.getRelationEntityUID();
-
-                List<String> fromConceptionEntityKind = currentRelationEntity.getFromConceptionEntityKinds();
-                String fromConceptionEntityUID = currentRelationEntity.getFromConceptionEntityUID();
-
-                List<String> toConceptionEntityKind = currentRelationEntity.getToConceptionEntityKinds();
-                String toConceptionEntityUID = currentRelationEntity.getToConceptionEntityUID();
-
-                if(!conceptionEntityUIDList.contains(fromConceptionEntityUID)){
-                    conceptionEntityUIDList.add(fromConceptionEntityUID);
-                    CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
-                    cytoscapeNodePayload.getData().put("shape","ellipse");
-                    cytoscapeNodePayload.getData().put("background_color","#c00");
-                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0))!=null){
-                        cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0)));
-                    }
-                    if(this.conceptionEntityUID.equals(fromConceptionEntityUID)){
-                        cytoscapeNodePayload.getData().put("shape","pentagon");
-                        cytoscapeNodePayload.getData().put("background_color","#555555");
-                    }
-                    if(fromConceptionEntityKind.get(0).startsWith("DOCG_")){
-                        cytoscapeNodePayload.getData().put("shape","diamond");
-                        cytoscapeNodePayload.getData().put("background_color","#FF8C00");
-                    }
-                    cytoscapeNodePayload.getData().put("id",fromConceptionEntityUID);
-                    cytoscapeNodePayload.getData().put("kind",fromConceptionEntityKind.get(0));
-                    cytoscapeNodePayload.getData().put("desc",fromConceptionEntityKind.get(0)+":\n"+fromConceptionEntityUID);
-                    runBeforeClientResponse(ui -> {
-                        try {
-                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                }
-                if(!conceptionEntityUIDList.contains(toConceptionEntityUID)){
-                    conceptionEntityUIDList.add(toConceptionEntityUID);
-                    CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
-                    cytoscapeNodePayload.getData().put("shape","ellipse");
-                    cytoscapeNodePayload.getData().put("background_color","#c00");
-                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(toConceptionEntityKind.get(0))!=null){
-                        cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(toConceptionEntityKind.get(0)));
-                    }
-                    if(this.conceptionEntityUID.equals(toConceptionEntityUID)){
-                        cytoscapeNodePayload.getData().put("shape","pentagon");
-                        cytoscapeNodePayload.getData().put("background_color","#555555");
-                    }
-                    if(toConceptionEntityKind.get(0).startsWith("DOCG_")){
-                        cytoscapeNodePayload.getData().put("shape","diamond");
-                        cytoscapeNodePayload.getData().put("background_color","#FF8C00");
-                    }
-                    cytoscapeNodePayload.getData().put("id",toConceptionEntityUID);
-                    cytoscapeNodePayload.getData().put("kind",toConceptionEntityKind.get(0));
-                    cytoscapeNodePayload.getData().put("desc",toConceptionEntityKind.get(0)+":\n"+toConceptionEntityUID);
-                    runBeforeClientResponse(ui -> {
-                        try {
-                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                }
-                if(!relationEntityUIDList.contains(relationEntityUID)){
-                    relationEntityUIDList.add(relationEntityUID);
-                    CytoscapeEdgePayload cytoscapeEdgePayload =new CytoscapeEdgePayload();
-                    cytoscapeEdgePayload.getData().put("type", relationKind+":"+relationEntityUID);
-                    cytoscapeEdgePayload.getData().put("source", fromConceptionEntityUID);
-                    cytoscapeEdgePayload.getData().put("target", toConceptionEntityUID);
-                    runBeforeClientResponse(ui -> {
-                        try {
-                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                }
+    private void initLayoutGraph(){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.initLayoutGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
             }
-
-/*
-            runBeforeClientResponse(ui -> {
-                try {
-                    getElement().callJsFunction("$connector.unlockGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-  */
-
-        }
+        });
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private void layoutGraph(){
         runBeforeClientResponse(ui -> {
@@ -295,10 +170,10 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         });
     }
 
-    private void layoutGraph2(){
+    private void lockGraph(){
         runBeforeClientResponse(ui -> {
             try {
-                getElement().callJsFunction("$connector.layoutGraph2", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+                getElement().callJsFunction("$connector.lockGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -311,15 +186,10 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
 
     @ClientCallable
     public void addConceptionEntityRelations(String entityType,String entityUID) {
-        System.out.println("addConceptionEntityRelations, " + entityUID);
-        if(this.conceptionEntityUID.equals(entityUID)){
-            loadTargetConceptionEntityRelationData();
-        }else{
-            loadAdditionalTargetConceptionEntityRelationData(entityType,entityUID);
-        }
+        loadAdditionalTargetConceptionEntityRelationData(entityType,entityUID);
     }
 
-    public void loadTargetConceptionEntityRelationData(){
+    public void initLoadTargetConceptionEntityRelationData(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
@@ -332,8 +202,12 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     List<String> attachedConceptionKinds = targetEntity.listAttachedConceptionKinds();
                     setConceptionKindColorMap(generateConceptionKindColorMap(attachedConceptionKinds));
                     QueryParameters relationshipQueryParameters = new QueryParameters();
-                    relationshipQueryParameters.setStartPage(currentRelationQueryPage);
-                    relationshipQueryParameters.setEndPage(currentRelationQueryPage+1);
+                    int currentEntityQueryPage = 1;
+                    if(additionalTargetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.conceptionEntityUID)){
+                        currentEntityQueryPage = additionalTargetConceptionEntityRelationCurrentQueryPageMap.get(this.conceptionEntityUID);
+                    }
+                    relationshipQueryParameters.setStartPage(currentEntityQueryPage);
+                    relationshipQueryParameters.setEndPage(currentEntityQueryPage+1);
                     relationshipQueryParameters.setPageSize(currentQueryPageSize);
                     for (String currentRelationKind : attachedRelationKinds) {
                         relationshipQueryParameters.setEntityKind(currentRelationKind);
@@ -342,11 +216,9 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     }
                     if(totalKindsRelationEntitiesList.size()>0){
                         setData(totalKindsRelationEntitiesList);
-                        if(!graphChartLoaded){
-                            graphChartLoaded = true;
-                            layoutGraph();
-                        }
-                        currentRelationQueryPage++;
+                        initLayoutGraph();
+                        currentEntityQueryPage++;
+                        additionalTargetConceptionEntityRelationCurrentQueryPageMap.put(this.conceptionEntityUID,currentEntityQueryPage);
                     }
                 }else{
                     CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
@@ -386,10 +258,11 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                         totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
                     }
                     if(totalKindsRelationEntitiesList.size()>0){
-                        insertData(totalKindsRelationEntitiesList);
+                        lockGraph();
+                        setData(totalKindsRelationEntitiesList);
                         currentEntityQueryPage++;
                         additionalTargetConceptionEntityRelationCurrentQueryPageMap.put(conceptionEntityUID,currentEntityQueryPage);
-                        layoutGraph2();
+                        layoutGraph();
                     }
                 }else{
                     CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
