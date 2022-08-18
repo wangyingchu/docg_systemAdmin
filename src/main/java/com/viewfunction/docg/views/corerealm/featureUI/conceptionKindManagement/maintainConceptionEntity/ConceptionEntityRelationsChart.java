@@ -41,6 +41,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         this.conceptionEntityUIDList = new ArrayList<>();
         this.relationEntityUIDList = new ArrayList<>();
         this.additionalTargetConceptionEntityRelationCurrentQueryPageMap = new HashMap<>();
+        this.conceptionKindColorMap = new HashMap<>();
         this.conceptionEntityUID = conceptionEntityUID;
         this.conceptionKind = conceptionKind;
         UI.getCurrent().getPage().addJavaScript("js/cytoscape/3.22.1/dist/cytoscape.min.js");
@@ -214,9 +215,9 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         });
     }
 
-    public void setConceptionKindColorMap(Map<String, String> conceptionKindColorMap) {
-        this.conceptionKindColorMap = conceptionKindColorMap;
-    }
+   // public void setConceptionKindColorMap(Map<String, String> conceptionKindColorMap) {
+   //     this.conceptionKindColorMap = conceptionKindColorMap;
+   // }
 
     @ClientCallable
     public void addConceptionEntityRelations(String entityType,String entityUID) {
@@ -239,7 +240,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
                     List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
                     List<String> attachedConceptionKinds = targetEntity.listAttachedConceptionKinds();
-                    setConceptionKindColorMap(generateConceptionKindColorMap(attachedConceptionKinds));
+                    generateConceptionKindColorMap(attachedConceptionKinds);
                     QueryParameters relationshipQueryParameters = new QueryParameters();
                     int currentEntityQueryPage = 1;
                     if(additionalTargetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.conceptionEntityUID)){
@@ -286,7 +287,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
                     List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
                     List<String> attachedConceptionKinds = targetEntity.listAttachedConceptionKinds();
-                    setConceptionKindColorMap(generateConceptionKindColorMap(attachedConceptionKinds));
+                    generateConceptionKindColorMap(attachedConceptionKinds);
                     QueryParameters relationshipQueryParameters = new QueryParameters();
                     relationshipQueryParameters.setStartPage(currentEntityQueryPage);
                     relationshipQueryParameters.setEndPage(currentEntityQueryPage+1);
@@ -320,15 +321,17 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                 "#EA2027","#006266","#1B1464","#5758BB","#6F1E51","#EE5A24","#009432","##0652DD","#9980FA","#833471",
                 "#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67"
         };
-        Map<String,String> conceptionKindColorMap = new HashMap<>();
+
         int colorIndex = 0;
         for(int i=0;i<attachedConceptionKinds.size();i++){
             if(colorIndex>=colorList.length){
                 colorIndex = 0;
             }
             String currentConceptionKindName = attachedConceptionKinds.get(i);
-            conceptionKindColorMap.put(currentConceptionKindName,colorList[colorIndex]);
-            colorIndex++;
+            if(!conceptionKindColorMap.containsKey(currentConceptionKindName)){
+                conceptionKindColorMap.put(currentConceptionKindName,colorList[colorIndex]);
+                colorIndex++;
+            }
         }
         return conceptionKindColorMap;
     }
