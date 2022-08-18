@@ -36,6 +36,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     private Map<String,String> conceptionKindColorMap;
     private int currentQueryPageSize = 10;
     private Map<String,Integer> additionalTargetConceptionEntityRelationCurrentQueryPageMap;
+    private int colorIndex = 0;
 
     public ConceptionEntityRelationsChart(String conceptionKind,String conceptionEntityUID){
         this.conceptionEntityUIDList = new ArrayList<>();
@@ -322,7 +323,6 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                 "#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67"
         };
 
-        int colorIndex = 0;
         for(int i=0;i<attachedConceptionKinds.size();i++){
             if(colorIndex>=colorList.length){
                 colorIndex = 0;
@@ -330,8 +330,8 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
             String currentConceptionKindName = attachedConceptionKinds.get(i);
             if(!conceptionKindColorMap.containsKey(currentConceptionKindName)){
                 conceptionKindColorMap.put(currentConceptionKindName,colorList[colorIndex]);
-                colorIndex++;
             }
+            colorIndex++;
         }
         return conceptionKindColorMap;
     }
