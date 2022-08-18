@@ -6,6 +6,26 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
         }
         c.$connector = {
             // functions
+            lockGraph:function(data){
+                cy.nodes().forEach(node => {
+                    node.lock();
+                })
+
+
+            },
+
+            unlockGraph:function(data){
+                cy.layout.on("layoutready", () => {
+                    this.nodes().forEach(node => {
+                        node.unlock();
+                    })
+                });
+
+            },
+
+
+
+
             setData : function(data) {
                 cy.add(eval("(" + data + ")"));
             },
@@ -14,18 +34,87 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
             },
             layoutGraph: function(){
                 let layout = cy.layout({
-                    name: 'concentric',
-                    fit:false,
-                    padding: 30, // the padding on fit
-                    startAngle:4/ 2 * Math.PI, // where nodes start in radians
-                    sweep: undefined, // how many radians should be between the first and last node (defaults to full circle)
-                    clockwise: true, // whether the layout should go clockwise (true) or counterclockwise/anticlockwise (false)
-                    equidistant: false, // whether levels have an equal radial distance betwen them, may cause bounding box overflow
-                    minNodeSpacing: 8 // min spacing between outside of nodes (used for radius adjustment)
+                    name: 'cose',
+                    fit:true,
+                    padding: 100, // the padding on fit
                 });
                 layout.run();
                 cy.fit();
                 cy.center();
+            },
+            layoutGraph2: function(){
+                let layout = cy.layout({
+                    name: 'cose',
+                    // Whether to animate while running the layout
+                    // true : Animate continuously as the layout is running
+                    // false : Just show the end result
+                    // 'end' : Animate with the end result, from the initial positions to the end positions
+                    animate: false,
+                    // Easing of the animation for animate:'end'
+                    animationEasing: undefined,
+                    // The duration of the animation for animate:'end'
+                    animationDuration: undefined,
+                    // A function that determines whether the node should be animated
+                    // All nodes animated by default on animate enabled
+                    // Non-animated nodes are positioned immediately when the layout starts
+                    animateFilter: function ( node, i ){ return true; },
+                    // The layout animates only after this many milliseconds for animate:true
+                    // (prevents flashing on fast runs)
+                    animationThreshold: 250,
+                    // Number of iterations between consecutive screen positions update
+                    refresh: 20,
+
+                    // Whether to fit the network view after when done
+                    fit: true,
+
+                    // Padding on fit
+                    padding: 100,
+
+                    // Constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
+                    boundingBox: undefined,
+
+                    // Excludes the label when calculating node bounding boxes for the layout algorithm
+                    nodeDimensionsIncludeLabels: false,
+
+                    // Randomize the initial positions of the nodes (true) or use existing positions (false)
+                    randomize: true,
+
+                    // Extra spacing between components in non-compound graphs
+                    componentSpacing: 40,
+
+                    // Node repulsion (non overlapping) multiplier
+                    nodeRepulsion: function( node ){ return 2048; },
+
+                    // Node repulsion (overlapping) multiplier
+                    nodeOverlap: 1,
+
+                    // Ideal edge (non nested) length
+                    idealEdgeLength: function( edge ){ return 32; },
+
+                    // Divisor to compute edge forces
+                    edgeElasticity: function( edge ){ return 32; },
+
+                    // Nesting factor (multiplier) to compute ideal edge length for nested edges
+                    nestingFactor: 1.2,
+
+                    // Gravity force (constant)
+                    gravity: 1,
+
+                    // Maximum number of iterations to perform
+                    numIter: 1000,
+
+                    // Initial temperature (maximum node displacement)
+                    initialTemp: 1000,
+
+                    // Cooling factor (how the temperature is reduced between consecutive iterations
+                    coolingFactor: 0.99,
+
+                    // Lower temperature threshold (below this point the layout will end)
+                    minTemp: 1.0
+                });
+                layout.run();
+                // cy.fit();
+                // cy.center();
             }
         };
 
@@ -49,17 +138,18 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                 .selector('edge')
                 .css({
                     'content': 'data(type)',
-                    'width': 0.4,
-                    'line-color': '#CCCCCC',
+                    'width': 0.3,
+                    'line-color': '#DDDDDD',
                     'arrow-scale': 0.2,
                     'line-style': 'solid',
-                    'curve-style': 'unbundled-bezier',
-                   // 'curve-style': 'segments',
+                    //'curve-style': 'unbundled-bezier',
+                    //'curve-style': 'segments',
+                    'curve-style': 'straight',
                     'text-rotation': 'autorotate',
-                    'font-size': 1.1,
+                    'font-size': 0.8,
                     'font-family': 'Georgia',
-                    'font-weight': 'bold',
-                    'color': '#555555',
+                    //'font-weight': 'bold',
+                    'color': '#888888',
                     'target-arrow-shape': 'vee',
                     'source-arrow-shape': 'tee'
                 }),
@@ -68,7 +158,7 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                 edges: []
             },
             layout: {
-                name: 'concentric'
+                name: 'cose'
             }
         });
         cy.on('click', 'node', function(evt){
