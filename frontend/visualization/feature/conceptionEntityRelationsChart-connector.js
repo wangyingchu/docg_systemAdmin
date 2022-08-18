@@ -106,8 +106,8 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                     'shape': 'data(shape)',
                     'text-outline-width': 0.15 ,
                     'text-outline-color': '#EEE',
-                    'width': 4,
-                    'height': 4
+                    'width': 'data(size)',
+                    'height': 'data(size)'
                 })
                 .selector('edge')
                 .css({

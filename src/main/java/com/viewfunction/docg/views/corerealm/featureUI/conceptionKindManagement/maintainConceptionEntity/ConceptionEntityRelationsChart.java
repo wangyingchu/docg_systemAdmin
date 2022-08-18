@@ -14,6 +14,7 @@ import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeEdgePayload;
@@ -83,17 +84,34 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
                     cytoscapeNodePayload.getData().put("shape","ellipse");
                     cytoscapeNodePayload.getData().put("background_color","#c00");
+                    cytoscapeNodePayload.getData().put("size","4");
                     if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0))!=null){
                         cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0)));
                     }
                     if(this.conceptionEntityUID.equals(fromConceptionEntityUID)){
                         cytoscapeNodePayload.getData().put("shape","pentagon");
                         cytoscapeNodePayload.getData().put("background_color","#555555");
+                        cytoscapeNodePayload.getData().put("size","5");
                     }
-                    if(fromConceptionEntityKind.get(0).startsWith("DOCG_")){
-                        cytoscapeNodePayload.getData().put("shape","diamond");
-                        cytoscapeNodePayload.getData().put("background_color","#FF8C00");
+                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEventClass)){
+                        cytoscapeNodePayload.getData().put("shape","round-diamond");
+                        cytoscapeNodePayload.getData().put("size","3");
+                        cytoscapeNodePayload.getData().put("background_color","#A239CA");
                     }
+                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEntityClass)){
+                        cytoscapeNodePayload.getData().put("shape","barrel");
+                        cytoscapeNodePayload.getData().put("background_color","#A239CA");
+                    }
+                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEventClass)){
+                        cytoscapeNodePayload.getData().put("shape","round-diamond");
+                        cytoscapeNodePayload.getData().put("size","3");
+                        cytoscapeNodePayload.getData().put("background_color","#07889B");
+                    }
+                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEntityClass)){
+                        cytoscapeNodePayload.getData().put("shape","barrel");
+                        cytoscapeNodePayload.getData().put("background_color","#07889B");
+                    }
+
                     cytoscapeNodePayload.getData().put("id",fromConceptionEntityUID);
                     cytoscapeNodePayload.getData().put("kind",fromConceptionEntityKind.get(0));
                     cytoscapeNodePayload.getData().put("desc",fromConceptionEntityKind.get(0)+":\n"+fromConceptionEntityUID);
@@ -110,16 +128,32 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
                     cytoscapeNodePayload.getData().put("shape","ellipse");
                     cytoscapeNodePayload.getData().put("background_color","#c00");
+                    cytoscapeNodePayload.getData().put("size","4");
                     if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(toConceptionEntityKind.get(0))!=null){
                         cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(toConceptionEntityKind.get(0)));
                     }
                     if(this.conceptionEntityUID.equals(toConceptionEntityUID)){
                         cytoscapeNodePayload.getData().put("shape","pentagon");
                         cytoscapeNodePayload.getData().put("background_color","#555555");
+                        cytoscapeNodePayload.getData().put("size","5");
                     }
-                    if(toConceptionEntityKind.get(0).startsWith("DOCG_")){
-                        cytoscapeNodePayload.getData().put("shape","diamond");
-                        cytoscapeNodePayload.getData().put("background_color","#FF8C00");
+                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEventClass)){
+                        cytoscapeNodePayload.getData().put("shape","round-diamond");
+                        cytoscapeNodePayload.getData().put("size","3");
+                        cytoscapeNodePayload.getData().put("background_color","#A239CA");
+                    }
+                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEntityClass)){
+                        cytoscapeNodePayload.getData().put("shape","barrel");
+                        cytoscapeNodePayload.getData().put("background_color","#A239CA");
+                    }
+                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEventClass)){
+                        cytoscapeNodePayload.getData().put("shape","round-diamond");
+                        cytoscapeNodePayload.getData().put("size","3");
+                        cytoscapeNodePayload.getData().put("background_color","#07889B");
+                    }
+                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEntityClass)){
+                        cytoscapeNodePayload.getData().put("shape","barrel");
+                        cytoscapeNodePayload.getData().put("background_color","#07889B");
                     }
                     cytoscapeNodePayload.getData().put("id",toConceptionEntityUID);
                     cytoscapeNodePayload.getData().put("kind",toConceptionEntityKind.get(0));
