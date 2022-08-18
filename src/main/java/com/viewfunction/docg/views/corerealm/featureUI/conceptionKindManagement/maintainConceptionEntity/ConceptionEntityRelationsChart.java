@@ -98,7 +98,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     }
                     cytoscapeNodePayload.getData().put("id",fromConceptionEntityUID);
                     cytoscapeNodePayload.getData().put("kind",fromConceptionEntityKind.get(0));
-                    cytoscapeNodePayload.getData().put("desc",fromConceptionEntityKind.get(0)+":"+fromConceptionEntityUID);
+                    cytoscapeNodePayload.getData().put("desc",fromConceptionEntityKind.get(0)+":\n"+fromConceptionEntityUID);
                     runBeforeClientResponse(ui -> {
                         try {
                             getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
@@ -125,7 +125,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     }
                     cytoscapeNodePayload.getData().put("id",toConceptionEntityUID);
                     cytoscapeNodePayload.getData().put("kind",toConceptionEntityKind.get(0));
-                    cytoscapeNodePayload.getData().put("desc",toConceptionEntityKind.get(0)+":"+toConceptionEntityUID);
+                    cytoscapeNodePayload.getData().put("desc",toConceptionEntityKind.get(0)+":\n"+toConceptionEntityUID);
                     runBeforeClientResponse(ui -> {
                         try {
                             getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
@@ -202,7 +202,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     }
                     cytoscapeNodePayload.getData().put("id",fromConceptionEntityUID);
                     cytoscapeNodePayload.getData().put("kind",fromConceptionEntityKind.get(0));
-                    cytoscapeNodePayload.getData().put("desc",fromConceptionEntityKind.get(0)+":"+fromConceptionEntityUID);
+                    cytoscapeNodePayload.getData().put("desc",fromConceptionEntityKind.get(0)+":\n"+fromConceptionEntityUID);
                     runBeforeClientResponse(ui -> {
                         try {
                             getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
@@ -229,7 +229,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     }
                     cytoscapeNodePayload.getData().put("id",toConceptionEntityUID);
                     cytoscapeNodePayload.getData().put("kind",toConceptionEntityKind.get(0));
-                    cytoscapeNodePayload.getData().put("desc",toConceptionEntityKind.get(0)+":"+toConceptionEntityUID);
+                    cytoscapeNodePayload.getData().put("desc",toConceptionEntityKind.get(0)+":\n"+toConceptionEntityUID);
                     runBeforeClientResponse(ui -> {
                         try {
                             getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
