@@ -36,7 +36,7 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                 let layout = cy.layout({
                     name: 'cose',
                     fit:true,
-                    padding: 100, // the padding on fit
+                    padding: 10, // the padding on fit
                 });
                 layout.run();
                 cy.fit();
@@ -68,7 +68,7 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                     fit: true,
 
                     // Padding on fit
-                    padding: 100,
+                    padding: 10,
 
                     // Constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
                     boundingBox: undefined,
