@@ -51,7 +51,6 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         this.setMargin(false);
         this.setPadding(false);
         this.setHeight(750, Unit.PIXELS);
-        //this.setHeight(chartHeight, Unit.PIXELS);
         initConnector();
     }
 
@@ -215,10 +214,6 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
             }
         });
     }
-
-   // public void setConceptionKindColorMap(Map<String, String> conceptionKindColorMap) {
-   //     this.conceptionKindColorMap = conceptionKindColorMap;
-   // }
 
     @ClientCallable
     public void addConceptionEntityRelations(String entityType,String entityUID) {

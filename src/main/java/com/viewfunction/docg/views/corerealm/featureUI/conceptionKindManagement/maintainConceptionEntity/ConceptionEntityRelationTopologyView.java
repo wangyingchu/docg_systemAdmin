@@ -8,6 +8,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
@@ -23,9 +24,13 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private SecondaryKeyValueDisplayItem isDenseDisplayItem;
     private int conceptionEntityRelationInfoViewHeightOffset;
     private ConceptionEntityRelationsChart conceptionEntityRelationsChart;
+    private Registration listener;
 
     public ConceptionEntityRelationTopologyView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
+        this.setSpacing(false);
+        this.setMargin(false);
+
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
         this.conceptionEntityRelationInfoViewHeightOffset = conceptionEntityIntegratedInfoViewHeightOffset+100;
@@ -76,11 +81,21 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        // Add browser window listener to observe size change
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            conceptionEntityRelationsChart.setHeight((event.getHeight()-this.conceptionEntityRelationInfoViewHeightOffset)+40, Unit.PIXELS);
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            int browserHeight = receiver.getBodyClientHeight();
+            conceptionEntityRelationsChart.setHeight((browserHeight-this.conceptionEntityRelationInfoViewHeightOffset+40),Unit.PIXELS);
+        }));
     }
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
         // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
         super.onDetach(detachEvent);
     }
 
