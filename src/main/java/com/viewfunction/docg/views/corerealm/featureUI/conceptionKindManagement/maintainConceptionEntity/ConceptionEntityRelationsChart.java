@@ -35,13 +35,13 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     private String conceptionKind;
     private Map<String,String> conceptionKindColorMap;
     private int currentQueryPageSize = 10;
-    private Map<String,Integer> additionalTargetConceptionEntityRelationCurrentQueryPageMap;
+    private Map<String,Integer> targetConceptionEntityRelationCurrentQueryPageMap;
     private int colorIndex = 0;
 
     public ConceptionEntityRelationsChart(String conceptionKind,String conceptionEntityUID){
         this.conceptionEntityUIDList = new ArrayList<>();
         this.relationEntityUIDList = new ArrayList<>();
-        this.additionalTargetConceptionEntityRelationCurrentQueryPageMap = new HashMap<>();
+        this.targetConceptionEntityRelationCurrentQueryPageMap = new HashMap<>();
         this.conceptionKindColorMap = new HashMap<>();
         this.conceptionEntityUID = conceptionEntityUID;
         this.conceptionKind = conceptionKind;
@@ -205,6 +205,16 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         });
     }
 
+    private void clearGraph(){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.clearData", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
     private void lockGraph(){
         runBeforeClientResponse(ui -> {
             try {
@@ -239,8 +249,8 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     generateConceptionKindColorMap(attachedConceptionKinds);
                     QueryParameters relationshipQueryParameters = new QueryParameters();
                     int currentEntityQueryPage = 1;
-                    if(additionalTargetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.conceptionEntityUID)){
-                        currentEntityQueryPage = additionalTargetConceptionEntityRelationCurrentQueryPageMap.get(this.conceptionEntityUID);
+                    if(targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.conceptionEntityUID)){
+                        currentEntityQueryPage = targetConceptionEntityRelationCurrentQueryPageMap.get(this.conceptionEntityUID);
                     }
                     relationshipQueryParameters.setStartPage(currentEntityQueryPage);
                     relationshipQueryParameters.setEndPage(currentEntityQueryPage+1);
@@ -254,7 +264,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                         setData(totalKindsRelationEntitiesList);
                         initLayoutGraph();
                         currentEntityQueryPage++;
-                        additionalTargetConceptionEntityRelationCurrentQueryPageMap.put(this.conceptionEntityUID,currentEntityQueryPage);
+                        targetConceptionEntityRelationCurrentQueryPageMap.put(this.conceptionEntityUID,currentEntityQueryPage);
                     }
                 }else{
                     CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
@@ -268,7 +278,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         coreRealm.closeGlobalSession();
     }
 
-    public void loadAdditionalTargetConceptionEntityRelationData(String conceptionKind,String conceptionEntityUID){
+    private void loadAdditionalTargetConceptionEntityRelationData(String conceptionKind,String conceptionEntityUID){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
@@ -277,8 +287,8 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                 ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(conceptionEntityUID);
                 if (targetEntity != null) {
                     int currentEntityQueryPage = 1;
-                    if(additionalTargetConceptionEntityRelationCurrentQueryPageMap.containsKey(conceptionEntityUID)){
-                        currentEntityQueryPage = additionalTargetConceptionEntityRelationCurrentQueryPageMap.get(conceptionEntityUID);
+                    if(targetConceptionEntityRelationCurrentQueryPageMap.containsKey(conceptionEntityUID)){
+                        currentEntityQueryPage = targetConceptionEntityRelationCurrentQueryPageMap.get(conceptionEntityUID);
                     }
                     List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
                     List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
@@ -293,11 +303,12 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                         List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
                         totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
                     }
-                    if(totalKindsRelationEntitiesList.size()>0){
+                    if(totalKindsRelationEntitiesList.size() > 1){
+                        //At lest has one relation with current ConceptionEntity
                         lockGraph();
                         setData(totalKindsRelationEntitiesList);
                         currentEntityQueryPage++;
-                        additionalTargetConceptionEntityRelationCurrentQueryPageMap.put(conceptionEntityUID,currentEntityQueryPage);
+                        targetConceptionEntityRelationCurrentQueryPageMap.put(conceptionEntityUID,currentEntityQueryPage);
                         layoutGraph();
                     }
                 }else{
@@ -329,5 +340,13 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
             colorIndex++;
         }
         return conceptionKindColorMap;
+    }
+
+    public void reload(){
+        this.conceptionEntityUIDList.clear();
+        this.relationEntityUIDList.clear();
+        this.targetConceptionEntityRelationCurrentQueryPageMap.clear();
+        clearGraph();
+        initLoadTargetConceptionEntityRelationData();
     }
 }
