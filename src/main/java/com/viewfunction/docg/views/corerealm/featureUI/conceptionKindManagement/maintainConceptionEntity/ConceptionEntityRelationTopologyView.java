@@ -83,7 +83,6 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         relationCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.EXPAND.create(), "当前显示关系实体总量", "-");
         new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CIRCLE_THIN.create(), "当显示概念实体总量", "-");
 
-
         Button conceptionEntitiesStaticInfoButton = new Button("关联概念实体类型分布");
         conceptionEntitiesStaticInfoButton.setIcon(VaadinIcon.PIE_CHART.create());
         conceptionEntitiesStaticInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
