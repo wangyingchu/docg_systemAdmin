@@ -13,6 +13,7 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
+import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +22,6 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
     private SecondaryKeyValueDisplayItem relationCountDisplayItem;
-    private SecondaryKeyValueDisplayItem inDegreeDisplayItem;
-    private SecondaryKeyValueDisplayItem outDegreeDisplayItem;
-    private SecondaryKeyValueDisplayItem isDenseDisplayItem;
     private int conceptionEntityRelationInfoViewHeightOffset;
     private ConceptionEntityRelationsChart conceptionEntityRelationsChart;
     private Registration listener;
@@ -39,21 +37,40 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         List<Component> secondaryTitleComponentsList = new ArrayList<>();
         List<Component> actionComponentsList = new ArrayList<>();
 
-
-
         HorizontalLayout graphExploreActionButtonContainer = new HorizontalLayout();
+        graphExploreActionButtonContainer.setPadding(false);
+        graphExploreActionButtonContainer.setSpacing(false);
+        graphExploreActionButtonContainer.setMargin(false);
 
-        Button reloadConceptionEntitiesInfoButton0 = new Button();
-        reloadConceptionEntitiesInfoButton0.setIcon(VaadinIcon.PIE_CHART.create());
-        reloadConceptionEntitiesInfoButton0.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
-        graphExploreActionButtonContainer.add(reloadConceptionEntitiesInfoButton0);
+        Button reloadConceptionEntitiesInfoButton = new Button();
+        reloadConceptionEntitiesInfoButton.setIcon(VaadinIcon.REFRESH.create());
+        Tooltips.getCurrent().setTooltip(reloadConceptionEntitiesInfoButton, "重新加载关系图");
+        reloadConceptionEntitiesInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                conceptionEntityRelationsChart.reload();
+            }
+        });
+        reloadConceptionEntitiesInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        graphExploreActionButtonContainer.add(reloadConceptionEntitiesInfoButton);
 
-        Label ss = new Label("单击选中实体，双击概念实体获取其一度关联信息");
-        ss.getStyle().set("font-size","10px").set("padding-left","5px").set("padding-right","15px");
-        ss.addClassNames("text-tertiary");
-        graphExploreActionButtonContainer.add(ss);
-        graphExploreActionButtonContainer.setVerticalComponentAlignment(Alignment.CENTER,ss);
+        Button deleteSingleEntityButton = new Button();
+        deleteSingleEntityButton.setIcon(VaadinIcon.DEL_A.create());
+        Tooltips.getCurrent().setTooltip(deleteSingleEntityButton, "隐藏选中的概念实体");
+        deleteSingleEntityButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        graphExploreActionButtonContainer.add(deleteSingleEntityButton);
 
+        Button deleteEntitiesButton = new Button();
+        deleteEntitiesButton.setIcon(VaadinIcon.DEL.create());
+        Tooltips.getCurrent().setTooltip(deleteEntitiesButton, "隐藏选中的以及与其一度关联的所有概念实体");
+        deleteEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        graphExploreActionButtonContainer.add(deleteEntitiesButton);
+
+        Label selectMethodMessage = new Label("单击选中实体，双击概念实体获取其一度关联信息");
+        selectMethodMessage.getStyle().set("font-size","10px").set("padding-right","30px");
+        selectMethodMessage.addClassNames("text-tertiary");
+        graphExploreActionButtonContainer.add(selectMethodMessage);
+        graphExploreActionButtonContainer.setVerticalComponentAlignment(Alignment.CENTER,selectMethodMessage);
 
         secondaryTitleComponentsList.add(graphExploreActionButtonContainer);
 
@@ -61,42 +78,29 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         secondaryTitleComponentsList.add(titleLayout);
         relationCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(), "显示关联关系总量", "-");
         new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(), "显示概念实体总量", "-");
-        //inDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_LEFT.create(), "关系入度", "-");
-        //outDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_RIGHT.create(), "关系出度", "-");
-        //isDenseDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.BULLSEYE.create(), "是否稠密实体", "-");
 
 
-
-        //H6 ss = new H6("单击选中实体，双击概念实体获取其一度关联信息");
-        //ss.getStyle().set("font-size","8px").set("padding-left","20px");
-        //ss.addClassNames("text-tertiary");
-
-        //titleLayout.add(ss);
-
-        //titleLayout.setVerticalComponentAlignment(Alignment.START,ss);
-
-
-        Button reloadConceptionEntitiesInfoButton = new Button("关联概念实体类型分布");
-        reloadConceptionEntitiesInfoButton.setIcon(VaadinIcon.PIE_CHART.create());
-        reloadConceptionEntitiesInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
-        reloadConceptionEntitiesInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button conceptionEntitiesStaticInfoButton = new Button("关联概念实体类型分布");
+        conceptionEntitiesStaticInfoButton.setIcon(VaadinIcon.PIE_CHART.create());
+        conceptionEntitiesStaticInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        conceptionEntitiesStaticInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
 
             }
         });
-        actionComponentsList.add(reloadConceptionEntitiesInfoButton);
+        actionComponentsList.add(conceptionEntitiesStaticInfoButton);
 
-        Button reloadRelationInfoButton = new Button("重新获取数据");
-        reloadRelationInfoButton.setIcon(VaadinIcon.REFRESH.create());
-        reloadRelationInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
-        reloadRelationInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button fullRelationsInfoButton = new Button("关联实体全量星云图");
+        fullRelationsInfoButton.setIcon(VaadinIcon.ASTERISK.create());
+        fullRelationsInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        fullRelationsInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                conceptionEntityRelationsChart.reload();
+
             }
         });
-        actionComponentsList.add(reloadRelationInfoButton);
+        actionComponentsList.add(fullRelationsInfoButton);
 
         Icon relationsIcon = VaadinIcon.AIRPLANE.create();
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon, "关联关系探索: ", secondaryTitleComponentsList, actionComponentsList);
@@ -110,7 +114,6 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         relationEntitiesDetailLayout.add(this.conceptionEntityRelationsChart);
 
         VerticalLayout selectedEntityInfoContainerLayout = new VerticalLayout();
-        //selectedEntityInfoContainerLayout.setPadding(false);
         selectedEntityInfoContainerLayout.setSpacing(false);
         selectedEntityInfoContainerLayout.setMargin(false);
 
@@ -122,12 +125,6 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.POINTER)," 已选中实体综合信息");
         selectedEntityInfoContainerLayout.add(infoTitle1);
-
-
-        //Label titleTextLabel = new Label("单击选中实体，双击概念实体获取其一度关联信息");
-        //titleTextLabel.addClassNames("text-xs","text-tertiary");
-        ///selectedEntityInfoContainerLayout.add(ss);
-
     }
 
     @Override

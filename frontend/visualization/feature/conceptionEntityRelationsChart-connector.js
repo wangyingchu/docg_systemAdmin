@@ -159,5 +159,13 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
             var node = evt.target;
             c.$server.addConceptionEntityRelations(node.data().kind,node.id());
         });
+        cy.on('unselect', 'node', function(evt){
+            var node = evt.target;
+            c.$server.disableControlActionButtons(node.data().kind,node.id());
+        });
+        cy.on('select', 'node', function(evt){
+            var node = evt.target;
+            c.$server.enableControlActionButtons(node.data().kind,node.id());
+        });
     }
 }

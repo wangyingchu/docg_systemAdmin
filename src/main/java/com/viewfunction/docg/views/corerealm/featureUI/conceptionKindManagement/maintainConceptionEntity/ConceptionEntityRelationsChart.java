@@ -235,6 +235,16 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         System.out.println("show conceptionEntity info");
     }
 
+    @ClientCallable
+    public void disableControlActionButtons(String entityType,String entityUID) {
+        System.out.println("disableControlActionButtons");
+    }
+
+    @ClientCallable
+    public void enableControlActionButtons(String entityType,String entityUID) {
+        System.out.println("enableControlActionButtons");
+    }
+
     public void initLoadTargetConceptionEntityRelationData(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
