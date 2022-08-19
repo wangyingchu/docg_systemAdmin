@@ -75,7 +75,14 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         add(relationEntitiesDetailLayout);
 
         this.conceptionEntityRelationsChart = new ConceptionEntityRelationsChart(this.conceptionKind,this.conceptionEntityUID);
-        add(this.conceptionEntityRelationsChart);
+        relationEntitiesDetailLayout.add(this.conceptionEntityRelationsChart);
+
+        VerticalLayout selectedEntityInfoContainerLayout = new VerticalLayout();
+        selectedEntityInfoContainerLayout.setWidth(300,Unit.PIXELS);
+        selectedEntityInfoContainerLayout.getStyle()
+                .set("border-left", "1px solid var(--lumo-contrast-20pct)");
+        relationEntitiesDetailLayout.add(selectedEntityInfoContainerLayout);
+        relationEntitiesDetailLayout.setFlexGrow(1,this.conceptionEntityRelationsChart);
     }
 
     @Override
