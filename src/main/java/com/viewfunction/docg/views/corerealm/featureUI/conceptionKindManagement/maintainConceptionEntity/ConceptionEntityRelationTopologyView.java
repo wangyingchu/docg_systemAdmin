@@ -25,6 +25,8 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private int conceptionEntityRelationInfoViewHeightOffset;
     private ConceptionEntityRelationsChart conceptionEntityRelationsChart;
     private Registration listener;
+    private Button deleteSingleEntityButton;
+    private Button deleteEntitiesButton;
 
     public ConceptionEntityRelationTopologyView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
@@ -54,17 +56,19 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         reloadConceptionEntitiesInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         graphExploreActionButtonContainer.add(reloadConceptionEntitiesInfoButton);
 
-        Button deleteSingleEntityButton = new Button();
+        deleteSingleEntityButton = new Button();
         deleteSingleEntityButton.setIcon(VaadinIcon.DEL_A.create());
         Tooltips.getCurrent().setTooltip(deleteSingleEntityButton, "隐藏选中的概念实体");
         deleteSingleEntityButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         graphExploreActionButtonContainer.add(deleteSingleEntityButton);
+        deleteSingleEntityButton.setEnabled(false);
 
-        Button deleteEntitiesButton = new Button();
+        deleteEntitiesButton = new Button();
         deleteEntitiesButton.setIcon(VaadinIcon.DEL.create());
         Tooltips.getCurrent().setTooltip(deleteEntitiesButton, "隐藏选中的以及与其一度关联的所有概念实体");
         deleteEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         graphExploreActionButtonContainer.add(deleteEntitiesButton);
+        deleteEntitiesButton.setEnabled(false);
 
         Label selectMethodMessage = new Label("单击选中实体，双击概念实体获取其一度关联信息");
         selectMethodMessage.getStyle().set("font-size","10px").set("padding-right","30px");
@@ -76,8 +80,8 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         HorizontalLayout titleLayout = new HorizontalLayout();
         secondaryTitleComponentsList.add(titleLayout);
-        relationCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(), "显示关联关系总量", "-");
-        new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(), "显示概念实体总量", "-");
+        relationCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.EXPAND.create(), "当前显示关系实体总量", "-");
+        new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CIRCLE_THIN.create(), "当显示概念实体总量", "-");
 
 
         Button conceptionEntitiesStaticInfoButton = new Button("关联概念实体类型分布");
@@ -111,6 +115,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         add(relationEntitiesDetailLayout);
 
         this.conceptionEntityRelationsChart = new ConceptionEntityRelationsChart(this.conceptionKind,this.conceptionEntityUID);
+        this.conceptionEntityRelationsChart.setContainerConceptionEntityRelationTopologyView(this);
         relationEntitiesDetailLayout.add(this.conceptionEntityRelationsChart);
 
         VerticalLayout selectedEntityInfoContainerLayout = new VerticalLayout();
@@ -150,5 +155,15 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
     public void loadEntityRelationNetworks(){
         this.conceptionEntityRelationsChart.initLoadTargetConceptionEntityRelationData();
+    }
+
+    public void disableControlActionButtons() {
+        deleteSingleEntityButton.setEnabled(false);
+        deleteEntitiesButton.setEnabled(false);
+    }
+
+    public void enableControlActionButtons() {
+        deleteSingleEntityButton.setEnabled(true);
+        deleteEntitiesButton.setEnabled(true);
     }
 }

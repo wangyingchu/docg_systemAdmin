@@ -37,6 +37,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     private int currentQueryPageSize = 10;
     private Map<String,Integer> targetConceptionEntityRelationCurrentQueryPageMap;
     private int colorIndex = 0;
+    private ConceptionEntityRelationTopologyView containerConceptionEntityRelationTopologyView;
 
     public ConceptionEntityRelationsChart(String conceptionKind,String conceptionEntityUID){
         this.conceptionEntityUIDList = new ArrayList<>();
@@ -237,12 +238,16 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
 
     @ClientCallable
     public void disableControlActionButtons(String entityType,String entityUID) {
-        System.out.println("disableControlActionButtons");
+        if(containerConceptionEntityRelationTopologyView != null){
+            containerConceptionEntityRelationTopologyView.disableControlActionButtons();
+        }
     }
 
     @ClientCallable
     public void enableControlActionButtons(String entityType,String entityUID) {
-        System.out.println("enableControlActionButtons");
+        if(containerConceptionEntityRelationTopologyView != null){
+            containerConceptionEntityRelationTopologyView.enableControlActionButtons();
+        }
     }
 
     public void initLoadTargetConceptionEntityRelationData(){
@@ -358,5 +363,9 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         this.targetConceptionEntityRelationCurrentQueryPageMap.clear();
         clearGraph();
         initLoadTargetConceptionEntityRelationData();
+    }
+
+    public void setContainerConceptionEntityRelationTopologyView(ConceptionEntityRelationTopologyView containerConceptionEntityRelationTopologyView) {
+        this.containerConceptionEntityRelationTopologyView = containerConceptionEntityRelationTopologyView;
     }
 }
