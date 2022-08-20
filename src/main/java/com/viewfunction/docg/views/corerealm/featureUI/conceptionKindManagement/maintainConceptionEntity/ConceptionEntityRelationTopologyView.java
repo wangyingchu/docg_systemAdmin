@@ -59,6 +59,12 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         deleteSingleEntityButton = new Button();
         deleteSingleEntityButton.setIcon(VaadinIcon.DEL_A.create());
         Tooltips.getCurrent().setTooltip(deleteSingleEntityButton, "隐藏选中的概念实体");
+        deleteSingleEntityButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                conceptionEntityRelationsChart.deleteSelectedConceptionEntity();
+            }
+        });
         deleteSingleEntityButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         graphExploreActionButtonContainer.add(deleteSingleEntityButton);
         deleteSingleEntityButton.setEnabled(false);
@@ -66,6 +72,12 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         deleteEntitiesButton = new Button();
         deleteEntitiesButton.setIcon(VaadinIcon.DEL.create());
         Tooltips.getCurrent().setTooltip(deleteEntitiesButton, "隐藏选中的以及与其一度关联的所有概念实体");
+        deleteEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                conceptionEntityRelationsChart.deleteSelectedAndDirectlyRelatedConceptionEntities();
+            }
+        });
         deleteEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         graphExploreActionButtonContainer.add(deleteEntitiesButton);
         deleteEntitiesButton.setEnabled(false);

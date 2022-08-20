@@ -17,6 +17,9 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
             clearData : function() {
                 cy.remove(cy.elements());
             },
+            deleteNode : function(data) {
+                cy.remove(cy.filter('[id = '+data+']') );
+             },
             initLayoutGraph: function(){
                 let layout = cy.layout({
                     name: 'cose',
@@ -150,22 +153,17 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                 name: 'cose'
             }
         });
-        cy.on('click', 'node', function(evt){
-            var node = evt.target;
-            c.$server.showConceptionEntityInfo(node.data().kind,node.id());
-        });
-
         cy.on('dblclick', 'node', function(evt){
             var node = evt.target;
             c.$server.addConceptionEntityRelations(node.data().kind,node.id());
         });
         cy.on('unselect', 'node', function(evt){
             var node = evt.target;
-            c.$server.disableControlActionButtons(node.data().kind,node.id());
+            c.$server.unselectConceptionEntity(node.data().kind,node.id());
         });
         cy.on('select', 'node', function(evt){
             var node = evt.target;
-            c.$server.enableControlActionButtons(node.data().kind,node.id());
+            c.$server.selectConceptionEntity(node.data().kind,node.id());
         });
     }
 }

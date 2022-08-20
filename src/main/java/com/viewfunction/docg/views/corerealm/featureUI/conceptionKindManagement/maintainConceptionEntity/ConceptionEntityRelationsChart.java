@@ -38,6 +38,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     private Map<String,Integer> targetConceptionEntityRelationCurrentQueryPageMap;
     private int colorIndex = 0;
     private ConceptionEntityRelationTopologyView containerConceptionEntityRelationTopologyView;
+    private String selectedConceptionEntityUID;
 
     public ConceptionEntityRelationsChart(String conceptionKind,String conceptionEntityUID){
         this.conceptionEntityUIDList = new ArrayList<>();
@@ -232,19 +233,17 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     }
 
     @ClientCallable
-    public void showConceptionEntityInfo(String entityType,String entityUID) {
-        System.out.println("show conceptionEntity info");
-    }
-
-    @ClientCallable
-    public void disableControlActionButtons(String entityType,String entityUID) {
+    public void unselectConceptionEntity(String entityType,String entityUID) {
+        this.selectedConceptionEntityUID = null;
         if(containerConceptionEntityRelationTopologyView != null){
             containerConceptionEntityRelationTopologyView.disableControlActionButtons();
         }
     }
 
     @ClientCallable
-    public void enableControlActionButtons(String entityType,String entityUID) {
+    public void selectConceptionEntity(String entityType,String entityUID) {
+        System.out.println("show conceptionEntity info"+entityType +entityUID);
+        this.selectedConceptionEntityUID = entityUID;
         if(containerConceptionEntityRelationTopologyView != null){
             containerConceptionEntityRelationTopologyView.enableControlActionButtons();
         }
@@ -363,6 +362,25 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         this.targetConceptionEntityRelationCurrentQueryPageMap.clear();
         clearGraph();
         initLoadTargetConceptionEntityRelationData();
+    }
+
+    public void deleteSelectedConceptionEntity(){
+        if(this.selectedConceptionEntityUID != null){
+            runBeforeClientResponse(ui -> {
+                try {
+                    getElement().callJsFunction("$connector.deleteNode", new Serializable[]{(new ObjectMapper()).writeValueAsString(this.selectedConceptionEntityUID)});
+                    conceptionEntityUIDList.remove(this.selectedConceptionEntityUID);
+                    targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
+                    selectedConceptionEntityUID = null;
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
+
+    public void deleteSelectedAndDirectlyRelatedConceptionEntities(){
+
     }
 
     public void setContainerConceptionEntityRelationTopologyView(ConceptionEntityRelationTopologyView containerConceptionEntityRelationTopologyView) {
