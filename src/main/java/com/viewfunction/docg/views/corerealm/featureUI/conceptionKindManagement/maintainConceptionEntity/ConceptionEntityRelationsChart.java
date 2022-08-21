@@ -3,6 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.google.common.collect.*;
 import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
@@ -21,10 +22,7 @@ import com.viewfunction.docg.element.visualizationComponent.payload.common.Cytos
 import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeNodePayload;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @JavaScript("./visualization/feature/conceptionEntityRelationsChart-connector.js")
 public class ConceptionEntityRelationsChart extends VerticalLayout {
@@ -39,12 +37,14 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     private int colorIndex = 0;
     private ConceptionEntityRelationTopologyView containerConceptionEntityRelationTopologyView;
     private String selectedConceptionEntityUID;
+    private Multimap<String,String> conception_relationEntityUIDMap;
 
     public ConceptionEntityRelationsChart(String conceptionKind,String conceptionEntityUID){
         this.conceptionEntityUIDList = new ArrayList<>();
         this.relationEntityUIDList = new ArrayList<>();
         this.targetConceptionEntityRelationCurrentQueryPageMap = new HashMap<>();
         this.conceptionKindColorMap = new HashMap<>();
+        this.conception_relationEntityUIDMap = ArrayListMultimap.create();
         this.conceptionEntityUID = conceptionEntityUID;
         this.conceptionKind = conceptionKind;
         UI.getCurrent().getPage().addJavaScript("js/cytoscape/3.22.1/dist/cytoscape.min.js");
@@ -81,6 +81,21 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
 
                 List<String> toConceptionEntityKind = currentRelationEntity.getToConceptionEntityKinds();
                 String toConceptionEntityUID = currentRelationEntity.getToConceptionEntityUID();
+
+                if(!conception_relationEntityUIDMap.containsKey(fromConceptionEntityUID)){
+                    conception_relationEntityUIDMap.put(fromConceptionEntityUID,relationEntityUID);
+                }else{
+                    if(!conception_relationEntityUIDMap.get(fromConceptionEntityUID).contains(relationEntityUID)){
+                        conception_relationEntityUIDMap.put(fromConceptionEntityUID,relationEntityUID);
+                    }
+                }
+                if(!conception_relationEntityUIDMap.containsKey(toConceptionEntityUID)){
+                    conception_relationEntityUIDMap.put(toConceptionEntityUID,relationEntityUID);
+                }else{
+                    if(!conception_relationEntityUIDMap.get(toConceptionEntityUID).contains(relationEntityUID)){
+                        conception_relationEntityUIDMap.put(toConceptionEntityUID,relationEntityUID);
+                    }
+                }
 
                 if(!conceptionEntityUIDList.contains(fromConceptionEntityUID)){
                     conceptionEntityUIDList.add(fromConceptionEntityUID);
@@ -317,8 +332,18 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                         List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
                         totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
                     }
+                    boolean executeGraphIncreaseOperation = false;
+                    if(totalKindsRelationEntitiesList.size() == 1){
+                        RelationEntity resultRelationEntity = totalKindsRelationEntitiesList.get(0);
+                        String relationUID = resultRelationEntity.getRelationEntityUID();
+                        if(!relationEntityUIDList.contains(relationUID)){
+                            executeGraphIncreaseOperation = true;
+                        }
+                    }
                     if(totalKindsRelationEntitiesList.size() > 1){
-                        //At lest has one relation with current ConceptionEntity
+                        executeGraphIncreaseOperation = true;
+                    }
+                    if(executeGraphIncreaseOperation){
                         lockGraph();
                         setData(totalKindsRelationEntitiesList);
                         currentEntityQueryPage++;
@@ -369,9 +394,14 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
             runBeforeClientResponse(ui -> {
                 try {
                     getElement().callJsFunction("$connector.deleteNode", new Serializable[]{(new ObjectMapper()).writeValueAsString(this.selectedConceptionEntityUID)});
-                    conceptionEntityUIDList.remove(this.selectedConceptionEntityUID);
-                    targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
-                    selectedConceptionEntityUID = null;
+                    this.conceptionEntityUIDList.remove(this.selectedConceptionEntityUID);
+                    this.targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
+                    Collection<String> attachedRelationUIDs = this.conception_relationEntityUIDMap.get(this.selectedConceptionEntityUID);
+                    if(attachedRelationUIDs != null){
+                        relationEntityUIDList.removeAll(attachedRelationUIDs);
+                    }
+                    this.conception_relationEntityUIDMap.removeAll(this.selectedConceptionEntityUID);
+                    this.selectedConceptionEntityUID = null;
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
