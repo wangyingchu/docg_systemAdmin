@@ -27,6 +27,8 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private Registration listener;
     private Button deleteSingleEntityButton;
     private Button deleteEntitiesButton;
+    private Button expendEntityRelationButton;
+    private Button compressEntityRelationButton;
 
     public ConceptionEntityRelationTopologyView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
@@ -81,6 +83,32 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         deleteEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         graphExploreActionButtonContainer.add(deleteEntitiesButton);
         deleteEntitiesButton.setEnabled(false);
+
+        expendEntityRelationButton = new Button();
+        expendEntityRelationButton.setIcon(VaadinIcon.EXPAND.create());
+        Tooltips.getCurrent().setTooltip(expendEntityRelationButton, "一度展开与选中概念实体关联的部分概念实体");
+        expendEntityRelationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //conceptionEntityRelationsChart.deleteSelectedAndDirectlyRelatedConceptionEntities();
+            }
+        });
+        expendEntityRelationButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        graphExploreActionButtonContainer.add(expendEntityRelationButton);
+        expendEntityRelationButton.setEnabled(false);
+
+        compressEntityRelationButton = new Button();
+        compressEntityRelationButton.setIcon(VaadinIcon.COMPRESS.create());
+        Tooltips.getCurrent().setTooltip(compressEntityRelationButton, "隐藏与选中概念实体一度关联的所有其他概念实体");
+        compressEntityRelationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //conceptionEntityRelationsChart.deleteSelectedAndDirectlyRelatedConceptionEntities();
+            }
+        });
+        compressEntityRelationButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        graphExploreActionButtonContainer.add(compressEntityRelationButton);
+        compressEntityRelationButton.setEnabled(false);
 
         Label selectMethodMessage = new Label("单击选中实体，双击概念实体获取其一度关联信息");
         selectMethodMessage.getStyle().set("font-size","10px").set("padding-right","30px");
@@ -171,10 +199,14 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     public void disableControlActionButtons() {
         deleteSingleEntityButton.setEnabled(false);
         deleteEntitiesButton.setEnabled(false);
+        compressEntityRelationButton.setEnabled(false);
+        expendEntityRelationButton.setEnabled(false);
     }
 
     public void enableControlActionButtons() {
         deleteSingleEntityButton.setEnabled(true);
         deleteEntitiesButton.setEnabled(true);
+        compressEntityRelationButton.setEnabled(true);
+        expendEntityRelationButton.setEnabled(true);
     }
 }
