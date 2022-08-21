@@ -19,7 +19,7 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
             },
             deleteNode : function(data) {
                 cy.remove(cy.filter('[id = '+data+']') );
-             },
+            },
             initLayoutGraph: function(){
                 let layout = cy.layout({
                     name: 'cose',

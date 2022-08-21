@@ -23,6 +23,7 @@ import com.viewfunction.docg.element.visualizationComponent.payload.common.Cytos
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 @JavaScript("./visualization/feature/conceptionEntityRelationsChart-connector.js")
 public class ConceptionEntityRelationsChart extends VerticalLayout {
@@ -410,7 +411,38 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     }
 
     public void deleteSelectedAndDirectlyRelatedConceptionEntities(){
+        if(this.selectedConceptionEntityUID != null){
+            Collection<String> needDeletedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(this.selectedConceptionEntityUID);
+            List<String> needDeletedConceptionEntitiesUID = new ArrayList<>();
+            if(needDeletedRelationEntityUIDs != null && needDeletedRelationEntityUIDs.size()>0) {
+                this.conception_relationEntityUIDMap.forEach(new BiConsumer<String, String>() {
+                    @Override
+                    public void accept(String conceptionEntityUID, String relationEntityUID) {
+                        if(needDeletedRelationEntityUIDs.contains(relationEntityUID)){
+                            needDeletedConceptionEntitiesUID.add(conceptionEntityUID);
+                        }
+                    }
+                });
+            }
+            if(needDeletedConceptionEntitiesUID.size()>0){
+                for(String currentConceptionEntity:needDeletedConceptionEntitiesUID){
+                    Collection<String> currentAttachedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(currentConceptionEntity);
+                    if(currentAttachedRelationEntityUIDs != null && currentAttachedRelationEntityUIDs.size() > 0){
+                        needDeletedRelationEntityUIDs.addAll(currentAttachedRelationEntityUIDs);
+                    }
+                }
+            }
 
+            // do deleteFromGraph
+
+            for(String currentNeedDeletedConceptionEntityUID:needDeletedConceptionEntitiesUID){
+                this.targetConceptionEntityRelationCurrentQueryPageMap.remove(currentNeedDeletedConceptionEntityUID);
+                this.conception_relationEntityUIDMap.removeAll(currentNeedDeletedConceptionEntityUID);
+            }
+            this.conceptionEntityUIDList.removeAll(needDeletedConceptionEntitiesUID);
+            this.relationEntityUIDList.removeAll(needDeletedRelationEntityUIDs);
+            this.selectedConceptionEntityUID = null;
+        }
     }
 
     public void setContainerConceptionEntityRelationTopologyView(ConceptionEntityRelationTopologyView containerConceptionEntityRelationTopologyView) {
