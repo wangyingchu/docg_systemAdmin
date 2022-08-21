@@ -53,6 +53,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 conceptionEntityRelationsChart.reload();
+                disableControlActionButtons();
             }
         });
         reloadConceptionEntitiesInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
