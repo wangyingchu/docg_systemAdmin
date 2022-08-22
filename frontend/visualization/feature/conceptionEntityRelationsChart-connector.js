@@ -18,7 +18,23 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                 cy.remove(cy.elements());
             },
             deleteNode : function(data) {
-                cy.remove(cy.filter('[id = '+data+']') );
+                let targetNode = cy.filter('[id = '+data+']');
+                //cy.remove(targetNode.union(targetNode.connectedEdges()));
+                cy.remove(targetNode);
+            },
+            deleteNodeWithOneDegreeConnection : function(data) {
+                /*
+                let targetNode = cy.filter('[id = '+data+']');
+                let relationsToDelete = targetNode.connectedEdges();
+                let nodesToDelete = relationsToDelete.connectedNodes();
+                let nodesToDeletesRelation = nodesToDelete.connectedEdges();
+                cy.remove(targetNode.union(relationsToDelete).union(nodesToDelete).union(nodesToDeletesRelation));
+                */
+                let targetNode = cy.filter('[id = '+data+']');
+                let relationsToDelete = targetNode.connectedEdges();
+                let nodesToDelete = relationsToDelete.connectedNodes();
+                //let nodesToDeletesRelation = nodesToDelete.connectedEdges();
+                cy.remove(targetNode.union(nodesToDelete));
             },
             initLayoutGraph: function(){
                 let layout = cy.layout({

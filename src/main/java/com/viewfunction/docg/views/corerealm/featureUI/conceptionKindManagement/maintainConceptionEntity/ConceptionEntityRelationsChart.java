@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.google.common.collect.*;
+
 import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -38,6 +38,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     private int colorIndex = 0;
     private ConceptionEntityRelationTopologyView containerConceptionEntityRelationTopologyView;
     private String selectedConceptionEntityUID;
+    private String selectedConceptionEntityKind;
     private Multimap<String,String> conception_relationEntityUIDMap;
 
     public ConceptionEntityRelationsChart(String conceptionKind,String conceptionEntityUID){
@@ -53,7 +54,6 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         this.setSpacing(false);
         this.setMargin(false);
         this.setPadding(false);
-        this.setHeight(750, Unit.PIXELS);
         initConnector();
     }
 
@@ -250,6 +250,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
 
     @ClientCallable
     public void unselectConceptionEntity(String entityType,String entityUID) {
+        this.selectedConceptionEntityKind = null;
         this.selectedConceptionEntityUID = null;
         if(containerConceptionEntityRelationTopologyView != null){
             containerConceptionEntityRelationTopologyView.disableControlActionButtons();
@@ -258,7 +259,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
 
     @ClientCallable
     public void selectConceptionEntity(String entityType,String entityUID) {
-        System.out.println("show conceptionEntity info"+entityType +entityUID);
+        this.selectedConceptionEntityKind = entityType;
         this.selectedConceptionEntityUID = entityUID;
         if(containerConceptionEntityRelationTopologyView != null){
             containerConceptionEntityRelationTopologyView.enableControlActionButtons();
@@ -403,6 +404,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     }
                     this.conception_relationEntityUIDMap.removeAll(this.selectedConceptionEntityUID);
                     this.selectedConceptionEntityUID = null;
+                    this.selectedConceptionEntityKind = null;
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
@@ -412,40 +414,57 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
 
     public void deleteSelectedAndDirectlyRelatedConceptionEntities(){
         if(this.selectedConceptionEntityUID != null){
-            Collection<String> needDeletedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(this.selectedConceptionEntityUID);
-            List<String> needDeletedConceptionEntitiesUID = new ArrayList<>();
-            if(needDeletedRelationEntityUIDs != null && needDeletedRelationEntityUIDs.size()>0) {
-                this.conception_relationEntityUIDMap.forEach(new BiConsumer<String, String>() {
-                    @Override
-                    public void accept(String conceptionEntityUID, String relationEntityUID) {
-                        if(needDeletedRelationEntityUIDs.contains(relationEntityUID)){
-                            needDeletedConceptionEntitiesUID.add(conceptionEntityUID);
+            runBeforeClientResponse(ui -> {
+                try {
+                    getElement().callJsFunction("$connector.deleteNodeWithOneDegreeConnection", new Serializable[]{(new ObjectMapper()).writeValueAsString(this.selectedConceptionEntityUID)});
+                    Collection<String> needDeletedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(this.selectedConceptionEntityUID);
+                    List<String> needDeletedConceptionEntitiesUID = new ArrayList<>();
+                    if(needDeletedRelationEntityUIDs != null && needDeletedRelationEntityUIDs.size()>0) {
+                        this.conception_relationEntityUIDMap.forEach(new BiConsumer<String, String>() {
+                            @Override
+                            public void accept(String conceptionEntityUID, String relationEntityUID) {
+                                if(needDeletedRelationEntityUIDs.contains(relationEntityUID)&& !needDeletedConceptionEntitiesUID.contains(conceptionEntityUID)){
+                                    needDeletedConceptionEntitiesUID.add(conceptionEntityUID);
+                                }
+                            }
+                        });
+                    }
+
+                    if(needDeletedConceptionEntitiesUID.size()>0){
+                        for(String currentConceptionEntity:needDeletedConceptionEntitiesUID){
+                            Collection<String> currentAttachedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(currentConceptionEntity);
+                            if(currentAttachedRelationEntityUIDs != null && currentAttachedRelationEntityUIDs.size() > 0){
+                                needDeletedRelationEntityUIDs.addAll(currentAttachedRelationEntityUIDs);
+                            }
                         }
                     }
-                });
-            }
-            if(needDeletedConceptionEntitiesUID.size()>0){
-                for(String currentConceptionEntity:needDeletedConceptionEntitiesUID){
-                    Collection<String> currentAttachedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(currentConceptionEntity);
-                    if(currentAttachedRelationEntityUIDs != null && currentAttachedRelationEntityUIDs.size() > 0){
-                        needDeletedRelationEntityUIDs.addAll(currentAttachedRelationEntityUIDs);
+
+                    for(String currentNeedDeletedConceptionEntityUID:needDeletedConceptionEntitiesUID){
+                        this.targetConceptionEntityRelationCurrentQueryPageMap.remove(currentNeedDeletedConceptionEntityUID);
+                        this.conception_relationEntityUIDMap.removeAll(currentNeedDeletedConceptionEntityUID);
                     }
+                    this.conceptionEntityUIDList.removeAll(needDeletedConceptionEntitiesUID);
+                    this.relationEntityUIDList.removeAll(needDeletedRelationEntityUIDs);
+                    this.selectedConceptionEntityUID = null;
+                    this.selectedConceptionEntityKind = null;
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
                 }
-            }
-
-            // do deleteFromGraph
-
-            for(String currentNeedDeletedConceptionEntityUID:needDeletedConceptionEntitiesUID){
-                this.targetConceptionEntityRelationCurrentQueryPageMap.remove(currentNeedDeletedConceptionEntityUID);
-                this.conception_relationEntityUIDMap.removeAll(currentNeedDeletedConceptionEntityUID);
-            }
-            this.conceptionEntityUIDList.removeAll(needDeletedConceptionEntitiesUID);
-            this.relationEntityUIDList.removeAll(needDeletedRelationEntityUIDs);
-            this.selectedConceptionEntityUID = null;
+            });
         }
     }
 
     public void setContainerConceptionEntityRelationTopologyView(ConceptionEntityRelationTopologyView containerConceptionEntityRelationTopologyView) {
         this.containerConceptionEntityRelationTopologyView = containerConceptionEntityRelationTopologyView;
+    }
+
+    public void expandSelectedEntityOneDegreeRelations() {
+        loadAdditionalTargetConceptionEntityRelationData(this.selectedConceptionEntityKind,this.selectedConceptionEntityUID);
+    }
+
+    public void resetConceptionEntityRelationQueryPageIndex(){
+        if(this.targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.selectedConceptionEntityUID)){
+            this.targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
+        }
     }
 }

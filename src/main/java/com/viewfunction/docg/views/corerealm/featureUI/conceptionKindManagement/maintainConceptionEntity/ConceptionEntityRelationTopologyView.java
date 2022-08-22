@@ -29,6 +29,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private Button deleteEntitiesButton;
     private Button expendEntityRelationButton;
     private Button compressEntityRelationButton;
+    private Button resetPageIndexButton;
 
     public ConceptionEntityRelationTopologyView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
@@ -91,7 +92,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         expendEntityRelationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //conceptionEntityRelationsChart.deleteSelectedAndDirectlyRelatedConceptionEntities();
+                conceptionEntityRelationsChart.expandSelectedEntityOneDegreeRelations();
             }
         });
         expendEntityRelationButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -110,6 +111,19 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         compressEntityRelationButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         graphExploreActionButtonContainer.add(compressEntityRelationButton);
         compressEntityRelationButton.setEnabled(false);
+
+        resetPageIndexButton = new Button();
+        resetPageIndexButton.setIcon(VaadinIcon.ARROW_BACKWARD.create());
+        Tooltips.getCurrent().setTooltip(resetPageIndexButton, "将选中概念实体的关联查询分页重置为第一页");
+        resetPageIndexButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                conceptionEntityRelationsChart.resetConceptionEntityRelationQueryPageIndex();
+            }
+        });
+        resetPageIndexButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        graphExploreActionButtonContainer.add(resetPageIndexButton);
+        resetPageIndexButton.setEnabled(false);
 
         Label selectMethodMessage = new Label("单击选中实体，双击概念实体获取其一度关联信息");
         selectMethodMessage.getStyle().set("font-size","10px").set("padding-right","30px");
@@ -202,6 +216,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         deleteEntitiesButton.setEnabled(false);
         compressEntityRelationButton.setEnabled(false);
         expendEntityRelationButton.setEnabled(false);
+        resetPageIndexButton.setEnabled(false);
     }
 
     public void enableControlActionButtons() {
@@ -209,5 +224,6 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         deleteEntitiesButton.setEnabled(true);
         compressEntityRelationButton.setEnabled(true);
         expendEntityRelationButton.setEnabled(true);
+        resetPageIndexButton.setEnabled(true);
     }
 }
