@@ -21,7 +21,8 @@ import java.util.List;
 public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
-    private SecondaryKeyValueDisplayItem relationCountDisplayItem;
+    private SecondaryKeyValueDisplayItem relationEntityCountDisplayItem;
+    private SecondaryKeyValueDisplayItem conceptionEntityCountDisplayItem;
     private int conceptionEntityRelationInfoViewHeightOffset;
     private ConceptionEntityRelationsChart conceptionEntityRelationsChart;
     private Registration listener;
@@ -89,7 +90,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         deleteEntitiesButton.setEnabled(false);
 
         expendEntityRelationButton = new Button();
-        expendEntityRelationButton.setIcon(VaadinIcon.EXPAND.create());
+        expendEntityRelationButton.setIcon(VaadinIcon.EXPAND_SQUARE.create());
         Tooltips.getCurrent().setTooltip(expendEntityRelationButton, "一度展开与选中概念实体关联的部分概念实体");
         expendEntityRelationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -102,7 +103,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         expendEntityRelationButton.setEnabled(false);
 
         compressEntityRelationButton = new Button();
-        compressEntityRelationButton.setIcon(VaadinIcon.COMPRESS.create());
+        compressEntityRelationButton.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
         Tooltips.getCurrent().setTooltip(compressEntityRelationButton, "隐藏与选中概念实体一度关联的所有其他概念实体");
         compressEntityRelationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -138,8 +139,8 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         HorizontalLayout titleLayout = new HorizontalLayout();
         secondaryTitleComponentsList.add(titleLayout);
-        relationCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.EXPAND.create(), "当前显示关系实体总量", "-");
-        new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CIRCLE_THIN.create(), "当显示概念实体总量", "-");
+        conceptionEntityCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CIRCLE_THIN.create(), "当显示概念实体总量", "-");
+        relationEntityCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.EXPAND.create(), "当前显示关系实体总量", "-");
 
         Button conceptionEntitiesStaticInfoButton = new Button("关联概念实体类型分布");
         conceptionEntitiesStaticInfoButton.setIcon(VaadinIcon.PIE_CHART.create());
@@ -228,5 +229,10 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         compressEntityRelationButton.setEnabled(true);
         expendEntityRelationButton.setEnabled(true);
         resetPageIndexButton.setEnabled(true);
+    }
+
+    public void updateEntitiesMetaStaticInfo(int totalConceptionEntityNumber,int totalRelationEntityNumber){
+        relationEntityCountDisplayItem.updateDisplayValue(""+totalRelationEntityNumber);
+        conceptionEntityCountDisplayItem.updateDisplayValue(""+totalConceptionEntityNumber);
     }
 }

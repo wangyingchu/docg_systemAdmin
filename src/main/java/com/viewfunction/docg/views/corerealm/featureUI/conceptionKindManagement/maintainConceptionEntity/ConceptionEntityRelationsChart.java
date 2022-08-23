@@ -307,6 +307,9 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
             CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
         }
         coreRealm.closeGlobalSession();
+        if(containerConceptionEntityRelationTopologyView != null){
+            containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
+        }
     }
 
     private void loadAdditionalTargetConceptionEntityRelationData(String conceptionKind,String conceptionEntityUID){
@@ -362,6 +365,9 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
             CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
         }
         coreRealm.closeGlobalSession();
+        if(containerConceptionEntityRelationTopologyView != null){
+            containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
+        }
     }
 
     private Map<String,String> generateConceptionKindColorMap(List<String> attachedConceptionKinds){
@@ -405,6 +411,10 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     this.conception_relationEntityUIDMap.removeAll(this.selectedConceptionEntityUID);
                     this.selectedConceptionEntityUID = null;
                     this.selectedConceptionEntityKind = null;
+
+                    if(containerConceptionEntityRelationTopologyView != null){
+                        containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
+                    }
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
@@ -458,6 +468,10 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     this.conceptionEntityUIDList.removeAll(needDeletedConceptionEntitiesUID);
                     this.selectedConceptionEntityUID = null;
                     this.selectedConceptionEntityKind = null;
+
+                    if(containerConceptionEntityRelationTopologyView != null){
+                        containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
+                    }
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
@@ -507,6 +521,9 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                     }
                     needDeletedConceptionEntitiesUID.remove(this.selectedConceptionEntityUID);
                     this.conceptionEntityUIDList.removeAll(needDeletedConceptionEntitiesUID);
+                    if(containerConceptionEntityRelationTopologyView != null){
+                        containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
+                    }
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
