@@ -19,22 +19,30 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
             },
             deleteNode : function(data) {
                 let targetNode = cy.filter('[id = '+data+']');
-                //cy.remove(targetNode.union(targetNode.connectedEdges()));
-                cy.remove(targetNode);
+                cy.remove(targetNode.union(targetNode.connectedEdges()));
             },
             deleteNodeWithOneDegreeConnection : function(data) {
-                /*
-                let targetNode = cy.filter('[id = '+data+']');
+                let dataObj = eval("(" + data + ")");
+                let targetNodeIDValue = '"'+dataObj.targetNodeId+'"';
+                let ignoreNodeIDValue = '"'+dataObj.ignoreNodeId+'"';
+                let targetNode = cy.filter('[id = '+ targetNodeIDValue+']');
                 let relationsToDelete = targetNode.connectedEdges();
                 let nodesToDelete = relationsToDelete.connectedNodes();
-                let nodesToDeletesRelation = nodesToDelete.connectedEdges();
-                cy.remove(targetNode.union(relationsToDelete).union(nodesToDelete).union(nodesToDeletesRelation));
-                */
-                let targetNode = cy.filter('[id = '+data+']');
+                let finalNodesToDelete = nodesToDelete.filter('[id != '+ignoreNodeIDValue+']');
+                let nodesToDeletesRelation = finalNodesToDelete.connectedEdges();
+                cy.remove(targetNode.union(relationsToDelete).union(finalNodesToDelete).union(nodesToDeletesRelation));
+            },
+            deleteOneDegreeConnectionNodes : function(data) {
+                let dataObj = eval("(" + data + ")");
+                let targetNodeIDValue = '"'+dataObj.targetNodeId+'"';
+                let ignoreNodeIDValue = '"'+dataObj.ignoreNodeId+'"';
+                let targetNode = cy.filter('[id = '+ targetNodeIDValue+']');
                 let relationsToDelete = targetNode.connectedEdges();
                 let nodesToDelete = relationsToDelete.connectedNodes();
-                //let nodesToDeletesRelation = nodesToDelete.connectedEdges();
-                cy.remove(targetNode.union(nodesToDelete));
+                let finalNodesToDeleteMiddle = nodesToDelete.filter('[id != '+ignoreNodeIDValue+']');
+                let finalNodesToDelete = finalNodesToDeleteMiddle.filter('[id != '+targetNodeIDValue+']');
+                let nodesToDeletesRelation = finalNodesToDelete.connectedEdges();
+                cy.remove(finalNodesToDelete.union(nodesToDeletesRelation));
             },
             initLayoutGraph: function(){
                 let layout = cy.layout({

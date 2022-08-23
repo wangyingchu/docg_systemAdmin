@@ -67,6 +67,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 conceptionEntityRelationsChart.deleteSelectedConceptionEntity();
+                disableControlActionButtons();
             }
         });
         deleteSingleEntityButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -80,6 +81,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 conceptionEntityRelationsChart.deleteSelectedAndDirectlyRelatedConceptionEntities();
+                disableControlActionButtons();
             }
         });
         deleteEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -105,7 +107,8 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         compressEntityRelationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //conceptionEntityRelationsChart.deleteSelectedAndDirectlyRelatedConceptionEntities();
+                conceptionEntityRelationsChart.deleteOneDegreeRelatedConceptionEntitiesOfSelectedConceptionEntity();
+                //disableControlActionButtons();
             }
         });
         compressEntityRelationButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);

@@ -416,20 +416,30 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         if(this.selectedConceptionEntityUID != null){
             runBeforeClientResponse(ui -> {
                 try {
-                    getElement().callJsFunction("$connector.deleteNodeWithOneDegreeConnection", new Serializable[]{(new ObjectMapper()).writeValueAsString(this.selectedConceptionEntityUID)});
-                    Collection<String> needDeletedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(this.selectedConceptionEntityUID);
+                    Map<String,String> valueMap =new HashMap<>();
+                    valueMap.put("ignoreNodeId",this.conceptionEntityUID);
+                    valueMap.put("targetNodeId",this.selectedConceptionEntityUID);
+                    getElement().callJsFunction("$connector.deleteNodeWithOneDegreeConnection",
+                            new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
+                    //所有需要删除的节点
                     List<String> needDeletedConceptionEntitiesUID = new ArrayList<>();
+                    needDeletedConceptionEntitiesUID.add(this.selectedConceptionEntityUID);
+                    //由选择的节点找到所有相连的边
+                    Collection<String> needDeletedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(this.selectedConceptionEntityUID);
+                    //找到所有与连接的边相关的需要删除的节点
                     if(needDeletedRelationEntityUIDs != null && needDeletedRelationEntityUIDs.size()>0) {
                         this.conception_relationEntityUIDMap.forEach(new BiConsumer<String, String>() {
                             @Override
-                            public void accept(String conceptionEntityUID, String relationEntityUID) {
-                                if(needDeletedRelationEntityUIDs.contains(relationEntityUID)&& !needDeletedConceptionEntitiesUID.contains(conceptionEntityUID)){
-                                    needDeletedConceptionEntitiesUID.add(conceptionEntityUID);
+                            public void accept(String currentConceptionEntityUID, String currentRelationEntityUID) {
+                                if(needDeletedRelationEntityUIDs.contains(currentRelationEntityUID) && !needDeletedConceptionEntitiesUID.contains(currentConceptionEntityUID)){
+                                    if(!conceptionEntityUID.equals(currentConceptionEntityUID)){
+                                        //当前主概念实体不能通过一度关系的关联而被间接的删除
+                                        needDeletedConceptionEntitiesUID.add(currentConceptionEntityUID);
+                                    }
                                 }
                             }
                         });
                     }
-
                     if(needDeletedConceptionEntitiesUID.size()>0){
                         for(String currentConceptionEntity:needDeletedConceptionEntitiesUID){
                             Collection<String> currentAttachedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(currentConceptionEntity);
@@ -439,14 +449,64 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
                         }
                     }
 
+                    this.relationEntityUIDList.removeAll(needDeletedRelationEntityUIDs);
                     for(String currentNeedDeletedConceptionEntityUID:needDeletedConceptionEntitiesUID){
                         this.targetConceptionEntityRelationCurrentQueryPageMap.remove(currentNeedDeletedConceptionEntityUID);
                         this.conception_relationEntityUIDMap.removeAll(currentNeedDeletedConceptionEntityUID);
                     }
+
                     this.conceptionEntityUIDList.removeAll(needDeletedConceptionEntitiesUID);
-                    this.relationEntityUIDList.removeAll(needDeletedRelationEntityUIDs);
                     this.selectedConceptionEntityUID = null;
                     this.selectedConceptionEntityKind = null;
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
+
+    public void deleteOneDegreeRelatedConceptionEntitiesOfSelectedConceptionEntity(){
+        if(this.selectedConceptionEntityUID != null){
+            runBeforeClientResponse(ui -> {
+                try {
+                    Map<String,String> valueMap =new HashMap<>();
+                    valueMap.put("ignoreNodeId",this.conceptionEntityUID);
+                    valueMap.put("targetNodeId",this.selectedConceptionEntityUID);
+                    getElement().callJsFunction("$connector.deleteOneDegreeConnectionNodes",
+                            new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
+                    //所有需要删除的节点
+                    List<String> needDeletedConceptionEntitiesUID = new ArrayList<>();
+                    //由选择的节点找到所有相连的边
+                    Collection<String> needDeletedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(this.selectedConceptionEntityUID);
+                    //找到所有与连接的边相关的需要删除的节点
+                    if(needDeletedRelationEntityUIDs != null && needDeletedRelationEntityUIDs.size()>0) {
+                        this.conception_relationEntityUIDMap.forEach(new BiConsumer<String, String>() {
+                            @Override
+                            public void accept(String currentConceptionEntityUID, String currentRelationEntityUID) {
+                                if(needDeletedRelationEntityUIDs.contains(currentRelationEntityUID) && !needDeletedConceptionEntitiesUID.contains(currentConceptionEntityUID)){
+                                    if(!conceptionEntityUID.equals(currentConceptionEntityUID) && !conceptionEntityUID.equals(selectedConceptionEntityUID)){
+                                        //当前主概念实体不能通过一度关系的关联而被间接的删除
+                                        needDeletedConceptionEntitiesUID.add(currentConceptionEntityUID);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    if(needDeletedConceptionEntitiesUID.size()>0){
+                        for(String currentConceptionEntity:needDeletedConceptionEntitiesUID){
+                            Collection<String> currentAttachedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(currentConceptionEntity);
+                            if(currentAttachedRelationEntityUIDs != null && currentAttachedRelationEntityUIDs.size() > 0){
+                                needDeletedRelationEntityUIDs.addAll(currentAttachedRelationEntityUIDs);
+                            }
+                        }
+                    }
+                    this.relationEntityUIDList.removeAll(needDeletedRelationEntityUIDs);
+                    for(String currentNeedDeletedConceptionEntityUID:needDeletedConceptionEntitiesUID){
+                        this.targetConceptionEntityRelationCurrentQueryPageMap.remove(currentNeedDeletedConceptionEntityUID);
+                        this.conception_relationEntityUIDMap.removeAll(currentNeedDeletedConceptionEntityUID);
+                    }
+                    needDeletedConceptionEntitiesUID.remove(this.selectedConceptionEntityUID);
+                    this.conceptionEntityUIDList.removeAll(needDeletedConceptionEntitiesUID);
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
