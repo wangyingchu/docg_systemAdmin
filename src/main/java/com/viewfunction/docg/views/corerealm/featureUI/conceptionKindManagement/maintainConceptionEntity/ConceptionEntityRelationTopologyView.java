@@ -129,7 +129,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         graphExploreActionButtonContainer.add(resetPageIndexButton);
         resetPageIndexButton.setEnabled(false);
 
-        Label selectMethodMessage = new Label("单击选中实体，双击概念实体获取其一度关联信息");
+        Label selectMethodMessage = new Label("单击选中实体，双击概念实体获取其一度关联实体信息展开");
         selectMethodMessage.getStyle().set("font-size","10px").set("padding-right","30px");
         selectMethodMessage.addClassNames("text-tertiary");
         graphExploreActionButtonContainer.add(selectMethodMessage);
