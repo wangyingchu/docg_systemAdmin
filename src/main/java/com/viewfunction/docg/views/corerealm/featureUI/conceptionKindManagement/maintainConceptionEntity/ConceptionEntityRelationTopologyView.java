@@ -110,7 +110,6 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 conceptionEntityRelationsChart.deleteOneDegreeRelatedConceptionEntitiesOfSelectedConceptionEntity();
-                //disableControlActionButtons();
             }
         });
         compressEntityRelationButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -237,8 +236,8 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         conceptionEntityCountDisplayItem.updateDisplayValue(""+totalConceptionEntityNumber);
     }
 
-    public void renderSelectedConceptionEntityAbstractInfo(){
-
+    public void renderSelectedConceptionEntityAbstractInfo(String entityType,String entityUID){
+        conceptionEntitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(entityType,entityUID);
     }
 
     public void clearConceptionEntityAbstractInfo(){
