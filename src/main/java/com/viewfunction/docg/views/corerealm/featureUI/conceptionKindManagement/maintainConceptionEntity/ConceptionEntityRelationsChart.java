@@ -254,6 +254,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         this.selectedConceptionEntityUID = null;
         if(containerConceptionEntityRelationTopologyView != null){
             containerConceptionEntityRelationTopologyView.disableControlActionButtons();
+            containerConceptionEntityRelationTopologyView.clearConceptionEntityAbstractInfo();
         }
     }
 
@@ -263,6 +264,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         this.selectedConceptionEntityUID = entityUID;
         if(containerConceptionEntityRelationTopologyView != null){
             containerConceptionEntityRelationTopologyView.enableControlActionButtons();
+            containerConceptionEntityRelationTopologyView.renderSelectedConceptionEntityAbstractInfo();
         }
     }
 

@@ -31,6 +31,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private Button expendEntityRelationButton;
     private Button compressEntityRelationButton;
     private Button resetPageIndexButton;
+    private ConceptionEntitySyntheticAbstractInfoView conceptionEntitySyntheticAbstractInfoView;
 
     public ConceptionEntityRelationTopologyView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
@@ -186,8 +187,8 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         relationEntitiesDetailLayout.add(selectedEntityInfoContainerLayout);
         relationEntitiesDetailLayout.setFlexGrow(1,this.conceptionEntityRelationsChart);
 
-        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.POINTER)," 已选中实体综合信息");
-        selectedEntityInfoContainerLayout.add(infoTitle1);
+        this.conceptionEntitySyntheticAbstractInfoView = new ConceptionEntitySyntheticAbstractInfoView();
+        selectedEntityInfoContainerLayout.add(this.conceptionEntitySyntheticAbstractInfoView);
     }
 
     @Override
@@ -234,5 +235,13 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     public void updateEntitiesMetaStaticInfo(int totalConceptionEntityNumber,int totalRelationEntityNumber){
         relationEntityCountDisplayItem.updateDisplayValue(""+totalRelationEntityNumber);
         conceptionEntityCountDisplayItem.updateDisplayValue(""+totalConceptionEntityNumber);
+    }
+
+    public void renderSelectedConceptionEntityAbstractInfo(){
+
+    }
+
+    public void clearConceptionEntityAbstractInfo(){
+
     }
 }
