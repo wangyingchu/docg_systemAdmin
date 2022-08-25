@@ -179,7 +179,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         VerticalLayout selectedEntityInfoContainerLayout = new VerticalLayout();
         selectedEntityInfoContainerLayout.setSpacing(false);
         selectedEntityInfoContainerLayout.setMargin(false);
-
+        selectedEntityInfoContainerLayout.getStyle().set("padding-right","0px");
         selectedEntityInfoContainerLayout.setWidth(350,Unit.PIXELS);
         selectedEntityInfoContainerLayout.getStyle()
                 .set("border-left", "1px solid var(--lumo-contrast-20pct)");
@@ -236,8 +236,8 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         conceptionEntityCountDisplayItem.updateDisplayValue(""+totalConceptionEntityNumber);
     }
 
-    public void renderSelectedConceptionEntityAbstractInfo(String entityType,String entityUID){
-        conceptionEntitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(entityType,entityUID);
+    public void renderSelectedConceptionEntityAbstractInfo(String entityType,String entityUID,int currentRelationQueryPage){
+        conceptionEntitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(entityType,entityUID,currentRelationQueryPage);
     }
 
     public void clearConceptionEntityAbstractInfo(){
