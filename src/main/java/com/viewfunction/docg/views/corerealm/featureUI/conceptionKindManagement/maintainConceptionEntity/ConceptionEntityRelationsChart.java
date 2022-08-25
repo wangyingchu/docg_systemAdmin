@@ -264,9 +264,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         this.selectedConceptionEntityUID = entityUID;
         if(containerConceptionEntityRelationTopologyView != null){
             containerConceptionEntityRelationTopologyView.enableControlActionButtons();
-            int entityRelationQueryPageIndex = targetConceptionEntityRelationCurrentQueryPageMap.get(entityUID) != null ?
-                    targetConceptionEntityRelationCurrentQueryPageMap.get(entityUID):1;
-            containerConceptionEntityRelationTopologyView.renderSelectedConceptionEntityAbstractInfo(entityType,entityUID,entityRelationQueryPageIndex);
+            containerConceptionEntityRelationTopologyView.renderSelectedConceptionEntityAbstractInfo(entityType,entityUID);
         }
     }
 

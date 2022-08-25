@@ -37,7 +37,6 @@ public class ConceptionEntitySyntheticAbstractInfoView extends VerticalLayout{
     private SecondaryKeyValueDisplayItem inDegreeDisplayItem;
     private SecondaryKeyValueDisplayItem outDegreeDisplayItem;
     private SecondaryKeyValueDisplayItem isDenseDisplayItem;
-    private SecondaryKeyValueDisplayItem currentExplorePageNumberDisplayItem;
     private String currentConceptionKindName;
     private String currentConceptionEntityUID;
     private Grid<AttributeValue> entityAttributesInfoGrid;
@@ -103,20 +102,6 @@ public class ConceptionEntitySyntheticAbstractInfoView extends VerticalLayout{
         conceptionEntityUIDInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,showDetailButton);
         conceptionEntityUIDInfoContainer.getStyle().set("padding-bottom", "10px");
 
-        HorizontalLayout titleLayout0 = new HorizontalLayout();
-        titleLayout0.getStyle().set("padding-bottom","8px");
-        infoContentContainer.add(titleLayout0);
-        currentExplorePageNumberDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout0, VaadinIcon.ABACUS.create(), "当前关联查询分页", "-");
-
-        Button backPageButton = new Button();
-        backPageButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
-        backPageButton.getStyle().set("font-size","8px");
-        backPageButton.setIcon(VaadinIcon.ANGLE_LEFT.create());
-        Tooltips.getCurrent().setTooltip(backPageButton, "显示概念实体详情");
-        titleLayout0.add(backPageButton);
-        titleLayout0.setVerticalComponentAlignment(Alignment.AUTO,backPageButton);
-
-
         HorizontalLayout titleLayout1 = new HorizontalLayout();
         infoContentContainer.add(titleLayout1);
         relationCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout1, VaadinIcon.LIST_OL.create(), "关联关系总量", "-");
@@ -131,7 +116,7 @@ public class ConceptionEntitySyntheticAbstractInfoView extends VerticalLayout{
         isDenseDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout4, VaadinIcon.BULLSEYE.create(), "是否稠密实体", "-");
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"实体属性");
-        infoTitle1.getStyle().set("padding-top","25px");
+        infoTitle1.getStyle().set("padding-top","15px");
         infoContentContainer.add(infoTitle1);
         HorizontalLayout horizontalDiv02 = new HorizontalLayout();
         horizontalDiv02.setWidthFull();
@@ -151,14 +136,15 @@ public class ConceptionEntitySyntheticAbstractInfoView extends VerticalLayout{
         entityAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
         entityAttributesInfoGrid.setHeight(500,Unit.PIXELS);
         infoContentContainer.add(entityAttributesInfoGrid);
+        infoContentContainer.setVisible(false);
     }
 
-    public void renderConceptionEntitySyntheticAbstractInfo(String conceptionKindName,String conceptionEntityUID,int currentRelationQueryPage){
+    public void renderConceptionEntitySyntheticAbstractInfo(String conceptionKindName,String conceptionEntityUID){
+        this.infoContentContainer.setVisible(true);
         this.currentConceptionKindName = conceptionKindName;
         this.currentConceptionEntityUID = conceptionEntityUID;
         this.conceptionKindLabel.setText(conceptionKindName);
         this.conceptionEntityUIDLabel.setText(conceptionEntityUID);
-        this.currentExplorePageNumberDisplayItem.updateDisplayValue(""+currentRelationQueryPage);
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
@@ -206,5 +192,9 @@ public class ConceptionEntitySyntheticAbstractInfoView extends VerticalLayout{
         fullScreenWindow.setWindowContent(conceptionEntityDetailView);
         conceptionEntityDetailView.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
+    }
+
+    public void cleanAbstractInfo(){
+        this.infoContentContainer.setVisible(false);
     }
 }

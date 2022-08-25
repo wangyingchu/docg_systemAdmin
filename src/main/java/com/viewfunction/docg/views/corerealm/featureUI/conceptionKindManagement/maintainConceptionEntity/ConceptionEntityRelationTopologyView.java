@@ -23,6 +23,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private String conceptionEntityUID;
     private SecondaryKeyValueDisplayItem relationEntityCountDisplayItem;
     private SecondaryKeyValueDisplayItem conceptionEntityCountDisplayItem;
+    private SecondaryKeyValueDisplayItem currentExplorePageNumberDisplayItem;
     private int conceptionEntityRelationInfoViewHeightOffset;
     private ConceptionEntityRelationsChart conceptionEntityRelationsChart;
     private Registration listener;
@@ -57,6 +58,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 conceptionEntityRelationsChart.reload();
                 disableControlActionButtons();
+                conceptionEntitySyntheticAbstractInfoView.cleanAbstractInfo();
             }
         });
         reloadConceptionEntitiesInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -70,6 +72,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 conceptionEntityRelationsChart.deleteSelectedConceptionEntity();
                 disableControlActionButtons();
+                conceptionEntitySyntheticAbstractInfoView.cleanAbstractInfo();
             }
         });
         deleteSingleEntityButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -84,6 +87,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 conceptionEntityRelationsChart.deleteSelectedAndDirectlyRelatedConceptionEntities();
                 disableControlActionButtons();
+                conceptionEntitySyntheticAbstractInfoView.cleanAbstractInfo();
             }
         });
         deleteEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -139,7 +143,8 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         HorizontalLayout titleLayout = new HorizontalLayout();
         secondaryTitleComponentsList.add(titleLayout);
-        conceptionEntityCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CIRCLE_THIN.create(), "当显示概念实体总量", "-");
+        currentExplorePageNumberDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ABACUS.create(), "当前关联查询分页", "-");
+        conceptionEntityCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CIRCLE_THIN.create(), "当前显示概念实体总量", "-");
         relationEntityCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.EXPAND.create(), "当前显示关系实体总量", "-");
 
         Button conceptionEntitiesStaticInfoButton = new Button("关联概念实体类型分布");
@@ -236,11 +241,11 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         conceptionEntityCountDisplayItem.updateDisplayValue(""+totalConceptionEntityNumber);
     }
 
-    public void renderSelectedConceptionEntityAbstractInfo(String entityType,String entityUID,int currentRelationQueryPage){
-        conceptionEntitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(entityType,entityUID,currentRelationQueryPage);
+    public void renderSelectedConceptionEntityAbstractInfo(String entityType,String entityUID){
+        conceptionEntitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(entityType,entityUID);
     }
 
     public void clearConceptionEntityAbstractInfo(){
-
+        conceptionEntitySyntheticAbstractInfoView.cleanAbstractInfo();
     }
 }
