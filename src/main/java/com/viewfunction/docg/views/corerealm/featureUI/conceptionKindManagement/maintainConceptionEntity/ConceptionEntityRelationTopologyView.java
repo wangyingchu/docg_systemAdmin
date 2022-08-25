@@ -23,7 +23,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private String conceptionEntityUID;
     private SecondaryKeyValueDisplayItem relationEntityCountDisplayItem;
     private SecondaryKeyValueDisplayItem conceptionEntityCountDisplayItem;
-    private SecondaryKeyValueDisplayItem currentExplorePageNumberDisplayItem;
+    private Label currentPageIndexValue;
     private int conceptionEntityRelationInfoViewHeightOffset;
     private ConceptionEntityRelationsChart conceptionEntityRelationsChart;
     private Registration listener;
@@ -32,6 +32,8 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private Button expendEntityRelationButton;
     private Button compressEntityRelationButton;
     private Button resetPageIndexButton;
+    private Button goBackOnePageIndexButton;
+    private Button goForwardOnePageIndexButton;
     private ConceptionEntitySyntheticAbstractInfoView conceptionEntitySyntheticAbstractInfoView;
 
     public ConceptionEntityRelationTopologyView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset) {
@@ -120,6 +122,11 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         graphExploreActionButtonContainer.add(compressEntityRelationButton);
         compressEntityRelationButton.setEnabled(false);
 
+        Icon divIcon = VaadinIcon.LINE_V.create();
+        divIcon.setSize("12px");
+        graphExploreActionButtonContainer.add(divIcon);
+        graphExploreActionButtonContainer.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+
         resetPageIndexButton = new Button();
         resetPageIndexButton.setIcon(VaadinIcon.ARROW_BACKWARD.create());
         Tooltips.getCurrent().setTooltip(resetPageIndexButton, "将选中概念实体的关联查询分页重置为第一页");
@@ -133,19 +140,58 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         graphExploreActionButtonContainer.add(resetPageIndexButton);
         resetPageIndexButton.setEnabled(false);
 
-        Label selectMethodMessage = new Label("单击选中实体，双击概念实体获取其一度关联实体信息展开");
-        selectMethodMessage.getStyle().set("font-size","10px").set("padding-right","30px");
-        selectMethodMessage.addClassNames("text-tertiary");
-        graphExploreActionButtonContainer.add(selectMethodMessage);
-        graphExploreActionButtonContainer.setVerticalComponentAlignment(Alignment.CENTER,selectMethodMessage);
+        goBackOnePageIndexButton = new Button();
+        goBackOnePageIndexButton.setIcon(VaadinIcon.ARROW_CIRCLE_LEFT_O.create());
+        Tooltips.getCurrent().setTooltip(goBackOnePageIndexButton, "将选中概念实体的关联查询分页重置为第一页");
+        goBackOnePageIndexButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+
+            }
+        });
+        goBackOnePageIndexButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        graphExploreActionButtonContainer.add(goBackOnePageIndexButton);
+        goBackOnePageIndexButton.setEnabled(false);
+
+        goForwardOnePageIndexButton = new Button();
+        goForwardOnePageIndexButton.setIcon(VaadinIcon.ARROW_CIRCLE_RIGHT_O.create());
+        Tooltips.getCurrent().setTooltip(goForwardOnePageIndexButton, "将选中概念实体的关联查询分页重置为第一页");
+        goForwardOnePageIndexButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+
+            }
+        });
+        goForwardOnePageIndexButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        graphExploreActionButtonContainer.add(goForwardOnePageIndexButton);
+        goForwardOnePageIndexButton.setEnabled(false);
 
         secondaryTitleComponentsList.add(graphExploreActionButtonContainer);
 
         HorizontalLayout titleLayout = new HorizontalLayout();
         secondaryTitleComponentsList.add(titleLayout);
-        currentExplorePageNumberDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ABACUS.create(), "当前关联查询分页", "-");
+
+        Icon currentPageIndexIcon = VaadinIcon.ABACUS.create();
+        currentPageIndexIcon.setSize("8px");
+        currentPageIndexIcon.addClassNames("text-tertiary");
+        titleLayout.add(currentPageIndexIcon);
+        titleLayout.setVerticalComponentAlignment(Alignment.CENTER,currentPageIndexIcon);
+        Tooltips.getCurrent().setTooltip(currentPageIndexIcon, "选中概念实体的当前关联查询分页");
+
+        currentPageIndexValue = new Label("-");
+        currentPageIndexValue.getStyle().set("font-size","10px").set("padding-right","30px");
+        currentPageIndexValue.addClassNames("text-tertiary");
+        titleLayout.add(currentPageIndexValue);
+        titleLayout.setVerticalComponentAlignment(Alignment.CENTER,currentPageIndexValue);
+
         conceptionEntityCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CIRCLE_THIN.create(), "当前显示概念实体总量", "-");
         relationEntityCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.EXPAND.create(), "当前显示关系实体总量", "-");
+
+        Label selectMethodMessage = new Label("单击选中实体，双击概念实体获取其一度关联实体信息展开");
+        selectMethodMessage.getStyle().set("font-size","10px").set("padding-left","30px");
+        selectMethodMessage.addClassNames("text-tertiary");
+        titleLayout.add(selectMethodMessage);
+        titleLayout.setVerticalComponentAlignment(Alignment.CENTER,selectMethodMessage);
 
         Button conceptionEntitiesStaticInfoButton = new Button("关联概念实体类型分布");
         conceptionEntitiesStaticInfoButton.setIcon(VaadinIcon.PIE_CHART.create());
@@ -228,14 +274,20 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         compressEntityRelationButton.setEnabled(false);
         expendEntityRelationButton.setEnabled(false);
         resetPageIndexButton.setEnabled(false);
+        goBackOnePageIndexButton.setEnabled(false);
+        goForwardOnePageIndexButton.setEnabled(false);
+        currentPageIndexValue.setText("-");
     }
 
-    public void enableControlActionButtons() {
+    public void enableControlActionButtons(int pageIndex) {
         deleteSingleEntityButton.setEnabled(true);
         deleteEntitiesButton.setEnabled(true);
         compressEntityRelationButton.setEnabled(true);
         expendEntityRelationButton.setEnabled(true);
         resetPageIndexButton.setEnabled(true);
+        goBackOnePageIndexButton.setEnabled(true);
+        goForwardOnePageIndexButton.setEnabled(true);
+        currentPageIndexValue.setText(""+pageIndex);
     }
 
     public void updateEntitiesMetaStaticInfo(int totalConceptionEntityNumber,int totalRelationEntityNumber){
