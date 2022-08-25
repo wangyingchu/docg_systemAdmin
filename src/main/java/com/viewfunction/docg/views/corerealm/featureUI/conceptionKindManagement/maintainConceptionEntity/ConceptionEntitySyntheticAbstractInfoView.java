@@ -134,7 +134,7 @@ public class ConceptionEntitySyntheticAbstractInfoView extends VerticalLayout{
         entityAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.INPUT,"属性值");
         entityAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
-        entityAttributesInfoGrid.setHeight(500,Unit.PIXELS);
+        entityAttributesInfoGrid.setHeight(400,Unit.PIXELS);
         infoContentContainer.add(entityAttributesInfoGrid);
         infoContentContainer.setVisible(false);
     }
@@ -196,5 +196,9 @@ public class ConceptionEntitySyntheticAbstractInfoView extends VerticalLayout{
 
     public void cleanAbstractInfo(){
         this.infoContentContainer.setVisible(false);
+    }
+
+    public void setEntityAttributesInfoGridHeight(int heightValue){
+        entityAttributesInfoGrid.setHeight(heightValue,Unit.PIXELS);
     }
 }
