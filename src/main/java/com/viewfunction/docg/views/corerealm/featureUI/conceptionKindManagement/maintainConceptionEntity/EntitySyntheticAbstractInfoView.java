@@ -16,10 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 
@@ -28,11 +25,13 @@ import dev.mett.vaadin.tooltip.Tooltips;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConceptionEntitySyntheticAbstractInfoView extends VerticalLayout{
+public class EntitySyntheticAbstractInfoView extends VerticalLayout{
 
     private VerticalLayout infoContentContainer;
     private Label conceptionKindLabel;
     private Label conceptionEntityUIDLabel;
+    private Label relationKindLabel;
+    private Label relationEntityUIDLabel;
     private SecondaryKeyValueDisplayItem relationCountDisplayItem;
     private SecondaryKeyValueDisplayItem inDegreeDisplayItem;
     private SecondaryKeyValueDisplayItem outDegreeDisplayItem;
@@ -40,8 +39,19 @@ public class ConceptionEntitySyntheticAbstractInfoView extends VerticalLayout{
     private String currentConceptionKindName;
     private String currentConceptionEntityUID;
     private Grid<AttributeValue> entityAttributesInfoGrid;
+    private String currentRelationKindName;
+    private String currentRelationEntityUID;
+    private HorizontalLayout conceptionKindNameInfoContainer;
+    private HorizontalLayout conceptionEntityUIDInfoContainer;
+    private HorizontalLayout relationKindNameInfoContainer;
+    private HorizontalLayout relationEntityUIDInfoContainer;
+    private HorizontalLayout titleLayout1;
+    private HorizontalLayout titleLayout2;
+    private HorizontalLayout titleLayout3;
+    private HorizontalLayout titleLayout4;
+    private VerticalLayout relationConceptionEntityInfoLayout;
 
-    public ConceptionEntitySyntheticAbstractInfoView(){
+    public EntitySyntheticAbstractInfoView(){
         setSpacing(false);
         setMargin(false);
         setPadding(false);
@@ -59,7 +69,7 @@ public class ConceptionEntitySyntheticAbstractInfoView extends VerticalLayout{
         infoContentContainer.setPadding(false);
         add(infoContentContainer);
 
-        HorizontalLayout conceptionKindNameInfoContainer = new HorizontalLayout();
+        conceptionKindNameInfoContainer = new HorizontalLayout();
         infoContentContainer.add(conceptionKindNameInfoContainer);
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
         conceptionKindIcon.setSize("16px");
@@ -73,7 +83,7 @@ public class ConceptionEntitySyntheticAbstractInfoView extends VerticalLayout{
         conceptionKindNameInfoContainer.add(conceptionKindLabel);
         conceptionKindNameInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindLabel);
 
-        HorizontalLayout conceptionEntityUIDInfoContainer = new HorizontalLayout();
+        conceptionEntityUIDInfoContainer = new HorizontalLayout();
         infoContentContainer.add(conceptionEntityUIDInfoContainer);
         Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
         conceptionEntityIcon.setSize("18px");
@@ -102,18 +112,49 @@ public class ConceptionEntitySyntheticAbstractInfoView extends VerticalLayout{
         conceptionEntityUIDInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,showDetailButton);
         conceptionEntityUIDInfoContainer.getStyle().set("padding-bottom", "10px");
 
-        HorizontalLayout titleLayout1 = new HorizontalLayout();
+        relationKindNameInfoContainer = new HorizontalLayout();
+        infoContentContainer.add(relationKindNameInfoContainer);
+        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+        relationKindIcon.setSize("16px");
+        relationKindIcon.getStyle().set("padding-right","3px");
+        relationKindNameInfoContainer.add(relationKindIcon);
+        relationKindNameInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,relationKindIcon);
+        relationKindLabel = new Label();
+        relationKindLabel.addClassNames("text-s","font-extrabold","border-b","border-contrast-10");
+        relationKindLabel.getStyle().set("font-weight","bold").set("color","#2e4e7e");
+        relationKindNameInfoContainer.getStyle().set("padding-top","15px");
+        relationKindNameInfoContainer.add(relationKindLabel);
+        relationKindNameInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,relationKindLabel);
+
+        relationEntityUIDInfoContainer = new HorizontalLayout();
+        infoContentContainer.add(relationEntityUIDInfoContainer);
+        Icon relationEntityIcon = VaadinIcon.KEY_O.create();
+        relationEntityIcon.setSize("18px");
+        relationEntityIcon.getStyle().set("padding-right","3px");
+        relationEntityUIDInfoContainer.add(relationEntityIcon);
+        relationEntityUIDInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,relationEntityIcon);
+        relationEntityUIDLabel = new Label();
+        relationEntityUIDLabel.addClassNames("text-s","font-extrabold","border-b","border-contrast-10");
+        relationEntityUIDLabel.getStyle().set("font-weight","bold").set("color","#2e4e7e");
+        relationEntityUIDInfoContainer.getStyle().set("padding-top","5px");
+        relationEntityUIDInfoContainer.add(relationEntityUIDLabel);
+        relationEntityUIDInfoContainer.getStyle().set("padding-bottom", "10px");
+
+        titleLayout1 = new HorizontalLayout();
         infoContentContainer.add(titleLayout1);
         relationCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout1, VaadinIcon.LIST_OL.create(), "关联关系总量", "-");
-        HorizontalLayout titleLayout2 = new HorizontalLayout();
+        titleLayout2 = new HorizontalLayout();
         infoContentContainer.add(titleLayout2);
         inDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout2, VaadinIcon.ANGLE_DOUBLE_LEFT.create(), "关系入度", "-");
-        HorizontalLayout titleLayout3 = new HorizontalLayout();
+        titleLayout3 = new HorizontalLayout();
         infoContentContainer.add(titleLayout3);
         outDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout3, VaadinIcon.ANGLE_DOUBLE_RIGHT.create(), "关系出度", "-");
-        HorizontalLayout titleLayout4 = new HorizontalLayout();
+        titleLayout4 = new HorizontalLayout();
         infoContentContainer.add(titleLayout4);
         isDenseDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout4, VaadinIcon.BULLSEYE.create(), "是否稠密实体", "-");
+
+        relationConceptionEntityInfoLayout = new VerticalLayout();
+        infoContentContainer.add(relationConceptionEntityInfoLayout);
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"实体属性");
         infoTitle1.getStyle().set("padding-top","15px");
@@ -140,6 +181,16 @@ public class ConceptionEntitySyntheticAbstractInfoView extends VerticalLayout{
     }
 
     public void renderConceptionEntitySyntheticAbstractInfo(String conceptionKindName,String conceptionEntityUID){
+        this.conceptionKindNameInfoContainer.setVisible(true);
+        this.conceptionEntityUIDInfoContainer.setVisible(true);
+        this.titleLayout1.setVisible(true);
+        this.titleLayout2.setVisible(true);
+        this.titleLayout3.setVisible(true);
+        this.titleLayout4.setVisible(true);
+        this.relationKindNameInfoContainer.setVisible(false);
+        this.relationEntityUIDInfoContainer.setVisible(false);
+        this.relationConceptionEntityInfoLayout.setVisible(false);
+
         this.infoContentContainer.setVisible(true);
         this.currentConceptionKindName = conceptionKindName;
         this.currentConceptionEntityUID = conceptionEntityUID;
@@ -201,4 +252,90 @@ public class ConceptionEntitySyntheticAbstractInfoView extends VerticalLayout{
     public void setEntityAttributesInfoGridHeight(int heightValue){
         entityAttributesInfoGrid.setHeight(heightValue,Unit.PIXELS);
     }
+
+    public void renderRelationEntitySyntheticAbstractInfo(String relationKindName,String relationEntityUID){
+        this.conceptionKindNameInfoContainer.setVisible(false);
+        this.conceptionEntityUIDInfoContainer.setVisible(false);
+        this.titleLayout1.setVisible(false);
+        this.titleLayout2.setVisible(false);
+        this.titleLayout3.setVisible(false);
+        this.titleLayout4.setVisible(false);
+        this.relationKindNameInfoContainer.setVisible(true);
+        this.relationEntityUIDInfoContainer.setVisible(true);
+        this.relationConceptionEntityInfoLayout.setVisible(true);
+
+        this.infoContentContainer.setVisible(true);
+        this.currentRelationKindName = relationKindName;
+        this.currentRelationEntityUID = relationEntityUID;
+        this.relationKindLabel.setText(this.currentRelationKindName);
+        this.relationEntityUIDLabel.setText(this.currentRelationEntityUID);
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+
+        RelationKind targetRelationKind = coreRealm.getRelationKind(this.currentRelationKindName);
+        if(targetRelationKind != null){
+            RelationEntity targetEntity = targetRelationKind.getEntityByUID(this.currentRelationEntityUID);
+            if(targetEntity != null){
+                List<AttributeValue> allAttributesList = targetEntity.getAttributes();
+                entityAttributesInfoGrid.setItems(allAttributesList);
+
+                String fromConceptionEntityUID = targetEntity.getFromConceptionEntityUID();
+                List<String> fromConceptionKinds = targetEntity.getFromConceptionEntityKinds();
+                String toConceptionEntityUID = targetEntity.getToConceptionEntityUID();
+                List<String> toConceptionKinds = targetEntity.getToConceptionEntityKinds();
+
+
+                relationConceptionEntityInfoLayout.removeAll();
+
+
+
+                Icon conceptionKindIcon0 = VaadinIcon.CUBE.create();
+                conceptionKindIcon0.setSize("12px");
+                conceptionKindIcon0.getStyle().set("padding-right","3px");
+                HorizontalLayout fromConceptionEntityInfo = new HorizontalLayout();
+                fromConceptionEntityInfo.add(conceptionKindIcon0);
+                Label fromConceptionKind = new Label("xxxx");
+                fromConceptionEntityInfo.add(fromConceptionKind);
+                Icon divIcon = VaadinIcon.ITALIC.create();
+                divIcon.setSize("12px");
+                divIcon.getStyle().set("padding-left","5px");
+                fromConceptionEntityInfo.add(divIcon);
+                Icon conceptionEntityIcon0 = VaadinIcon.KEY_O.create();
+                conceptionEntityIcon0.setSize("12px");
+                conceptionEntityIcon0.getStyle().set("padding-right","3px").set("padding-left","5px");
+                fromConceptionEntityInfo.add(conceptionEntityIcon0);
+                Label fromConceptionEntityUIDLabel = new Label(fromConceptionEntityUID);
+                fromConceptionEntityInfo.add(fromConceptionEntityUIDLabel);
+                relationConceptionEntityInfoLayout.add(fromConceptionEntityInfo);
+
+
+                /*
+                List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList0 = new ArrayList<>();
+                //footprintMessageVOList0.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon0,fromConceptionKinds.get(0)));
+                footprintMessageVOList0.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon0,"=========="));
+                footprintMessageVOList0.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon0,fromConceptionEntityUID));
+                FootprintMessageBar entityInfoFootprintMessageBar0 = new FootprintMessageBar(footprintMessageVOList0,true);
+                relationConceptionEntityInfoLayout.add(entityInfoFootprintMessageBar0);
+
+
+                Icon conceptionKindIcon1 = VaadinIcon.CUBE.create();
+                conceptionKindIcon1.setSize("12px");
+                conceptionKindIcon1.getStyle().set("padding-right","3px");
+                Icon conceptionEntityIcon1 = VaadinIcon.KEY_O.create();
+                conceptionEntityIcon1.setSize("18px");
+                conceptionEntityIcon1.getStyle().set("padding-right","3px").set("padding-left","5px");
+                List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList1 = new ArrayList<>();
+                //footprintMessageVOList1.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon1,toConceptionKinds.get(0)));
+                footprintMessageVOList1.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon1,"========"));
+                footprintMessageVOList1.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon1,toConceptionEntityUID));
+                FootprintMessageBar entityInfoFootprintMessageBar1 = new FootprintMessageBar(footprintMessageVOList1,true);
+                relationConceptionEntityInfoLayout.add(entityInfoFootprintMessageBar1);
+                */
+
+            }
+        }
+        coreRealm.closeGlobalSession();
+    }
+
 }

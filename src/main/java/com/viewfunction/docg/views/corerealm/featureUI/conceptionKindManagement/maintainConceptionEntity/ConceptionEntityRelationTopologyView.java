@@ -12,7 +12,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
-import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -34,7 +33,8 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private Button resetPageIndexButton;
     private Button goBackOnePageIndexButton;
     private Button goForwardOnePageIndexButton;
-    private ConceptionEntitySyntheticAbstractInfoView conceptionEntitySyntheticAbstractInfoView;
+    private EntitySyntheticAbstractInfoView entitySyntheticAbstractInfoView;
+    private int currentSelectedConceptionEntityRelationQueryIndex = 1;
 
     public ConceptionEntityRelationTopologyView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
@@ -60,7 +60,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 conceptionEntityRelationsChart.reload();
                 disableControlActionButtons();
-                conceptionEntitySyntheticAbstractInfoView.cleanAbstractInfo();
+                entitySyntheticAbstractInfoView.cleanAbstractInfo();
             }
         });
         reloadConceptionEntitiesInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -74,7 +74,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 conceptionEntityRelationsChart.deleteSelectedConceptionEntity();
                 disableControlActionButtons();
-                conceptionEntitySyntheticAbstractInfoView.cleanAbstractInfo();
+                entitySyntheticAbstractInfoView.cleanAbstractInfo();
             }
         });
         deleteSingleEntityButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -89,7 +89,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 conceptionEntityRelationsChart.deleteSelectedAndDirectlyRelatedConceptionEntities();
                 disableControlActionButtons();
-                conceptionEntitySyntheticAbstractInfoView.cleanAbstractInfo();
+                entitySyntheticAbstractInfoView.cleanAbstractInfo();
             }
         });
         deleteEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -116,6 +116,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 conceptionEntityRelationsChart.deleteOneDegreeRelatedConceptionEntitiesOfSelectedConceptionEntity();
+                currentPageIndexValue.setText("1");
             }
         });
         compressEntityRelationButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -134,6 +135,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 conceptionEntityRelationsChart.resetConceptionEntityRelationQueryPageIndex();
+                currentPageIndexValue.setText("1");
             }
         });
         resetPageIndexButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -142,11 +144,17 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         goBackOnePageIndexButton = new Button();
         goBackOnePageIndexButton.setIcon(VaadinIcon.ARROW_CIRCLE_LEFT_O.create());
-        Tooltips.getCurrent().setTooltip(goBackOnePageIndexButton, "将选中概念实体的关联查询分页重置为第一页");
+        Tooltips.getCurrent().setTooltip(goBackOnePageIndexButton, "将选中概念实体的关联查询分页减小一页");
         goBackOnePageIndexButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-
+                conceptionEntityRelationsChart.minusConceptionEntityRelationQueryPageIndex();
+                if(currentSelectedConceptionEntityRelationQueryIndex-1>0){
+                    currentSelectedConceptionEntityRelationQueryIndex =currentSelectedConceptionEntityRelationQueryIndex -1;
+                    currentPageIndexValue.setText(""+currentSelectedConceptionEntityRelationQueryIndex);
+                }else{
+                    currentPageIndexValue.setText("1");
+                }
             }
         });
         goBackOnePageIndexButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -155,11 +163,13 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         goForwardOnePageIndexButton = new Button();
         goForwardOnePageIndexButton.setIcon(VaadinIcon.ARROW_CIRCLE_RIGHT_O.create());
-        Tooltips.getCurrent().setTooltip(goForwardOnePageIndexButton, "将选中概念实体的关联查询分页重置为第一页");
+        Tooltips.getCurrent().setTooltip(goForwardOnePageIndexButton, "将选中概念实体的关联查询分页增加一页");
         goForwardOnePageIndexButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-
+                conceptionEntityRelationsChart.addConceptionEntityRelationQueryPageIndex();
+                currentSelectedConceptionEntityRelationQueryIndex = currentSelectedConceptionEntityRelationQueryIndex+1;
+                currentPageIndexValue.setText(""+(currentSelectedConceptionEntityRelationQueryIndex));
             }
         });
         goForwardOnePageIndexButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -237,8 +247,8 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         relationEntitiesDetailLayout.add(selectedEntityInfoContainerLayout);
         relationEntitiesDetailLayout.setFlexGrow(1,this.conceptionEntityRelationsChart);
 
-        this.conceptionEntitySyntheticAbstractInfoView = new ConceptionEntitySyntheticAbstractInfoView();
-        selectedEntityInfoContainerLayout.add(this.conceptionEntitySyntheticAbstractInfoView);
+        this.entitySyntheticAbstractInfoView = new EntitySyntheticAbstractInfoView();
+        selectedEntityInfoContainerLayout.add(this.entitySyntheticAbstractInfoView);
     }
 
     @Override
@@ -247,13 +257,13 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             conceptionEntityRelationsChart.setHeight((event.getHeight()-this.conceptionEntityRelationInfoViewHeightOffset)+40, Unit.PIXELS);
-            conceptionEntitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(event.getHeight()-this.conceptionEntityRelationInfoViewHeightOffset-200);
+            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(event.getHeight()-this.conceptionEntityRelationInfoViewHeightOffset-200);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             conceptionEntityRelationsChart.setHeight((browserHeight-this.conceptionEntityRelationInfoViewHeightOffset+40),Unit.PIXELS);
-            conceptionEntitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(browserHeight-this.conceptionEntityRelationInfoViewHeightOffset-200);
+            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(browserHeight-this.conceptionEntityRelationInfoViewHeightOffset-200);
         }));
     }
 
@@ -288,6 +298,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         goBackOnePageIndexButton.setEnabled(true);
         goForwardOnePageIndexButton.setEnabled(true);
         currentPageIndexValue.setText(""+pageIndex);
+        currentSelectedConceptionEntityRelationQueryIndex = pageIndex;
     }
 
     public void updateEntitiesMetaStaticInfo(int totalConceptionEntityNumber,int totalRelationEntityNumber){
@@ -296,10 +307,18 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     }
 
     public void renderSelectedConceptionEntityAbstractInfo(String entityType,String entityUID){
-        conceptionEntitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(entityType,entityUID);
+        entitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(entityType,entityUID);
     }
 
     public void clearConceptionEntityAbstractInfo(){
-        conceptionEntitySyntheticAbstractInfoView.cleanAbstractInfo();
+        entitySyntheticAbstractInfoView.cleanAbstractInfo();
+    }
+
+    public void renderSelectedRelationEntityAbstractInfo(String entityType,String entityUID){
+        entitySyntheticAbstractInfoView.renderRelationEntitySyntheticAbstractInfo(entityType,entityUID);
+    }
+
+    public void clearRelationEntityAbstractInfo(){
+        entitySyntheticAbstractInfoView.cleanAbstractInfo();
     }
 }

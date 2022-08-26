@@ -40,6 +40,8 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     private String selectedConceptionEntityUID;
     private String selectedConceptionEntityKind;
     private Multimap<String,String> conception_relationEntityUIDMap;
+    private String selectedRelationEntityUID;
+    private String selectedRelationEntityKind;
 
     public ConceptionEntityRelationsChart(String conceptionKind,String conceptionEntityUID){
         this.conceptionEntityUIDList = new ArrayList<>();
@@ -270,6 +272,30 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         }
     }
 
+    @ClientCallable
+    public void unselectRelationEntity(String entityTypeAnUIDStr) {
+        String[] entityIDInfoArray = entityTypeAnUIDStr.split(":");
+        String relationEntityType = entityIDInfoArray[0];
+        String relationEntityUID = entityIDInfoArray[1];
+        this.selectedRelationEntityKind = null;
+        this.selectedRelationEntityUID = null;
+        if(containerConceptionEntityRelationTopologyView != null){
+            containerConceptionEntityRelationTopologyView.clearRelationEntityAbstractInfo();
+        }
+    }
+
+    @ClientCallable
+    public void selectRelationEntity(String entityTypeAnUIDStr) {
+        String[] entityIDInfoArray = entityTypeAnUIDStr.split(":");
+        String relationEntityType = entityIDInfoArray[0];
+        String relationEntityUID = entityIDInfoArray[1];
+        this.selectedRelationEntityKind = relationEntityType;
+        this.selectedRelationEntityUID = relationEntityUID;
+        if(containerConceptionEntityRelationTopologyView != null){
+            containerConceptionEntityRelationTopologyView.renderSelectedRelationEntityAbstractInfo(selectedRelationEntityKind,selectedRelationEntityUID);
+        }
+    }
+
     public void initLoadTargetConceptionEntityRelationData(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
@@ -371,6 +397,9 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         coreRealm.closeGlobalSession();
         if(containerConceptionEntityRelationTopologyView != null){
             containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
+            int pageIndex = targetConceptionEntityRelationCurrentQueryPageMap.containsKey(conceptionEntityUID) ?
+                    targetConceptionEntityRelationCurrentQueryPageMap.get(conceptionEntityUID) : 1 ;
+            containerConceptionEntityRelationTopologyView.enableControlActionButtons(pageIndex);
         }
     }
 
@@ -546,6 +575,26 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
     public void resetConceptionEntityRelationQueryPageIndex(){
         if(this.targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.selectedConceptionEntityUID)){
             this.targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
+        }
+    }
+
+    public void addConceptionEntityRelationQueryPageIndex(){
+        if(this.targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.selectedConceptionEntityUID)){
+            int currentValue = this.targetConceptionEntityRelationCurrentQueryPageMap.get(this.selectedConceptionEntityUID);
+            this.targetConceptionEntityRelationCurrentQueryPageMap.put(this.selectedConceptionEntityUID,currentValue+1);
+        }else{
+            this.targetConceptionEntityRelationCurrentQueryPageMap.put(this.selectedConceptionEntityUID,1);
+        }
+    }
+
+    public void minusConceptionEntityRelationQueryPageIndex(){
+        if(this.targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.selectedConceptionEntityUID)){
+            int currentValue = this.targetConceptionEntityRelationCurrentQueryPageMap.get(this.selectedConceptionEntityUID);
+            if(currentValue -1 >1){
+                this.targetConceptionEntityRelationCurrentQueryPageMap.put(this.selectedConceptionEntityUID,currentValue -1);
+            }else{
+                this.targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
+            }
         }
     }
 }

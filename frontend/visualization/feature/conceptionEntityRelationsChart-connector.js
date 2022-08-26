@@ -178,16 +178,24 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
             }
         });
         cy.on('dblclick', 'node', function(evt){
-            var node = evt.target;
+            let node = evt.target;
             c.$server.addConceptionEntityRelations(node.data().kind,node.id());
         });
         cy.on('unselect', 'node', function(evt){
-            var node = evt.target;
+            let node = evt.target;
             c.$server.unselectConceptionEntity(node.data().kind,node.id());
         });
         cy.on('select', 'node', function(evt){
-            var node = evt.target;
+            let node = evt.target;
             c.$server.selectConceptionEntity(node.data().kind,node.id());
+        });
+        cy.on('unselect', 'edge', function(evt){
+            let edge = evt.target;
+            c.$server.unselectRelationEntity(edge.data().type);
+        });
+        cy.on('select', 'edge', function(evt){
+            let edge = evt.target;
+            c.$server.selectRelationEntity(edge.data().type);
         });
     }
 }
