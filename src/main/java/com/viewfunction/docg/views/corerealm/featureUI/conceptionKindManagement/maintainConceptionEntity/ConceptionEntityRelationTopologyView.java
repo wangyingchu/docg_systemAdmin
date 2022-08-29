@@ -241,13 +241,13 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         selectedEntityInfoContainerLayout.setSpacing(false);
         selectedEntityInfoContainerLayout.setMargin(false);
         selectedEntityInfoContainerLayout.getStyle().set("padding-right","0px");
-        selectedEntityInfoContainerLayout.setWidth(350,Unit.PIXELS);
+        selectedEntityInfoContainerLayout.setWidth(330,Unit.PIXELS);
         selectedEntityInfoContainerLayout.getStyle()
                 .set("border-left", "1px solid var(--lumo-contrast-20pct)");
         relationEntitiesDetailLayout.add(selectedEntityInfoContainerLayout);
         relationEntitiesDetailLayout.setFlexGrow(1,this.conceptionEntityRelationsChart);
 
-        this.entitySyntheticAbstractInfoView = new EntitySyntheticAbstractInfoView();
+        this.entitySyntheticAbstractInfoView = new EntitySyntheticAbstractInfoView(330);
         selectedEntityInfoContainerLayout.add(this.entitySyntheticAbstractInfoView);
     }
 
