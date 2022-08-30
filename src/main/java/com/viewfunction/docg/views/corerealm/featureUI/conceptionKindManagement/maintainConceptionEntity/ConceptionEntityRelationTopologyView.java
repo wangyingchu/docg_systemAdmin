@@ -10,6 +10,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -209,7 +211,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         conceptionEntitiesStaticInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-
+                renderRelatedConceptionEntitiesKindStaticInfo();
             }
         });
         actionComponentsList.add(conceptionEntitiesStaticInfoButton);
@@ -320,5 +322,30 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
     public void clearRelationEntityAbstractInfo(){
         entitySyntheticAbstractInfoView.cleanAbstractInfo();
+    }
+
+    public void renderRelatedConceptionEntitiesKindStaticInfo(){
+        String targetConceptionKind = this.conceptionKind;
+        String targetConceptionEntityUID = this.conceptionEntityUID;
+
+        List<Component> actionComponentList = new ArrayList<>();
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("12px");
+        conceptionKindIcon.getStyle().set("padding-right","3px");
+        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+        conceptionEntityIcon.setSize("18px");
+        conceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
+        List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,targetConceptionKind));
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,targetConceptionEntityUID));
+        FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
+        actionComponentList.add(entityInfoFootprintMessageBar);
+
+        RelatedConceptionEntitiesKindStaticInfoView relatedConceptionEntitiesKindStaticInfoView = new RelatedConceptionEntitiesKindStaticInfoView();
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.PIE_CHART),"关联概念实体类型分布",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(relatedConceptionEntitiesKindStaticInfoView);
+        //conceptionEntityDetailView.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
+
     }
 }
