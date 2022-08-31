@@ -1,4 +1,4 @@
-package relationKindManagement;
+package com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;

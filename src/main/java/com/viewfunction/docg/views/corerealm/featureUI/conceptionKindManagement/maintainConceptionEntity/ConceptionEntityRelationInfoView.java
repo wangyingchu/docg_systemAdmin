@@ -33,7 +33,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 
 import dev.mett.vaadin.tooltip.Tooltips;
-import relationKindManagement.DeleteRelationEntityView;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.DeleteRelationEntityView;
 
 import java.util.*;
 

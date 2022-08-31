@@ -1,26 +1,29 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
 import com.github.appreciated.apexcharts.ApexCharts;
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.Unit;
+
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class RelatedConceptionEntitiesKindStaticInfoView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
+    private HorizontalLayout conceptionKindsInfoLayout;
+    private VerticalLayout conceptionKindsEntityCountLayout;
     public RelatedConceptionEntitiesKindStaticInfoView(String conceptionKind,String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
@@ -36,6 +39,22 @@ public class RelatedConceptionEntitiesKindStaticInfoView extends VerticalLayout 
         footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,this.conceptionEntityUID));
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
+
+        conceptionKindsInfoLayout = new HorizontalLayout();
+        conceptionKindsInfoLayout.setWidthFull();
+        add(conceptionKindsInfoLayout);
+
+        conceptionKindsEntityCountLayout = new VerticalLayout();
+        conceptionKindsEntityCountLayout.setPadding(true);
+        conceptionKindsEntityCountLayout.setMargin(false);
+        conceptionKindsEntityCountLayout.setSpacing(false);
+
+        Scroller scroller = new Scroller();
+        scroller.setHeight(350,Unit.PIXELS);
+        scroller.setWidth(900,Unit.PIXELS);
+        scroller.setScrollDirection(Scroller.ScrollDirection.BOTH);
+        scroller.setContent(conceptionKindsEntityCountLayout);
+        conceptionKindsInfoLayout.add(scroller);
     }
 
     @Override
@@ -57,12 +76,52 @@ public class RelatedConceptionEntitiesKindStaticInfoView extends VerticalLayout 
             ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
             if(targetEntity != null){
                 Map<Set<String>,Long> attachedConceptionKindsMap = targetEntity.countAttachedConceptionKinds();
+                Map<String,Long> conceptionKindEntityCountMap = new HashMap<>();
+                Set<Set<String>> conceptionKindsSet = attachedConceptionKindsMap.keySet();
+                for(Set<String> currentConceptionKindSet : conceptionKindsSet){
+                    Long currentEntityCount = attachedConceptionKindsMap.get(currentConceptionKindSet);
+                    for(String currentConceptionKind :currentConceptionKindSet){
+                        if(conceptionKindEntityCountMap.containsKey(currentConceptionKind)){
+                            Long newEntityCount = conceptionKindEntityCountMap.get(currentConceptionKind) + currentEntityCount;
+                            conceptionKindEntityCountMap.put(currentConceptionKind,newEntityCount);
+                        }else{
+                            conceptionKindEntityCountMap.put(currentConceptionKind,currentEntityCount);
+                        }
+                    }
+                }
+
+                for(String relationKindName : conceptionKindEntityCountMap.keySet()){
+                    HorizontalLayout conceptionKindInfoItem = new HorizontalLayout();
+                    conceptionKindInfoItem.setSpacing(false);
+                    conceptionKindInfoItem.getStyle().set("padding-bottom","5px");
+                    conceptionKindsEntityCountLayout.add(conceptionKindInfoItem);
+
+                    Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+                    conceptionKindIcon.addClassNames("text-tertiary");
+                    conceptionKindIcon.setSize("8px");
+                    conceptionKindInfoItem.add(conceptionKindIcon);
+                    conceptionKindInfoItem.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindIcon);
+                    Label currentConceptionKind = new Label(relationKindName);
+                    currentConceptionKind.getStyle().set("font-size","var(--lumo-font-size-xs)").set("padding-left","5px");
+                    currentConceptionKind.addClassNames("text-tertiary");
+                    conceptionKindInfoItem.add(currentConceptionKind);
+                    conceptionKindInfoItem.setVerticalComponentAlignment(Alignment.CENTER,currentConceptionKind);
+
+                    Span conceptionEntityCountSpan = new Span(""+conceptionKindEntityCountMap.get(relationKindName).toString());
+                    conceptionEntityCountSpan.getStyle().set("font-size","var(--lumo-font-size-xxs)").set("font-weight","bold");
+                    conceptionEntityCountSpan.setHeight(15,Unit.PIXELS);
+                    conceptionEntityCountSpan.getElement().getThemeList().add("badge contrast");
+                    conceptionKindInfoItem.add(conceptionEntityCountSpan);
+                }
+
                 ApexCharts entityAttachedConceptionKindsCountChart = new EntityAttachedConceptionKindsCountChart(attachedConceptionKindsMap)
-                        .withColors("#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67").build();
-                entityAttachedConceptionKindsCountChart.setWidth(600,Unit.PIXELS);
-                entityAttachedConceptionKindsCountChart.getStyle().set("padding-left","50px");
-                add(entityAttachedConceptionKindsCountChart);
+                        .withColors("#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67",
+                                    "#EA2027","#006266","#1B1464","#5758BB","#6F1E51","#EE5A24","#009432","##0652DD","#9980FA","#833471").build();
+                entityAttachedConceptionKindsCountChart.setWidth(680,Unit.PIXELS);
+                entityAttachedConceptionKindsCountChart.setHeight(360,Unit.PIXELS);
+                conceptionKindsInfoLayout.add(entityAttachedConceptionKindsCountChart);
             }
         }
+        coreRealm.closeGlobalSession();
     }
 }
