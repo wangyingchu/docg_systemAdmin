@@ -6,12 +6,14 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.ResultEntitiesParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.List;
 public class RelatedConceptionEntitiesNebulaGraphInfoView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
-
+    private Registration listener;
     public RelatedConceptionEntitiesNebulaGraphInfoView(String conceptionKind,String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
@@ -38,15 +40,20 @@ public class RelatedConceptionEntitiesNebulaGraphInfoView extends VerticalLayout
 
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        loadRelatedConceptionEntitiesCollRelationsInfo();
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            int browserHeight = receiver.getBodyClientHeight();
+            loadRelatedConceptionEntitiesCollRelationsInfo(browserHeight);
+        }));
     }
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
         super.onDetach(detachEvent);
     }
 
-    private void loadRelatedConceptionEntitiesCollRelationsInfo(){
+    private void loadRelatedConceptionEntitiesCollRelationsInfo(int browserHeight){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
@@ -69,7 +76,7 @@ public class RelatedConceptionEntitiesNebulaGraphInfoView extends VerticalLayout
                     List<RelationEntity> relationEntityList = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionEntityUIDList);
 
                     RelatedConceptionEntitiesNebulaGraphChart relatedConceptionEntitiesNebulaGraphChart =
-                            new RelatedConceptionEntitiesNebulaGraphChart(this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
+                            new RelatedConceptionEntitiesNebulaGraphChart(this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList,browserHeight-140);
                     add(relatedConceptionEntitiesNebulaGraphChart);
 
                 } catch (CoreRealmServiceEntityExploreException e) {
