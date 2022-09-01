@@ -2,6 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -13,7 +14,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOp
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +77,9 @@ public class RelatedConceptionEntitiesNebulaGraphInfoView extends VerticalLayout
 
                     RelatedConceptionEntitiesNebulaGraphChart relatedConceptionEntitiesNebulaGraphChart =
                             new RelatedConceptionEntitiesNebulaGraphChart(this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList,browserHeight-140);
+
+                    relatedConceptionEntitiesNebulaGraphChart.setHeight(400, Unit.PIXELS);
+                    relatedConceptionEntitiesNebulaGraphChart.setWidth(400,Unit.PIXELS);
                     add(relatedConceptionEntitiesNebulaGraphChart);
 
                 } catch (CoreRealmServiceEntityExploreException e) {
