@@ -3,6 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.IFrame;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
@@ -11,6 +12,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 
 import java.util.List;
 
+@StyleSheet("./visualization/feature/xxx.css")
 @JavaScript("./visualization/feature/relatedConceptionEntitiesNebulaGraphChart-connector.js")
 public class RelatedConceptionEntitiesNebulaGraphChart extends VerticalLayout {
     private String mainConceptionEntityUID;
@@ -20,6 +22,9 @@ public class RelatedConceptionEntitiesNebulaGraphChart extends VerticalLayout {
         this.mainConceptionEntityUID = mainConceptionEntityUID;
         this.conceptionEntityList = conceptionEntityList;
         this.relationEntityList = relationEntityList;
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.70.13/dist/three.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.70.13/dist/three-spritetext.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.70.13/dist/CSS2DRenderer.js");
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.70.13/dist/3d-force-graph.min.js");
         initConnector();
 /*
