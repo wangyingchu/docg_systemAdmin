@@ -21,7 +21,6 @@ import java.util.List;
 public class RelatedConceptionEntitiesNebulaGraphInfoView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
-    private Registration listener;
     public RelatedConceptionEntitiesNebulaGraphInfoView(String conceptionKind,String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
@@ -40,20 +39,15 @@ public class RelatedConceptionEntitiesNebulaGraphInfoView extends VerticalLayout
 
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            int browserHeight = receiver.getBodyClientHeight();
-            loadRelatedConceptionEntitiesCollRelationsInfo(browserHeight);
-        }));
+        loadRelatedConceptionEntitiesCollRelationsInfo();
     }
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
-        // Listener needs to be eventually removed in order to avoid resource leak
-        listener.remove();
         super.onDetach(detachEvent);
     }
 
-    private void loadRelatedConceptionEntitiesCollRelationsInfo(int browserHeight){
+    private void loadRelatedConceptionEntitiesCollRelationsInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
@@ -76,12 +70,8 @@ public class RelatedConceptionEntitiesNebulaGraphInfoView extends VerticalLayout
                     List<RelationEntity> relationEntityList = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionEntityUIDList);
 
                     RelatedConceptionEntitiesNebulaGraphChart relatedConceptionEntitiesNebulaGraphChart =
-                            new RelatedConceptionEntitiesNebulaGraphChart(this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList,browserHeight-140);
-
-                    relatedConceptionEntitiesNebulaGraphChart.setHeight(400, Unit.PIXELS);
-                    relatedConceptionEntitiesNebulaGraphChart.setWidth(400,Unit.PIXELS);
+                            new RelatedConceptionEntitiesNebulaGraphChart(this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
                     add(relatedConceptionEntitiesNebulaGraphChart);
-
                 } catch (CoreRealmServiceEntityExploreException e) {
                     throw new RuntimeException(e);
                 } finally {
