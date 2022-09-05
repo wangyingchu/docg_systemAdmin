@@ -39,16 +39,17 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesNebulaGraphChart = {
                     .width(dataObj.graphWidth)
                     .height(dataObj.graphHeight)
                     .nodeRelSize(6)
-                    .nodeResolution(20)
+                    .nodeResolution(8)
+                    .nodeOpacity(0.85)
                     .linkOpacity(0.7)
-                    .linkDirectionalArrowLength(6)
-                    .linkCurvature(0.01)
+                    .linkDirectionalArrowLength(4)
+                    .linkCurvature(0.06)
                     .linkDirectionalArrowRelPos(0.9)
-                    .linkWidth(1.2)
+                    .linkWidth(0.8)
                     .linkThreeObjectExtend(true)
                     .linkThreeObject(link => {
                         // extend link with text sprite
-                        const sprite = new SpriteText(`${link.source} > ${link.target}`);
+                        const sprite = new SpriteText(`${link.entityKind} : ${link.source} > ${link.target}`);
                         sprite.color = 'black';
                         sprite.textHeight = 1.5;
                         return sprite;
@@ -83,7 +84,7 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesNebulaGraphChart = {
                     });
                 ;
                 // Spread nodes a little wider
-                Graph.d3Force('charge').strength(-120);
+                Graph.d3Force('charge').strength(-2000);
             }
         };
     }

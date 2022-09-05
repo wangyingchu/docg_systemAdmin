@@ -28,7 +28,9 @@ public class RelatedConceptionEntitiesNebulaGraphChart extends VerticalLayout {
     private List<RelationEntity> relationEntityList;
     private Registration listener;
     private int colorIndex = 0;
+    private int colorIndex2 = 0;
     private Map<String,String> conceptionKindColorMap;
+    private Map<String,String> relationKindColorMap;
     public RelatedConceptionEntitiesNebulaGraphChart(String mainConceptionKind,String mainConceptionEntityUID, List<ConceptionEntity> conceptionEntityList,List<RelationEntity> relationEntityList){
         this.setSpacing(false);
         this.setMargin(false);
@@ -38,6 +40,7 @@ public class RelatedConceptionEntitiesNebulaGraphChart extends VerticalLayout {
         this.conceptionEntityList = conceptionEntityList;
         this.relationEntityList = relationEntityList;
         this.conceptionKindColorMap = new HashMap<>();
+        this.relationKindColorMap = new HashMap<>();
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.70.13/dist/three.js");
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.70.13/dist/three-spritetext.js");
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.70.13/dist/CSS2DRenderer.js");
@@ -77,7 +80,7 @@ public class RelatedConceptionEntitiesNebulaGraphChart extends VerticalLayout {
                 Map<String,String> centerNodeInfo = new HashMap<>();
                 centerNodeInfo.put("id",this.mainConceptionEntityUID);
                 centerNodeInfo.put("entityKind",this.mainConceptionKind);
-                centerNodeInfo.put("color","#555555");
+                centerNodeInfo.put("color","#888888");
                 nodeInfoList.add(centerNodeInfo);
 
                 List<String> attachedConceptionKinds = new ArrayList<>();
@@ -101,11 +104,21 @@ public class RelatedConceptionEntitiesNebulaGraphChart extends VerticalLayout {
                 }
 
                 List<Map<String,String>> edgeInfoList = new ArrayList<>();
+
+                List<String> attachedRelationKinds = new ArrayList<>();
+                for(RelationEntity currentRelationEntity:this.relationEntityList){
+                    if(!attachedRelationKinds.contains(currentRelationEntity.getRelationKindName())){
+                        attachedRelationKinds.add(currentRelationEntity.getRelationKindName());
+                    }
+                }
+                generateRelationKindColorMap(attachedRelationKinds);
+
                 for(RelationEntity currentRelationEntity:this.relationEntityList){
                     Map<String,String> currentEdgeInfo = new HashMap<>();
                     currentEdgeInfo.put("source",currentRelationEntity.getFromConceptionEntityUID());
                     currentEdgeInfo.put("target",currentRelationEntity.getToConceptionEntityUID());
-                    currentEdgeInfo.put("color","#666666");
+                    currentEdgeInfo.put("entityKind",currentRelationEntity.getRelationKindName());
+                    currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
                     edgeInfoList.add(currentEdgeInfo);
                 }
 
@@ -138,5 +151,24 @@ public class RelatedConceptionEntitiesNebulaGraphChart extends VerticalLayout {
             colorIndex++;
         }
         return conceptionKindColorMap;
+    }
+
+    private Map<String,String> generateRelationKindColorMap(List<String> attachedRelationKinds){
+        String[] colorList =new String[]{
+                "#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67",
+                "#EA2027","#006266","#1B1464","#5758BB","#6F1E51","#EE5A24","#009432","##0652DD","#9980FA","#833471"
+        };
+
+        for(int i=0;i<attachedRelationKinds.size();i++){
+            if(colorIndex2>=colorList.length){
+                colorIndex2 = 0;
+            }
+            String currentRelationKindName = attachedRelationKinds.get(i);
+            if(!relationKindColorMap.containsKey(currentRelationKindName)){
+                relationKindColorMap.put(currentRelationKindName,colorList[colorIndex2]);
+            }
+            colorIndex2++;
+        }
+        return relationKindColorMap;
     }
 }
