@@ -8,8 +8,8 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesNebulaGraphChart = {
             // functions
             generateGraph : function(data) {
                 let dataObj = eval("(" + data + ")");
-                //console.log(dataObj);
                 // Random tree
+                /*
                 const N = 300;
                 const gData = {
                     nodes: [...Array(N).keys()].map(i => ({
@@ -27,6 +27,11 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesNebulaGraphChart = {
                             //,name:'linkName'+id
                         }))
                 };
+                */
+                const gData = {
+                    nodes:dataObj.nodesInfo,
+                    links:dataObj.edgesInfo
+                }
                 const Graph = ForceGraph3D({
                     extraRenderers: [new THREE.CSS2DRenderer()]
                 })(c).graphData(gData)
@@ -57,7 +62,7 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesNebulaGraphChart = {
                     })
                     .nodeThreeObject(node => {
                         const nodeEl = document.createElement('div');
-                        nodeEl.textContent = 'NodeText '+node.id;
+                        nodeEl.textContent = node.entityKind+' '+node.id;
                         //nodeEl.style.color = node.color;
                         nodeEl.className = 'node-label';
                         return new THREE.CSS2DObject(nodeEl);
