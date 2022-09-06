@@ -16,6 +16,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
     private String conceptionEntityUID;
     private ConceptionEntityRelationInfoView conceptionEntityRelationInfoView;
     private ConceptionEntityRelationTopologyView conceptionEntityRelationTopologyView;
+    private ConceptionEntitySpatialInfoView conceptionEntitySpatialInfoView;
     private boolean conceptionEntityRelationTopologyViewFirstRendered = false;
 
     public ConceptionEntityIntegratedInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset){
@@ -30,6 +31,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         tabs.getElement().getStyle().set("width","100%");
         this.conceptionEntityRelationInfoView = new ConceptionEntityRelationInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
         this.conceptionEntityRelationTopologyView = new ConceptionEntityRelationTopologyView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
+        this.conceptionEntitySpatialInfoView = new ConceptionEntitySpatialInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
 
         Tab tab0 = tabs.add("", conceptionEntityRelationInfoView,false);
         Span relationInfoSpan =new Span();
@@ -47,7 +49,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         networkGraphSpan.add(networkGraphIcon,networkGraphLabel);
         tab1.add(networkGraphSpan);
 
-        Tab tab2 = tabs.add("", new Label("3"),false);
+        Tab tab2 = tabs.add("", conceptionEntitySpatialInfoView,false);
         Span earthMapSpan =new Span();
         Icon earthMapIcon = new Icon(VaadinIcon.GLOBE);
         earthMapIcon.setSize("20px");

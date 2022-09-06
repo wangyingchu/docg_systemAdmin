@@ -27,4 +27,22 @@ public class CommonUIOperationUtil {
         notification.add(layout);
         notification.open();
     }
+
+    public static void showPopupNotification(String notificationMessage, NotificationVariant notificationVariant, int duration, Notification.Position position){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        notification.setDuration(duration);
+        notification.setPosition(position);
+        Div text = new Div(new Text(notificationMessage));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setAlignItems(FlexComponent.Alignment.CENTER);
+        notification.add(layout);
+        notification.open();
+    }
 }
