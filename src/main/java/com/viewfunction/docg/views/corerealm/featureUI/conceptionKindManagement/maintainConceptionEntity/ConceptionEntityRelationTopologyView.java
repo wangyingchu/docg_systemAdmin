@@ -213,13 +213,13 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         });
         actionComponentsList.add(conceptionEntitiesStaticInfoButton);
 
-        Button fullRelationsInfoButton = new Button("关联实体全量星云图");
+        Button fullRelationsInfoButton = new Button("关联实体全量蒲公英图");
         fullRelationsInfoButton.setIcon(VaadinIcon.ASTERISK.create());
         fullRelationsInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         fullRelationsInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderRelatedConceptionEntitiesNebulaGraphInfo();
+                renderRelatedConceptionEntitiesDandelionGraphInfo();
             }
         });
         actionComponentsList.add(fullRelationsInfoButton);
@@ -331,11 +331,11 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         fixSizeWindow.show();
     }
 
-    private void renderRelatedConceptionEntitiesNebulaGraphInfo(){
-        RelatedConceptionEntitiesNebulaGraphInfoView relatedConceptionEntitiesNebulaGraphInfoView =
-                new RelatedConceptionEntitiesNebulaGraphInfoView(this.conceptionKind,this.conceptionEntityUID);
-        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.ASTERISK),"关联实体全量星云图",null,null,true);
-        fullScreenWindow.setWindowContent(relatedConceptionEntitiesNebulaGraphInfoView);
+    private void renderRelatedConceptionEntitiesDandelionGraphInfo(){
+        RelatedConceptionEntitiesDandelionGraphInfoView relatedConceptionEntitiesDandelionGraphInfoView =
+                new RelatedConceptionEntitiesDandelionGraphInfoView(this.conceptionKind,this.conceptionEntityUID);
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.ASTERISK),"关联实体全量蒲公英图",null,null,true);
+        fullScreenWindow.setWindowContent(relatedConceptionEntitiesDandelionGraphInfoView);
         fullScreenWindow.show();
     }
 }

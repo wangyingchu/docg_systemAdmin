@@ -1,4 +1,4 @@
-window.Vaadin.Flow.feature_RelatedConceptionEntitiesNebulaGraphChart = {
+window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
     initLazy: function (c) {
         // Check whether the connector was already initialized
         if (c.$connector) {

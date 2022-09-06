@@ -19,9 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@StyleSheet("webApps/relatedConceptionEntitiesNebulaGraphChart/style.css")
-@JavaScript("./visualization/feature/relatedConceptionEntitiesNebulaGraphChart-connector.js")
-public class RelatedConceptionEntitiesNebulaGraphChart extends VerticalLayout {
+@StyleSheet("webApps/relatedConceptionEntitiesDandelionGraphChart/style.css")
+@JavaScript("./visualization/feature/relatedConceptionEntitiesDandelionGraphChart-connector.js")
+public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout {
     private String mainConceptionKind;
     private String mainConceptionEntityUID;
     private List<ConceptionEntity> conceptionEntityList;
@@ -31,7 +31,7 @@ public class RelatedConceptionEntitiesNebulaGraphChart extends VerticalLayout {
     private int colorIndex2 = 0;
     private Map<String,String> conceptionKindColorMap;
     private Map<String,String> relationKindColorMap;
-    public RelatedConceptionEntitiesNebulaGraphChart(String mainConceptionKind,String mainConceptionEntityUID, List<ConceptionEntity> conceptionEntityList,List<RelationEntity> relationEntityList){
+    public RelatedConceptionEntitiesDandelionGraphChart(String mainConceptionKind, String mainConceptionEntityUID, List<ConceptionEntity> conceptionEntityList, List<RelationEntity> relationEntityList){
         this.setSpacing(false);
         this.setMargin(false);
         this.setPadding(false);
@@ -50,7 +50,7 @@ public class RelatedConceptionEntitiesNebulaGraphChart extends VerticalLayout {
 
     private void initConnector() {
         runBeforeClientResponse(ui -> ui.getPage().executeJs(
-                "window.Vaadin.Flow.feature_RelatedConceptionEntitiesNebulaGraphChart.initLazy($0)", getElement()));
+                "window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart.initLazy($0)", getElement()));
     }
 
     private void runBeforeClientResponse(SerializableConsumer<UI> command) {

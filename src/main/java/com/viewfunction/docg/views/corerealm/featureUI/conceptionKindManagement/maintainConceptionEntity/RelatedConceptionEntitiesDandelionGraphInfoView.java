@@ -16,10 +16,10 @@ import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RelatedConceptionEntitiesNebulaGraphInfoView extends VerticalLayout {
+public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
-    public RelatedConceptionEntitiesNebulaGraphInfoView(String conceptionKind,String conceptionEntityUID){
+    public RelatedConceptionEntitiesDandelionGraphInfoView(String conceptionKind, String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
@@ -67,9 +67,9 @@ public class RelatedConceptionEntitiesNebulaGraphInfoView extends VerticalLayout
                     conceptionEntityUIDList.add(this.conceptionEntityUID);
                     List<RelationEntity> relationEntityList = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionEntityUIDList);
 
-                    RelatedConceptionEntitiesNebulaGraphChart relatedConceptionEntitiesNebulaGraphChart =
-                            new RelatedConceptionEntitiesNebulaGraphChart(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
-                    add(relatedConceptionEntitiesNebulaGraphChart);
+                    RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart =
+                            new RelatedConceptionEntitiesDandelionGraphChart(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
+                    add(relatedConceptionEntitiesDandelionGraphChart);
                 } catch (CoreRealmServiceEntityExploreException e) {
                     throw new RuntimeException(e);
                 } finally {
