@@ -18,6 +18,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
     private ConceptionEntityRelationTopologyView conceptionEntityRelationTopologyView;
     private ConceptionEntitySpatialInfoView conceptionEntitySpatialInfoView;
     private boolean conceptionEntityRelationTopologyViewFirstRendered = false;
+    private boolean conceptionEntitySpatialInfoViewFirstRendered = false;
 
     public ConceptionEntityIntegratedInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset){
         this.conceptionKind = conceptionKind;
@@ -74,6 +75,12 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
                     if(!conceptionEntityRelationTopologyViewFirstRendered){
                         conceptionEntityRelationTopologyViewFirstRendered = true;
                         conceptionEntityRelationTopologyView.loadEntityRelationNetworks();
+                    }
+                }
+                if(tab.equals(tab2)){
+                    if(!conceptionEntitySpatialInfoViewFirstRendered){
+                        conceptionEntitySpatialInfoViewFirstRendered = true;
+                        conceptionEntitySpatialInfoView.renderEntitySpatialInfo();
                     }
                 }
             }
