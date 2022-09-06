@@ -67,7 +67,17 @@ public class RelatedConceptionEntitiesNebulaGraphChart extends VerticalLayout {
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
-        // Listener needs to be eventually removed in order to avoid resource leak
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.emptyGraph",
+                        new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        // 此处调用 listener.remove() 会抛出 java.lang.NullPointerException 异常，
+        // 但是此异常的抛出能够阻止在多次打开 3d-force-graph 星图的场景下系统UI卡顿，停止相应并出现持续性的线程调用无法回收的情况
+        //具体原理未知，有待调查
         listener.remove();
         super.onDetach(detachEvent);
     }
