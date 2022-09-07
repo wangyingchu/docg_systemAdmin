@@ -41,6 +41,7 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
         this.relationEntityList = relationEntityList;
         this.conceptionKindColorMap = new HashMap<>();
         this.relationKindColorMap = new HashMap<>();
+        //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.70.13/dist/three.js");
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.70.13/dist/three-spritetext.js");
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.70.13/dist/CSS2DRenderer.js");
@@ -76,7 +77,7 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
             }
         });
         // 此处调用 listener.remove() 会抛出 java.lang.NullPointerException 异常，
-        // 但是此异常的抛出能够阻止在多次打开 3d-force-graph 星图的场景下系统UI卡顿，停止相应并出现持续性的线程调用无法回收的情况
+        // 但是此异常的抛出能够阻止在多次打开 3d-force-graph 蒲公英图的场景下系统UI卡顿，停止相应并出现持续性的线程调用无法回收的情况
         //具体原理未知，有待调查
         listener.remove();
         super.onDetach(detachEvent);
