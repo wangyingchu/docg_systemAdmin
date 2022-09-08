@@ -19,6 +19,7 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                 center: [110.770672, 34.159869],
                 pitch: 45,
             }),
+            logoVisible: false
         });
 
 
@@ -26,6 +27,8 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
         console.log("=====================================");
         console.log("=====================================");
         console.log("=====================================");
+        console.log(scene);
+
         console.log("=====================================");
         console.log("=====================================");
     }
