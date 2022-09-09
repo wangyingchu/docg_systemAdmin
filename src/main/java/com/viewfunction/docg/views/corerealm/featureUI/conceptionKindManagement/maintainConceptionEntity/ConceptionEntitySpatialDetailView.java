@@ -1,32 +1,64 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
+import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConceptionEntitySpatialDetailView extends VerticalLayout {
 
-    private VerticalLayout mapContainer;
-    public ConceptionEntitySpatialDetailView(){
-        mapContainer = new VerticalLayout();
-        mapContainer.setWidth(300, Unit.PIXELS);
-        mapContainer.setHeight(400,Unit.PIXELS);
-        //add(mapContainer);
-    }
+    private int conceptionEntitySpatialInfoViewHeightOffset;
+    private Registration listener;
+    public ConceptionEntitySpatialDetailView(int conceptionEntitySpatialInfoViewHeightOffset){
+        this.setPadding(false);
+        this.setSpacing(false);
+        this.setMargin(false);
+        this.conceptionEntitySpatialInfoViewHeightOffset = conceptionEntitySpatialInfoViewHeightOffset+5;
 
+        List<Component> secondaryTitleComponentsList = new ArrayList<>();
+        List<Component> actionComponentsList = new ArrayList<>();
+
+        HorizontalLayout titleLayout = new HorizontalLayout();
+        secondaryTitleComponentsList.add(titleLayout);
+        SecondaryKeyValueDisplayItem relationCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(), "关联关系总量", "-");
+        SecondaryKeyValueDisplayItem inDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_LEFT.create(), "关系入度", "-");
+        SecondaryKeyValueDisplayItem outDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_RIGHT.create(), "关系出度", "-");
+        SecondaryKeyValueDisplayItem isDenseDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.BULLSEYE.create(), "是否稠密实体", "-");
+
+        Icon relationsIcon = VaadinIcon.RANDOM.create();
+        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon, "地理空间信息概要: ", secondaryTitleComponentsList, actionComponentsList);
+        secondaryTitleActionBar.getStyle().set("padding-top","10px");
+        add(secondaryTitleActionBar);
+    }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
-        //renderEntitySpatialInfo();
-
-        Div continerDiv = new Div();
-        continerDiv.setWidth("300px");
-        continerDiv.setHeight("300px");
         ConceptionEntitySpatialChart conceptionEntitySpatialChart = new ConceptionEntitySpatialChart();
-        continerDiv.add(conceptionEntitySpatialChart);
-        add(continerDiv);
+        conceptionEntitySpatialChart.setWidth(100,Unit.PERCENTAGE);
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            conceptionEntitySpatialChart.setHeight(event.getHeight()-this.conceptionEntitySpatialInfoViewHeightOffset, Unit.PIXELS);
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            int browserHeight = receiver.getBodyClientHeight();
+            conceptionEntitySpatialChart.setHeight(browserHeight-this.conceptionEntitySpatialInfoViewHeightOffset,Unit.PIXELS);
+        }));
+        add(conceptionEntitySpatialChart);
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
+        super.onDetach(detachEvent);
     }
 }

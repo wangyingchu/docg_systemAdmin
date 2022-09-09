@@ -21,22 +21,25 @@ import org.vaadin.tabs.PagedTabs;
 public class ConceptionEntitySpatialInfoView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
-    private int conceptionEntityRelationInfoViewHeightOffset;
-    public ConceptionEntitySpatialInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset){
+    private int conceptionEntitySpatialInfoViewHeightOffset;
+    public ConceptionEntitySpatialInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntitySpatialInfoViewHeightOffset){
         this.setPadding(false);
         this.setSpacing(false);
         this.setMargin(false);
 
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
-        this.conceptionEntityRelationInfoViewHeightOffset = conceptionEntityIntegratedInfoViewHeightOffset+100;
+        this.conceptionEntitySpatialInfoViewHeightOffset = conceptionEntitySpatialInfoViewHeightOffset+100;
 
         VerticalLayout container = new VerticalLayout();
+        container.setPadding(false);
+        container.setSpacing(false);
+        container.setMargin(false);
+
         PagedTabs tabs = new PagedTabs(container);
         tabs.getElement().getStyle().set("width","100%");
 
-        //ConceptionEntitySpatialChart conceptionEntitySpatialChart0 = new ConceptionEntitySpatialChart();
-        ConceptionEntitySpatialDetailView conceptionEntitySpatialDetailView = new ConceptionEntitySpatialDetailView();
+        ConceptionEntitySpatialDetailView conceptionEntitySpatialDetailView = new ConceptionEntitySpatialDetailView(this.conceptionEntitySpatialInfoViewHeightOffset);
         Tab tab0 = tabs.add("", conceptionEntitySpatialDetailView,false);
         Span globalInfoSpan =new Span();
         Icon globalInfoIcon = new Icon(VaadinIcon.GLOBE_WIRE);
