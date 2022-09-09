@@ -3,9 +3,11 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
+@StyleSheet("webApps/conceptionEntitySpatialChart/style.css")
 @JavaScript("./visualization/feature/conceptionEntitySpatialChart-connector.js")
 public class ConceptionEntitySpatialChart extends VerticalLayout {
 

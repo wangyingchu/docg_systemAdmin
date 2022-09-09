@@ -35,8 +35,9 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
         PagedTabs tabs = new PagedTabs(container);
         tabs.getElement().getStyle().set("width","100%");
 
-        ConceptionEntitySpatialChart conceptionEntitySpatialChart0 = new ConceptionEntitySpatialChart();
-        Tab tab0 = tabs.add("", conceptionEntitySpatialChart0,false);
+        //ConceptionEntitySpatialChart conceptionEntitySpatialChart0 = new ConceptionEntitySpatialChart();
+        ConceptionEntitySpatialDetailView conceptionEntitySpatialDetailView = new ConceptionEntitySpatialDetailView();
+        Tab tab0 = tabs.add("", conceptionEntitySpatialDetailView,false);
         Span globalInfoSpan =new Span();
         Icon globalInfoIcon = new Icon(VaadinIcon.GLOBE_WIRE);
         globalInfoIcon.setSize("14px");
