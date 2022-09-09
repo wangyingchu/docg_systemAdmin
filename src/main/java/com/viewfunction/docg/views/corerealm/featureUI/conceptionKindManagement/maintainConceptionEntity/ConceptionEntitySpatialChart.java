@@ -3,18 +3,17 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
-import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
-@StyleSheet("webApps/conceptionEntitySpatialChart/style.css")
 @JavaScript("./visualization/feature/conceptionEntitySpatialChart-connector.js")
 public class ConceptionEntitySpatialChart extends VerticalLayout {
 
     public ConceptionEntitySpatialChart(){
         setWidth(500, Unit.PIXELS);
         setHeight(500,Unit.PIXELS);
-
+        //需要设定position 为相对位置，否则地图会占满占全部屏幕尺寸
+        getStyle().set("position","relative");
         //link to download latest l7 build js: https://unpkg.com/@antv/l7
         UI.getCurrent().getPage().addJavaScript("js/antv/l7/2.9.26/dist/l7.js");
         initConnector();

@@ -2,6 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class ConceptionEntitySpatialDetailView extends VerticalLayout {
@@ -11,7 +12,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         mapContainer = new VerticalLayout();
         mapContainer.setWidth(300, Unit.PIXELS);
         mapContainer.setHeight(400,Unit.PIXELS);
-        add(mapContainer);
+        //add(mapContainer);
     }
 
 
@@ -21,9 +22,11 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         // Add browser window listener to observe size change
         //renderEntitySpatialInfo();
 
-
+        Div continerDiv = new Div();
+        continerDiv.setWidth("300px");
+        continerDiv.setHeight("300px");
         ConceptionEntitySpatialChart conceptionEntitySpatialChart = new ConceptionEntitySpatialChart();
-
-        mapContainer.add(conceptionEntitySpatialChart);
+        continerDiv.add(conceptionEntitySpatialChart);
+        add(continerDiv);
     }
 }

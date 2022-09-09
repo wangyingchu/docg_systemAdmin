@@ -1,6 +1,5 @@
 window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
     initLazy: function (c) {
-
         // Check whether the connector was already initialized
         if (c.$connector) {
             return;
@@ -8,10 +7,6 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
         c.$connector = {
 
         };
-
-
-        console.log(c);
-
         const scene = new L7.Scene({
             id: c,
             map: new L7.GaodeMap({
@@ -21,15 +16,5 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
             }),
             logoVisible: false
         });
-
-
-        console.log("=====================================");
-        console.log("=====================================");
-        console.log("=====================================");
-        console.log("=====================================");
-        console.log(scene);
-
-        console.log("=====================================");
-        console.log("=====================================");
     }
 }
