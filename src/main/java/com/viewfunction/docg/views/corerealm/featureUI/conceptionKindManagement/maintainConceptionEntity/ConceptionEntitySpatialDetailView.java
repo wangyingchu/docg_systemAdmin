@@ -6,6 +6,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
@@ -16,6 +18,8 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
 
     private int conceptionEntitySpatialInfoViewHeightOffset;
     private Registration listener;
+    private ConceptionEntity conceptionEntity;
+    private GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel;
     public ConceptionEntitySpatialDetailView(int conceptionEntitySpatialInfoViewHeightOffset){
         this.setPadding(false);
         this.setSpacing(false);
@@ -32,7 +36,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         SecondaryKeyValueDisplayItem outDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_RIGHT.create(), "关系出度", "-");
         SecondaryKeyValueDisplayItem isDenseDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.BULLSEYE.create(), "是否稠密实体", "-");
 
-        Icon relationsIcon = VaadinIcon.RANDOM.create();
+        Icon relationsIcon = VaadinIcon.LOCATION_ARROW_CIRCLE_O.create();
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon, "地理空间信息概要: ", secondaryTitleComponentsList, actionComponentsList);
         secondaryTitleActionBar.getStyle().set("padding-top","10px");
         add(secondaryTitleActionBar);
@@ -60,5 +64,25 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
+    }
+
+    public ConceptionEntity getConceptionEntity() {
+        return conceptionEntity;
+    }
+
+    public void setConceptionEntity(ConceptionEntity conceptionEntity) {
+        this.conceptionEntity = conceptionEntity;
+    }
+
+    public GeospatialScaleCalculable.SpatialScaleLevel getSpatialScaleLevel() {
+        return spatialScaleLevel;
+    }
+
+    public void setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel) {
+        this.spatialScaleLevel = spatialScaleLevel;
+    }
+
+    public void renderEntitySpatialDetailInfo(){
+
     }
 }

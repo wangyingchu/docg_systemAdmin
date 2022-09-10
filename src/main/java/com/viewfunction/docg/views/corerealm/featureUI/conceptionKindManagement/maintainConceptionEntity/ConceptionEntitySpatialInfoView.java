@@ -11,6 +11,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.component.tabs.Tab;
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -22,6 +23,9 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
     private int conceptionEntitySpatialInfoViewHeightOffset;
+    private ConceptionEntitySpatialDetailView globalConceptionEntitySpatialDetailView;
+    private ConceptionEntitySpatialDetailView countryConceptionEntitySpatialDetailView;
+    private ConceptionEntitySpatialDetailView localConceptionEntitySpatialDetailView;
     public ConceptionEntitySpatialInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntitySpatialInfoViewHeightOffset){
         this.setPadding(false);
         this.setSpacing(false);
@@ -39,8 +43,8 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
         PagedTabs tabs = new PagedTabs(container);
         tabs.getElement().getStyle().set("width","100%");
 
-        ConceptionEntitySpatialDetailView conceptionEntitySpatialDetailView = new ConceptionEntitySpatialDetailView(this.conceptionEntitySpatialInfoViewHeightOffset);
-        Tab tab0 = tabs.add("", conceptionEntitySpatialDetailView,false);
+        globalConceptionEntitySpatialDetailView = new ConceptionEntitySpatialDetailView(this.conceptionEntitySpatialInfoViewHeightOffset);
+        Tab tab0 = tabs.add("", globalConceptionEntitySpatialDetailView,false);
         Span globalInfoSpan =new Span();
         Icon globalInfoIcon = new Icon(VaadinIcon.GLOBE_WIRE);
         globalInfoIcon.setSize("14px");
@@ -48,7 +52,8 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
         globalInfoSpan.add(globalInfoIcon,globalInfoLabel);
         tab0.add(globalInfoSpan);
 
-        Tab tab1 = tabs.add("", new Label("4"),false);
+        countryConceptionEntitySpatialDetailView = new ConceptionEntitySpatialDetailView(this.conceptionEntitySpatialInfoViewHeightOffset);
+        Tab tab1 = tabs.add("", countryConceptionEntitySpatialDetailView,false);
         Span countryInfoSpan =new Span();
         Icon countryInfoIcon = new Icon(VaadinIcon.LOCATION_ARROW_CIRCLE);
         countryInfoIcon.setSize("14px");
@@ -56,7 +61,8 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
         countryInfoSpan.add(countryInfoIcon,countryInfoLabel);
         tab1.add(countryInfoSpan);
 
-        Tab tab2 = tabs.add("", new Label("4"),false);
+        localConceptionEntitySpatialDetailView = new ConceptionEntitySpatialDetailView(this.conceptionEntitySpatialInfoViewHeightOffset);
+        Tab tab2 = tabs.add("", localConceptionEntitySpatialDetailView,false);
         Span localInfoSpan =new Span();
         Icon localInfoIcon = new Icon(VaadinIcon.HOME);
         localInfoIcon.setSize("14px");
@@ -70,8 +76,6 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        // Add browser window listener to observe size change
-        //renderEntitySpatialInfo();
     }
 
     @Override
@@ -87,16 +91,21 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
             if(targetConceptionKind != null){
                 ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
                 if(targetEntity != null){
-                    String _GlobalCRSAID = targetEntity.getGlobalCRSAID();
                     String _GLGeometryContent = targetEntity.getGLGeometryContent();
-                    String _CountryCRSAID = targetEntity.getCountryCRSAID();
                     String _CLGeometryContent = targetEntity.getCLGeometryContent();
-                    String _LocalCRSAID = targetEntity.getLocalCRSAID();
                     String _LLGeometryContent = targetEntity.getLLGeometryContent();
                     if(_GLGeometryContent == null & _CLGeometryContent == null & _LLGeometryContent == null){
                         CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中不包含地理空间信息", NotificationVariant.LUMO_CONTRAST,0, Notification.Position.MIDDLE);
                     }else{
-
+                        globalConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
+                        globalConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Global);
+                        globalConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();
+                        countryConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
+                        countryConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Country);
+                        countryConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();
+                        localConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
+                        localConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Local);
+                        localConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();
                     }
                 }else{
                     CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
