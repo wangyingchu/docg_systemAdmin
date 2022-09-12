@@ -7,6 +7,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
@@ -20,6 +21,8 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
     private Registration listener;
     private ConceptionEntity conceptionEntity;
     private GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel;
+    private SecondaryKeyValueDisplayItem _WKTGeometryTypeItem;
+    private SecondaryKeyValueDisplayItem _CRSAIDItem;
     public ConceptionEntitySpatialDetailView(int conceptionEntitySpatialInfoViewHeightOffset){
         this.setPadding(false);
         this.setSpacing(false);
@@ -31,13 +34,13 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
 
         HorizontalLayout titleLayout = new HorizontalLayout();
         secondaryTitleComponentsList.add(titleLayout);
-        SecondaryKeyValueDisplayItem relationCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(), "关联关系总量", "-");
-        SecondaryKeyValueDisplayItem inDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_LEFT.create(), "关系入度", "-");
+        _WKTGeometryTypeItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(), "地理空间元素类型", "-");
+        _CRSAIDItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_LEFT.create(), "坐标系 CRSAID", "-");
         SecondaryKeyValueDisplayItem outDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_RIGHT.create(), "关系出度", "-");
         SecondaryKeyValueDisplayItem isDenseDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.BULLSEYE.create(), "是否稠密实体", "-");
 
-        Icon relationsIcon = VaadinIcon.LOCATION_ARROW_CIRCLE_O.create();
-        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon, "地理空间信息概要: ", secondaryTitleComponentsList, actionComponentsList);
+        Icon spatialInfoIcon = VaadinIcon.LOCATION_ARROW_CIRCLE_O.create();
+        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(spatialInfoIcon, "地理空间信息概要: ", secondaryTitleComponentsList, actionComponentsList);
         secondaryTitleActionBar.getStyle().set("padding-top","10px");
         add(secondaryTitleActionBar);
     }
@@ -83,6 +86,29 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
     }
 
     public void renderEntitySpatialDetailInfo(){
-
+        if(this.conceptionEntity != null && this.spatialScaleLevel != null){
+            GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = this.conceptionEntity.getGeometryType();
+            if(_WKTGeometryType != null){
+                _WKTGeometryTypeItem.updateDisplayValue(_WKTGeometryType.name());
+                String geometryContent = null;
+                String geometryCRSAID = null;
+                switch(this.spatialScaleLevel){
+                    case Local:
+                        geometryContent = this.conceptionEntity.getLLGeometryContent();
+                        geometryCRSAID = this.conceptionEntity.getLocalCRSAID();
+                        break;
+                    case Global:
+                        geometryContent = this.conceptionEntity.getGLGeometryContent();
+                        geometryCRSAID = this.conceptionEntity.getGlobalCRSAID();
+                        break;
+                    case Country:
+                        geometryContent = this.conceptionEntity.getCLGeometryContent();
+                        geometryCRSAID = this.conceptionEntity.getCountryCRSAID();
+                }
+                if(geometryContent != null && geometryCRSAID != null){
+                    _CRSAIDItem.updateDisplayValue(geometryCRSAID);
+                }
+            }
+        }
     }
 }
