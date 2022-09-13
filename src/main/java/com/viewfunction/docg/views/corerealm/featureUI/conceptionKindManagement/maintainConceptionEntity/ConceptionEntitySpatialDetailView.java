@@ -6,6 +6,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
@@ -23,6 +25,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
     private GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel;
     private SecondaryKeyValueDisplayItem _WKTGeometryTypeItem;
     private SecondaryKeyValueDisplayItem _CRSAIDItem;
+    private ConceptionEntitySpatialChart conceptionEntitySpatialChart;
     public ConceptionEntitySpatialDetailView(int conceptionEntitySpatialInfoViewHeightOffset){
         this.setPadding(false);
         this.setSpacing(false);
@@ -34,10 +37,8 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
 
         HorizontalLayout titleLayout = new HorizontalLayout();
         secondaryTitleComponentsList.add(titleLayout);
-        _WKTGeometryTypeItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(), "地理空间元素类型", "-");
-        _CRSAIDItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_LEFT.create(), "坐标系 CRSAID", "-");
-        SecondaryKeyValueDisplayItem outDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_RIGHT.create(), "关系出度", "-");
-        SecondaryKeyValueDisplayItem isDenseDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.BULLSEYE.create(), "是否稠密实体", "-");
+        _WKTGeometryTypeItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.VIEWPORT.create(), "地理空间元素类型", "-");
+        _CRSAIDItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CROSSHAIRS.create(), "坐标系 CRSAID", "-");
 
         Icon spatialInfoIcon = VaadinIcon.LOCATION_ARROW_CIRCLE_O.create();
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(spatialInfoIcon, "地理空间信息概要: ", secondaryTitleComponentsList, actionComponentsList);
@@ -49,7 +50,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
-        ConceptionEntitySpatialChart conceptionEntitySpatialChart = new ConceptionEntitySpatialChart();
+        conceptionEntitySpatialChart = new ConceptionEntitySpatialChart();
         conceptionEntitySpatialChart.setWidth(100,Unit.PERCENTAGE);
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             conceptionEntitySpatialChart.setHeight(event.getHeight()-this.conceptionEntitySpatialInfoViewHeightOffset, Unit.PIXELS);
@@ -69,46 +70,113 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         super.onDetach(detachEvent);
     }
 
-    public ConceptionEntity getConceptionEntity() {
-        return conceptionEntity;
-    }
-
     public void setConceptionEntity(ConceptionEntity conceptionEntity) {
         this.conceptionEntity = conceptionEntity;
-    }
-
-    public GeospatialScaleCalculable.SpatialScaleLevel getSpatialScaleLevel() {
-        return spatialScaleLevel;
     }
 
     public void setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel) {
         this.spatialScaleLevel = spatialScaleLevel;
     }
 
-    public void renderEntitySpatialDetailInfo(){
-        if(this.conceptionEntity != null && this.spatialScaleLevel != null){
+    public void renderEntitySpatialDetailInfo() {
+        if (this.conceptionEntity != null && this.spatialScaleLevel != null) {
             GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = this.conceptionEntity.getGeometryType();
-            if(_WKTGeometryType != null){
-                _WKTGeometryTypeItem.updateDisplayValue(_WKTGeometryType.name());
-                String geometryContent = null;
-                String geometryCRSAID = null;
-                switch(this.spatialScaleLevel){
-                    case Local:
-                        geometryContent = this.conceptionEntity.getLLGeometryContent();
-                        geometryCRSAID = this.conceptionEntity.getLocalCRSAID();
-                        break;
-                    case Global:
-                        geometryContent = this.conceptionEntity.getGLGeometryContent();
-                        geometryCRSAID = this.conceptionEntity.getGlobalCRSAID();
-                        break;
-                    case Country:
-                        geometryContent = this.conceptionEntity.getCLGeometryContent();
-                        geometryCRSAID = this.conceptionEntity.getCountryCRSAID();
-                }
-                if(geometryContent != null && geometryCRSAID != null){
-                    _CRSAIDItem.updateDisplayValue(geometryCRSAID);
+            if(_WKTGeometryType != null) {
+                try {
+                    String centroidPointWKT = conceptionEntity.getEntitySpatialCentroidPointWKTGeometryContent(this.spatialScaleLevel);
+                    String interiorPointWKT = conceptionEntity.getEntitySpatialInteriorPointWKTGeometryContent(this.spatialScaleLevel);
+                    String envelopePointWKT = conceptionEntity.getEntitySpatialEnvelopeWKTGeometryContent(this.spatialScaleLevel);
+
+                    _WKTGeometryTypeItem.updateDisplayValue(_WKTGeometryType.name());
+                    String geometryContent = null;
+                    String geometryCRSAID = null;
+                    switch (this.spatialScaleLevel) {
+                        case Local:
+                            geometryContent = this.conceptionEntity.getLLGeometryContent();
+                            geometryCRSAID = this.conceptionEntity.getLocalCRSAID();
+                            break;
+                        case Global:
+                            geometryContent = this.conceptionEntity.getGLGeometryContent();
+                            geometryCRSAID = this.conceptionEntity.getGlobalCRSAID();
+                            break;
+                        case Country:
+                            geometryContent = this.conceptionEntity.getCLGeometryContent();
+                            geometryCRSAID = this.conceptionEntity.getCountryCRSAID();
+                    }
+                    if(geometryContent != null && geometryCRSAID != null) {
+                        _CRSAIDItem.updateDisplayValue(geometryCRSAID);
+
+                    }
+                    if(conceptionEntitySpatialChart != null) {
+                        conceptionEntitySpatialChart.renderMapAndSpatialInfo();
+                        switch (_WKTGeometryType) {
+                            case POINT:
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
+                                break;
+                            case LINESTRING:
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
+                                if(centroidPointWKT != null){
+                                    conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                }
+                                break;
+                            case POLYGON:
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
+                                if(interiorPointWKT != null){
+                                    conceptionEntitySpatialChart.renderInteriorPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
+                                }
+                                if(envelopePointWKT != null){
+                                    conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopePointWKT));
+                                }
+                                break;
+                            case MULTIPOINT:
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
+                                if(centroidPointWKT != null){
+                                    conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                }
+                                if(envelopePointWKT != null){
+                                    conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopePointWKT));
+                                }
+                                break;
+                            case MULTILINESTRING:
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
+                                if(centroidPointWKT != null){
+                                    conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                }
+                                break;
+                            case MULTIPOLYGON:
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
+                                if(centroidPointWKT != null){
+                                    conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                }
+                                if(envelopePointWKT != null){
+                                    conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopePointWKT));
+                                }
+                                break;
+                            case GEOMETRYCOLLECTION:
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
+                                if(centroidPointWKT != null){
+                                    conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                }
+                                if(envelopePointWKT != null){
+                                    conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopePointWKT));
+                                }
+                        }
+                    }
+                } catch (CoreRealmServiceRuntimeException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
+    }
+    private String getGeoJsonFromWKTContent(String geometryCRSAID,String wktContent){
+         /*
+                    String geoJsonContent = GeospatialCalculateUtil.getGeoJsonFromWTK(geometryContent);
+                    System.out.println(geoJsonContent);
+                    System.out.println(geoJsonContent);
+                    System.out.println(geoJsonContent);
+                    System.out.println(geoJsonContent);
+                    System.out.println(geoJsonContent);
+                    */
+        return null;
     }
 }

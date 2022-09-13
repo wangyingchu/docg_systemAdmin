@@ -11,10 +11,59 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
             id: c,
             map: new L7.GaodeMap({
                 style: 'light',
-                center: [110.770672, 34.159869],
-                pitch: 45,
+                center: [123.230989, 41.721006],
+                pitch: 0,
+                zoom: 11
             }),
             logoVisible: false
         });
+        /*
+        scene.on('loaded', () => {
+            fetch(
+                'https://gw.alipayobjects.com/os/basement_prod/d3564b06-670f-46ea-8edb-842f7010a7c6.json'
+            ).then(res => res.json()).then(data => {
+                    const pointLayer = new L7.PointLayer({})
+                        .source(data)
+                        .shape('simple')
+                        .size(15)
+                        .color('mag', mag => {
+                            return mag > 4.5 ? '#5B8FF9' : '#5CCEA1';
+                        })
+                        .active(true)
+                        .style({
+                            opacity: 0.6,
+                            strokeWidth: 3
+                        });
+                    scene.addLayer(pointLayer);
+            });
+        });
+        */
+
+     //   scene.on('loaded', () => {
+            const data = {
+                "type": "FeatureCollection",
+                //"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+                "crs": { "type": "name", "properties": { "name": "EPSG:4326" } },
+                "features": [
+                    { "type": "Feature", "properties": { "id": "ak16821829", "mag": 1.5, "time": 1504834613166, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 123.230989, 41.721006, 6.1 ] } },
+                    { "type": "Feature", "properties": { "id": "hv61900626", "mag": 2.91, "time": 1504833891990, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 121.309668, 31.066417, 2.609 ] } }
+                ]
+            };
+            const pointLayer = new L7.PointLayer({})
+                .source(data)
+                .shape('simple')
+                .size(8)
+               // .color('mag', mag => {
+               //     return mag > 4.5 ? '#5B8FF9' : '#5CCEA1';
+               // })
+                .color('#0099FF'
+                )
+                .active(true)
+                .style({
+                    opacity: 0.9,
+                    strokeWidth: 1
+                });
+            scene.addLayer(pointLayer);
+     //   });
     }
 }

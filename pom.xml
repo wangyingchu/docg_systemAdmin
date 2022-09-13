@@ -312,7 +312,7 @@
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.version}</version>
                 <configuration>
-                    <useDeprecatedV14Bootstrapping>true</useDeprecatedV14Bootstrapping>
+                    <useDeprecatedV14Bootstrapping>false</useDeprecatedV14Bootstrapping>
                 </configuration>
             </plugin>
         </plugins>
