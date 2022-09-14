@@ -11,6 +11,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServi
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.geospatial.GeospatialCalculateUtil;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
@@ -106,6 +107,9 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
                     if(geometryContent != null && geometryCRSAID != null) {
                         _CRSAIDItem.updateDisplayValue(geometryCRSAID);
 
+
+                        getGeoJsonFromWKTContent(geometryCRSAID,geometryContent);
+
                     }
                     if(conceptionEntitySpatialChart != null) {
                         conceptionEntitySpatialChart.renderMapAndSpatialInfo();
@@ -169,14 +173,22 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         }
     }
     private String getGeoJsonFromWKTContent(String geometryCRSAID,String wktContent){
-         /*
-                    String geoJsonContent = GeospatialCalculateUtil.getGeoJsonFromWTK(geometryContent);
+        String geoJsonContent = GeospatialCalculateUtil.getGeoJsonFromWTK(wktContent);
                     System.out.println(geoJsonContent);
                     System.out.println(geoJsonContent);
                     System.out.println(geoJsonContent);
                     System.out.println(geoJsonContent);
                     System.out.println(geoJsonContent);
-                    */
+        if(geoJsonContent != null){
+            String resultGeoJson = "{\n" +
+                    "\"type\": \"FeatureCollection\",\n" +
+                    "\"crs\": { \"type\": \"name\", \"properties\": { \"name\": \""+geometryCRSAID+"\" } },\n" +
+                    "\"features\": [\n";
+            resultGeoJson = resultGeoJson + geoJsonContent;
+            resultGeoJson = resultGeoJson +"\n]\n" +
+                    "}";
+            return resultGeoJson;
+        }
         return null;
     }
 }

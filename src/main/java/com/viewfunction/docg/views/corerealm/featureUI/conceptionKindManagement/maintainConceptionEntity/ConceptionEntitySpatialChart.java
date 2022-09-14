@@ -53,5 +53,9 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
 
     public void renderEntityContent(GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType,String entityContentGeoJson){
         this.entityContentGeoJson = entityContentGeoJson;
+
+
+
+
     }
 }
