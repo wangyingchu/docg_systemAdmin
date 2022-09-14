@@ -97,15 +97,21 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
                     if(_GLGeometryContent == null & _CLGeometryContent == null & _LLGeometryContent == null){
                         CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中不包含地理空间信息", NotificationVariant.LUMO_CONTRAST,5000, Notification.Position.MIDDLE);
                     }else{
-                        globalConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
-                        globalConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Global);
-                        globalConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();
-                        countryConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
-                        countryConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Country);
-                        countryConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();
-                        localConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
-                        localConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Local);
-                        localConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();
+                        if(_GLGeometryContent != null){
+                            globalConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
+                            globalConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Global);
+                            globalConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();
+                        }
+                        if(_CLGeometryContent != null){
+                            countryConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
+                            countryConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Country);
+                            countryConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();
+                        }
+                        if(_LLGeometryContent != null){
+                            localConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
+                            localConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Local);
+                            localConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();
+                        }
                     }
                 }else{
                     CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);

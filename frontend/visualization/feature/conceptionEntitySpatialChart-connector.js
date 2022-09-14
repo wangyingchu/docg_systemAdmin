@@ -5,13 +5,40 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
             return;
         }
         c.$connector = {
+            renderPointEntityContent : function(geoJsonStr) {
 
+                console.log(geoJsonStr);
+                console.log(geoJsonStr);
+                const geoJsonData =JSON.parse(geoJsonStr);
+
+                console.log(eval("(" + geoJsonStr + ")"));
+                    //eval("(" + geoJsonStr + ")")
+
+                console.log(geoJsonData);
+                console.log(geoJsonData);
+                console.log(geoJsonData);
+                console.log(geoJsonData);
+                console.log(geoJsonData);
+                console.log(geoJsonData);
+
+                const pointLayer = new L7.PointLayer({})
+                    .source(eval("(" + geoJsonStr + ")"))
+                    .shape('simple')
+                    .size(18)
+                    .color('#0099FF')
+                    .active(true)
+                    .style({
+                        opacity: 0.9,
+                        strokeWidth: 1
+                    });
+                scene.addLayer(pointLayer);
+            }
         };
         const scene = new L7.Scene({
             id: c,
             map: new L7.GaodeMap({
                 style: 'light',
-                center: [123.230989, 41.721006],
+                center: [-122.29346695102016,47.615982606514976],
                 pitch: 0,
                 zoom: 11
             }),
@@ -39,7 +66,7 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
         });
         */
 
-     //   scene.on('loaded', () => {
+/*
             const data = {
                 "type": "FeatureCollection",
                 //"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
@@ -64,6 +91,6 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                     strokeWidth: 1
                 });
             scene.addLayer(pointLayer);
-     //   });
+*/
     }
 }
