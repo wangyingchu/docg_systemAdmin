@@ -6,67 +6,44 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
         }
         c.$connector = {
             renderPointEntityContent : function(geoJsonStr) {
-
-                console.log(geoJsonStr);
-                console.log(geoJsonStr);
-                const geoJsonData =JSON.parse(geoJsonStr);
-
-                console.log(eval("(" + geoJsonStr + ")"));
-                    //eval("(" + geoJsonStr + ")")
-
-                console.log(geoJsonData);
-                console.log(geoJsonData);
-                console.log(geoJsonData);
-                console.log(geoJsonData);
-                console.log(geoJsonData);
-                console.log(geoJsonData);
-
+                let reformattedGeoJsonStr = geoJsonStr.replaceAll('\\','');
+                if(reformattedGeoJsonStr.startsWith('"')){
+                    reformattedGeoJsonStr = reformattedGeoJsonStr.replace('"','');
+                }
+                if(reformattedGeoJsonStr.endsWith('"')){
+                    reformattedGeoJsonStr = reformattedGeoJsonStr.split("").reverse().join('').replace('"','').split('').reverse().join('');
+                }
+                const geoJsonObject = eval("(" + reformattedGeoJsonStr + ")");
                 const pointLayer = new L7.PointLayer({})
-                    .source(eval("(" + geoJsonStr + ")"))
+                    .source(geoJsonObject)
                     .shape('simple')
-                    .size(18)
-                    .color('#0099FF')
+                    .size(8)
+                    .color('#CE0000')
                     .active(true)
                     .style({
-                        opacity: 0.9,
+                        opacity: 1,
                         strokeWidth: 1
                     });
-                scene.addLayer(pointLayer);
+                const centerPoint = geoJsonObject.features[0].geometry.coordinates;
+                scene.on('loaded', () => {
+                    scene.addLayer(pointLayer);
+                    scene.setZoomAndCenter(15,centerPoint);
+                });
             }
         };
         const scene = new L7.Scene({
             id: c,
             map: new L7.GaodeMap({
                 style: 'light',
-                center: [-122.29346695102016,47.615982606514976],
+                //center: [-122.29346695102016,47.615982606514976],
                 pitch: 0,
                 zoom: 11
             }),
             logoVisible: false
         });
-        /*
-        scene.on('loaded', () => {
-            fetch(
-                'https://gw.alipayobjects.com/os/basement_prod/d3564b06-670f-46ea-8edb-842f7010a7c6.json'
-            ).then(res => res.json()).then(data => {
-                    const pointLayer = new L7.PointLayer({})
-                        .source(data)
-                        .shape('simple')
-                        .size(15)
-                        .color('mag', mag => {
-                            return mag > 4.5 ? '#5B8FF9' : '#5CCEA1';
-                        })
-                        .active(true)
-                        .style({
-                            opacity: 0.6,
-                            strokeWidth: 3
-                        });
-                    scene.addLayer(pointLayer);
-            });
-        });
-        */
 
-/*
+
+            /*
             const data = {
                 "type": "FeatureCollection",
                 //"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
@@ -91,6 +68,6 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                     strokeWidth: 1
                 });
             scene.addLayer(pointLayer);
-*/
+        */
     }
 }
