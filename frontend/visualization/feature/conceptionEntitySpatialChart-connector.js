@@ -22,7 +22,8 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                     .active(true)
                     .style({
                         opacity: 1,
-                        strokeWidth: 1
+                        strokeWidth: 1,
+                        stroke: '#333333',
                     });
                 const centerPoint = geoJsonObject.features[0].geometry.coordinates;
                 scene.on('loaded', () => {
@@ -33,11 +34,18 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
         };
         const scene = new L7.Scene({
             id: c,
+            /*
             map: new L7.GaodeMap({
                 style: 'light',
-                //center: [-122.29346695102016,47.615982606514976],
                 pitch: 0,
                 zoom: 11
+            }),
+            */
+            map: new L7.Mapbox({
+                style: 'light',
+                pitch: 0,
+                zoom: 11,
+                accessToken:'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw'
             }),
             logoVisible: false
         });

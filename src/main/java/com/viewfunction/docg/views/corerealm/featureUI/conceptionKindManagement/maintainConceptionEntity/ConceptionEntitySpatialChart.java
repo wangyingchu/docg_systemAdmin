@@ -25,6 +25,8 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
         //需要设定position 为相对位置，否则地图会占满占全部屏幕尺寸
         getStyle().set("position","relative");
         //link to download latest l7 build js: https://unpkg.com/@antv/l7
+        //link to download latest mapbox-gl build js:https://unpkg.com/mapbox-gl
+        UI.getCurrent().getPage().addJavaScript("js/mapbox-gl/2.10.0/dist/mapbox-gl.js");
         UI.getCurrent().getPage().addJavaScript("js/antv/l7/2.9.26/dist/l7.js");
 
     }
