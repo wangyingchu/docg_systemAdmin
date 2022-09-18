@@ -30,6 +30,71 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                     scene.addLayer(pointLayer);
                     scene.setZoomAndCenter(15,centerPoint);
                 });
+            },
+            renderPolygonEntityContent: function(geoJsonStr) {
+                let reformattedGeoJsonStr = geoJsonStr.replaceAll('\\','');
+                if(reformattedGeoJsonStr.startsWith('"')){
+                    reformattedGeoJsonStr = reformattedGeoJsonStr.replace('"','');
+                }
+                if(reformattedGeoJsonStr.endsWith('"')){
+                    reformattedGeoJsonStr = reformattedGeoJsonStr.split("").reverse().join('').replace('"','').split('').reverse().join('');
+                }
+                const geoJsonObject = eval("(" + reformattedGeoJsonStr + ")");
+
+
+                console.log(geoJsonObject)
+
+                const pointLayer = new L7.PolygonLayer({})
+                    .source(geoJsonObject)
+                   // .shape('simple')
+                  //  .size(8)
+                    .color('#CE0000')
+                    .active(true)
+                    .style({
+                        opacity: 1,
+                        strokeWidth: 1,
+                        stroke: '#333333',
+                    });
+                //const centerPoint = geoJsonObject.features[0].geometry.coordinates;
+                scene.on('loaded', () => {
+                    scene.addLayer(pointLayer);
+                    //scene.setZoomAndCenter(15,centerPoint);
+                });
+
+            },
+            renderLineEntityContent: function(geoJsonStr) {
+
+
+
+                let reformattedGeoJsonStr = geoJsonStr.replaceAll('\\','');
+                if(reformattedGeoJsonStr.startsWith('"')){
+                    reformattedGeoJsonStr = reformattedGeoJsonStr.replace('"','');
+                }
+                if(reformattedGeoJsonStr.endsWith('"')){
+                    reformattedGeoJsonStr = reformattedGeoJsonStr.split("").reverse().join('').replace('"','').split('').reverse().join('');
+                }
+                const geoJsonObject = eval("(" + reformattedGeoJsonStr + ")");
+
+                console.log(geoJsonObject)
+
+
+                const pointLayer = new L7.LineLayer({})
+                    .source(geoJsonObject)
+                   // .shape('simple')
+                   // .size(8)
+                    .color('#CE0000')
+                    .active(true)
+                    .style({
+                        opacity: 1,
+                        strokeWidth: 1,
+                        stroke: '#333333',
+                    });
+                //const centerPoint = geoJsonObject.features[0].geometry.coordinates;
+                scene.on('loaded', () => {
+                    scene.addLayer(pointLayer);
+                    //scene.setZoomAndCenter(15,centerPoint);
+                });
+
             }
         };
         const scene = new L7.Scene({
