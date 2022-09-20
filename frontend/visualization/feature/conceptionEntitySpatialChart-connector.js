@@ -83,9 +83,112 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
 
 
 
+                geoJsonObject = {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [-170.0, 10.0],
+                            [170.0, 10.0],
+                            [170.0, -10.0],
+                            [-170.0, -10.0],
+                            [-170.0, 10.0]
+                        ],
+                        [
+                            [175.0, 5.0],
+                            [-175.0, 5.0],
+                            [-175.0, -5.0],
+                            [175.0, -5.0],
+                            [175.0, 5.0]
+                        ]
+                    ]
+                };
+
+
+                geoJsonObject={"type": "FeatureCollection","crs": { "type": "name", "properties": { "name": "EPSG:4326" } },"features": [{ "type": "Feature", "geometry":
+   /*
+                            {
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [-170.0, 10.0],
+                    [170.0, 10.0],
+                    [170.0, -10.0],
+                    [-170.0, -10.0],
+                    [-170.0, 10.0]
+                ],
+                [
+                    [175.0, 5.0],
+                    [-175.0, 5.0],
+                    [-175.0, -5.0],
+                    [175.0, -5.0],
+                    [175.0, 5.0]
+                ]
+            ]
+        }
+
+*/
+
+
+/*
+                        {
+                            "type": "MultiPolygon",
+                            "coordinates": [
+                                [
+                                    [
+                                        [102.0, 2.0],
+                                        [103.0, 2.0],
+                                        [103.0, 3.0],
+                                        [102.0, 3.0],
+                                        [102.0, 2.0]
+                                    ]
+                                ],
+                                [
+                                    [
+                                        [100.0, 0.0],
+                                        [101.0, 0.0],
+                                        [101.0, 1.0],
+                                        [100.0, 1.0],
+                                        [100.0, 0.0]
+                                    ],
+                                    [
+                                        [100.2, 0.2],
+                                        [100.8, 0.2],
+                                        [100.8, 0.8],
+                                        [100.2, 0.8],
+                                        [100.2, 0.2]
+                                    ]
+                                ]
+                            ]
+                        }
+*/
 
 
 
+                        {
+                            "type": "MultiPolygon",
+                            "coordinates": [
+                                [
+                                    [
+                                        //[-122.391,47.691],
+                                        //[-122.392,47.692],
+                                        //[-122.393,47.693],
+                                        //[-122.394,47.694],
+                                       // [-122.391,47.691]
+
+
+                                        [102.011, 2.011],
+                                        [103.011, 2.011],
+                                        [103.011, 3.011],
+                                        [102.011, 3.011],
+                                        [102.011, 2.011]
+                                    ]
+                                ]
+                            ]
+                        }
+
+
+
+                }]}
 
 
 
@@ -98,6 +201,7 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                         .then(data => {
                             const layer = new L7.PolygonLayer({})
                                 .source(geoJsonObject)
+                                /*
                                 .color(
                                     'unit_price',
                                     [
@@ -113,6 +217,8 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                                         '#F2F5FC'
                                     ].reverse()
                                 )
+                                */
+                                .color('#CE0000')
                                 .shape('fill')
                                 .active(true)
                                 .style({
@@ -236,6 +342,9 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
             }),
             */
             map: new L7.Mapbox({
+
+                center: [-122.39048970780193,47.698588001067826],
+
                 style: 'light',
                 pitch: 0,
                 zoom: 11,
