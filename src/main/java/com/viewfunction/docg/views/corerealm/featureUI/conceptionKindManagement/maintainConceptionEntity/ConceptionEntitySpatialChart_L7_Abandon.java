@@ -10,21 +10,24 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleF
 
 import java.io.Serializable;
 
-@JavaScript("./visualization/feature/conceptionEntitySpatialChart-connector.js")
-public class ConceptionEntitySpatialChart extends VerticalLayout {
+@JavaScript("./visualization/feature/conceptionEntitySpatialChart-connector_Abandon.js")
+public class ConceptionEntitySpatialChart_L7_Abandon extends VerticalLayout{
 
     private String centroidPointGeoJson;
     private String interiorPointGeoJson;
     private String envelopeGeoJson;
     private String entityContentGeoJson;
 
-    public ConceptionEntitySpatialChart(){
+    public ConceptionEntitySpatialChart_L7_Abandon(){
         this.setPadding(false);
         this.setSpacing(false);
         this.setMargin(false);
-        //link to download latest l7 build js: https://unpkg.com/leaflet
-        UI.getCurrent().getPage().addStyleSheet("js/leaflet/1.8.0/dist/leaflet.css");
-        UI.getCurrent().getPage().addJavaScript("js/leaflet/1.8.0/dist/leaflet.js");
+        //需要设定position 为相对位置，否则地图会占满占全部屏幕尺寸
+        getStyle().set("position","relative");
+        //link to download latest l7 build js: https://unpkg.com/@antv/l7
+        //link to download latest mapbox-gl build js:https://unpkg.com/mapbox-gl
+        UI.getCurrent().getPage().addJavaScript("js/mapbox-gl/2.10.0/dist/mapbox-gl.js");
+        UI.getCurrent().getPage().addJavaScript("js/antv/l7/2.9.26/dist/l7.js");
     }
 
     private void initConnector() {
