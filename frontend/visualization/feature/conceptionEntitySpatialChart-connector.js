@@ -55,6 +55,7 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
         };
         const mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
         const grayscale = L.tileLayer(mbUrl, {id: 'mapbox/light-v10'}), streets  = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11'});
+        const satellite = L.tileLayer(mbUrl, {id: 'mapbox/satellite-v9', tileSize: 512, zoomOffset: -1});
         const map = L.map(c,{
             attributionControl:false,
             //layers: [streets]
@@ -63,7 +64,8 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
 
         let baseLayers = {
             "<span style='color: gray'>Grayscale</span>": grayscale,
-            "Streets": streets
+            "Streets": streets,
+            "Satellite": satellite
         };
         L.control.layers(baseLayers).addTo(map);
     }
