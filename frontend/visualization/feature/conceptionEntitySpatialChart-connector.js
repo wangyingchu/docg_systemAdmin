@@ -5,17 +5,7 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
             return;
         }
         c.$connector = {
-            renderPointEntityContent : function(geoJsonStr) {
-                c.$connector.renderEntityContent(geoJsonStr);
-            },
-            renderPolygonEntityContent: function(geoJsonStr) {
-                c.$connector.renderEntityContent(geoJsonStr);
-            },
-            renderLineEntityContent: function(geoJsonStr) {
-                c.$connector.renderEntityContent(geoJsonStr);
-            },
-
-            renderEntityContent: function(geoJsonStr) {
+            getGeoJsonObject : function(geoJsonStr){
                 let reformattedGeoJsonStr = geoJsonStr.replaceAll('\\','');
                 if(reformattedGeoJsonStr.startsWith('"')){
                     reformattedGeoJsonStr = reformattedGeoJsonStr.replace('"','');
@@ -24,7 +14,27 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                     reformattedGeoJsonStr = reformattedGeoJsonStr.split("").reverse().join('').replace('"','').split('').reverse().join('');
                 }
                 const geoJsonObject = eval("(" + reformattedGeoJsonStr + ")");
+                return geoJsonObject;
+            },
 
+            renderPointEntityContent : function(geoJsonStr) {
+                const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
+                c.$connector.renderEntityContent(geoJsonObject);
+                const pointLocation = geoJsonObject.features[0].geometry.coordinates;
+                map.setView([pointLocation[1],pointLocation[0]], 17);
+            },
+
+            renderPolygonEntityContent: function(geoJsonStr) {
+                const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
+                c.$connector.renderEntityContent(geoJsonObject);
+            },
+
+            renderLineEntityContent: function(geoJsonStr) {
+                const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
+                c.$connector.renderEntityContent(geoJsonObject);
+            },
+
+            renderEntityContent: function(geoJsonObject) {
                 const geoStyle = {
                     "color": '#003472',
                     "weight": 2,
@@ -54,7 +64,13 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                     }
                     layer.bindPopup(popupContent);
                 }
-            }
+            },
+            renderCentroidPoint : function(geoJsonStr) {
+                const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
+                //c.$connector.renderEntityContent(geoJsonObject);
+                const pointLocation = geoJsonObject.features[0].geometry.coordinates;
+                map.setView([pointLocation[1],pointLocation[0]], 15);
+            },
         };
         const mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
         const grayscale = L.tileLayer(mbUrl, {id: 'mapbox/light-v10'}), streets  = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11'});
@@ -63,7 +79,7 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
             attributionControl:false,
             //layers: [streets]
             layers: [grayscale]
-        }).setView([39.74739, -105], 13);
+        });
 
         let baseLayers = {
             "灰度模式": grayscale,
