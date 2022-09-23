@@ -67,7 +67,28 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
             },
             renderCentroidPoint : function(geoJsonStr) {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
-                //c.$connector.renderEntityContent(geoJsonObject);
+                const geoStyle = {
+                    "dashArray": 5,
+                    "color": '#666666',
+                    "weight": 1,
+                    "opacity": 0.4,
+                    "fillColor": '#AAAAAA',
+                    "fillOpacity": 0.2
+                };
+                L.geoJSON(geoJsonObject, {
+                    pointToLayer: function (feature, latlng) {
+                        return L.circleMarker(latlng, {
+                            dashArray: 5,
+                            radius: 6,
+                            fillColor: '#AAAAAA',
+                            color: "#666666",
+                            weight: 1,
+                            opacity: 0.5,
+                            fillOpacity: 0.3
+                        });
+                    },
+                    style:geoStyle
+                }).addTo(map);
                 const pointLocation = geoJsonObject.features[0].geometry.coordinates;
                 map.setView([pointLocation[1],pointLocation[0]], 15);
             },
