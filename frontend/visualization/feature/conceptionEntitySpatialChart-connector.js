@@ -74,11 +74,12 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
             renderEnvelope: function(geoJsonStr) {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
                 const geoStyle = {
+                    "dashArray": 5,
                     "color": '#666666',
                     "weight": 1,
-                    "opacity": 0.3,
+                    "opacity": 0.4,
                     "fillColor": '#AAAAAA',
-                    "fillOpacity": 0.1
+                    "fillOpacity": 0.2
                 };
                 L.geoJSON(geoJsonObject, {
                     pointToLayer: function (feature, latlng) {
