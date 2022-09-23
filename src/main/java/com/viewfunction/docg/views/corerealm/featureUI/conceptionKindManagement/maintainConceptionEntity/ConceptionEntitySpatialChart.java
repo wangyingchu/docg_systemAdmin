@@ -43,12 +43,6 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
 
     public void renderCentroidPoint(String centroidPointGeoJson){
         this.centroidPointGeoJson = centroidPointGeoJson;
-
-
-        System.out.println(this.centroidPointGeoJson);
-        System.out.println(this.centroidPointGeoJson);
-        System.out.println(this.centroidPointGeoJson);
-
         runBeforeClientResponse(ui -> {
             try {
                 getElement().callJsFunction("$connector.renderCentroidPoint", new Serializable[]{(new ObjectMapper()).writeValueAsString(centroidPointGeoJson)});
@@ -56,7 +50,6 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
                 throw new RuntimeException(e);
             }
         });
-
     }
 
     public void renderInteriorPoint(String interiorPointGeoJson){
@@ -65,6 +58,14 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
 
     public void renderEnvelope(String envelopeGeoJson){
         this.envelopeGeoJson = envelopeGeoJson;
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.renderEnvelope", new Serializable[]{(new ObjectMapper()).writeValueAsString(envelopeGeoJson)});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
     }
 
     public void renderEntityContent(GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType,String entityContentGeoJson){

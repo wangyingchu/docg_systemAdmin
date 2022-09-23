@@ -86,7 +86,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
                 try {
                     String centroidPointWKT = conceptionEntity.getEntitySpatialCentroidPointWKTGeometryContent(this.spatialScaleLevel);
                     String interiorPointWKT = conceptionEntity.getEntitySpatialInteriorPointWKTGeometryContent(this.spatialScaleLevel);
-                    String envelopePointWKT = conceptionEntity.getEntitySpatialEnvelopeWKTGeometryContent(this.spatialScaleLevel);
+                    String envelopeAreaWKT = conceptionEntity.getEntitySpatialEnvelopeWKTGeometryContent(this.spatialScaleLevel);
 
                     _WKTGeometryTypeItem.updateDisplayValue(_WKTGeometryType.name());
                     String geometryContent = null;
@@ -124,8 +124,8 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
                                 if(interiorPointWKT != null){
                                     conceptionEntitySpatialChart.renderInteriorPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
                                 }
-                                if(envelopePointWKT != null){
-                                    conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopePointWKT));
+                                if(envelopeAreaWKT != null){
+                                    conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
                                 }
                                 break;
                             case MULTIPOINT:
@@ -133,8 +133,8 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
                                 if(centroidPointWKT != null){
                                     conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
                                 }
-                                if(envelopePointWKT != null){
-                                    conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopePointWKT));
+                                if(envelopeAreaWKT != null){
+                                    conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
                                 }
                                 break;
                             case MULTILINESTRING:
@@ -148,8 +148,8 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
                                 if(centroidPointWKT != null){
                                     conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
                                 }
-                                if(envelopePointWKT != null){
-                                    conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopePointWKT));
+                                if(envelopeAreaWKT != null){
+                                    conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
                                 }
                                 break;
                             case GEOMETRYCOLLECTION:
@@ -157,8 +157,8 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
                                 if(centroidPointWKT != null){
                                     conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
                                 }
-                                if(envelopePointWKT != null){
-                                    conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopePointWKT));
+                                if(envelopeAreaWKT != null){
+                                    conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
                                 }
                         }
                     }

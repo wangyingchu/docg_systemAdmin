@@ -71,6 +71,29 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                 const pointLocation = geoJsonObject.features[0].geometry.coordinates;
                 map.setView([pointLocation[1],pointLocation[0]], 15);
             },
+            renderEnvelope: function(geoJsonStr) {
+                const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
+                const geoStyle = {
+                    "color": '#666666',
+                    "weight": 1,
+                    "opacity": 0.3,
+                    "fillColor": '#AAAAAA',
+                    "fillOpacity": 0.1
+                };
+                L.geoJSON(geoJsonObject, {
+                    pointToLayer: function (feature, latlng) {
+                        return L.circleMarker(latlng, {
+                            radius: 6,
+                            fillColor: '#1685a9',
+                            color: "#003472",
+                            weight: 1,
+                            opacity: 0.9,
+                            fillOpacity: 0.65
+                        });
+                    },
+                    style:geoStyle
+                }).addTo(map);
+            }
         };
         const mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
         const grayscale = L.tileLayer(mbUrl, {id: 'mapbox/light-v10'}), streets  = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11'});
