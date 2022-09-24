@@ -114,52 +114,52 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
                                 conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                                 break;
                             case LINESTRING:
-                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                                 if(centroidPointWKT != null){
                                     conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
                                 }
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                                 break;
                             case POLYGON:
-                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                                 if(interiorPointWKT != null){
                                     conceptionEntitySpatialChart.renderInteriorPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
                                 }
                                 if(envelopeAreaWKT != null){
                                     conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
                                 }
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                                 break;
                             case MULTIPOINT:
-                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
-                                if(centroidPointWKT != null){
-                                    conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
-                                }
                                 if(envelopeAreaWKT != null){
                                     conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
                                 }
+                                if(centroidPointWKT != null){
+                                    conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                }
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                                 break;
                             case MULTILINESTRING:
-                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                                 if(centroidPointWKT != null){
                                     conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
                                 }
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                                 break;
                             case MULTIPOLYGON:
-                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
-                                if(centroidPointWKT != null){
-                                    conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
-                                }
                                 if(envelopeAreaWKT != null){
                                     conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
                                 }
+                                if(centroidPointWKT != null){
+                                    conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                }
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                                 break;
                             case GEOMETRYCOLLECTION:
-                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
-                                if(centroidPointWKT != null){
-                                    conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
-                                }
                                 if(envelopeAreaWKT != null){
                                     conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
                                 }
+                                if(centroidPointWKT != null){
+                                    conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                }
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                         }
                     }
                 } catch (CoreRealmServiceRuntimeException e) {

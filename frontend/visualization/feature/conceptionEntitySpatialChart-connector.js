@@ -71,20 +71,20 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                     "dashArray": 5,
                     "color": '#666666',
                     "weight": 1,
-                    "opacity": 0.4,
+                    "opacity": 0.9,
                     "fillColor": '#AAAAAA',
-                    "fillOpacity": 0.2
+                    "fillOpacity": 0.7
                 };
                 L.geoJSON(geoJsonObject, {
                     pointToLayer: function (feature, latlng) {
                         return L.circleMarker(latlng, {
                             dashArray: 5,
-                            radius: 6,
+                            radius: 3,
                             fillColor: '#AAAAAA',
                             color: "#666666",
                             weight: 1,
-                            opacity: 0.5,
-                            fillOpacity: 0.3
+                            opacity: 0.8,
+                            fillOpacity: 0.5
                         });
                     },
                     style:geoStyle
@@ -102,6 +102,7 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                     "fillColor": '#AAAAAA',
                     "fillOpacity": 0.2
                 };
+
                 L.geoJSON(geoJsonObject, {
                     pointToLayer: function (feature, latlng) {
                         return L.circleMarker(latlng, {
@@ -115,6 +116,8 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                     },
                     style:geoStyle
                 }).addTo(map);
+
+
             }
         };
         const mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
