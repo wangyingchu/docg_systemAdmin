@@ -65,16 +65,9 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                     layer.bindPopup(popupContent,{closeButton:false});
                 }
             },
+
             renderCentroidPoint : function(geoJsonStr) {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
-                const geoStyle = {
-                    "dashArray": 5,
-                    "color": '#666666',
-                    "weight": 1,
-                    "opacity": 0.9,
-                    "fillColor": '#AAAAAA',
-                    "fillOpacity": 0.7
-                };
                 L.geoJSON(geoJsonObject, {
                     pointToLayer: function (feature, latlng) {
                         return L.circleMarker(latlng, {
@@ -86,12 +79,29 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                             opacity: 0.8,
                             fillOpacity: 0.5
                         });
-                    },
-                    style:geoStyle
+                    }
                 }).addTo(map);
                 const pointLocation = geoJsonObject.features[0].geometry.coordinates;
                 map.setView([pointLocation[1],pointLocation[0]], 15);
             },
+
+            renderInteriorPoint : function(geoJsonStr) {
+                const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
+                L.geoJSON(geoJsonObject, {
+                    pointToLayer: function (feature, latlng) {
+                        return L.circleMarker(latlng, {
+                            dashArray: 5,
+                            radius: 3,
+                            fillColor: '#AAAAAA',
+                            color: "#000000",
+                            weight: 1,
+                            opacity: 0.8,
+                            fillOpacity: 0.5
+                        });
+                    }
+                }).addTo(map);
+            },
+
             renderEnvelope: function(geoJsonStr) {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
                 const geoStyle = {

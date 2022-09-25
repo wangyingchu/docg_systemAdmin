@@ -114,17 +114,23 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
                                 conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                                 break;
                             case LINESTRING:
+                                if(envelopeAreaWKT != null){
+                                    conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
+                                }
                                 if(centroidPointWKT != null){
                                     conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                }
+                                if(interiorPointWKT != null){
+                                    conceptionEntitySpatialChart.renderInteriorPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
                                 }
                                 conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                                 break;
                             case POLYGON:
-                                if(interiorPointWKT != null){
-                                    conceptionEntitySpatialChart.renderInteriorPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
-                                }
                                 if(envelopeAreaWKT != null){
                                     conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
+                                }
+                                if(interiorPointWKT != null){
+                                    conceptionEntitySpatialChart.renderInteriorPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
                                 }
                                 conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                                 break;
@@ -138,8 +144,14 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
                                 conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                                 break;
                             case MULTILINESTRING:
+                                if(envelopeAreaWKT != null){
+                                    conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
+                                }
                                 if(centroidPointWKT != null){
                                     conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                }
+                                if(interiorPointWKT != null){
+                                    conceptionEntitySpatialChart.renderInteriorPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
                                 }
                                 conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                                 break;
@@ -158,6 +170,9 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
                                 }
                                 if(centroidPointWKT != null){
                                     conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                }
+                                if(interiorPointWKT != null){
+                                    conceptionEntitySpatialChart.renderInteriorPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
                                 }
                                 conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
                         }

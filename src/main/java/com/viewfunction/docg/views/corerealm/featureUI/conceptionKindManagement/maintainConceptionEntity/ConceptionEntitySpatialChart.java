@@ -54,6 +54,13 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
 
     public void renderInteriorPoint(String interiorPointGeoJson){
         this.interiorPointGeoJson = interiorPointGeoJson;
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.renderInteriorPoint", new Serializable[]{(new ObjectMapper()).writeValueAsString(interiorPointGeoJson)});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public void renderEnvelope(String envelopeGeoJson){
@@ -65,7 +72,6 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
                 throw new RuntimeException(e);
             }
         });
-
     }
 
     public void renderEntityContent(GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType,String entityContentGeoJson){
