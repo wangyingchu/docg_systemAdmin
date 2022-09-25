@@ -58,11 +58,11 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                 }).addTo(map);
 
                 function onEachFeature(feature, layer) {
-                    let popupContent = '<p>I started out as a GeoJSON ' + feature.geometry.type + ', but now I\'m a Leaflet vector!</p>';
+                    let popupContent = '<p> '+ feature.geometry.type +'</p>';
                     if (feature.properties && feature.properties.popupContent) {
                         popupContent += feature.properties.popupContent;
                     }
-                    layer.bindPopup(popupContent);
+                    layer.bindPopup(popupContent,{closeButton:false});
                 }
             },
             renderCentroidPoint : function(geoJsonStr) {
