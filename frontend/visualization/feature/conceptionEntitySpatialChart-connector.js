@@ -17,27 +17,24 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                 return geoJsonObject;
             },
 
-            renderPointEntityContent : function(geoJsonStr) {
+            renderPointEntityContent : function(geoJsonStr,conceptionKindName,conceptionEntityUID) {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
-                c.$connector.renderEntityContent(geoJsonObject);
+                c.$connector.renderEntityContent(geoJsonObject,conceptionKindName,conceptionEntityUID);
                 const pointLocation = geoJsonObject.features[0].geometry.coordinates;
                 map.setView([pointLocation[1],pointLocation[0]], 17);
             },
 
-            renderPolygonEntityContent: function(geoJsonStr) {
+            renderPolygonEntityContent: function(geoJsonStr,conceptionKindName,conceptionEntityUID) {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
-                c.$connector.renderEntityContent(geoJsonObject);
+                c.$connector.renderEntityContent(geoJsonObject,conceptionKindName,conceptionEntityUID);
             },
 
-            renderLineEntityContent: function(geoJsonStr) {
+            renderLineEntityContent: function(geoJsonStr,conceptionKindName,conceptionEntityUID) {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
-                c.$connector.renderEntityContent(geoJsonObject);
+                c.$connector.renderEntityContent(geoJsonObject,conceptionKindName,conceptionEntityUID);
             },
 
-            renderEntityContent: function(geoJsonObject) {
-
-                console.log(geoJsonObject)
-
+            renderEntityContent: function(geoJsonObject,conceptionKindName,conceptionEntityUID) {
                 const geoStyle = {
                     "color": '#003472',
                     "weight": 2,
@@ -45,7 +42,7 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                     "fillColor": '#1685a9',
                     "fillOpacity": 0.65
                 };
-                L.geoJSON(geoJsonObject.GeoJson, {
+                L.geoJSON(geoJsonObject, {
                     pointToLayer: function (feature, latlng) {
                         return L.circleMarker(latlng, {
                             radius: 6,
@@ -61,7 +58,7 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                 }).addTo(map);
 
                 function onEachFeature(feature, layer) {
-                    let popupContent = '<p> '+ feature.geometry.type +'</p>';
+                    let popupContent = '<p> '+ conceptionKindName+' - '+conceptionEntityUID+' ('+feature.geometry.type +')</p>';
                     if (feature.properties && feature.properties.popupContent) {
                         popupContent += feature.properties.popupContent;
                     }

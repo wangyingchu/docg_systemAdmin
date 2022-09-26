@@ -82,18 +82,15 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
 
     public void renderEntityContent(GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType,String entityContentGeoJson){
         this.entityContentGeoJson = entityContentGeoJson;
-
-        Map<String,String> conceptionEntityGeoInfo = new HashMap<>();
-        conceptionEntityGeoInfo.put("GeoJson",this.entityContentGeoJson);
-        conceptionEntityGeoInfo.put("ConceptionKind",this.conceptionKindName);
-        conceptionEntityGeoInfo.put("ConceptionEntityUID",this.conceptionEntityUID);
-
         switch (_WKTGeometryType){
             case POINT:
                 runBeforeClientResponse(ui -> {
                     try {
-                        //getElement().callJsFunction("$connector.renderPointEntityContent", new Serializable[]{(new ObjectMapper()).writeValueAsString(entityContentGeoJson)});
-                        getElement().callJsFunction("$connector.renderPointEntityContent", new Serializable[]{(new ObjectMapper()).writeValueAsString(conceptionEntityGeoInfo)});
+                        getElement().callJsFunction("$connector.renderPointEntityContent", new Serializable[]{
+                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
+                        });
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
@@ -102,7 +99,11 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
             case POLYGON:
                 runBeforeClientResponse(ui -> {
                     try {
-                        getElement().callJsFunction("$connector.renderPolygonEntityContent", new Serializable[]{(new ObjectMapper()).writeValueAsString(entityContentGeoJson)});
+                        getElement().callJsFunction("$connector.renderPolygonEntityContent", new Serializable[]{
+                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
+                        });
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
@@ -111,18 +112,37 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
             case LINESTRING:
                 runBeforeClientResponse(ui -> {
                     try {
-                        getElement().callJsFunction("$connector.renderLineEntityContent", new Serializable[]{(new ObjectMapper()).writeValueAsString(entityContentGeoJson)});
+                        getElement().callJsFunction("$connector.renderLineEntityContent", new Serializable[]{
+                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
+                        });
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
                 });
                 break;
             case MULTIPOINT:
+                runBeforeClientResponse(ui -> {
+                    try {
+                        getElement().callJsFunction("$connector.renderPointEntityContent", new Serializable[]{
+                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
+                        });
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
                 break;
             case MULTIPOLYGON:
                 runBeforeClientResponse(ui -> {
                     try {
-                        getElement().callJsFunction("$connector.renderPolygonEntityContent", new Serializable[]{(new ObjectMapper()).writeValueAsString(entityContentGeoJson)});
+                        getElement().callJsFunction("$connector.renderPolygonEntityContent", new Serializable[]{
+                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
+                        });
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
@@ -131,7 +151,11 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
             case MULTILINESTRING:
                 runBeforeClientResponse(ui -> {
                     try {
-                        getElement().callJsFunction("$connector.renderLineEntityContent", new Serializable[]{(new ObjectMapper()).writeValueAsString(entityContentGeoJson)});
+                        getElement().callJsFunction("$connector.renderLineEntityContent", new Serializable[]{
+                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
+                        });
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
