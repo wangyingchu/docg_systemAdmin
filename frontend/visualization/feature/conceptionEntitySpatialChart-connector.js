@@ -35,6 +35,9 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
             },
 
             renderEntityContent: function(geoJsonObject) {
+
+                console.log(geoJsonObject)
+
                 const geoStyle = {
                     "color": '#003472',
                     "weight": 2,
@@ -42,7 +45,7 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                     "fillColor": '#1685a9',
                     "fillOpacity": 0.65
                 };
-                L.geoJSON(geoJsonObject, {
+                L.geoJSON(geoJsonObject.GeoJson, {
                     pointToLayer: function (feature, latlng) {
                         return L.circleMarker(latlng, {
                             radius: 6,

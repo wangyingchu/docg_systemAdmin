@@ -9,6 +9,8 @@ import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 @JavaScript("./visualization/feature/conceptionEntitySpatialChart-connector.js")
 public class ConceptionEntitySpatialChart extends VerticalLayout {
@@ -17,6 +19,8 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
     private String interiorPointGeoJson;
     private String envelopeGeoJson;
     private String entityContentGeoJson;
+    private String conceptionKindName;
+    private String conceptionEntityUID;
 
     public ConceptionEntitySpatialChart(){
         this.setPadding(false);
@@ -37,7 +41,9 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
                 .beforeClientResponse(this, context -> command.accept(ui)));
     }
 
-    public void renderMapAndSpatialInfo(){
+    public void renderMapAndSpatialInfo(String conceptionKindName,String conceptionEntityUID){
+        this.conceptionKindName = conceptionKindName;
+        this.conceptionEntityUID = conceptionEntityUID;
         initConnector();
     }
 
@@ -76,11 +82,18 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
 
     public void renderEntityContent(GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType,String entityContentGeoJson){
         this.entityContentGeoJson = entityContentGeoJson;
+
+        Map<String,String> conceptionEntityGeoInfo = new HashMap<>();
+        conceptionEntityGeoInfo.put("GeoJson",this.entityContentGeoJson);
+        conceptionEntityGeoInfo.put("ConceptionKind",this.conceptionKindName);
+        conceptionEntityGeoInfo.put("ConceptionEntityUID",this.conceptionEntityUID);
+
         switch (_WKTGeometryType){
             case POINT:
                 runBeforeClientResponse(ui -> {
                     try {
-                        getElement().callJsFunction("$connector.renderPointEntityContent", new Serializable[]{(new ObjectMapper()).writeValueAsString(entityContentGeoJson)});
+                        //getElement().callJsFunction("$connector.renderPointEntityContent", new Serializable[]{(new ObjectMapper()).writeValueAsString(entityContentGeoJson)});
+                        getElement().callJsFunction("$connector.renderPointEntityContent", new Serializable[]{(new ObjectMapper()).writeValueAsString(conceptionEntityGeoInfo)});
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }

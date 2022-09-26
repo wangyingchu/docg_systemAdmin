@@ -108,7 +108,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
                         _CRSAIDItem.updateDisplayValue(geometryCRSAID);
                     }
                     if(conceptionEntitySpatialChart != null) {
-                        conceptionEntitySpatialChart.renderMapAndSpatialInfo();
+                        conceptionEntitySpatialChart.renderMapAndSpatialInfo(this.conceptionEntity.getConceptionKindName(),this.conceptionEntity.getConceptionEntityUID());
                         switch (_WKTGeometryType) {
                             case POINT:
                                 conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
