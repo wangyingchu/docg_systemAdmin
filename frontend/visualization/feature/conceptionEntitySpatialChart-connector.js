@@ -92,7 +92,7 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                         return L.circleMarker(latlng, {
                             dashArray: 5,
                             radius: 3,
-                            fillColor: '#AAAAAA',
+                            fillColor: '#444444',
                             color: "#000000",
                             weight: 1,
                             opacity: 0.8,
@@ -126,8 +126,6 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                     },
                     style:geoStyle
                 }).addTo(map);
-
-
             }
         };
         const mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
