@@ -9,8 +9,6 @@ import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 @JavaScript("./visualization/feature/conceptionEntitySpatialChart-connector.js")
 public class ConceptionEntitySpatialChart extends VerticalLayout {
@@ -27,8 +25,8 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
         this.setSpacing(false);
         this.setMargin(false);
         //link to download latest l7 build js: https://unpkg.com/leaflet
-        UI.getCurrent().getPage().addStyleSheet("js/leaflet/1.8.0/dist/leaflet.css");
-        UI.getCurrent().getPage().addJavaScript("js/leaflet/1.8.0/dist/leaflet.js");
+        UI.getCurrent().getPage().addStyleSheet("js/leaflet/1.9.1/dist/leaflet.css");
+        UI.getCurrent().getPage().addJavaScript("js/leaflet/1.9.1/dist/leaflet.js");
     }
 
     private void initConnector() {
