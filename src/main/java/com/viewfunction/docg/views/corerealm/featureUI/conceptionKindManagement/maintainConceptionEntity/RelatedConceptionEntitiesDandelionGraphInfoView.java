@@ -65,11 +65,13 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
                     }
                     //above query does not contain this.conceptionEntityUID, need add it
                     conceptionEntityUIDList.add(this.conceptionEntityUID);
-                    List<RelationEntity> relationEntityList = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionEntityUIDList);
+                    if(conceptionEntityUIDList.size()>=2){
+                        List<RelationEntity> relationEntityList = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionEntityUIDList);
 
-                    RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart =
-                            new RelatedConceptionEntitiesDandelionGraphChart(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
-                    add(relatedConceptionEntitiesDandelionGraphChart);
+                        RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart =
+                                new RelatedConceptionEntitiesDandelionGraphChart(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
+                        add(relatedConceptionEntitiesDandelionGraphChart);
+                    }
                 } catch (CoreRealmServiceEntityExploreException e) {
                     throw new RuntimeException(e);
                 } finally {
