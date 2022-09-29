@@ -33,7 +33,7 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
 
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
-        this.conceptionEntitySpatialInfoViewHeightOffset = conceptionEntitySpatialInfoViewHeightOffset+100;
+        this.conceptionEntitySpatialInfoViewHeightOffset = conceptionEntitySpatialInfoViewHeightOffset+106;
 
         VerticalLayout container = new VerticalLayout();
         container.setPadding(false);
