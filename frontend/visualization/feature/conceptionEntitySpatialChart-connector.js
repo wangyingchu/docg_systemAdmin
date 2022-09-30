@@ -134,7 +134,9 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
         const map = L.map(c,{
             attributionControl:false,
             //layers: [streets]
-            layers: [grayscale]
+            layers: [grayscale],
+            //crs: L.CRS.EPSG4326
+            crs: L.CRS.EPSG3857
         });
 
         let baseLayers = {

@@ -3,9 +3,11 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
 
@@ -14,6 +16,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleC
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.geospatial.GeospatialCalculateUtil;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -30,6 +33,15 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
     private SecondaryKeyValueDisplayItem _WKTGeometryTypeItem;
     private SecondaryKeyValueDisplayItem _CRSAIDItem;
     private ConceptionEntitySpatialChart conceptionEntitySpatialChart;
+    private Button centroidPointWKTButton;
+    private Button interiorPointWKTButton;
+    private Button contentWKTButton;
+    private Button envelopeWKTButton;
+    private String centroidPointWKT;
+    private String interiorPointWKT;
+    private String envelopeAreaWKT;
+    private String geometryContentWKT;
+
     public ConceptionEntitySpatialDetailView(int conceptionEntitySpatialInfoViewHeightOffset){
         this.setPadding(false);
         this.setSpacing(false);
@@ -44,25 +56,64 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         _WKTGeometryTypeItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.VIEWPORT.create(), "地理空间元素类型", "-");
         _CRSAIDItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CROSSHAIRS.create(), "坐标系 CRSAID", "-");
 
+        HorizontalLayout wktControllerContainer = new HorizontalLayout();
+        wktControllerContainer.setSpacing(false);
+        wktControllerContainer.setPadding(false);
+        wktControllerContainer.setMargin(false);
+        secondaryTitleComponentsList.add(wktControllerContainer);
 
-
-
-        Button resetPageIndexButton = new Button();
-        resetPageIndexButton.setIcon(VaadinIcon.ARROW_BACKWARD.create());
-        Tooltips.getCurrent().setTooltip(resetPageIndexButton, "将选中概念实体的关联查询分页重置为第一页");
-        resetPageIndexButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        contentWKTButton = new Button();
+        contentWKTButton.setIcon(VaadinIcon.ELASTIC.create());
+        Tooltips.getCurrent().setTooltip(contentWKTButton, "显示实体空间信息数据");
+        contentWKTButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //conceptionEntityRelationsChart.resetConceptionEntityRelationQueryPageIndex();
-                //currentPageIndexValue.setText("1");
+                renderEntitySpatialWKTInfo("实体 WKT 空间信息",geometryContentWKT);
             }
         });
-        resetPageIndexButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        contentWKTButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        wktControllerContainer.add(contentWKTButton);
 
-        secondaryTitleComponentsList.add(resetPageIndexButton);
+        centroidPointWKTButton = new Button();
+        centroidPointWKTButton.setIcon(VaadinIcon.BULLSEYE.create());
+        Tooltips.getCurrent().setTooltip(centroidPointWKTButton, "显示实体质心空间信息数据");
+        centroidPointWKTButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderEntitySpatialWKTInfo("实体质心 WKT 空间信息",centroidPointWKT);
+            }
+        });
+        centroidPointWKTButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        wktControllerContainer.add(centroidPointWKTButton);
 
+        interiorPointWKTButton = new Button();
+        interiorPointWKTButton.setIcon(VaadinIcon.DOT_CIRCLE.create());
+        Tooltips.getCurrent().setTooltip(interiorPointWKTButton, "显示实体中心点空间信息数据");
+        interiorPointWKTButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderEntitySpatialWKTInfo("实体中心点 WKT 空间信息",interiorPointWKT);
+            }
+        });
+        interiorPointWKTButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        wktControllerContainer.add(interiorPointWKTButton);
 
+        envelopeWKTButton = new Button();
+        envelopeWKTButton.setIcon(VaadinIcon.ABSOLUTE_POSITION.create());
+        Tooltips.getCurrent().setTooltip(envelopeWKTButton, "显示实体包围盒空间信息数据");
+        envelopeWKTButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderEntitySpatialWKTInfo("实体包围盒 WKT 空间信息",envelopeAreaWKT);
+            }
+        });
+        envelopeWKTButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        wktControllerContainer.add(envelopeWKTButton);
 
+        contentWKTButton.setEnabled(false);
+        interiorPointWKTButton.setEnabled(false);
+        centroidPointWKTButton.setEnabled(false);
+        envelopeWKTButton.setEnabled(false);
 
         Icon spatialInfoIcon = VaadinIcon.LOCATION_ARROW_CIRCLE_O.create();
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(spatialInfoIcon, "地理空间信息概要: ", secondaryTitleComponentsList, actionComponentsList);
@@ -107,97 +158,119 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
             GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = this.conceptionEntity.getGeometryType();
             if(_WKTGeometryType != null) {
                 try {
-                    String centroidPointWKT = conceptionEntity.getEntitySpatialCentroidPointWKTGeometryContent(this.spatialScaleLevel);
-                    String interiorPointWKT = conceptionEntity.getEntitySpatialInteriorPointWKTGeometryContent(this.spatialScaleLevel);
-                    String envelopeAreaWKT = conceptionEntity.getEntitySpatialEnvelopeWKTGeometryContent(this.spatialScaleLevel);
+                    centroidPointWKT = conceptionEntity.getEntitySpatialCentroidPointWKTGeometryContent(this.spatialScaleLevel);
+                    interiorPointWKT = conceptionEntity.getEntitySpatialInteriorPointWKTGeometryContent(this.spatialScaleLevel);
+                    envelopeAreaWKT = conceptionEntity.getEntitySpatialEnvelopeWKTGeometryContent(this.spatialScaleLevel);
 
                     _WKTGeometryTypeItem.updateDisplayValue(_WKTGeometryType.name());
-                    String geometryContent = null;
+                    geometryContentWKT = null;
                     String geometryCRSAID = null;
                     switch (this.spatialScaleLevel) {
                         case Local:
-                            geometryContent = this.conceptionEntity.getLLGeometryContent();
+                            geometryContentWKT = this.conceptionEntity.getLLGeometryContent();
                             geometryCRSAID = this.conceptionEntity.getLocalCRSAID();
                             break;
                         case Global:
-                            geometryContent = this.conceptionEntity.getGLGeometryContent();
+                            geometryContentWKT = this.conceptionEntity.getGLGeometryContent();
                             geometryCRSAID = this.conceptionEntity.getGlobalCRSAID();
                             break;
                         case Country:
-                            geometryContent = this.conceptionEntity.getCLGeometryContent();
+                            geometryContentWKT = this.conceptionEntity.getCLGeometryContent();
                             geometryCRSAID = this.conceptionEntity.getCountryCRSAID();
                     }
-                    if(geometryContent != null && geometryCRSAID != null) {
+                    if(geometryContentWKT != null && geometryCRSAID != null) {
                         _CRSAIDItem.updateDisplayValue(geometryCRSAID);
                     }
                     if(conceptionEntitySpatialChart != null) {
                         conceptionEntitySpatialChart.renderMapAndSpatialInfo(this.conceptionEntity.getConceptionKindName(),this.conceptionEntity.getConceptionEntityUID());
                         switch (_WKTGeometryType) {
                             case POINT:
-                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
+                                contentWKTButton.setEnabled(true);
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT));
                                 break;
                             case LINESTRING:
+                                contentWKTButton.setEnabled(true);
                                 if(envelopeAreaWKT != null){
+                                    envelopeWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
                                 }
                                 if(centroidPointWKT != null){
+                                    centroidPointWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
                                 }
                                 if(interiorPointWKT != null){
+                                    interiorPointWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderInteriorPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
                                 }
-                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT));
                                 break;
                             case POLYGON:
+                                contentWKTButton.setEnabled(true);
                                 if(envelopeAreaWKT != null){
+                                    envelopeWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
                                 }
                                 if(interiorPointWKT != null){
+                                    interiorPointWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderInteriorPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
                                 }
-                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT));
                                 break;
                             case MULTIPOINT:
+                                contentWKTButton.setEnabled(true);
                                 if(envelopeAreaWKT != null){
+                                    envelopeWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
                                 }
                                 if(centroidPointWKT != null){
+                                    centroidPointWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
                                 }
-                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT));
                                 break;
                             case MULTILINESTRING:
+                                contentWKTButton.setEnabled(true);
                                 if(envelopeAreaWKT != null){
+                                    envelopeWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
                                 }
                                 if(centroidPointWKT != null){
+                                    centroidPointWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
                                 }
                                 if(interiorPointWKT != null){
+                                    interiorPointWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderInteriorPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
                                 }
-                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT));
                                 break;
                             case MULTIPOLYGON:
+                                contentWKTButton.setEnabled(true);
                                 if(envelopeAreaWKT != null){
+                                    envelopeWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
                                 }
                                 if(centroidPointWKT != null){
+                                    centroidPointWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
                                 }
-                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT));
                                 break;
                             case GEOMETRYCOLLECTION:
+                                contentWKTButton.setEnabled(true);
                                 if(envelopeAreaWKT != null){
+                                    envelopeWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
                                 }
                                 if(centroidPointWKT != null){
+                                    centroidPointWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
                                 }
                                 if(interiorPointWKT != null){
+                                    interiorPointWKTButton.setEnabled(true);
                                     conceptionEntitySpatialChart.renderInteriorPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
                                 }
-                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContent));
+                                conceptionEntitySpatialChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT));
                         }
                     }
                 } catch (CoreRealmServiceRuntimeException e) {
@@ -214,5 +287,14 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
             return resultGeoJson;
         }
         return null;
+    }
+
+    private void renderEntitySpatialWKTInfo(String wktType,String wktValue){
+        Span wktSpan = new Span(wktValue);
+        Scroller scroller = new Scroller(wktSpan);
+        scroller.setHeight(350,Unit.PIXELS);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.ELASTIC),wktType,null,true,600,430,false);
+        fixSizeWindow.setWindowContent(scroller);
+        fixSizeWindow.show();
     }
 }
