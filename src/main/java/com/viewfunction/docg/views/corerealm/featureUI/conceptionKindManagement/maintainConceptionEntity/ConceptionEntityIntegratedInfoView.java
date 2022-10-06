@@ -17,8 +17,11 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
     private ConceptionEntityRelationInfoView conceptionEntityRelationInfoView;
     private ConceptionEntityRelationTopologyView conceptionEntityRelationTopologyView;
     private ConceptionEntitySpatialInfoView conceptionEntitySpatialInfoView;
+
+    private ConceptionEntityTemporalInfoView conceptionEntityTemporalInfoView;
     private boolean conceptionEntityRelationTopologyViewFirstRendered = false;
     private boolean conceptionEntitySpatialInfoViewFirstRendered = false;
+    private boolean conceptionEntityTemporalInfoViewFirstRendered = false;
 
     public ConceptionEntityIntegratedInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset){
         this.conceptionKind = conceptionKind;
@@ -33,6 +36,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         this.conceptionEntityRelationInfoView = new ConceptionEntityRelationInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
         this.conceptionEntityRelationTopologyView = new ConceptionEntityRelationTopologyView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
         this.conceptionEntitySpatialInfoView = new ConceptionEntitySpatialInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
+        this.conceptionEntityTemporalInfoView = new ConceptionEntityTemporalInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
 
         Tab tab0 = tabs.add("", conceptionEntityRelationInfoView,false);
         Span relationInfoSpan =new Span();
@@ -58,7 +62,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         earthMapSpan.add(earthMapIcon,earthMapLabel);
         tab2.add(earthMapSpan);
 
-        Tab tab3 = tabs.add("", new Label("4"),false);
+        Tab tab3 = tabs.add("", conceptionEntityTemporalInfoView,false);
         Span timeChartSpan =new Span();
         Icon timeChartIcon = new Icon(VaadinIcon.CALENDAR_CLOCK);
         timeChartIcon.setSize("20px");
@@ -81,6 +85,12 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
                     if(!conceptionEntitySpatialInfoViewFirstRendered){
                         conceptionEntitySpatialInfoViewFirstRendered = true;
                         conceptionEntitySpatialInfoView.renderEntitySpatialInfo();
+                    }
+                }
+                if(tab.equals(tab3)){
+                    if(!conceptionEntityTemporalInfoViewFirstRendered){
+                        conceptionEntityTemporalInfoViewFirstRendered = true;
+                        conceptionEntityTemporalInfoView.renderEntityTemporalInfo();
                     }
                 }
             }
