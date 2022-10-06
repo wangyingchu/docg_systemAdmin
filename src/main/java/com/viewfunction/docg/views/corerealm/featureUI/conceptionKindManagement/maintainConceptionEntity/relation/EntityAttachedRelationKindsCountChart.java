@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
+package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.relation;
 
 import com.github.appreciated.apexcharts.ApexChartsBuilder;
 import com.github.appreciated.apexcharts.config.Stroke;

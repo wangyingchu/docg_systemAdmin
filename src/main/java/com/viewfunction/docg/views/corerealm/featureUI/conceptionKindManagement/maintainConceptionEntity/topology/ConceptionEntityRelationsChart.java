@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
+package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +20,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeEdgePayload;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeNodePayload;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityRelationTopologyView;
 
 import java.io.Serializable;
 import java.util.*;

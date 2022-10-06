@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
+package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology;
 
 import com.github.appreciated.apexcharts.ApexCharts;
 
@@ -16,6 +16,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.relation.EntityAttachedConceptionKindsCountChart;
 
 import java.util.*;
 

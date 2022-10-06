@@ -32,6 +32,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import com.viewfunction.docg.util.ResourceHolder;
 
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.relation.EntityAttachedRelationKindsCountChart;
 import dev.mett.vaadin.tooltip.Tooltips;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.DeleteRelationEntityView;
 

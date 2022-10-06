@@ -11,6 +11,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.ConceptionEntityRelationsChart;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.EntitySyntheticAbstractInfoView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.RelatedConceptionEntitiesDandelionGraphInfoView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.RelatedConceptionEntitiesKindStaticInfoView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;

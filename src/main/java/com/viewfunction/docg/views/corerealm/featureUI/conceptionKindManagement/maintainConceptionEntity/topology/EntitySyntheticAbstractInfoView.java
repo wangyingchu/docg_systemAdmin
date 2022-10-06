@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
+package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
@@ -21,6 +21,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
