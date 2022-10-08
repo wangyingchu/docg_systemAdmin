@@ -45,9 +45,9 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
         add(temporalEntityAndChartContainer);
 
         conceptionEntityTemporalDataView = new ConceptionEntityTemporalDataView();
-        conceptionEntityTemporalSunburstChart = new ConceptionEntityTemporalSunburstChart();
+        conceptionEntityTemporalSunburstChart = new ConceptionEntityTemporalSunburstChart();temporalEntityAndChartContainer.add(conceptionEntityTemporalSunburstChart);
         temporalEntityAndChartContainer.add(conceptionEntityTemporalDataView);
-        temporalEntityAndChartContainer.add(conceptionEntityTemporalSunburstChart);
+
         temporalEntityAndChartContainer.setFlexGrow(1,conceptionEntityTemporalDataView);
 
         conceptionEntityTemporalTimelineChart = new ConceptionEntityTemporalTimelineChart();
