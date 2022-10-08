@@ -24,7 +24,7 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
         this.setPadding(false);
         this.setSpacing(false);
         this.setMargin(false);
-        //link to download latest l7 build js: https://unpkg.com/leaflet
+        //link to download latest leaflet build js: https://unpkg.com/leaflet
         UI.getCurrent().getPage().addStyleSheet("js/leaflet/1.9.1/dist/leaflet.css");
         UI.getCurrent().getPage().addJavaScript("js/leaflet/1.9.1/dist/leaflet.js");
     }
