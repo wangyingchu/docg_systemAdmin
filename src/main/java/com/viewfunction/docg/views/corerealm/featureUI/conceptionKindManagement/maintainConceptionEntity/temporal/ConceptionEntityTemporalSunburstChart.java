@@ -17,12 +17,12 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
     private List<TimeScaleDataPair> timeScaleDataPairList;
 
     public ConceptionEntityTemporalSunburstChart(){
-        this.setWidth(600,Unit.PIXELS);
+        this.setWidth(400,Unit.PIXELS);
         this.setHeight(500,Unit.PIXELS);
         UI.getCurrent().getPage().addJavaScript("js/amcharts/5.2.29/index.js");
         UI.getCurrent().getPage().addJavaScript("js/amcharts/5.2.29/hierarchy.js");
         UI.getCurrent().getPage().addJavaScript("js/amcharts/5.2.29/themes/Animated.js");
-        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.PIE_CHART.create(), "时间序列关联信息");
+        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.PIE_CHART.create(), "时间序列关联统计信息");
         add(secondaryIconTitle);
     }
 

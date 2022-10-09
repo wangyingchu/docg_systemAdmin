@@ -33,6 +33,7 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
         this.setPadding(false);
         this.setSpacing(false);
         this.setMargin(false);
+        this.setWidthFull();
 
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
@@ -45,7 +46,8 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
         add(temporalEntityAndChartContainer);
 
         conceptionEntityTemporalDataView = new ConceptionEntityTemporalDataView();
-        conceptionEntityTemporalSunburstChart = new ConceptionEntityTemporalSunburstChart();temporalEntityAndChartContainer.add(conceptionEntityTemporalSunburstChart);
+        conceptionEntityTemporalSunburstChart = new ConceptionEntityTemporalSunburstChart();
+        temporalEntityAndChartContainer.add(conceptionEntityTemporalSunburstChart);
         temporalEntityAndChartContainer.add(conceptionEntityTemporalDataView);
 
         temporalEntityAndChartContainer.setFlexGrow(1,conceptionEntityTemporalDataView);

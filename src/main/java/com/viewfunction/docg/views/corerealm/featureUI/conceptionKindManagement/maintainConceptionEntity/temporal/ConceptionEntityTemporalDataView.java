@@ -16,6 +16,8 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
     private List<TimeScaleDataPair> timeScaleDataPairList;
 
     public ConceptionEntityTemporalDataView(){
+
+        this.getStyle().set("padding-left","50px");
         SecondaryIconTitle secondaryIconTitle2 = new SecondaryIconTitle(VaadinIcon.LIST_SELECT.create(), "时间序列关联信息");
         add(secondaryIconTitle2);
 
