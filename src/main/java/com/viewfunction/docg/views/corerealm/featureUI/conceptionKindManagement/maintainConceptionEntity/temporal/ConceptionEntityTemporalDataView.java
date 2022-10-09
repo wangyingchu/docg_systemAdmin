@@ -16,13 +16,12 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
     private List<TimeScaleDataPair> timeScaleDataPairList;
 
     public ConceptionEntityTemporalDataView(){
-
         this.getStyle().set("padding-left","50px");
-        SecondaryIconTitle secondaryIconTitle2 = new SecondaryIconTitle(VaadinIcon.LIST_SELECT.create(), "时间序列关联信息");
-        add(secondaryIconTitle2);
+        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.LIST_SELECT.create(), "时间序列关联信息");
+        add(secondaryIconTitle);
 
         Accordion accordion = new Accordion();
-        accordion.setWidth(95,Unit.PERCENTAGE);
+        accordion.setWidth(100,Unit.PERCENTAGE);
 
         Span name = new Span("Sophia Williams");
         Span email = new Span("sophia.williams@company.com");
@@ -32,9 +31,6 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
         personalInformationLayout.setSpacing(false);
         personalInformationLayout.setPadding(false);
         personalInformationLayout.setWidth(100, Unit.PERCENTAGE);
-        //personalInformationLayout.getStyle()
-            //    .set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
-
         accordion.add("Personal information", personalInformationLayout);
 
         VerticalLayout personalInformationLayout2 = new VerticalLayout(new Span("aaa"),new Span("aaa"), new Span("aaa"));
