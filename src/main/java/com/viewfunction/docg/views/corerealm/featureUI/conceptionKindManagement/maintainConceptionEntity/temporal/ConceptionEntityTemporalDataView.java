@@ -17,7 +17,7 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
 
     public ConceptionEntityTemporalDataView(){
         this.getStyle().set("padding-left","50px");
-        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.LIST_SELECT.create(), "时间序列关联信息");
+        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.LIST_SELECT.create(), "关联时间序列事件信息");
         add(secondaryIconTitle);
 
         Accordion accordion = new Accordion();

@@ -97,6 +97,14 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
                     }]
             }]);
             series.appear(1000, 100);
+
+            let legend = container.children.push(am5.Legend.new(root, {
+                centerX: am5.percent(50),
+                x: am5.percent(50),
+                layout: root.gridLayout
+            }));
+
+            legend.data.setAll(series.dataItems[0].get("children"));
         });
     }
 }
