@@ -3,6 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -88,9 +89,16 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
                 ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
                 if(targetEntity != null){
                     List<TimeScaleDataPair> timeScaleDataPairList = targetEntity.getAttachedTimeScaleDataPairs();
-                    conceptionEntityTemporalTimelineChart.renderTemporalTimelineInfo(timeScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
-                    conceptionEntityTemporalDataView.renderTemporalDataInfo(timeScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
-                    conceptionEntityTemporalSunburstChart.renderTemporalSunburstInfo(timeScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
+                    if(timeScaleDataPairList == null || timeScaleDataPairList.size() == 0){
+                        conceptionEntityTemporalTimelineChart.setVisible(false);
+                        conceptionEntityTemporalDataView.setVisible(false);
+                        conceptionEntityTemporalSunburstChart.setVisible(false);
+                        CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中不包含时间序列相关信息", NotificationVariant.LUMO_CONTRAST,5000, Notification.Position.MIDDLE);
+                    }else{
+                        conceptionEntityTemporalTimelineChart.renderTemporalTimelineInfo(timeScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
+                        conceptionEntityTemporalDataView.renderTemporalDataInfo(timeScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
+                        conceptionEntityTemporalSunburstChart.renderTemporalSunburstInfo(timeScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
+                    }
                 }else{
                     CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
                 }
