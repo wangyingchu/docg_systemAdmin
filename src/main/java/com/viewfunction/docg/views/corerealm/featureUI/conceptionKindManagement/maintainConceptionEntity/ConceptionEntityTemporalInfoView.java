@@ -60,7 +60,7 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             temporalEntityAndChartContainer.setHeight(event.getHeight()-this.conceptionEntityTemporalInfoViewHeightOffset-140, Unit.PIXELS);
             conceptionEntityTemporalSunburstChart.setHeight(event.getHeight()-this.conceptionEntityTemporalInfoViewHeightOffset-180, Unit.PIXELS);
-            conceptionEntityTemporalDataView.setWidth(event.getWidth() - 820,Unit.PIXELS);
+            conceptionEntityTemporalDataView.setWidth(event.getWidth() - 790,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -68,7 +68,7 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
             int browserWidth = receiver.getBodyClientWidth();
             temporalEntityAndChartContainer.setHeight(browserHeight-this.conceptionEntityTemporalInfoViewHeightOffset-140,Unit.PIXELS);
             conceptionEntityTemporalSunburstChart.setHeight(browserHeight-this.conceptionEntityTemporalInfoViewHeightOffset-180,Unit.PIXELS);
-            conceptionEntityTemporalDataView.setWidth(browserWidth - 820,Unit.PIXELS);
+            conceptionEntityTemporalDataView.setWidth(browserWidth - 790,Unit.PIXELS);
         }));
     }
 
@@ -91,7 +91,6 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
                     conceptionEntityTemporalTimelineChart.renderTemporalTimelineInfo(timeScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
                     conceptionEntityTemporalDataView.renderTemporalDataInfo(timeScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
                     conceptionEntityTemporalSunburstChart.renderTemporalSunburstInfo(timeScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
-
                 }else{
                     CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
                 }
