@@ -16,7 +16,7 @@ public class TemporalEventDetailWidget extends VerticalLayout {
         this.timeScaleEvent = timeScaleEvent;
         this.timeScaleEntity = timeScaleEntity;
 
-        List<AttributeValue>  attributeValueList = timeScaleEvent.getAttributes();
+        List<AttributeValue> attributeValueList = timeScaleEvent.getAttributes();
         List<Classification> classificationList = timeScaleEvent.getAttachedClassifications(null,null);
     }
 }
