@@ -16,6 +16,8 @@ import dev.mett.vaadin.tooltip.Tooltips;
 public class AttributeValueInfoWidget extends HorizontalLayout {
 
     public AttributeValueInfoWidget(AttributeValue attributeValue){
+        this.setWidthFull();
+        this.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-10pct)");
         String attributeName = attributeValue.getAttributeName();
         Object attributeNameValue = attributeValue.getAttributeValue();
         AttributeDataType attributeDataType = attributeValue.getAttributeDataType();
