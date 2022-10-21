@@ -20,14 +20,14 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.spatial.ConceptionEntitySpatialDetailView;
 import org.vaadin.tabs.PagedTabs;
 
-public class ConceptionEntitySpatialInfoView extends VerticalLayout {
+public class ConceptionEntitySpatialAttributeView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
     private int conceptionEntitySpatialInfoViewHeightOffset;
     private ConceptionEntitySpatialDetailView globalConceptionEntitySpatialDetailView;
     private ConceptionEntitySpatialDetailView countryConceptionEntitySpatialDetailView;
     private ConceptionEntitySpatialDetailView localConceptionEntitySpatialDetailView;
-    public ConceptionEntitySpatialInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntitySpatialInfoViewHeightOffset){
+    public ConceptionEntitySpatialAttributeView(String conceptionKind, String conceptionEntityUID, int conceptionEntitySpatialInfoViewHeightOffset){
         this.setPadding(false);
         this.setSpacing(false);
         this.setMargin(false);
