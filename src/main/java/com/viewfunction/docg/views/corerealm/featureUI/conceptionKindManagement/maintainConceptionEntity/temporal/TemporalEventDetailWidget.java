@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.temporal;
 
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
@@ -17,6 +18,18 @@ public class TemporalEventDetailWidget extends VerticalLayout {
         this.timeScaleEntity = timeScaleEntity;
 
         List<AttributeValue> attributeValueList = timeScaleEvent.getAttributes();
-        List<Classification> classificationList = timeScaleEvent.getAttachedClassifications(null,null);
+        if(attributeValueList != null){
+            for(AttributeValue currentAttributeValue:attributeValueList){
+                currentAttributeValue.getAttributeName();
+                currentAttributeValue.getAttributeValue();
+                currentAttributeValue.getAttributeDataType();
+                Label label = new Label(currentAttributeValue.getAttributeName()+":"+currentAttributeValue.getAttributeValue());
+                add(label);
+            }
+        }
+
+
+
+        //List<Classification> classificationList = timeScaleEvent.getAttachedClassifications(null,null);
     }
 }
