@@ -6,6 +6,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEvent;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.common.AttributeValueInfoWidget;
 
 import java.util.List;
 
@@ -25,6 +26,8 @@ public class TemporalEventDetailWidget extends VerticalLayout {
                 currentAttributeValue.getAttributeDataType();
                 Label label = new Label(currentAttributeValue.getAttributeName()+":"+currentAttributeValue.getAttributeValue());
                 add(label);
+                AttributeValueInfoWidget attributeValueInfoWidget = new AttributeValueInfoWidget();
+                add(attributeValueInfoWidget);
             }
         }
 
