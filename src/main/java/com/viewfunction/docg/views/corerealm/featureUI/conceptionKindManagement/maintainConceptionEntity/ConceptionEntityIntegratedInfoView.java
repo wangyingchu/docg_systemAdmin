@@ -74,8 +74,8 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
 
         Tab tab4 = tabs.add("", conceptionEntitySpatialInfoView,false);
         Span spatialInfoSpan =new Span();
-        Icon spatialInfoIcon = new Icon(VaadinIcon.CALENDAR_CLOCK);
-        spatialInfoIcon.setSize("20px");
+        Icon spatialInfoIcon = new Icon(VaadinIcon.MAP_MARKER);
+        spatialInfoIcon.setSize("18px");
         Label spatialInfoLabel = new Label(" 实体地理空间相关信息");
         spatialInfoSpan.add(spatialInfoIcon,spatialInfoLabel);
         tab4.add(spatialInfoSpan);
