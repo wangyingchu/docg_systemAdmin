@@ -18,6 +18,8 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
     private ConceptionEntityRelationTopologyView conceptionEntityRelationTopologyView;
     private ConceptionEntitySpatialAttributeView conceptionEntitySpatialAttributeView;
     private ConceptionEntityTemporalInfoView conceptionEntityTemporalInfoView;
+
+    private ConceptionEntitySpatialInfoView conceptionEntitySpatialInfoView;
     private boolean conceptionEntityRelationTopologyViewFirstRendered = false;
     private boolean conceptionEntitySpatialInfoViewFirstRendered = false;
     private boolean conceptionEntityTemporalInfoViewFirstRendered = false;
@@ -36,6 +38,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         this.conceptionEntityRelationTopologyView = new ConceptionEntityRelationTopologyView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
         this.conceptionEntitySpatialAttributeView = new ConceptionEntitySpatialAttributeView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
         this.conceptionEntityTemporalInfoView = new ConceptionEntityTemporalInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
+        this.conceptionEntitySpatialInfoView = new ConceptionEntitySpatialInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
 
         Tab tab0 = tabs.add("", conceptionEntityRelationInfoView,false);
         Span relationInfoSpan =new Span();
@@ -68,6 +71,14 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         Label timeChartLabel = new Label(" 实体时间序列相关信息");
         timeChartSpan.add(timeChartIcon,timeChartLabel);
         tab3.add(timeChartSpan);
+
+        Tab tab4 = tabs.add("", conceptionEntitySpatialInfoView,false);
+        Span spatialInfoSpan =new Span();
+        Icon spatialInfoIcon = new Icon(VaadinIcon.CALENDAR_CLOCK);
+        spatialInfoIcon.setSize("20px");
+        Label spatialInfoLabel = new Label(" 实体地理空间相关信息");
+        spatialInfoSpan.add(spatialInfoIcon,spatialInfoLabel);
+        tab4.add(spatialInfoSpan);
 
         add(tabs,container);
 
