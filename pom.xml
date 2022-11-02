@@ -13,6 +13,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <vaadin.version>23.2.6</vaadin.version>
+        <neo4j.version>5.2.0</neo4j.version>
     </properties>
 
     <parent>
@@ -266,10 +267,17 @@
             <version>1.14.3</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.neo4j.driver/neo4j-java-driver -->
+        <dependency>
+            <groupId>org.neo4j.driver</groupId>
+            <artifactId>neo4j-java-driver</artifactId>
+            <version>${neo4j.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.viewfunction</groupId>
             <artifactId>docg_coreRealm</artifactId>
-            <version>0.5</version>
+            <version>1.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
