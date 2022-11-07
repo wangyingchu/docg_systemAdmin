@@ -3,6 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -41,6 +42,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
     private String interiorPointWKT;
     private String envelopeAreaWKT;
     private String geometryContentWKT;
+    private HorizontalLayout doesNotContainsSpatialInfoMessage;
 
     public ConceptionEntitySpatialDetailView(int conceptionEntitySpatialInfoViewHeightOffset){
         this.setPadding(false);
@@ -119,6 +121,21 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(spatialInfoIcon, "地理空间信息概要: ", secondaryTitleComponentsList, actionComponentsList);
         secondaryTitleActionBar.getStyle().set("padding-top","10px");
         add(secondaryTitleActionBar);
+
+        doesNotContainsSpatialInfoMessage = new HorizontalLayout();
+        doesNotContainsSpatialInfoMessage.setSpacing(true);
+        doesNotContainsSpatialInfoMessage.setPadding(true);
+        doesNotContainsSpatialInfoMessage.setMargin(true);
+        doesNotContainsSpatialInfoMessage.setWidth(100,Unit.PERCENTAGE);
+        doesNotContainsSpatialInfoMessage.setHeight(300,Unit.PIXELS);
+        Icon messageLogo = new Icon(VaadinIcon.MAILBOX);
+        messageLogo.getStyle()
+                .set("color","#2e4e7e").set("padding-right", "5px");
+        messageLogo.setSize("30px");
+        Label messageLabel = new Label(" 当前概念实体中不包含本类型地理空间信息");
+        messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
+        doesNotContainsSpatialInfoMessage.add(messageLogo,messageLabel);
+        add(doesNotContainsSpatialInfoMessage);
     }
 
     @Override
@@ -136,6 +153,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
             conceptionEntitySpatialChart.setHeight(browserHeight-this.conceptionEntitySpatialInfoViewHeightOffset,Unit.PIXELS);
         }));
         add(conceptionEntitySpatialChart);
+        conceptionEntitySpatialChart.setVisible(false);
     }
 
     @Override
@@ -155,6 +173,8 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
 
     public void renderEntitySpatialDetailInfo() {
         if (this.conceptionEntity != null && this.spatialScaleLevel != null) {
+            doesNotContainsSpatialInfoMessage.setVisible(false);
+            conceptionEntitySpatialChart.setVisible(true);
             GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = this.conceptionEntity.getGeometryType();
             if(_WKTGeometryType != null) {
                 try {

@@ -96,7 +96,7 @@ public class ConceptionEntitySpatialAttributeView extends VerticalLayout {
                     String _CLGeometryContent = targetEntity.getCLGeometryContent();
                     String _LLGeometryContent = targetEntity.getLLGeometryContent();
                     if(_GLGeometryContent == null & _CLGeometryContent == null & _LLGeometryContent == null){
-                        CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中不包含地理空间信息", NotificationVariant.LUMO_CONTRAST,5000, Notification.Position.MIDDLE);
+                        CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中不包含地理空间信息", NotificationVariant.LUMO_CONTRAST,5000, Notification.Position.BOTTOM_START);
                     }else{
                         if(_GLGeometryContent != null){
                             globalConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
