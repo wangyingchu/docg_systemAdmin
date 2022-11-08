@@ -3,6 +3,9 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -30,6 +33,7 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
     private ConceptionEntityTemporalSunburstChart conceptionEntityTemporalSunburstChart;
     private Registration listener;
     private HorizontalLayout temporalEntityAndChartContainer;
+    private HorizontalLayout doesNotContainsTemporalInfoMessage;
     public ConceptionEntityTemporalInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityTemporalInfoViewHeightOffset){
         this.setPadding(false);
         this.setSpacing(false);
@@ -39,6 +43,21 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
         this.conceptionEntityTemporalInfoViewHeightOffset = conceptionEntityTemporalInfoViewHeightOffset+106;
+
+        doesNotContainsTemporalInfoMessage = new HorizontalLayout();
+        doesNotContainsTemporalInfoMessage.setSpacing(true);
+        doesNotContainsTemporalInfoMessage.setPadding(true);
+        doesNotContainsTemporalInfoMessage.setMargin(true);
+        doesNotContainsTemporalInfoMessage.setWidth(100,Unit.PERCENTAGE);
+        doesNotContainsTemporalInfoMessage.setHeight(300,Unit.PIXELS);
+        Icon messageLogo = new Icon(VaadinIcon.MAILBOX);
+        messageLogo.getStyle()
+                .set("color","#2e4e7e").set("padding-right", "5px");
+        messageLogo.setSize("30px");
+        Label messageLabel = new Label(" 当前概念实体中不包含时间序列相关信息");
+        messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
+        doesNotContainsTemporalInfoMessage.add(messageLogo,messageLabel);
+        add(doesNotContainsTemporalInfoMessage);
 
         temporalEntityAndChartContainer = new HorizontalLayout();
         temporalEntityAndChartContainer.setPadding(false);
@@ -53,6 +72,9 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
 
         conceptionEntityTemporalTimelineChart = new ConceptionEntityTemporalTimelineChart();
         add(conceptionEntityTemporalTimelineChart);
+
+        temporalEntityAndChartContainer.setVisible(false);
+        conceptionEntityTemporalTimelineChart.setVisible(false);
     }
 
     @Override
@@ -93,8 +115,12 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
                         conceptionEntityTemporalTimelineChart.setVisible(false);
                         conceptionEntityTemporalDataView.setVisible(false);
                         conceptionEntityTemporalSunburstChart.setVisible(false);
-                        CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中不包含时间序列相关信息", NotificationVariant.LUMO_CONTRAST,5000, Notification.Position.MIDDLE);
+                        CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中不包含时间序列相关信息", NotificationVariant.LUMO_CONTRAST,5000, Notification.Position.BOTTOM_START);
                     }else{
+                        doesNotContainsTemporalInfoMessage.setVisible(false);
+                        temporalEntityAndChartContainer.setVisible(true);
+                        conceptionEntityTemporalTimelineChart.setVisible(true);
+
                         conceptionEntityTemporalTimelineChart.renderTemporalTimelineInfo(timeScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
                         conceptionEntityTemporalDataView.renderTemporalDataInfo(timeScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
                         conceptionEntityTemporalSunburstChart.renderTemporalSunburstInfo(timeScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
