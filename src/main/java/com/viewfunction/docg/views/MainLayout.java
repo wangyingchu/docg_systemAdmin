@@ -5,10 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.github.wolfie.blackboard.Blackboard;
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentUtil;
-import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Image;
@@ -103,8 +100,11 @@ public class MainLayout extends AppLayout {
         HorizontalLayout logoLayout = new HorizontalLayout();
         logoLayout.setId("logo");
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-        logoLayout.add(new Image("images/logo.png", "DOCG-SAC logo"));
-        logoLayout.add(new H1("DOCG-SAC"));
+        Image image = new Image("images/logo.png","DOCG-SAC logo");
+        image.setHeight(39, Unit.PIXELS);
+        image.setWidth(39, Unit.PIXELS);
+        logoLayout.add(image);
+        logoLayout.add(new H1(" 数海云图"));
         layout.add(logoLayout, menu);
         return layout;
     }
