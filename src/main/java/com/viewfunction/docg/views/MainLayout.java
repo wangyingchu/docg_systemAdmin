@@ -102,9 +102,9 @@ public class MainLayout extends AppLayout {
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         Image image = new Image("images/logo.png","DOCG-SAC logo");
         image.setHeight(39, Unit.PIXELS);
-        image.setWidth(39, Unit.PIXELS);
+        image.setWidth(128, Unit.PIXELS);
         logoLayout.add(image);
-        logoLayout.add(new H1(" 数海云图"));
+        //logoLayout.add(new H1(" SAC"));
         layout.add(logoLayout, menu);
         return layout;
     }
