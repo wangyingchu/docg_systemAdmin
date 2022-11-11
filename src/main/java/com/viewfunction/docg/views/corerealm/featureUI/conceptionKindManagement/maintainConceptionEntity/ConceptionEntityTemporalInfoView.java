@@ -83,7 +83,7 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             temporalEntityAndChartContainer.setHeight(event.getHeight()-this.conceptionEntityTemporalInfoViewHeightOffset-140, Unit.PIXELS);
             conceptionEntityTemporalSunburstChart.setHeight(event.getHeight()-this.conceptionEntityTemporalInfoViewHeightOffset-180, Unit.PIXELS);
-            conceptionEntityTemporalDataView.setWidth(event.getWidth() - 800,Unit.PIXELS);
+            conceptionEntityTemporalDataView.setWidth(event.getWidth() - 820,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -91,7 +91,7 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
             int browserWidth = receiver.getBodyClientWidth();
             temporalEntityAndChartContainer.setHeight(browserHeight-this.conceptionEntityTemporalInfoViewHeightOffset-140,Unit.PIXELS);
             conceptionEntityTemporalSunburstChart.setHeight(browserHeight-this.conceptionEntityTemporalInfoViewHeightOffset-180,Unit.PIXELS);
-            conceptionEntityTemporalDataView.setWidth(browserWidth - 800,Unit.PIXELS);
+            conceptionEntityTemporalDataView.setWidth(browserWidth - 820,Unit.PIXELS);
         }));
     }
 
