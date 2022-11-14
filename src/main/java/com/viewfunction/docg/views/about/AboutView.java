@@ -6,7 +6,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
 import com.viewfunction.docg.views.MainLayout;
 
-@PageTitle("关于 [ About ]")
+@PageTitle("数海云图 - 关于 [ About ]")
 @Route(value = "about", layout = MainLayout.class)
 public class AboutView extends Div {
 
