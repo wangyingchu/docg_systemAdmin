@@ -194,7 +194,9 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         attributeValueInfoContainerLayout.add(inputIcon);
 
         this.valueEditor = generateValueEditorTextField();
-        attributeValueInfoContainerLayout.add(valueEditor);
+        if(this.valueEditor!= null){
+            attributeValueInfoContainerLayout.add(valueEditor);
+        }
         this.add(attributeValueInfoContainerLayout);
 
         this.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
