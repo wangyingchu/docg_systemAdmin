@@ -69,6 +69,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
     private TextField conceptionKindNameFilterField;
     private TextField conceptionKindDescFilterField;
     private GridListDataView<EntityStatisticsInfo> conceptionKindsMetaInfoView;
+    private HorizontalLayout selectItemPromptMessage;
     public ConceptionKindManagementUI(){
         Button refreshDataButton = new Button("刷新概念类型数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -78,6 +79,8 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
             loadConceptionKindsInfo();
             resetSingleConceptionKindSummaryInfoArea();
+            selectItemPromptMessage.setVisible(true);
+            singleConceptionKindSummaryInfoContainerLayout.setVisible(false);
         });
 
         List<Component> buttonList = new ArrayList<>();
@@ -282,7 +285,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
         conceptionKindMetaInfoGrid.appendFooterRow();
 
-        HorizontalLayout selectItemPromptMessage =new HorizontalLayout();
+        selectItemPromptMessage =new HorizontalLayout();
         selectItemPromptMessage.setSpacing(true);
         selectItemPromptMessage.setPadding(true);
         selectItemPromptMessage.setMargin(true);
