@@ -40,8 +40,8 @@ import com.viewfunction.docg.element.eventHandling.ConceptionKindRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.*;
-
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -69,7 +69,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
     private TextField conceptionKindNameFilterField;
     private TextField conceptionKindDescFilterField;
     private GridListDataView<EntityStatisticsInfo> conceptionKindsMetaInfoView;
-    private HorizontalLayout selectItemPromptMessage;
+
     public ConceptionKindManagementUI(){
         Button refreshDataButton = new Button("刷新概念类型数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -79,8 +79,6 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
             loadConceptionKindsInfo();
             resetSingleConceptionKindSummaryInfoArea();
-            selectItemPromptMessage.setVisible(true);
-            singleConceptionKindSummaryInfoContainerLayout.setVisible(false);
         });
 
         List<Component> buttonList = new ArrayList<>();
@@ -285,24 +283,6 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
         conceptionKindMetaInfoGrid.appendFooterRow();
 
-        selectItemPromptMessage =new HorizontalLayout();
-        selectItemPromptMessage.setSpacing(true);
-        selectItemPromptMessage.setPadding(true);
-        selectItemPromptMessage.setMargin(true);
-        selectItemPromptMessage.setWidth(100,Unit.PERCENTAGE);
-        selectItemPromptMessage.setHeight(300,Unit.PIXELS);
-        Icon messageLogo = new Icon(VaadinIcon.COMMENT_O);
-        messageLogo.getStyle()
-                .set("color","#2e4e7e")
-                //.set("color","var(--lumo-primary-color)")
-                .set("padding-right", "5px");
-        messageLogo.setSize("30px");
-        Label messageLabel = new Label(" 请选择概念类型定义");
-        messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)")
-                .set("color","#2e4e7e");
-                //.set("color","var(--lumo-primary-color)");
-        selectItemPromptMessage.add(messageLogo,messageLabel);
-
         conceptionKindMetaInfoGrid.addSelectionListener(new SelectionListener<Grid<EntityStatisticsInfo>, EntityStatisticsInfo>() {
             @Override
             public void selectionChange(SelectionEvent<Grid<EntityStatisticsInfo>, EntityStatisticsInfo> selectionEvent) {
@@ -311,8 +291,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
                     // don't allow to unselect item, just reselect last selected item
                     conceptionKindMetaInfoGrid.select(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo);
                 }else{
-                    selectItemPromptMessage.setVisible(false);
-                    singleConceptionKindSummaryInfoContainerLayout.setVisible(true);
+                    //singleConceptionKindSummaryInfoContainerLayout.setVisible(true);
                     EntityStatisticsInfo selectedEntityStatisticsInfo = selectedItemSet.iterator().next();
                     renderConceptionKindOverview(selectedEntityStatisticsInfo);
                     lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo = selectedEntityStatisticsInfo;
@@ -393,7 +372,6 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
 
         conceptionKindsInfoContainerLayout.add(conceptionKindMetaInfoGridContainerLayout);
-        conceptionKindsInfoContainerLayout.add(selectItemPromptMessage);
 
         singleConceptionKindSummaryInfoContainerLayout = new VerticalLayout();
         singleConceptionKindSummaryInfoContainerLayout.setSpacing(true);
@@ -442,7 +420,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
-        singleConceptionKindSummaryInfoContainerLayout.setVisible(false);
+        //singleConceptionKindSummaryInfoContainerLayout.setVisible(false);
         add(conceptionKindsInfoContainerLayout);
     }
 
