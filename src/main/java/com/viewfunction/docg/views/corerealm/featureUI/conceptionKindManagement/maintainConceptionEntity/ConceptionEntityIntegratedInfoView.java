@@ -21,8 +21,9 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
 
     private ConceptionEntitySpatialInfoView conceptionEntitySpatialInfoView;
     private boolean conceptionEntityRelationTopologyViewFirstRendered = false;
-    private boolean conceptionEntitySpatialInfoViewFirstRendered = false;
+    private boolean conceptionEntitySpatialAttributeViewFirstRendered = false;
     private boolean conceptionEntityTemporalInfoViewFirstRendered = false;
+    private boolean conceptionEntitySpatialInfoViewFirstRendered = false;
 
     public ConceptionEntityIntegratedInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntityIntegratedInfoViewHeightOffset){
         this.conceptionKind = conceptionKind;
@@ -92,8 +93,8 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
                     }
                 }
                 if(tab.equals(tab2)){
-                    if(!conceptionEntitySpatialInfoViewFirstRendered){
-                        conceptionEntitySpatialInfoViewFirstRendered = true;
+                    if(!conceptionEntitySpatialAttributeViewFirstRendered){
+                        conceptionEntitySpatialAttributeViewFirstRendered = true;
                         conceptionEntitySpatialAttributeView.renderEntitySpatialInfo();
                     }
                 }
@@ -101,6 +102,12 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
                     if(!conceptionEntityTemporalInfoViewFirstRendered){
                         conceptionEntityTemporalInfoViewFirstRendered = true;
                         conceptionEntityTemporalInfoView.renderEntityTemporalInfo();
+                    }
+                }
+                if(tab.equals(tab4)){
+                    if(!conceptionEntitySpatialInfoViewFirstRendered){
+                        conceptionEntitySpatialInfoViewFirstRendered = true;
+                        conceptionEntitySpatialInfoView.renderEntitySpatialInfo();
                     }
                 }
             }
