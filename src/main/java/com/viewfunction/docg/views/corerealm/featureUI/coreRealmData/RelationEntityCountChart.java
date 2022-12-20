@@ -14,7 +14,7 @@ public class RelationEntityCountChart extends ApexChartsBuilder {
         Stroke stroke = new Stroke();
         stroke.setWidth(0.5);
         withChart(ChartBuilder.get()
-                .withType(Type.bar)
+                .withType(Type.BAR)
                 .build())
                 .withLabels("Team A", "Team B", "Team C", "Team D", "Team E", "Team F","Team G", "Team H", "Team I", "Team J","OTHER")
                 .withPlotOptions(PlotOptionsBuilder.get()

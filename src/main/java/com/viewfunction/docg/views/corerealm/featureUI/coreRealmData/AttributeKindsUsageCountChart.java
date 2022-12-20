@@ -17,7 +17,7 @@ public class AttributeKindsUsageCountChart extends ApexChartsBuilder {
         Stroke stroke = new Stroke();
         stroke.setWidth(0.5);
         withChart(ChartBuilder.get()
-                .withType(Type.bar)
+                .withType(Type.BAR)
                 .build())
                 .withLabels("Kind A", "Kind B", "Kind C", "Kind D", "Kind E", "Kind F","Kind G", "Kind H", "Kind I", "Kind J","OTHER")
                 .withPlotOptions(PlotOptionsBuilder.get()

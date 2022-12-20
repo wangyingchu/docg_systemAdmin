@@ -12,14 +12,14 @@
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <vaadin.version>23.2.11</vaadin.version>
+        <vaadin.version>23.3.0</vaadin.version>
         <neo4j.version>5.2.0</neo4j.version>
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.6</version>
+        <version>2.7.5</version>
     </parent>
 
     <repositories>
@@ -76,56 +76,15 @@
             <groupId>com.vaadin</groupId>
             <!-- Replace artifactId with vaadin-core to use only free components -->
             <artifactId>vaadin</artifactId>
-            <exclusions>
-                <!-- Webjars are only needed when running in Vaadin 13 compatibility mode -->
-                <exclusion>
-                    <groupId>com.vaadin.webjar</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars.bowergithub.insites</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars.bowergithub.polymer</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars.bowergithub.polymerelements</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars.bowergithub.vaadin</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars.bowergithub.webcomponents</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
-            <exclusions>
-                <!-- Excluding so that webjars are not included. -->
-                <exclusion>
-                    <groupId>com.vaadin</groupId>
-                    <artifactId>vaadin-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.vaadin.artur</groupId>
-            <artifactId>a-vaadin-helper</artifactId>
-            <version>1.7.1</version>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -141,23 +100,13 @@
             <artifactId>vaadin-testbench</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- Include JUnit 4 support for TestBench and others -->
+
+        <!-- VAADIN PlugIns -->
+        <!-- https://mvnrepository.com/artifact/org.vaadin.artur/a-vaadin-helper -->
         <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hamcrest</groupId>
-                    <artifactId>hamcrest-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
+            <groupId>org.vaadin.artur</groupId>
+            <artifactId>a-vaadin-helper</artifactId>
+            <version>1.9.0</version>
         </dependency>
         <!-- https://vaadin.com/directory/component/scrolllayout -->
         <dependency>
@@ -171,12 +120,6 @@
             <artifactId>font-awesome-iron-iconset</artifactId>
             <version>3.0.0</version>
         </dependency>
-        <!-- https://vaadin.com/directory/component/chartjs-add-on-for-vaadin-14 -->
-        <dependency>
-            <groupId>org.vaadin.addons.chartjs</groupId>
-            <artifactId>chartjs</artifactId>
-            <version>0.1.37</version>
-        </dependency>
         <!-- https://vaadin.com/directory/component/paged-tabs/ -->
         <dependency>
             <groupId>org.vaadin.tabs</groupId>
@@ -189,68 +132,34 @@
             <artifactId>so-charts</artifactId>
             <version>2.3.0</version>
         </dependency>
-        <!-- https://vaadin.com/directory/component/leafletmap-for-vaadin -->
-        <dependency>
-           <groupId>com.xdev-software</groupId>
-           <artifactId>vaadin-maps-leaflet-flow</artifactId>
-           <version>1.1.0</version>
-        </dependency>
-        <!-- https://vaadin.com/directory/component/slidetab/ -->
-        <dependency>
-            <groupId>org.vaadin.erik</groupId>
-            <artifactId>slidetab</artifactId>
-            <version>4.0.2</version>
-        </dependency>
-        <!-- https://vaadin.com/directory/component/sparkline -->
-        <dependency>
-            <groupId>com.vaadin.componentfactory</groupId>
-            <artifactId>sparkline-flow</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-        <!-- https://vaadin.com/directory/component/apollonav
-        -navigation-component-for-vaadin -->
-        <dependency>
-            <groupId>org.vaadin.addons.apollo</groupId>
-            <artifactId>ApolloNav</artifactId>
-            <version>1.2.0</version>
-        </dependency>
         <!-- https://vaadin.com/directory/component/apexchartsjs/ -->
         <dependency>
             <groupId>com.github.appreciated</groupId>
             <artifactId>apexcharts</artifactId>
-            <version>2.0.0-beta13</version>
-        </dependency>
-        <!-- https://vaadin.com/directory/component/card/ -->
-        <dependency>
-            <groupId>com.github.appreciated</groupId>
-            <artifactId>card</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-        <!-- https://vaadin.com/directory/component/vis-network-vaadin/ -->
-        <dependency>
-            <groupId>org.vaadin.addons.visjs.network</groupId>
-            <artifactId>vis-network-vaadin</artifactId>
-            <version>1.0.2</version>
+            <version>23.0.0</version>
         </dependency>
         <!-- https://vaadin.com/directory/component/veaktor -->
+        <!--
         <dependency>
             <groupId>org.vaadin.addons.leif</groupId>
             <artifactId>veaktor</artifactId>
             <version>1.0.1</version>
         </dependency>
+        -->
         <!-- https://vaadin.com/directory/component/pure-timeline-flow -->
-        <dependency>
-            <groupId>de.nils_bauer</groupId>
-            <artifactId>pure-timeline-flow</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+        <!--
+         <dependency>
+             <groupId>de.nils_bauer</groupId>
+             <artifactId>pure-timeline-flow</artifactId>
+             <version>1.0.0</version>
+         </dependency>
+         -->
         <!-- https://vaadin.com/directory/component/tooltips4vaadin -->
         <dependency>
             <groupId>dev.mett.vaadin</groupId>
             <artifactId>tooltip</artifactId>
             <version>3.0.2</version>
         </dependency>
-
         <!-- https://vaadin.com/directory/component/blackboard -->
         <!-- https://mvnrepository.com/artifact/org.vaadin.addons/blackboard -->
         <dependency>
@@ -266,14 +175,12 @@
             <artifactId>jsoup</artifactId>
             <version>1.14.3</version>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.neo4j.driver/neo4j-java-driver -->
         <dependency>
             <groupId>org.neo4j.driver</groupId>
             <artifactId>neo4j-java-driver</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.viewfunction</groupId>
             <artifactId>docg_coreRealm</artifactId>
@@ -293,7 +200,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
     </dependencies>
 
     <build>

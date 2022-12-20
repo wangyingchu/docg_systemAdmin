@@ -17,7 +17,7 @@ public class AttributeViewKindsUsageCountChart extends ApexChartsBuilder {
         Stroke stroke = new Stroke();
         stroke.setWidth(0.5);
         withChart(ChartBuilder.get()
-                .withType(Type.bar)
+                .withType(Type.BAR)
                 .build())
                 .withLabels("View A", "View B", "View C", "View D", "View E", "View F","View G", "View H", "View I", "View J","OTHER")
                 .withPlotOptions(PlotOptionsBuilder.get()

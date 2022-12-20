@@ -26,10 +26,10 @@ public class EntityAttachedRelationKindsCountChart extends ApexChartsBuilder {
 
         Stroke stroke = new Stroke();
         stroke.setWidth(0.5);
-        withChart(ChartBuilder.get().withType(Type.pie).build())
+        withChart(ChartBuilder.get().withType(Type.PIE).build())
                 .withStroke(stroke)
                 .withLabels(relationKindNameArray)
-                .withLegend(LegendBuilder.get().withFloating(true).withPosition(Position.right).withOffsetX(800.0).build())
+                .withLegend(LegendBuilder.get().withFloating(true).withPosition(Position.RIGHT).withOffsetX(800.0).build())
                 .withSeries(relationEntityCountArray)
                 .build();
     }

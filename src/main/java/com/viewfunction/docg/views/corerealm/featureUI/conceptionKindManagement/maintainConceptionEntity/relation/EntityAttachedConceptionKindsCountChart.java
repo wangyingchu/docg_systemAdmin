@@ -24,7 +24,7 @@ public class EntityAttachedConceptionKindsCountChart extends ApexChartsBuilder {
 
         Stroke stroke = new Stroke();
         stroke.setWidth(0.5);
-        withChart(ChartBuilder.get().withType(Type.pie).build())
+        withChart(ChartBuilder.get().withType(Type.PIE).build())
                 .withStroke(stroke)
                 .withLabels(conceptionKindNameArray)
                 //.withLegend(LegendBuilder.get().withFloating(true).withPosition(Position.right).withOffsetX(600.0).build())
