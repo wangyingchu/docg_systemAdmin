@@ -69,33 +69,37 @@ public class ConceptionEntityTemporalTimelineChart extends VerticalLayout {
         if(timeScaleDataPairList != null){
             for(int i=0; i<timeScaleDataPairList.size();i++){
                 TimeScaleDataPair timeScaleDataPair = timeScaleDataPairList.get(i);
-                TimeScaleEntity timeScaleEntity = timeScaleDataPair.getTimeScaleEntity();
                 TimeScaleEvent timeScaleEvent = timeScaleDataPair.getTimeScaleEvent();
 
                 LocalDateTime referTime = timeScaleEvent.getReferTime();
                 TimeFlow.TimeScaleGrade timeScaleGrade = timeScaleEvent.getTimeScaleGrade();
                 String eventComment = timeScaleEvent.getEventComment();
 
+                String referTimeString = "";
+                switch(timeScaleGrade){
+                    case YEAR:
+                        referTimeString = ""+referTime.getYear()+"-01";
+                        break;
+                    case MONTH:
+                        referTimeString = ""+referTime.getYear()+"-"+referTime.getMonth().getValue();
+                        break;
+                    case DAY:
+                        referTimeString = ""+referTime.getYear()+"-"+referTime.getMonthValue()+"-"+referTime.getDayOfMonth();
+                        break;
+                    case HOUR:
+                        referTimeString = ""+referTime.getYear()+"-"+referTime.getMonthValue()+"-"+referTime.getDayOfMonth()+" "+referTime.getHour()+":00";
+                        break;
+                    case MINUTE:
+                        referTimeString = ""+referTime.getYear()+"-"+referTime.getMonthValue()+"-"+referTime.getDayOfMonth()+" "+referTime.getHour()+":"+referTime.getMinute();
+                        break;
+                    case SECOND:
+                        referTimeString = ""+referTime.getYear()+"-"+referTime.getMonthValue()+"-"+referTime.getDayOfMonth()+" "+referTime.getHour()+":"+referTime.getMinute()+":"+referTime.getSecond();
+                }
                 HashMap<String,Object> timeScaleData = new HashMap<>();
                 timeScaleData.put("id",i+1);
-                timeScaleData.put("content",eventComment);
-                //timeScaleData.put("start",referTime.toString());
-                timeScaleData.put("start","2014-02-12");
-
-                //2014-02-12T12:17
+                timeScaleData.put("content",eventComment+"<br/>"+referTimeString+"<br/>"+timeScaleGrade+"-"+timeScaleEvent.getTimeScaleEventUID());
+                timeScaleData.put("start",referTimeString);
                 timelineDataStructure.add(timeScaleData);
-
-                /*
-                switch(timeScaleGrade){
-                    case YEAR :
-                        referTime.getYear(); System.out.println();break;
-                    case MONTH : System.out.println();
-                    case DAY : System.out.println();
-                    case HOUR : System.out.println();
-                    case MINUTE : System.out.println();
-                    case SECOND : System.out.println();
-                }
-          */
             }
         }
         return timelineDataStructure;
