@@ -1,5 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.temporal;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
@@ -10,7 +12,10 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEvent;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,11 +49,26 @@ public class ConceptionEntityTemporalTimelineChart extends VerticalLayout {
         this.conceptionEntityUID = conceptionEntityUID;
         this.timeScaleDataPairList = timeScaleDataPairList;
         initConnector();
+        renderTimelineEntities(
+                generateSunburstTemporalDataStructure(timeScaleDataPairList)
+        );
+    }
+
+    public void renderTimelineEntities(List<Map> timelineEntities){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.renderTimelineEntities", new Serializable[]{(new ObjectMapper()).writeValueAsString(timelineEntities)});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private List<Map> generateSunburstTemporalDataStructure(List<TimeScaleDataPair> timeScaleDataPairList){
+        List<Map> timelineDataStructure = new ArrayList<>();
         if(timeScaleDataPairList != null){
-            for(TimeScaleDataPair timeScaleDataPair:timeScaleDataPairList){
+            for(int i=0; i<timeScaleDataPairList.size();i++){
+                TimeScaleDataPair timeScaleDataPair = timeScaleDataPairList.get(i);
                 TimeScaleEntity timeScaleEntity = timeScaleDataPair.getTimeScaleEntity();
                 TimeScaleEvent timeScaleEvent = timeScaleDataPair.getTimeScaleEvent();
 
@@ -56,6 +76,16 @@ public class ConceptionEntityTemporalTimelineChart extends VerticalLayout {
                 TimeFlow.TimeScaleGrade timeScaleGrade = timeScaleEvent.getTimeScaleGrade();
                 String eventComment = timeScaleEvent.getEventComment();
 
+                HashMap<String,Object> timeScaleData = new HashMap<>();
+                timeScaleData.put("id",i+1);
+                timeScaleData.put("content",eventComment);
+                //timeScaleData.put("start",referTime.toString());
+                timeScaleData.put("start","2014-02-12");
+
+                //2014-02-12T12:17
+                timelineDataStructure.add(timeScaleData);
+
+                /*
                 switch(timeScaleGrade){
                     case YEAR :
                         referTime.getYear(); System.out.println();break;
@@ -65,9 +95,10 @@ public class ConceptionEntityTemporalTimelineChart extends VerticalLayout {
                     case MINUTE : System.out.println();
                     case SECOND : System.out.println();
                 }
+          */
             }
         }
-        return null;
+        return timelineDataStructure;
     }
 
 }
