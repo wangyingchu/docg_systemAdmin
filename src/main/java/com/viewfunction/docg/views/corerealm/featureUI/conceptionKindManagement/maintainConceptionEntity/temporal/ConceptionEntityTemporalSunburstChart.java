@@ -7,8 +7,12 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleDataPair;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEvent;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 
+import java.time.LocalDateTime;
 import java.util.List;
 @JavaScript("./visualization/feature/conceptionEntityTemporalSunburstChart-connector.js")
 public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
@@ -41,4 +45,29 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
         this.timeScaleDataPairList = timeScaleDataPairList;
         initConnector();
     }
+
+    private void generateSunburstTemporalDataStructure(List<TimeScaleDataPair> timeScaleDataPairList){
+        if(timeScaleDataPairList != null){
+            for(TimeScaleDataPair timeScaleDataPair:timeScaleDataPairList){
+                TimeScaleEntity timeScaleEntity = timeScaleDataPair.getTimeScaleEntity();
+                TimeScaleEvent timeScaleEvent = timeScaleDataPair.getTimeScaleEvent();
+
+                LocalDateTime referTime = timeScaleEvent.getReferTime();
+                TimeFlow.TimeScaleGrade timeScaleGrade = timeScaleEvent.getTimeScaleGrade();
+                String eventComment = timeScaleEvent.getEventComment();
+
+                switch(timeScaleGrade){
+                    case YEAR :
+                            referTime.getYear(); System.out.println();break;
+                    case MONTH : System.out.println();
+                    case DAY : System.out.println();
+                    case HOUR : System.out.println();
+                    case MINUTE : System.out.println();
+                    case SECOND : System.out.println();
+                }
+            }
+        }
+    }
+
+    private void setTemporalData(){}
 }

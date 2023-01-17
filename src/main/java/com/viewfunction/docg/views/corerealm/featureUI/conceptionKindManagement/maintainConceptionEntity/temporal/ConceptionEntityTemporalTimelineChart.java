@@ -6,8 +6,13 @@ import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleDataPair;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEvent;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @JavaScript("./visualization/feature/conceptionEntityTemporalTimelineChart-connector.js")
 public class ConceptionEntityTemporalTimelineChart extends VerticalLayout {
@@ -40,4 +45,29 @@ public class ConceptionEntityTemporalTimelineChart extends VerticalLayout {
         this.timeScaleDataPairList = timeScaleDataPairList;
         initConnector();
     }
+
+    private List<Map> generateSunburstTemporalDataStructure(List<TimeScaleDataPair> timeScaleDataPairList){
+        if(timeScaleDataPairList != null){
+            for(TimeScaleDataPair timeScaleDataPair:timeScaleDataPairList){
+                TimeScaleEntity timeScaleEntity = timeScaleDataPair.getTimeScaleEntity();
+                TimeScaleEvent timeScaleEvent = timeScaleDataPair.getTimeScaleEvent();
+
+                LocalDateTime referTime = timeScaleEvent.getReferTime();
+                TimeFlow.TimeScaleGrade timeScaleGrade = timeScaleEvent.getTimeScaleGrade();
+                String eventComment = timeScaleEvent.getEventComment();
+
+                switch(timeScaleGrade){
+                    case YEAR :
+                        referTime.getYear(); System.out.println();break;
+                    case MONTH : System.out.println();
+                    case DAY : System.out.println();
+                    case HOUR : System.out.println();
+                    case MINUTE : System.out.println();
+                    case SECOND : System.out.println();
+                }
+            }
+        }
+        return null;
+    }
+
 }
