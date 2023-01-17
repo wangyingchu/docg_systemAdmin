@@ -30,6 +30,7 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalTimelineChart = {
                 ]);
                 console.log(items2);
                 timeline.setItems(items);
+                timeline.fit();
                 //timeline.redraw();
             }
         }
