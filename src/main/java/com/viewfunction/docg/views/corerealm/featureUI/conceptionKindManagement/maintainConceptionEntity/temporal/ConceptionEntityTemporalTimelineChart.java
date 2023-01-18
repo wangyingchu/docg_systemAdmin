@@ -9,7 +9,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleDataPair;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEvent;
 
 import java.io.Serializable;

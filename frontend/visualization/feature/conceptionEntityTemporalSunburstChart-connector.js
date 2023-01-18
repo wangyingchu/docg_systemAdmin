@@ -36,9 +36,9 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
             series.data.setAll([{
                 name: "root",
                 children: [{
-                    name: "First",
+                    name: "2021",
                     children: [
-                        { name: "A1", value: 100 },
+                        { name: "2021-1", value: 100 },
                         { name: "A2", value: 60 }
                     ]
                 },
