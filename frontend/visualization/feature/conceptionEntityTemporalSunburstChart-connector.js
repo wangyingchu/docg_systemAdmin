@@ -61,10 +61,108 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
                         }]
                 }];
 
+
+                let data2 = [
+                    {
+                        "name": "root",
+                        "desc": "",
+
+                        "children": [
+                            {
+                                "name": "2015",
+
+                                "children": [
+                                    {
+                                        "name": "2015-9",
+
+                                       // "value": 1,
+                                        "children": [
+                                            {
+                                                "name": "2015-9-7",
+
+                                                //"value": 1,
+                                                "children": [
+                                                    {
+                                                        "name": "2015-9-7 14",
+
+                                                        //"value": 1,
+                                                        "children": [
+                                                            {
+                                                                "name": "2015-9-7 14:50",
+                                                                "desc": "Incident closed at",
+                                                                "value": 1
+                                                            },
+                                                            {
+                                                                "name": "2015-9-7 14:29",
+                                                                "desc": "Rescue arrived at",
+                                                                "value": 1
+                                                            },
+                                                            {
+                                                                "name": "2015-9-7 14:25",
+                                                                "desc": "Incident alarmed at",
+                                                                "value": 1
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                            ,
+
+                            {
+                                "name": "2016",
+
+                                "children": [
+                                    {
+                                        "name": "2015-9",
+
+                                        // "value": 1,
+                                        "children": [
+                                            {
+                                                "name": "2015-9-7",
+
+                                                //"value": 1,
+                                                "children": [
+                                                    {
+                                                        "name": "2015-9-7 14",
+
+                                                        //"value": 1,
+                                                        "children": [
+                                                            {
+                                                                "name": "2015-9-7 14:50",
+                                                                "desc": "Incident closed at",
+                                                                "value": 1
+                                                            },
+                                                            {
+                                                                "name": "2015-9-7 14:29",
+                                                                "desc": "Rescue arrived at",
+                                                                "value": 1
+                                                            },
+                                                            {
+                                                                "name": "2015-9-7 14:25",
+                                                                "desc": "Incident alarmed at",
+                                                                "value": 1
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ];
+
                 console.log(data);
                 console.log([sunburstEntitiesObject]);
-                c.$connector.sunburstChart.data.setAll(data);
-                //c.$connector.sunburstChart.data.setAll([sunburstEntitiesObject]);
+                //c.$connector.sunburstChart.data.setAll(data);
+                c.$connector.sunburstChart.data.setAll([sunburstEntitiesObject]);
+                c.$connector.sunburstChart.data.setAll(data2);
 
                 let legend = c.$connector.container.children.push(am5.Legend.new(c.$connector.root, {
                     centerX: am5.percent(50),

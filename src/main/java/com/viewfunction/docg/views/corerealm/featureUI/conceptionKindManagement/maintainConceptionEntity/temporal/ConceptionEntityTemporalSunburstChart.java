@@ -69,7 +69,7 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
 
         public TemporalDataEntity(String name){
             this.setName(name);
-            this.setValue(1);
+            this.setValue(0);
         }
 
         public TemporalDataEntity(String name,String desc){
@@ -192,7 +192,7 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
                             String parentYearString = ""+referTime.getYear();
                             if(!singleTemporalDataEntityMap.containsKey(parentYearString)){
                                 TemporalDataEntity yearEntity = new TemporalDataEntity(parentYearString,null);
-                                yearEntity.setValue(1);
+                                yearEntity.setValue(0);
                                 singleTemporalDataEntityMap.put(parentYearString,yearEntity);
                                 rootTemporalDataEntity.addChild(yearEntity);
                             }
@@ -210,7 +210,7 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
                             String parentMonthString = ""+referTime.getYear()+"-"+referTime.getMonth().getValue();
                             if(!singleTemporalDataEntityMap.containsKey(parentYearString)){
                                 TemporalDataEntity yearEntity = new TemporalDataEntity(parentYearString,null);
-                                yearEntity.setValue(1);
+                                yearEntity.setValue(0);
                                 singleTemporalDataEntityMap.put(parentYearString,yearEntity);
                                 rootTemporalDataEntity.addChild(yearEntity);
                             }
@@ -235,7 +235,7 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
                             String parentDayString = ""+referTime.getYear()+"-"+referTime.getMonthValue()+"-"+referTime.getDayOfMonth();
                             if(!singleTemporalDataEntityMap.containsKey(parentYearString)){
                                 TemporalDataEntity yearEntity = new TemporalDataEntity(parentYearString,null);
-                                yearEntity.setValue(1);
+                                yearEntity.setValue(0);
                                 singleTemporalDataEntityMap.put(parentYearString,yearEntity);
                                 rootTemporalDataEntity.addChild(yearEntity);
                             }
@@ -267,7 +267,7 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
                             String parentHourString = ""+referTime.getYear()+"-"+referTime.getMonthValue()+"-"+referTime.getDayOfMonth()+" "+referTime.getHour();
                             if(!singleTemporalDataEntityMap.containsKey(parentYearString)){
                                 TemporalDataEntity yearEntity = new TemporalDataEntity(parentYearString,null);
-                                yearEntity.setValue(1);
+                                yearEntity.setValue(0);
                                 singleTemporalDataEntityMap.put(parentYearString,yearEntity);
                                 rootTemporalDataEntity.addChild(yearEntity);
                             }
