@@ -50,7 +50,7 @@ public class ConceptionEntityTemporalTimelineChart extends VerticalLayout {
         this.timeScaleDataPairList = timeScaleDataPairList;
         initConnector();
         renderTimelineEntities(
-                generateSunburstTemporalDataStructure(timeScaleDataPairList)
+                generateTimelineTemporalDataStructure(timeScaleDataPairList)
         );
     }
 
@@ -64,7 +64,7 @@ public class ConceptionEntityTemporalTimelineChart extends VerticalLayout {
         });
     }
 
-    private List<Map> generateSunburstTemporalDataStructure(List<TimeScaleDataPair> timeScaleDataPairList){
+    private List<Map> generateTimelineTemporalDataStructure(List<TimeScaleDataPair> timeScaleDataPairList){
         List<Map> timelineDataStructure = new ArrayList<>();
         if(timeScaleDataPairList != null){
             for(int i=0; i<timeScaleDataPairList.size();i++){
