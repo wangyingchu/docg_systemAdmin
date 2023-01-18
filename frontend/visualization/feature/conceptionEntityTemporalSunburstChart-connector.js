@@ -13,54 +13,56 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
                         name: "2021",
                         children: [
                             { name: "2021-1", value: 1 },
-                            { name: "A2", value: 1 }
+                            { name: "2021-3", value: 1 }
                         ]
                     },
-                        { name: "Second",
+                        { name: "2022",
                             children: [
-                                { name: "B1", value: 1 },
-                                { name: "B2", value: 1 }
+                                { name: "2022-3", value: 1 },
+                                { name: "2022-7", value: 1 }
                             ]
                         },
-                        { name: "Third",
+                        { name: "2023",
                             children: [
-                                { name: "C1",
+                                { name: "2023-1",
                                     children: [
-                                        { name: "EE1", value: 1 },
-                                        { name: "EE2", value: 1 },
-                                        { name: "EE3", value: 1 }
+                                        { name: "2023-1-1", value: 1 },
+                                        { name: "2023-1-17", value: 1 },
+                                        { name: "2023-1-22", value: 1 }
                                     ]
                                 },
-                                { name: "C2", value: 1 },
-                                { name: "C3", children: [
-                                        { name: "CC1", value: 1 },
-                                        { name: "CC2", value: 1 }
+                                { name: "2023-5", value: 1 },
+                                { name: "2023-7", children: [
+                                        { name: "2023-7-1", value: 1 },
+                                        { name: "2023-7-23", value: 1 }
                                     ]
                                 },
-                                { name: "C4", value: 1 }
+                                { name: "2023-9", value: 1 }
                             ]
                         },
-                        { name: "Fourth",
+                        { name: "2024",
                             children: [
-                                { name: "D1", value: 1 },
-                                { name: "D2", value: 1 },
-                                { name: "D3", value: 1 }
+                                { name: "2024-3", value: 1 },
+                                { name: "2024-5", value: 1 },
+                                { name: "2024-9", value: 1 }
                             ]
                         },
-                        { name: "Fifth",
+                        { name: "2025",
                             children: [
-                                { name: "E1",
+                                { name: "2025-7",
                                     children: [
-                                        { name: "EE1", value: 1 },
-                                        { name: "EE2", value: 1 },
-                                        { name: "EE3", value: 1 }
+                                        { name: "2025-7-1", value: 1 },
+                                        { name: "2025-7-19", value: 1 },
+                                        { name: "2025-7-26", value: 1 }
                                     ]
                                 },
-                                { name: "E2",value: 1 }
+                                { name: "2025-9",value: 1 }
                             ]
                         }]
                 }];
 
+                console.log(data);
+                console.log([sunburstEntitiesObject]);
                 c.$connector.sunburstChart.data.setAll(data);
                 //c.$connector.sunburstChart.data.setAll([sunburstEntitiesObject]);
 
