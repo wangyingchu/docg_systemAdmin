@@ -16,18 +16,15 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
                             { name: "A2", value: 60 }
                         ]
                     },
-                        {
-                            name: "Second",
+                        { name: "Second",
                             children: [
                                 { name: "B1", value: 135 },
                                 { name: "B2", value: 98 }
                             ]
                         },
-                        {
-                            name: "Third",
+                        { name: "Third",
                             children: [
-                                {
-                                    name: "C1",
+                                { name: "C1",
                                     children: [
                                         { name: "EE1", value: 130 },
                                         { name: "EE2", value: 87 },
@@ -35,8 +32,7 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
                                     ]
                                 },
                                 { name: "C2", value: 148 },
-                                {
-                                    name: "C3", children: [
+                                { name: "C3", children: [
                                         { name: "CC1", value: 53 },
                                         { name: "CC2", value: 30 }
                                     ]
@@ -44,34 +40,30 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
                                 { name: "C4", value: 26 }
                             ]
                         },
-                        {
-                            name: "Fourth",
+                        { name: "Fourth",
                             children: [
                                 { name: "D1", value: 415 },
                                 { name: "D2", value: 148 },
                                 { name: "D3", value: 89 }
                             ]
                         },
-                        {
-                            name: "Fifth",
+                        { name: "Fifth",
                             children: [
-                                {
-                                    name: "E1",
+                                { name: "E1",
                                     children: [
                                         { name: "EE1", value: 33 },
                                         { name: "EE2", value: 40 },
                                         { name: "EE3", value: 89 }
                                     ]
                                 },
-                                {
-                                    name: "E2",
-                                    value: 148
-                                }
+                                { name: "E2",value: 148 }
                             ]
                         }]
                 }];
 
-                c.$connector.sunburstChart.data.setAll(data);
+                //c.$connector.sunburstChart.data.setAll(data);
+                c.$connector.sunburstChart.data.setAll([sunburstEntitiesObject]);
+
                 let legend = c.$connector.container.children.push(am5.Legend.new(c.$connector.root, {
                     centerX: am5.percent(50),
                     x: am5.percent(50),
@@ -93,7 +85,6 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
                 height: am5.percent(100),
                 layout: c.$connector.root.verticalLayout
             }));
-
             // Create series
             // https://www.amcharts.com/docs/v5/charts/hierarchy/#Adding
             c.$connector.sunburstChart = c.$connector.container.children.push(am5hierarchy.Sunburst.new(c.$connector.root, {
