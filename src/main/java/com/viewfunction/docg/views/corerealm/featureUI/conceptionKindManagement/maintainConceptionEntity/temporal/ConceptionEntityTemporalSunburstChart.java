@@ -1,16 +1,24 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.temporal;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
+import com.vaadin.flow.component.JsonSerializable;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleDataPair;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEvent;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.JsonObject;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,30 +60,86 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
         );
     }
 
-    private class TemporalDataEntity{
+    private class TemporalDataEntity implements JsonSerializable {
         private String name;
         private String value;
         private List<TemporalDataEntity> children;
 
         public TemporalDataEntity(String name,String value){
-            this.name = name;
-            this.value = value;
+            this.setName(name);
+            this.setValue(value);
         }
 
         public void addChild(TemporalDataEntity temporalDataEntity){
-            if(children == null){
-                children = new ArrayList<>();
+            if(getChildren() == null){
+                setChildren(new ArrayList<>());
             }
-            children.add(temporalDataEntity);
+            getChildren().add(temporalDataEntity);
         }
 
         public void appendValue(String newValue){
-            this.value = this.value +";"+newValue;
+            this.setValue(this.getValue() +";"+newValue);
+        }
+
+        @Override
+        public JsonObject toJson() {
+            JsonObject obj = Json.createObject();
+            if (getName() != null) {
+                obj.put("name", getName());
+            }
+            //if(getItemValue() >0){
+           //     obj.put("value", getItemValue());
+            //}
+            if(getChildren() != null && getChildren().size()>0){
+                JsonArray childrenArray = Json.createArray();
+                for(int i=0; i< getChildren().size();i++ ){
+                    TemporalDataEntity currentSunburstNodeData = getChildren().get(i);
+                    JsonObject childJsonObject = currentSunburstNodeData.toJson();
+                    childrenArray.set(i, childJsonObject);
+                }
+                obj.put("children", childrenArray);
+            }
+            return obj;
+        }
+
+        @Override
+        public JsonSerializable readJson(JsonObject jsonObject) {
+            return null;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value != null ? value : "";
+        }
+
+        public List<TemporalDataEntity> getChildren() {
+            return children;
+        }
+
+        public void setChildren(List<TemporalDataEntity> children) {
+            this.children = children;
         }
     }
 
-    private void renderSunburstEntities(TemporalDataEntity root){
-
+    private void renderSunburstEntities(TemporalDataEntity temporalDataEntity){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.renderSunburstEntities", new Serializable[]{(new ObjectMapper()).writeValueAsString(temporalDataEntity)});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private TemporalDataEntity generateSunburstTemporalDataStructure(List<TimeScaleDataPair> timeScaleDataPairList){
