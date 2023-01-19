@@ -215,7 +215,7 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
                             }
                             if(!singleTemporalDataEntityMap.containsKey(parentMonthString)){
                                 TemporalDataEntity monthEntity = new TemporalDataEntity(parentMonthString,null);
-                                monthEntity.setValue(1);
+                                monthEntity.setValue(0);
                                 singleTemporalDataEntityMap.put(parentMonthString,monthEntity);
                                 singleTemporalDataEntityMap.get(parentYearString).addChild(monthEntity);
                             }
@@ -240,13 +240,13 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
                             }
                             if(!singleTemporalDataEntityMap.containsKey(parentMonthString)){
                                 TemporalDataEntity monthEntity = new TemporalDataEntity(parentMonthString,null);
-                                monthEntity.setValue(1);
+                                monthEntity.setValue(0);
                                 singleTemporalDataEntityMap.put(parentMonthString,monthEntity);
                                 singleTemporalDataEntityMap.get(parentYearString).addChild(monthEntity);
                             }
                             if(!singleTemporalDataEntityMap.containsKey(parentDayString)){
                                 TemporalDataEntity dayEntity = new TemporalDataEntity(parentDayString,null);
-                                dayEntity.setValue(1);
+                                dayEntity.setValue(0);
                                 singleTemporalDataEntityMap.put(parentDayString,dayEntity);
                                 singleTemporalDataEntityMap.get(parentMonthString).addChild(dayEntity);
                             }
@@ -272,19 +272,19 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
                             }
                             if(!singleTemporalDataEntityMap.containsKey(parentMonthString)){
                                 TemporalDataEntity monthEntity = new TemporalDataEntity(parentMonthString,null);
-                                monthEntity.setValue(1);
+                                monthEntity.setValue(0);
                                 singleTemporalDataEntityMap.put(parentMonthString,monthEntity);
                                 singleTemporalDataEntityMap.get(parentYearString).addChild(monthEntity);
                             }
                             if(!singleTemporalDataEntityMap.containsKey(parentDayString)){
                                 TemporalDataEntity dayEntity = new TemporalDataEntity(parentDayString,null);
-                                dayEntity.setValue(1);
+                                dayEntity.setValue(0);
                                 singleTemporalDataEntityMap.put(parentDayString,dayEntity);
                                 singleTemporalDataEntityMap.get(parentMonthString).addChild(dayEntity);
                             }
                             if(!singleTemporalDataEntityMap.containsKey(parentHourString)){
                                 TemporalDataEntity hourEntity = new TemporalDataEntity(parentHourString,null);
-                                hourEntity.setValue(1);
+                                hourEntity.setValue(0);
                                 singleTemporalDataEntityMap.put(parentHourString,hourEntity);
                                 singleTemporalDataEntityMap.get(parentDayString).addChild(hourEntity);
                             }
