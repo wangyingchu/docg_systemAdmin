@@ -5,8 +5,7 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
             return;
         }
         c.$connector = {
-            renderSunburstEntities: function(sunburstEntitiesStr) {
-                const sunburstEntitiesObject = eval("(" + sunburstEntitiesStr + ")")
+            renderSunburstEntities: function(sunburstEntities) {
                 let data =[{
                     name: "root",
                     children: [{
@@ -61,7 +60,6 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
                         }]
                 }];
 
-
                 let data2 = [
                     {
                         "name": "root",
@@ -87,11 +85,7 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
 
                                                         //"value": 1,
                                                         "children": [
-                                                            {
-                                                                "name": "2015-9-7 14:50",
-                                                                "desc": "Incident closed at",
-                                                                "value": 1
-                                                            },
+
                                                             {
                                                                 "name": "2015-9-7 14:29",
                                                                 "desc": "Rescue arrived at",
@@ -157,13 +151,7 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
                         ]
                     }
                 ];
-
-                console.log(data);
-                console.log([sunburstEntitiesObject]);
-                //c.$connector.sunburstChart.data.setAll(data);
-                c.$connector.sunburstChart.data.setAll([sunburstEntitiesObject]);
-                c.$connector.sunburstChart.data.setAll(data2);
-
+                c.$connector.sunburstChart.data.setAll(sunburstEntities);
                 let legend = c.$connector.container.children.push(am5.Legend.new(c.$connector.root, {
                     centerX: am5.percent(50),
                     x: am5.percent(50),

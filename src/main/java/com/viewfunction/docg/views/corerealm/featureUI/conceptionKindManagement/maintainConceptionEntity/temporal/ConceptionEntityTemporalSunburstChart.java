@@ -1,7 +1,5 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.temporal;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
@@ -18,7 +16,6 @@ import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -154,8 +151,10 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
     private void renderSunburstEntities(TemporalDataEntity temporalDataEntity){
         runBeforeClientResponse(ui -> {
             try {
-                getElement().callJsFunction("$connector.renderSunburstEntities", new Serializable[]{(new ObjectMapper()).writeValueAsString(temporalDataEntity)});
-            } catch (JsonProcessingException e) {
+                JsonArray array = Json.createArray();
+                array.set(0,temporalDataEntity.toJson());
+                getElement().callJsFunction("$connector.renderSunburstEntities", array);
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
