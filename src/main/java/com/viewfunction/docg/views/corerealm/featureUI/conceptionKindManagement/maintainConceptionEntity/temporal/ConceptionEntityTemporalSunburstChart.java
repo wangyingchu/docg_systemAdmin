@@ -177,6 +177,9 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
                         referTimeString = ""+referTime.getYear();
                         if(singleTemporalDataEntityMap.containsKey(referTimeString)){
                             singleTemporalDataEntityMap.get(referTimeString).appendDesc(eventComment);
+                            singleTemporalDataEntityMap.get(referTimeString).setValue(
+                                    singleTemporalDataEntityMap.get(referTimeString).getValue()+1
+                            );
                         }else{
                             TemporalDataEntity yearEntity = new TemporalDataEntity(referTimeString,eventComment);
                             singleTemporalDataEntityMap.put(referTimeString,yearEntity);
@@ -187,6 +190,9 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
                         referTimeString = ""+referTime.getYear()+"-"+referTime.getMonth().getValue();
                         if(singleTemporalDataEntityMap.containsKey(referTimeString)){
                             singleTemporalDataEntityMap.get(referTimeString).appendDesc(eventComment);
+                            singleTemporalDataEntityMap.get(referTimeString).setValue(
+                                    singleTemporalDataEntityMap.get(referTimeString).getValue()+1
+                            );
                         }else{
                             String parentYearString = ""+referTime.getYear();
                             if(!singleTemporalDataEntityMap.containsKey(parentYearString)){
@@ -204,6 +210,9 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
                         referTimeString = ""+referTime.getYear()+"-"+referTime.getMonthValue()+"-"+referTime.getDayOfMonth();
                         if(singleTemporalDataEntityMap.containsKey(referTimeString)){
                             singleTemporalDataEntityMap.get(referTimeString).appendDesc(eventComment);
+                            singleTemporalDataEntityMap.get(referTimeString).setValue(
+                                    singleTemporalDataEntityMap.get(referTimeString).getValue()+1
+                            );
                         }else{
                             String parentYearString = ""+referTime.getYear();
                             String parentMonthString = ""+referTime.getYear()+"-"+referTime.getMonth().getValue();
@@ -228,6 +237,9 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
                         referTimeString = ""+referTime.getYear()+"-"+referTime.getMonthValue()+"-"+referTime.getDayOfMonth()+" "+referTime.getHour();
                         if(singleTemporalDataEntityMap.containsKey(referTimeString)){
                             singleTemporalDataEntityMap.get(referTimeString).appendDesc(eventComment);
+                            singleTemporalDataEntityMap.get(referTimeString).setValue(
+                                    singleTemporalDataEntityMap.get(referTimeString).getValue()+1
+                            );
                         }else{
                             String parentYearString = ""+referTime.getYear();
                             String parentMonthString = ""+referTime.getYear()+"-"+referTime.getMonth().getValue();
@@ -259,6 +271,9 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
                         referTimeString = ""+referTime.getYear()+"-"+referTime.getMonthValue()+"-"+referTime.getDayOfMonth()+" "+referTime.getHour()+":"+referTime.getMinute();
                         if(singleTemporalDataEntityMap.containsKey(referTimeString)){
                             singleTemporalDataEntityMap.get(referTimeString).appendDesc(eventComment);
+                            singleTemporalDataEntityMap.get(referTimeString).setValue(
+                                    singleTemporalDataEntityMap.get(referTimeString).getValue()+1
+                            );
                         }else{
                             String parentYearString = ""+referTime.getYear();
                             String parentMonthString = ""+referTime.getYear()+"-"+referTime.getMonth().getValue();
