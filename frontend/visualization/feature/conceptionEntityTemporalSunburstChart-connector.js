@@ -6,6 +6,7 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
         }
         c.$connector = {
             renderSunburstEntities: function(sunburstEntities) {
+                /*
                 let data =[{
                     name: "root",
                     children: [{
@@ -151,6 +152,7 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
                         ]
                     }
                 ];
+                */
                 c.$connector.sunburstChart.data.setAll(sunburstEntities);
                 let legend = c.$connector.container.children.push(am5.Legend.new(c.$connector.root, {
                     centerX: am5.percent(50),
