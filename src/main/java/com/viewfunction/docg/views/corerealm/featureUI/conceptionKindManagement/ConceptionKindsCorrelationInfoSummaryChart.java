@@ -27,9 +27,9 @@ import java.util.*;
 public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
 
     public ConceptionKindsCorrelationInfoSummaryChart(int windowWidth, int windowHeight){
-        UI.getCurrent().getPage().addJavaScript("js/echarts/5.3.2/dist/echarts.min.js");
-        UI.getCurrent().getPage().addJavaScript("js/echarts/5.3.2/dist/extension/dataTool.min.js");
-        UI.getCurrent().getPage().addJavaScript("js/echarts/5.3.2/dist/extension/bmap.min.js");
+        UI.getCurrent().getPage().addJavaScript("js/echarts/5.4.1/dist/echarts.min.js");
+        UI.getCurrent().getPage().addJavaScript("js/echarts/5.4.1/dist/extension/dataTool.min.js");
+        UI.getCurrent().getPage().addJavaScript("js/echarts/5.4.1/dist/extension/bmap.min.js");
         setWidth(windowWidth,Unit.PIXELS);
         setHeight(windowHeight,Unit.PIXELS);
         initConnector(getElement());
