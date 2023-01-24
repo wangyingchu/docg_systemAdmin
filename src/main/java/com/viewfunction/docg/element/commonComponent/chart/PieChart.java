@@ -3,12 +3,14 @@ package com.viewfunction.docg.element.commonComponent.chart;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.function.SerializableConsumer;
 
 import java.util.Map;
 
+@JavaScript("./visualization/common/pieChart_echarts-connector.js")
 public class PieChart extends Div {
 
     public PieChart(int windowWidth, int windowHeight){
