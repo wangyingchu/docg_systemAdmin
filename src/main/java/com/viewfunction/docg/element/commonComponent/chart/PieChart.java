@@ -7,6 +7,8 @@ import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.function.SerializableConsumer;
+import elemental.json.Json;
+import elemental.json.JsonObject;
 
 import java.util.Map;
 
@@ -23,7 +25,8 @@ public class PieChart extends Div {
     }
 
     public void setDate(Map<String, Long> pieChartDate){
-
+        JsonObject obj = Json.createObject();
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", obj));
     }
 
     @Override

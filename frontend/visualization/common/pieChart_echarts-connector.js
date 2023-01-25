@@ -6,44 +6,48 @@ window.Vaadin.Flow.common_PieChart_echarts = {
         }
         c.$connector = {
             // functions
+            setData: function (data) {
+
+
+
+                c.$connector.option.series[0].data = [
+                    { value: 1048, name: 'Search Engine' },
+                    { value: 735, name: 'Direct' },
+                    { value: 580, name: 'Email' },
+                    { value: 484, name: 'Union Ads' },
+                    { value: 300, name: 'Video Ads' }
+                ];
+
+
+
+
+
+
+
+                c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
+            }
         };
-
-
-
-
-
-
-
-
-
-        let myChart = echarts.init(c);
-
-
-        let option = {
+        c.$connector.myChart = echarts.init(c);
+        c.$connector.option = {
+            color:["#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"],
             title: {
-                text: 'Referer of a Website',
-                subtext: 'Fake Data',
-                left: 'center'
+                //text: 'Referer of a Website',
+                //subtext: 'Fake Data',
+                //left: 'center'
             },
             tooltip: {
                 trigger: 'item'
             },
+            /*
             legend: {
-                orient: 'vertical',
-                left: 'left'
+                //orient: 'vertical',
+                //left: 'left'
             },
+            */
             series: [
                 {
-                    name: 'Access From',
                     type: 'pie',
-                    radius: '50%',
-                    data: [
-                        { value: 1048, name: 'Search Engine' },
-                        { value: 735, name: 'Direct' },
-                        { value: 580, name: 'Email' },
-                        { value: 484, name: 'Union Ads' },
-                        { value: 300, name: 'Video Ads' }
-                    ],
+                    radius: '80%',
                     emphasis: {
                         itemStyle: {
                             shadowBlur: 10,
@@ -54,15 +58,5 @@ window.Vaadin.Flow.common_PieChart_echarts = {
                 }
             ]
         };
-
-
-
-
-
-
-
-
-
-
     }
 }

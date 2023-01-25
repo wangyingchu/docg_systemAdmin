@@ -266,14 +266,14 @@
     "@polymer/polymer": "$@polymer/polymer",
     "proj4": "$proj4",
     "onecolor": "$onecolor",
-    "lumo-css-framework": "$lumo-css-framework",
     "echarts": "$echarts",
     "tippy.js": "$tippy.js",
     "@flowingcode/font-awesome-iron-iconset": "$@flowingcode/font-awesome-iron-iconset",
-    "line-awesome": "$line-awesome",
     "apexcharts": "$apexcharts",
     "date-fns": "$date-fns",
-    "retry": "$retry"
+    "retry": "$retry",
+    "lumo-css-framework": "$lumo-css-framework",
+    "line-awesome": "$line-awesome"
   },
   "vaadin": {
     "dependencies": {

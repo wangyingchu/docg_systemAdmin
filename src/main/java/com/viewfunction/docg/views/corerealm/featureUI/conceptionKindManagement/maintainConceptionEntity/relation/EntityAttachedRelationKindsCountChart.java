@@ -1,16 +1,12 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.relation;
 
-import com.github.appreciated.apexcharts.ApexChartsBuilder;
-import com.github.appreciated.apexcharts.config.Stroke;
-import com.github.appreciated.apexcharts.config.builder.ChartBuilder;
-import com.github.appreciated.apexcharts.config.builder.LegendBuilder;
-import com.github.appreciated.apexcharts.config.chart.Type;
-import com.github.appreciated.apexcharts.config.legend.Position;
+import com.vaadin.flow.component.html.Span;
+import com.viewfunction.docg.element.commonComponent.chart.PieChart;
 
 import java.util.Map;
 import java.util.Set;
 
-public class EntityAttachedRelationKindsCountChart extends ApexChartsBuilder {
+public class EntityAttachedRelationKindsCountChart extends Span {
 
     public EntityAttachedRelationKindsCountChart(Map<String, Long> attachedRelationKindCountInfo) {
         Set<String> relationKindsSet = attachedRelationKindCountInfo.keySet();
@@ -24,6 +20,12 @@ public class EntityAttachedRelationKindsCountChart extends ApexChartsBuilder {
             idx++;
         }
 
+        PieChart pieChart = new PieChart(280,200);
+        add(pieChart);
+        pieChart.setDate(null);
+
+
+        /*
         Stroke stroke = new Stroke();
         stroke.setWidth(0.5);
         withChart(ChartBuilder.get().withType(Type.PIE).build())
@@ -32,5 +34,7 @@ public class EntityAttachedRelationKindsCountChart extends ApexChartsBuilder {
                 .withLegend(LegendBuilder.get().withFloating(true).withPosition(Position.RIGHT).withOffsetX(800.0).build())
                 .withSeries(relationEntityCountArray)
                 .build();
+
+         */
     }
 }
