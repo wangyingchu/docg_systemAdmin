@@ -20,21 +20,8 @@ public class EntityAttachedRelationKindsCountChart extends Span {
             idx++;
         }
 
-        PieChart pieChart = new PieChart(280,200);
+        PieChart pieChart = new PieChart(320,180);
         add(pieChart);
-        pieChart.setDate(null);
-
-
-        /*
-        Stroke stroke = new Stroke();
-        stroke.setWidth(0.5);
-        withChart(ChartBuilder.get().withType(Type.PIE).build())
-                .withStroke(stroke)
-                .withLabels(relationKindNameArray)
-                .withLegend(LegendBuilder.get().withFloating(true).withPosition(Position.RIGHT).withOffsetX(800.0).build())
-                .withSeries(relationEntityCountArray)
-                .build();
-
-         */
+        pieChart.setDate(relationKindNameArray,relationEntityCountArray);
     }
 }

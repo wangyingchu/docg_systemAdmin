@@ -7,9 +7,7 @@ window.Vaadin.Flow.common_PieChart_echarts = {
         c.$connector = {
             // functions
             setData: function (data) {
-
-
-
+                /*
                 c.$connector.option.series[0].data = [
                     { value: 1048, name: 'Search Engine' },
                     { value: 735, name: 'Direct' },
@@ -17,13 +15,8 @@ window.Vaadin.Flow.common_PieChart_echarts = {
                     { value: 484, name: 'Union Ads' },
                     { value: 300, name: 'Video Ads' }
                 ];
-
-
-
-
-
-
-
+                */
+                c.$connector.option.series[0].data = data;
                 c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
             }
         };

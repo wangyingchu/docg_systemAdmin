@@ -7,10 +7,9 @@ import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.function.SerializableConsumer;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsPieChartPayload;
 import elemental.json.Json;
-import elemental.json.JsonObject;
-
-import java.util.Map;
+import elemental.json.JsonArray;
 
 @JavaScript("./visualization/common/pieChart_echarts-connector.js")
 public class PieChart extends Div {
@@ -24,9 +23,15 @@ public class PieChart extends Div {
         initConnector(getElement());
     }
 
-    public void setDate(Map<String, Long> pieChartDate){
-        JsonObject obj = Json.createObject();
-        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", obj));
+    public void setDate(String[] nameArray,Double[] valueArray){
+        JsonArray dataArray = Json.createArray();
+        for(int i = 0; i < nameArray.length; i++){
+            String dataName = nameArray[i];
+            Double dataValue = valueArray[i];
+            EchartsPieChartPayload currentEchartsPieChartPayload = new EchartsPieChartPayload(dataName,dataValue);
+            dataArray.set(i,currentEchartsPieChartPayload.toJson());
+        }
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", dataArray));
     }
 
     @Override
