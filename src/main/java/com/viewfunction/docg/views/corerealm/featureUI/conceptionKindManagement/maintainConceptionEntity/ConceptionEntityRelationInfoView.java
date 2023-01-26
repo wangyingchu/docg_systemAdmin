@@ -1,7 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
-import com.github.appreciated.apexcharts.ApexCharts;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
