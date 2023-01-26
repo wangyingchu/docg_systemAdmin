@@ -34,6 +34,15 @@ public class PieChart extends Div {
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", dataArray));
     }
 
+    public void setColor(String[] colorArray){
+        JsonArray dataArray = Json.createArray();
+        for(int i = 0; i < colorArray.length; i++){
+            String currentColor = colorArray[i];
+            dataArray.set(i,currentColor);
+        }
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setColor", dataArray));
+    }
+
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
