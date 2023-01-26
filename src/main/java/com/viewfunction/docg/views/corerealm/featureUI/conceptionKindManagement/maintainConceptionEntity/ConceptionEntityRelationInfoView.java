@@ -27,7 +27,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
 import com.viewfunction.docg.element.commonComponent.*;
-import com.viewfunction.docg.element.commonComponent.chart.PieChart;
 import com.viewfunction.docg.element.eventHandling.RelationEntityDeletedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
@@ -215,12 +214,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
                 relationKindsInfoLayout.add(chartContainer);
 
                 EntityAttachedRelationKindsCountChart entityAttachedRelationKindsCountChart = new EntityAttachedRelationKindsCountChart(attachedRelationKindCountInfo);
-                        //.withColors("#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a").build();
-                //entityAttachedRelationKindsCountChart.setWidth(200,Unit.PIXELS);
-                //entityAttachedRelationKindsCountChart.getStyle().set("padding-left","50px");
                 chartContainer.add(entityAttachedRelationKindsCountChart);
-
-
 
                 Icon filterIcon = new Icon(VaadinIcon.FILTER);
                 filterIcon.setSize("8px");
@@ -343,14 +337,9 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
                 relationEntityCountSpanMap.get(relationKindName).setText(""+newRelationEntityCount.longValue());
 
                 chartContainer.removeAll();
-                /*
-                ApexCharts entityAttachedRelationKindsCountChart = new EntityAttachedRelationKindsCountChart(attachedRelationKindCountInfo)
-                        .withColors("#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a").build();
-                entityAttachedRelationKindsCountChart.setWidth(200,Unit.PIXELS);
-                entityAttachedRelationKindsCountChart.getStyle().set("padding-left","50px");
-                chartContainer.add(entityAttachedRelationKindsCountChart);
 
-                 */
+                EntityAttachedRelationKindsCountChart entityAttachedRelationKindsCountChart = new EntityAttachedRelationKindsCountChart(attachedRelationKindCountInfo);
+                chartContainer.add(entityAttachedRelationKindsCountChart);
             }
         }
     }

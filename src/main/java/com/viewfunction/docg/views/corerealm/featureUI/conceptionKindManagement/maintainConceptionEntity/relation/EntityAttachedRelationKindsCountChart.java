@@ -20,7 +20,7 @@ public class EntityAttachedRelationKindsCountChart extends Span {
             idx++;
         }
 
-        PieChart pieChart = new PieChart(320,180);
+        PieChart pieChart = new PieChart(320,180);//.withColors("#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a").build();
         add(pieChart);
         pieChart.setDate(relationKindNameArray,relationEntityCountArray);
     }
