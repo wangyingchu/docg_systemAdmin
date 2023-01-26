@@ -12,6 +12,9 @@ window.Vaadin.Flow.common_PieChart_echarts = {
             setRadius:function(radiusValue){
                 c.$connector.option.series[0].radius = radiusValue;
             },
+            setCenter:function(centerArray){
+                c.$connector.option.series[0].center = centerArray;
+            },
             setData: function (data) {
                 /*
                 c.$connector.option.series[0].data = [
@@ -44,16 +47,19 @@ window.Vaadin.Flow.common_PieChart_echarts = {
                 },
                 formatter: '{b0}<br/> <b>{c0}</b>  -  {d}%'
             },
-            /*
+
             legend: {
-                //orient: 'vertical',
-                //left: 'left'
+                show:true,
+                type:'scroll',
+                orient: 'vertical',
+                right: 'right'
             },
-            */
+
             series: [
                 {
                     type: 'pie',
                     //radius: '70%',
+                    //center:['50%', '50%'],
                     emphasis: {
                         itemStyle: {
                             shadowBlur: 10,

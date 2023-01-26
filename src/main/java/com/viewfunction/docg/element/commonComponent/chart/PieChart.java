@@ -43,6 +43,17 @@ public class PieChart extends Div {
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setColor", dataArray));
     }
 
+    public void setCenter(int xOffset,int yOffset){
+        if(xOffset>0 && xOffset<=100 && yOffset>0 && yOffset<=100){
+            JsonArray dataArray = Json.createArray();
+            String xOffsetValue = ""+xOffset+"%";
+            String yOffsetValue = ""+yOffset+"%";
+            dataArray.set(0,xOffsetValue);
+            dataArray.set(1,yOffsetValue);
+            runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setCenter", dataArray));
+        }
+    }
+
     public void setRadius(int radius){
         if(radius>0 && radius<=100){
             String radiusValue = ""+radius+"%";

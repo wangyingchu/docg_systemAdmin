@@ -1,7 +1,5 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology;
 
-import com.github.appreciated.apexcharts.ApexCharts;
-
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
@@ -115,11 +113,7 @@ public class RelatedConceptionEntitiesKindStaticInfoView extends VerticalLayout 
                     conceptionKindInfoItem.add(conceptionEntityCountSpan);
                 }
 
-                ApexCharts entityAttachedConceptionKindsCountChart = new EntityAttachedConceptionKindsCountChart(attachedConceptionKindsMap)
-                        .withColors("#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67",
-                                    "#EA2027","#006266","#1B1464","#5758BB","#6F1E51","#EE5A24","#009432","##0652DD","#9980FA","#833471").build();
-                entityAttachedConceptionKindsCountChart.setWidth(680,Unit.PIXELS);
-                entityAttachedConceptionKindsCountChart.setHeight(360,Unit.PIXELS);
+                EntityAttachedConceptionKindsCountChart entityAttachedConceptionKindsCountChart = new EntityAttachedConceptionKindsCountChart(attachedConceptionKindsMap);
                 conceptionKindsInfoLayout.add(entityAttachedConceptionKindsCountChart);
             }
         }

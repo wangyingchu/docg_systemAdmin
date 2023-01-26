@@ -1,16 +1,13 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.relation;
 
-import com.github.appreciated.apexcharts.ApexChartsBuilder;
-import com.github.appreciated.apexcharts.config.Stroke;
-import com.github.appreciated.apexcharts.config.builder.ChartBuilder;
-import com.github.appreciated.apexcharts.config.chart.Type;
+import com.vaadin.flow.component.html.Span;
+import com.viewfunction.docg.element.commonComponent.chart.PieChart;
 
 import java.util.Map;
 import java.util.Set;
 
-public class EntityAttachedConceptionKindsCountChart extends ApexChartsBuilder {
+public class EntityAttachedConceptionKindsCountChart extends Span {
     public EntityAttachedConceptionKindsCountChart(Map<Set<String>,Long> attachedConceptionKindsMap){
-
         Set<Set<String>> conceptionKindsNamesSet = attachedConceptionKindsMap.keySet();
 
         String[] conceptionKindNameArray = new String[conceptionKindsNamesSet.size()];
@@ -22,13 +19,13 @@ public class EntityAttachedConceptionKindsCountChart extends ApexChartsBuilder {
             idx++;
         }
 
-        Stroke stroke = new Stroke();
-        stroke.setWidth(0.5);
-        withChart(ChartBuilder.get().withType(Type.PIE).build())
-                .withStroke(stroke)
-                .withLabels(conceptionKindNameArray)
-                //.withLegend(LegendBuilder.get().withFloating(true).withPosition(Position.right).withOffsetX(600.0).build())
-                .withSeries(conceptionEntityCountArray)
-                .build();
+        PieChart pieChart = new PieChart(680,350);
+        add(pieChart);
+
+        String[] pieColorArray = new String[]{"#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"};
+        pieChart.setColor(pieColorArray);
+        pieChart.setCenter(25,40);
+        pieChart.setRadius(70);
+        pieChart.setDate(conceptionKindNameArray,conceptionEntityCountArray);
     }
 }
