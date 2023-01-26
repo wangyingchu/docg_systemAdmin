@@ -38,7 +38,8 @@ window.Vaadin.Flow.common_PieChart_echarts = {
                 showContent:true,
                 textStyle: {
                     fontSize: 12
-                }
+                },
+                formatter: '{b0}<br/> <b>{c0}</b>  -  {d}%'
             },
             /*
             legend: {
