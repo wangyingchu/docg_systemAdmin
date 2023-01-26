@@ -9,6 +9,9 @@ window.Vaadin.Flow.common_PieChart_echarts = {
             setColor:function(colorArray){
                 c.$connector.option.color = colorArray;
             },
+            setRadius:function(radiusValue){
+                c.$connector.option.series[0].radius = radiusValue;
+            },
             setData: function (data) {
                 /*
                 c.$connector.option.series[0].data = [
@@ -50,7 +53,7 @@ window.Vaadin.Flow.common_PieChart_echarts = {
             series: [
                 {
                     type: 'pie',
-                    radius: '80%',
+                    //radius: '70%',
                     emphasis: {
                         itemStyle: {
                             shadowBlur: 10,

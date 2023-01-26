@@ -25,6 +25,7 @@ public class EntityAttachedRelationKindsCountChart extends Span {
 
         String[] pieColorArray = new String[]{"#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"};
         pieChart.setColor(pieColorArray);
+        pieChart.setRadius(70);
         pieChart.setDate(relationKindNameArray,relationEntityCountArray);
     }
 }

@@ -43,6 +43,13 @@ public class PieChart extends Div {
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setColor", dataArray));
     }
 
+    public void setRadius(int radius){
+        if(radius>0 && radius<=100){
+            String radiusValue = ""+radius+"%";
+            runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setRadius", radiusValue));
+        }
+    }
+
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
