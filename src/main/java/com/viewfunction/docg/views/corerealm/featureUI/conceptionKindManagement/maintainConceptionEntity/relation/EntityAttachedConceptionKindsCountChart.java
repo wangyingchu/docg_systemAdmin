@@ -26,6 +26,7 @@ public class EntityAttachedConceptionKindsCountChart extends Span {
         pieChart.setColor(pieColorArray);
         pieChart.setCenter(25,40);
         pieChart.setRadius(70);
+        pieChart.enableRightLegend();
         pieChart.setDate(conceptionKindNameArray,conceptionEntityCountArray);
     }
 }

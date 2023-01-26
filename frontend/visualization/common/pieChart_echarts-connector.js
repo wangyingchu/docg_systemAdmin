@@ -15,6 +15,38 @@ window.Vaadin.Flow.common_PieChart_echarts = {
             setCenter:function(centerArray){
                 c.$connector.option.series[0].center = centerArray;
             },
+            enableRightLegend:function(command){
+                c.$connector.option.legend = {
+                    show:true,
+                    type:'scroll',
+                    orient: 'vertical',
+                    right: 'right'
+                };
+            },
+            enableLeftLegend:function(command){
+                c.$connector.option.legend = {
+                    show:true,
+                    type:'scroll',
+                    orient: 'vertical',
+                    left: 'left'
+                };
+            },
+            enableTopLegend:function(command){
+                c.$connector.option.legend = {
+                    show:true,
+                    type:'scroll',
+                    orient: 'horizontal',
+                    top: 'top'
+                };
+            },
+            enableBottomLegend:function(command){
+                c.$connector.option.legend = {
+                    show:true,
+                    type:'scroll',
+                    orient: 'horizontal',
+                    bottom: 'bottom'
+                };
+            },
             setData: function (data) {
                 /*
                 c.$connector.option.series[0].data = [
@@ -47,14 +79,9 @@ window.Vaadin.Flow.common_PieChart_echarts = {
                 },
                 formatter: '{b0}<br/> <b>{c0}</b>  -  {d}%'
             },
-
             legend: {
-                show:true,
-                type:'scroll',
-                orient: 'vertical',
-                right: 'right'
+                show:false
             },
-
             series: [
                 {
                     type: 'pie',

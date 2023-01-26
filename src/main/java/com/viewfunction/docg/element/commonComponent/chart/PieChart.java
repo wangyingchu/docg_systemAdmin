@@ -61,6 +61,22 @@ public class PieChart extends Div {
         }
     }
 
+    public void enableRightLegend(){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.enableRightLegend", ""));
+    }
+
+    public void enableLeftLegend(){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.enableLeftLegend", ""));
+    }
+
+    public void enableTopLegend(){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.enableTopLegend", ""));
+    }
+
+    public void enableBottomLegend(){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.enableBottomLegend", ""));
+    }
+
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
