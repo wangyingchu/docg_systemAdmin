@@ -27,12 +27,18 @@ window.Vaadin.Flow.common_PieChart_echarts = {
         c.$connector.option = {
             //color:["#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"],
             title: {
-                //text: 'Referer of a Website',
-                //subtext: 'Fake Data',
-                //left: 'center'
+                //text: 'title text',
+                //subtext: 'subtext',
+                //left: 'left'
             },
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                confine:true,
+                show:true,
+                showContent:true,
+                textStyle: {
+                    fontSize: 12
+                }
             },
             /*
             legend: {
@@ -49,7 +55,9 @@ window.Vaadin.Flow.common_PieChart_echarts = {
                             shadowBlur: 10,
                             shadowOffsetX: 0,
                             shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
+                        },
+                        scale:true,
+                        scaleSize:5
                     }
                 }
             ]
