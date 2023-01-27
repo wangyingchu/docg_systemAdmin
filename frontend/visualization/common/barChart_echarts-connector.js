@@ -48,16 +48,6 @@ window.Vaadin.Flow.common_BarChart_echarts = {
                 };
             },
             setData: function (data) {
-                console.log(data);
-                /*
-                c.$connector.option.series[0].data = [
-                    { value: 1048, name: 'Search Engine' },
-                    { value: 735, name: 'Direct' },
-                    { value: 580, name: 'Email' },
-                    { value: 484, name: 'Union Ads' },
-                    { value: 300, name: 'Video Ads' }
-                ];
-                */
                 c.$connector.option.xAxis.data = data.category;
                 c.$connector.option.series[0].data = data.value;
                 c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
@@ -65,17 +55,74 @@ window.Vaadin.Flow.common_BarChart_echarts = {
         };
         c.$connector.myChart = echarts.init(c);
         c.$connector.option = {
+            color:["#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"],
+            tooltip: {
+                trigger: 'item',
+                confine:true,
+                show:true,
+                showContent:true,
+                textStyle: {
+                    fontSize: 12
+                },
+                formatter: '{b0}<br/> <b>{c0}</b>'
+            },
+
+            grid: {
+                //left: '3%',
+                right: '20%',
+                //bottom: '3%',
+                top:'1%',
+                containLabel: false
+            },
+
+            legend:{
+                show:true,
+                type:'scroll',
+                orient: 'horizontal',
+                top: 'top'
+            },
             xAxis: {
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                //data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                axisLabel:{
+                    show:true,
+
+                    inside:false,
+                    rotate:30,
+                    fontSize:8
+                }
             },
             yAxis: {
-                type: 'value'
+                type: 'value',
+
+
+               // axisLine:{onZero:false},
+                //offset:-200,
+                position:'right',
+
+                /*
+                min: function (value) {
+                    return value.min-100;
+                },
+                */
+                max: function (value) {
+                    return value.max+100;
+                },
+
+                axisLabel:{
+                    show:true,
+                    //position:'top',
+                    inside:false,
+                    //rotate:55,
+                    fontSize:10
+                }
             },
             series: [
                 {
-                    data: [120, 200, 150, 80, 70, 110, 130],
+                    //data: [120, 200, 150, 80, 70, 110, 130],
                     type: 'bar'
+                    //,
+                    //center:[50,10]
                 }
             ]
         };
