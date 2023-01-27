@@ -48,6 +48,7 @@ window.Vaadin.Flow.common_BarChart_echarts = {
                 };
             },
             setData: function (data) {
+                console.log(data);
                 /*
                 c.$connector.option.series[0].data = [
                     { value: 1048, name: 'Search Engine' },
@@ -57,45 +58,24 @@ window.Vaadin.Flow.common_BarChart_echarts = {
                     { value: 300, name: 'Video Ads' }
                 ];
                 */
-                c.$connector.option.series[0].data = data;
+                c.$connector.option.xAxis.data = data.category;
+                c.$connector.option.series[0].data = data.value;
                 c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
             }
         };
         c.$connector.myChart = echarts.init(c);
         c.$connector.option = {
-            //color:["#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"],
-            title: {
-                //text: 'title text',
-                //subtext: 'subtext',
-                //left: 'left'
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
             },
-            tooltip: {
-                trigger: 'item',
-                confine:true,
-                show:true,
-                showContent:true,
-                textStyle: {
-                    fontSize: 12
-                },
-                formatter: '{b0}<br/> <b>{c0}</b>  -  {d}%'
-            },
-            legend: {
-                show:false
+            yAxis: {
+                type: 'value'
             },
             series: [
                 {
-                    type: 'pie',
-                    //radius: '70%',
-                    //center:['50%', '50%'],
-                    emphasis: {
-                        itemStyle: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        },
-                        scale:true,
-                        scaleSize:5
-                    }
+                    data: [120, 200, 150, 80, 70, 110, 130],
+                    type: 'bar'
                 }
             ]
         };

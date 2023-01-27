@@ -1,18 +1,15 @@
 package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
-import com.github.appreciated.apexcharts.ApexCharts;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.chart.BarChart;
-import com.viewfunction.docg.element.commonComponent.chart.PieChart;
 
 import java.text.NumberFormat;
 import java.util.*;
@@ -70,13 +67,6 @@ public class RelationKindInfoWidget extends HorizontalLayout {
         kindEntitiesCountArray[topRelationKindNameArraySize-1] =Double.valueOf( totalEntitiesCount - top10CountTotal);
         NumberFormat numberFormat = NumberFormat.getInstance();
 
-
-
-
-
-
-
-
         new PrimaryKeyValueDisplayItem(leftComponentContainer, FontAwesome.Regular.CIRCLE.create(),"关系类型数量:",numberFormat.format(totalKindCount));
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
@@ -111,17 +101,5 @@ public class RelationKindInfoWidget extends HorizontalLayout {
         //pieChart.setRadius(60);
         //pieChart.enableBottomLegend();
         pieChart.setDate(relationKindNameArray,kindEntitiesCountArray);
-
-
-
-
-
-
-
-
-        ApexCharts apexCharts = new RelationEntityCountChart().build();
-        apexCharts.setWidth("330");
-        rightComponentContainer.add(apexCharts);
-        rightComponentContainer.setHorizontalComponentAlignment(Alignment.START,apexCharts);
     }
 }
