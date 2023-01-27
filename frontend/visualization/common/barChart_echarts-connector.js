@@ -75,12 +75,7 @@ window.Vaadin.Flow.common_BarChart_echarts = {
                 containLabel: false
             },
 
-            legend:{
-                show:true,
-                type:'scroll',
-                orient: 'horizontal',
-                top: 'top'
-            },
+
             xAxis: {
                 type: 'category',
                 //data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']

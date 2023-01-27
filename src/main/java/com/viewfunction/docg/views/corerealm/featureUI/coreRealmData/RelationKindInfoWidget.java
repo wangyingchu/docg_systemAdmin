@@ -89,8 +89,6 @@ public class RelationKindInfoWidget extends HorizontalLayout {
         add(rightComponentContainer);
         this.setFlexGrow(1,rightComponentContainer);
 
-
-
         BarChart barChart = new BarChart(330,250);
         rightComponentContainer.add(barChart);
         rightComponentContainer.setHorizontalComponentAlignment(Alignment.START,barChart);
