@@ -74,14 +74,10 @@ window.Vaadin.Flow.common_BarChart_echarts = {
                 top:'1%',
                 containLabel: false
             },
-
-
             xAxis: {
                 type: 'category',
-                //data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
                 axisLabel:{
                     show:true,
-
                     inside:false,
                     rotate:30,
                     fontSize:8
@@ -89,35 +85,19 @@ window.Vaadin.Flow.common_BarChart_echarts = {
             },
             yAxis: {
                 type: 'value',
-
-
-               // axisLine:{onZero:false},
-                //offset:-200,
                 position:'right',
-
-                /*
-                min: function (value) {
-                    return value.min-100;
-                },
-                */
                 max: function (value) {
                     return value.max+100;
                 },
-
                 axisLabel:{
                     show:true,
-                    //position:'top',
                     inside:false,
-                    //rotate:55,
                     fontSize:10
                 }
             },
             series: [
                 {
-                    //data: [120, 200, 150, 80, 70, 110, 130],
                     type: 'bar'
-                    //,
-                    //center:[50,10]
                 }
             ]
         };
