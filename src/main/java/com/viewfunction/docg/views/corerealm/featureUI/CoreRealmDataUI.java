@@ -27,6 +27,7 @@ public class CoreRealmDataUI extends VerticalLayout {
     private Registration listener;
 
     private VerticalLayout leftSideContentContainerLayout;
+    private VerticalLayout rightSideContentContainerLayout;
 
     public CoreRealmDataUI(){
 
@@ -64,6 +65,10 @@ public class CoreRealmDataUI extends VerticalLayout {
         leftSideContentContainerLayout.setWidth(550, Unit.PIXELS);
         leftSideContentContainerLayout.addClassNames("border-r","border-contrast-20");
         contentContainerLayout.add(leftSideContentContainerLayout);
+
+        rightSideContentContainerLayout = new VerticalLayout();
+        rightSideContentContainerLayout.setSpacing(false);
+        contentContainerLayout.add(rightSideContentContainerLayout);
 
         HorizontalLayout coreRealmInfoContainerLayout = new HorizontalLayout();
         coreRealmInfoContainerLayout.setWidth(100,Unit.PERCENTAGE);
@@ -140,6 +145,10 @@ public class CoreRealmDataUI extends VerticalLayout {
 
         SystemRuntimeInfoWidget systemRuntimeInfoWidget = new SystemRuntimeInfoWidget();
         leftSideSectionContainerScrollLayout.add(systemRuntimeInfoWidget);
+
+        Icon icon2 = new Icon(VaadinIcon.GRID_SMALL_O);
+        SectionActionBar sectionActionBar2 = new SectionActionBar(icon2,"数据关联分布",null);
+        rightSideContentContainerLayout.add(sectionActionBar2);
     }
 
     @Override
@@ -148,12 +157,14 @@ public class CoreRealmDataUI extends VerticalLayout {
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             this.leftSideContentContainerLayout.setHeight(event.getHeight()-185,Unit.PIXELS);
+            this.rightSideContentContainerLayout.setWidth(event.getWidth()-580,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserWidth = receiver.getBodyClientWidth();
             int browserHeight = receiver.getBodyClientHeight();
             this.leftSideContentContainerLayout.setHeight(browserHeight-185,Unit.PIXELS);
+            this.rightSideContentContainerLayout.setWidth(browserWidth-580,Unit.PIXELS);
         }));
     }
 
