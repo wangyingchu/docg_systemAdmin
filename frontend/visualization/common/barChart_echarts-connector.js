@@ -9,37 +9,17 @@ window.Vaadin.Flow.common_BarChart_echarts = {
             setColor:function(colorArray){
                 c.$connector.option.color = colorArray;
             },
-            enableRightLegend:function(command){
-                c.$connector.option.legend = {
-                    show:true,
-                    type:'scroll',
-                    orient: 'vertical',
-                    right: 'right'
-                };
+            setTopMargin:function(marginValue){
+                c.$connector.option.grid.top = marginValue;
             },
-            enableLeftLegend:function(command){
-                c.$connector.option.legend = {
-                    show:true,
-                    type:'scroll',
-                    orient: 'vertical',
-                    left: 'left'
-                };
+            setLeftMargin:function(marginValue){
+                c.$connector.option.grid.left = marginValue;
             },
-            enableTopLegend:function(command){
-                c.$connector.option.legend = {
-                    show:true,
-                    type:'scroll',
-                    orient: 'horizontal',
-                    top: 'top'
-                };
+            setRightMargin:function(marginValue){
+                c.$connector.option.grid.right = marginValue;
             },
-            enableBottomLegend:function(command){
-                c.$connector.option.legend = {
-                    show:true,
-                    type:'scroll',
-                    orient: 'horizontal',
-                    bottom: 'bottom'
-                };
+            setBottomMargin:function(marginValue){
+                c.$connector.option.grid.bottom = marginValue;
             },
             setData: function (data) {
                 c.$connector.option.xAxis.data = data.category;
@@ -49,7 +29,6 @@ window.Vaadin.Flow.common_BarChart_echarts = {
         };
         c.$connector.myChart = echarts.init(c);
         c.$connector.option = {
-            color:["#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"],
             tooltip: {
                 trigger: 'item',
                 confine:true,
@@ -62,9 +41,9 @@ window.Vaadin.Flow.common_BarChart_echarts = {
             },
             grid: {
                 //left: '3%',
-                right: '20%',
+                //right: '20%',
                 //bottom: '3%',
-                top:'2%',
+                //top:'2%',
                 containLabel: false
             },
             xAxis: {
