@@ -69,8 +69,10 @@ public class ConceptionKindInfoWidget extends HorizontalLayout {
             kindEntitiesCountArray[i] = Double.valueOf(mapping.getValue());
             top10CountTotal = top10CountTotal+mapping.getValue();
         }
-        conceptionKindNameArray[topConceptionKindNameArraySize-1] = "OTHER";
-        kindEntitiesCountArray[topConceptionKindNameArraySize-1] =Double.valueOf( totalEntitiesCount - top10CountTotal);
+        if(topConceptionKindNameArraySize ==11) {
+            conceptionKindNameArray[topConceptionKindNameArraySize - 1] = "OTHER";
+            kindEntitiesCountArray[topConceptionKindNameArraySize - 1] = Double.valueOf(totalEntitiesCount - top10CountTotal);
+        }
         NumberFormat numberFormat = NumberFormat.getInstance();
 
         new PrimaryKeyValueDisplayItem(leftComponentContainer,FontAwesome.Regular.CIRCLE.create(),"概念类型数量:",numberFormat.format(totalKindCount));
