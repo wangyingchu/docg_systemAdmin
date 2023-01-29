@@ -66,12 +66,11 @@ window.Vaadin.Flow.common_BarChart_echarts = {
                 },
                 formatter: '{b0}<br/> <b>{c0}</b>'
             },
-
             grid: {
                 //left: '3%',
                 right: '20%',
                 //bottom: '3%',
-                top:'1%',
+                top:'2%',
                 containLabel: false
             },
             xAxis: {
