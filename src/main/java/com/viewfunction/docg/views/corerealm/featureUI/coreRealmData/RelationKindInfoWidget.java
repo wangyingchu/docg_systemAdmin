@@ -95,17 +95,8 @@ public class RelationKindInfoWidget extends HorizontalLayout {
         BarChart barChart = new BarChart(330,250);
         rightComponentContainer.add(barChart);
 
-        String[] pieColorArray = new String[]{"#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"};
-
-
-        System.out.println(relationKindNameArray);
-        for(String currentKey:relationKindNameArray){
-            System.out.println(currentKey);
-        }
-        System.out.println(kindEntitiesCountArray);
-        for(Double currentValue:kindEntitiesCountArray){
-            System.out.println(currentValue);
-        }
+        String[] barColorArray = new String[]{"#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"};
+        barChart.setColor(barColorArray);
 
         barChart.setDate(relationKindNameArray,kindEntitiesCountArray);
     }

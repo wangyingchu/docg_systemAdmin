@@ -9,12 +9,6 @@ window.Vaadin.Flow.common_BarChart_echarts = {
             setColor:function(colorArray){
                 c.$connector.option.color = colorArray;
             },
-            setRadius:function(radiusValue){
-                c.$connector.option.series[0].radius = radiusValue;
-            },
-            setCenter:function(centerArray){
-                c.$connector.option.series[0].center = centerArray;
-            },
             enableRightLegend:function(command){
                 c.$connector.option.legend = {
                     show:true,
@@ -86,7 +80,7 @@ window.Vaadin.Flow.common_BarChart_echarts = {
                 type: 'value',
                 position:'right',
                 max: function (value) {
-                    return value.max+100;
+                    return value.max+10;
                 },
                 axisLabel:{
                     show:true,

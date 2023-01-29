@@ -8,6 +8,8 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsBarChartPayload;
+import elemental.json.Json;
+import elemental.json.JsonArray;
 
 @JavaScript("./visualization/common/barChart_echarts-connector.js")
 public class BarChart extends Div {
@@ -24,6 +26,15 @@ public class BarChart extends Div {
     public void setDate(String[] nameArray,Double[] valueArray){
         EchartsBarChartPayload echartsBarChartPayload = new EchartsBarChartPayload(nameArray,valueArray);
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", echartsBarChartPayload.toJson()));
+    }
+
+    public void setColor(String[] colorArray){
+        JsonArray dataArray = Json.createArray();
+        for(int i = 0; i < colorArray.length; i++){
+            String currentColor = colorArray[i];
+            dataArray.set(i,currentColor);
+        }
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setColor", dataArray));
     }
 
     @Override
