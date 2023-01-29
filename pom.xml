@@ -132,12 +132,6 @@
             <artifactId>so-charts</artifactId>
             <version>2.3.0</version>
         </dependency>
-        <!-- https://vaadin.com/directory/component/apexchartsjs/ -->
-        <dependency>
-            <groupId>com.github.appreciated</groupId>
-            <artifactId>apexcharts</artifactId>
-            <version>23.0.0</version>
-        </dependency>
         <!-- https://vaadin.com/directory/component/veaktor -->
         <!--
         <dependency>

@@ -1,12 +1,13 @@
 package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
-import com.github.appreciated.apexcharts.ApexCharts;
+
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
+import com.viewfunction.docg.element.commonComponent.chart.BarChart;
 
 public class AttributeKindInfoWidget extends HorizontalLayout {
 
@@ -37,9 +38,7 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
         add(rightComponentContainer);
         this.setFlexGrow(1,rightComponentContainer);
 
-        ApexCharts apexCharts = new AttributeKindsUsageCountChart().build();
-        apexCharts.setWidth("330");
-        rightComponentContainer.add(apexCharts);
-        rightComponentContainer.setHorizontalComponentAlignment(Alignment.START,apexCharts);
+        BarChart barChart = new BarChart(330,250);
+        rightComponentContainer.add(barChart);
     }
 }
