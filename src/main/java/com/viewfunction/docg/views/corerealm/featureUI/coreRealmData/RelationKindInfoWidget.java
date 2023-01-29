@@ -52,19 +52,22 @@ public class RelationKindInfoWidget extends HorizontalLayout {
             }
         });
 
-        int topRelationKindNameArraySize = totalKindCount >= 10 ? 11 : totalKindCount+1;
+        int topRelationKindNameArraySize = totalKindCount >= 10 ? 11 : totalKindCount;
         String[] relationKindNameArray = new String[topRelationKindNameArraySize];
         Double[] kindEntitiesCountArray = new Double[topRelationKindNameArraySize];
         long top10CountTotal = 0;
 
-        for(int i=0;i <topRelationKindNameArraySize -1;i++){
+        for(int i=0;i <topRelationKindNameArraySize;i++){
             Map.Entry<String,Long> mapping = orderedlist.get(i);
             relationKindNameArray[i] = mapping.getKey();
             kindEntitiesCountArray[i] = Double.valueOf(mapping.getValue());
             top10CountTotal = top10CountTotal+mapping.getValue();
         }
-        relationKindNameArray[topRelationKindNameArraySize-1] = "OTHER";
-        kindEntitiesCountArray[topRelationKindNameArraySize-1] =Double.valueOf( totalEntitiesCount - top10CountTotal);
+        if(topRelationKindNameArraySize == 11){
+            relationKindNameArray[topRelationKindNameArraySize-1] = "OTHER";
+            kindEntitiesCountArray[topRelationKindNameArraySize-1] =Double.valueOf( totalEntitiesCount - top10CountTotal);
+        }
+
         NumberFormat numberFormat = NumberFormat.getInstance();
 
         new PrimaryKeyValueDisplayItem(leftComponentContainer, FontAwesome.Regular.CIRCLE.create(),"关系类型数量:",numberFormat.format(totalKindCount));
@@ -93,6 +96,16 @@ public class RelationKindInfoWidget extends HorizontalLayout {
         rightComponentContainer.add(barChart);
 
         String[] pieColorArray = new String[]{"#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"};
+
+
+        System.out.println(relationKindNameArray);
+        for(String currentKey:relationKindNameArray){
+            System.out.println(currentKey);
+        }
+        System.out.println(kindEntitiesCountArray);
+        for(Double currentValue:kindEntitiesCountArray){
+            System.out.println(currentValue);
+        }
 
         barChart.setDate(relationKindNameArray,kindEntitiesCountArray);
     }
