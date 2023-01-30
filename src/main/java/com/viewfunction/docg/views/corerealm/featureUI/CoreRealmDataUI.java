@@ -28,6 +28,7 @@ public class CoreRealmDataUI extends VerticalLayout {
 
     private VerticalLayout leftSideContentContainerLayout;
     private VerticalLayout rightSideContentContainerLayout;
+    private DataRelationDistributionWidget dataRelationDistributionWidget;
 
     public CoreRealmDataUI(){
 
@@ -72,7 +73,7 @@ public class CoreRealmDataUI extends VerticalLayout {
 
         HorizontalLayout coreRealmInfoContainerLayout = new HorizontalLayout();
         coreRealmInfoContainerLayout.setWidth(100,Unit.PERCENTAGE);
-        Icon icon = new Icon(VaadinIcon.AUTOMATION); //Icon icon = new Icon("lumo", "photo");
+        Icon icon = new Icon(VaadinIcon.AUTOMATION);
         //leftSideContentContainerLayout.add(FontAwesome.Solid.ADDRESS_CARD.create());
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"数据概览信息",null);
         leftSideContentContainerLayout.add(sectionActionBar);
@@ -147,8 +148,11 @@ public class CoreRealmDataUI extends VerticalLayout {
         leftSideSectionContainerScrollLayout.add(systemRuntimeInfoWidget);
 
         Icon icon2 = new Icon(VaadinIcon.GRID_SMALL_O);
-        SectionActionBar sectionActionBar2 = new SectionActionBar(icon2,"数据关联分布",null);
+        SectionActionBar sectionActionBar2 = new SectionActionBar(icon2,"全域数据关联分布",null);
         rightSideContentContainerLayout.add(sectionActionBar2);
+
+        dataRelationDistributionWidget = new DataRelationDistributionWidget();
+        rightSideContentContainerLayout.add(dataRelationDistributionWidget);
     }
 
     @Override
@@ -158,6 +162,7 @@ public class CoreRealmDataUI extends VerticalLayout {
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             this.leftSideContentContainerLayout.setHeight(event.getHeight()-185,Unit.PIXELS);
             this.rightSideContentContainerLayout.setWidth(event.getWidth()-580,Unit.PIXELS);
+            this.dataRelationDistributionWidget.setHeight(event.getHeight()-220,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -165,6 +170,7 @@ public class CoreRealmDataUI extends VerticalLayout {
             int browserHeight = receiver.getBodyClientHeight();
             this.leftSideContentContainerLayout.setHeight(browserHeight-185,Unit.PIXELS);
             this.rightSideContentContainerLayout.setWidth(browserWidth-580,Unit.PIXELS);
+            this.dataRelationDistributionWidget.setHeight(browserHeight-220,Unit.PIXELS);
         }));
     }
 
