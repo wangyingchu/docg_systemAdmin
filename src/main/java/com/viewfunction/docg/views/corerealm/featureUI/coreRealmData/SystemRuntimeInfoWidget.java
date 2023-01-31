@@ -9,7 +9,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.SystemStatusSnap
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
+import com.viewfunction.docg.element.commonComponent.chart.PieChart;
 
+import java.text.NumberFormat;
 import java.util.Date;
 
 public class SystemRuntimeInfoWidget extends VerticalLayout {
@@ -29,7 +31,7 @@ public class SystemRuntimeInfoWidget extends VerticalLayout {
         HorizontalLayout statusInfoContainer2 = new HorizontalLayout();
         statusInfoContainer2.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         add(statusInfoContainer2);
-        new SecondaryKeyValueDisplayItem(statusInfoContainer2, VaadinIcon.FLIGHT_TAKEOFF.create(),"系统启动时间:",systemStatusSnapshotInfo.getSystemStartupTime().toString());
+        new SecondaryKeyValueDisplayItem(statusInfoContainer2, VaadinIcon.FLIGHT_TAKEOFF.create(),"领域启动时间:",systemStatusSnapshotInfo.getSystemStartupTime().toString());
 
         HorizontalLayout statusInfoContainer3 = new HorizontalLayout();
         statusInfoContainer3.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -43,40 +45,63 @@ public class SystemRuntimeInfoWidget extends VerticalLayout {
         HorizontalLayout statusInfoContainer4 = new HorizontalLayout();
         statusInfoContainer4.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         add(statusInfoContainer4);
-        new SecondaryKeyValueDisplayItem(statusInfoContainer4, VaadinIcon.AREA_SELECT.create(),"系统服务请求总量:",""+systemStatusSnapshotInfo.getTotalAcceptedRequestCount());
+        new SecondaryKeyValueDisplayItem(statusInfoContainer4, VaadinIcon.AREA_SELECT.create(),"领域服务请求总量:",""+systemStatusSnapshotInfo.getTotalAcceptedRequestCount());
 
         HorizontalLayout statusInfoContainer5 = new HorizontalLayout();
         statusInfoContainer5.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         add(statusInfoContainer5);
-        new SecondaryKeyValueDisplayItem(statusInfoContainer5, VaadinIcon.AREA_SELECT.create(),"系统服务请求峰值:",""+systemStatusSnapshotInfo.getPeakRequestCount());
+        new SecondaryKeyValueDisplayItem(statusInfoContainer5, VaadinIcon.AREA_SELECT.create(),"领域服务请求峰值:",""+systemStatusSnapshotInfo.getPeakRequestCount());
 
         HorizontalLayout statusInfoContainer6 = new HorizontalLayout();
         statusInfoContainer6.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         add(statusInfoContainer6);
-        new SecondaryKeyValueDisplayItem(statusInfoContainer6, VaadinIcon.AREA_SELECT.create(),"当前系统服务请求量:",""+systemStatusSnapshotInfo.getCurrentAcceptedRequestCount());
+        new SecondaryKeyValueDisplayItem(statusInfoContainer6, VaadinIcon.AREA_SELECT.create(),"当前领域服务请求量:",""+systemStatusSnapshotInfo.getCurrentAcceptedRequestCount());
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setHeight(6, Unit.PIXELS);
         add(spaceDivLayout2);
 
+        HorizontalLayout diskSpaceInfoLayout = new HorizontalLayout();
+        diskSpaceInfoLayout.setDefaultVerticalComponentAlignment(Alignment.START);
+        add(diskSpaceInfoLayout);
+
+        VerticalLayout diskInfoLeftLayout = new VerticalLayout();
+        diskInfoLeftLayout.setPadding(false);
+        diskInfoLeftLayout.setDefaultHorizontalComponentAlignment(Alignment.START);
+        diskSpaceInfoLayout.add(diskInfoLeftLayout);
+
         HorizontalLayout statusInfoContainer7 = new HorizontalLayout();
         statusInfoContainer7.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        add(statusInfoContainer7);
-        new SecondaryKeyValueDisplayItem(statusInfoContainer7, VaadinIcon.DASHBOARD.create(),"系统磁盘空间总量:",""+systemStatusSnapshotInfo.getTotalDiskSpaceSize());
+        diskInfoLeftLayout.add(statusInfoContainer7);
+        new SecondaryKeyValueDisplayItem(statusInfoContainer7, VaadinIcon.DATABASE.create(),"系统磁盘空间总量:",""+(systemStatusSnapshotInfo.getTotalDiskSpaceSize()/1000000000)+"GB");
 
         HorizontalLayout statusInfoContainer8 = new HorizontalLayout();
         statusInfoContainer8.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        add(statusInfoContainer8);
-        new SecondaryKeyValueDisplayItem(statusInfoContainer8, VaadinIcon.HARDDRIVE.create(),"系统未用磁盘空间总量:",""+systemStatusSnapshotInfo.getFreeDiskSpaceSize());
-
-        HorizontalLayout statusInfoContainer9 = new HorizontalLayout();
-        statusInfoContainer9.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        add(statusInfoContainer9);
-        new SecondaryKeyValueDisplayItem(statusInfoContainer9, VaadinIcon.HARDDRIVE_O.create(),"系统可用磁盘空间总量:",""+systemStatusSnapshotInfo.getUsableDiskSpaceSize());
+        diskInfoLeftLayout.add(statusInfoContainer8);
+        new SecondaryKeyValueDisplayItem(statusInfoContainer8, VaadinIcon.HARDDRIVE.create(),"系统未用磁盘空间总量:",""+(systemStatusSnapshotInfo.getFreeDiskSpaceSize()/1000000000)+"GB");
 
         HorizontalLayout statusInfoContainer10 = new HorizontalLayout();
         statusInfoContainer10.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        add(statusInfoContainer10);
-        new SecondaryKeyValueDisplayItem(statusInfoContainer10, VaadinIcon.PIE_CHART.create(),"系统未用磁盘空间占比:",""+systemStatusSnapshotInfo.getFreeDiskPercent());
+        diskInfoLeftLayout.add(statusInfoContainer10);
+        NumberFormat nt= NumberFormat.getPercentInstance();
+        nt.setMinimumFractionDigits(1);
+        new SecondaryKeyValueDisplayItem(statusInfoContainer10, VaadinIcon.PIE_CHART.create(),"系统未用磁盘空间占比:",nt.format(systemStatusSnapshotInfo.getFreeDiskPercent()));
+
+        HorizontalLayout statusInfoContainer9 = new HorizontalLayout();
+        statusInfoContainer9.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        diskInfoLeftLayout.add(statusInfoContainer9);
+        new SecondaryKeyValueDisplayItem(statusInfoContainer9, VaadinIcon.HARDDRIVE_O.create(),"领域可用磁盘空间总量:",""+(systemStatusSnapshotInfo.getUsableDiskSpaceSize()/1000000000)+"GB");
+
+        PieChart pieChart = new PieChart(150,200);
+        String[] pieColorArray = new String[]{"#168eea","#323b43"};
+        pieChart.setColor(pieColorArray);
+        pieChart.setCenter(50,30);
+        pieChart.setRadius(50);
+        pieChart.setDate(new String[]{"领域可用磁盘空间","系统已用磁盘空间"},new Double[]{
+                Double.valueOf(systemStatusSnapshotInfo.getUsableDiskSpaceSize()/1000000000),
+                Double.valueOf((systemStatusSnapshotInfo.getTotalDiskSpaceSize()-systemStatusSnapshotInfo.getFreeDiskSpaceSize())/1000000000)
+                });
+
+        diskSpaceInfoLayout.add(pieChart);
     }
 }
