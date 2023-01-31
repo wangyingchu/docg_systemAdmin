@@ -13,10 +13,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
 
-import com.viewfunction.docg.element.commonComponent.SectionWallContainer;
-import com.viewfunction.docg.element.commonComponent.SectionWallTitle;
-import com.viewfunction.docg.element.commonComponent.SectionActionBar;
-import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.*;
 
 import java.util.ArrayList;
@@ -143,6 +140,14 @@ public class CoreRealmDataUI extends VerticalLayout {
         SectionWallContainer attributesKindInSectionWallContainer = new SectionWallContainer(attributesKindInfoSectionWallTitle, attributeKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(attributesKindInSectionWallContainer);
         attributesKindInSectionWallContainer.setOpened(false);
+
+        HorizontalLayout spaceDivLayout = new HorizontalLayout();
+        spaceDivLayout.setHeight(20,Unit.PIXELS);
+        leftSideSectionContainerScrollLayout.add(spaceDivLayout);
+
+        Icon icon3 = new Icon(VaadinIcon.SPARK_LINE);
+        SecondaryTitleActionBar sectionActionBar3 = new SecondaryTitleActionBar(icon3,"系统运行信息",null,null);
+        leftSideSectionContainerScrollLayout.add(sectionActionBar3);
 
         SystemRuntimeInfoWidget systemRuntimeInfoWidget = new SystemRuntimeInfoWidget();
         leftSideSectionContainerScrollLayout.add(systemRuntimeInfoWidget);

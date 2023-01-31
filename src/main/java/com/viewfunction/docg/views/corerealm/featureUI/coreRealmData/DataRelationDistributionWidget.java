@@ -28,7 +28,10 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         //SystemStatusSnapshotInfo systemStatusSnapshotInfo = systemMaintenanceOperator.getSystemStatusSnapshot();
+  /*
         DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
+
+        systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
 
         System.out.println(dataStatusSnapshotInfo.getRelationKindsDataCount());
         System.out.println(dataStatusSnapshotInfo.getConceptionKindsDataCount());
@@ -45,7 +48,7 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
 
 
         }
-
+*/
 
     }
     @Override
