@@ -87,12 +87,12 @@ public class SystemRuntimeInfoWidget extends VerticalLayout {
         HorizontalLayout statusInfoContainer7 = new HorizontalLayout();
         statusInfoContainer7.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         diskInfoLeftLayout.add(statusInfoContainer7);
-        totalDiskDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer7, VaadinIcon.DATABASE.create(),"系统磁盘空间总量:",""+(systemStatusSnapshotInfo.getTotalDiskSpaceSize()/1000000000)+"GB");
+        totalDiskDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer7, VaadinIcon.DATABASE.create(),"系统磁盘空间总量:",""+(systemStatusSnapshotInfo.getTotalDiskSpaceSize()/1000000000)+" GB");
 
         HorizontalLayout statusInfoContainer8 = new HorizontalLayout();
         statusInfoContainer8.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         diskInfoLeftLayout.add(statusInfoContainer8);
-        freeDiskDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer8, VaadinIcon.HARDDRIVE.create(),"系统未用磁盘空间总量:",""+(systemStatusSnapshotInfo.getFreeDiskSpaceSize()/1000000000)+"GB");
+        freeDiskDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer8, VaadinIcon.HARDDRIVE.create(),"系统未用磁盘空间总量:",""+(systemStatusSnapshotInfo.getFreeDiskSpaceSize()/1000000000)+" GB");
 
         HorizontalLayout statusInfoContainer10 = new HorizontalLayout();
         statusInfoContainer10.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -102,12 +102,12 @@ public class SystemRuntimeInfoWidget extends VerticalLayout {
         HorizontalLayout statusInfoContainer9 = new HorizontalLayout();
         statusInfoContainer9.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         diskInfoLeftLayout.add(statusInfoContainer9);
-        usableDiskDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer9, VaadinIcon.HARDDRIVE_O.create(),"领域可用磁盘空间总量:",""+(systemStatusSnapshotInfo.getUsableDiskSpaceSize()/1000000000)+"GB");
+        usableDiskDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer9, VaadinIcon.HARDDRIVE_O.create(),"领域可用磁盘空间总量:",""+(systemStatusSnapshotInfo.getUsableDiskSpaceSize()/1000000000)+" GB");
 
-        pieChart = new PieChart(150,170);
+        pieChart = new PieChart(250,150);
         String[] pieColorArray = new String[]{"#168eea","#323b43"};
         pieChart.setColor(pieColorArray);
-        pieChart.setCenter(50,30);
+        pieChart.setCenter(50,40);
         pieChart.setRadius(50);
         pieChart.setDate(new String[]{"领域可用磁盘空间","系统已用磁盘空间"},new Double[]{
                 Double.valueOf(systemStatusSnapshotInfo.getUsableDiskSpaceSize()/1000000000),
@@ -125,10 +125,10 @@ public class SystemRuntimeInfoWidget extends VerticalLayout {
         totalRequestDisplayItem.updateDisplayValue(""+systemStatusSnapshotInfo.getTotalAcceptedRequestCount());
         peakRequestDisplayItem.updateDisplayValue(""+systemStatusSnapshotInfo.getPeakRequestCount());
         currentRequestDisplayItem .updateDisplayValue(""+systemStatusSnapshotInfo.getCurrentAcceptedRequestCount());
-        totalDiskDisplayItem .updateDisplayValue(""+(systemStatusSnapshotInfo.getTotalDiskSpaceSize()/1000000000)+"GB");
-        freeDiskDisplayItem .updateDisplayValue(""+(systemStatusSnapshotInfo.getFreeDiskSpaceSize()/1000000000)+"GB");
+        totalDiskDisplayItem .updateDisplayValue(""+(systemStatusSnapshotInfo.getTotalDiskSpaceSize()/1000000000)+" GB");
+        freeDiskDisplayItem .updateDisplayValue(""+(systemStatusSnapshotInfo.getFreeDiskSpaceSize()/1000000000)+" GB");
         freeDiskPercentDisplayItem .updateDisplayValue(nt.format(systemStatusSnapshotInfo.getFreeDiskPercent()));
-        usableDiskDisplayItem.updateDisplayValue(""+(systemStatusSnapshotInfo.getUsableDiskSpaceSize()/1000000000)+"GB");
+        usableDiskDisplayItem.updateDisplayValue(""+(systemStatusSnapshotInfo.getUsableDiskSpaceSize()/1000000000)+" GB");
         pieChart.setDate(new String[]{"领域可用磁盘空间","系统已用磁盘空间"},new Double[]{
                 Double.valueOf(systemStatusSnapshotInfo.getUsableDiskSpaceSize()/1000000000),
                 Double.valueOf((systemStatusSnapshotInfo.getTotalDiskSpaceSize()-systemStatusSnapshotInfo.getFreeDiskSpaceSize())/1000000000)
