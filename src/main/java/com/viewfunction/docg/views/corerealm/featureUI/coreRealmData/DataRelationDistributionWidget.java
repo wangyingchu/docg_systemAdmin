@@ -41,6 +41,7 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
 
         DataRelationDistributionChart dataRelationDistributionChart = new DataRelationDistributionChart();
         add(dataRelationDistributionChart);
+        dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
     }
     @Override
     protected void onAttach(AttachEvent attachEvent) {

@@ -5,6 +5,10 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
+
+import java.util.Map;
+import java.util.Set;
 
 @JavaScript("./visualization/feature/dataRelationDistributionChart-connector.js")
 public class DataRelationDistributionChart extends VerticalLayout {
@@ -20,6 +24,17 @@ public class DataRelationDistributionChart extends VerticalLayout {
 
         this.setHeight(600, Unit.PIXELS);
         initConnector();
+    }
+
+    public void setData(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet, Map<String, Long> conceptionKindsDataCount,Map<String, Long> relationKindsDataCount){
+        if(conceptionKindCorrelationInfoSet != null){
+            for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
+                String sourceConceptionKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
+                String targetConceptionKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
+                String relationKindName = currentConceptionKindCorrelationInfo.getRelationKindName();
+                long relationEntityCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
+            }
+        }
     }
 
     private void initConnector() {
