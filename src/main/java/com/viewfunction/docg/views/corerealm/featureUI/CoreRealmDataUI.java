@@ -26,6 +26,7 @@ public class CoreRealmDataUI extends VerticalLayout {
     private VerticalLayout leftSideContentContainerLayout;
     private VerticalLayout rightSideContentContainerLayout;
     private DataRelationDistributionWidget dataRelationDistributionWidget;
+    private SystemRuntimeInfoWidget systemRuntimeInfoWidget;
 
     public CoreRealmDataUI(){
 
@@ -145,11 +146,21 @@ public class CoreRealmDataUI extends VerticalLayout {
         spaceDivLayout.setHeight(20,Unit.PIXELS);
         leftSideSectionContainerScrollLayout.add(spaceDivLayout);
 
+        List<Component> actionComponentsList = new ArrayList<>();
+        Button refreshSystemRuntimeInfoButton = new Button("获取系统运行信息",new Icon(VaadinIcon.REFRESH));
+        refreshSystemRuntimeInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        refreshSystemRuntimeInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        refreshSystemRuntimeInfoButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        refreshSystemRuntimeInfoButton.addClickListener((ClickEvent<Button> click) ->{
+            systemRuntimeInfoWidget.refreshSystemRuntimeInfo();
+        });
+        actionComponentsList.add(refreshSystemRuntimeInfoButton);
+
         Icon icon3 = new Icon(VaadinIcon.SPARK_LINE);
-        SecondaryTitleActionBar sectionActionBar3 = new SecondaryTitleActionBar(icon3,"系统运行信息",null,null);
+        SecondaryTitleActionBar sectionActionBar3 = new SecondaryTitleActionBar(icon3,"系统运行信息",null,actionComponentsList);
         leftSideSectionContainerScrollLayout.add(sectionActionBar3);
 
-        SystemRuntimeInfoWidget systemRuntimeInfoWidget = new SystemRuntimeInfoWidget();
+        systemRuntimeInfoWidget = new SystemRuntimeInfoWidget();
         leftSideSectionContainerScrollLayout.add(systemRuntimeInfoWidget);
 
         Icon icon2 = new Icon(VaadinIcon.GRID_SMALL_O);
