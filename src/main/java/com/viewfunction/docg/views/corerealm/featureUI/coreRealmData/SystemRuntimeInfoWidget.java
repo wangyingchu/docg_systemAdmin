@@ -104,7 +104,7 @@ public class SystemRuntimeInfoWidget extends VerticalLayout {
         diskInfoLeftLayout.add(statusInfoContainer9);
         usableDiskDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer9, VaadinIcon.HARDDRIVE_O.create(),"领域可用磁盘空间总量:",""+(systemStatusSnapshotInfo.getUsableDiskSpaceSize()/1000000000)+"GB");
 
-        pieChart = new PieChart(150,200);
+        pieChart = new PieChart(150,170);
         String[] pieColorArray = new String[]{"#168eea","#323b43"};
         pieChart.setColor(pieColorArray);
         pieChart.setCenter(50,30);
