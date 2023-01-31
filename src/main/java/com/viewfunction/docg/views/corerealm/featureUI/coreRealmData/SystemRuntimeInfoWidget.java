@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -12,6 +13,9 @@ import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayIte
 import com.viewfunction.docg.element.commonComponent.chart.PieChart;
 
 import java.text.NumberFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Date;
 
 public class SystemRuntimeInfoWidget extends VerticalLayout {
@@ -27,6 +31,7 @@ public class SystemRuntimeInfoWidget extends VerticalLayout {
     private SecondaryKeyValueDisplayItem usableDiskDisplayItem;
     private NumberFormat nt;
     private PieChart pieChart;
+    final ZoneId id = ZoneId.systemDefault();
     public SystemRuntimeInfoWidget(){
         this.setWidthFull();
 
@@ -40,17 +45,20 @@ public class SystemRuntimeInfoWidget extends VerticalLayout {
         HorizontalLayout statusInfoContainer1 = new HorizontalLayout();
         statusInfoContainer1.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         add(statusInfoContainer1);
-        new SecondaryKeyValueDisplayItem(statusInfoContainer1, VaadinIcon.GOLF.create(),"领域创建时间:",systemStatusSnapshotInfo.getSystemCreateTime().toString());
+        new SecondaryKeyValueDisplayItem(statusInfoContainer1, VaadinIcon.GOLF.create(),"领域创建时间:",
+                systemStatusSnapshotInfo.getSystemCreateTime().toInstant().atZone(id).format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
 
         HorizontalLayout statusInfoContainer2 = new HorizontalLayout();
         statusInfoContainer2.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         add(statusInfoContainer2);
-        realmStartDateDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer2, VaadinIcon.FLIGHT_TAKEOFF.create(),"领域启动时间:",systemStatusSnapshotInfo.getSystemStartupTime().toString());
+        realmStartDateDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer2, VaadinIcon.FLIGHT_TAKEOFF.create(),"领域启动时间:",
+                systemStatusSnapshotInfo.getSystemStartupTime().toInstant().atZone(id).format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
 
         HorizontalLayout statusInfoContainer3 = new HorizontalLayout();
         statusInfoContainer3.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         add(statusInfoContainer3);
-        infoSampleDateDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer3, VaadinIcon.CAMERA.create(),"指标采样时间:",new Date(systemStatusSnapshotInfo.getSnapshotTookTime()).toString());
+        infoSampleDateDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer3, VaadinIcon.CAMERA.create(),"指标采样时间:",
+                new Date(systemStatusSnapshotInfo.getSnapshotTookTime()).toInstant().atZone(id).format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
 
         HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
         spaceDivLayout1.setHeight(6, Unit.PIXELS);
@@ -59,17 +67,17 @@ public class SystemRuntimeInfoWidget extends VerticalLayout {
         HorizontalLayout statusInfoContainer4 = new HorizontalLayout();
         statusInfoContainer4.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         add(statusInfoContainer4);
-        totalRequestDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer4, VaadinIcon.AREA_SELECT.create(),"领域服务请求总量:",""+systemStatusSnapshotInfo.getTotalAcceptedRequestCount());
+        totalRequestDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer4, FontAwesome.Solid.CALCULATOR.create(),"领域服务请求总量:",""+systemStatusSnapshotInfo.getTotalAcceptedRequestCount());
 
         HorizontalLayout statusInfoContainer5 = new HorizontalLayout();
         statusInfoContainer5.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         add(statusInfoContainer5);
-        peakRequestDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer5, VaadinIcon.AREA_SELECT.create(),"领域服务请求峰值:",""+systemStatusSnapshotInfo.getPeakRequestCount());
+        peakRequestDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer5, FontAwesome.Solid.HEART_PULSE.create(),"领域服务请求峰值:",""+systemStatusSnapshotInfo.getPeakRequestCount());
 
         HorizontalLayout statusInfoContainer6 = new HorizontalLayout();
         statusInfoContainer6.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         add(statusInfoContainer6);
-        currentRequestDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer6, VaadinIcon.AREA_SELECT.create(),"当前领域服务请求量:",""+systemStatusSnapshotInfo.getCurrentAcceptedRequestCount());
+        currentRequestDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer6, FontAwesome.Solid.SERVER.create(),"当前领域服务请求量:",""+systemStatusSnapshotInfo.getCurrentAcceptedRequestCount());
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setHeight(6, Unit.PIXELS);
@@ -120,8 +128,10 @@ public class SystemRuntimeInfoWidget extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         SystemStatusSnapshotInfo systemStatusSnapshotInfo = systemMaintenanceOperator.getSystemStatusSnapshot();
-        realmStartDateDisplayItem.updateDisplayValue(systemStatusSnapshotInfo.getSystemStartupTime().toString());
-        infoSampleDateDisplayItem.updateDisplayValue(new Date(systemStatusSnapshotInfo.getSnapshotTookTime()).toString());
+        realmStartDateDisplayItem.updateDisplayValue(systemStatusSnapshotInfo.getSystemStartupTime().
+                toInstant().atZone(id).format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
+        infoSampleDateDisplayItem.updateDisplayValue(new Date(systemStatusSnapshotInfo.getSnapshotTookTime()).
+                toInstant().atZone(id).format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
         totalRequestDisplayItem.updateDisplayValue(""+systemStatusSnapshotInfo.getTotalAcceptedRequestCount());
         peakRequestDisplayItem.updateDisplayValue(""+systemStatusSnapshotInfo.getPeakRequestCount());
         currentRequestDisplayItem .updateDisplayValue(""+systemStatusSnapshotInfo.getCurrentAcceptedRequestCount());
