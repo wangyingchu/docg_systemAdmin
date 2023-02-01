@@ -27,6 +27,17 @@ public class DataRelationDistributionChart extends VerticalLayout {
     }
 
     public void setData(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet, Map<String, Long> conceptionKindsDataCount,Map<String, Long> relationKindsDataCount){
+        if(conceptionKindsDataCount != null){
+            Set<String> conceptionKindNameSet = conceptionKindsDataCount.keySet();
+
+
+
+
+        }
+
+
+
+
         if(conceptionKindCorrelationInfoSet != null){
             for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
                 String sourceConceptionKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
