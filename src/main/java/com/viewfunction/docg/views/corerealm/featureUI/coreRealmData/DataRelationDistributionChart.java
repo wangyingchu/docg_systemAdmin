@@ -13,14 +13,13 @@ import com.viewfunction.docg.element.visualizationComponent.payload.common.Cytos
 import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeNodePayload;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @JavaScript("./visualization/feature/dataRelationDistributionChart-connector.js")
 public class DataRelationDistributionChart extends VerticalLayout {
 
     private Map<String,String> conceptionKindColorMap;
+    private int colorIndex = 0;
 
     public DataRelationDistributionChart(){
         UI.getCurrent().getPage().addJavaScript("js/cytoscape/3.22.1/dist/cytoscape.min.js");
@@ -36,11 +35,12 @@ public class DataRelationDistributionChart extends VerticalLayout {
     public void setData(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet, Map<String, Long> conceptionKindsDataCount,Map<String, Long> relationKindsDataCount){
         if(conceptionKindsDataCount != null){
             Set<String> conceptionKindNameSet = conceptionKindsDataCount.keySet();
+            generateConceptionKindColorMap(conceptionKindNameSet);
             for(String currentConceptionKindName:conceptionKindNameSet){
                 CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
                 cytoscapeNodePayload.getData().put("shape","ellipse");
                 cytoscapeNodePayload.getData().put("background_color","#c00");
-                cytoscapeNodePayload.getData().put("size","4");
+                cytoscapeNodePayload.getData().put("size", ""+Math.log10(conceptionKindsDataCount.get(currentConceptionKindName)));
                 if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionKindName)!=null){
                     cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(currentConceptionKindName));
                 }
@@ -94,6 +94,28 @@ public class DataRelationDistributionChart extends VerticalLayout {
                 });
             }
         }
+    }
+
+    private Map<String,String> generateConceptionKindColorMap(Set<String> attachedConceptionKindsSet){
+        List<String> attachedConceptionKinds = new ArrayList<String>();
+        attachedConceptionKinds.addAll(attachedConceptionKindsSet);
+
+        String[] colorList =new String[]{
+                "#EA2027","#006266","#1B1464","#5758BB","#6F1E51","#EE5A24","#009432","##0652DD","#9980FA","#833471",
+                "#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67"
+        };
+
+        for(int i=0;i<attachedConceptionKinds.size();i++){
+            if(colorIndex>=colorList.length){
+                colorIndex = 0;
+            }
+            String currentConceptionKindName = attachedConceptionKinds.get(i);
+            if(!conceptionKindColorMap.containsKey(currentConceptionKindName)){
+                conceptionKindColorMap.put(currentConceptionKindName,colorList[colorIndex]);
+            }
+            colorIndex++;
+        }
+        return conceptionKindColorMap;
     }
 
     private void initConnector() {
