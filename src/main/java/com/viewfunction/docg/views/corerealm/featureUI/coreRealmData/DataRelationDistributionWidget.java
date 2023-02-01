@@ -26,19 +26,13 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
         List<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoList = dataStatusSnapshotInfo.getRelationAndConceptionKindAttachInfo();
-
         for(RuntimeRelationAndConceptionKindAttachInfo currentRuntimeRelationAndConceptionKindAttachInfo:runtimeRelationAndConceptionKindAttachInfoList){
             currentRuntimeRelationAndConceptionKindAttachInfo.getConceptionKind();
             currentRuntimeRelationAndConceptionKindAttachInfo.getRelationKind();
             currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount();
-            System.out.println(currentRuntimeRelationAndConceptionKindAttachInfo.getConceptionKind()+" - "+currentRuntimeRelationAndConceptionKindAttachInfo.getRelationKind()+":"+currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount());
         }
 
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet =  systemMaintenanceOperator.getSystemConceptionKindsRelationDistributionStatistics();
-        System.out.println(dataStatusSnapshotInfo.getRelationKindsDataCount());
-        System.out.println(dataStatusSnapshotInfo.getConceptionKindsDataCount());
-        System.out.println(conceptionKindCorrelationInfoSet);
-
         DataRelationDistributionChart dataRelationDistributionChart = new DataRelationDistributionChart();
         add(dataRelationDistributionChart);
         dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
