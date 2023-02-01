@@ -2,6 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI;
 
 import ch.carnet.kasparscherrer.VerticalScrollLayout;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -163,8 +164,7 @@ public class CoreRealmDataUI extends VerticalLayout {
         systemRuntimeInfoWidget = new SystemRuntimeInfoWidget();
         leftSideSectionContainerScrollLayout.add(systemRuntimeInfoWidget);
 
-        Icon icon2 = new Icon(VaadinIcon.GRID_SMALL_O);
-        SectionActionBar sectionActionBar2 = new SectionActionBar(icon2,"全域数据关联分布",null);
+        SectionActionBar sectionActionBar2 = new SectionActionBar(FontAwesome.Solid.CODE_FORK.create(),"全域数据关联分布",null);
         rightSideContentContainerLayout.add(sectionActionBar2);
 
         dataRelationDistributionWidget = new DataRelationDistributionWidget();
