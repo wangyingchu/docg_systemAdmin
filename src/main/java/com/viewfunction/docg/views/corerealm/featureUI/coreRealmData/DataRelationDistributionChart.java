@@ -69,7 +69,7 @@ public class DataRelationDistributionChart extends VerticalLayout {
                         && !currentConceptionKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
                         && !currentConceptionKindName.equals(RealmConstant.ClassificationClass)){
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
-                    cytoscapeNodePayload.getData().put("shape","ellipse");
+                    cytoscapeNodePayload.getData().put("shape","hexagon");
                     cytoscapeNodePayload.getData().put("background_color","#c00");
                     cytoscapeNodePayload.getData().put("size", ""+Math.log10(conceptionKindsDataCount.get(currentConceptionKindName)));
                     if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionKindName)!=null){
@@ -139,6 +139,14 @@ public class DataRelationDistributionChart extends VerticalLayout {
                 });
             }
         }
+
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.layoutGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private Map<String,String> generateConceptionKindColorMap(Set<String> attachedConceptionKindsSet){
