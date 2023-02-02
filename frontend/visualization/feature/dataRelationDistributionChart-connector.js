@@ -142,7 +142,7 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     'color': '#666666',
                     'target-arrow-shape': 'vee',
                     'source-arrow-shape': 'tee',
-                    'line-opacity': 0.8
+                    'line-opacity': 0.7
                 })
                 .selector('node:selected')
                 .style({

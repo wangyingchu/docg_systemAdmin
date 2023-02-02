@@ -54,7 +54,7 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                 String targetConceptionKindId = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
                 if(!conceptionKindIdList.contains(sourceConceptionKindId)){
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
-                    cytoscapeNodePayload.getData().put("shape","ellipse");
+                    cytoscapeNodePayload.getData().put("shape","round-octagon");
                     cytoscapeNodePayload.getData().put("background_color","#c00");
                     if(targetConceptionKind.equals(sourceConceptionKindId)){
                         cytoscapeNodePayload.getData().put("shape","pentagon");
@@ -76,7 +76,7 @@ public class ConceptionKindCorrelationInfoChart extends VerticalLayout {
                 }
                 if(!conceptionKindIdList.contains(targetConceptionKindId)){
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
-                    cytoscapeNodePayload.getData().put("shape","ellipse");
+                    cytoscapeNodePayload.getData().put("shape","round-octagon");
                     cytoscapeNodePayload.getData().put("background_color","#c00");
                     if(targetConceptionKind.equals(targetConceptionKindId)){
                         cytoscapeNodePayload.getData().put("shape","pentagon");

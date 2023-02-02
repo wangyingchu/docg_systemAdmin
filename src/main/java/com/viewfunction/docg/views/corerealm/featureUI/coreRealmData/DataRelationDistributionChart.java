@@ -49,9 +49,9 @@ public class DataRelationDistributionChart extends VerticalLayout {
             });
 
             CytoscapeNodePayload ts_cytoscapeNodePayload =new CytoscapeNodePayload();
-            ts_cytoscapeNodePayload.getData().put("shape","ellipse");
-            ts_cytoscapeNodePayload.getData().put("background_color","#EEEEEE");
             ts_cytoscapeNodePayload.getData().put("id","TS");
+            ts_cytoscapeNodePayload.getData().put("background_color","#EEEEEE");
+
             runBeforeClientResponse(ui -> {
                 try {
                     getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(ts_cytoscapeNodePayload)});
