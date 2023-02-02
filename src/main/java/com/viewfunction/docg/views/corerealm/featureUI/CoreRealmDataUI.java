@@ -30,6 +30,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
     private VerticalLayout rightSideContentContainerLayout;
     private DataRelationDistributionWidget dataRelationDistributionWidget;
     private SystemRuntimeInfoWidget systemRuntimeInfoWidget;
+    private RelationAndConceptionKindAttachInfoWidget relationAndConceptionKindAttachInfoWidget;
 
     public CoreRealmDataUI(){
 
@@ -175,8 +176,19 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         SectionActionBar sectionActionBar2 = new SectionActionBar(FontAwesome.Solid.CODE_FORK.create(),"全域数据关联分布",null);
         rightSideContentContainerLayout.add(sectionActionBar2);
 
+        HorizontalLayout widgetDivLayout = new HorizontalLayout();
+        widgetDivLayout.setMargin(false);
+        widgetDivLayout.setSpacing(false);
+        widgetDivLayout.setPadding(false);
+        rightSideContentContainerLayout.add(widgetDivLayout);
+
         dataRelationDistributionWidget = new DataRelationDistributionWidget();
-        rightSideContentContainerLayout.add(dataRelationDistributionWidget);
+        dataRelationDistributionWidget.addClassNames("border-r","border-contrast-10");
+        widgetDivLayout.add(dataRelationDistributionWidget);
+
+        relationAndConceptionKindAttachInfoWidget = new RelationAndConceptionKindAttachInfoWidget();
+        relationAndConceptionKindAttachInfoWidget.setWidth(400,Unit.PIXELS);
+        widgetDivLayout.add(relationAndConceptionKindAttachInfoWidget);
     }
 
     @Override
@@ -187,6 +199,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
             this.leftSideContentContainerLayout.setHeight(event.getHeight()-185,Unit.PIXELS);
             this.rightSideContentContainerLayout.setWidth(event.getWidth()-580,Unit.PIXELS);
             this.dataRelationDistributionWidget.setHeight(event.getHeight()-220,Unit.PIXELS);
+            this.dataRelationDistributionWidget.setWidth(event.getWidth()-550-400-50,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -195,6 +208,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
             this.leftSideContentContainerLayout.setHeight(browserHeight-185,Unit.PIXELS);
             this.rightSideContentContainerLayout.setWidth(browserWidth-580,Unit.PIXELS);
             this.dataRelationDistributionWidget.setHeight(browserHeight-220,Unit.PIXELS);
+            this.dataRelationDistributionWidget.setWidth(browserWidth-550-400-50,Unit.PIXELS);
         }));
         ResourceHolder.getApplicationBlackboard().addListener(this);
     }
@@ -211,5 +225,6 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
     public void receivedCheckSystemRuntimeInfoEvent(CheckSystemRuntimeInfoEvent event) {
         systemRuntimeInfoWidget.refreshSystemRuntimeInfo();
         dataRelationDistributionWidget.refreshDataRelationDistributionData();
+        relationAndConceptionKindAttachInfoWidget.refreshRelationAndConceptionKindAttachInfo();
     }
 }
