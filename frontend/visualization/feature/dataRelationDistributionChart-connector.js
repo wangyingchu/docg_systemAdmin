@@ -21,29 +21,6 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                 let targetNode = cy.filter('[id = '+data+']');
                 cy.remove(targetNode.union(targetNode.connectedEdges()));
             },
-            deleteNodeWithOneDegreeConnection : function(data) {
-                let dataObj = eval("(" + data + ")");
-                let targetNodeIDValue = '"'+dataObj.targetNodeId+'"';
-                let ignoreNodeIDValue = '"'+dataObj.ignoreNodeId+'"';
-                let targetNode = cy.filter('[id = '+ targetNodeIDValue+']');
-                let relationsToDelete = targetNode.connectedEdges();
-                let nodesToDelete = relationsToDelete.connectedNodes();
-                let finalNodesToDelete = nodesToDelete.filter('[id != '+ignoreNodeIDValue+']');
-                let nodesToDeletesRelation = finalNodesToDelete.connectedEdges();
-                cy.remove(targetNode.union(relationsToDelete).union(finalNodesToDelete).union(nodesToDeletesRelation));
-            },
-            deleteOneDegreeConnectionNodes : function(data) {
-                let dataObj = eval("(" + data + ")");
-                let targetNodeIDValue = '"'+dataObj.targetNodeId+'"';
-                let ignoreNodeIDValue = '"'+dataObj.ignoreNodeId+'"';
-                let targetNode = cy.filter('[id = '+ targetNodeIDValue+']');
-                let relationsToDelete = targetNode.connectedEdges();
-                let nodesToDelete = relationsToDelete.connectedNodes();
-                let finalNodesToDeleteMiddle = nodesToDelete.filter('[id != '+ignoreNodeIDValue+']');
-                let finalNodesToDelete = finalNodesToDeleteMiddle.filter('[id != '+targetNodeIDValue+']');
-                let nodesToDeletesRelation = finalNodesToDelete.connectedEdges();
-                cy.remove(finalNodesToDelete.union(nodesToDeletesRelation));
-            },
             initLayoutGraph: function(){
                 let layout = cy.layout({
                     name: 'cose',
@@ -78,7 +55,7 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     // Whether to fit the network view after when done
                     fit: true,
                     // Padding on fit
-                    padding: 10,
+                    padding: 1,
                     // Constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
                     boundingBox: undefined,
                     // Excludes the label when calculating node bounding boxes for the layout algorithm
@@ -98,7 +75,7 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     // Nesting factor (multiplier) to compute ideal edge length for nested edges
                     nestingFactor: 1.2,
                     // Gravity force (constant)
-                    gravity: 1,
+                    gravity: 0.1,
                     // Maximum number of iterations to perform
                     numIter: 1000,
                     // Initial temperature (maximum node displacement)
@@ -122,6 +99,10 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
         let cy = cytoscape({
             container: c,
             style: cytoscape.stylesheet()
+                .selector('parent')
+                .css({
+                    'background-opacity': 0.1
+                })
                 .selector('node')
                 .css({
                     'font-size': 1.1,
@@ -134,19 +115,25 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     'text-outline-width': 0.15 ,
                     'text-outline-color': '#EEE',
                     'width': 'data(size)',
-                    'height': 'data(size)'
+                    'height': 'data(size)',
+                    'background-opacity': 1
                 })
                 .selector('edge')
                 .css({
                     'content': 'data(type)',
                     'width': 0.3,
-                    'line-color': '#DDDDDD',
-                    'source-arrow-color':'#DDDDDD',
-                    'target-arrow-color':'#DDDDDD',
+                    'line-color': '#BBBBBB',
+                    'source-arrow-color':'#BBBBBB',
+                    'target-arrow-color':'#BBBBBB',
                     'arrow-scale': 0.1,
                     'line-style': 'solid',
                     //'curve-style': 'unbundled-bezier',
                     //'curve-style': 'segments',
+                    //'curve-style': 'unbundled-bezier(multiple)',
+                    //'curve-style': 'taxi',
+                    //'curve-style': 'straight',
+                    //'curve-style': 'haystack',
+                    //'curve-style': 'loop',
                     'curve-style': 'straight',
                     'text-rotation': 'autorotate',
                     'font-size': 0.8,
@@ -154,7 +141,8 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     //'font-weight': 'bold',
                     'color': '#666666',
                     'target-arrow-shape': 'vee',
-                    'source-arrow-shape': 'tee'
+                    'source-arrow-shape': 'tee',
+                    'line-opacity': 0.8
                 })
                 .selector('node:selected')
                 .style({
@@ -177,6 +165,7 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                 name: 'cose'
             }
         });
+        /*
         cy.on('dblclick', 'node', function(evt){
             let node = evt.target;
             c.$server.addConceptionEntityRelations(node.data().kind,node.id());
@@ -197,5 +186,6 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
             let edge = evt.target;
             c.$server.selectRelationEntity(edge.data().type);
         });
+        */
     }
 }

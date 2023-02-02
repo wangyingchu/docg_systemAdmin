@@ -38,9 +38,8 @@ public class DataRelationDistributionChart extends VerticalLayout {
             generateConceptionKindColorMap(conceptionKindNameSet);
 
             CytoscapeNodePayload gs_cytoscapeNodePayload =new CytoscapeNodePayload();
-            gs_cytoscapeNodePayload.getData().put("shape","ellipse");
-            //gs_cytoscapeNodePayload.getData().put("background_color","#c00");
             gs_cytoscapeNodePayload.getData().put("id","GS");
+            gs_cytoscapeNodePayload.getData().put("background_color","#EEEEEE");
             runBeforeClientResponse(ui -> {
                 try {
                     getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(gs_cytoscapeNodePayload)});
@@ -51,7 +50,7 @@ public class DataRelationDistributionChart extends VerticalLayout {
 
             CytoscapeNodePayload ts_cytoscapeNodePayload =new CytoscapeNodePayload();
             ts_cytoscapeNodePayload.getData().put("shape","ellipse");
-            //gs_cytoscapeNodePayload.getData().put("background_color","#c00");
+            ts_cytoscapeNodePayload.getData().put("background_color","#EEEEEE");
             ts_cytoscapeNodePayload.getData().put("id","TS");
             runBeforeClientResponse(ui -> {
                 try {
@@ -69,7 +68,7 @@ public class DataRelationDistributionChart extends VerticalLayout {
                         && !currentConceptionKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
                         && !currentConceptionKindName.equals(RealmConstant.ClassificationClass)){
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
-                    cytoscapeNodePayload.getData().put("shape","hexagon");
+                    cytoscapeNodePayload.getData().put("shape","round-octagon");
                     cytoscapeNodePayload.getData().put("background_color","#c00");
                     cytoscapeNodePayload.getData().put("size", ""+Math.log10(conceptionKindsDataCount.get(currentConceptionKindName)));
                     if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionKindName)!=null){
@@ -77,7 +76,6 @@ public class DataRelationDistributionChart extends VerticalLayout {
                     }
                     if(currentConceptionKindName.startsWith("DOCG_TS_")){
                         cytoscapeNodePayload.getData().put("background_color","#40E0D0");
-
                         cytoscapeNodePayload.getData().put("shape","round-tag");
                         cytoscapeNodePayload.getData().put("parent","TS");
                     }
@@ -96,6 +94,7 @@ public class DataRelationDistributionChart extends VerticalLayout {
                     if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEntityClass)){
                         cytoscapeNodePayload.getData().put("shape","barrel");
                         cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                        cytoscapeNodePayload.getData().put("parent","TS");
                     }
                     if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEventClass)){
                         cytoscapeNodePayload.getData().put("shape","round-diamond");
@@ -105,6 +104,7 @@ public class DataRelationDistributionChart extends VerticalLayout {
                     if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEntityClass)){
                         cytoscapeNodePayload.getData().put("shape","barrel");
                         cytoscapeNodePayload.getData().put("background_color","#C71585");
+                        cytoscapeNodePayload.getData().put("parent","GS");
                     }
                     cytoscapeNodePayload.getData().put("id",currentConceptionKindName);
                     cytoscapeNodePayload.getData().put("kind",currentConceptionKindName);
