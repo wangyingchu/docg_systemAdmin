@@ -15,13 +15,15 @@ import java.util.Set;
 
 public class DataRelationDistributionWidget extends HorizontalLayout {
 
+    private DataRelationDistributionChart dataRelationDistributionChart;
+
     public DataRelationDistributionWidget(){
         this.setWidthFull();
         this.setSpacing(false);
         this.setMargin(false);
     }
 
-    private void generateDataRelationDistributionMap(){
+    private void renderDataRelationDistributionInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
@@ -32,14 +34,29 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
             currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount();
         }
 
-        Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet =  systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
-        DataRelationDistributionChart dataRelationDistributionChart = new DataRelationDistributionChart();
+        Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
+        dataRelationDistributionChart = new DataRelationDistributionChart();
         add(dataRelationDistributionChart);
         dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
     }
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        generateDataRelationDistributionMap();
+        renderDataRelationDistributionInfo();
+    }
+
+    public void refreshDataRelationDistributionData(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+        DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
+        List<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoList = dataStatusSnapshotInfo.getRelationAndConceptionKindAttachInfo();
+        for(RuntimeRelationAndConceptionKindAttachInfo currentRuntimeRelationAndConceptionKindAttachInfo:runtimeRelationAndConceptionKindAttachInfoList){
+            currentRuntimeRelationAndConceptionKindAttachInfo.getConceptionKind();
+            currentRuntimeRelationAndConceptionKindAttachInfo.getRelationKind();
+            currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount();
+        }
+        Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
+        dataRelationDistributionChart.clearData();
+        dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
     }
 }

@@ -15,12 +15,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.eventHandling.CheckSystemRuntimeInfoEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CoreRealmDataUI extends VerticalLayout {
+public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntimeInfoEvent.CheckSystemRuntimeInfoListener{
 
     private Registration listener;
 
@@ -35,6 +37,12 @@ public class CoreRealmDataUI extends VerticalLayout {
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
+        refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
+            CheckSystemRuntimeInfoEvent checkSystemRuntimeInfoEvent = new CheckSystemRuntimeInfoEvent();
+            checkSystemRuntimeInfoEvent.setCoreRealmName("Default CoreRealm");
+            ResourceHolder.getApplicationBlackboard().fire(checkSystemRuntimeInfoEvent);
+        });
 
         List<Component> buttonList = new ArrayList<>();
         buttonList.add(refreshDataButton);
@@ -188,6 +196,7 @@ public class CoreRealmDataUI extends VerticalLayout {
             this.rightSideContentContainerLayout.setWidth(browserWidth-580,Unit.PIXELS);
             this.dataRelationDistributionWidget.setHeight(browserHeight-220,Unit.PIXELS);
         }));
+        ResourceHolder.getApplicationBlackboard().addListener(this);
     }
 
     @Override
@@ -195,5 +204,12 @@ public class CoreRealmDataUI extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
+
+    @Override
+    public void receivedCheckSystemRuntimeInfoEvent(CheckSystemRuntimeInfoEvent event) {
+        systemRuntimeInfoWidget.refreshSystemRuntimeInfo();
+        dataRelationDistributionWidget.refreshDataRelationDistributionData();
     }
 }

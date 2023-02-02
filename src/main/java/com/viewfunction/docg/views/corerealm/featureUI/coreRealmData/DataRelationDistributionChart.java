@@ -149,6 +149,16 @@ public class DataRelationDistributionChart extends VerticalLayout {
         });
     }
 
+    public void clearData(){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.clearData", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
     private Map<String,String> generateConceptionKindColorMap(Set<String> attachedConceptionKindsSet){
         List<String> attachedConceptionKinds = new ArrayList<String>();
         attachedConceptionKinds.addAll(attachedConceptionKindsSet);

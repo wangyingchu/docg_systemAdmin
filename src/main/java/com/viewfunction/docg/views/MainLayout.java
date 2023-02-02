@@ -69,6 +69,8 @@ public class MainLayout extends AppLayout {
         addToDrawer(createDrawerContent(menu));
         //close the left side drawer by default
         this.setDrawerOpened(false);
+
+        initBlackboard();
     }
 
     private Component createHeaderContent() {
@@ -177,6 +179,9 @@ public class MainLayout extends AppLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+    }
+
+    private void initBlackboard(){
         Blackboard _BLACKBOARD = new Blackboard();
         _BLACKBOARD.enableLogging();
 
@@ -198,6 +203,8 @@ public class MainLayout extends AppLayout {
                 ConceptionEntityAttributeDeletedEvent.class);
         _BLACKBOARD.register(RelationEntityDeletedEvent.RelationEntityDeletedListener.class,
                 RelationEntityDeletedEvent.class);
+        _BLACKBOARD.register(CheckSystemRuntimeInfoEvent.CheckSystemRuntimeInfoListener.class,
+                CheckSystemRuntimeInfoEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }
