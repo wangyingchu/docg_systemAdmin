@@ -36,42 +36,87 @@ public class DataRelationDistributionChart extends VerticalLayout {
         if(conceptionKindsDataCount != null){
             Set<String> conceptionKindNameSet = conceptionKindsDataCount.keySet();
             generateConceptionKindColorMap(conceptionKindNameSet);
+
+            CytoscapeNodePayload gs_cytoscapeNodePayload =new CytoscapeNodePayload();
+            gs_cytoscapeNodePayload.getData().put("shape","ellipse");
+            //gs_cytoscapeNodePayload.getData().put("background_color","#c00");
+            gs_cytoscapeNodePayload.getData().put("id","GS");
+            runBeforeClientResponse(ui -> {
+                try {
+                    getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(gs_cytoscapeNodePayload)});
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            CytoscapeNodePayload ts_cytoscapeNodePayload =new CytoscapeNodePayload();
+            ts_cytoscapeNodePayload.getData().put("shape","ellipse");
+            //gs_cytoscapeNodePayload.getData().put("background_color","#c00");
+            ts_cytoscapeNodePayload.getData().put("id","TS");
+            runBeforeClientResponse(ui -> {
+                try {
+                    getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(ts_cytoscapeNodePayload)});
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
             for(String currentConceptionKindName:conceptionKindNameSet){
-                CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
-                cytoscapeNodePayload.getData().put("shape","ellipse");
-                cytoscapeNodePayload.getData().put("background_color","#c00");
-                cytoscapeNodePayload.getData().put("size", ""+Math.log10(conceptionKindsDataCount.get(currentConceptionKindName)));
-                if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionKindName)!=null){
-                    cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(currentConceptionKindName));
-                }
-                if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEventClass)){
-                    cytoscapeNodePayload.getData().put("shape","round-diamond");
-                    cytoscapeNodePayload.getData().put("size","3");
-                    cytoscapeNodePayload.getData().put("background_color","#40E0D0");
-                }
-                if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEntityClass)){
-                    cytoscapeNodePayload.getData().put("shape","barrel");
-                    cytoscapeNodePayload.getData().put("background_color","#40E0D0");
-                }
-                if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEventClass)){
-                    cytoscapeNodePayload.getData().put("shape","round-diamond");
-                    cytoscapeNodePayload.getData().put("size","3");
-                    cytoscapeNodePayload.getData().put("background_color","#C71585");
-                }
-                if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEntityClass)){
-                    cytoscapeNodePayload.getData().put("shape","barrel");
-                    cytoscapeNodePayload.getData().put("background_color","#C71585");
-                }
-                cytoscapeNodePayload.getData().put("id",currentConceptionKindName);
-                cytoscapeNodePayload.getData().put("kind",currentConceptionKindName);
-                cytoscapeNodePayload.getData().put("desc",currentConceptionKindName);
-                runBeforeClientResponse(ui -> {
-                    try {
-                        getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
+                if(!currentConceptionKindName.equals(RealmConstant.ConceptionKindClass)
+                && !currentConceptionKindName.equals(RealmConstant.AttributesViewKindClass)
+                        && !currentConceptionKindName.equals(RealmConstant.AttributeKindClass)
+                        && !currentConceptionKindName.equals(RealmConstant.RelationKindClass)
+                        && !currentConceptionKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
+                        && !currentConceptionKindName.equals(RealmConstant.ClassificationClass)){
+                    CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
+                    cytoscapeNodePayload.getData().put("shape","ellipse");
+                    cytoscapeNodePayload.getData().put("background_color","#c00");
+                    cytoscapeNodePayload.getData().put("size", ""+Math.log10(conceptionKindsDataCount.get(currentConceptionKindName)));
+                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionKindName)!=null){
+                        cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(currentConceptionKindName));
                     }
-                });
+                    if(currentConceptionKindName.startsWith("DOCG_TS_")){
+                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+
+                        cytoscapeNodePayload.getData().put("shape","round-tag");
+                        cytoscapeNodePayload.getData().put("parent","TS");
+                    }
+
+                    if(currentConceptionKindName.startsWith("DOCG_GS_")){
+                        cytoscapeNodePayload.getData().put("background_color","#C71585");
+                        cytoscapeNodePayload.getData().put("shape","round-octagon");
+                        cytoscapeNodePayload.getData().put("parent","GS");
+                    }
+
+                    if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEventClass)){
+                        cytoscapeNodePayload.getData().put("shape","round-diamond");
+                        cytoscapeNodePayload.getData().put("size","3");
+                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                    }
+                    if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEntityClass)){
+                        cytoscapeNodePayload.getData().put("shape","barrel");
+                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                    }
+                    if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEventClass)){
+                        cytoscapeNodePayload.getData().put("shape","round-diamond");
+                        cytoscapeNodePayload.getData().put("size","3");
+                        cytoscapeNodePayload.getData().put("background_color","#C71585");
+                    }
+                    if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEntityClass)){
+                        cytoscapeNodePayload.getData().put("shape","barrel");
+                        cytoscapeNodePayload.getData().put("background_color","#C71585");
+                    }
+                    cytoscapeNodePayload.getData().put("id",currentConceptionKindName);
+                    cytoscapeNodePayload.getData().put("kind",currentConceptionKindName);
+                    cytoscapeNodePayload.getData().put("desc",currentConceptionKindName);
+                    runBeforeClientResponse(ui -> {
+                        try {
+                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
             }
         }
         if(conceptionKindCorrelationInfoSet != null){

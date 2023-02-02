@@ -32,7 +32,7 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
             currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount();
         }
 
-        Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet =  systemMaintenanceOperator.getSystemConceptionKindsRelationDistributionStatistics();
+        Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet =  systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
         DataRelationDistributionChart dataRelationDistributionChart = new DataRelationDistributionChart();
         add(dataRelationDistributionChart);
         dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
