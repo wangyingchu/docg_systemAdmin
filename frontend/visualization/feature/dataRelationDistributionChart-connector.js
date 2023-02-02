@@ -65,15 +65,15 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     // Extra spacing between components in non-compound graphs
                     componentSpacing: 40,
                     // Node repulsion (non overlapping) multiplier
-                    nodeRepulsion: function( node ){ return 2048; },
+                    nodeRepulsion: function( node ){ return 3000; },
                     // Node repulsion (overlapping) multiplier
                     nodeOverlap: 1,
                     // Ideal edge (non nested) length
-                    idealEdgeLength: function( edge ){ return 32; },
+                    idealEdgeLength: function( edge ){ return 5; },
                     // Divisor to compute edge forces
-                    edgeElasticity: function( edge ){ return 32; },
+                    edgeElasticity: function( edge ){ return 50; },
                     // Nesting factor (multiplier) to compute ideal edge length for nested edges
-                    nestingFactor: 1.2,
+                    nestingFactor: 0.1,
                     // Gravity force (constant)
                     gravity: 0.1,
                     // Maximum number of iterations to perform
@@ -131,10 +131,9 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     //'curve-style': 'segments',
                     //'curve-style': 'unbundled-bezier(multiple)',
                     //'curve-style': 'taxi',
-                    //'curve-style': 'straight',
+                    'curve-style': 'straight',
                     //'curve-style': 'haystack',
                     //'curve-style': 'loop',
-                    'curve-style': 'straight',
                     'text-rotation': 'autorotate',
                     'font-size': 0.8,
                     'font-family': 'Georgia',
@@ -165,27 +164,5 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                 name: 'cose'
             }
         });
-        /*
-        cy.on('dblclick', 'node', function(evt){
-            let node = evt.target;
-            c.$server.addConceptionEntityRelations(node.data().kind,node.id());
-        });
-        cy.on('unselect', 'node', function(evt){
-            let node = evt.target;
-            c.$server.unselectConceptionEntity(node.data().kind,node.id());
-        });
-        cy.on('select', 'node', function(evt){
-            let node = evt.target;
-            c.$server.selectConceptionEntity(node.data().kind,node.id());
-        });
-        cy.on('unselect', 'edge', function(evt){
-            let edge = evt.target;
-            c.$server.unselectRelationEntity(edge.data().type);
-        });
-        cy.on('select', 'edge', function(evt){
-            let edge = evt.target;
-            c.$server.selectRelationEntity(edge.data().type);
-        });
-        */
     }
 }
