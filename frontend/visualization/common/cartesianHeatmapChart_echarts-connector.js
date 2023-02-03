@@ -11,7 +11,7 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
 
 
 
-        let myChart = echarts.init(c);
+        c.$connector.myChart = echarts.init(c);
 
         //c.$connector.myChart = echarts.init(c);
 
@@ -19,7 +19,7 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
 
 // prettier-ignore
         const hours = [
-            '12a', '1a', '2a', '3a', '4a', '5a', '6a',
+            '12adcdcdd', '1avdvdvd', '2avdvddd', '3avddddd', '4a', '5a', '6a',
             '7a', '8a', '9a','10a','11a',
             '12p', '1p', '2p', '3p', '4p', '5p',
             '6p', '7p', '8p', '9p', '10p', '11p'
@@ -27,8 +27,8 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
 
 // prettier-ignore
         const days = [
-            'Saturday', 'Friday', 'Thursday',
-            'Wednesday', 'Tuesday', 'Monday', 'Sunday'
+            'Saturdayvddvdd', 'Fridayvdvddd', 'Thursdayvdvdvd',
+            'Wednesdaydvdvddd', 'Tuesdayvdvdd', 'Mondayvdvdd', 'Sunday'
         ];
 
 // prettier-ignore
@@ -37,19 +37,27 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                 return [item[1], item[0], item[2] || '-'];
             });
 
-        let option = {
+        c.$connector.option = {
             tooltip: {
-                position: 'top'
+                position: 'left'
             },
             grid: {
-                height: '50%',
-                top: '10%'
+                height: '95%',
+                top: 2,
+                left:10,
+                right:10,
+                bottom:10,
+                width:'95%'
             },
             xAxis: {
                 type: 'category',
                 data: hours,
                 splitArea: {
                     show: true
+                },
+                axisLabel:{
+                    show:false,
+                    inside:false
                 }
             },
             yAxis: {
@@ -57,14 +65,19 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                 data: days,
                 splitArea: {
                     show: true
+                },
+                axisLabel:{
+                    show:false,
+                    inside:false
                 }
             },
             visualMap: {
+                show:false,
                 min: 0,
                 max: 10,
                 calculable: true,
                 orient: 'horizontal',
-                left: 'center',
+                left: 'left',
                 bottom: '15%'
             },
             series: [
@@ -85,15 +98,6 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
             ]
         };
 
-        option && myChart.setOption(option);
-
-
-
-
-
-
-
-
-
+        c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
     }
 }

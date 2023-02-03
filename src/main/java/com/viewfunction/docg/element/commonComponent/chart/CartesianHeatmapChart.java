@@ -10,12 +10,12 @@ import com.vaadin.flow.function.SerializableConsumer;
 @JavaScript("./visualization/common/cartesianHeatmapChart_echarts-connector.js")
 public class CartesianHeatmapChart extends Div {
 
-    public CartesianHeatmapChart(){
+    public CartesianHeatmapChart(int chartWidth,int chartHeight){
         UI.getCurrent().getPage().addJavaScript("js/echarts/5.4.1/dist/echarts.min.js");
         UI.getCurrent().getPage().addJavaScript("js/echarts/5.4.1/dist/extension/dataTool.min.js");
         UI.getCurrent().getPage().addJavaScript("js/echarts/5.4.1/dist/extension/bmap.min.js");
-        setWidth(400, Unit.PIXELS);
-        setHeight(500,Unit.PIXELS);
+        setWidth(chartWidth, Unit.PIXELS);
+        setHeight(chartHeight,Unit.PIXELS);
         initConnector(getElement());
     }
 
