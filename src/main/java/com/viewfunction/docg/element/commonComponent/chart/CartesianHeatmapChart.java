@@ -25,6 +25,18 @@ public class CartesianHeatmapChart extends Div {
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", ""));
     }
 
+    public void setName(String chartName){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setName", chartName));
+    }
+
+    public void setTooltipPosition(String positionValue){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setTooltipPosition", positionValue));
+    }
+
+    public void hideLabels(){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.hideLabels", ""));
+    }
+
     public void setColorRange(String startColor,String endColor){
         JsonArray dataArray = Json.createArray();
         dataArray.set(0,startColor);

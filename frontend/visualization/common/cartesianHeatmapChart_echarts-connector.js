@@ -9,19 +9,24 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
             setColorRange:function(colorArray){
                 c.$connector.option.visualMap.inRange.color = colorArray;
             },
+            setName:function(nameValue){
+                c.$connector.option.series[0].name = nameValue;
+            },
+            setTooltipPosition:function(positionValue){
+                c.$connector.option.tooltip.position = positionValue;
+            },
+            hideLabels:function(){
+                c.$connector.option.xAxis.axisLabel.show = false;
+                c.$connector.option.yAxis.axisLabel.show = false;
+            },
             setData:function(){
                 c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
             }
         };
 
-
-
-
         c.$connector.myChart = echarts.init(c);
 
-        //c.$connector.myChart = echarts.init(c);
 
-        //var option: EChartsOption;
 
 // prettier-ignore
         const hours = [
@@ -44,7 +49,6 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
             });
 
         c.$connector.option = {
-            color:["#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"],
             tooltip: {
                 position: 'left'
             },
@@ -63,7 +67,7 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                     show: true
                 },
                 axisLabel:{
-                    show:false,
+                    show:true,
                     inside:false
                 }
             },
@@ -74,7 +78,7 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                     show: true
                 },
                 axisLabel:{
-                    show:false,
+                    show:true,
                     inside:false
                 }
             },
@@ -92,7 +96,7 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
             },
             series: [
                 {
-                    name: 'Punch Card',
+                    name: ' ',
                     type: 'heatmap',
                     data: data,
                     label: {
@@ -107,7 +111,5 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                 }
             ]
         };
-
-
     }
 }
