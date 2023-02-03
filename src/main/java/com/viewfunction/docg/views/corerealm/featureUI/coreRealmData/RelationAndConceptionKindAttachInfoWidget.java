@@ -16,6 +16,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         CartesianHeatmapChart cartesianHeatmapChart1 = new CartesianHeatmapChart(380,280);
         cartesianHeatmapChart1.setColorRange("WhiteSmoke","#168eea");
         cartesianHeatmapChart1.setName("领域概念与关系实体入度统计");
+        cartesianHeatmapChart1.hideLabels();
         cartesianHeatmapChart1.setData();
         add(cartesianHeatmapChart1);
 

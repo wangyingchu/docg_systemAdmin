@@ -44,6 +44,22 @@ public class CartesianHeatmapChart extends Div {
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setColorRange", dataArray));
     }
 
+    public void setTopMargin(int marginValue){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setTopMargin", marginValue));
+    }
+
+    public void setRightMargin(int marginValue){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setRightMargin", marginValue));
+    }
+
+    public void setLeftMargin(int marginValue){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setLeftMargin", marginValue));
+    }
+
+    public void setBottomMargin(int marginValue){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setBottomMargin", marginValue));
+    }
+
     private void initConnector(Element layout) {
         runBeforeClientResponse(ui -> ui.getPage().executeJs(
                 "window.Vaadin.Flow.common_CartesianHeatmapChart_echarts.initLazy($0)", getElement()));
