@@ -61,11 +61,11 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     // Excludes the label when calculating node bounding boxes for the layout algorithm
                     nodeDimensionsIncludeLabels: false,
                     // Randomize the initial positions of the nodes (true) or use existing positions (false)
-                    randomize: true,
+                    randomize: false,
                     // Extra spacing between components in non-compound graphs
-                    componentSpacing: 40,
+                    componentSpacing: 1,
                     // Node repulsion (non overlapping) multiplier
-                    nodeRepulsion: function( node ){ return 3000; },
+                    nodeRepulsion: function( node ){ return 10; },
                     // Node repulsion (overlapping) multiplier
                     nodeOverlap: 1,
                     // Ideal edge (non nested) length
@@ -127,11 +127,11 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     'target-arrow-color':'#BBBBBB',
                     'arrow-scale': 0.1,
                     'line-style': 'solid',
-                    //'curve-style': 'unbundled-bezier',
+                    'curve-style': 'unbundled-bezier',
                     //'curve-style': 'segments',
                     //'curve-style': 'unbundled-bezier(multiple)',
                     //'curve-style': 'taxi',
-                    'curve-style': 'straight',
+                    //'curve-style': 'straight',
                     //'curve-style': 'haystack',
                     //'curve-style': 'loop',
                     'text-rotation': 'autorotate',
