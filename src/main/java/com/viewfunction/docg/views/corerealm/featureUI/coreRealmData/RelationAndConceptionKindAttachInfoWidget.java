@@ -5,8 +5,15 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DataStatusSnapshotInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RuntimeRelationAndConceptionKindAttachInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.chart.CartesianHeatmapChart;
+
+import java.util.List;
 
 public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
 
@@ -34,5 +41,15 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         add(cartesianHeatmapChart2);
     }
 
-    public void refreshRelationAndConceptionKindAttachInfo(){}
+    public void refreshRelationAndConceptionKindAttachInfo(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+        DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
+        List<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoList = dataStatusSnapshotInfo.getRelationAndConceptionKindAttachInfo();
+        for(RuntimeRelationAndConceptionKindAttachInfo currentRuntimeRelationAndConceptionKindAttachInfo:runtimeRelationAndConceptionKindAttachInfoList){
+            currentRuntimeRelationAndConceptionKindAttachInfo.getConceptionKind();
+            currentRuntimeRelationAndConceptionKindAttachInfo.getRelationKind();
+            currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount();
+        }
+    }
 }

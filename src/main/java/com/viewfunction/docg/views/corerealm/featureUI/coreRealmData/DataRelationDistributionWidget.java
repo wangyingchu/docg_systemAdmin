@@ -27,12 +27,6 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
-        List<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoList = dataStatusSnapshotInfo.getRelationAndConceptionKindAttachInfo();
-        for(RuntimeRelationAndConceptionKindAttachInfo currentRuntimeRelationAndConceptionKindAttachInfo:runtimeRelationAndConceptionKindAttachInfoList){
-            currentRuntimeRelationAndConceptionKindAttachInfo.getConceptionKind();
-            currentRuntimeRelationAndConceptionKindAttachInfo.getRelationKind();
-            currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount();
-        }
 
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
         dataRelationDistributionChart = new DataRelationDistributionChart();
