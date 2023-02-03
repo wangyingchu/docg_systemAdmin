@@ -6,6 +6,12 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
         }
         c.$connector = {
             // functions
+            setColorRange:function(colorArray){
+                c.$connector.option.visualMap.inRange.color = colorArray;
+            },
+            setData:function(){
+                c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
+            }
         };
 
 
@@ -38,6 +44,7 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
             });
 
         c.$connector.option = {
+            color:["#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"],
             tooltip: {
                 position: 'left'
             },
@@ -78,7 +85,10 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                 calculable: true,
                 orient: 'horizontal',
                 left: 'left',
-                bottom: '15%'
+                bottom: '15%',
+                inRange: {
+                   color: ['WhiteSmoke','#00d1b2']
+                }
             },
             series: [
                 {
@@ -98,6 +108,6 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
             ]
         };
 
-        c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
+
     }
 }
