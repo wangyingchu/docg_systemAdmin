@@ -21,6 +21,24 @@ public class CartesianHeatmapChart extends Div {
         initConnector(getElement());
     }
 
+    public void setXAxisLabel(String[] xAxisLabel){
+        JsonArray dataArray = Json.createArray();
+        for(int i = 0; i < xAxisLabel.length; i++){
+            String currentLabel = xAxisLabel[i];
+            dataArray.set(i,currentLabel);
+        }
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setXAxisLabel", dataArray));
+    }
+
+    public void setYAxisLabel(String[] yAxisLabel){
+        JsonArray dataArray = Json.createArray();
+        for(int i = 0; i < yAxisLabel.length; i++){
+            String currentLabel = yAxisLabel[i];
+            dataArray.set(i,currentLabel);
+        }
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setYAxisLabel", dataArray));
+    }
+
     public  void setData(){
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", ""));
     }

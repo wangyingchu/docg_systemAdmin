@@ -31,14 +31,19 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
             setBottomMargin:function(marginValue){
                 c.$connector.option.grid.bottom = marginValue
             },
+            setXAxisLabel:function(xAxisLabel){
+
+            },
+            setYAxisLabel:function(yAxisLabel){
+
+            },
             setData:function(){
                 c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
             }
         };
         c.$connector.myChart = echarts.init(c);
 
-        // prettier-ignore
-        const hours = [
+        c.$connector.xAxisLabel = [
             '12adcdcdd', '1avdvdvd', '2avdvddd', '3avddddd', '4a', '5a', '6a',
             '7a', '8a', '9a','10a','11a',
             '12p', '1p', '2p', '3p', '4p', '5p',
@@ -71,7 +76,7 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
             },
             xAxis: {
                 type: 'category',
-                data: hours,
+                data: c.$connector.xAxisLabel,
                 splitArea: {
                     show: true
                 },
