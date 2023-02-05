@@ -66,7 +66,10 @@ public class DataRelationDistributionChart extends VerticalLayout {
                         && !currentConceptionKindName.equals(RealmConstant.AttributeKindClass)
                         && !currentConceptionKindName.equals(RealmConstant.RelationKindClass)
                         && !currentConceptionKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
-                        && !currentConceptionKindName.equals(RealmConstant.ClassificationClass)){
+                        && !currentConceptionKindName.equals(RealmConstant.ClassificationClass)
+                        && !currentConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
+                        && !currentConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
+                ){
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
                     cytoscapeNodePayload.getData().put("shape","round-octagon");
                     cytoscapeNodePayload.getData().put("background_color","#c00");
@@ -125,18 +128,30 @@ public class DataRelationDistributionChart extends VerticalLayout {
                 String targetConceptionKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
                 String relationKindName = currentConceptionKindCorrelationInfo.getRelationKindName();
                 long relationEntityCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
-
-                CytoscapeEdgePayload cytoscapeEdgePayload =new CytoscapeEdgePayload();
-                cytoscapeEdgePayload.getData().put("type", relationKindName);
-                cytoscapeEdgePayload.getData().put("source", sourceConceptionKindName);
-                cytoscapeEdgePayload.getData().put("target", targetConceptionKindName);
-                runBeforeClientResponse(ui -> {
-                    try {
-                        getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
+                boolean linkToTG = false;
+                if(sourceConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
+                        ||sourceConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
+                        ||targetConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
+                        ||targetConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)){
+                    linkToTG = true;
+                }
+                if(!linkToTG){
+                    if(!relationKindName.startsWith("DOCG_TS_NextIs") &&
+                            !relationKindName.startsWith("DOCG_TS_FirstChildIs") &&
+                            !relationKindName.startsWith("DOCG_TS_LastChildIs")){
+                        CytoscapeEdgePayload cytoscapeEdgePayload =new CytoscapeEdgePayload();
+                        cytoscapeEdgePayload.getData().put("type", relationKindName);
+                        cytoscapeEdgePayload.getData().put("source", sourceConceptionKindName);
+                        cytoscapeEdgePayload.getData().put("target", targetConceptionKindName);
+                        runBeforeClientResponse(ui -> {
+                            try {
+                                getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
+                            } catch (JsonProcessingException e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
                     }
-                });
+                }
             }
         }
 

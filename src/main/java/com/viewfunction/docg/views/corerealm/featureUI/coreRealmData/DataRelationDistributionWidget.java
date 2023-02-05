@@ -6,11 +6,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DataStatusSnapshotInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RuntimeRelationAndConceptionKindAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
-import java.util.List;
 import java.util.Set;
 
 public class DataRelationDistributionWidget extends HorizontalLayout {
@@ -43,12 +41,6 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
-        List<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoList = dataStatusSnapshotInfo.getRelationAndConceptionKindAttachInfo();
-        for(RuntimeRelationAndConceptionKindAttachInfo currentRuntimeRelationAndConceptionKindAttachInfo:runtimeRelationAndConceptionKindAttachInfoList){
-            currentRuntimeRelationAndConceptionKindAttachInfo.getConceptionKind();
-            currentRuntimeRelationAndConceptionKindAttachInfo.getRelationKind();
-            currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount();
-        }
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
         dataRelationDistributionChart.clearData();
         dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
