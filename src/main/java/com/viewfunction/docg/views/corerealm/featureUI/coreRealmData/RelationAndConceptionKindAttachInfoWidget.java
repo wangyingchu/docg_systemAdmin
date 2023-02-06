@@ -1,40 +1,48 @@
 package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DataStatusSnapshotInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RuntimeRelationAndConceptionKindAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.chart.CartesianHeatmapChart;
+import elemental.json.Json;
+import elemental.json.JsonArray;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
 
+    private Map<String,Integer> conceptionKindIndexMap;
+    private Map<String,Integer> relationKindIndexMap;
+    private String[] conceptionKindsLabel_x;
+    private String[] relationKindsLabel_y;
+    private CartesianHeatmapChart inDegreeCartesianHeatmapChart;
+    private CartesianHeatmapChart outDegreeCartesianHeatmapChart;
+
     public RelationAndConceptionKindAttachInfoWidget(){
-
-
-        String[] conceptionKindsLabel_x = new String[]{"ABCDEF", "1avdvdvd", "2avdvddd", "3avddddd", "4a", "5a", "6a",
-                "7a"," '8a'", "9a","10a","11a","12p", "1p", "2p", "3p", "4p", "5p","6p", "7p", "8p", "9p", "10p", "GHIJK"};
-        String[] relationKindsLabel_y = new String[]{"A_Saturdayvddvdd", "Fridayvdvddd", "Thursdayvdvdvd",
-                "Wednesdaydvdvddd", "Tuesdayvdvdd", "Mondayvdvdd", "SundayB_"};
+        conceptionKindIndexMap = new HashMap<>();
+        relationKindIndexMap = new HashMap<>();
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.COMPRESS_SQUARE),"概念与关系实体入度统计");
         add(infoTitle1);
-        CartesianHeatmapChart cartesianHeatmapChart1 = new CartesianHeatmapChart(380,280);
-        cartesianHeatmapChart1.setColorRange("WhiteSmoke","#168eea");
-        cartesianHeatmapChart1.setName("领域概念与关系实体入度统计");
-        cartesianHeatmapChart1.hideLabels();
-        cartesianHeatmapChart1.setXAxisLabel(conceptionKindsLabel_x);
-        cartesianHeatmapChart1.setYAxisLabel(relationKindsLabel_y);
-        cartesianHeatmapChart1.setData();
-        add(cartesianHeatmapChart1);
+        inDegreeCartesianHeatmapChart = new CartesianHeatmapChart(380,280);
+        inDegreeCartesianHeatmapChart.setColorRange("WhiteSmoke","#168eea");
+        inDegreeCartesianHeatmapChart.setName("领域概念与关系实体入度统计");
+        inDegreeCartesianHeatmapChart.hideLabels();
+        add(inDegreeCartesianHeatmapChart);
 
         HorizontalLayout spaceDiv01 = new HorizontalLayout();
         spaceDiv01.setHeight(5, Unit.PIXELS);
@@ -42,23 +50,82 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.EXPAND_SQUARE),"概念与关系实体出度统计");
         add(infoTitle2);
-        CartesianHeatmapChart cartesianHeatmapChart2 = new CartesianHeatmapChart(380,280);
-        cartesianHeatmapChart2.setColorRange("WhiteSmoke","#323b43");
-        cartesianHeatmapChart2.setName("领域概念与关系实体出度统计");
-        cartesianHeatmapChart2.hideLabels();
-        cartesianHeatmapChart2.setData();
-        add(cartesianHeatmapChart2);
+        outDegreeCartesianHeatmapChart = new CartesianHeatmapChart(380,280);
+        outDegreeCartesianHeatmapChart.setColorRange("WhiteSmoke","#323b43");
+        outDegreeCartesianHeatmapChart.setName("领域概念与关系实体出度统计");
+        outDegreeCartesianHeatmapChart.hideLabels();
+        add(outDegreeCartesianHeatmapChart);
     }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        renderRelationAndConceptionKindAttachInfo();
+    }
+
+    public void renderRelationAndConceptionKindAttachInfo(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        JsonArray outDegreeDataArray = Json.createArray();
+        JsonArray inDegreeDataArray = Json.createArray();
+        try {
+            List<EntityStatisticsInfo> conceptionEntityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
+            conceptionKindsLabel_x = new String[conceptionEntityStatisticsInfoList.size()];
+            for(int i =0 ;i<conceptionEntityStatisticsInfoList.size();i++){
+                String conceptionKindName = conceptionEntityStatisticsInfoList.get(i).getEntityKindName();
+                conceptionKindIndexMap.put(conceptionKindName,i);
+                conceptionKindsLabel_x[i]=conceptionKindName;
+            }
+
+            List<EntityStatisticsInfo> relationEntityStatisticsInfoList = coreRealm.getRelationEntitiesStatistics();
+            relationKindsLabel_y = new String[relationEntityStatisticsInfoList.size()];
+            for(int i =0 ;i<relationEntityStatisticsInfoList.size();i++){
+                String relationKindName =  relationEntityStatisticsInfoList.get(i).getEntityKindName();
+                relationKindIndexMap.put(relationKindName,i);
+                relationKindsLabel_y[i] = relationKindName;
+            }
+            SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+            DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
+            List<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoList = dataStatusSnapshotInfo.getRelationAndConceptionKindAttachInfo();
+            for(RuntimeRelationAndConceptionKindAttachInfo currentRuntimeRelationAndConceptionKindAttachInfo:runtimeRelationAndConceptionKindAttachInfoList){
+                RelationDirection relationDirection = currentRuntimeRelationAndConceptionKindAttachInfo.getRelationDirection();
+                String ConceptionKindName = currentRuntimeRelationAndConceptionKindAttachInfo.getConceptionKind();
+                String relationKindName = currentRuntimeRelationAndConceptionKindAttachInfo.getRelationKind();
+                long relationEntityCount = currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount();
+
+
+
+
+
+            }
+
+
+
+
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+
+        conceptionKindsLabel_x = new String[]{"ABCDEF", "1avdvdvd", "2avdvddd", "3avddddd", "4a", "5a", "6a",
+                "7a"," '8a'", "9a","10a","11a","12p", "1p", "2p", "3p", "4p", "5p","6p", "7p", "8p", "9p", "10p", "GHIJK"};
+        relationKindsLabel_y = new String[]{"A_Saturdayvddvdd", "Fridayvdvddd", "Thursdayvdvdvd",
+                "Wednesdaydvdvddd", "Tuesdayvdvdd", "Mondayvdvdd", "SundayB_"};
+
+
+
+
+        inDegreeCartesianHeatmapChart.setXAxisLabel(conceptionKindsLabel_x);
+        inDegreeCartesianHeatmapChart.setYAxisLabel(relationKindsLabel_y);
+        inDegreeCartesianHeatmapChart.setData(null);
+
+        outDegreeCartesianHeatmapChart.setXAxisLabel(conceptionKindsLabel_x);
+        outDegreeCartesianHeatmapChart.setYAxisLabel(relationKindsLabel_y);
+        outDegreeCartesianHeatmapChart.setData(null);
+    }
+
 
     public void refreshRelationAndConceptionKindAttachInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
-        DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
-        List<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoList = dataStatusSnapshotInfo.getRelationAndConceptionKindAttachInfo();
-        for(RuntimeRelationAndConceptionKindAttachInfo currentRuntimeRelationAndConceptionKindAttachInfo:runtimeRelationAndConceptionKindAttachInfoList){
-            currentRuntimeRelationAndConceptionKindAttachInfo.getConceptionKind();
-            currentRuntimeRelationAndConceptionKindAttachInfo.getRelationKind();
-            currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount();
-        }
+
     }
 }

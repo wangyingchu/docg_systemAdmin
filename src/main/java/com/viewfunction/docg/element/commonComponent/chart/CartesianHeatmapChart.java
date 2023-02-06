@@ -39,8 +39,8 @@ public class CartesianHeatmapChart extends Div {
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setYAxisLabel", dataArray));
     }
 
-    public  void setData(){
-        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", ""));
+    public  void setData(JsonArray dataArray){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", dataArray));
     }
 
     public void setName(String chartName){
