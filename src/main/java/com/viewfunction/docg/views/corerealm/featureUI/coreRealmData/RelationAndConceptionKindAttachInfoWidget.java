@@ -86,40 +86,46 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
             SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
             DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
             List<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoList = dataStatusSnapshotInfo.getRelationAndConceptionKindAttachInfo();
+
+            int inDegreeDataArrayIdx = 0;
+            int outDegreeDataArrayIdx = 0;
+
             for(RuntimeRelationAndConceptionKindAttachInfo currentRuntimeRelationAndConceptionKindAttachInfo:runtimeRelationAndConceptionKindAttachInfoList){
                 RelationDirection relationDirection = currentRuntimeRelationAndConceptionKindAttachInfo.getRelationDirection();
-                String ConceptionKindName = currentRuntimeRelationAndConceptionKindAttachInfo.getConceptionKind();
+                String conceptionKindName = currentRuntimeRelationAndConceptionKindAttachInfo.getConceptionKind();
                 String relationKindName = currentRuntimeRelationAndConceptionKindAttachInfo.getRelationKind();
                 long relationEntityCount = currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount();
 
+                if(conceptionKindIndexMap.get(conceptionKindName) != null && relationKindIndexMap.get(relationKindName) != null){
+                    JsonArray dataArray = Json.createArray();
+                    dataArray.set(0,conceptionKindIndexMap.get(conceptionKindName));
+                    dataArray.set(1,relationKindIndexMap.get(relationKindName));
+                    dataArray.set(2,relationEntityCount);
 
-
-
-
+                    switch (relationDirection){
+                        case FROM -> {
+                            outDegreeDataArray.set(outDegreeDataArrayIdx,dataArray);
+                            outDegreeDataArrayIdx++;
+                            break;
+                        }
+                        case TO -> {
+                            inDegreeDataArray.set(inDegreeDataArrayIdx,dataArray);
+                            inDegreeDataArrayIdx++;
+                        }
+                    }
+                }
             }
-
-
-
-
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
 
-        conceptionKindsLabel_x = new String[]{"ABCDEF", "1avdvdvd", "2avdvddd", "3avddddd", "4a", "5a", "6a",
-                "7a"," '8a'", "9a","10a","11a","12p", "1p", "2p", "3p", "4p", "5p","6p", "7p", "8p", "9p", "10p", "GHIJK"};
-        relationKindsLabel_y = new String[]{"A_Saturdayvddvdd", "Fridayvdvddd", "Thursdayvdvdvd",
-                "Wednesdaydvdvddd", "Tuesdayvdvdd", "Mondayvdvdd", "SundayB_"};
-
-
-
-
         inDegreeCartesianHeatmapChart.setXAxisLabel(conceptionKindsLabel_x);
         inDegreeCartesianHeatmapChart.setYAxisLabel(relationKindsLabel_y);
-        inDegreeCartesianHeatmapChart.setData(null);
+        inDegreeCartesianHeatmapChart.setData(inDegreeDataArray);
 
         outDegreeCartesianHeatmapChart.setXAxisLabel(conceptionKindsLabel_x);
         outDegreeCartesianHeatmapChart.setYAxisLabel(relationKindsLabel_y);
-        outDegreeCartesianHeatmapChart.setData(null);
+        outDegreeCartesianHeatmapChart.setData(outDegreeDataArray);
     }
 
 
