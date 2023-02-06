@@ -55,6 +55,18 @@ public class CartesianHeatmapChart extends Div {
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.hideLabels", ""));
     }
 
+    public void setMinMapValue(int minValue){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setMinMapValue", minValue));
+    }
+
+    public void setMaxMapValue(int maxValue){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setMaxMapValue", maxValue));
+    }
+
+    public void hideMapValues(){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.hideMapValues", ""));
+    }
+
     public void setColorRange(String startColor,String endColor){
         JsonArray dataArray = Json.createArray();
         dataArray.set(0,startColor);

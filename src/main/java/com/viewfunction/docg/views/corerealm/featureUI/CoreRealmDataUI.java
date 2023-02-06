@@ -225,6 +225,6 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
     public void receivedCheckSystemRuntimeInfoEvent(CheckSystemRuntimeInfoEvent event) {
         systemRuntimeInfoWidget.refreshSystemRuntimeInfo();
         dataRelationDistributionWidget.refreshDataRelationDistributionData();
-        relationAndConceptionKindAttachInfoWidget.refreshRelationAndConceptionKindAttachInfo();
+        relationAndConceptionKindAttachInfoWidget.renderRelationAndConceptionKindAttachInfo();
     }
 }

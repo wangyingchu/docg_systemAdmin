@@ -19,6 +19,15 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                 c.$connector.option.xAxis.axisLabel.show = false;
                 c.$connector.option.yAxis.axisLabel.show = false;
             },
+            hideMapValues:function(){
+                c.$connector.option.series[0].label.show = false;
+            },
+            setMinMapValue:function(minValue){
+                c.$connector.option.visualMap.min = minValue;
+            },
+            setMaxMapValue:function(maxValue){
+                c.$connector.option.visualMap.max = maxValue;
+            },
             setTopMargin:function(marginValue){
                 c.$connector.option.grid.top = marginValue
             },
@@ -114,7 +123,7 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
             visualMap: {
                 show:false,
                 min: 0,
-                max: 10,
+                max: 100,
                 calculable: true,
                 orient: 'horizontal',
                 left: 'left',
