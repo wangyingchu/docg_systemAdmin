@@ -199,7 +199,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
             this.leftSideContentContainerLayout.setHeight(event.getHeight()-185,Unit.PIXELS);
             this.rightSideContentContainerLayout.setWidth(event.getWidth()-580,Unit.PIXELS);
             this.dataRelationDistributionWidget.setHeight(event.getHeight()-220,Unit.PIXELS);
-            this.dataRelationDistributionWidget.setWidth(event.getWidth()-550-400-50,Unit.PIXELS);
+            this.dataRelationDistributionWidget.setWidth(event.getWidth()-550-420-50,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -208,7 +208,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
             this.leftSideContentContainerLayout.setHeight(browserHeight-185,Unit.PIXELS);
             this.rightSideContentContainerLayout.setWidth(browserWidth-580,Unit.PIXELS);
             this.dataRelationDistributionWidget.setHeight(browserHeight-220,Unit.PIXELS);
-            this.dataRelationDistributionWidget.setWidth(browserWidth-550-400-50,Unit.PIXELS);
+            this.dataRelationDistributionWidget.setWidth(browserWidth-550-420-50,Unit.PIXELS);
         }));
         ResourceHolder.getApplicationBlackboard().addListener(this);
     }

@@ -2,6 +2,8 @@ package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -14,6 +16,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RuntimeRelationA
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.chart.CartesianHeatmapChart;
 import elemental.json.Json;
@@ -31,6 +34,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
     private String[] relationKindsLabel_y;
     private CartesianHeatmapChart inDegreeCartesianHeatmapChart;
     private CartesianHeatmapChart outDegreeCartesianHeatmapChart;
+    private Grid<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoGrid;
 
     public RelationAndConceptionKindAttachInfoWidget(){
         conceptionKindIndexMap = new HashMap<>();
@@ -43,11 +47,11 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         inDegreeCartesianHeatmapChart.setName("领域概念与关系实体入度统计");
         inDegreeCartesianHeatmapChart.hideLabels();
         inDegreeCartesianHeatmapChart.hideMapValues();
-        add(inDegreeCartesianHeatmapChart);
+        //add(inDegreeCartesianHeatmapChart);
 
         HorizontalLayout spaceDiv01 = new HorizontalLayout();
         spaceDiv01.setHeight(5, Unit.PIXELS);
-        add(spaceDiv01);
+        //add(spaceDiv01);
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.EXPAND_SQUARE),"概念与关系实体出度统计");
         add(infoTitle2);
@@ -56,7 +60,28 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         outDegreeCartesianHeatmapChart.setName("领域概念与关系实体出度统计");
         outDegreeCartesianHeatmapChart.hideLabels();
         outDegreeCartesianHeatmapChart.hideMapValues();
-        add(outDegreeCartesianHeatmapChart);
+        //add(outDegreeCartesianHeatmapChart);
+
+        runtimeRelationAndConceptionKindAttachInfoGrid = new Grid<>();
+        runtimeRelationAndConceptionKindAttachInfoGrid.setWidth(410,Unit.PIXELS);
+        runtimeRelationAndConceptionKindAttachInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        runtimeRelationAndConceptionKindAttachInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        runtimeRelationAndConceptionKindAttachInfoGrid.setHeight(500,Unit.PIXELS);
+        runtimeRelationAndConceptionKindAttachInfoGrid.addColumn(RuntimeRelationAndConceptionKindAttachInfo::getConceptionKind).setHeader("概念类型").setKey("idx_0");
+        runtimeRelationAndConceptionKindAttachInfoGrid.addColumn(RuntimeRelationAndConceptionKindAttachInfo::getRelationKind).setHeader("关系类型").setKey("idx_1");
+        runtimeRelationAndConceptionKindAttachInfoGrid.addColumn(RuntimeRelationAndConceptionKindAttachInfo::getRelationDirection).setHeader("关系方向").setKey("idx_2");
+        runtimeRelationAndConceptionKindAttachInfoGrid.addColumn(RuntimeRelationAndConceptionKindAttachInfo::getRelationEntityCount).setHeader("关系数量").setKey("idx_3");
+
+        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.CUBE,"概念类型");
+        runtimeRelationAndConceptionKindAttachInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.CONNECT_O,"关系类型");
+        runtimeRelationAndConceptionKindAttachInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.EXCHANGE,"度方向");
+        runtimeRelationAndConceptionKindAttachInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(VaadinIcon.CROSSHAIRS,"关系数量");
+        runtimeRelationAndConceptionKindAttachInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
+
+        add(runtimeRelationAndConceptionKindAttachInfoGrid);
     }
 
     @Override
@@ -92,6 +117,8 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
             SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
             DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
             List<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoList = dataStatusSnapshotInfo.getRelationAndConceptionKindAttachInfo();
+
+            runtimeRelationAndConceptionKindAttachInfoGrid.setItems(runtimeRelationAndConceptionKindAttachInfoList);
 
             int inDegreeDataArrayIdx = 0;
             int outDegreeDataArrayIdx = 0;
