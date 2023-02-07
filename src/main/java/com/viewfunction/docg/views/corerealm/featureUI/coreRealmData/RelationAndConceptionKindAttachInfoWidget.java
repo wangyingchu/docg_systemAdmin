@@ -1,13 +1,12 @@
 package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
@@ -20,9 +19,10 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
-import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
+import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.chart.CartesianHeatmapChart;
 
+import dev.mett.vaadin.tooltip.Tooltips;
 import elemental.json.Json;
 import elemental.json.JsonArray;
 
@@ -45,8 +45,31 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         conceptionKindIndexMap = new HashMap<>();
         relationKindIndexMap = new HashMap<>();
 
-        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.GRID),"概念与关系实体统计");
-        add(infoTitle1);
+        List<Component> actionComponentsList = new ArrayList<>();
+        Button outDegreeInfoButton = new Button("出度统计",new Icon(VaadinIcon.EXPAND_SQUARE));
+        outDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        outDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        outDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        outDegreeInfoButton.addClickListener((ClickEvent<Button> click) ->{
+            //systemRuntimeInfoWidget.refreshSystemRuntimeInfo();
+        });
+        Tooltips.getCurrent().setTooltip(outDegreeInfoButton,"概念与关系实体出度统计 HeatMap");
+        actionComponentsList.add(outDegreeInfoButton);
+
+        Button inDegreeInfoButton = new Button("入度统计",new Icon(VaadinIcon.COMPRESS_SQUARE));
+        inDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        inDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        inDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        inDegreeInfoButton.addClickListener((ClickEvent<Button> click) ->{
+            //systemRuntimeInfoWidget.refreshSystemRuntimeInfo();
+        });
+        Tooltips.getCurrent().setTooltip(inDegreeInfoButton,"概念与关系实体入度统计 HeatMap");
+        actionComponentsList.add(inDegreeInfoButton);
+
+        SecondaryTitleActionBar sectionActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.GRID),"概念与关系实体统计",null,actionComponentsList);
+        sectionActionBar.setWidth(410,Unit.PIXELS);
+        add(sectionActionBar);
+
         inDegreeCartesianHeatmapChart = new CartesianHeatmapChart(380,280);
         inDegreeCartesianHeatmapChart.setColorRange("WhiteSmoke","#168eea");
         inDegreeCartesianHeatmapChart.setName("领域概念与关系实体入度统计");
@@ -54,12 +77,6 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         inDegreeCartesianHeatmapChart.hideMapValues();
         //add(inDegreeCartesianHeatmapChart);
 
-        HorizontalLayout spaceDiv01 = new HorizontalLayout();
-        spaceDiv01.setHeight(5, Unit.PIXELS);
-        //add(spaceDiv01);
-
-        //ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.EXPAND_SQUARE),"概念与关系实体出度统计");
-       // add(infoTitle2);
         outDegreeCartesianHeatmapChart = new CartesianHeatmapChart(380,280);
         outDegreeCartesianHeatmapChart.setColorRange("WhiteSmoke","#323b43");
         outDegreeCartesianHeatmapChart.setName("领域概念与关系实体出度统计");
