@@ -361,6 +361,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
             return relationDirectionIcon;
         }
     }
+
     private class RelationEntityActionButtonsValueProvider implements ValueProvider<RelationEntity,HorizontalLayout>{
         @Override
         public HorizontalLayout apply(RelationEntity relationEntity) {

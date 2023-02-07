@@ -9,6 +9,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
@@ -71,21 +72,49 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         runtimeRelationAndConceptionKindAttachInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         runtimeRelationAndConceptionKindAttachInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
         runtimeRelationAndConceptionKindAttachInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
-        runtimeRelationAndConceptionKindAttachInfoGrid.addColumn(RuntimeRelationAndConceptionKindAttachInfo::getConceptionKind).setHeader("概念类型").setKey("idx_0");
-        runtimeRelationAndConceptionKindAttachInfoGrid.addColumn(RuntimeRelationAndConceptionKindAttachInfo::getRelationKind).setHeader("关系类型").setKey("idx_1");
-        runtimeRelationAndConceptionKindAttachInfoGrid.addColumn(RuntimeRelationAndConceptionKindAttachInfo::getRelationDirection).setHeader("关系方向").setKey("idx_2");
-        runtimeRelationAndConceptionKindAttachInfoGrid.addColumn(RuntimeRelationAndConceptionKindAttachInfo::getRelationEntityCount).setHeader("关系数量").setKey("idx_3");
+        runtimeRelationAndConceptionKindAttachInfoGrid.addColumn(RuntimeRelationAndConceptionKindAttachInfo::getConceptionKind).setHeader("概念类型").setKey("idx_0").setResizable(true)
+                .setTooltipGenerator(runtimeRelationAndConceptionKindAttachInfo -> getConceptionKindName(runtimeRelationAndConceptionKindAttachInfo));
+        runtimeRelationAndConceptionKindAttachInfoGrid.addColumn(RuntimeRelationAndConceptionKindAttachInfo::getRelationKind).setHeader("关系类型").setKey("idx_1").setResizable(true)
+                .setTooltipGenerator(runtimeRelationAndConceptionKindAttachInfo -> getRelationKindName(runtimeRelationAndConceptionKindAttachInfo));
+        runtimeRelationAndConceptionKindAttachInfoGrid.addComponentColumn(new RelationDirectionIconValueProvider()).setHeader("").setKey("idx_2").setFlexGrow(0).setWidth("35px").setResizable(false)
+                .setTooltipGenerator(runtimeRelationAndConceptionKindAttachInfo -> getRelationDirection(runtimeRelationAndConceptionKindAttachInfo));
+        runtimeRelationAndConceptionKindAttachInfoGrid.addColumn(RuntimeRelationAndConceptionKindAttachInfo::getRelationEntityCount).setHeader("关系数量").setKey("idx_3").setWidth("50px");
 
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.CUBE,"概念类型");
         runtimeRelationAndConceptionKindAttachInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.CONNECT_O,"关系类型");
         runtimeRelationAndConceptionKindAttachInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
-        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.EXCHANGE,"度方向");
-        runtimeRelationAndConceptionKindAttachInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(VaadinIcon.CROSSHAIRS,"关系数量");
         runtimeRelationAndConceptionKindAttachInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
-
         add(runtimeRelationAndConceptionKindAttachInfoGrid);
+    }
+
+    private String getConceptionKindName(RuntimeRelationAndConceptionKindAttachInfo runtimeRelationAndConceptionKindAttachInfo){
+        return runtimeRelationAndConceptionKindAttachInfo.getConceptionKind();
+    }
+
+    private String getRelationKindName(RuntimeRelationAndConceptionKindAttachInfo runtimeRelationAndConceptionKindAttachInfo){
+        return runtimeRelationAndConceptionKindAttachInfo.getRelationKind();
+    }
+
+    private String getRelationDirection(RuntimeRelationAndConceptionKindAttachInfo runtimeRelationAndConceptionKindAttachInfo){
+        return runtimeRelationAndConceptionKindAttachInfo.getRelationDirection().toString();
+    }
+
+    private class RelationDirectionIconValueProvider implements ValueProvider<RuntimeRelationAndConceptionKindAttachInfo,Icon> {
+        @Override
+        public Icon apply(RuntimeRelationAndConceptionKindAttachInfo runtimeRelationAndConceptionKindAttachInfo) {
+            Icon relationDirectionIcon = null;
+            RelationDirection relationDirection = runtimeRelationAndConceptionKindAttachInfo.getRelationDirection();
+            switch(relationDirection){
+                case FROM -> relationDirectionIcon = VaadinIcon.ANGLE_DOUBLE_RIGHT.create();
+                case TO -> relationDirectionIcon = VaadinIcon.ANGLE_DOUBLE_LEFT.create();
+            }
+            if(relationDirectionIcon != null){
+                relationDirectionIcon.setSize("14px");
+            }
+            return relationDirectionIcon;
+        }
     }
 
     @Override
