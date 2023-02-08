@@ -20,6 +20,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
+import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.chart.CartesianHeatmapChart;
@@ -154,23 +155,31 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
     }
 
     private void renderRelationAndConceptionKindAttachInfoHeatMapUI(){
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念与关系实体度统计概览",null,true,1600,900,false);
-        fixSizeWindow.setModel(true);
+        FullScreenWindow fullSizeWindow = new FullScreenWindow(new Icon(VaadinIcon.SITEMAP),"概念与关系实体度统计概览",null,null,true);
+        fullSizeWindow.setModel(true);
         HorizontalLayout heatMapsContainerLayout = new HorizontalLayout();
 
-        inDegreeCartesianHeatmapChart = new CartesianHeatmapChart(750,700);
-        inDegreeCartesianHeatmapChart.setColorRange("WhiteSmoke","#168eea");
+        inDegreeCartesianHeatmapChart = new CartesianHeatmapChart(1850,800);
+        inDegreeCartesianHeatmapChart.setColorRange("WhiteSmoke","#4682B4");
         inDegreeCartesianHeatmapChart.setName("领域概念与关系实体入度统计");
         inDegreeCartesianHeatmapChart.hideLabels();
-        inDegreeCartesianHeatmapChart.hideMapValues();
+        //inDegreeCartesianHeatmapChart.hideMapValues();
+        inDegreeCartesianHeatmapChart.setTopMargin(20);
+        inDegreeCartesianHeatmapChart.setTooltipPosition("right");
+        inDegreeCartesianHeatmapChart.setLeftMargin(20);
+        inDegreeCartesianHeatmapChart.setBottomMargin(20);
+        inDegreeCartesianHeatmapChart.setRightMargin(20);
         heatMapsContainerLayout.add(inDegreeCartesianHeatmapChart);
 
-        outDegreeCartesianHeatmapChart = new CartesianHeatmapChart(750,700);
+        outDegreeCartesianHeatmapChart = new CartesianHeatmapChart(750,800);
         outDegreeCartesianHeatmapChart.setColorRange("WhiteSmoke","#323b43");
         outDegreeCartesianHeatmapChart.setName("领域概念与关系实体出度统计");
-        outDegreeCartesianHeatmapChart.hideLabels();
+        //outDegreeCartesianHeatmapChart.hideLabels();
         outDegreeCartesianHeatmapChart.hideMapValues();
-        heatMapsContainerLayout.add(outDegreeCartesianHeatmapChart);
+        outDegreeCartesianHeatmapChart.setTopMargin(20);
+        outDegreeCartesianHeatmapChart.setTooltipPosition("left");
+        outDegreeCartesianHeatmapChart.setRightMargin(200);
+        //heatMapsContainerLayout.add(outDegreeCartesianHeatmapChart);
 
         conceptionKindIndexMap.clear();
         relationKindIndexMap.clear();
@@ -248,9 +257,9 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         outDegreeCartesianHeatmapChart.setMaxMapValue((int)outDegreeMaxRelationCount);
         outDegreeCartesianHeatmapChart.setData(outDegreeDataArray);
 
-        fixSizeWindow.setWindowContent(heatMapsContainerLayout);
-        fixSizeWindow.show();
-        fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
+        fullSizeWindow.setWindowContent(heatMapsContainerLayout);
+        fullSizeWindow.show();
+        fullSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
             @Override
             public void onComponentEvent(DetachEvent detachEvent) {
                 //conceptionKindRelationGuideButton.setEnabled(true);

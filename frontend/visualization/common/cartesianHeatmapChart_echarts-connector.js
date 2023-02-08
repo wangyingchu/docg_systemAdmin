@@ -91,12 +91,19 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                 }
             },
             grid: {
-                height: '95%',
+
+                containLabel:true,
+                height: 'auto',
                 top: 2,
                 left:10,
                 right:10,
                 bottom:10,
-                width:'95%'
+                //width:'95%'
+                //width:1400
+                //borderColor  : '#0099ff',
+                //borderWidth:1,
+                //show:true,
+                width:'auto'
             },
             xAxis: {
                 type: 'category',
@@ -106,7 +113,8 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                 },
                 axisLabel:{
                     show:true,
-                    inside:false
+                    inside:true,
+                    rotate:30
                 }
             },
             yAxis: {
@@ -121,13 +129,23 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                 }
             },
             visualMap: {
+
                 show:false,
                 min: 0,
                 max: 100,
                 calculable: true,
                 orient: 'horizontal',
                 left: 'left',
-                bottom: '15%',
+
+
+                /*
+                textStyle:{
+                    fontWeight:'bold',
+                    fontSize : 3
+                },
+                */
+
+
                 inRange: {
                    color: ['WhiteSmoke','#00d1b2']
                 }
