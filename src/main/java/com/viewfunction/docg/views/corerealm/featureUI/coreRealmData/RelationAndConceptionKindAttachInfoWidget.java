@@ -72,8 +72,6 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         sectionActionBar.setWidth(410,Unit.PIXELS);
         add(sectionActionBar);
 
-
-
         runtimeRelationAndConceptionKindAttachInfoGrid = new Grid<>();
         runtimeRelationAndConceptionKindAttachInfoGrid.setWidth(410,Unit.PIXELS);
         runtimeRelationAndConceptionKindAttachInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
@@ -147,85 +145,17 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
     }
 
     public void renderRelationAndConceptionKindAttachInfo(){
-        conceptionKindIndexMap.clear();
-        relationKindIndexMap.clear();
         runtimeRelationAndConceptionKindAttachInfoGrid.setItems(new ArrayList<>());
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        JsonArray outDegreeDataArray = Json.createArray();
-        JsonArray inDegreeDataArray = Json.createArray();
-        long inDegreeMaxRelationCount = 0;
-        long outDegreeMaxRelationCount = 0;
-        try {
-            List<EntityStatisticsInfo> conceptionEntityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
-            conceptionKindsLabel_x = new String[conceptionEntityStatisticsInfoList.size()];
-            for(int i =0 ;i<conceptionEntityStatisticsInfoList.size();i++){
-                String conceptionKindName = conceptionEntityStatisticsInfoList.get(i).getEntityKindName();
-                conceptionKindIndexMap.put(conceptionKindName,i);
-                conceptionKindsLabel_x[i]=conceptionKindName;
-            }
-
-            List<EntityStatisticsInfo> relationEntityStatisticsInfoList = coreRealm.getRelationEntitiesStatistics();
-            relationKindsLabel_y = new String[relationEntityStatisticsInfoList.size()];
-            for(int i =0 ;i<relationEntityStatisticsInfoList.size();i++){
-                String relationKindName =  relationEntityStatisticsInfoList.get(i).getEntityKindName();
-                relationKindIndexMap.put(relationKindName,i);
-                relationKindsLabel_y[i] = relationKindName;
-            }
-            SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
-            DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
-            List<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoList = dataStatusSnapshotInfo.getRelationAndConceptionKindAttachInfo();
-
-            runtimeRelationAndConceptionKindAttachInfoGrid.setItems(runtimeRelationAndConceptionKindAttachInfoList);
-
-            int inDegreeDataArrayIdx = 0;
-            int outDegreeDataArrayIdx = 0;
-
-            for(RuntimeRelationAndConceptionKindAttachInfo currentRuntimeRelationAndConceptionKindAttachInfo:runtimeRelationAndConceptionKindAttachInfoList){
-                RelationDirection relationDirection = currentRuntimeRelationAndConceptionKindAttachInfo.getRelationDirection();
-                String conceptionKindName = currentRuntimeRelationAndConceptionKindAttachInfo.getConceptionKind();
-                String relationKindName = currentRuntimeRelationAndConceptionKindAttachInfo.getRelationKind();
-                long relationEntityCount = currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount();
-
-                if(conceptionKindIndexMap.get(conceptionKindName) != null && relationKindIndexMap.get(relationKindName) != null){
-                    JsonArray dataArray = Json.createArray();
-                    dataArray.set(0,conceptionKindIndexMap.get(conceptionKindName));
-                    dataArray.set(1,relationKindIndexMap.get(relationKindName));
-                    dataArray.set(2,relationEntityCount);
-
-                    switch (relationDirection){
-                        case FROM -> {
-                            outDegreeDataArray.set(outDegreeDataArrayIdx,dataArray);
-                            outDegreeDataArrayIdx++;
-                            if(relationEntityCount > outDegreeMaxRelationCount){
-                                outDegreeMaxRelationCount = relationEntityCount;
-                            }
-                            break;
-                        }
-                        case TO -> {
-                            inDegreeDataArray.set(inDegreeDataArrayIdx,dataArray);
-                            inDegreeDataArrayIdx++;
-                            if(relationEntityCount > inDegreeMaxRelationCount){
-                                inDegreeMaxRelationCount = relationEntityCount;
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (CoreRealmServiceEntityExploreException e) {
-            throw new RuntimeException(e);
-        }
-
-
+        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+        DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
+        List<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoList = dataStatusSnapshotInfo.getRelationAndConceptionKindAttachInfo();
+        runtimeRelationAndConceptionKindAttachInfoGrid.setItems(runtimeRelationAndConceptionKindAttachInfoList);
     }
 
     private void renderRelationAndConceptionKindAttachInfoHeatMapUI(){
-
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念类型实体实时关联分布概览",null,true,1600,900,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念与关系实体度统计概览",null,true,1600,900,false);
         fixSizeWindow.setModel(true);
-
-
-
-
         HorizontalLayout heatMapsContainerLayout = new HorizontalLayout();
 
         inDegreeCartesianHeatmapChart = new CartesianHeatmapChart(750,700);
@@ -242,10 +172,9 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         outDegreeCartesianHeatmapChart.hideMapValues();
         heatMapsContainerLayout.add(outDegreeCartesianHeatmapChart);
 
-
         conceptionKindIndexMap.clear();
         relationKindIndexMap.clear();
-        runtimeRelationAndConceptionKindAttachInfoGrid.setItems(new ArrayList<>());
+
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         JsonArray outDegreeDataArray = Json.createArray();
         JsonArray inDegreeDataArray = Json.createArray();
@@ -270,10 +199,6 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
 
             int inDegreeDataArrayIdx = 0;
             int outDegreeDataArrayIdx = 0;
-
-
-
-
 
             SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
             DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
@@ -310,8 +235,6 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
                     }
                 }
             }
-
-
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
@@ -325,17 +248,6 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         outDegreeCartesianHeatmapChart.setMaxMapValue((int)outDegreeMaxRelationCount);
         outDegreeCartesianHeatmapChart.setData(outDegreeDataArray);
 
-
-
-
-
-
-
-
-
-
-
-
         fixSizeWindow.setWindowContent(heatMapsContainerLayout);
         fixSizeWindow.show();
         fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
@@ -344,6 +256,5 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
                 //conceptionKindRelationGuideButton.setEnabled(true);
             }
         });
-
     }
 }
