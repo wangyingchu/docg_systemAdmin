@@ -91,18 +91,12 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                 }
             },
             grid: {
-
                 containLabel:true,
                 height: 'auto',
-                top: 2,
+                top: 10,
                 left:10,
                 right:10,
                 bottom:10,
-                //width:'95%'
-                //width:1400
-                //borderColor  : '#0099ff',
-                //borderWidth:1,
-                //show:true,
                 width:'auto'
             },
             xAxis: {

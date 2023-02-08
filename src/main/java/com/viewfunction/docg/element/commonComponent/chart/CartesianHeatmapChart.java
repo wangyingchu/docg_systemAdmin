@@ -90,6 +90,8 @@ public class CartesianHeatmapChart extends Div {
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setBottomMargin", marginValue));
     }
 
+    //public void setXAxisLabel
+
     private void initConnector(Element layout) {
         runBeforeClientResponse(ui -> ui.getPage().executeJs(
                 "window.Vaadin.Flow.common_CartesianHeatmapChart_echarts.initLazy($0)", getElement()));
