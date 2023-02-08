@@ -19,7 +19,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RuntimeRelationA
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
@@ -36,25 +35,16 @@ import java.util.Map;
 
 public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
     private Registration listener;
-    private Map<String,Integer> conceptionKindIndexMap;
-    private Map<String,Integer> relationKindIndexMap;
-    private String[] conceptionKindsLabel_x;
-    private String[] relationKindsLabel_y;
-    private CartesianHeatmapChart inDegreeCartesianHeatmapChart;
-    private CartesianHeatmapChart outDegreeCartesianHeatmapChart;
     private Grid<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoGrid;
 
     public RelationAndConceptionKindAttachInfoWidget(){
-        conceptionKindIndexMap = new HashMap<>();
-        relationKindIndexMap = new HashMap<>();
-
         List<Component> actionComponentsList = new ArrayList<>();
         Button outDegreeInfoButton = new Button("出度统计",new Icon(VaadinIcon.EXPAND_SQUARE));
         outDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         outDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         outDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         outDegreeInfoButton.addClickListener((ClickEvent<Button> click) ->{
-            //renderRelationAndConceptionKindAttachInfoHeatMapUI();
+            renderRelationAndConceptionKindOutDegreeHeatMapUI();
         });
         Tooltips.getCurrent().setTooltip(outDegreeInfoButton,"概念与关系实体出度统计 HeatMap");
         actionComponentsList.add(outDegreeInfoButton);
@@ -159,31 +149,22 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         fullSizeWindow.setModel(true);
         HorizontalLayout heatMapsContainerLayout = new HorizontalLayout();
 
-        inDegreeCartesianHeatmapChart = new CartesianHeatmapChart(1850,800);
-        inDegreeCartesianHeatmapChart.setColorRange("WhiteSmoke","#168eea");
+        CartesianHeatmapChart inDegreeCartesianHeatmapChart = new CartesianHeatmapChart(1850,800);
+        inDegreeCartesianHeatmapChart.setColorRange("#ABDCFF","#0396FF");
         inDegreeCartesianHeatmapChart.setName("领域概念与关系实体入度统计");
         inDegreeCartesianHeatmapChart.setTooltipPosition("left");
         inDegreeCartesianHeatmapChart.setXAxisLabelRotateDegree(30);
         heatMapsContainerLayout.add(inDegreeCartesianHeatmapChart);
 
-        outDegreeCartesianHeatmapChart = new CartesianHeatmapChart(750,800);
-        outDegreeCartesianHeatmapChart.setColorRange("WhiteSmoke","#323b43");
-        outDegreeCartesianHeatmapChart.setName("领域概念与关系实体出度统计");
-        //outDegreeCartesianHeatmapChart.hideLabels();
-        outDegreeCartesianHeatmapChart.hideMapValues();
-        outDegreeCartesianHeatmapChart.setTopMargin(20);
-        outDegreeCartesianHeatmapChart.setTooltipPosition("left");
-        outDegreeCartesianHeatmapChart.setRightMargin(200);
-        //heatMapsContainerLayout.add(outDegreeCartesianHeatmapChart);
-
-        conceptionKindIndexMap.clear();
-        relationKindIndexMap.clear();
+        String[] conceptionKindsLabel_x;
+        String[] relationKindsLabel_y;
+        Map<String,Integer> conceptionKindIndexMap = new HashMap<>();
+        Map<String,Integer> relationKindIndexMap = new HashMap<>();
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        JsonArray outDegreeDataArray = Json.createArray();
+
         JsonArray inDegreeDataArray = Json.createArray();
         long inDegreeMaxRelationCount = 0;
-        long outDegreeMaxRelationCount = 0;
         try {
             List<EntityStatisticsInfo> conceptionEntityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
             conceptionKindsLabel_x = new String[conceptionEntityStatisticsInfoList.size()];
@@ -202,6 +183,88 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
             }
 
             int inDegreeDataArrayIdx = 0;
+
+            SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+            DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
+            List<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoList = dataStatusSnapshotInfo.getRelationAndConceptionKindAttachInfo();
+
+            for(RuntimeRelationAndConceptionKindAttachInfo currentRuntimeRelationAndConceptionKindAttachInfo:runtimeRelationAndConceptionKindAttachInfoList){
+                RelationDirection relationDirection = currentRuntimeRelationAndConceptionKindAttachInfo.getRelationDirection();
+                String conceptionKindName = currentRuntimeRelationAndConceptionKindAttachInfo.getConceptionKind();
+                String relationKindName = currentRuntimeRelationAndConceptionKindAttachInfo.getRelationKind();
+                long relationEntityCount = currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount();
+
+                if(conceptionKindIndexMap.get(conceptionKindName) != null && relationKindIndexMap.get(relationKindName) != null){
+                    JsonArray dataArray = Json.createArray();
+                    dataArray.set(0,conceptionKindIndexMap.get(conceptionKindName));
+                    dataArray.set(1,relationKindIndexMap.get(relationKindName));
+                    dataArray.set(2,relationEntityCount);
+
+                    switch (relationDirection){
+                        case TO -> {
+                            inDegreeDataArray.set(inDegreeDataArrayIdx,dataArray);
+                            inDegreeDataArrayIdx++;
+                            if(relationEntityCount > inDegreeMaxRelationCount){
+                                inDegreeMaxRelationCount = relationEntityCount;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+        inDegreeCartesianHeatmapChart.setXAxisLabel(conceptionKindsLabel_x);
+        inDegreeCartesianHeatmapChart.setYAxisLabel(relationKindsLabel_y);
+        inDegreeCartesianHeatmapChart.setMaxMapValue((int)inDegreeMaxRelationCount);
+        inDegreeCartesianHeatmapChart.setData(inDegreeDataArray);
+
+        fullSizeWindow.setWindowContent(heatMapsContainerLayout);
+        fullSizeWindow.show();
+        fullSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
+            @Override
+            public void onComponentEvent(DetachEvent detachEvent) {}
+        });
+    }
+
+    private void renderRelationAndConceptionKindOutDegreeHeatMapUI(){
+        FullScreenWindow fullSizeWindow = new FullScreenWindow(new Icon(VaadinIcon.EXPAND_SQUARE),"概念与关系实体出度统计概览",null,null,true);
+        fullSizeWindow.setModel(true);
+        HorizontalLayout heatMapsContainerLayout = new HorizontalLayout();
+
+        CartesianHeatmapChart outDegreeCartesianHeatmapChart = new CartesianHeatmapChart(1850,800);
+        outDegreeCartesianHeatmapChart.setColorRange("#FCCF31","#F55555");
+        outDegreeCartesianHeatmapChart.setName("领域概念与关系实体出度统计");
+        outDegreeCartesianHeatmapChart.setTooltipPosition("left");
+        outDegreeCartesianHeatmapChart.setXAxisLabelRotateDegree(30);
+        heatMapsContainerLayout.add(outDegreeCartesianHeatmapChart);
+
+        String[] conceptionKindsLabel_x;
+        String[] relationKindsLabel_y;
+        Map<String,Integer> conceptionKindIndexMap = new HashMap<>();
+        Map<String,Integer> relationKindIndexMap = new HashMap<>();
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        JsonArray outDegreeDataArray = Json.createArray();
+
+        long outDegreeMaxRelationCount = 0;
+        try {
+            List<EntityStatisticsInfo> conceptionEntityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
+            conceptionKindsLabel_x = new String[conceptionEntityStatisticsInfoList.size()];
+            for(int i =0 ;i<conceptionEntityStatisticsInfoList.size();i++){
+                String conceptionKindName = conceptionEntityStatisticsInfoList.get(i).getEntityKindName();
+                conceptionKindIndexMap.put(conceptionKindName,i);
+                conceptionKindsLabel_x[i]=conceptionKindName;
+            }
+
+            List<EntityStatisticsInfo> relationEntityStatisticsInfoList = coreRealm.getRelationEntitiesStatistics();
+            relationKindsLabel_y = new String[relationEntityStatisticsInfoList.size()];
+            for(int i =0 ;i<relationEntityStatisticsInfoList.size();i++){
+                String relationKindName =  relationEntityStatisticsInfoList.get(i).getEntityKindName();
+                relationKindIndexMap.put(relationKindName,i);
+                relationKindsLabel_y[i] = relationKindName;
+            }
+
             int outDegreeDataArrayIdx = 0;
 
             SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
@@ -227,14 +290,6 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
                             if(relationEntityCount > outDegreeMaxRelationCount){
                                 outDegreeMaxRelationCount = relationEntityCount;
                             }
-                            break;
-                        }
-                        case TO -> {
-                            inDegreeDataArray.set(inDegreeDataArrayIdx,dataArray);
-                            inDegreeDataArrayIdx++;
-                            if(relationEntityCount > inDegreeMaxRelationCount){
-                                inDegreeMaxRelationCount = relationEntityCount;
-                            }
                         }
                     }
                 }
@@ -242,10 +297,6 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
-        inDegreeCartesianHeatmapChart.setXAxisLabel(conceptionKindsLabel_x);
-        inDegreeCartesianHeatmapChart.setYAxisLabel(relationKindsLabel_y);
-        inDegreeCartesianHeatmapChart.setMaxMapValue((int)inDegreeMaxRelationCount);
-        inDegreeCartesianHeatmapChart.setData(inDegreeDataArray);
 
         outDegreeCartesianHeatmapChart.setXAxisLabel(conceptionKindsLabel_x);
         outDegreeCartesianHeatmapChart.setYAxisLabel(relationKindsLabel_y);
@@ -256,9 +307,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         fullSizeWindow.show();
         fullSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
             @Override
-            public void onComponentEvent(DetachEvent detachEvent) {
-                //conceptionKindRelationGuideButton.setEnabled(true);
-            }
+            public void onComponentEvent(DetachEvent detachEvent) {}
         });
     }
 }
