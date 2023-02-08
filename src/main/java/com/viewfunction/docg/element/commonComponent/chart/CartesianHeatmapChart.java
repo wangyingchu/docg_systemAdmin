@@ -90,7 +90,21 @@ public class CartesianHeatmapChart extends Div {
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setBottomMargin", marginValue));
     }
 
-    //public void setXAxisLabel
+    public void displayXAxisLabelInside(boolean inside){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.displayXAxisLabelInside", inside));
+    }
+
+    public void setXAxisLabelRotateDegree(int rotateDegree){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setXAxisLabelRotateDegree", rotateDegree));
+    }
+
+    public void displayYAxisLabelInside(boolean inside){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.displayYAxisLabelInside", inside));
+    }
+
+    public void setYAxisLabelRotateDegree(int rotateDegree){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setYAxisLabelRotateDegree", rotateDegree));
+    }
 
     private void initConnector(Element layout) {
         runBeforeClientResponse(ui -> ui.getPage().executeJs(

@@ -48,6 +48,18 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                 c.$connector.option.yAxis.data = yAxisLabel;
                 c.$connector.yAxisLabel = yAxisLabel;
             },
+            setXAxisLabelRotateDegree:function(rotateDegree){
+                c.$connector.option.xAxis.axisLabel.rotate = rotateDegree;
+            },
+            displayXAxisLabelInside:function(inside){
+                c.$connector.option.xAxis.axisLabel.inside = inside;
+            },
+            setYAxisLabelRotateDegree:function(rotateDegree){
+                c.$connector.option.yAxis.axisLabel.rotate = rotateDegree;
+            },
+            displayYAxisLabelInside:function(inside){
+                c.$connector.option.yAxis.axisLabel.inside = inside;
+            },
             setData:function(dataObj){
                 let mapData = dataObj.map(function (item) {
                         return [item[1], item[0], item[2] || '-'];
@@ -107,8 +119,8 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                 },
                 axisLabel:{
                     show:true,
-                    inside:true,
-                    rotate:30
+                    inside:false,
+                    rotate:0
                 }
             },
             yAxis: {
@@ -119,27 +131,17 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                 },
                 axisLabel:{
                     show:true,
-                    inside:false
+                    inside:false,
+                    rotate:0
                 }
             },
             visualMap: {
-
                 show:false,
                 min: 0,
                 max: 100,
                 calculable: true,
                 orient: 'horizontal',
                 left: 'left',
-
-
-                /*
-                textStyle:{
-                    fontWeight:'bold',
-                    fontSize : 3
-                },
-                */
-
-
                 inRange: {
                    color: ['WhiteSmoke','#00d1b2']
                 }

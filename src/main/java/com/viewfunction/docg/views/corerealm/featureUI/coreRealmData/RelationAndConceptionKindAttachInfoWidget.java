@@ -162,13 +162,8 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         inDegreeCartesianHeatmapChart = new CartesianHeatmapChart(1850,800);
         inDegreeCartesianHeatmapChart.setColorRange("WhiteSmoke","#168eea");
         inDegreeCartesianHeatmapChart.setName("领域概念与关系实体入度统计");
-        //inDegreeCartesianHeatmapChart.hideLabels();
-        //inDegreeCartesianHeatmapChart.hideMapValues();
-        inDegreeCartesianHeatmapChart.setTopMargin(20);
-        inDegreeCartesianHeatmapChart.setTooltipPosition("right");
-        inDegreeCartesianHeatmapChart.setLeftMargin(20);
-        inDegreeCartesianHeatmapChart.setBottomMargin(20);
-        inDegreeCartesianHeatmapChart.setRightMargin(20);
+        inDegreeCartesianHeatmapChart.setTooltipPosition("left");
+        inDegreeCartesianHeatmapChart.setXAxisLabelRotateDegree(30);
         heatMapsContainerLayout.add(inDegreeCartesianHeatmapChart);
 
         outDegreeCartesianHeatmapChart = new CartesianHeatmapChart(750,800);
