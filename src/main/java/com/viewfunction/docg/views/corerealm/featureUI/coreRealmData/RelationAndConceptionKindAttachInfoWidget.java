@@ -54,7 +54,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         outDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         outDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         outDegreeInfoButton.addClickListener((ClickEvent<Button> click) ->{
-            renderRelationAndConceptionKindAttachInfoHeatMapUI();
+            //renderRelationAndConceptionKindAttachInfoHeatMapUI();
         });
         Tooltips.getCurrent().setTooltip(outDegreeInfoButton,"概念与关系实体出度统计 HeatMap");
         actionComponentsList.add(outDegreeInfoButton);
@@ -64,7 +64,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         inDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         inDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         inDegreeInfoButton.addClickListener((ClickEvent<Button> click) ->{
-            //systemRuntimeInfoWidget.refreshSystemRuntimeInfo();
+            renderRelationAndConceptionKindInDegreeHeatMapUI();
         });
         Tooltips.getCurrent().setTooltip(inDegreeInfoButton,"概念与关系实体入度统计 HeatMap");
         actionComponentsList.add(inDegreeInfoButton);
@@ -154,8 +154,8 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         runtimeRelationAndConceptionKindAttachInfoGrid.setItems(runtimeRelationAndConceptionKindAttachInfoList);
     }
 
-    private void renderRelationAndConceptionKindAttachInfoHeatMapUI(){
-        FullScreenWindow fullSizeWindow = new FullScreenWindow(new Icon(VaadinIcon.SITEMAP),"概念与关系实体度统计概览",null,null,true);
+    private void renderRelationAndConceptionKindInDegreeHeatMapUI(){
+        FullScreenWindow fullSizeWindow = new FullScreenWindow(new Icon(VaadinIcon.COMPRESS_SQUARE),"概念与关系实体入度统计概览",null,null,true);
         fullSizeWindow.setModel(true);
         HorizontalLayout heatMapsContainerLayout = new HorizontalLayout();
 
