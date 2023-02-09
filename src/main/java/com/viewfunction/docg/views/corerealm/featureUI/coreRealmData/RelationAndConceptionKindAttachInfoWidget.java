@@ -28,10 +28,7 @@ import dev.mett.vaadin.tooltip.Tooltips;
 import elemental.json.Json;
 import elemental.json.JsonArray;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
     private Registration listener;
@@ -162,8 +159,9 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         Map<String,Integer> relationKindIndexMap = new HashMap<>();
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-
         JsonArray inDegreeDataArray = Json.createArray();
+        List<Long> totalCountList = new ArrayList<>();
+
         long inDegreeMaxRelationCount = 0;
         try {
             List<EntityStatisticsInfo> conceptionEntityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
@@ -199,6 +197,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
                     dataArray.set(0,relationKindIndexMap.get(relationKindName));
                     dataArray.set(1,conceptionKindIndexMap.get(conceptionKindName));
                     dataArray.set(2,relationEntityCount);
+                    totalCountList.add(relationEntityCount);
 
                     switch (relationDirection){
                         case TO -> {
@@ -214,9 +213,12 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
+
         inDegreeCartesianHeatmapChart.setXAxisLabel(conceptionKindsLabel_x);
         inDegreeCartesianHeatmapChart.setYAxisLabel(relationKindsLabel_y);
-        inDegreeCartesianHeatmapChart.setMaxMapValue((int)inDegreeMaxRelationCount);
+        int maxValue = (int)(inDegreeMaxRelationCount - median(totalCountList))/3;
+        inDegreeCartesianHeatmapChart.setMaxMapValue(maxValue);
+        inDegreeCartesianHeatmapChart.setMinMapValue((int)min(totalCountList));
         inDegreeCartesianHeatmapChart.setData(inDegreeDataArray);
 
         fullSizeWindow.setWindowContent(heatMapsContainerLayout);
@@ -246,6 +248,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         JsonArray outDegreeDataArray = Json.createArray();
+        List<Long> totalCountList = new ArrayList<>();
 
         long outDegreeMaxRelationCount = 0;
         try {
@@ -282,7 +285,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
                     dataArray.set(0,relationKindIndexMap.get(relationKindName));
                     dataArray.set(1,conceptionKindIndexMap.get(conceptionKindName));
                     dataArray.set(2,relationEntityCount);
-
+                    totalCountList.add(relationEntityCount);
                     switch (relationDirection){
                         case FROM -> {
                             outDegreeDataArray.set(outDegreeDataArrayIdx,dataArray);
@@ -300,7 +303,9 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
 
         outDegreeCartesianHeatmapChart.setXAxisLabel(conceptionKindsLabel_x);
         outDegreeCartesianHeatmapChart.setYAxisLabel(relationKindsLabel_y);
-        outDegreeCartesianHeatmapChart.setMaxMapValue((int)outDegreeMaxRelationCount);
+        int maxValue = (int)(outDegreeMaxRelationCount - median(totalCountList))/3;
+        outDegreeCartesianHeatmapChart.setMaxMapValue(maxValue);
+        outDegreeCartesianHeatmapChart.setMinMapValue((int)min(totalCountList));
         outDegreeCartesianHeatmapChart.setData(outDegreeDataArray);
 
         fullSizeWindow.setWindowContent(heatMapsContainerLayout);
@@ -309,5 +314,28 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
             @Override
             public void onComponentEvent(DetachEvent detachEvent) {}
         });
+    }
+
+    private static double median(List<Long> total) {
+        /*获取数组中位数*/
+        double j = 0;
+        //集合排序
+        Collections.sort(total);
+        int size = total.size();
+        if(size % 2 == 1){
+            j = total.get((size-1)/2);
+        }else {
+            //加0.0是为了把int转成double类型，否则除以2会算错
+            j = (total.get(size/2-1) + total.get(size/2) + 0.0)/2;
+        }
+        return j;
+    }
+
+    private static long min(List<Long> total) {
+        /*获取数组最小数*/
+        double j = 0;
+        //集合排序
+        Collections.sort(total);
+        return total.get(0);
     }
 }
