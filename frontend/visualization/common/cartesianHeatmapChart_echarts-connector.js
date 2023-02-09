@@ -152,7 +152,9 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                     type: 'heatmap',
                     data: data,
                     label: {
-                        show: true
+                        show: true,
+                        fontSize:7,
+                        fontWeight:'bold'
                     },
                     emphasis: {
                         itemStyle: {
