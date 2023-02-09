@@ -156,6 +156,11 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                         fontSize:7,
                         fontWeight:'bold'
                     },
+                    itemStyle: {
+                        borderWidth:1,
+                        borderType:'dashed',
+                        borderColor:'#666666'
+                    },
                     emphasis: {
                         itemStyle: {
                             shadowBlur: 10,
