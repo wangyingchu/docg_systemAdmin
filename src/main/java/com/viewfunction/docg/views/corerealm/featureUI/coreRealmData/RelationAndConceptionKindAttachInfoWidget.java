@@ -196,8 +196,8 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
 
                 if(conceptionKindIndexMap.get(conceptionKindName) != null && relationKindIndexMap.get(relationKindName) != null){
                     JsonArray dataArray = Json.createArray();
-                    dataArray.set(0,conceptionKindIndexMap.get(conceptionKindName));
-                    dataArray.set(1,relationKindIndexMap.get(relationKindName));
+                    dataArray.set(0,relationKindIndexMap.get(relationKindName));
+                    dataArray.set(1,conceptionKindIndexMap.get(conceptionKindName));
                     dataArray.set(2,relationEntityCount);
 
                     switch (relationDirection){
@@ -279,8 +279,8 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
 
                 if(conceptionKindIndexMap.get(conceptionKindName) != null && relationKindIndexMap.get(relationKindName) != null){
                     JsonArray dataArray = Json.createArray();
-                    dataArray.set(0,conceptionKindIndexMap.get(conceptionKindName));
-                    dataArray.set(1,relationKindIndexMap.get(relationKindName));
+                    dataArray.set(0,relationKindIndexMap.get(relationKindName));
+                    dataArray.set(1,conceptionKindIndexMap.get(conceptionKindName));
                     dataArray.set(2,relationEntityCount);
 
                     switch (relationDirection){
