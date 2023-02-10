@@ -59,7 +59,7 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     // Nesting factor (multiplier) to compute ideal edge length for nested edges
                     nestingFactor: 1.2,
                     // Gravity force (constant)
-                    gravity: 5,
+                    gravity: 1,
                     // Maximum number of iterations to perform
                     numIter: 1000,
                     // Initial temperature (maximum node displacement)
