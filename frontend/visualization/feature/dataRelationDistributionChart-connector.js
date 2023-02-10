@@ -75,6 +75,8 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                 layout.run();
                 cy.fit();
                 cy.center();
+                cy.minZoom(0.5);
+                cy.maxZoom(30)
             }
         };
 
@@ -108,8 +110,9 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     'source-arrow-color':'data(sourceArrowColor)',
                     'target-arrow-color':'data(targetArrowColor)',
                     'arrow-scale': 0.1,
-                    'line-style': 'solid',
-                    'curve-style': 'unbundled-bezier',
+                    'line-style': 'data(lineStyle)',
+                    'curve-style': 'data(curveStyle)',
+                    //'curve-style': 'unbundled-bezier',
                     //'curve-style': 'segments',
                     //'curve-style': 'unbundled-bezier(multiple)',
                     //'curve-style': 'taxi',
