@@ -143,6 +143,26 @@ public class DataRelationDistributionChart extends VerticalLayout {
                         cytoscapeEdgePayload.getData().put("type", relationKindName);
                         cytoscapeEdgePayload.getData().put("source", sourceConceptionKindName);
                         cytoscapeEdgePayload.getData().put("target", targetConceptionKindName);
+
+                        if(relationKindName.startsWith("DOCG_TS")){
+                            cytoscapeEdgePayload.getData().put("lineWidth", "0.1");
+                            cytoscapeEdgePayload.getData().put("lineColor", "#40E0D0");
+                            cytoscapeEdgePayload.getData().put("sourceArrowColor", "#40E0D0");
+                            cytoscapeEdgePayload.getData().put("targetArrowColor", "#40E0D0");
+                            cytoscapeEdgePayload.getData().put("lineOpacity", "0.4");
+                        }else if(relationKindName.startsWith("DOCG_GS")){
+                            cytoscapeEdgePayload.getData().put("lineWidth", "0.1");
+                            cytoscapeEdgePayload.getData().put("lineColor", "#C71585");
+                            cytoscapeEdgePayload.getData().put("sourceArrowColor", "#C71585");
+                            cytoscapeEdgePayload.getData().put("targetArrowColor", "#C71585");
+                            cytoscapeEdgePayload.getData().put("lineOpacity", "0.4");
+                        }else{
+                            cytoscapeEdgePayload.getData().put("lineWidth", "0.2");
+                            cytoscapeEdgePayload.getData().put("lineColor", "#AAAAAA");
+                            cytoscapeEdgePayload.getData().put("sourceArrowColor", "#AAAAAA");
+                            cytoscapeEdgePayload.getData().put("targetArrowColor", "#AAAAAA");
+                            cytoscapeEdgePayload.getData().put("lineOpacity", "0.8");
+                        }
                         runBeforeClientResponse(ui -> {
                             try {
                                 getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});

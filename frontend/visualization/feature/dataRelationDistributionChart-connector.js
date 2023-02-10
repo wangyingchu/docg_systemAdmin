@@ -121,10 +121,10 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                 .selector('edge')
                 .css({
                     'content': 'data(type)',
-                    'width': 0.3,
-                    'line-color': '#BBBBBB',
-                    'source-arrow-color':'#BBBBBB',
-                    'target-arrow-color':'#BBBBBB',
+                    'width': 'data(lineWidth)',
+                    'line-color': 'data(lineColor)',
+                    'source-arrow-color':'data(sourceArrowColor)',
+                    'target-arrow-color':'data(targetArrowColor)',
                     'arrow-scale': 0.1,
                     'line-style': 'solid',
                     'curve-style': 'unbundled-bezier',
@@ -141,7 +141,7 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     'color': '#666666',
                     'target-arrow-shape': 'vee',
                     'source-arrow-shape': 'tee',
-                    'line-opacity': 0.7
+                    'line-opacity': 'data(lineOpacity)'
                 })
                 .selector('node:selected')
                 .style({
