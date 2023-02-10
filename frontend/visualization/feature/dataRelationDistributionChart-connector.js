@@ -6,39 +6,23 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
         }
         c.$connector = {
             // functions
-            lockGraph:function(data){
-                cy.nodes().forEach(node => {
-                    node.lock();
-                })
-            },
             setData : function(data) {
                 cy.add(eval("(" + data + ")"));
             },
             clearData : function() {
                 cy.remove(cy.elements());
             },
-            deleteNode : function(data) {
-                let targetNode = cy.filter('[id = '+data+']');
-                cy.remove(targetNode.union(targetNode.connectedEdges()));
-            },
-            initLayoutGraph: function(){
-                let layout = cy.layout({
-                    name: 'cose',
-                    fit:true,
-                    padding: 10, // the padding on fit
-                });
-                layout.run();
-                cy.fit();
-                cy.center();
-            },
             layoutGraph: function(){
-                let layout = cy.layout({
-                    name: 'cose',
+                let option = {name: 'cose',
+                    // Called on `layoutready`
+                    ready: function(){},
+                    // Called on `layoutstop`
+                    stop: function(){},
                     // Whether to animate while running the layout
                     // true : Animate continuously as the layout is running
                     // false : Just show the end result
                     // 'end' : Animate with the end result, from the initial positions to the end positions
-                    animate: false,
+                    animate: true,
                     // Easing of the animation for animate:'end'
                     animationEasing: undefined,
                     // The duration of the animation for animate:'end'
@@ -55,7 +39,7 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     // Whether to fit the network view after when done
                     fit: true,
                     // Padding on fit
-                    padding: 1,
+                    padding: 5,
                     // Constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
                     boundingBox: undefined,
                     // Excludes the label when calculating node bounding boxes for the layout algorithm
@@ -63,19 +47,19 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     // Randomize the initial positions of the nodes (true) or use existing positions (false)
                     randomize: false,
                     // Extra spacing between components in non-compound graphs
-                    componentSpacing: 1,
+                    componentSpacing: 40,
                     // Node repulsion (non overlapping) multiplier
-                    nodeRepulsion: function( node ){ return 10; },
+                    nodeRepulsion: function( node ){ return 2048; },
                     // Node repulsion (overlapping) multiplier
-                    nodeOverlap: 1,
+                    nodeOverlap: 4,
                     // Ideal edge (non nested) length
-                    idealEdgeLength: function( edge ){ return 5; },
+                    idealEdgeLength: function( edge ){ return 32; },
                     // Divisor to compute edge forces
-                    edgeElasticity: function( edge ){ return 50; },
+                    edgeElasticity: function( edge ){ return 32; },
                     // Nesting factor (multiplier) to compute ideal edge length for nested edges
-                    nestingFactor: 0.1,
+                    nestingFactor: 1.2,
                     // Gravity force (constant)
-                    gravity: 0.1,
+                    gravity: 5,
                     // Maximum number of iterations to perform
                     numIter: 1000,
                     // Initial temperature (maximum node displacement)
@@ -84,15 +68,13 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     coolingFactor: 0.99,
                     // Lower temperature threshold (below this point the layout will end)
                     minTemp: 1.0
-                });
-                layout.on("layoutready", () => {
-                    cy.nodes().forEach(node => {
-                        node.unlock();
-                    })
-                })
+                };
+
+                let layout = cy.layout(option);
+                layout.on("layoutready", () => {})
                 layout.run();
-                // cy.fit();
-                // cy.center();
+                cy.fit();
+                cy.center();
             }
         };
 
