@@ -20,21 +20,11 @@
  * SOFTWARE.
  */
 
-'use strict';
-
-var debounce = require('lodash/debounce');
-var Heap = require('heap');
-var get = require('lodash/get');
-var set = require('lodash/set');
-var toPath = require('lodash/toPath');
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-var debounce__default = /*#__PURE__*/_interopDefaultLegacy(debounce);
-var Heap__default = /*#__PURE__*/_interopDefaultLegacy(Heap);
-var get__default = /*#__PURE__*/_interopDefaultLegacy(get);
-var set__default = /*#__PURE__*/_interopDefaultLegacy(set);
-var toPath__default = /*#__PURE__*/_interopDefaultLegacy(toPath);
+import debounce from 'lodash/debounce';
+import Heap from 'heap';
+import get from 'lodash/get';
+import set from 'lodash/set';
+import toPath from 'lodash/toPath';
 
 function _typeof(obj) {
   "@babel/helpers - typeof";
@@ -910,7 +900,7 @@ var uuid = function uuid(a, b
   b += a * 51 & 52 // if "a" is not 9 or 14 or 19 or 24
   ? //  return a random number or 4
   (a ^ 15 // if "a" is not 15
-  ? // genetate a random number from 0 to 15
+  ? // generate a random number from 0 to 15
   8 ^ Math.random() * (a ^ 20 ? 16 : 4) // unless "a" is 20, in which case a random number from 8 to 11
   : 4 //  otherwise 4
   ).toString(16) : '-' //  in other cases (if "a" is 9,14,19,24) insert "-"
@@ -1183,7 +1173,7 @@ var Element = function Element(cy, params) {
     // array of connected edges
     children: [],
     // array of children
-    parent: null,
+    parent: params.parent && params.parent.isNode() ? params.parent : null,
     // parent ref
     traversalCache: {},
     // cache of output of traversal functions
@@ -1406,7 +1396,7 @@ var elesfn$v = {
   depthFirstSearch: defineSearch({
     dfs: true
   })
-}; // nice, short mathemathical alias
+}; // nice, short mathematical alias
 
 elesfn$v.bfs = elesfn$v.breadthFirstSearch;
 elesfn$v.dfs = elesfn$v.depthFirstSearch;
@@ -1458,7 +1448,7 @@ var elesfn$u = {
       Q.updateItem(node);
     };
 
-    var Q = new Heap__default["default"](function (a, b) {
+    var Q = new Heap(function (a, b) {
       return getDist(a) - getDist(b);
     });
 
@@ -1635,7 +1625,7 @@ var elesfn$s = {
     var gScore = {};
     var fScore = {};
     var closedSetIds = {};
-    var openSet = new Heap__default["default"](function (a, b) {
+    var openSet = new Heap(function (a, b) {
       return fScore[a.id()] - fScore[b.id()];
     });
     var openSetIds = new Set$1();
@@ -3792,7 +3782,7 @@ var elesfn$n = {
   } // degreeCentrality
 
 }; // elesfn
-// nice, short mathemathical alias
+// nice, short mathematical alias
 
 elesfn$n.dc = elesfn$n.degreeCentrality;
 elesfn$n.dcn = elesfn$n.degreeCentralityNormalised = elesfn$n.degreeCentralityNormalized;
@@ -3902,7 +3892,7 @@ var elesfn$m = {
   } // closenessCentrality
 
 }; // elesfn
-// nice, short mathemathical alias
+// nice, short mathematical alias
 
 elesfn$m.cc = elesfn$m.closenessCentrality;
 elesfn$m.ccn = elesfn$m.closenessCentralityNormalised = elesfn$m.closenessCentralityNormalized;
@@ -3958,7 +3948,7 @@ var elesfn$l = {
       var P = {};
       var g = {};
       var d = {};
-      var Q = new Heap__default["default"](function (a, b) {
+      var Q = new Heap(function (a, b) {
         return d[a] - d[b];
       }); // queue
       // init dictionaries
@@ -4079,7 +4069,7 @@ var elesfn$l = {
   } // betweennessCentrality
 
 }; // elesfn
-// nice, short mathemathical alias
+// nice, short mathematical alias
 
 elesfn$l.bc = elesfn$l.betweennessCentrality;
 
@@ -6654,7 +6644,7 @@ var define$2 = {
         // set or get property
         var isPathLike = name.indexOf('.') !== -1; // there might be a normal field with a dot 
 
-        var path = isPathLike && toPath__default["default"](name); // .data('foo')
+        var path = isPathLike && toPath(name); // .data('foo')
 
         if (p.allowGetting && value === undefined) {
           // get
@@ -6664,7 +6654,7 @@ var define$2 = {
             p.beforeGet(single); // check if it's path and a field with the same name doesn't exist
 
             if (path && single._private[p.field][name] === undefined) {
-              ret = get__default["default"](single._private[p.field], path);
+              ret = get(single._private[p.field], path);
             } else {
               ret = single._private[p.field][name];
             }
@@ -6685,7 +6675,7 @@ var define$2 = {
 
               if (p.canSet(ele)) {
                 if (path && single._private[p.field][name] === undefined) {
-                  set__default["default"](ele._private[p.field], path, value);
+                  set(ele._private[p.field], path, value);
                 } else {
                   ele._private[p.field][name] = value;
                 }
@@ -12584,6 +12574,7 @@ elesfn$2.componentsOf = elesfn$2.components;
 
 var Collection = function Collection(cy, elements) {
   var unique = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  var removed = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
   if (cy === undefined) {
     error('A collection must have a reference to the core');
@@ -12683,7 +12674,7 @@ var Collection = function Collection(cy, elements) {
   } // restore the elements if we created them from json
 
 
-  if (createdElements) {
+  if (createdElements && !removed) {
     this.restore();
   }
 }; // Functions
@@ -13073,12 +13064,16 @@ elesfn$1.restore = function () {
     var parentId = _data4.parent;
     var specifiedParent = parentId != null;
 
-    if (specifiedParent) {
-      var parent = cy.getElementById(parentId);
+    if (specifiedParent || node._private.parent) {
+      var parent = node._private.parent ? cy.collection().merge(node._private.parent) : cy.getElementById(parentId);
 
       if (parent.empty()) {
         // non-existant parent; just remove it
         _data4.parent = undefined;
+      } else if (parent[0].removed()) {
+        warn('Node added with missing parent, reference to parent removed');
+        _data4.parent = undefined;
+        node._private.parent = null;
       } else {
         var selfAsParent = false;
         var ancestor = parent;
@@ -14529,7 +14524,11 @@ var corefn$3 = {
     } else if (elementOrCollection(eles)) {
       return eles.collection();
     } else if (array(eles)) {
-      return new Collection(this, eles, opts);
+      if (!opts) {
+        opts = {};
+      }
+
+      return new Collection(this, eles, opts.unique, opts.removed);
     }
 
     return new Collection(this);
@@ -24515,7 +24514,7 @@ BRp$3.load = function () {
     });
   }
 
-  var onResize = debounce__default["default"](function () {
+  var onResize = debounce(function () {
     r.cy.resize();
   }, 100);
 
@@ -27149,7 +27148,7 @@ var defs = {
         self.dequeueingSetup = true;
       }
 
-      var queueRedraw = debounce__default["default"](function () {
+      var queueRedraw = debounce(function () {
         r.redrawHint('eles', true);
         r.redrawHint('drag', true);
         r.redraw();
@@ -27495,7 +27494,7 @@ ETCp.getRetiredTextureQueue = function (txrH) {
 
 ETCp.getElementQueue = function () {
   var self = this;
-  var q = self.eleCacheQueue = self.eleCacheQueue || new Heap__default["default"](function (a, b) {
+  var q = self.eleCacheQueue = self.eleCacheQueue || new Heap(function (a, b) {
     return b.reqs - a.reqs;
   });
   return q;
@@ -27964,7 +27963,7 @@ var LayeredTextureCache = function LayeredTextureCache(renderer) {
   self.lastInvalidationTime = performanceNow() - 2 * invalidThreshold;
   self.skipping = false;
   self.eleTxrDeqs = cy.collection();
-  self.scheduleElementRefinement = debounce__default["default"](function () {
+  self.scheduleElementRefinement = debounce(function () {
     self.refineElementTextures(self.eleTxrDeqs);
     self.eleTxrDeqs.unmerge(self.eleTxrDeqs);
   }, refineEleDebounceTime);
@@ -27980,7 +27979,7 @@ var LayeredTextureCache = function LayeredTextureCache(renderer) {
     return b.reqs - a.reqs;
   };
 
-  self.layersQueue = new Heap__default["default"](qSort);
+  self.layersQueue = new Heap(qSort);
   self.setupDequeueing();
 };
 
@@ -28528,7 +28527,7 @@ LTCp.applyLayerReplacement = function (layer) {
   self.requestRedraw();
 };
 
-LTCp.requestRedraw = debounce__default["default"](function () {
+LTCp.requestRedraw = debounce(function () {
   var r = this.renderer;
   r.redrawHint('eles', true);
   r.redrawHint('drag', true);
@@ -31904,7 +31903,7 @@ sheetfn.appendToStyle = function (style) {
   return style;
 };
 
-var version = "3.22.1";
+var version = "3.23.0";
 
 var cytoscape = function cytoscape(options) {
   // if no options specified, use default
@@ -31940,4 +31939,4 @@ cytoscape.version = version; // expose public apis (mostly for extensions)
 
 cytoscape.stylesheet = cytoscape.Stylesheet = Stylesheet;
 
-module.exports = cytoscape;
+export { cytoscape as default };

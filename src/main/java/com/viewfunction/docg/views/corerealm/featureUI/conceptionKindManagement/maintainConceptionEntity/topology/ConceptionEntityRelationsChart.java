@@ -52,7 +52,7 @@ public class ConceptionEntityRelationsChart extends VerticalLayout {
         this.conception_relationEntityUIDMap = ArrayListMultimap.create();
         this.conceptionEntityUID = conceptionEntityUID;
         this.conceptionKind = conceptionKind;
-        UI.getCurrent().getPage().addJavaScript("js/cytoscape/3.22.1/dist/cytoscape.min.js");
+        UI.getCurrent().getPage().addJavaScript("js/cytoscape/3.23.0/dist/cytoscape.min.js");
         this.setWidthFull();
         this.setSpacing(false);
         this.setMargin(false);

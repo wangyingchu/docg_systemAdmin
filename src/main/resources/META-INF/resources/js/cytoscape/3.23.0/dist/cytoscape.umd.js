@@ -1415,7 +1415,7 @@
     b += a * 51 & 52 // if "a" is not 9 or 14 or 19 or 24
     ? //  return a random number or 4
     (a ^ 15 // if "a" is not 15
-    ? // genetate a random number from 0 to 15
+    ? // generate a random number from 0 to 15
     8 ^ Math.random() * (a ^ 20 ? 16 : 4) // unless "a" is 20, in which case a random number from 8 to 11
     : 4 //  otherwise 4
     ).toString(16) : '-' //  in other cases (if "a" is 9,14,19,24) insert "-"
@@ -1688,7 +1688,7 @@
       // array of connected edges
       children: [],
       // array of children
-      parent: null,
+      parent: params.parent && params.parent.isNode() ? params.parent : null,
       // parent ref
       traversalCache: {},
       // cache of output of traversal functions
@@ -1911,7 +1911,7 @@
     depthFirstSearch: defineSearch({
       dfs: true
     })
-  }; // nice, short mathemathical alias
+  }; // nice, short mathematical alias
 
   elesfn$v.bfs = elesfn$v.breadthFirstSearch;
   elesfn$v.dfs = elesfn$v.depthFirstSearch;
@@ -4673,7 +4673,7 @@
     } // degreeCentrality
 
   }; // elesfn
-  // nice, short mathemathical alias
+  // nice, short mathematical alias
 
   elesfn$n.dc = elesfn$n.degreeCentrality;
   elesfn$n.dcn = elesfn$n.degreeCentralityNormalised = elesfn$n.degreeCentralityNormalized;
@@ -4783,7 +4783,7 @@
     } // closenessCentrality
 
   }; // elesfn
-  // nice, short mathemathical alias
+  // nice, short mathematical alias
 
   elesfn$m.cc = elesfn$m.closenessCentrality;
   elesfn$m.ccn = elesfn$m.closenessCentralityNormalised = elesfn$m.closenessCentralityNormalized;
@@ -4960,7 +4960,7 @@
     } // betweennessCentrality
 
   }; // elesfn
-  // nice, short mathemathical alias
+  // nice, short mathematical alias
 
   elesfn$l.bc = elesfn$l.betweennessCentrality;
 
@@ -14665,6 +14665,7 @@
 
   var Collection = function Collection(cy, elements) {
     var unique = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    var removed = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
     if (cy === undefined) {
       error('A collection must have a reference to the core');
@@ -14764,7 +14765,7 @@
     } // restore the elements if we created them from json
 
 
-    if (createdElements) {
+    if (createdElements && !removed) {
       this.restore();
     }
   }; // Functions
@@ -15154,12 +15155,16 @@
       var parentId = _data4.parent;
       var specifiedParent = parentId != null;
 
-      if (specifiedParent) {
-        var parent = cy.getElementById(parentId);
+      if (specifiedParent || node._private.parent) {
+        var parent = node._private.parent ? cy.collection().merge(node._private.parent) : cy.getElementById(parentId);
 
         if (parent.empty()) {
           // non-existant parent; just remove it
           _data4.parent = undefined;
+        } else if (parent[0].removed()) {
+          warn('Node added with missing parent, reference to parent removed');
+          _data4.parent = undefined;
+          node._private.parent = null;
         } else {
           var selfAsParent = false;
           var ancestor = parent;
@@ -16610,7 +16615,11 @@
       } else if (elementOrCollection(eles)) {
         return eles.collection();
       } else if (array(eles)) {
-        return new Collection(this, eles, opts);
+        if (!opts) {
+          opts = {};
+        }
+
+        return new Collection(this, eles, opts.unique, opts.removed);
       }
 
       return new Collection(this);
@@ -33985,7 +33994,7 @@ var printLayoutInfo;
     return style;
   };
 
-  var version = "3.22.1";
+  var version = "3.23.0";
 
   var cytoscape = function cytoscape(options) {
     // if no options specified, use default
