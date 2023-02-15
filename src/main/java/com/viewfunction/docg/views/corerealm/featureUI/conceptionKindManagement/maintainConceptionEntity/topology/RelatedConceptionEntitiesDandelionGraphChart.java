@@ -42,10 +42,10 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
         this.conceptionKindColorMap = new HashMap<>();
         this.relationKindColorMap = new HashMap<>();
         //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.70.13/dist/three.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.70.13/dist/three-spritetext.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.70.13/dist/CSS2DRenderer.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.70.13/dist/3d-force-graph.min.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.71.1/dist/three.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.71.1/dist/three-spritetext.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.71.1/dist/CSS2DRenderer.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.71.1/dist/3d-force-graph.min.js");
         initConnector();
     }
 
