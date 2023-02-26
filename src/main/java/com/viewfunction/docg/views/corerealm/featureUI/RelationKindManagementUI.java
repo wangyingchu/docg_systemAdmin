@@ -1,88 +1,46 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
-import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.html.Section;
+
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.theme.lumo.Lumo;
+import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-//@Theme(value = Lumo.class, variant = Lumo.DARK)
+
 public class RelationKindManagementUI extends VerticalLayout {
 
     public RelationKindManagementUI(){
-        add(new Label("RelationKindManagementUI"));
+        Button refreshDataButton = new Button("刷新关系类型数据统计信息",new Icon(VaadinIcon.REFRESH));
+        refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        refreshDataButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        refreshDataButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
+        refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
+            //loadConceptionKindsInfo();
+            //resetSingleConceptionKindSummaryInfoArea();
+        });
 
+        List<Component> buttonList = new ArrayList<>();
+        buttonList.add(refreshDataButton);
 
+        List<Component> secTitleElementsList = new ArrayList<>();
 
-        H3 personalTitle = new H3("Personal information");
-        personalTitle.setId("PERSONAL_TITLE_ID");
+        Icon realmIcon = VaadinIcon.ARCHIVE.create();
+        realmIcon.getStyle().set("padding", "var(--lumo-space-xs");
+        Span realmNameSpan = new Span( realmIcon,new Span("Default CoreRealm"));
+        realmNameSpan.addClassName("text-2xs");
+        realmNameSpan.getElement().getThemeList().add("badge contrast");
+        secTitleElementsList.add(realmNameSpan);
 
-        TextField firstName = new TextField("First name");
-        firstName.setWidthFull();
-
-        TextField lastName = new TextField("Last name");
-        lastName.setWidthFull();
-
-        DatePicker birthDate = new DatePicker("Birthdate");
-        birthDate.setInitialPosition(LocalDate.of(1990, 1, 1));
-        birthDate.setWidthFull();
-
-        Section personalInformation = new Section(personalTitle, firstName, lastName, birthDate);
-        personalInformation.getElement().setAttribute("aria-labelledby", "PERSONAL_TITLE_ID");
-
-        add(personalInformation);
-
-// Employment information
-        H3 employementTitle = new H3("Employment information");
-        employementTitle.setId("EMPLOYMENT_TITLE_ID");
-
-        TextField position = new TextField("Position");
-        position.setWidthFull();
-
-        TextArea additionalInformation = new TextArea("Additional Information");
-        additionalInformation.setWidthFull();
-
-        Section employmentInformation = new Section(employementTitle, position, additionalInformation);
-        employmentInformation.getElement().setAttribute("aria-labelledby", "EMPLOYMENT_TITLE_ID");
-
-        add(employmentInformation);
-
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
-        add(new Label("RelationKindManagementUI"));
+        TitleActionBar titleActionBar = new TitleActionBar(new Icon(VaadinIcon.COG_O),"Relation Kind 关系类型数据管理",secTitleElementsList,buttonList);
+        add(titleActionBar);
     }
 }
