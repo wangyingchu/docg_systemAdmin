@@ -1,12 +1,13 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -14,23 +15,47 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.renderer.NumberRenderer;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
+import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
+import dev.mett.vaadin.tooltip.Tooltips;
 
+import java.text.NumberFormat;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 
 public class RelationKindManagementUI extends VerticalLayout {
 
 
-
+    private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
+    private GridListDataView<EntityStatisticsInfo> conceptionKindsMetaInfoView;
+    private Registration listener;
     final ZoneId id = ZoneId.systemDefault();
     private TextField conceptionKindNameFilterField;
     private TextField conceptionKindDescFilterField;
+    //private GridListDataView<EntityStatisticsInfo> conceptionKindsMetaInfoView;
 
+    private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
 
     public RelationKindManagementUI(){
         Button refreshDataButton = new Button("刷新关系类型数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -92,8 +117,6 @@ public class RelationKindManagementUI extends VerticalLayout {
         conceptionKindsInfoContainerLayout.setMargin(false);
         conceptionKindsInfoContainerLayout.setWidth(100, Unit.PERCENTAGE);
         add(conceptionKindsInfoContainerLayout);
-
-
 
         VerticalLayout conceptionKindMetaInfoGridContainerLayout = new VerticalLayout();
         conceptionKindMetaInfoGridContainerLayout.setSpacing(true);
@@ -160,10 +183,183 @@ public class RelationKindManagementUI extends VerticalLayout {
             }
         });
 
-        //conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
-
         conceptionKindsInfoContainerLayout.add(conceptionKindMetaInfoGridContainerLayout);
 
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+            Icon queryIcon = new Icon(VaadinIcon.RECORDS);
+            queryIcon.setSize("20px");
+            Button queryConceptionKind = new Button(queryIcon, event -> {
+                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                    //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
+                }
+            });
+            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(queryConceptionKind, "查询关系类型实体");
+
+            Icon configIcon = new Icon(VaadinIcon.COG);
+            configIcon.setSize("21px");
+            Button configConceptionKind = new Button(configIcon, event -> {
+                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                    //renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
+                }
+            });
+            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(configConceptionKind, "配置关系类型定义");
+
+            Icon cleanKindIcon = new Icon(VaadinIcon.RECYCLE);
+            cleanKindIcon.setSize("21px");
+            Button cleanConceptionKind = new Button(cleanKindIcon, event -> {});
+            cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(cleanConceptionKind, "清除关系类型所有实例");
+            cleanConceptionKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                        //renderCleanConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
+                    }
+                }
+            });
+
+            Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
+            deleteKindIcon.setSize("21px");
+            Button removeConceptionKind = new Button(deleteKindIcon, event -> {});
+            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            Tooltips.getCurrent().setTooltip(removeConceptionKind, "删除关系类型");
+            removeConceptionKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                        //renderRemoveConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
+                    }
+                }
+            });
+
+            HorizontalLayout buttons = new HorizontalLayout(queryConceptionKind,configConceptionKind, cleanConceptionKind,removeConceptionKind);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(15,Unit.PIXELS);
+            buttons.setWidth(80,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
+
+        ComponentRenderer _createDateComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+            if(entityStatisticsInfo instanceof EntityStatisticsInfo && ((EntityStatisticsInfo)entityStatisticsInfo).getCreateDateTime() != null){
+                ZonedDateTime createZonedDateTime = ((EntityStatisticsInfo)entityStatisticsInfo).getCreateDateTime();
+                return new Label(createZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
+            }else{
+                return new Label("-");
+            }
+        });
+
+        Comparator createDateComparator = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(((EntityStatisticsInfo)o1).getCreateDateTime()!= null && ((EntityStatisticsInfo)o2).getCreateDateTime()!= null &&
+                        ((EntityStatisticsInfo)o1).getLastModifyDateTime() instanceof ZonedDateTime &&
+                        ((EntityStatisticsInfo)o2).getLastModifyDateTime() instanceof ZonedDateTime){
+                    if(((EntityStatisticsInfo)o1).getCreateDateTime().isBefore(((EntityStatisticsInfo)o2).getCreateDateTime())){
+                        return -1;
+                    }if(((EntityStatisticsInfo)o1).getCreateDateTime().isAfter(((EntityStatisticsInfo)o2).getCreateDateTime())){
+                        return 1;
+                    }
+                }
+                return 0;
+            }
+            @Override
+            public boolean equals(Object obj) {
+                return false;
+            }
+        };
+
+        ComponentRenderer _lastUpdateDateComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+            if(entityStatisticsInfo instanceof EntityStatisticsInfo && ((EntityStatisticsInfo)entityStatisticsInfo).getLastModifyDateTime() != null){
+                ZonedDateTime createZonedDateTime = ((EntityStatisticsInfo)entityStatisticsInfo).getLastModifyDateTime();
+                return new Label(createZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
+            }else{
+                return new Label("-");
+            }
+        });
+
+        Comparator lastUpdateDateComparator = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(((EntityStatisticsInfo)o1).getLastModifyDateTime()!= null && ((EntityStatisticsInfo)o2).getLastModifyDateTime()!= null &&
+                        ((EntityStatisticsInfo)o1).getLastModifyDateTime() instanceof ZonedDateTime &&
+                        ((EntityStatisticsInfo)o2).getLastModifyDateTime() instanceof ZonedDateTime){
+                    if(((EntityStatisticsInfo)o1).getLastModifyDateTime().isBefore(((EntityStatisticsInfo)o2).getLastModifyDateTime())){
+                        return -1;
+                    }if(((EntityStatisticsInfo)o1).getLastModifyDateTime().isAfter(((EntityStatisticsInfo)o2).getLastModifyDateTime())){
+                        return 1;
+                    }
+                }
+                return 0;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return false;
+            }
+        };
+
+        conceptionKindMetaInfoGrid = new Grid<>();
+        conceptionKindMetaInfoGrid.setWidth(1300,Unit.PIXELS);
+        conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        conceptionKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindName).setHeader("关系念类型名称").setKey("idx_0");
+        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindDesc).setHeader("关系类型显示名称").setKey("idx_1");
+        conceptionKindMetaInfoGrid.addColumn(_createDateComponentRenderer).setHeader("类型创建时间").setKey("idx_2")
+                .setComparator(createDateComparator)
+                .setFlexGrow(0).setWidth("210px").setResizable(false);
+        conceptionKindMetaInfoGrid.addColumn(_lastUpdateDateComponentRenderer).setHeader("类型最后更新时间").setKey("idx_3")
+                .setComparator(lastUpdateDateComparator)
+                .setFlexGrow(0).setWidth("210px").setResizable(false);
+        conceptionKindMetaInfoGrid.addColumn(new NumberRenderer<>(EntityStatisticsInfo::getEntitiesCount, NumberFormat.getIntegerInstance()))
+                .setComparator((entityStatisticsInfo1, entityStatisticsInfo2) ->
+                        (int)(entityStatisticsInfo1.getEntitiesCount() - entityStatisticsInfo2.getEntitiesCount()))
+                .setHeader("类型包含实体数量").setKey("idx_4")
+                .setFlexGrow(0).setWidth("150px").setResizable(false);
+        conceptionKindMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_5")
+                .setFlexGrow(0).setWidth("140px").setResizable(false);
+
+        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"关系类型名称");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"关系类型显示名称");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"类型创建时间");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"类型最后更新时间");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.STOCK,"类型包含实体数量");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5);
+
+        conceptionKindMetaInfoGrid.appendFooterRow();
+
+        conceptionKindMetaInfoGrid.addSelectionListener(new SelectionListener<Grid<EntityStatisticsInfo>, EntityStatisticsInfo>() {
+            @Override
+            public void selectionChange(SelectionEvent<Grid<EntityStatisticsInfo>, EntityStatisticsInfo> selectionEvent) {
+                Set<EntityStatisticsInfo> selectedItemSet = selectionEvent.getAllSelectedItems();
+                if(selectedItemSet.size() == 0){
+                    // don't allow to unselect item, just reselect last selected item
+                    //conceptionKindMetaInfoGrid.select(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo);
+                }else{
+                    //singleConceptionKindSummaryInfoContainerLayout.setVisible(true);
+                    EntityStatisticsInfo selectedEntityStatisticsInfo = selectedItemSet.iterator().next();
+                    //renderConceptionKindOverview(selectedEntityStatisticsInfo);
+                    //lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo = selectedEntityStatisticsInfo;
+                }
+            }
+        });
+
+        conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
 
 
 
@@ -184,11 +380,76 @@ public class RelationKindManagementUI extends VerticalLayout {
 
 
 
+    }
 
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        //ResourceHolder.getApplicationBlackboard().addListener(this);
+        loadConceptionKindsInfo();
+        // Add browser window listener to observe size change
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            conceptionKindMetaInfoGrid.setHeight(event.getHeight()-280,Unit.PIXELS);
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            int browserHeight = receiver.getBodyClientHeight();
+            conceptionKindMetaInfoGrid.setHeight(browserHeight-280,Unit.PIXELS);
+            //conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-600);
+            //singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
+        }));
+    }
 
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
+        super.onDetach(detachEvent);
+        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
 
+    private void loadConceptionKindsInfo(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        List<EntityStatisticsInfo>  entityStatisticsInfoList = null;
+        try {
+            entityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
+            entityStatisticsInfoList = coreRealm.getRelationEntitiesStatistics();
+            List<EntityStatisticsInfo> conceptionKindEntityStatisticsInfoList = new ArrayList<>();
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
+                if(!currentEntityStatisticsInfo.isSystemKind()) {
+                    conceptionKindEntityStatisticsInfoList.add(currentEntityStatisticsInfo);
+                }
+            }
+            this.conceptionKindNameFilterField.setValue("");
+            this.conceptionKindDescFilterField.setValue("");
+            this.conceptionKindsMetaInfoView = conceptionKindMetaInfoGrid.setItems(conceptionKindEntityStatisticsInfoList);
+            //logic to filter ConceptionKinds already loaded from server
+            this.conceptionKindsMetaInfoView.addFilter(item->{
+                String entityKindName = item.getEntityKindName();
+                String entityKindDesc = item.getEntityKindDesc();
 
+                boolean conceptionKindNameFilterResult = true;
+                if(!conceptionKindNameFilterField.getValue().trim().equals("")){
+                    if(entityKindName.contains(conceptionKindNameFilterField.getValue().trim())){
+                        conceptionKindNameFilterResult = true;
+                    }else{
+                        conceptionKindNameFilterResult = false;
+                    }
+                }
 
+                boolean conceptionKindDescFilterResult = true;
+                if(!conceptionKindDescFilterField.getValue().trim().equals("")){
+                    if(entityKindDesc.contains(conceptionKindDescFilterField.getValue().trim())){
+                        conceptionKindDescFilterResult = true;
+                    }else{
+                        conceptionKindDescFilterResult = false;
+                    }
+                }
+                return conceptionKindNameFilterResult & conceptionKindDescFilterResult;
+            });
 
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
