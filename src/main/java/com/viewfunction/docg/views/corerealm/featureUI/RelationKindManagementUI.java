@@ -3,12 +3,14 @@ package com.viewfunction.docg.views.corerealm.featureUI;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 
 import java.util.ArrayList;
@@ -42,5 +44,34 @@ public class RelationKindManagementUI extends VerticalLayout {
 
         TitleActionBar titleActionBar = new TitleActionBar(new Icon(VaadinIcon.COG_O),"Relation Kind 关系类型数据管理",secTitleElementsList,buttonList);
         add(titleActionBar);
+
+        List<Component> relationKindManagementOperationButtonList = new ArrayList<>();
+
+        Button relationKindRelationGuideButton = new Button("关系实体关联分布概览",new Icon(VaadinIcon.SITEMAP));
+        relationKindRelationGuideButton.setDisableOnClick(true);
+        relationKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        relationKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        relationKindManagementOperationButtonList.add(relationKindRelationGuideButton);
+        relationKindRelationGuideButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //renderConceptionKindsCorrelationInfoSummaryUI(conceptionKindRelationGuideButton);
+            }
+        });
+
+        Button createRelationKindButton = new Button("创建关系类型",new Icon(VaadinIcon.PLUS_SQUARE_O));
+        createRelationKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        createRelationKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        relationKindManagementOperationButtonList.add(createRelationKindButton);
+        createRelationKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //renderCreateConceptionKindUI();
+            }
+        });
+
+        Icon icon = new Icon(VaadinIcon.LIST);
+        SectionActionBar sectionActionBar = new SectionActionBar(icon,"关系类型定义:",relationKindManagementOperationButtonList);
+        add(sectionActionBar);
     }
 }
