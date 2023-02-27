@@ -27,7 +27,12 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.eventHandling.RelationEntityDeletedEvent;
+import com.viewfunction.docg.element.eventHandling.RelationKindCleanedEvent;
+import com.viewfunction.docg.element.eventHandling.RelationKindCreatedEvent;
+import com.viewfunction.docg.element.eventHandling.RelationKindRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
 
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -42,7 +47,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-public class RelationKindManagementUI extends VerticalLayout {
+public class RelationKindManagementUI extends VerticalLayout implements
+        RelationKindCreatedEvent.RelationKindCreatedListener,
+        RelationKindCleanedEvent.RelationKindCleanedListener,
+        RelationKindRemovedEvent.ConceptionKindRemovedListener,
+        RelationEntityDeletedEvent.RelationEntityDeletedListener{
 
     private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
     private GridListDataView<EntityStatisticsInfo> conceptionKindsMetaInfoView;
@@ -413,7 +422,7 @@ public class RelationKindManagementUI extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        //ResourceHolder.getApplicationBlackboard().addListener(this);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         loadConceptionKindsInfo();
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
@@ -433,7 +442,7 @@ public class RelationKindManagementUI extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     private void loadConceptionKindsInfo(){
@@ -514,5 +523,25 @@ public class RelationKindManagementUI extends VerticalLayout {
         conceptionKindNameFilterField.setValue("");
         conceptionKindDescFilterField.setValue("");
         this.conceptionKindsMetaInfoView.refreshAll();
+    }
+
+    @Override
+    public void receivedRelationEntityDeletedEvent(RelationEntityDeletedEvent event) {
+
+    }
+
+    @Override
+    public void receivedRelationKindCleanedEvent(RelationKindCleanedEvent event) {
+
+    }
+
+    @Override
+    public void receivedRelationKindCreatedEvent(RelationKindCreatedEvent event) {
+
+    }
+
+    @Override
+    public void receivedRelationKindRemovedEvent(RelationKindRemovedEvent event) {
+
     }
 }
