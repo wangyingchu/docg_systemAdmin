@@ -31,6 +31,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -57,6 +58,9 @@ public class RelationKindManagementUI extends VerticalLayout {
 
     private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
     private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
+
+    private RelationKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
+
 
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private int entityAttributesDistributionStatisticSampleRatio = 10000;
@@ -382,18 +386,18 @@ public class RelationKindManagementUI extends VerticalLayout {
         singleConceptionKindInfoElementsContainerLayout.setHeight("30px");
         singleConceptionKindSummaryInfoContainerLayout.add(singleConceptionKindInfoElementsContainerLayout);
 
-        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"概念类型概览");
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"关系类型概览");
         singleConceptionKindInfoElementsContainerLayout.add(filterTitle2);
         singleConceptionKindInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
 
 
 
 
-        secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null);
+        secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONNECT_O),"-",null,null);
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
         singleConceptionKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
 
-        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体概略采样数 "+entityAttributesDistributionStatisticSampleRatio+")");
+        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"关系类型属性分布 (实体概略采样数 "+entityAttributesDistributionStatisticSampleRatio+")");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle1);
 
         conceptionKindAttributesInfoGrid = new Grid<>();
@@ -417,7 +421,7 @@ public class RelationKindManagementUI extends VerticalLayout {
         conceptionKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
         singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindAttributesInfoGrid);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"关系类型实体关联分布");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
 
 
@@ -443,8 +447,8 @@ public class RelationKindManagementUI extends VerticalLayout {
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             conceptionKindMetaInfoGrid.setHeight(browserHeight-280,Unit.PIXELS);
-            //conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-600);
-            //singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
+            conceptionKindCorrelationInfoChart = new RelationKindCorrelationInfoChart(browserHeight-600);
+            singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
         }));
     }
 
@@ -494,8 +498,6 @@ public class RelationKindManagementUI extends VerticalLayout {
                 }
                 return conceptionKindNameFilterResult & conceptionKindDescFilterResult;
             });
-
-
     }
 
     private void renderConceptionKindOverview(EntityStatisticsInfo conceptionKindStatisticsInfo){
@@ -507,8 +509,6 @@ public class RelationKindManagementUI extends VerticalLayout {
         coreRealm.openGlobalSession();
         RelationKind targetConceptionKind = coreRealm.getRelationKind(conceptionKindName);
         List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
-
-        //Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
         coreRealm.closeGlobalSession();
 
         conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
