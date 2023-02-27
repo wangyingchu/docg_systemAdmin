@@ -12,4 +12,6 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
         this.setPadding(false);
         this.setHeight(chartHeight, Unit.PIXELS);
     }
+
+    public void clearData(){}
 }

@@ -1,6 +1,5 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
-
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -20,18 +19,14 @@ import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
-import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
-import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -44,9 +39,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-
 public class RelationKindManagementUI extends VerticalLayout {
-
 
     private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
     private GridListDataView<EntityStatisticsInfo> conceptionKindsMetaInfoView;
@@ -55,13 +48,9 @@ public class RelationKindManagementUI extends VerticalLayout {
     private TextField conceptionKindNameFilterField;
     private TextField conceptionKindDescFilterField;
     private EntityStatisticsInfo lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo;
-
     private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
     private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
-
     private RelationKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
-
-
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private int entityAttributesDistributionStatisticSampleRatio = 10000;
 
@@ -72,8 +61,8 @@ public class RelationKindManagementUI extends VerticalLayout {
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
-            //loadConceptionKindsInfo();
-            //resetSingleConceptionKindSummaryInfoArea();
+            loadConceptionKindsInfo();
+            resetSingleConceptionKindSummaryInfoArea();
         });
 
         List<Component> buttonList = new ArrayList<>();
@@ -369,10 +358,6 @@ public class RelationKindManagementUI extends VerticalLayout {
 
         conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
 
-
-
-
-
         singleConceptionKindSummaryInfoContainerLayout = new VerticalLayout();
         singleConceptionKindSummaryInfoContainerLayout.setSpacing(true);
         singleConceptionKindSummaryInfoContainerLayout.setMargin(true);
@@ -389,9 +374,6 @@ public class RelationKindManagementUI extends VerticalLayout {
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"关系类型概览");
         singleConceptionKindInfoElementsContainerLayout.add(filterTitle2);
         singleConceptionKindInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
-
-
-
 
         secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONNECT_O),"-",null,null);
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
@@ -423,15 +405,6 @@ public class RelationKindManagementUI extends VerticalLayout {
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"关系类型实体关联分布");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
-
-
-
-
-
-
-
-
-
     }
 
     @Override
@@ -464,40 +437,40 @@ public class RelationKindManagementUI extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         List<EntityStatisticsInfo>  entityStatisticsInfoList = null;
 
-            entityStatisticsInfoList = coreRealm.getRelationEntitiesStatistics();
-            List<EntityStatisticsInfo> conceptionKindEntityStatisticsInfoList = new ArrayList<>();
-            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
-                if(!currentEntityStatisticsInfo.isSystemKind()) {
-                    conceptionKindEntityStatisticsInfoList.add(currentEntityStatisticsInfo);
+        entityStatisticsInfoList = coreRealm.getRelationEntitiesStatistics();
+        List<EntityStatisticsInfo> conceptionKindEntityStatisticsInfoList = new ArrayList<>();
+        for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
+            if(!currentEntityStatisticsInfo.isSystemKind()) {
+                conceptionKindEntityStatisticsInfoList.add(currentEntityStatisticsInfo);
+            }
+        }
+        this.conceptionKindNameFilterField.setValue("");
+        this.conceptionKindDescFilterField.setValue("");
+        this.conceptionKindsMetaInfoView = conceptionKindMetaInfoGrid.setItems(conceptionKindEntityStatisticsInfoList);
+        //logic to filter ConceptionKinds already loaded from server
+        this.conceptionKindsMetaInfoView.addFilter(item->{
+            String entityKindName = item.getEntityKindName();
+            String entityKindDesc = item.getEntityKindDesc();
+
+            boolean conceptionKindNameFilterResult = true;
+            if(!conceptionKindNameFilterField.getValue().trim().equals("")){
+                if(entityKindName.contains(conceptionKindNameFilterField.getValue().trim())){
+                    conceptionKindNameFilterResult = true;
+                }else{
+                    conceptionKindNameFilterResult = false;
                 }
             }
-            this.conceptionKindNameFilterField.setValue("");
-            this.conceptionKindDescFilterField.setValue("");
-            this.conceptionKindsMetaInfoView = conceptionKindMetaInfoGrid.setItems(conceptionKindEntityStatisticsInfoList);
-            //logic to filter ConceptionKinds already loaded from server
-            this.conceptionKindsMetaInfoView.addFilter(item->{
-                String entityKindName = item.getEntityKindName();
-                String entityKindDesc = item.getEntityKindDesc();
 
-                boolean conceptionKindNameFilterResult = true;
-                if(!conceptionKindNameFilterField.getValue().trim().equals("")){
-                    if(entityKindName.contains(conceptionKindNameFilterField.getValue().trim())){
-                        conceptionKindNameFilterResult = true;
-                    }else{
-                        conceptionKindNameFilterResult = false;
-                    }
+            boolean conceptionKindDescFilterResult = true;
+            if(!conceptionKindDescFilterField.getValue().trim().equals("")){
+                if(entityKindDesc.contains(conceptionKindDescFilterField.getValue().trim())){
+                    conceptionKindDescFilterResult = true;
+                }else{
+                    conceptionKindDescFilterResult = false;
                 }
-
-                boolean conceptionKindDescFilterResult = true;
-                if(!conceptionKindDescFilterField.getValue().trim().equals("")){
-                    if(entityKindDesc.contains(conceptionKindDescFilterField.getValue().trim())){
-                        conceptionKindDescFilterResult = true;
-                    }else{
-                        conceptionKindDescFilterResult = false;
-                    }
-                }
-                return conceptionKindNameFilterResult & conceptionKindDescFilterResult;
-            });
+            }
+            return conceptionKindNameFilterResult & conceptionKindDescFilterResult;
+        });
     }
 
     private void renderConceptionKindOverview(EntityStatisticsInfo conceptionKindStatisticsInfo){
@@ -509,13 +482,18 @@ public class RelationKindManagementUI extends VerticalLayout {
         coreRealm.openGlobalSession();
         RelationKind targetConceptionKind = coreRealm.getRelationKind(conceptionKindName);
         List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
+
         coreRealm.closeGlobalSession();
-
         conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
-        //conceptionKindCorrelationInfoChart.clearData();
+        conceptionKindCorrelationInfoChart.clearData();
         //conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,conceptionKindName);
-
         String conceptionNameText = conceptionKindName+ " ( "+conceptionKindDesc+" )";
         this.secondaryTitleActionBar.updateTitleContent(conceptionNameText);
+    }
+
+    private void resetSingleConceptionKindSummaryInfoArea(){
+        this.conceptionKindAttributesInfoGrid.setItems(new ArrayList<>());
+        this.secondaryTitleActionBar.updateTitleContent(" - ");
+        this.conceptionKindCorrelationInfoChart.clearData();
     }
 }
