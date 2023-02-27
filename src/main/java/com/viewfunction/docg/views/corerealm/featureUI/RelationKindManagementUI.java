@@ -34,7 +34,10 @@ import com.viewfunction.docg.element.eventHandling.RelationKindCreatedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CleanRelationKindEntitiesView;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CreateRelationKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RemoveRelationKindView;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -111,7 +114,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
         createRelationKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderCreateConceptionKindUI();
+                renderCreateConceptionKindUI();
             }
         });
 
@@ -225,7 +228,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                        //renderCleanConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
+                        renderCleanConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
                     }
                 }
             });
@@ -241,7 +244,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                        //renderRemoveConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
+                        renderRemoveConceptionKindUI((EntityStatisticsInfo)entityStatisticsInfo);
                     }
                 }
             });
@@ -511,7 +514,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
         String conceptionKindFilterValue = conceptionKindNameFilterField.getValue().trim();
         String conceptionKindDescFilterValue = conceptionKindDescFilterField.getValue().trim();
         if(conceptionKindFilterValue.equals("")&conceptionKindDescFilterValue.equals("")){
-            CommonUIOperationUtil.showPopupNotification("请输入概念类型名称 和/或 概念类型显示名称", NotificationVariant.LUMO_ERROR);
+            CommonUIOperationUtil.showPopupNotification("请输入关系类型名称 和/或 关系类型显示名称", NotificationVariant.LUMO_ERROR);
         }else{
             this.conceptionKindsMetaInfoView.refreshAll();
         }
@@ -521,6 +524,35 @@ public class RelationKindManagementUI extends VerticalLayout implements
         conceptionKindNameFilterField.setValue("");
         conceptionKindDescFilterField.setValue("");
         this.conceptionKindsMetaInfoView.refreshAll();
+    }
+
+    private void renderCreateConceptionKindUI(){
+        CreateRelationKindView createRelationKindView = new CreateRelationKindView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建关系类型",null,true,630,335,false);
+        fixSizeWindow.setWindowContent(createRelationKindView);
+        fixSizeWindow.setModel(true);
+        createRelationKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderCleanConceptionKindEntitiesUI(EntityStatisticsInfo entityStatisticsInfo){
+        String conceptionKindName = entityStatisticsInfo.getEntityKindName();
+        CleanRelationKindEntitiesView cleanConceptionKindEntitiesView = new CleanRelationKindEntitiesView(conceptionKindName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"清除关系类型所有实例",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(cleanConceptionKindEntitiesView);
+        fixSizeWindow.setModel(true);
+        cleanConceptionKindEntitiesView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderRemoveConceptionKindUI(EntityStatisticsInfo entityStatisticsInfo){
+        String conceptionKindName = entityStatisticsInfo.getEntityKindName();
+        RemoveRelationKindView removeConceptionKindView = new RemoveRelationKindView(conceptionKindName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除关系类型",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(removeConceptionKindView);
+        fixSizeWindow.setModel(true);
+        removeConceptionKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 
     @Override
