@@ -10,6 +10,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -19,12 +20,14 @@ import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
 
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -158,7 +161,7 @@ public class RelationKindManagementUI extends VerticalLayout {
         searchConceptionKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //filterConceptionKinds();
+                filterConceptionKinds();
             }
         });
 
@@ -176,7 +179,7 @@ public class RelationKindManagementUI extends VerticalLayout {
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //cancelFilterConceptionKinds();
+                cancelFilterConceptionKinds();
             }
         });
 
@@ -447,7 +450,7 @@ public class RelationKindManagementUI extends VerticalLayout {
         this.conceptionKindNameFilterField.setValue("");
         this.conceptionKindDescFilterField.setValue("");
         this.conceptionKindsMetaInfoView = conceptionKindMetaInfoGrid.setItems(conceptionKindEntityStatisticsInfoList);
-        //logic to filter ConceptionKinds already loaded from server
+        //logic to filter RelationKinds already loaded from server
         this.conceptionKindsMetaInfoView.addFilter(item->{
             String entityKindName = item.getEntityKindName();
             String entityKindDesc = item.getEntityKindDesc();
@@ -495,5 +498,21 @@ public class RelationKindManagementUI extends VerticalLayout {
         this.conceptionKindAttributesInfoGrid.setItems(new ArrayList<>());
         this.secondaryTitleActionBar.updateTitleContent(" - ");
         this.conceptionKindCorrelationInfoChart.clearData();
+    }
+
+    private void filterConceptionKinds(){
+        String conceptionKindFilterValue = conceptionKindNameFilterField.getValue().trim();
+        String conceptionKindDescFilterValue = conceptionKindDescFilterField.getValue().trim();
+        if(conceptionKindFilterValue.equals("")&conceptionKindDescFilterValue.equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入概念类型名称 和/或 概念类型显示名称", NotificationVariant.LUMO_ERROR);
+        }else{
+            this.conceptionKindsMetaInfoView.refreshAll();
+        }
+    }
+
+    private void cancelFilterConceptionKinds(){
+        conceptionKindNameFilterField.setValue("");
+        conceptionKindDescFilterField.setValue("");
+        this.conceptionKindsMetaInfoView.refreshAll();
     }
 }
