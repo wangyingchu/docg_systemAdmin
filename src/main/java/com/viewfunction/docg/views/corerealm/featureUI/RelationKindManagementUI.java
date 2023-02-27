@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
@@ -42,10 +43,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class RelationKindManagementUI extends VerticalLayout implements
         RelationKindCreatedEvent.RelationKindCreatedListener,
@@ -527,21 +525,78 @@ public class RelationKindManagementUI extends VerticalLayout implements
 
     @Override
     public void receivedRelationEntityDeletedEvent(RelationEntityDeletedEvent event) {
-
+        if(event.getRelationKindName() != null){
+            ListDataProvider dtaProvider=(ListDataProvider)conceptionKindMetaInfoGrid.getDataProvider();
+            Collection<EntityStatisticsInfo> entityStatisticsInfoList = dtaProvider.getItems();
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
+                if( event.getRelationKindName().equals(currentEntityStatisticsInfo.getEntityKindName())){
+                    long orgEntitiesCount = currentEntityStatisticsInfo.getEntitiesCount();
+                    if(orgEntitiesCount >=1){
+                        currentEntityStatisticsInfo.setEntitiesCount(orgEntitiesCount-1);
+                    }
+                }
+            }
+            dtaProvider.refreshAll();
+        }
     }
 
     @Override
     public void receivedRelationKindCleanedEvent(RelationKindCleanedEvent event) {
-
+        if(event.getRelationKindName() != null){
+            if(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo != null &&
+                    lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo.getEntityKindName().equals(event.getRelationKindName())){
+                renderConceptionKindOverview(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo);
+            }
+            ListDataProvider dtaProvider=(ListDataProvider)conceptionKindMetaInfoGrid.getDataProvider();
+            Collection<EntityStatisticsInfo> entityStatisticsInfoList = dtaProvider.getItems();
+            EntityStatisticsInfo cleanedTargetElement = null;
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
+                if(currentEntityStatisticsInfo.getEntityKindName().equals(event.getRelationKindName())){
+                    cleanedTargetElement = currentEntityStatisticsInfo;
+                }
+            }
+            if(cleanedTargetElement != null){
+                cleanedTargetElement.setEntitiesCount(0);
+            }
+            dtaProvider.refreshAll();
+        }
     }
 
     @Override
     public void receivedRelationKindCreatedEvent(RelationKindCreatedEvent event) {
-
+        Date createDateTime = event.getCreateDateTime();
+        Date lastModifyDateTime = event.getLastModifyDateTime();
+        EntityStatisticsInfo newConceptionKindEntityStatisticsInfo = new EntityStatisticsInfo(
+                event.getRelationKindName(), EntityStatisticsInfo.kindType.RelationKind,false,
+                0,event.getRelationKindDesc(),event.getRelationKindName(),
+                ZonedDateTime.ofInstant(createDateTime.toInstant(), id),ZonedDateTime.ofInstant(lastModifyDateTime.toInstant(), id),
+                event.getCreatorId(),event.getDataOrigin()
+        );
+        ListDataProvider dtaProvider=(ListDataProvider)conceptionKindMetaInfoGrid.getDataProvider();
+        dtaProvider.getItems().add(newConceptionKindEntityStatisticsInfo);
+        dtaProvider.refreshAll();
     }
 
     @Override
     public void receivedRelationKindRemovedEvent(RelationKindRemovedEvent event) {
+        if(event.getRelationKindName() != null){
+            ListDataProvider dtaProvider=(ListDataProvider)conceptionKindMetaInfoGrid.getDataProvider();
+            Collection<EntityStatisticsInfo> entityStatisticsInfoList = dtaProvider.getItems();
+            EntityStatisticsInfo removeTargetElement = null;
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
+                if(currentEntityStatisticsInfo.getEntityKindName().equals(event.getRelationKindName())){
+                    removeTargetElement = currentEntityStatisticsInfo;
+                }
+            }
+            if(removeTargetElement != null){
+                dtaProvider.getItems().remove(removeTargetElement);
+            }
+            dtaProvider.refreshAll();
 
+            if(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo != null &&
+                    lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo.getEntityKindName().equals(event.getRelationKindName())){
+                resetSingleConceptionKindSummaryInfoArea();
+            }
+        }
     }
 }
