@@ -21,9 +21,12 @@ import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.util.ResourceHolder;
@@ -50,7 +53,7 @@ public class RelationKindManagementUI extends VerticalLayout {
     final ZoneId id = ZoneId.systemDefault();
     private TextField conceptionKindNameFilterField;
     private TextField conceptionKindDescFilterField;
-    //private GridListDataView<EntityStatisticsInfo> conceptionKindsMetaInfoView;
+    private EntityStatisticsInfo lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo;
 
     private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
     private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
@@ -350,12 +353,12 @@ public class RelationKindManagementUI extends VerticalLayout {
                 Set<EntityStatisticsInfo> selectedItemSet = selectionEvent.getAllSelectedItems();
                 if(selectedItemSet.size() == 0){
                     // don't allow to unselect item, just reselect last selected item
-                    //conceptionKindMetaInfoGrid.select(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo);
+                    conceptionKindMetaInfoGrid.select(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo);
                 }else{
                     //singleConceptionKindSummaryInfoContainerLayout.setVisible(true);
                     EntityStatisticsInfo selectedEntityStatisticsInfo = selectedItemSet.iterator().next();
-                    //renderConceptionKindOverview(selectedEntityStatisticsInfo);
-                    //lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo = selectedEntityStatisticsInfo;
+                    renderConceptionKindOverview(selectedEntityStatisticsInfo);
+                    lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo = selectedEntityStatisticsInfo;
                 }
             }
         });
@@ -493,5 +496,26 @@ public class RelationKindManagementUI extends VerticalLayout {
             });
 
 
+    }
+
+    private void renderConceptionKindOverview(EntityStatisticsInfo conceptionKindStatisticsInfo){
+        String conceptionKindName = conceptionKindStatisticsInfo.getEntityKindName();
+        String conceptionKindDesc = conceptionKindStatisticsInfo.getEntityKindDesc() != null ?
+                conceptionKindStatisticsInfo.getEntityKindDesc():"未设置显示名称";
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        RelationKind targetConceptionKind = coreRealm.getRelationKind(conceptionKindName);
+        List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
+
+        //Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
+        coreRealm.closeGlobalSession();
+
+        conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
+        //conceptionKindCorrelationInfoChart.clearData();
+        //conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,conceptionKindName);
+
+        String conceptionNameText = conceptionKindName+ " ( "+conceptionKindDesc+" )";
+        this.secondaryTitleActionBar.updateTitleContent(conceptionNameText);
     }
 }
