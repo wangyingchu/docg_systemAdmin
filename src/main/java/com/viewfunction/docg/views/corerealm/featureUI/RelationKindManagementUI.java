@@ -3,6 +3,8 @@ package com.viewfunction.docg.views.corerealm.featureUI;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.dialog.DialogVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
@@ -34,11 +36,13 @@ import com.viewfunction.docg.element.eventHandling.RelationKindCreatedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CleanRelationKindEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CreateRelationKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RemoveRelationKindView;
 
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.queryRelationKind.RelationKindQueryUI;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -200,7 +204,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
             queryIcon.setSize("20px");
             Button queryConceptionKind = new Button(queryIcon, event -> {
                 if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                    //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
+                    renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
                 }
             });
             queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -211,7 +215,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
             configIcon.setSize("21px");
             Button configConceptionKind = new Button(configIcon, event -> {
                 if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                    //renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
+                    renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
                 }
             });
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -553,6 +557,39 @@ public class RelationKindManagementUI extends VerticalLayout implements
         fixSizeWindow.setModel(true);
         removeConceptionKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    private void renderConceptionKindQueryUI(EntityStatisticsInfo entityStatisticsInfo){
+        RelationKindQueryUI conceptionKindQueryUI = new RelationKindQueryUI(entityStatisticsInfo.getEntityKindName());
+        List<Component> actionComponentList = new ArrayList<>();
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("22px");
+        footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
+        actionComponentList.add(footPrintStartIcon);
+        Icon conceptionKindIcon = VaadinIcon.CONNECT_O.create();
+        conceptionKindIcon.setSize("12px");
+        conceptionKindIcon.getStyle().set("padding-right","3px");
+        actionComponentList.add(conceptionKindIcon);
+        Label conceptionKindName = new Label(entityStatisticsInfo.getEntityKindName());
+        actionComponentList.add(conceptionKindName);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"关系类型实体数据查询",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(conceptionKindQueryUI);
+        fullScreenWindow.show();
+    }
+
+    private void renderConceptionKindConfigurationUI(EntityStatisticsInfo entityStatisticsInfo){
+        Dialog dialog = new Dialog();
+        dialog.setModal(true);
+        dialog.setResizable(false);
+        dialog.setCloseOnEsc(false);
+        dialog.setCloseOnOutsideClick(false);
+        dialog.setSizeFull();
+        dialog.addThemeVariants(DialogVariant.LUMO_NO_PADDING);
+        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        dialog.add(cancelButton);
+        dialog.open();
     }
 
     @Override
