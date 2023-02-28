@@ -207,7 +207,7 @@ public class MainLayout extends AppLayout {
                 CheckSystemRuntimeInfoEvent.class);
         _BLACKBOARD.register(RelationKindCreatedEvent.RelationKindCreatedListener.class,
                 RelationKindCreatedEvent.class);
-        _BLACKBOARD.register(RelationKindRemovedEvent.ConceptionKindRemovedListener.class,
+        _BLACKBOARD.register(RelationKindRemovedEvent.RelationKindRemovedListener.class,
                 RelationKindRemovedEvent.class);
         _BLACKBOARD.register(RelationKindCleanedEvent.RelationKindCleanedListener.class,
                 RelationKindCleanedEvent.class);

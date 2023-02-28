@@ -15,7 +15,7 @@ public class RelationKindRemovedEvent implements Event {
         this.relationKindName = relationKindName;
     }
 
-    public interface ConceptionKindRemovedListener extends Listener {
+    public interface RelationKindRemovedListener extends Listener {
         public void receivedRelationKindRemovedEvent(final RelationKindRemovedEvent event);
     }
 }
