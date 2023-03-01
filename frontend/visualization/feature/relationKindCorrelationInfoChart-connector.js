@@ -24,6 +24,10 @@ window.Vaadin.Flow.feature_RelationKindCorrelationInfoChart = {
 
         c.$connector.myChart = echarts.init(c);
         c.$connector.option = {
+            tooltip: {
+                trigger: 'item',
+                triggerOn: 'mousemove'
+            },
             series: {
                 type: 'sankey',
                 layout: 'none',

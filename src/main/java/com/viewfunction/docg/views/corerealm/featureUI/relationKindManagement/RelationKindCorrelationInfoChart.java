@@ -48,45 +48,45 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
             JsonObject obj = Json.createObject();
             JsonArray linkDataArray = Json.createArray();
             JsonArray dataDataArray = Json.createArray();
-
             int idx_link = 0;
             int idx_data = 0;
             List<String> conceptionKindList = new ArrayList<>();
+            List<String> sourceConceptionKindList = new ArrayList<>();
+
             for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
                 String sourceKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
-                String targetKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
-                //String relationKindName = currentConceptionKindCorrelationInfo.getRelationKindName();
-                long relationCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
-
                 if(!conceptionKindList.contains(sourceKindName)){
                     JsonObject jsonObject = Json.createObject();
                     jsonObject.put("name",sourceKindName);
                     dataDataArray.set(idx_data, jsonObject);
                     idx_data ++;
                     conceptionKindList.add(sourceKindName);
+                    sourceConceptionKindList.add(sourceKindName);
                 }
-                if(!conceptionKindList.contains(targetKindName)){
+            }
+            for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
+                String targetKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
+                String targetConceptionKindRealName = sourceConceptionKindList.contains(targetKindName) ? targetKindName+"(1)":targetKindName;
+                if(!conceptionKindList.contains(targetConceptionKindRealName)){
                     JsonObject jsonObject = Json.createObject();
-                    jsonObject.put("name",targetKindName);
+                    jsonObject.put("name",targetConceptionKindRealName);
                     dataDataArray.set(idx_data, jsonObject);
                     idx_data ++;
-                    conceptionKindList.add(targetKindName);
+                    conceptionKindList.add(targetConceptionKindRealName);
                 }
+            }
 
-                if(sourceKindName.equals(targetKindName)){
-                    JsonObject jsonObject = Json.createObject();
-                    jsonObject.put("name",sourceKindName+"(1)");
-                    dataDataArray.set(idx_data, jsonObject);
-                    idx_data ++;
-                    conceptionKindList.add(sourceKindName+"(1)");
-                }
-
+            for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
+                String sourceKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
+                String targetKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
+                long relationCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
+                String targetConceptionKindRealName = sourceConceptionKindList.contains(targetKindName) ? targetKindName+"(1)":targetKindName;
                 JsonObject linkJsonObject = Json.createObject();
                 linkJsonObject.put("source",sourceKindName);
                 if(sourceKindName.equals(targetKindName)){
                     linkJsonObject.put("target",sourceKindName+"(1)");
                 }else{
-                    linkJsonObject.put("target",targetKindName);
+                    linkJsonObject.put("target",targetConceptionKindRealName);
                 }
                 linkJsonObject.put("value",relationCount);
                 linkDataArray.set(idx_link, linkJsonObject);
