@@ -6,11 +6,19 @@ window.Vaadin.Flow.feature_RelationKindCorrelationInfoChart = {
         }
         c.$connector = {
             // functions
-            setData : function(data) {
-
+            setData : function(dataObj) {
+                c.$connector.option.series.data = dataObj.data;
+                c.$connector.option.series.links = dataObj.links;
+                if (c.$connector.option && typeof c.$connector.option === "object") {
+                    c.$connector.myChart.setOption(c.$connector.option, true);
+                }
             },
             clearData : function() {
-
+                c.$connector.option.series.data = [];
+                c.$connector.option.series.links = [];
+                if (c.$connector.option && typeof c.$connector.option === "object") {
+                    c.$connector.myChart.setOption(c.$connector.option, true);
+                }
             }
         };
 
@@ -76,7 +84,5 @@ window.Vaadin.Flow.feature_RelationKindCorrelationInfoChart = {
                 ]
             }
         };
-
-        c.$connector.myChart.setOption(c.$connector.option, true);
     }
 }

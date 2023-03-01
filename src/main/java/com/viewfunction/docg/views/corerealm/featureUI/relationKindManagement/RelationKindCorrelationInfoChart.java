@@ -6,7 +6,12 @@ import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.JsonObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @JavaScript("./visualization/feature/relationKindCorrelationInfoChart-connector.js")
@@ -34,9 +39,53 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
                 .beforeClientResponse(this, context -> command.accept(ui)));
     }
 
-    public void clearData(){}
+    public void clearData(){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.clearData", ""));
+    }
 
     public void setData(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet){
+        if(conceptionKindCorrelationInfoSet != null && conceptionKindCorrelationInfoSet.size() > 0){
+            JsonObject obj = Json.createObject();
+            JsonArray linkDataArray = Json.createArray();
+            JsonArray dataDataArray = Json.createArray();
 
+            int idx_link = 0;
+            int idx_data = 0;
+            List<String> conceptionKindList = new ArrayList<>();
+            for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
+                String sourceKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
+                String targetKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
+                //String relationKindName = currentConceptionKindCorrelationInfo.getRelationKindName();
+                long relationCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
+
+                if(!conceptionKindList.contains(sourceKindName)){
+                    JsonObject jsonObject = Json.createObject();
+                    jsonObject.put("name",sourceKindName);
+                    dataDataArray.set(idx_data, jsonObject);
+                    idx_data ++;
+                    conceptionKindList.add(sourceKindName);
+                }
+                if(!conceptionKindList.contains(targetKindName)){
+                    JsonObject jsonObject = Json.createObject();
+                    jsonObject.put("name",targetKindName);
+                    dataDataArray.set(idx_data, jsonObject);
+                    idx_data ++;
+                    conceptionKindList.add(targetKindName);
+                }
+
+                JsonObject linkJsonObject = Json.createObject();
+                linkJsonObject.put("source",sourceKindName);
+                linkJsonObject.put("target",targetKindName);
+                linkJsonObject.put("value",relationCount);
+
+                linkDataArray.set(idx_link, linkJsonObject);
+                idx_link++;
+            }
+            obj.put("links", linkDataArray);
+            obj.put("data", dataDataArray);
+            runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", obj));
+        }else{
+            clearData();
+        }
     }
 }
