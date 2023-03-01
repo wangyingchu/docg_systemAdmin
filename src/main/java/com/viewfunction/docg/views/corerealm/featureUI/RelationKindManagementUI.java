@@ -419,7 +419,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
         relationKindAttributesInfoGrid.setHeight(150,Unit.PIXELS);
         singleRelationKindSummaryInfoContainerLayout.add(relationKindAttributesInfoGrid);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"关系类型实体关联流向");
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.RANDOM),"关系类型实体关联流向");
         singleRelationKindSummaryInfoContainerLayout.add(infoTitle2);
     }
 
