@@ -31,7 +31,9 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import com.viewfunction.docg.util.ResourceHolder;
 
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.AddConceptionEntityToProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.relation.EntityAttachedRelationKindsCountChart;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CreateRelationEntityView;
 import dev.mett.vaadin.tooltip.Tooltips;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.DeleteRelationEntityView;
 
@@ -81,7 +83,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         createRelationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderShowMetaInfoUI();
+                renderRelateConceptionEntityInfoUI();
             }
         });
 
@@ -514,6 +516,15 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         fixSizeWindow.setWindowContent(deleteRelationEntityView);
         fixSizeWindow.setModel(true);
         deleteRelationEntityView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderRelateConceptionEntityInfoUI(){
+        CreateRelationEntityView createRelationEntityView = new CreateRelationEntityView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.LINK),"新建实体关联",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(createRelationEntityView);
+        fixSizeWindow.setModel(true);
+        createRelationEntityView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 }
