@@ -73,11 +73,22 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
                     conceptionKindList.add(targetKindName);
                 }
 
+                if(sourceKindName.equals(targetKindName)){
+                    JsonObject jsonObject = Json.createObject();
+                    jsonObject.put("name",sourceKindName+"(1)");
+                    dataDataArray.set(idx_data, jsonObject);
+                    idx_data ++;
+                    conceptionKindList.add(sourceKindName+"(1)");
+                }
+
                 JsonObject linkJsonObject = Json.createObject();
                 linkJsonObject.put("source",sourceKindName);
-                linkJsonObject.put("target",targetKindName);
+                if(sourceKindName.equals(targetKindName)){
+                    linkJsonObject.put("target",sourceKindName+"(1)");
+                }else{
+                    linkJsonObject.put("target",targetKindName);
+                }
                 linkJsonObject.put("value",relationCount);
-
                 linkDataArray.set(idx_link, linkJsonObject);
                 idx_link++;
             }

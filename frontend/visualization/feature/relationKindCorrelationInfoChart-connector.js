@@ -31,6 +31,7 @@ window.Vaadin.Flow.feature_RelationKindCorrelationInfoChart = {
                     focus: 'adjacency'
                 },
                 data: [
+                    /*
                     {
                         name: 'a'
                     },
@@ -49,8 +50,10 @@ window.Vaadin.Flow.feature_RelationKindCorrelationInfoChart = {
                     {
                         name: 'c'
                     }
+                    */
                 ],
                 links: [
+                    /*
                     {
                         source: 'a',
                         target: 'a1',
@@ -81,6 +84,7 @@ window.Vaadin.Flow.feature_RelationKindCorrelationInfoChart = {
                         target: 'c',
                         value: 2
                     }
+                     */
                 ]
             }
         };
