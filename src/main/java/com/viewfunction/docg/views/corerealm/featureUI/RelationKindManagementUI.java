@@ -24,6 +24,7 @@ import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -498,10 +499,21 @@ public class RelationKindManagementUI extends VerticalLayout implements
         RelationKind targetRelationKind = coreRealm.getRelationKind(relationKindName);
         List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetRelationKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
 
+        Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoList = targetRelationKind.getConceptionKindsRelationStatistics();
+        for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoList){
+            String currentRelationKindName = currentConceptionKindCorrelationInfo.getRelationKindName();
+            if(relationKindName.equals(currentRelationKindName)){
+                System.out.println(currentConceptionKindCorrelationInfo.getSourceConceptionKindName());
+                System.out.println(currentConceptionKindCorrelationInfo.getRelationEntityCount());
+                System.out.println(currentConceptionKindCorrelationInfo.getTargetConceptionKindName());
+                System.out.println("===================================");
+            }
+        }
+
         coreRealm.closeGlobalSession();
         relationKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
         relationKindCorrelationInfoChart.clearData();
-        //conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,conceptionKindName);
+        relationKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoList);
         String relationNameText = relationKindName+ " ( "+relationKindDesc+" )";
         this.secondaryTitleActionBar.updateTitleContent(relationNameText);
     }
