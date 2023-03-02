@@ -1,30 +1,52 @@
 package com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement;
 
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ConceptionEntityResourceHolderVO;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.ProcessingListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class CreateRelationEntityView extends VerticalLayout {
 
-    private ComboBox relationKindSelect;
+    private ComboBox<KindMetaInfo> relationKindSelect;
     private RadioButtonGroup<String> relationDirectionRadioGroup;
+    private ProcessingListView processingListView;
+    private Checkbox allowDupTypeRelationCheckbox;
+    private String conceptionKind;
+    private String conceptionEntityUID;
 
     public CreateRelationEntityView(String conceptionKind,String conceptionEntityUID){
+        this.conceptionKind = conceptionKind;
+        this.conceptionEntityUID = conceptionEntityUID;
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
         conceptionKindIcon.setSize("12px");
         conceptionKindIcon.getStyle().set("padding-right","3px");
@@ -55,6 +77,15 @@ public class CreateRelationEntityView extends VerticalLayout {
         relationKindSelect.setPageSize(30);
         relationKindSelect.setPlaceholder("选择关系类型定义");
         relationKindSelect.setWidth(250,Unit.PIXELS);
+
+        relationKindSelect.setItemLabelGenerator(new ItemLabelGenerator<KindMetaInfo>() {
+            @Override
+            public String apply(KindMetaInfo kindMetaInfo) {
+                String itemLabelValue = kindMetaInfo.getKindName()+ " ("+
+                        kindMetaInfo.getKindDesc()+")";
+                return itemLabelValue;
+            }
+        });
         basicInfoContainerLayout.add(relationKindSelect);
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.EXCHANGE),"选择关系方向");
@@ -84,10 +115,27 @@ public class CreateRelationEntityView extends VerticalLayout {
         spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         basicInfoContainerLayout.add(spaceDivLayout2);
 
-        Button executeQueryButton = new Button("查询概念实体");
-        executeQueryButton.setIcon(new Icon(VaadinIcon.SEARCH));
-        executeQueryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        basicInfoContainerLayout.add(executeQueryButton);
+        HorizontalLayout buttonsContainerLayout = new HorizontalLayout();
+        buttonsContainerLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        basicInfoContainerLayout.add(buttonsContainerLayout);
+
+        Button executeCreateRelationButton = new Button("创建实体关联");
+        executeCreateRelationButton.setIcon(new Icon(VaadinIcon.LINK));
+        executeCreateRelationButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        executeCreateRelationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                creatConceptionEntityRelations();
+            }
+        });
+        buttonsContainerLayout.add(executeCreateRelationButton);
+
+        allowDupTypeRelationCheckbox = new Checkbox();
+        buttonsContainerLayout.add(allowDupTypeRelationCheckbox);
+        Label chechboxDescLabel = new Label("允许重复创建同类型关系");
+        chechboxDescLabel.addClassNames("text-xs","text-tertiary");
+        chechboxDescLabel.setWidth(80,Unit.PIXELS);
+        buttonsContainerLayout.add(chechboxDescLabel);
 
         VerticalLayout targetConceptionEntitiesInfoContainerLayout = new VerticalLayout();
         targetConceptionEntitiesInfoContainerLayout.setSpacing(false);
@@ -96,7 +144,7 @@ public class CreateRelationEntityView extends VerticalLayout {
         ThirdLevelIconTitle infoTitle4 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CUBES),"选择目标概念实体");
         targetConceptionEntitiesInfoContainerLayout.add(infoTitle4);
 
-        ProcessingListView processingListView = new ProcessingListView(500);
+        processingListView = new ProcessingListView(500);
         targetConceptionEntitiesInfoContainerLayout.add(processingListView);
     }
 
@@ -108,5 +156,99 @@ public class CreateRelationEntityView extends VerticalLayout {
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        try {
+            List<KindMetaInfo> reltionKindsList = coreRealm.getRelationKindsMetaInfo();
+            relationKindSelect.setItems(reltionKindsList);
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void creatConceptionEntityRelations(){
+        KindMetaInfo selectedRelationKind = relationKindSelect.getValue();
+        if(selectedRelationKind == null){
+            CommonUIOperationUtil.showPopupNotification("请选择关系类型定义", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
+        Set<ConceptionEntityResourceHolderVO> targetConceptionEntitiesInfoSet = processingListView.getSelectedConceptionEntitiesInProcessingList();
+        if(targetConceptionEntitiesInfoSet.size() == 0){
+            CommonUIOperationUtil.showPopupNotification("请选择至少一个关联目标概念实体", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
+
+        String relationDirection = relationDirectionRadioGroup.getValue();
+        boolean allowDupRelation = allowDupTypeRelationCheckbox.getValue();
+        String relationKind = selectedRelationKind.getKindName();
+
+        CoreRealm coreRealm = null;
+        try {
+            coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            coreRealm.openGlobalSession();
+            CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
+            List<String> conceptionEntityUIDList = new ArrayList<>();
+            conceptionEntityUIDList.add(this.conceptionEntityUID);
+            List<ConceptionEntity> conceptionEntityList = crossKindDataOperator.getConceptionEntitiesByUIDs(conceptionEntityUIDList);
+            ConceptionEntity sourceConceptionEntity = conceptionEntityList.get(0);
+            int successRelationCount = 0;
+            for(ConceptionEntityResourceHolderVO currentConceptionEntityResourceHolderVO:targetConceptionEntitiesInfoSet){
+                String targetConceptionEntityUID = currentConceptionEntityResourceHolderVO.getConceptionEntityUID();
+                if(relationDirection.equals("FROM")){
+                    RelationEntity resultRelationEntity = sourceConceptionEntity.attachFromRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
+                    if(resultRelationEntity != null){
+                        successRelationCount++;
+                    }
+                }else if(relationDirection.equals("TO")){
+                    RelationEntity resultRelationEntity = sourceConceptionEntity.attachToRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
+                    if(resultRelationEntity != null){
+                        successRelationCount++;
+                    }
+                }else{
+                    //BOTH
+                    RelationEntity resultRelationEntity = sourceConceptionEntity.attachFromRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
+                    if(resultRelationEntity != null){
+                        successRelationCount++;
+                    }
+                    resultRelationEntity = sourceConceptionEntity.attachToRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
+                    if(resultRelationEntity != null){
+                        successRelationCount++;
+                    }
+                }
+            }
+            showPopupNotification(successRelationCount,NotificationVariant.LUMO_SUCCESS);
+        } catch (CoreRealmServiceEntityExploreException | CoreRealmServiceRuntimeException e) {
+            CommonUIOperationUtil.showPopupNotification("概念实体 "+conceptionKind+" / "+conceptionEntityUID+" 新建实体关联操作错误",NotificationVariant.LUMO_ERROR);
+            throw new RuntimeException(e);
+        }finally {
+            if(coreRealm != null){
+                coreRealm.closeGlobalSession();
+            }
+        }
+    }
+
+    private void showPopupNotification(int relationCount, NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text("概念实体 "+conceptionKind+" / "+conceptionEntityUID+" 新建实体关联操作成功"));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
+
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        notificationMessageContainer.add(new Div(new Text("新建关系实体数: "+relationCount)));
+        notification.add(notificationMessageContainer);
+        notification.setDuration(3000);
+        notification.open();
     }
 }
