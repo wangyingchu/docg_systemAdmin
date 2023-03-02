@@ -211,6 +211,8 @@ public class MainLayout extends AppLayout {
                 RelationKindRemovedEvent.class);
         _BLACKBOARD.register(RelationKindCleanedEvent.RelationKindCleanedListener.class,
                 RelationKindCleanedEvent.class);
+        _BLACKBOARD.register(RelationEntitiesCreatedEvent.RelationEntitiesCreatedListener.class,
+                RelationEntitiesCreatedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

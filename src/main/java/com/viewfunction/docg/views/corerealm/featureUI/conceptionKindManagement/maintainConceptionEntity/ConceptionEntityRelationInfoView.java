@@ -26,6 +26,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.eventHandling.RelationEntitiesCreatedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationEntityDeletedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
@@ -38,7 +39,8 @@ import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.De
 import java.util.*;
 
 public class ConceptionEntityRelationInfoView extends VerticalLayout implements
-        RelationEntityDeletedEvent.RelationEntityDeletedListener{
+        RelationEntityDeletedEvent.RelationEntityDeletedListener,
+        RelationEntitiesCreatedEvent.RelationEntitiesCreatedListener {
     private String conceptionKind;
     private String conceptionEntityUID;
     private SecondaryKeyValueDisplayItem relationCountDisplayItem;
@@ -341,6 +343,11 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
                 chartContainer.add(entityAttachedRelationKindsCountChart);
             }
         }
+    }
+
+    @Override
+    public void receivedRelationEntitiesCreatedEvent(RelationEntitiesCreatedEvent event) {
+
     }
 
     private class RelationDirectionIconValueProvider implements ValueProvider<RelationEntity,Icon>{

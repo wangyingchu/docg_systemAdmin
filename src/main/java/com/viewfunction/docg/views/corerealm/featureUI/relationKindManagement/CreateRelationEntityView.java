@@ -27,8 +27,10 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
+import com.viewfunction.docg.element.eventHandling.RelationEntitiesCreatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ConceptionEntityResourceHolderVO;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.ProcessingListView;
 
 import java.util.ArrayList;
@@ -196,31 +198,42 @@ public class CreateRelationEntityView extends VerticalLayout {
             List<ConceptionEntity> conceptionEntityList = crossKindDataOperator.getConceptionEntitiesByUIDs(conceptionEntityUIDList);
             ConceptionEntity sourceConceptionEntity = conceptionEntityList.get(0);
             int successRelationCount = 0;
+            List<RelationEntitiesCreatedEvent.RelationEntityInfo> relationEntityInfoList = new ArrayList<>();
             for(ConceptionEntityResourceHolderVO currentConceptionEntityResourceHolderVO:targetConceptionEntitiesInfoSet){
                 String targetConceptionEntityUID = currentConceptionEntityResourceHolderVO.getConceptionEntityUID();
                 if(relationDirection.equals("FROM")){
                     RelationEntity resultRelationEntity = sourceConceptionEntity.attachFromRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
                     if(resultRelationEntity != null){
                         successRelationCount++;
+                        addRelationEntityEventList(resultRelationEntity,relationEntityInfoList);
                     }
                 }else if(relationDirection.equals("TO")){
                     RelationEntity resultRelationEntity = sourceConceptionEntity.attachToRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
                     if(resultRelationEntity != null){
                         successRelationCount++;
+                        addRelationEntityEventList(resultRelationEntity,relationEntityInfoList);
                     }
                 }else{
                     //BOTH
                     RelationEntity resultRelationEntity = sourceConceptionEntity.attachFromRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
                     if(resultRelationEntity != null){
                         successRelationCount++;
+                        addRelationEntityEventList(resultRelationEntity,relationEntityInfoList);
                     }
                     resultRelationEntity = sourceConceptionEntity.attachToRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
                     if(resultRelationEntity != null){
                         successRelationCount++;
+                        addRelationEntityEventList(resultRelationEntity,relationEntityInfoList);
                     }
                 }
             }
+
             showPopupNotification(successRelationCount,NotificationVariant.LUMO_SUCCESS);
+            if(successRelationCount > 0){
+                RelationEntitiesCreatedEvent relationEntitiesCreatedEvent = new RelationEntitiesCreatedEvent();
+                relationEntitiesCreatedEvent.setCreatedRelationEntitiesList(relationEntityInfoList);
+                ResourceHolder.getApplicationBlackboard().fire(relationEntitiesCreatedEvent);
+            }
         } catch (CoreRealmServiceEntityExploreException | CoreRealmServiceRuntimeException e) {
             CommonUIOperationUtil.showPopupNotification("概念实体 "+conceptionKind+" / "+conceptionEntityUID+" 新建实体关联操作错误",NotificationVariant.LUMO_ERROR);
             throw new RuntimeException(e);
@@ -250,5 +263,14 @@ public class CreateRelationEntityView extends VerticalLayout {
         notification.add(notificationMessageContainer);
         notification.setDuration(3000);
         notification.open();
+    }
+
+    private void addRelationEntityEventList(RelationEntity resultRelationEntity,List<RelationEntitiesCreatedEvent.RelationEntityInfo> relationEntityInfoList){
+        RelationEntitiesCreatedEvent.RelationEntityInfo relationEntityInfo = new RelationEntitiesCreatedEvent.RelationEntityInfo();
+        relationEntityInfo.setRelationKindName(resultRelationEntity.getRelationKindName());
+        relationEntityInfo.setRelationEntityUID(resultRelationEntity.getRelationEntityUID());
+        relationEntityInfo.setToConceptionEntityUID(resultRelationEntity.getToConceptionEntityUID());
+        relationEntityInfo.setFromConceptionEntityUID(resultRelationEntity.getFromConceptionEntityUID());
+        relationEntityInfoList.add(relationEntityInfo);
     }
 }
