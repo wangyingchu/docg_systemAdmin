@@ -198,32 +198,32 @@ public class CreateRelationEntityView extends VerticalLayout {
             List<ConceptionEntity> conceptionEntityList = crossKindDataOperator.getConceptionEntitiesByUIDs(conceptionEntityUIDList);
             ConceptionEntity sourceConceptionEntity = conceptionEntityList.get(0);
             int successRelationCount = 0;
-            List<RelationEntitiesCreatedEvent.RelationEntityInfo> relationEntityInfoList = new ArrayList<>();
+            List<RelationEntity> relationEntityInfoList = new ArrayList<>();
             for(ConceptionEntityResourceHolderVO currentConceptionEntityResourceHolderVO:targetConceptionEntitiesInfoSet){
                 String targetConceptionEntityUID = currentConceptionEntityResourceHolderVO.getConceptionEntityUID();
                 if(relationDirection.equals("FROM")){
                     RelationEntity resultRelationEntity = sourceConceptionEntity.attachFromRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
                     if(resultRelationEntity != null){
                         successRelationCount++;
-                        addRelationEntityEventList(resultRelationEntity,relationEntityInfoList);
+                        relationEntityInfoList.add(resultRelationEntity);
                     }
                 }else if(relationDirection.equals("TO")){
                     RelationEntity resultRelationEntity = sourceConceptionEntity.attachToRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
                     if(resultRelationEntity != null){
                         successRelationCount++;
-                        addRelationEntityEventList(resultRelationEntity,relationEntityInfoList);
+                        relationEntityInfoList.add(resultRelationEntity);
                     }
                 }else{
                     //BOTH
                     RelationEntity resultRelationEntity = sourceConceptionEntity.attachFromRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
                     if(resultRelationEntity != null){
                         successRelationCount++;
-                        addRelationEntityEventList(resultRelationEntity,relationEntityInfoList);
+                        relationEntityInfoList.add(resultRelationEntity);
                     }
                     resultRelationEntity = sourceConceptionEntity.attachToRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
                     if(resultRelationEntity != null){
                         successRelationCount++;
-                        addRelationEntityEventList(resultRelationEntity,relationEntityInfoList);
+                        relationEntityInfoList.add(resultRelationEntity);
                     }
                 }
             }
@@ -263,14 +263,5 @@ public class CreateRelationEntityView extends VerticalLayout {
         notification.add(notificationMessageContainer);
         notification.setDuration(3000);
         notification.open();
-    }
-
-    private void addRelationEntityEventList(RelationEntity resultRelationEntity,List<RelationEntitiesCreatedEvent.RelationEntityInfo> relationEntityInfoList){
-        RelationEntitiesCreatedEvent.RelationEntityInfo relationEntityInfo = new RelationEntitiesCreatedEvent.RelationEntityInfo();
-        relationEntityInfo.setRelationKindName(resultRelationEntity.getRelationKindName());
-        relationEntityInfo.setRelationEntityUID(resultRelationEntity.getRelationEntityUID());
-        relationEntityInfo.setToConceptionEntityUID(resultRelationEntity.getToConceptionEntityUID());
-        relationEntityInfo.setFromConceptionEntityUID(resultRelationEntity.getFromConceptionEntityUID());
-        relationEntityInfoList.add(relationEntityInfo);
     }
 }
