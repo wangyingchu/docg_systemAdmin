@@ -19,7 +19,7 @@ public class ResourceHolder {
 
     private static List<ConceptionEntityResourceHolderVO> conceptionEntityProcessingDataList = new ArrayList<>();
 
-    public List<ConceptionEntityResourceHolderVO> getConceptionEntityProcessingDataList(){
+    public static List<ConceptionEntityResourceHolderVO> getConceptionEntityProcessingDataList(){
         return conceptionEntityProcessingDataList;
     }
 

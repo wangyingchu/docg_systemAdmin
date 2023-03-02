@@ -8,6 +8,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -74,7 +75,7 @@ public class AddConceptionEntityToProcessingListView  extends VerticalLayout {
         ConceptionEntityResourceHolderVO conceptionEntityResourceHolderVO = new ConceptionEntityResourceHolderVO(conceptionKind,conceptionEntityValue.getConceptionEntityUID());
         boolean addResult = ResourceHolder.addConceptionEntityToProcessingList(conceptionEntityResourceHolderVO);
         if(addResult){
-            CommonUIOperationUtil.showPopupNotification("概念实体 "+conceptionKind+" - "+conceptionEntityValue.getConceptionEntityUID()+" 加入待处理数据列表成功", NotificationVariant.LUMO_SUCCESS);
+            CommonUIOperationUtil.showPopupNotification("概念实体 "+conceptionKind+" - "+conceptionEntityValue.getConceptionEntityUID()+" 加入待处理数据列表成功", NotificationVariant.LUMO_SUCCESS,5000, Notification.Position.BOTTOM_START);
             if(containerDialog != null){
                 containerDialog.close();
             }
