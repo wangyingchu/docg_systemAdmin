@@ -37,6 +37,7 @@ import com.viewfunction.docg.element.eventHandling.RelationKindCreatedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.ProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CleanRelationKindEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CreateRelationKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
@@ -108,6 +109,18 @@ public class RelationKindManagementUI extends VerticalLayout implements
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 //renderConceptionKindsCorrelationInfoSummaryUI(conceptionKindRelationGuideButton);
+            }
+        });
+
+        Button processingDataListButton = new Button("待处理数据列表",new Icon(VaadinIcon.MAILBOX));
+        processingDataListButton.setDisableOnClick(true);
+        processingDataListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        processingDataListButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        relationKindManagementOperationButtonList.add(processingDataListButton);
+        processingDataListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderProcessingDataListUI(processingDataListButton);
             }
         });
 
@@ -589,6 +602,20 @@ public class RelationKindManagementUI extends VerticalLayout implements
         Button cancelButton = new Button("Cancel", e -> dialog.close());
         dialog.add(cancelButton);
         dialog.open();
+    }
+
+    private void renderProcessingDataListUI(Button processingDataListButton){
+        ProcessingListView processingListView = new ProcessingListView(500);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.MAILBOX),"待处理数据列表",null,true,1070,690,false);
+        fixSizeWindow.setWindowContent(processingListView);
+        fixSizeWindow.setModel(false);
+        fixSizeWindow.show();
+        fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
+            @Override
+            public void onComponentEvent(DetachEvent detachEvent) {
+                processingDataListButton.setEnabled(true);
+            }
+        });
     }
 
     @Override

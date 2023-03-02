@@ -39,6 +39,7 @@ import com.viewfunction.docg.element.eventHandling.ConceptionKindCreatedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.ProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.*;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
 
@@ -107,6 +108,18 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 renderConceptionKindsCorrelationInfoSummaryUI(conceptionKindRelationGuideButton);
+            }
+        });
+
+        Button processingDataListButton = new Button("待处理数据列表",new Icon(VaadinIcon.MAILBOX));
+        processingDataListButton.setDisableOnClick(true);
+        processingDataListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        processingDataListButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        conceptionKindManagementOperationButtonList.add(processingDataListButton);
+        processingDataListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderProcessingDataListUI(processingDataListButton);
             }
         });
 
@@ -712,5 +725,19 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
             }
             dtaProvider.refreshAll();
         }
+    }
+
+    private void renderProcessingDataListUI(Button processingDataListButton){
+        ProcessingListView processingListView = new ProcessingListView(500);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.MAILBOX),"待处理数据列表",null,true,1070,690,false);
+        fixSizeWindow.setWindowContent(processingListView);
+        fixSizeWindow.setModel(false);
+        fixSizeWindow.show();
+        fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
+            @Override
+            public void onComponentEvent(DetachEvent detachEvent) {
+                processingDataListButton.setEnabled(true);
+            }
+        });
     }
 }
