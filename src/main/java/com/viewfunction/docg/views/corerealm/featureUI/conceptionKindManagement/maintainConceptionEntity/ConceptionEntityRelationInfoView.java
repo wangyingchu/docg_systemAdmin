@@ -93,7 +93,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         reloadRelationInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAddNewAttributeUI();
+                refreshRelationsInfo();
             }
         });
 
@@ -347,26 +347,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
 
     @Override
     public void receivedRelationEntitiesCreatedEvent(RelationEntitiesCreatedEvent event) {
-        List<RelationEntity> createdRelationEntityInfoList = event.getCreatedRelationEntitiesList();
-        if(createdRelationEntityInfoList != null){
-            ListDataProvider dataProvider = (ListDataProvider)relationEntitiesGrid.getDataProvider();
-            boolean needRefresh = false;
-            for(RelationEntity currentRelationEntityInfo:createdRelationEntityInfoList){
-                currentRelationEntityInfo.getRelationEntityUID();
-                currentRelationEntityInfo.getRelationKindName();
-                currentRelationEntityInfo.getFromConceptionEntityUID();
-                currentRelationEntityInfo.getToConceptionEntityUID();
-                if(this.conceptionEntityUID.equals(currentRelationEntityInfo.getFromConceptionEntityUID()) ||
-                        this.conceptionEntityUID.equals(currentRelationEntityInfo.getToConceptionEntityUID())
-                ){
-                    dataProvider.getItems().add(currentRelationEntityInfo);
-                    needRefresh = true;
-                }
-            }
-            if(needRefresh){
-                dataProvider.refreshAll();
-            }
-        }
+        refreshRelationsInfo();
     }
 
     private class RelationDirectionIconValueProvider implements ValueProvider<RelationEntity,Icon>{
@@ -550,5 +531,13 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         fixSizeWindow.setModel(true);
         createRelationEntityView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    private void refreshRelationsInfo(){
+        relationKindsInfoLayout.removeAll();
+        ListDataProvider dataProvider = (ListDataProvider)relationEntitiesGrid.getDataProvider();
+        dataProvider.getItems().clear();
+        dataProvider.refreshAll();
+        loadEntityRelationsInfo();
     }
 }
