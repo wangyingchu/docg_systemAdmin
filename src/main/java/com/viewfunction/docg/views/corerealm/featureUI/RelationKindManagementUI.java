@@ -37,7 +37,7 @@ import com.viewfunction.docg.element.eventHandling.RelationKindCreatedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingConceptionEntityListView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingDataListView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CleanRelationKindEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CreateRelationKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
@@ -112,7 +112,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
             }
         });
 
-        Button processingDataListButton = new Button("待处理数据列表",new Icon(VaadinIcon.MAILBOX));
+        Button processingDataListButton = new Button("待处理数据",new Icon(VaadinIcon.MAILBOX));
         processingDataListButton.setDisableOnClick(true);
         processingDataListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         processingDataListButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -605,9 +605,9 @@ public class RelationKindManagementUI extends VerticalLayout implements
     }
 
     private void renderProcessingDataListUI(Button processingDataListButton){
-        ProcessingConceptionEntityListView processingConceptionEntityListView = new ProcessingConceptionEntityListView(500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.MAILBOX),"待处理数据列表",null,true,1070,690,false);
-        fixSizeWindow.setWindowContent(processingConceptionEntityListView);
+        ProcessingDataListView processingDataListView = new ProcessingDataListView(500);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.MAILBOX),"待处理数据",null,true,1070,690,false);
+        fixSizeWindow.setWindowContent(processingDataListView);
         fixSizeWindow.setModel(false);
         fixSizeWindow.show();
         fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
