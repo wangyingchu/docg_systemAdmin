@@ -78,6 +78,7 @@ public class CreateRelationEntityView extends VerticalLayout {
         add(mainContainerLayout);
 
         VerticalLayout basicInfoContainerLayout = new VerticalLayout();
+        basicInfoContainerLayout.setWidth(350,Unit.PIXELS);
         mainContainerLayout.add(basicInfoContainerLayout);
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT_O),"选择关系类型");
@@ -86,7 +87,7 @@ public class CreateRelationEntityView extends VerticalLayout {
         relationKindSelect = new ComboBox();
         relationKindSelect.setPageSize(30);
         relationKindSelect.setPlaceholder("选择关系类型定义");
-        relationKindSelect.setWidth(250,Unit.PIXELS);
+        relationKindSelect.setWidth(340,Unit.PIXELS);
 
         relationKindSelect.setItemLabelGenerator(new ItemLabelGenerator<KindMetaInfo>() {
             @Override
