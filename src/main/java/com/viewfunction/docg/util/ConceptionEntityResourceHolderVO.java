@@ -4,15 +4,14 @@ public class ConceptionEntityResourceHolderVO {
 
     private String conceptionKind;
     private String conceptionEntityUID;
+    private String comment;
 
     public ConceptionEntityResourceHolderVO(String conceptionKind,String conceptionEntityUID){
         this.setConceptionKind(conceptionKind);
         this.setConceptionEntityUID(conceptionEntityUID);
     }
 
-    public ConceptionEntityResourceHolderVO(){
-        
-    }
+    public ConceptionEntityResourceHolderVO(){}
 
     public String getConceptionKind() {
         return conceptionKind;
@@ -28,5 +27,13 @@ public class ConceptionEntityResourceHolderVO {
 
     public void setConceptionEntityUID(String conceptionEntityUID) {
         this.conceptionEntityUID = conceptionEntityUID;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

@@ -328,7 +328,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
     private void addConceptionEntityToProcessingList(ConceptionEntityValue conceptionEntityValue){
         AddConceptionEntityToProcessingListView addConceptionEntityToProcessingListView = new AddConceptionEntityToProcessingListView(conceptionKindName,conceptionEntityValue);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INBOX),"待处理数据列表添加概念实例",null,true,600,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INBOX),"待处理数据列表添加概念实例",null,true,600,320,false);
         fixSizeWindow.setWindowContent(addConceptionEntityToProcessingListView);
         fixSizeWindow.setModel(true);
         addConceptionEntityToProcessingListView.setContainerDialog(fixSizeWindow);

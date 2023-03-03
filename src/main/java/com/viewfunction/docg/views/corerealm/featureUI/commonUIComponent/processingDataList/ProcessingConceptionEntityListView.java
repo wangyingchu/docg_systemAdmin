@@ -15,14 +15,14 @@ import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.function.ValueProvider;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
+
 import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelTitleActionBar;
 import com.viewfunction.docg.util.ConceptionEntityResourceHolderVO;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryResultsView;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -142,22 +142,16 @@ public class ProcessingConceptionEntityListView extends VerticalLayout {
                 }
             });
 
-            Button addToProcessListButton = new Button();
-            addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            addToProcessListButton.setIcon(VaadinIcon.INBOX.create());
-            Tooltips.getCurrent().setTooltip(addToProcessListButton, "加入待处理数据列表");
-            actionButtonContainerLayout.add(addToProcessListButton);
-            addToProcessListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-                @Override
-                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(conceptionEntityValue != null){
-                        //addConceptionEntityToProcessingList(conceptionEntityValue);
-                    }
-                }
-            });
-
-
+            Icon commentIcon = VaadinIcon.COMMENT.create();
+            if(conceptionEntityValue.getComment() != null){
+                commentIcon.setTooltipText(conceptionEntityValue.getComment());
+                commentIcon.setColor("#AAAAAA");
+            }else{
+                commentIcon.setColor("#DEDEDE");
+            }
+            commentIcon.setSize("12px");
+            actionButtonContainerLayout.add(commentIcon);
+            actionButtonContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,commentIcon);
             return actionButtonContainerLayout;
         }
     }

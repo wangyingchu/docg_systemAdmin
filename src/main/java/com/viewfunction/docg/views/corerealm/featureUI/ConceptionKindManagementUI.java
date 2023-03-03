@@ -728,7 +728,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
     }
 
     private void renderProcessingDataListUI(Button processingDataListButton){
-        ProcessingDataListView processingDataListView = new ProcessingDataListView(500);
+        ProcessingDataListView processingDataListView = new ProcessingDataListView(510);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.MAILBOX),"待处理数据",null,true,760,690,false);
         fixSizeWindow.setWindowContent(processingDataListView);
         fixSizeWindow.setModel(false);

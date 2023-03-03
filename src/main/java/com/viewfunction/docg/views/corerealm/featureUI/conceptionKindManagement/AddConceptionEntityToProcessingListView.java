@@ -2,6 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -12,6 +13,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ConceptionEntityResourceHolderVO;
@@ -22,12 +24,19 @@ public class AddConceptionEntityToProcessingListView  extends VerticalLayout {
     private ConceptionEntityValue conceptionEntityValue;
     private Dialog containerDialog;
     private String conceptionKind;
+    private TextArea commentTextField;
 
     public AddConceptionEntityToProcessingListView(String conceptionKind, ConceptionEntityValue conceptionEntityValue){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityValue = conceptionEntityValue;
         H5 viewTitle = new H5("将概念类型 "+conceptionKind+" 中的UID为 "+conceptionEntityValue.getConceptionEntityUID()+" 的概念实体添加入待处理数据列表,请确认执行操作。");
         add(viewTitle);
+
+        commentTextField = new TextArea();
+        commentTextField.setPlaceholder("待处理数据备注......");
+        commentTextField.setWidth(100, Unit.PERCENTAGE);
+        commentTextField.setHeight(80,Unit.PIXELS);
+        add(commentTextField);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setWidthFull();
@@ -73,6 +82,9 @@ public class AddConceptionEntityToProcessingListView  extends VerticalLayout {
 
     private void doAddConceptionEntityToProcessingDataList(){
         ConceptionEntityResourceHolderVO conceptionEntityResourceHolderVO = new ConceptionEntityResourceHolderVO(conceptionKind,conceptionEntityValue.getConceptionEntityUID());
+        if(commentTextField.getValue() != null && !commentTextField.getValue().equals("")){
+            conceptionEntityResourceHolderVO.setComment(commentTextField.getValue());
+        }
         boolean addResult = ResourceHolder.addConceptionEntityToProcessingList(conceptionEntityResourceHolderVO);
         if(addResult){
             CommonUIOperationUtil.showPopupNotification("概念实体 "+conceptionKind+" - "+conceptionEntityValue.getConceptionEntityUID()+" 加入待处理数据列表成功", NotificationVariant.LUMO_SUCCESS,5000, Notification.Position.BOTTOM_START);
