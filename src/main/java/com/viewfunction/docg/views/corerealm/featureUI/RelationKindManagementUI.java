@@ -37,7 +37,7 @@ import com.viewfunction.docg.element.eventHandling.RelationKindCreatedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.ProcessingListView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingConceptionEntityListView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CleanRelationKindEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CreateRelationKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
@@ -605,9 +605,9 @@ public class RelationKindManagementUI extends VerticalLayout implements
     }
 
     private void renderProcessingDataListUI(Button processingDataListButton){
-        ProcessingListView processingListView = new ProcessingListView(500);
+        ProcessingConceptionEntityListView processingConceptionEntityListView = new ProcessingConceptionEntityListView(500);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.MAILBOX),"待处理数据列表",null,true,1070,690,false);
-        fixSizeWindow.setWindowContent(processingListView);
+        fixSizeWindow.setWindowContent(processingConceptionEntityListView);
         fixSizeWindow.setModel(false);
         fixSizeWindow.show();
         fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {

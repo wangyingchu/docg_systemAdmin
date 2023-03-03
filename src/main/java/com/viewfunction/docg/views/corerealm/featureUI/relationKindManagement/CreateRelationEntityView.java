@@ -31,7 +31,7 @@ import com.viewfunction.docg.element.eventHandling.RelationEntitiesCreatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ConceptionEntityResourceHolderVO;
 import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.ProcessingListView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingConceptionEntityListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class CreateRelationEntityView extends VerticalLayout {
 
     private ComboBox<KindMetaInfo> relationKindSelect;
     private RadioButtonGroup<String> relationDirectionRadioGroup;
-    private ProcessingListView processingListView;
+    private ProcessingConceptionEntityListView processingConceptionEntityListView;
     private Checkbox allowDupTypeRelationCheckbox;
     private String conceptionKind;
     private String conceptionEntityUID;
@@ -146,8 +146,8 @@ public class CreateRelationEntityView extends VerticalLayout {
         ThirdLevelIconTitle infoTitle4 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CUBES),"选择目标概念实体");
         targetConceptionEntitiesInfoContainerLayout.add(infoTitle4);
 
-        processingListView = new ProcessingListView(500);
-        targetConceptionEntitiesInfoContainerLayout.add(processingListView);
+        processingConceptionEntityListView = new ProcessingConceptionEntityListView(500);
+        targetConceptionEntitiesInfoContainerLayout.add(processingConceptionEntityListView);
     }
 
     private Dialog containerDialog;
@@ -178,7 +178,7 @@ public class CreateRelationEntityView extends VerticalLayout {
             CommonUIOperationUtil.showPopupNotification("请选择关系类型定义", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
             return;
         }
-        Set<ConceptionEntityResourceHolderVO> targetConceptionEntitiesInfoSet = processingListView.getSelectedConceptionEntitiesInProcessingList();
+        Set<ConceptionEntityResourceHolderVO> targetConceptionEntitiesInfoSet = processingConceptionEntityListView.getSelectedConceptionEntitiesInProcessingList();
         if(targetConceptionEntitiesInfoSet.size() == 0){
             CommonUIOperationUtil.showPopupNotification("请选择至少一个关联目标概念实体", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
             return;

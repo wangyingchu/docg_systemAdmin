@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent;
+package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
@@ -15,11 +15,11 @@ import com.viewfunction.docg.util.ResourceHolder;
 import java.util.List;
 import java.util.Set;
 
-public class ProcessingListView extends VerticalLayout {
+public class ProcessingConceptionEntityListView extends VerticalLayout {
 
     private Grid<ConceptionEntityResourceHolderVO> conceptionEntityProcessingDataGrid;
 
-    public ProcessingListView(int processingListHeight){
+    public ProcessingConceptionEntityListView(int processingListHeight){
         conceptionEntityProcessingDataGrid = new Grid<>();
         conceptionEntityProcessingDataGrid.setWidth(710, Unit.PIXELS);
         conceptionEntityProcessingDataGrid.setHeight(processingListHeight, Unit.PIXELS);
