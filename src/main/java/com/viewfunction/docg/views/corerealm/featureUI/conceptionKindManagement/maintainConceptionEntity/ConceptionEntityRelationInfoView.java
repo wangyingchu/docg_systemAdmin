@@ -22,6 +22,7 @@ import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
@@ -31,6 +32,7 @@ import com.viewfunction.docg.element.eventHandling.RelationEntityDeletedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.AddConceptionEntityToProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.relation.EntityAttachedRelationKindsCountChart;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CreateRelationEntityView;
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -77,6 +79,16 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         outDegreeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.ANGLE_DOUBLE_RIGHT.create(), "关系出度", "-");
         isDenseDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.BULLSEYE.create(), "是否稠密实体", "-");
 
+        Button addToProcessingDataListButton = new Button("加入待处理数据列表");
+        addToProcessingDataListButton.setIcon(VaadinIcon.INBOX.create());
+        addToProcessingDataListButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        addToProcessingDataListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                addConceptionEntityToProcessingList();
+            }
+        });
+
         Button createRelationButton = new Button("新建实体关联");
         createRelationButton.setIcon(VaadinIcon.LINK.create());
         createRelationButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -97,6 +109,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
             }
         });
 
+        actionComponentsList.add(addToProcessingDataListButton);
         actionComponentsList.add(createRelationButton);
         actionComponentsList.add(reloadRelationInfoButton);
 
@@ -539,5 +552,16 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         dataProvider.getItems().clear();
         dataProvider.refreshAll();
         loadEntityRelationsInfo();
+    }
+
+    private void addConceptionEntityToProcessingList(){
+        ConceptionEntityValue conceptionEntityValue = new ConceptionEntityValue();
+        conceptionEntityValue.setConceptionEntityUID(this.conceptionEntityUID);
+        AddConceptionEntityToProcessingListView addConceptionEntityToProcessingListView = new AddConceptionEntityToProcessingListView(this.conceptionKind,conceptionEntityValue);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INBOX),"待处理数据列表添加概念实例",null,true,600,320,false);
+        fixSizeWindow.setWindowContent(addConceptionEntityToProcessingListView);
+        fixSizeWindow.setModel(true);
+        addConceptionEntityToProcessingListView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }
