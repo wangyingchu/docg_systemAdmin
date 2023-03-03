@@ -70,7 +70,9 @@ public class AddEntityAttributeView extends VerticalLayout {
         footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,conceptionKind));
         footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,conceptionEntityUID));
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
-        add(entityInfoFootprintMessageBar);
+        if(this.conceptionEntityUID  != null){
+            add(entityInfoFootprintMessageBar);
+        }
 
         HorizontalLayout errorMessageContainer = new HorizontalLayout();
         errorMessageContainer.setSpacing(false);
@@ -199,7 +201,9 @@ public class AddEntityAttributeView extends VerticalLayout {
                         errorMessage.setText("输入的属性值为空或格式不合法");
                         errorMessage.setVisible(true);
                     }else{
-                        addEntityAttribute();
+                        if(conceptionKind != null && conceptionEntityUID != null){
+                            addEntityAttribute();
+                        }
                     }
                 }
             }
@@ -518,12 +522,24 @@ public class AddEntityAttributeView extends VerticalLayout {
         return false;
     }
 
-    private void addEntityAttribute(){
+    private AttributeValue getAttributeValue(){
+        String attributeName = attributeNameField.getValue();
+        Object newEntityAttributeValue = getAttributeValueObject();
+        AttributeDataType attributeDataType = attributeDataTypeFilterSelect.getValue();
+
+        AttributeValue attributeValue = new AttributeValue();
+        attributeValue.setAttributeName(attributeName);
+        attributeValue.setAttributeValue(newEntityAttributeValue);
+        attributeValue.setAttributeDataType(attributeDataType);
+        return attributeValue;
+    }
+
+    private Object getAttributeValueObject(){
         String attributeValueString = null;
         Object newEntityAttributeValue = null;
-        String attributeName = attributeNameField.getValue();
         if (attributeValueInputContainer.getComponentAt(0) != null) {
             Component currentConditionValueEditor = attributeValueInputContainer.getComponentAt(0);
+
             switch (attributeDataTypeFilterSelect.getValue()) {
                 case INT:
                     attributeValueString = ((TextField) currentConditionValueEditor).getValue();
@@ -576,6 +592,15 @@ public class AddEntityAttributeView extends VerticalLayout {
                     newEntityAttributeValue = ((DateTimePicker) currentConditionValueEditor).getValue();
                     break;
             }
+        }
+        return newEntityAttributeValue;
+    }
+
+    private void addEntityAttribute(){
+        String attributeName = attributeNameField.getValue();
+        Object newEntityAttributeValue = getAttributeValueObject();
+
+        if(attributeValueInputContainer.getComponentAt(0) != null) {
             if(newEntityAttributeValue != null){
                 CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
                 ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);

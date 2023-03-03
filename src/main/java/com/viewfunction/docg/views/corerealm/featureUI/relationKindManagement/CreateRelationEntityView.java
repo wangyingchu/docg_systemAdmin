@@ -25,6 +25,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.eventHandling.RelationEntitiesCreatedEvent;
@@ -32,6 +33,9 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ConceptionEntityResourceHolderVO;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingConceptionEntityListView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.AddEntityAttributeView;
+
+import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,8 +102,29 @@ public class CreateRelationEntityView extends VerticalLayout {
         relationDirectionRadioGroup.setValue("FROM");
         basicInfoContainerLayout.add(relationDirectionRadioGroup);
 
+        HorizontalLayout addRelationAttributsUIContainerLayout = new HorizontalLayout();
+        addRelationAttributsUIContainerLayout.setSpacing(false);
+        addRelationAttributsUIContainerLayout.setMargin(false);
+        addRelationAttributsUIContainerLayout.setPadding(false);
+        basicInfoContainerLayout.add(addRelationAttributsUIContainerLayout);
+
+        addRelationAttributsUIContainerLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+
         ThirdLevelIconTitle infoTitle3 = new ThirdLevelIconTitle(new Icon(VaadinIcon.COMBOBOX),"设定关系属性");
-        basicInfoContainerLayout.add(infoTitle3);
+        addRelationAttributsUIContainerLayout.add(infoTitle3);
+
+        Button addCustomQueryCriteriaButton = new Button();
+        Tooltips.getCurrent().setTooltip(addCustomQueryCriteriaButton, "添加关系实体属性");
+        addCustomQueryCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        addCustomQueryCriteriaButton.addThemeVariants(ButtonVariant.LUMO_LARGE);
+        addCustomQueryCriteriaButton.setIcon(VaadinIcon.KEYBOARD_O.create());
+        addCustomQueryCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderAddNewAttributeUI();
+            }
+        });
+        addRelationAttributsUIContainerLayout.add(addCustomQueryCriteriaButton);
 
         VerticalLayout relationEntityAttributesContainer = new VerticalLayout();
         relationEntityAttributesContainer.setMargin(false);
@@ -263,5 +288,14 @@ public class CreateRelationEntityView extends VerticalLayout {
         notification.add(notificationMessageContainer);
         notification.setDuration(3000);
         notification.open();
+    }
+
+    private void renderAddNewAttributeUI(){
+        AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(null,null);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加实体属性",null,true,480,230,false);
+        fixSizeWindow.setWindowContent(addEntityAttributeView);
+        fixSizeWindow.setModel(true);
+        addEntityAttributeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }
