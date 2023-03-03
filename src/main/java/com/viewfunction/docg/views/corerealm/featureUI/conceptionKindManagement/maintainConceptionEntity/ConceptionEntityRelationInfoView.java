@@ -539,7 +539,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
 
     private void renderRelateConceptionEntityInfoUI(){
         CreateRelationEntityView createRelationEntityView = new CreateRelationEntityView(this.conceptionKind,this.conceptionEntityUID);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.LINK),"新建实体关联",null,true,1070,710,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.LINK),"新建实体关联",null,true,1160,710,false);
         fixSizeWindow.setWindowContent(createRelationEntityView);
         fixSizeWindow.setModel(true);
         createRelationEntityView.setContainerDialog(fixSizeWindow);
