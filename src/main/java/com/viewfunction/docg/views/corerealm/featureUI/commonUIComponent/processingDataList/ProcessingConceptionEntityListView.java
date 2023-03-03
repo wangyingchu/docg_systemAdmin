@@ -23,28 +23,32 @@ import java.util.Set;
 public class ProcessingConceptionEntityListView extends VerticalLayout {
 
     private Grid<ConceptionEntityResourceHolderVO> conceptionEntityProcessingDataGrid;
+    private HorizontalLayout controllerToolbar;
 
     public ProcessingConceptionEntityListView(int processingListHeight){
-        HorizontalLayout controllerToolbar = new HorizontalLayout();
 
+        this.setPadding(false);
+        this.setMargin(false);
+        this.setSpacing(false);
 
-
+        controllerToolbar = new HorizontalLayout();
+        controllerToolbar.setVisible(false);
 
         List<Component> actionComponentsList = new ArrayList<>();
-        Button outDegreeInfoButton = new Button("出度统计",new Icon(VaadinIcon.EXPAND_SQUARE));
+        Button outDegreeInfoButton = new Button("清除选中待处理数据",new Icon(VaadinIcon.DEL));
         outDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         outDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        outDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
         outDegreeInfoButton.addClickListener((ClickEvent<Button> click) ->{
             //renderRelationAndConceptionKindOutDegreeHeatMapUI();
         });
         Tooltips.getCurrent().setTooltip(outDegreeInfoButton,"概念与关系实体出度统计 HeatMap");
         actionComponentsList.add(outDegreeInfoButton);
 
-        Button inDegreeInfoButton = new Button("入度统计",new Icon(VaadinIcon.COMPRESS_SQUARE));
+        Button inDegreeInfoButton = new Button("清除全部待处理数据",new Icon(VaadinIcon.RECYCLE));
         inDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         inDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        inDegreeInfoButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
         inDegreeInfoButton.addClickListener((ClickEvent<Button> click) ->{
            // renderRelationAndConceptionKindInDegreeHeatMapUI();
         });
@@ -75,6 +79,10 @@ public class ProcessingConceptionEntityListView extends VerticalLayout {
 
     public Set<ConceptionEntityResourceHolderVO> getSelectedConceptionEntitiesInProcessingList(){
         return conceptionEntityProcessingDataGrid.getSelectedItems();
+    }
+
+    public void showControllerToolbar(boolean onOff){
+        this.controllerToolbar.setVisible(onOff);
     }
 
     @Override

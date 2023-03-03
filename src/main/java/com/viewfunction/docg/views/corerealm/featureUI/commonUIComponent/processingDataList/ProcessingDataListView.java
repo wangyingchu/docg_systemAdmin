@@ -19,13 +19,20 @@ public class ProcessingDataListView extends VerticalLayout {
         container.setMargin(false);
         container.setSpacing(false);
 
+        VerticalLayout conceptionEntityDataListContainer = new VerticalLayout();
+        VerticalLayout relationEntityDataListContainer = new VerticalLayout();
+
         ProcessingConceptionEntityListView processingConceptionEntityListView = new ProcessingConceptionEntityListView(heightValue);
+        processingConceptionEntityListView.showControllerToolbar(true);
+        conceptionEntityDataListContainer.add(processingConceptionEntityListView);
+
         ProcessingRelationEntityListView processingRelationEntityListView = new ProcessingRelationEntityListView(heightValue);
+        relationEntityDataListContainer.add(processingRelationEntityListView);
 
         PagedTabs tabs = new PagedTabs(container);
         tabs.getElement().getStyle().set("width","100%");
 
-        Tab tab0 = tabs.add("",processingConceptionEntityListView,false);
+        Tab tab0 = tabs.add("",conceptionEntityDataListContainer,false);
         Span relationInfoSpan =new Span();
         Icon relationInfoIcon = new Icon(VaadinIcon.CUBE);
         relationInfoIcon.setSize("20px");
@@ -33,7 +40,7 @@ public class ProcessingDataListView extends VerticalLayout {
         relationInfoSpan.add(relationInfoIcon,relationInfoLabel);
         tab0.add(relationInfoSpan);
 
-        Tab tab1 = tabs.add("", processingRelationEntityListView,false);
+        Tab tab1 = tabs.add("", relationEntityDataListContainer,false);
         Span networkGraphSpan =new Span();
         Icon networkGraphIcon = new Icon(VaadinIcon.CONNECT_O);
         networkGraphIcon.setSize("20px");
