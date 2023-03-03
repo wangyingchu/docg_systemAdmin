@@ -20,6 +20,7 @@ import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -29,12 +30,14 @@ import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.eventHandling.RelationEntitiesCreatedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ConceptionEntityResourceHolderVO;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingConceptionEntityListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.AddEntityAttributeView;
 
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.AttributeEditorItemWidget;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -49,6 +52,7 @@ public class CreateRelationEntityView extends VerticalLayout {
     private Checkbox allowDupTypeRelationCheckbox;
     private String conceptionKind;
     private String conceptionEntityUID;
+    private VerticalLayout relationEntityAttributesContainer;
 
     public CreateRelationEntityView(String conceptionKind,String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
@@ -126,7 +130,7 @@ public class CreateRelationEntityView extends VerticalLayout {
         });
         addRelationAttributsUIContainerLayout.add(addCustomQueryCriteriaButton);
 
-        VerticalLayout relationEntityAttributesContainer = new VerticalLayout();
+        relationEntityAttributesContainer = new VerticalLayout();
         relationEntityAttributesContainer.setMargin(false);
         relationEntityAttributesContainer.setSpacing(false);
         relationEntityAttributesContainer.setPadding(false);
@@ -292,7 +296,16 @@ public class CreateRelationEntityView extends VerticalLayout {
 
     private void renderAddNewAttributeUI(){
         AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(null,null);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加实体属性",null,true,480,230,false);
+        AttributeValueOperateHandler attributeValueOperateHandler = new AttributeValueOperateHandler() {
+            @Override
+            public void handleAttributeValue(AttributeValue attributeValue) {
+                AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(null,null,attributeValue);
+                relationEntityAttributesContainer.add(attributeEditorItemWidget);
+            }
+        };
+        addEntityAttributeView.setAttributeValueOperateHandler(attributeValueOperateHandler);
+
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加关系实体属性",null,true,480,210,false);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);

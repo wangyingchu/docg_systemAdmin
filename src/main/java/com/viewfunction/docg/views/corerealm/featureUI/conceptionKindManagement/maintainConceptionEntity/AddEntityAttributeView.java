@@ -32,6 +32,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImp
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeAddedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
 import com.viewfunction.docg.util.ResourceHolder;
@@ -54,6 +55,8 @@ public class AddEntityAttributeView extends VerticalLayout {
     private HorizontalLayout attributeValueInputContainer;
     private String conceptionKind;
     private String conceptionEntityUID;
+    private AttributeValueOperateHandler attributeValueOperateHandler;
+
     public AddEntityAttributeView(String conceptionKind,String conceptionEntityUID){
         this.setMargin(false);
         this.setSpacing(false);
@@ -203,6 +206,9 @@ public class AddEntityAttributeView extends VerticalLayout {
                     }else{
                         if(conceptionKind != null && conceptionEntityUID != null){
                             addEntityAttribute();
+                        }
+                        if(attributeValueOperateHandler != null){
+                            attributeValueOperateHandler.handleAttributeValue(getAttributeValue());
                         }
                     }
                 }
@@ -672,5 +678,9 @@ public class AddEntityAttributeView extends VerticalLayout {
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
+    }
+
+    public void setAttributeValueOperateHandler(AttributeValueOperateHandler attributeValueOperateHandler) {
+        this.attributeValueOperateHandler = attributeValueOperateHandler;
     }
 }
