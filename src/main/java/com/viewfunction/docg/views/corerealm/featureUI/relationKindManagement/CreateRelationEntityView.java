@@ -120,18 +120,32 @@ public class CreateRelationEntityView extends VerticalLayout {
         ThirdLevelIconTitle infoTitle3 = new ThirdLevelIconTitle(new Icon(VaadinIcon.COMBOBOX),"设定关系属性");
         addRelationAttributsUIContainerLayout.add(infoTitle3);
 
-        Button addCustomQueryCriteriaButton = new Button();
-        Tooltips.getCurrent().setTooltip(addCustomQueryCriteriaButton, "添加关系实体属性");
-        addCustomQueryCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        addCustomQueryCriteriaButton.addThemeVariants(ButtonVariant.LUMO_LARGE);
-        addCustomQueryCriteriaButton.setIcon(VaadinIcon.KEYBOARD_O.create());
-        addCustomQueryCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button addAttributeButton = new Button();
+        Tooltips.getCurrent().setTooltip(addAttributeButton, "添加关系实体属性");
+        addAttributeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        addAttributeButton.addThemeVariants(ButtonVariant.LUMO_LARGE);
+        addAttributeButton.setIcon(VaadinIcon.KEYBOARD_O.create());
+        addAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 renderAddNewAttributeUI();
             }
         });
-        addRelationAttributsUIContainerLayout.add(addCustomQueryCriteriaButton);
+        addRelationAttributsUIContainerLayout.add(addAttributeButton);
+
+        Button clearAttributeButton = new Button();
+        clearAttributeButton.setEnabled(false);
+        Tooltips.getCurrent().setTooltip(clearAttributeButton, "清除已设置关系实体属性");
+        clearAttributeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        clearAttributeButton.addThemeVariants(ButtonVariant.LUMO_LARGE);
+        clearAttributeButton.setIcon(VaadinIcon.RECYCLE.create());
+        clearAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //renderAddNewAttributeUI();
+            }
+        });
+        addRelationAttributsUIContainerLayout.add(clearAttributeButton);
 
         relationEntityAttributesContainer = new VerticalLayout();
         relationEntityAttributesContainer.setMargin(false);
