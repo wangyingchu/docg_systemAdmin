@@ -26,6 +26,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
@@ -232,9 +233,38 @@ public class CreateRelationEntityView extends VerticalLayout {
             return;
         }
 
+        List<Button> actionButtonList = new ArrayList<>();
+
+        Button confirmButton = new Button("确认创建关系实体",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行创建关系实体操作",actionButtonList,400,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doCreateRelationEntities();
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doCreateRelationEntities(){
+        KindMetaInfo selectedRelationKind = relationKindSelect.getValue();
         String relationDirection = relationDirectionRadioGroup.getValue();
         boolean allowDupRelation = allowDupTypeRelationCheckbox.getValue();
         String relationKind = selectedRelationKind.getKindName();
+        Set<ConceptionEntityResourceHolderVO> targetConceptionEntitiesInfoSet = processingConceptionEntityListView.getSelectedConceptionEntitiesInProcessingList();
 
         CoreRealm coreRealm = null;
         try {
