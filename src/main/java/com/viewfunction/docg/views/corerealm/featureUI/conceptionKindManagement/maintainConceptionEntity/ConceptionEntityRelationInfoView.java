@@ -452,6 +452,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
             conceptionEntityIcon.setSize("18px");
             conceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
             List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
+
             if(conceptionEntityUID.equals(fromConceptionEntityUID)){
                 String conceptionKind = "";
                 if(toConceptionKindList !=null &&toConceptionKindList.size()>0){
@@ -465,18 +466,20 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
                 footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,conceptionKind));
                 footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,toConceptionEntityUID));
             }
-            if(conceptionEntityUID.equals(toConceptionEntityUID)){
-                String conceptionKind = "";
-                if(fromConceptionKindList !=null && fromConceptionKindList.size()>0){
-                    for(int i=0; i<fromConceptionKindList.size(); i++){
-                        conceptionKind = conceptionKind+fromConceptionKindList.get(i);
-                        if(i<fromConceptionKindList.size()-1){
-                            conceptionKind = conceptionKind+" | ";
+            if(!fromConceptionEntityUID.equals(toConceptionEntityUID)){
+                if(conceptionEntityUID.equals(toConceptionEntityUID)){
+                    String conceptionKind = "";
+                    if(fromConceptionKindList !=null && fromConceptionKindList.size()>0){
+                        for(int i=0; i<fromConceptionKindList.size(); i++){
+                            conceptionKind = conceptionKind+fromConceptionKindList.get(i);
+                            if(i<fromConceptionKindList.size()-1){
+                                conceptionKind = conceptionKind+" | ";
+                            }
                         }
                     }
+                    footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,conceptionKind));
+                    footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,fromConceptionEntityUID));
                 }
-                footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,conceptionKind));
-                footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,fromConceptionEntityUID));
             }
             FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList,true);
 
