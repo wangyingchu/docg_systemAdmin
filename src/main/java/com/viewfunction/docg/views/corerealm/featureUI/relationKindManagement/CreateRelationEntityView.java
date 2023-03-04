@@ -41,10 +41,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.AttributeEditorItemWidget;
 import dev.mett.vaadin.tooltip.Tooltips;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class CreateRelationEntityView extends VerticalLayout {
 
@@ -55,7 +52,8 @@ public class CreateRelationEntityView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
     private VerticalLayout relationEntityAttributesContainer;
-    private Set<String> relationAttributeNamesSet;
+    private Map<String,AttributeEditorItemWidget> relationAttributeEditorsMap;
+    private Button clearAttributeButton;
 
     public CreateRelationEntityView(String conceptionKind,String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
@@ -110,16 +108,16 @@ public class CreateRelationEntityView extends VerticalLayout {
         relationDirectionRadioGroup.setValue("FROM");
         basicInfoContainerLayout.add(relationDirectionRadioGroup);
 
-        HorizontalLayout addRelationAttributsUIContainerLayout = new HorizontalLayout();
-        addRelationAttributsUIContainerLayout.setSpacing(false);
-        addRelationAttributsUIContainerLayout.setMargin(false);
-        addRelationAttributsUIContainerLayout.setPadding(false);
-        basicInfoContainerLayout.add(addRelationAttributsUIContainerLayout);
+        HorizontalLayout addRelationAttributesUIContainerLayout = new HorizontalLayout();
+        addRelationAttributesUIContainerLayout.setSpacing(false);
+        addRelationAttributesUIContainerLayout.setMargin(false);
+        addRelationAttributesUIContainerLayout.setPadding(false);
+        basicInfoContainerLayout.add(addRelationAttributesUIContainerLayout);
 
-        addRelationAttributsUIContainerLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        addRelationAttributesUIContainerLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
 
         ThirdLevelIconTitle infoTitle3 = new ThirdLevelIconTitle(new Icon(VaadinIcon.COMBOBOX),"设定关系属性");
-        addRelationAttributsUIContainerLayout.add(infoTitle3);
+        addRelationAttributesUIContainerLayout.add(infoTitle3);
 
         Button addAttributeButton = new Button();
         Tooltips.getCurrent().setTooltip(addAttributeButton, "添加关系实体属性");
@@ -132,9 +130,9 @@ public class CreateRelationEntityView extends VerticalLayout {
                 renderAddNewAttributeUI();
             }
         });
-        addRelationAttributsUIContainerLayout.add(addAttributeButton);
+        addRelationAttributesUIContainerLayout.add(addAttributeButton);
 
-        Button clearAttributeButton = new Button();
+        clearAttributeButton = new Button();
         clearAttributeButton.setEnabled(false);
         Tooltips.getCurrent().setTooltip(clearAttributeButton, "清除已设置关系实体属性");
         clearAttributeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -143,10 +141,10 @@ public class CreateRelationEntityView extends VerticalLayout {
         clearAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAddNewAttributeUI();
+                cleanRelationAttributes();
             }
         });
-        addRelationAttributsUIContainerLayout.add(clearAttributeButton);
+        addRelationAttributesUIContainerLayout.add(clearAttributeButton);
 
         relationEntityAttributesContainer = new VerticalLayout();
         relationEntityAttributesContainer.setMargin(false);
@@ -196,7 +194,7 @@ public class CreateRelationEntityView extends VerticalLayout {
         processingConceptionEntityListView = new ProcessingConceptionEntityListView(500);
         targetConceptionEntitiesInfoContainerLayout.add(processingConceptionEntityListView);
 
-        this.relationAttributeNamesSet = new HashSet<>();
+        this.relationAttributeEditorsMap = new HashMap<>();
     }
 
     private Dialog containerDialog;
@@ -277,28 +275,38 @@ public class CreateRelationEntityView extends VerticalLayout {
             ConceptionEntity sourceConceptionEntity = conceptionEntityList.get(0);
             int successRelationCount = 0;
             List<RelationEntity> relationEntityInfoList = new ArrayList<>();
+
+            Map<String, Object> relationAttributesMap = null;
+            if(relationAttributeEditorsMap.size() > 0){
+                relationAttributesMap = new HashMap<>();
+                for(String currentAttributeName:relationAttributeEditorsMap.keySet()){
+                    AttributeValue currentAttributeValue = relationAttributeEditorsMap.get(currentAttributeName).getAttributeValue();
+                    relationAttributesMap.put(currentAttributeValue.getAttributeName(),currentAttributeValue.getAttributeValue());
+                }
+            }
+
             for(ConceptionEntityResourceHolderVO currentConceptionEntityResourceHolderVO:targetConceptionEntitiesInfoSet){
                 String targetConceptionEntityUID = currentConceptionEntityResourceHolderVO.getConceptionEntityUID();
                 if(relationDirection.equals("FROM")){
-                    RelationEntity resultRelationEntity = sourceConceptionEntity.attachFromRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
+                    RelationEntity resultRelationEntity = sourceConceptionEntity.attachFromRelation(targetConceptionEntityUID,relationKind,relationAttributesMap,allowDupRelation);
                     if(resultRelationEntity != null){
                         successRelationCount++;
                         relationEntityInfoList.add(resultRelationEntity);
                     }
                 }else if(relationDirection.equals("TO")){
-                    RelationEntity resultRelationEntity = sourceConceptionEntity.attachToRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
+                    RelationEntity resultRelationEntity = sourceConceptionEntity.attachToRelation(targetConceptionEntityUID,relationKind,relationAttributesMap,allowDupRelation);
                     if(resultRelationEntity != null){
                         successRelationCount++;
                         relationEntityInfoList.add(resultRelationEntity);
                     }
                 }else{
                     //BOTH
-                    RelationEntity resultRelationEntity = sourceConceptionEntity.attachFromRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
+                    RelationEntity resultRelationEntity = sourceConceptionEntity.attachFromRelation(targetConceptionEntityUID,relationKind,relationAttributesMap,allowDupRelation);
                     if(resultRelationEntity != null){
                         successRelationCount++;
                         relationEntityInfoList.add(resultRelationEntity);
                     }
-                    resultRelationEntity = sourceConceptionEntity.attachToRelation(targetConceptionEntityUID,relationKind,null,allowDupRelation);
+                    resultRelationEntity = sourceConceptionEntity.attachToRelation(targetConceptionEntityUID,relationKind,relationAttributesMap,allowDupRelation);
                     if(resultRelationEntity != null){
                         successRelationCount++;
                         relationEntityInfoList.add(resultRelationEntity);
@@ -345,26 +353,49 @@ public class CreateRelationEntityView extends VerticalLayout {
 
     private void renderAddNewAttributeUI(){
         AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(null,null);
-        AttributeValueOperateHandler attributeValueOperateHandler = new AttributeValueOperateHandler() {
+        AttributeValueOperateHandler attributeValueOperateHandlerForDelete = new AttributeValueOperateHandler(){
             @Override
             public void handleAttributeValue(AttributeValue attributeValue) {
                 String attributeName = attributeValue.getAttributeName();
-                if(relationAttributeNamesSet.contains(attributeName)){
-                    CommonUIOperationUtil.showPopupNotification("已经设置了名称为 "+attributeName+" 的关系属性",NotificationVariant.LUMO_ERROR);
-                }else{
-                    relationAttributeNamesSet.add(attributeName);
-                    AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(null,null,attributeValue);
-                    attributeEditorItemWidget.setWidth(350,Unit.PIXELS);
-                    relationEntityAttributesContainer.add(attributeEditorItemWidget);
+                if(relationAttributeEditorsMap.containsKey(attributeName)){
+                    relationEntityAttributesContainer.remove(relationAttributeEditorsMap.get(attributeName));
+                }
+                relationAttributeEditorsMap.remove(attributeName);
+                if(relationAttributeEditorsMap.size()==0) {
+                    clearAttributeButton.setEnabled(false);
                 }
             }
         };
-        addEntityAttributeView.setAttributeValueOperateHandler(attributeValueOperateHandler);
+        AttributeValueOperateHandler attributeValueOperateHandlerForAdd = new AttributeValueOperateHandler() {
+            @Override
+            public void handleAttributeValue(AttributeValue attributeValue) {
+                String attributeName = attributeValue.getAttributeName();
+                if(relationAttributeEditorsMap.containsKey(attributeName)){
+                    CommonUIOperationUtil.showPopupNotification("已经设置了名称为 "+attributeName+" 的关系属性",NotificationVariant.LUMO_ERROR);
+                }else{
+                    AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(null,null,attributeValue);
+                    attributeEditorItemWidget.setWidth(350,Unit.PIXELS);
+                    relationEntityAttributesContainer.add(attributeEditorItemWidget);
+                    attributeEditorItemWidget.setAttributeValueOperateHandler(attributeValueOperateHandlerForDelete);
+                    relationAttributeEditorsMap.put(attributeName,attributeEditorItemWidget);
+                }
+                if(relationAttributeEditorsMap.size()>0){
+                    clearAttributeButton.setEnabled(true);
+                }
+            }
+        };
+        addEntityAttributeView.setAttributeValueOperateHandler(attributeValueOperateHandlerForAdd);
 
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加关系实体属性",null,true,480,210,false);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    private void cleanRelationAttributes(){
+        relationEntityAttributesContainer.removeAll();
+        relationAttributeEditorsMap.clear();
+        clearAttributeButton.setEnabled(false);
     }
 }
