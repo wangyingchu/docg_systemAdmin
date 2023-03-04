@@ -81,6 +81,8 @@ public class ProcessingConceptionEntityListView extends VerticalLayout {
         conceptionEntityProcessingDataGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.KEY,"概念实体唯一值ID");
         conceptionEntityProcessingDataGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
+        conceptionEntityProcessingDataGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(false);
 
         conceptionEntityProcessingDataGrid.addSelectionListener(new SelectionListener<Grid<ConceptionEntityResourceHolderVO>, ConceptionEntityResourceHolderVO>() {
             @Override
