@@ -85,7 +85,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         addToProcessingDataListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                addConceptionEntityToProcessingList();
+                addConceptionEntityToProcessingList(conceptionKind,conceptionEntityUID);
             }
         });
 
@@ -413,7 +413,16 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(relationEntity != null){
-                        //addConceptionEntityToProcessingList(conceptionEntityValue);
+                        String targetConceptionKind = null;
+                        String targetConceptionEntityUID = null;
+                        if(conceptionEntityUID.equals(relationEntity.getFromConceptionEntityUID())){
+                            targetConceptionEntityUID = relationEntity.getToConceptionEntityUID();
+                            targetConceptionKind = relationEntity.getToConceptionEntityKinds().get(0);
+                        }else{
+                            targetConceptionEntityUID= relationEntity.getFromConceptionEntityUID();
+                            targetConceptionKind = relationEntity.getFromConceptionEntityKinds().get(0);
+                        }
+                        addConceptionEntityToProcessingList(targetConceptionKind,targetConceptionEntityUID);
                     }
                 }
             });
@@ -557,10 +566,10 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         loadEntityRelationsInfo();
     }
 
-    private void addConceptionEntityToProcessingList(){
+    private void addConceptionEntityToProcessingList(String conceptionKind,String conceptionEntityUID){
         ConceptionEntityValue conceptionEntityValue = new ConceptionEntityValue();
-        conceptionEntityValue.setConceptionEntityUID(this.conceptionEntityUID);
-        AddConceptionEntityToProcessingListView addConceptionEntityToProcessingListView = new AddConceptionEntityToProcessingListView(this.conceptionKind,conceptionEntityValue);
+        conceptionEntityValue.setConceptionEntityUID(conceptionEntityUID);
+        AddConceptionEntityToProcessingListView addConceptionEntityToProcessingListView = new AddConceptionEntityToProcessingListView(conceptionKind,conceptionEntityValue);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INBOX),"待处理数据列表添加概念实例",null,true,600,320,false);
         fixSizeWindow.setWindowContent(addConceptionEntityToProcessingListView);
         fixSizeWindow.setModel(true);
