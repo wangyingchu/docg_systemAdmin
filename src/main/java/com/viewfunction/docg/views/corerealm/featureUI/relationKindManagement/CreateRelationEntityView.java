@@ -41,6 +41,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -53,6 +54,7 @@ public class CreateRelationEntityView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
     private VerticalLayout relationEntityAttributesContainer;
+    private Set<String> relationAttributeNamesSet;
 
     public CreateRelationEntityView(String conceptionKind,String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
@@ -178,6 +180,8 @@ public class CreateRelationEntityView extends VerticalLayout {
 
         processingConceptionEntityListView = new ProcessingConceptionEntityListView(500);
         targetConceptionEntitiesInfoContainerLayout.add(processingConceptionEntityListView);
+
+        this.relationAttributeNamesSet = new HashSet<>();
     }
 
     private Dialog containerDialog;
@@ -300,8 +304,15 @@ public class CreateRelationEntityView extends VerticalLayout {
         AttributeValueOperateHandler attributeValueOperateHandler = new AttributeValueOperateHandler() {
             @Override
             public void handleAttributeValue(AttributeValue attributeValue) {
-                AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(null,null,attributeValue);
-                relationEntityAttributesContainer.add(attributeEditorItemWidget);
+                String attributeName = attributeValue.getAttributeName();
+                if(relationAttributeNamesSet.contains(attributeName)){
+                    CommonUIOperationUtil.showPopupNotification("已经设置了名称为 "+attributeName+" 的关系属性",NotificationVariant.LUMO_ERROR);
+                }else{
+                    relationAttributeNamesSet.add(attributeName);
+                    AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(null,null,attributeValue);
+                    attributeEditorItemWidget.setWidth(350,Unit.PIXELS);
+                    relationEntityAttributesContainer.add(attributeEditorItemWidget);
+                }
             }
         };
         addEntityAttributeView.setAttributeValueOperateHandler(attributeValueOperateHandler);
