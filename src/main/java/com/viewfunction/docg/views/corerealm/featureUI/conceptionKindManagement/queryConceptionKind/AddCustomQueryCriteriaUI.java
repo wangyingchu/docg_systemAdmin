@@ -13,17 +13,19 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.KindQueryCriteriaView;
 
 public class AddCustomQueryCriteriaUI extends VerticalLayout {
     private Dialog containerDialog;
     private H6 errorMessage;
     private TextField propertyNameField;
     private ComboBox<AttributeDataType> propertyDataTypeFilterSelect;
-    private ConceptionKindQueryCriteriaView conceptionKindQueryCriteriaView;
+    private KindQueryCriteriaView kindQueryCriteriaView;
 
     public AddCustomQueryCriteriaUI(){
         HorizontalLayout messageContainerLayout = new HorizontalLayout();
@@ -122,7 +124,7 @@ public class AddCustomQueryCriteriaUI extends VerticalLayout {
                     errorMessage.setText("属性名称与数据类型是必填项");
                     errorMessage.setVisible(true);
                 }else{
-                    getConceptionKindQueryCriteriaView().addQueryConditionItem(propertyNameField.getValue(),propertyDataTypeFilterSelect.getValue());
+                    getKindQueryCriteriaView().addQueryConditionItem(propertyNameField.getValue(),propertyDataTypeFilterSelect.getValue());
                     if(getContainerDialog() != null){
                         getContainerDialog().close();
                     }
@@ -140,11 +142,11 @@ public class AddCustomQueryCriteriaUI extends VerticalLayout {
         this.containerDialog = containerDialog;
     }
 
-    public ConceptionKindQueryCriteriaView getConceptionKindQueryCriteriaView() {
-        return conceptionKindQueryCriteriaView;
+    public KindQueryCriteriaView getKindQueryCriteriaView() {
+        return kindQueryCriteriaView;
     }
 
-    public void setConceptionKindQueryCriteriaView(ConceptionKindQueryCriteriaView conceptionKindQueryCriteriaView) {
-        this.conceptionKindQueryCriteriaView = conceptionKindQueryCriteriaView;
+    public void setKindQueryCriteriaView(KindQueryCriteriaView kindQueryCriteriaView) {
+        this.kindQueryCriteriaView = kindQueryCriteriaView;
     }
 }

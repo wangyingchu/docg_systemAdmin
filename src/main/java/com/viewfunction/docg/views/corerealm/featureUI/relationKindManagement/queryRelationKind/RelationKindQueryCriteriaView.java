@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind;
+package com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.queryRelationKind;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
@@ -20,8 +20,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryPara
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.FilteringItem;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
@@ -29,15 +29,18 @@ import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
-
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.KindQueryCriteriaView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.AddCustomQueryCriteriaUI;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.QueryConditionItemWidget;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.QueryResultSetConfigView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
-public class ConceptionKindQueryCriteriaView extends VerticalLayout implements KindQueryCriteriaView {
-    private String conceptionKindName;
+public class RelationKindQueryCriteriaView extends VerticalLayout {
+
+    private String relationKindName;
     private ComboBox<KindEntityAttributeRuntimeStatistics> queryCriteriaFilterSelect;
     private VerticalLayout criteriaItemsContainer;
     private Registration listener;
@@ -47,8 +50,8 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout implements K
     private boolean defaultQueryConditionIsSet = true;
     private boolean otherQueryConditionsAreSet = false;
 
-    public ConceptionKindQueryCriteriaView(String conceptionKindName){
-        this.conceptionKindName = conceptionKindName;
+    public RelationKindQueryCriteriaView(String relationKindName){
+        this.relationKindName = relationKindName;
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.SEARCH),"查询条件");
         add(filterTitle1);
 
@@ -86,7 +89,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout implements K
             }
         });
 
-        ConceptionKindQueryCriteriaView containerConceptionKindQueryCriteriaView = this;
+        RelationKindQueryCriteriaView containerConceptionKindQueryCriteriaView = this;
         queryCriteriaFilterSelect.addValueChangeListener(new HasValue.
                 ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<KindEntityAttributeRuntimeStatistics>,
                 KindEntityAttributeRuntimeStatistics>>() {
@@ -208,7 +211,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout implements K
             CommonUIOperationUtil.showPopupNotification("请设定默认查询条件的属性过滤值", NotificationVariant.LUMO_ERROR);
         }else{
             ConceptionKindQueriedEvent conceptionKindQueriedEvent = new ConceptionKindQueriedEvent();
-            conceptionKindQueriedEvent.setConceptionKindName(this.conceptionKindName);
+            conceptionKindQueriedEvent.setConceptionKindName(this.relationKindName);
             conceptionKindQueriedEvent.setResultAttributesList(this.resultAttributesList);
             conceptionKindQueriedEvent.setQueryParameters(this.queryParameters);
             ResourceHolder.getApplicationBlackboard().fire(conceptionKindQueriedEvent);
@@ -241,9 +244,9 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout implements K
         int entityAttributesDistributionStatisticSampleRatio = 20000;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
-        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKindName);
+        RelationKind targetRelationKind = coreRealm.getRelationKind(relationKindName);
         List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList =
-                targetConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
+                targetRelationKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
         coreRealm.closeGlobalSession();
         queryCriteriaFilterSelect.setItems(kindEntityAttributeRuntimeStatisticsList);
     }
@@ -287,7 +290,17 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout implements K
 
     private void renderAddCustomQueryCriteriaUI(){
         AddCustomQueryCriteriaUI addCustomQueryCriteriaUI = new AddCustomQueryCriteriaUI();
-        addCustomQueryCriteriaUI.setKindQueryCriteriaView(this);
+
+
+
+
+
+        //addCustomQueryCriteriaUI.setConceptionKindQueryCriteriaView(this);
+
+
+
+
+
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"添加自定义查询/显示属性",null,true,470,180,false);
         fixSizeWindow.setWindowContent(addCustomQueryCriteriaUI);
         fixSizeWindow.setModel(true);
@@ -295,12 +308,17 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout implements K
         fixSizeWindow.show();
     }
 
-    @Override
     public void addQueryConditionItem(String attributeName, AttributeDataType attributeDataType){
         if(!resultAttributesList.contains(attributeName)){
             resultAttributesList.add(attributeName);
             QueryConditionItemWidget queryConditionItemWidget = new QueryConditionItemWidget(attributeName,attributeDataType,this.queryConditionDataBinder);
-            queryConditionItemWidget.setContainerDataInstanceQueryCriteriaView(this);
+
+
+            //queryConditionItemWidget.setContainerDataInstanceQueryCriteriaView(this);
+
+
+
+
             if(resultAttributesList.size()==1){
                 //this one is the default query condition
                 queryConditionItemWidget.setAsDefaultQueryConditionItem();
