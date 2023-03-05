@@ -89,7 +89,6 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout implements K
             }
         });
 
-        ConceptionKindQueryCriteriaView containerConceptionKindQueryCriteriaView = this;
         queryCriteriaFilterSelect.addValueChangeListener(new HasValue.
                 ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<KindEntityAttributeRuntimeStatistics>,
                 KindEntityAttributeRuntimeStatistics>>() {

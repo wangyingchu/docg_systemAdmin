@@ -90,7 +90,6 @@ public class RelationKindQueryCriteriaView extends VerticalLayout implements Kin
             }
         });
 
-        RelationKindQueryCriteriaView containerConceptionKindQueryCriteriaView = this;
         queryCriteriaFilterSelect.addValueChangeListener(new HasValue.
                 ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<KindEntityAttributeRuntimeStatistics>,
                 KindEntityAttributeRuntimeStatistics>>() {
