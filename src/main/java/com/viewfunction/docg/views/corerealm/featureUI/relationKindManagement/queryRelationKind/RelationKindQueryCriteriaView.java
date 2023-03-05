@@ -26,7 +26,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
+import com.viewfunction.docg.element.eventHandling.RelationKindQueriedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.KindQueryCriteriaView;
@@ -210,11 +210,11 @@ public class RelationKindQueryCriteriaView extends VerticalLayout implements Kin
         if(!defaultQueryConditionIsSet & otherQueryConditionsAreSet){
             CommonUIOperationUtil.showPopupNotification("请设定默认查询条件的属性过滤值", NotificationVariant.LUMO_ERROR);
         }else{
-            ConceptionKindQueriedEvent conceptionKindQueriedEvent = new ConceptionKindQueriedEvent();
-            conceptionKindQueriedEvent.setConceptionKindName(this.relationKindName);
-            conceptionKindQueriedEvent.setResultAttributesList(this.resultAttributesList);
-            conceptionKindQueriedEvent.setQueryParameters(this.queryParameters);
-            ResourceHolder.getApplicationBlackboard().fire(conceptionKindQueriedEvent);
+            RelationKindQueriedEvent relationKindQueriedEvent = new RelationKindQueriedEvent();
+            relationKindQueriedEvent.setRelationKindName(this.relationKindName);
+            relationKindQueriedEvent.setResultAttributesList(this.resultAttributesList);
+            relationKindQueriedEvent.setQueryParameters(this.queryParameters);
+            ResourceHolder.getApplicationBlackboard().fire(relationKindQueriedEvent);
         }
     }
 
