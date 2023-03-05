@@ -29,6 +29,7 @@ import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.KindQueryCriteriaView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.AddCustomQueryCriteriaUI;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.QueryConditionItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.QueryResultSetConfigView;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class RelationKindQueryCriteriaView extends VerticalLayout {
+public class RelationKindQueryCriteriaView extends VerticalLayout implements KindQueryCriteriaView {
 
     private String relationKindName;
     private ComboBox<KindEntityAttributeRuntimeStatistics> queryCriteriaFilterSelect;
@@ -265,6 +266,7 @@ public class RelationKindQueryCriteriaView extends VerticalLayout {
                 .withProperty("attributeDataType", KindEntityAttributeRuntimeStatistics::getAttributeDataType);
     }
 
+    @Override
     public void removeCriteriaFilterItem(QueryConditionItemWidget queryConditionItemWidget){
         String removedAttributeName = queryConditionItemWidget.getAttributeName();
         boolean isDefaultCondition = queryConditionItemWidget.isDefaultQueryConditionItem();
@@ -290,17 +292,7 @@ public class RelationKindQueryCriteriaView extends VerticalLayout {
 
     private void renderAddCustomQueryCriteriaUI(){
         AddCustomQueryCriteriaUI addCustomQueryCriteriaUI = new AddCustomQueryCriteriaUI();
-
-
-
-
-
-        //addCustomQueryCriteriaUI.setConceptionKindQueryCriteriaView(this);
-
-
-
-
-
+        addCustomQueryCriteriaUI.setKindQueryCriteriaView(this);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"添加自定义查询/显示属性",null,true,470,180,false);
         fixSizeWindow.setWindowContent(addCustomQueryCriteriaUI);
         fixSizeWindow.setModel(true);
@@ -308,17 +300,12 @@ public class RelationKindQueryCriteriaView extends VerticalLayout {
         fixSizeWindow.show();
     }
 
+    @Override
     public void addQueryConditionItem(String attributeName, AttributeDataType attributeDataType){
         if(!resultAttributesList.contains(attributeName)){
             resultAttributesList.add(attributeName);
             QueryConditionItemWidget queryConditionItemWidget = new QueryConditionItemWidget(attributeName,attributeDataType,this.queryConditionDataBinder);
-
-
-            //queryConditionItemWidget.setContainerDataInstanceQueryCriteriaView(this);
-
-
-
-
+            queryConditionItemWidget.setContainerDataInstanceQueryCriteriaView(this);
             if(resultAttributesList.size()==1){
                 //this one is the default query condition
                 queryConditionItemWidget.setAsDefaultQueryConditionItem();

@@ -31,6 +31,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filtering
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.KindQueryCriteriaView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.math.BigDecimal;
@@ -72,7 +73,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
     private Icon plusIcon;
     private Icon multiIcon;
     private Icon notIcon;
-    private ConceptionKindQueryCriteriaView containerDataInstanceQueryCriteriaView;
+    private KindQueryCriteriaView containerDataInstanceQueryCriteriaView;
     private Label isDefaultLabel;
     private Label joinTypeLabel;
     private Label isConvertedLabel;
@@ -488,11 +489,11 @@ public class QueryConditionItemWidget extends VerticalLayout {
         }
     }
 
-    public ConceptionKindQueryCriteriaView getContainerDataInstanceQueryCriteriaView() {
+    public KindQueryCriteriaView getContainerDataInstanceQueryCriteriaView() {
         return containerDataInstanceQueryCriteriaView;
     }
 
-    public void setContainerDataInstanceQueryCriteriaView(ConceptionKindQueryCriteriaView containerDataInstanceQueryCriteriaView) {
+    public void setContainerDataInstanceQueryCriteriaView(KindQueryCriteriaView containerDataInstanceQueryCriteriaView) {
         this.containerDataInstanceQueryCriteriaView = containerDataInstanceQueryCriteriaView;
     }
 

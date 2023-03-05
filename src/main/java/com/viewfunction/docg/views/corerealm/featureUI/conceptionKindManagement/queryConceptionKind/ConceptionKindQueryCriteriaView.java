@@ -262,6 +262,7 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout implements K
                 .withProperty("attributeDataType", KindEntityAttributeRuntimeStatistics::getAttributeDataType);
     }
 
+    @Override
     public void removeCriteriaFilterItem(QueryConditionItemWidget queryConditionItemWidget){
         String removedAttributeName = queryConditionItemWidget.getAttributeName();
         boolean isDefaultCondition = queryConditionItemWidget.isDefaultQueryConditionItem();
