@@ -21,6 +21,7 @@ import com.vaadin.flow.component.timepicker.TimePicker;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.QueryConditionItemWidget;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;

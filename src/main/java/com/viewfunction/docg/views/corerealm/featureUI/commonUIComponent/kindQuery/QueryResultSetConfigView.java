@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind;
+package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
