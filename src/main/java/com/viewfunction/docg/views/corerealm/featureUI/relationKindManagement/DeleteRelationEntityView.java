@@ -37,12 +37,12 @@ public class DeleteRelationEntityView extends VerticalLayout {
         renderUIElement();
     }
 
-    public DeleteRelationEntityView(RelationEntityValue relationEntityValue){
+    public DeleteRelationEntityView(String relationKindName,RelationEntityValue relationEntityValue){
         this.relationEntityValue = relationEntityValue;
-        this.relationKindName = this.relationEntity.getRelationKindName();
-        this.relationEntityUID = this.relationEntity.getRelationEntityUID();
-        this.fromConceptionEntityUID = this.relationEntity.getFromConceptionEntityUID();
-        this.toConceptionEntityUID = this.relationEntity.getToConceptionEntityUID();
+        this.relationKindName = relationKindName;
+        this.relationEntityUID = this.relationEntityValue.getRelationEntityUID();
+        this.fromConceptionEntityUID = this.relationEntityValue.getFromConceptionEntityUID();
+        this.toConceptionEntityUID = this.relationEntityValue.getToConceptionEntityUID();
         renderUIElement();
     }
 
