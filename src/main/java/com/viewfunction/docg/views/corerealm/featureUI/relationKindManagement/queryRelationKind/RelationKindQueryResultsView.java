@@ -31,9 +31,9 @@ import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.RelationEntityDeletedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailView;
 
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.DeleteRelationEntityView;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.time.ZoneId;
@@ -77,8 +77,8 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
         queryResultGrid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
         queryResultGrid.addColumn(new ValueProvider<RelationEntityValue, Object>() {
             @Override
-            public Object apply(RelationEntityValue conceptionEntityValue) {
-                return conceptionEntityValue.getEntityAttributesValue().get(_rowIndexPropertyName);
+            public Object apply(RelationEntityValue relationEntityValue) {
+                return relationEntityValue.getEntityAttributesValue().get(_rowIndexPropertyName);
             }
         }).setHeader("").setHeader("IDX").setKey("idx").setFlexGrow(0).setWidth("75px").setResizable(false);
         queryResultGrid.addComponentColumn(new RelationEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("110px").setResizable(false);
@@ -100,10 +100,10 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
 
         queryResultGrid.addItemDoubleClickListener(new ComponentEventListener<ItemDoubleClickEvent<RelationEntityValue>>() {
             @Override
-            public void onComponentEvent(ItemDoubleClickEvent<RelationEntityValue> conceptionEntityValueItemDoubleClickEvent) {
-                RelationEntityValue targetConceptionEntityValue = conceptionEntityValueItemDoubleClickEvent.getItem();
-                if(targetConceptionEntityValue!= null){
-                    renderConceptionEntityUI(targetConceptionEntityValue);
+            public void onComponentEvent(ItemDoubleClickEvent<RelationEntityValue> relationEntityValueItemDoubleClickEvent) {
+                RelationEntityValue targetRelationEntityValue = relationEntityValueItemDoubleClickEvent.getItem();
+                if(targetRelationEntityValue!= null){
+                    renderRelationEntityUI(targetRelationEntityValue);
                 }
             }
         });
@@ -136,32 +136,32 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
                     attributesList.add(RealmConstant._dataOriginProperty);
                 }
 
-                RelationEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
+                RelationEntitiesAttributesRetrieveResult relationEntitiesAttributesRetrieveResult =
                         targetRelation.getEntityAttributesByAttributeNames(attributesList,queryParameters);
-                if(conceptionEntitiesAttributesRetrieveResult != null && conceptionEntitiesAttributesRetrieveResult.getOperationStatistics() != null){
-                    showPopupNotification(conceptionEntitiesAttributesRetrieveResult, NotificationVariant.LUMO_SUCCESS);
-                    Date startDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime();
+                if(relationEntitiesAttributesRetrieveResult != null && relationEntitiesAttributesRetrieveResult.getOperationStatistics() != null){
+                    showPopupNotification(relationEntitiesAttributesRetrieveResult, NotificationVariant.LUMO_SUCCESS);
+                    Date startDateTime = relationEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime();
                     ZonedDateTime startZonedDateTime = ZonedDateTime.ofInstant(startDateTime.toInstant(), id);
                     String startTimeStr = startZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
                     startTimeDisplayItem.updateDisplayValue(startTimeStr);
-                    Date finishDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime();
+                    Date finishDateTime = relationEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime();
                     ZonedDateTime finishZonedDateTime = ZonedDateTime.ofInstant(finishDateTime.toInstant(), id);
                     String finishTimeStr = finishZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
                     finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
-                    dataCountDisplayItem.updateDisplayValue(""+conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount());
+                    dataCountDisplayItem.updateDisplayValue(""+relationEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount());
 
-                    List<RelationEntityValue> conceptionEntityValueList = conceptionEntitiesAttributesRetrieveResult.getRelationEntityValues();
-                    for(int i=0 ; i<conceptionEntityValueList.size();i++){
-                        RelationEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
-                        currentConceptionEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName,i+1);
+                    List<RelationEntityValue> relationEntityValueList = relationEntitiesAttributesRetrieveResult.getRelationEntityValues();
+                    for(int i=0 ; i<relationEntityValueList.size();i++){
+                        RelationEntityValue currentRelationEntityValue = relationEntityValueList.get(i);
+                        currentRelationEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName,i+1);
                     }
                     if (resultAttributesList != null && resultAttributesList.size() > 0) {
                         for (String currentProperty : resultAttributesList) {
                             if (!currentProperty.equals(_rowIndexPropertyName)) {
                                 queryResultGrid.addColumn(new ValueProvider<RelationEntityValue, Object>() {
                                     @Override
-                                    public Object apply(RelationEntityValue conceptionEntityValue) {
-                                        return conceptionEntityValue.getEntityAttributesValue().get(currentProperty);
+                                    public Object apply(RelationEntityValue relationEntityValue) {
+                                        return relationEntityValue.getEntityAttributesValue().get(currentProperty);
                                     }
                                 }).setHeader(" " + currentProperty).setKey(currentProperty + "_KEY");
                                 queryResultGrid.getColumnByKey(currentProperty + "_KEY").setSortable(true).setResizable(true);
@@ -170,7 +170,7 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
                             this.currentRowKeyList.add(currentProperty + "_KEY");
                         }
                     }
-                    queryResultGrid.setItems(conceptionEntityValueList);
+                    queryResultGrid.setItems(relationEntityValueList);
                 }
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
@@ -224,7 +224,7 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
 
     private class RelationEntityActionButtonsValueProvider implements ValueProvider<RelationEntityValue,HorizontalLayout>{
         @Override
-        public HorizontalLayout apply(RelationEntityValue conceptionEntityValue) {
+        public HorizontalLayout apply(RelationEntityValue relationEntityValue) {
             HorizontalLayout actionButtonContainerLayout = new HorizontalLayout();
             actionButtonContainerLayout.setMargin(false);
             actionButtonContainerLayout.setSpacing(false);
@@ -237,8 +237,8 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
             showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(conceptionEntityValue != null){
-                        renderConceptionEntityUI(conceptionEntityValue);
+                    if(relationEntityValue != null){
+                        renderRelationEntityUI(relationEntityValue);
                     }
                 }
             });
@@ -252,8 +252,8 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
             addToProcessListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(conceptionEntityValue != null){
-                        addConceptionEntityToProcessingList(conceptionEntityValue);
+                    if(relationEntityValue != null){
+                        addRelationEntityToProcessingList(relationEntityValue);
                     }
                 }
             });
@@ -268,8 +268,8 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
             deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(conceptionEntityValue != null){
-                        deleteRelationEntity(conceptionEntityValue);
+                    if(relationEntityValue != null){
+                        deleteRelationEntity(relationEntityValue);
                     }
                 }
             });
@@ -300,8 +300,8 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
         notification.open();
     }
 
-    private void renderConceptionEntityUI(RelationEntityValue conceptionEntityValue){
-        ConceptionEntityDetailView conceptionEntityDetailView = new ConceptionEntityDetailView(relationKindName,conceptionEntityValue.getRelationEntityUID());
+    private void renderRelationEntityUI(RelationEntityValue relationEntityValue){
+        RelationEntityDetailView relationEntityDetailView = new RelationEntityDetailView(relationKindName,relationEntityValue.getRelationEntityUID());
 
         List<Component> actionComponentList = new ArrayList<>();
 
@@ -309,31 +309,31 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
         footPrintStartIcon.setSize("22px");
         footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
         actionComponentList.add(footPrintStartIcon);
-        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
-        conceptionKindIcon.setSize("12px");
-        conceptionKindIcon.getStyle().set("padding-right","3px");
-        actionComponentList.add(conceptionKindIcon);
-        Label conceptionKindNameLabel = new Label(relationKindName);
-        actionComponentList.add(conceptionKindNameLabel);
+        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+        relationKindIcon.setSize("12px");
+        relationKindIcon.getStyle().set("padding-right","3px");
+        actionComponentList.add(relationKindIcon);
+        Label relationKindNameLabel = new Label(relationKindName);
+        actionComponentList.add(relationKindNameLabel);
         Icon divIcon = VaadinIcon.ITALIC.create();
         divIcon.setSize("12px");
         divIcon.getStyle().set("padding-left","5px");
         actionComponentList.add(divIcon);
-        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
-        conceptionEntityIcon.setSize("18px");
-        conceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
-        actionComponentList.add(conceptionEntityIcon);
+        Icon relationEntityIcon = VaadinIcon.KEY_O.create();
+        relationEntityIcon.setSize("18px");
+        relationEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
+        actionComponentList.add(relationEntityIcon);
 
-        Label conceptionEntityUIDLabel = new Label(conceptionEntityValue.getRelationEntityUID());
-        actionComponentList.add(conceptionEntityUIDLabel);
+        Label relationEntityUIDLabel = new Label(relationEntityValue.getRelationEntityUID());
+        actionComponentList.add(relationEntityUIDLabel);
 
-        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
-        fullScreenWindow.setWindowContent(conceptionEntityDetailView);
-        conceptionEntityDetailView.setContainerDialog(fullScreenWindow);
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"关系实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(relationEntityDetailView);
+        relationEntityDetailView.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
     }
 
-    private void addConceptionEntityToProcessingList(RelationEntityValue conceptionEntityValue){
+    private void addRelationEntityToProcessingList(RelationEntityValue relationEntityValue){
         /*
         AddConceptionEntityToProcessingListView addConceptionEntityToProcessingListView = new AddConceptionEntityToProcessingListView(conceptionKindName,conceptionEntityValue);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INBOX),"待处理数据列表添加概念实例",null,true,600,320,false);
@@ -342,8 +342,6 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
         addConceptionEntityToProcessingListView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
         */
-
-
     }
 
     private void deleteRelationEntity(RelationEntityValue relationEntityValue){
