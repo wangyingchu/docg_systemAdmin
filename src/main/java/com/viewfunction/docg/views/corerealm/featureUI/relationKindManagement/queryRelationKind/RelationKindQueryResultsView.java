@@ -21,7 +21,6 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -29,11 +28,12 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
-import com.viewfunction.docg.element.eventHandling.ConceptionEntityDeletedEvent;
+import com.viewfunction.docg.element.eventHandling.RelationEntityDeletedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailView;
 
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.DeleteRelationEntityView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.time.ZoneId;
@@ -47,7 +47,7 @@ import java.util.List;
 
 public class RelationKindQueryResultsView extends VerticalLayout implements
         RelationKindQueriedEvent.RelationKindQueriedListener,
-        ConceptionEntityDeletedEvent.ConceptionEntityDeletedListener {
+        RelationEntityDeletedEvent.RelationEntityDeletedListener {
     private String relationKindName;
     private Registration listener;
     private Grid<RelationEntityValue> queryResultGrid;
@@ -81,7 +81,7 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
                 return conceptionEntityValue.getEntityAttributesValue().get(_rowIndexPropertyName);
             }
         }).setHeader("").setHeader("IDX").setKey("idx").setFlexGrow(0).setWidth("75px").setResizable(false);
-        queryResultGrid.addComponentColumn(new RelationKindQueryResultsView.ConceptionEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("110px").setResizable(false);
+        queryResultGrid.addComponentColumn(new RelationEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("110px").setResizable(false);
         queryResultGrid.addColumn(RelationEntityValue::getRelationEntityUID).setHeader(" EntityUID").setKey("idx_1").setFlexGrow(1).setWidth("150px").setResizable(false);
         queryResultGrid.addColumn(RelationEntityValue::getFromConceptionEntityUID).setHeader(" FromEntityUID").setKey("idx_2").setFlexGrow(1).setWidth("150px").setResizable(false);
         queryResultGrid.addColumn(RelationEntityValue::getToConceptionEntityUID).setHeader(" ToEntityUID").setKey("idx_3").setFlexGrow(1).setWidth("150px").setResizable(false);
@@ -202,27 +202,27 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
     }
 
     @Override
-    public void receivedConceptionEntityDeletedEvent(ConceptionEntityDeletedEvent event) {
-        List<String> deletedEntityAllConceptionKinds = event.getEntityAllConceptionKindNames();
-        if(deletedEntityAllConceptionKinds.contains(relationKindName)){
-            String conceptionEntityUID = event.getConceptionEntityUID();
+    public void receivedRelationEntityDeletedEvent(RelationEntityDeletedEvent event) {
+        String relationKindName = event.getRelationKindName();
+        if(relationKindName.equals(relationKindName)){
+            String relationEntityUID = event.getRelationEntityUID();
             ListDataProvider dataProvider=(ListDataProvider)queryResultGrid.getDataProvider();
-            ConceptionEntityValue conceptionEntityValueToDelete = null;
-            Collection<ConceptionEntityValue> conceptionEntityValueList = dataProvider.getItems();
-            for(ConceptionEntityValue currentConceptionEntityValue:conceptionEntityValueList){
-                if(currentConceptionEntityValue.getConceptionEntityUID().equals(conceptionEntityUID)){
-                    conceptionEntityValueToDelete = currentConceptionEntityValue;
+            RelationEntityValue relationEntityValueToDelete = null;
+            Collection<RelationEntityValue> relationEntityValueList = dataProvider.getItems();
+            for(RelationEntityValue currentRelationEntityValue:relationEntityValueList){
+                if(currentRelationEntityValue.getRelationEntityUID().equals(relationEntityUID)){
+                    relationEntityValueToDelete = currentRelationEntityValue;
                     break;
                 }
             }
-            if(conceptionEntityValueToDelete != null){
-                dataProvider.getItems().remove(conceptionEntityValueToDelete);
+            if(relationEntityValueToDelete != null){
+                dataProvider.getItems().remove(relationEntityValueToDelete);
                 dataProvider.refreshAll();
             }
         }
     }
 
-    private class ConceptionEntityActionButtonsValueProvider implements ValueProvider<RelationEntityValue,HorizontalLayout>{
+    private class RelationEntityActionButtonsValueProvider implements ValueProvider<RelationEntityValue,HorizontalLayout>{
         @Override
         public HorizontalLayout apply(RelationEntityValue conceptionEntityValue) {
             HorizontalLayout actionButtonContainerLayout = new HorizontalLayout();
@@ -232,7 +232,7 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
             showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             showDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             showDetailButton.setIcon(VaadinIcon.EYE.create());
-            Tooltips.getCurrent().setTooltip(showDetailButton, "显示概念实体详情");
+            Tooltips.getCurrent().setTooltip(showDetailButton, "显示关系实体详情");
             actionButtonContainerLayout.add(showDetailButton);
             showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
@@ -262,14 +262,14 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
             deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
-            deleteButton.setIcon(VaadinIcon.TRASH.create());
-            Tooltips.getCurrent().setTooltip(deleteButton, "删除概念实体");
+            deleteButton.setIcon(VaadinIcon.UNLINK.create());
+            Tooltips.getCurrent().setTooltip(deleteButton, "删除关系实体");
             actionButtonContainerLayout.add(deleteButton);
             deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(conceptionEntityValue != null){
-                        deleteConceptionEntity(conceptionEntityValue);
+                        deleteRelationEntity(conceptionEntityValue);
                     }
                 }
             });
@@ -280,7 +280,7 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
     private void showPopupNotification(RelationEntitiesAttributesRetrieveResult relationEntitiesAttributesRetrieveResult, NotificationVariant notificationVariant){
         Notification notification = new Notification();
         notification.addThemeVariants(notificationVariant);
-        Div text = new Div(new Text("概念类型 "+ relationKindName +" 实例查询操作成功"));
+        Div text = new Div(new Text("关系类型 "+ relationKindName +" 实例查询操作成功"));
         Button closeButton = new Button(new Icon("lumo", "cross"));
         closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         closeButton.addClickListener(event -> {
@@ -346,15 +346,12 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
 
     }
 
-    private void deleteConceptionEntity(RelationEntityValue conceptionEntityValue){
-        /*
-        DeleteConceptionEntityView deleteConceptionEntityView = new DeleteConceptionEntityView(conceptionKindName,conceptionEntityValue);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除概念实体",null,true,600,210,false);
-        fixSizeWindow.setWindowContent(deleteConceptionEntityView);
+    private void deleteRelationEntity(RelationEntityValue relationEntityValue){
+        DeleteRelationEntityView deleteRelationEntityView = new DeleteRelationEntityView(relationEntityValue);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除关系实体",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(deleteRelationEntityView);
         fixSizeWindow.setModel(true);
-        deleteConceptionEntityView.setContainerDialog(fixSizeWindow);
+        deleteRelationEntityView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
-
-         */
     }
 }

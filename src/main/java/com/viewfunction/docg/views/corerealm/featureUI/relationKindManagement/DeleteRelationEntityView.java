@@ -12,6 +12,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.eventHandling.RelationEntityDeletedEvent;
@@ -20,11 +21,33 @@ import com.viewfunction.docg.util.ResourceHolder;
 
 public class DeleteRelationEntityView extends VerticalLayout {
     private RelationEntity relationEntity;
+    private RelationEntityValue relationEntityValue;
     private Dialog containerDialog;
+    private String relationKindName;
+    private String relationEntityUID;
+    private String toConceptionEntityUID;
+    private String fromConceptionEntityUID;
 
     public DeleteRelationEntityView(RelationEntity relationEntity){
         this.relationEntity = relationEntity;
-        H4 viewTitle = new H4("本操作将删除关系类型 "+this.relationEntity.getRelationKindName()+" 中的UID为 "+this.relationEntity.getRelationEntityUID()+" 的关系实体,请确认执行操作。");
+        this.relationKindName = this.relationEntity.getRelationKindName();
+        this.relationEntityUID = this.relationEntity.getRelationEntityUID();
+        this.fromConceptionEntityUID = this.relationEntity.getFromConceptionEntityUID();
+        this.toConceptionEntityUID = this.relationEntity.getToConceptionEntityUID();
+        renderUIElement();
+    }
+
+    public DeleteRelationEntityView(RelationEntityValue relationEntityValue){
+        this.relationEntityValue = relationEntityValue;
+        this.relationKindName = this.relationEntity.getRelationKindName();
+        this.relationEntityUID = this.relationEntity.getRelationEntityUID();
+        this.fromConceptionEntityUID = this.relationEntity.getFromConceptionEntityUID();
+        this.toConceptionEntityUID = this.relationEntity.getToConceptionEntityUID();
+        renderUIElement();
+    }
+
+    private void renderUIElement(){
+        H4 viewTitle = new H4("本操作将删除关系类型 "+this.relationKindName+" 中的UID为 "+this.relationEntityUID+" 的关系实体,请确认执行操作。");
         viewTitle.getStyle().set("font-size","var(--lumo-font-size-m)").set("color","var(--lumo-error-color)");
         add(viewTitle);
 
@@ -66,33 +89,33 @@ public class DeleteRelationEntityView extends VerticalLayout {
     private void doRemoveRelationEntity(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
-            RelationKind targetRelationKind = coreRealm.getRelationKind(this.relationEntity.getRelationKindName());
+            RelationKind targetRelationKind = coreRealm.getRelationKind(this.relationKindName);
             if(targetRelationKind != null){
-                RelationEntity targetRelationEntity = targetRelationKind.getEntityByUID(this.relationEntity.getRelationEntityUID());
+                RelationEntity targetRelationEntity = targetRelationKind.getEntityByUID(this.relationEntityUID);
                 if(targetRelationEntity == null){
-                    CommonUIOperationUtil.showPopupNotification("关系实体 "+this.relationEntity.getRelationKindName()+" - "+this.relationEntity.getRelationEntityUID()+" 删除操作失败",NotificationVariant.LUMO_ERROR);
+                    CommonUIOperationUtil.showPopupNotification("关系实体 "+this.relationKindName+" - "+this.relationEntityUID+" 删除操作失败",NotificationVariant.LUMO_ERROR);
                 }else{
                     boolean operationResult = targetRelationKind.deleteEntity(targetRelationEntity.getRelationEntityUID());
                     if(operationResult){
                         RelationEntityDeletedEvent relationEntityDeletedEvent = new RelationEntityDeletedEvent();
-                        relationEntityDeletedEvent.setRelationEntityUID(this.relationEntity.getRelationEntityUID());
-                        relationEntityDeletedEvent.setRelationKindName(this.relationEntity.getRelationKindName());
-                        relationEntityDeletedEvent.setToConceptionEntityUID(this.relationEntity.getToConceptionEntityUID());
-                        relationEntityDeletedEvent.setFromConceptionEntityUID(this.relationEntity.getFromConceptionEntityUID());
+                        relationEntityDeletedEvent.setRelationEntityUID(this.relationEntityUID);
+                        relationEntityDeletedEvent.setRelationKindName(this.relationKindName);
+                        relationEntityDeletedEvent.setToConceptionEntityUID(this.toConceptionEntityUID);
+                        relationEntityDeletedEvent.setFromConceptionEntityUID(this.fromConceptionEntityUID);
                         ResourceHolder.getApplicationBlackboard().fire(relationEntityDeletedEvent);
-                        CommonUIOperationUtil.showPopupNotification("关系实体 "+this.relationEntity.getRelationKindName()+" - "+this.relationEntity.getRelationEntityUID()+" 删除操作成功", NotificationVariant.LUMO_SUCCESS);
+                        CommonUIOperationUtil.showPopupNotification("关系实体 "+this.relationKindName+" - "+this.relationEntityUID+" 删除操作成功", NotificationVariant.LUMO_SUCCESS);
                     }else{
-                        CommonUIOperationUtil.showPopupNotification("关系实体 "+this.relationEntity.getRelationKindName()+" - "+this.relationEntity.getRelationEntityUID()+" 删除操作失败",NotificationVariant.LUMO_ERROR);
+                        CommonUIOperationUtil.showPopupNotification("关系实体 "+this.relationKindName+" - "+this.relationEntityUID+" 删除操作失败",NotificationVariant.LUMO_ERROR);
                     }
                 }
             }else{
-                CommonUIOperationUtil.showPopupNotification("关系实体 "+this.relationEntity.getRelationKindName()+" - "+this.relationEntity.getRelationEntityUID()+" 删除操作失败",NotificationVariant.LUMO_ERROR);
+                CommonUIOperationUtil.showPopupNotification("关系实体 "+this.relationKindName+" - "+this.relationEntityUID+" 删除操作失败",NotificationVariant.LUMO_ERROR);
             }
             if(containerDialog != null){
                 containerDialog.close();
             }
         } catch (CoreRealmServiceRuntimeException e) {
-            CommonUIOperationUtil.showPopupNotification("关系实体 "+this.relationEntity.getRelationKindName()+" - "+this.relationEntity.getRelationEntityUID()+" 删除操作发生服务器端错误", NotificationVariant.LUMO_ERROR);
+            CommonUIOperationUtil.showPopupNotification("关系实体 "+this.relationKindName+" - "+this.relationEntityUID+" 删除操作发生服务器端错误", NotificationVariant.LUMO_ERROR);
             throw new RuntimeException(e);
         }
     }
