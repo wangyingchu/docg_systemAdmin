@@ -9,27 +9,21 @@ import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.WebBrowser;
 import com.vaadin.flow.shared.Registration;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryResultsView;
 
 public class RelationKindQueryUI extends VerticalLayout {
     private String relationKindName;
-
     private Registration listener;
-    private String conceptionKindName;
     private VerticalLayout queryFieldsContainer;
     private VerticalLayout queryResultContainer;
 
     public RelationKindQueryUI(String relationKindName){
         this.relationKindName = relationKindName;
 
-
-        this.conceptionKindName = relationKindName;
-
         queryFieldsContainer = new VerticalLayout();
         queryFieldsContainer.setPadding(false);
         queryFieldsContainer.setSpacing(false);
         queryFieldsContainer.setMargin(false);
-        RelationKindQueryCriteriaView relationKindQueryCriteriaView = new RelationKindQueryCriteriaView(this.conceptionKindName);
+        RelationKindQueryCriteriaView relationKindQueryCriteriaView = new RelationKindQueryCriteriaView(this.relationKindName);
         queryFieldsContainer.add(relationKindQueryCriteriaView);
 
         WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
@@ -45,8 +39,8 @@ public class RelationKindQueryUI extends VerticalLayout {
         queryResultContainer.setPadding(false);
         queryResultContainer.setSpacing(false);
         queryResultContainer.setMargin(false);
-        ConceptionKindQueryResultsView conceptionKindQueryResultsView = new ConceptionKindQueryResultsView(this.conceptionKindName);
-        queryResultContainer.add(conceptionKindQueryResultsView);
+        RelationKindQueryResultsView relationKindQueryResultsView = new RelationKindQueryResultsView(this.relationKindName);
+        queryResultContainer.add(relationKindQueryResultsView);
 
         SplitLayout splitLayout = new SplitLayout(queryFieldsContainer, queryResultContainer);
         splitLayout.setSplitterPosition(0);

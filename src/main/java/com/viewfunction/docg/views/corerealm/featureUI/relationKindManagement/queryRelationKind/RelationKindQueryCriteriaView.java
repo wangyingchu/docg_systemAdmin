@@ -156,7 +156,7 @@ public class RelationKindQueryCriteriaView extends VerticalLayout implements Kin
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                queryConceptionEntities();
+                queryRelationEntities();
             }
         });
         buttonsContainerLayout.add(executeQueryButton);
@@ -179,7 +179,7 @@ public class RelationKindQueryCriteriaView extends VerticalLayout implements Kin
         this.queryConditionDataBinder = new Binder<>();
     }
 
-    private void queryConceptionEntities(){
+    private void queryRelationEntities(){
         queryParameters.getAndFilteringItemsList().clear();
         queryParameters.getOrFilteringItemsList().clear();
         queryParameters.setDefaultFilteringItem(null);
