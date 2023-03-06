@@ -47,10 +47,6 @@ import java.util.List;
 
 public class AddEntityAttributeView extends VerticalLayout {
 
-    public void setEntityKindType(KindType entityKindType) {
-        this.entityKindType = entityKindType;
-    }
-
     public enum KindType {ConceptionKind,RelationKind}
 
     private Dialog containerDialog;
@@ -64,12 +60,15 @@ public class AddEntityAttributeView extends VerticalLayout {
     private AttributeValueOperateHandler attributeValueOperateHandler;
     private KindType entityKindType = KindType.ConceptionKind;
 
-    public AddEntityAttributeView(String kindName, String entityUID){
+    public AddEntityAttributeView(String kindName, String entityUID,KindType entityKindType){
         this.setMargin(false);
         this.setSpacing(false);
         this.binder = new Binder<>();
         this.kindName = kindName;
         this.entityUID = entityUID;
+        if(entityKindType != null){
+            this.entityKindType = entityKindType;
+        }
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
         conceptionKindIcon.setSize("12px");
         conceptionKindIcon.getStyle().set("padding-right","3px");

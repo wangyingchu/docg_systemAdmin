@@ -352,7 +352,7 @@ public class CreateRelationEntityView extends VerticalLayout {
     }
 
     private void renderAddNewAttributeUI(){
-        AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(null,null);
+        AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(null,null, AddEntityAttributeView.KindType.RelationKind);
         AttributeValueOperateHandler attributeValueOperateHandlerForDelete = new AttributeValueOperateHandler(){
             @Override
             public void handleAttributeValue(AttributeValue attributeValue) {
