@@ -6,8 +6,6 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityAttributesEditorView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityIntegratedInfoView;
 
 public class RelationEntityDetailView extends VerticalLayout {
 
@@ -40,8 +38,8 @@ public class RelationEntityDetailView extends VerticalLayout {
         this.entityFieldsContainer.setMaxWidth(500, Unit.PIXELS);
         this.entityDetailContainer = new VerticalLayout();
 
-        ConceptionEntityAttributesEditorView conceptionEntityAttributesEditorView =
-                new ConceptionEntityAttributesEditorView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityAttributesEditorHeightOffset);
+        RelationEntityAttributesEditorView conceptionEntityAttributesEditorView =
+                new RelationEntityAttributesEditorView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityAttributesEditorHeightOffset);
 
         //ConceptionEntityIntegratedInfoView conceptionEntityIntegratedInfoView =
          //       new ConceptionEntityIntegratedInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityAttributesEditorHeightOffset);
