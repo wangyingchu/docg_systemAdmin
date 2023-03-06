@@ -47,22 +47,29 @@ import java.util.List;
 
 public class AddEntityAttributeView extends VerticalLayout {
 
+    public void setEntityKindType(KindType entityKindType) {
+        this.entityKindType = entityKindType;
+    }
+
+    public enum KindType {ConceptionKind,RelationKind}
+
     private Dialog containerDialog;
     private Label errorMessage;
     private TextField attributeNameField;
     private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
     private Binder<String> binder;
     private HorizontalLayout attributeValueInputContainer;
-    private String conceptionKind;
-    private String conceptionEntityUID;
+    private String kindName;
+    private String entityUID;
     private AttributeValueOperateHandler attributeValueOperateHandler;
+    private KindType entityKindType = KindType.ConceptionKind;
 
-    public AddEntityAttributeView(String conceptionKind,String conceptionEntityUID){
+    public AddEntityAttributeView(String kindName, String entityUID){
         this.setMargin(false);
         this.setSpacing(false);
         this.binder = new Binder<>();
-        this.conceptionKind = conceptionKind;
-        this.conceptionEntityUID = conceptionEntityUID;
+        this.kindName = kindName;
+        this.entityUID = entityUID;
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
         conceptionKindIcon.setSize("12px");
         conceptionKindIcon.getStyle().set("padding-right","3px");
@@ -70,10 +77,10 @@ public class AddEntityAttributeView extends VerticalLayout {
         conceptionEntityIcon.setSize("18px");
         conceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
         List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
-        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,conceptionKind));
-        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,conceptionEntityUID));
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon, kindName));
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon, entityUID));
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
-        if(this.conceptionEntityUID  != null){
+        if(this.entityUID != null){
             add(entityInfoFootprintMessageBar);
         }
 
@@ -204,7 +211,7 @@ public class AddEntityAttributeView extends VerticalLayout {
                         errorMessage.setText("输入的属性值为空或格式不合法");
                         errorMessage.setVisible(true);
                     }else{
-                        if(conceptionKind != null && conceptionEntityUID != null){
+                        if(kindName != null && entityUID != null){
                             addEntityAttribute();
                         }
                         if(attributeValueOperateHandler != null){
@@ -609,16 +616,16 @@ public class AddEntityAttributeView extends VerticalLayout {
         if(attributeValueInputContainer.getComponentAt(0) != null) {
             if(newEntityAttributeValue != null){
                 CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.kindName);
                 if(targetConceptionKind == null){
-                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
+                    CommonUIOperationUtil.showPopupNotification("概念类型 "+ kindName +" 不存在", NotificationVariant.LUMO_ERROR);
                 }else{
-                    ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+                    ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.entityUID);
                     if(targetConceptionEntity == null){
-                        CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
+                        CommonUIOperationUtil.showPopupNotification("概念类型 "+ kindName +" 中不存在 UID 为"+ entityUID +" 的概念实体", NotificationVariant.LUMO_ERROR);
                     }else{
                         if(targetConceptionEntity.hasAttribute(attributeName)){
-                            CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中已经存在属性 "+attributeName, NotificationVariant.LUMO_ERROR);
+                            CommonUIOperationUtil.showPopupNotification("UID 为 "+ entityUID +" 的概念实体中已经存在属性 "+attributeName, NotificationVariant.LUMO_ERROR);
                         }else{
                             try {
                                 AttributeValue attributeValue = null;
@@ -651,11 +658,11 @@ public class AddEntityAttributeView extends VerticalLayout {
                                 }
                                 if(attributeValue != null){
                                     ConceptionEntityAttributeAddedEvent conceptionEntityAttributeAddedEvent = new ConceptionEntityAttributeAddedEvent();
-                                    conceptionEntityAttributeAddedEvent.setConceptionEntityUID(this.conceptionEntityUID);
-                                    conceptionEntityAttributeAddedEvent.setConceptionKindName(this.conceptionKind);
+                                    conceptionEntityAttributeAddedEvent.setConceptionEntityUID(this.entityUID);
+                                    conceptionEntityAttributeAddedEvent.setConceptionKindName(this.kindName);
                                     conceptionEntityAttributeAddedEvent.setAttributeValue(attributeValue);
                                     ResourceHolder.getApplicationBlackboard().fire(conceptionEntityAttributeAddedEvent);
-                                    CommonUIOperationUtil.showPopupNotification("在 UID 为 "+conceptionEntityUID+" 的概念实体中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
+                                    CommonUIOperationUtil.showPopupNotification("在 UID 为 "+ entityUID +" 的概念实体中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
                                     if(containerDialog != null){
                                         containerDialog.close();
                                     }
