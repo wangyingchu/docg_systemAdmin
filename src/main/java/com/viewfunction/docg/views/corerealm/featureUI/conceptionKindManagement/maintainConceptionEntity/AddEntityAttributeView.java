@@ -23,11 +23,9 @@ import com.vaadin.flow.data.validator.*;
 import com.vaadin.flow.function.ValueProvider;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.AttributesMeasurable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
@@ -69,15 +67,19 @@ public class AddEntityAttributeView extends VerticalLayout {
         if(entityKindType != null){
             this.entityKindType = entityKindType;
         }
-        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
-        conceptionKindIcon.setSize("12px");
-        conceptionKindIcon.getStyle().set("padding-right","3px");
-        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
-        conceptionEntityIcon.setSize("18px");
-        conceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
+        Icon kindIcon = VaadinIcon.CUBE.create();
+        switch (this.entityKindType){
+            case ConceptionKind ->  kindIcon = VaadinIcon.CUBE.create();
+            case RelationKind -> kindIcon = VaadinIcon.CONNECT_O.create();
+        }
+        kindIcon.setSize("12px");
+        kindIcon.getStyle().set("padding-right","3px");
+        Icon entityIcon = VaadinIcon.KEY_O.create();
+        entityIcon.setSize("18px");
+        entityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
         List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
-        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon, kindName));
-        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon, entityUID));
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(kindIcon, kindName));
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(entityIcon, entityUID));
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         if(this.entityUID != null){
             add(entityInfoFootprintMessageBar);
@@ -615,61 +617,88 @@ public class AddEntityAttributeView extends VerticalLayout {
         if(attributeValueInputContainer.getComponentAt(0) != null) {
             if(newEntityAttributeValue != null){
                 CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.kindName);
-                if(targetConceptionKind == null){
-                    CommonUIOperationUtil.showPopupNotification("概念类型 "+ kindName +" 不存在", NotificationVariant.LUMO_ERROR);
-                }else{
-                    ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.entityUID);
-                    if(targetConceptionEntity == null){
-                        CommonUIOperationUtil.showPopupNotification("概念类型 "+ kindName +" 中不存在 UID 为"+ entityUID +" 的概念实体", NotificationVariant.LUMO_ERROR);
-                    }else{
-                        if(targetConceptionEntity.hasAttribute(attributeName)){
-                            CommonUIOperationUtil.showPopupNotification("UID 为 "+ entityUID +" 的概念实体中已经存在属性 "+attributeName, NotificationVariant.LUMO_ERROR);
+                AttributesMeasurable targetEntity = null;
+                boolean executeAddOperation = true;
+                switch (this.entityKindType){
+                    case ConceptionKind :
+                        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.kindName);
+                        if(targetConceptionKind == null){
+                            CommonUIOperationUtil.showPopupNotification("概念类型 "+ kindName +" 不存在", NotificationVariant.LUMO_ERROR);
+                            executeAddOperation = false;
                         }else{
-                            try {
-                                AttributeValue attributeValue = null;
-                                if (newEntityAttributeValue instanceof Boolean) {
-                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Boolean) newEntityAttributeValue).booleanValue());
-                                }else if (newEntityAttributeValue instanceof Integer) {
-                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Integer) newEntityAttributeValue).intValue());
-                                }else if (newEntityAttributeValue instanceof Short) {
-                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Short) newEntityAttributeValue).shortValue());
-                                }else if (newEntityAttributeValue instanceof Long) {
-                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Long) newEntityAttributeValue).longValue());
-                                }else if (newEntityAttributeValue instanceof Float) {
-                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Float) newEntityAttributeValue).floatValue());
-                                }else if (newEntityAttributeValue instanceof Double) {
-                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Double) newEntityAttributeValue).doubleValue());
-                                }else if (newEntityAttributeValue instanceof Byte) {
-                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,((Byte) newEntityAttributeValue).byteValue());
-                                }else if (newEntityAttributeValue instanceof Date){
-                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(Date)newEntityAttributeValue);
-                                }else if (newEntityAttributeValue instanceof LocalDateTime){
-                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(LocalDateTime)newEntityAttributeValue);
-                                }else if (newEntityAttributeValue instanceof LocalDate){
-                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(LocalDate)newEntityAttributeValue);
-                                }else if (newEntityAttributeValue instanceof LocalTime){
-                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(LocalTime)newEntityAttributeValue);
-                                }else if (newEntityAttributeValue instanceof BigDecimal){
-                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,(BigDecimal)newEntityAttributeValue);
-                                }else if (newEntityAttributeValue instanceof String){
-                                    attributeValue = targetConceptionEntity.addAttribute(attributeName,newEntityAttributeValue.toString());
+                             targetEntity = targetConceptionKind.getEntityByUID(this.entityUID);
+                             if(targetEntity == null){
+                                CommonUIOperationUtil.showPopupNotification("概念类型 "+ kindName +" 中不存在 UID 为"+ entityUID +" 的概念实体", NotificationVariant.LUMO_ERROR);
+                                 executeAddOperation = false;
+                             }else{
+                                 if(targetEntity.hasAttribute(attributeName)){
+                                     CommonUIOperationUtil.showPopupNotification("UID 为 "+ entityUID +" 的概念实体中已经存在属性 "+attributeName, NotificationVariant.LUMO_ERROR);
+                                     executeAddOperation = false;
+                                 }
+                             }
+                        }
+                        break;
+                    case RelationKind :
+                        RelationKind targetRelationKind = coreRealm.getRelationKind(this.kindName);
+                        if(targetRelationKind == null){
+                            CommonUIOperationUtil.showPopupNotification("关系类型 "+ kindName +" 不存在", NotificationVariant.LUMO_ERROR);
+                            executeAddOperation = false;
+                        }else{
+                            targetEntity = targetRelationKind.getEntityByUID(this.entityUID);
+                            if(targetEntity == null){
+                                CommonUIOperationUtil.showPopupNotification("关系类型 "+ kindName +" 中不存在 UID 为"+ entityUID +" 的关系实体", NotificationVariant.LUMO_ERROR);
+                                executeAddOperation = false;
+                            }else{
+                                if(targetEntity.hasAttribute(attributeName)){
+                                    CommonUIOperationUtil.showPopupNotification("UID 为 "+ entityUID +" 的关系实体中已经存在属性 "+attributeName, NotificationVariant.LUMO_ERROR);
+                                    executeAddOperation = false;
                                 }
-                                if(attributeValue != null){
-                                    ConceptionEntityAttributeAddedEvent conceptionEntityAttributeAddedEvent = new ConceptionEntityAttributeAddedEvent();
-                                    conceptionEntityAttributeAddedEvent.setConceptionEntityUID(this.entityUID);
-                                    conceptionEntityAttributeAddedEvent.setConceptionKindName(this.kindName);
-                                    conceptionEntityAttributeAddedEvent.setAttributeValue(attributeValue);
-                                    ResourceHolder.getApplicationBlackboard().fire(conceptionEntityAttributeAddedEvent);
-                                    CommonUIOperationUtil.showPopupNotification("在 UID 为 "+ entityUID +" 的概念实体中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
-                                    if(containerDialog != null){
-                                        containerDialog.close();
-                                    }
-                                }
-                            } catch (CoreRealmServiceRuntimeException e) {
-                                throw new RuntimeException(e);
                             }
                         }
+                }
+                if(executeAddOperation){
+                    try {
+                        AttributeValue attributeValue = null;
+                        if (newEntityAttributeValue instanceof Boolean) {
+                            attributeValue = targetEntity.addAttribute(attributeName,((Boolean) newEntityAttributeValue).booleanValue());
+                        }else if (newEntityAttributeValue instanceof Integer) {
+                            attributeValue = targetEntity.addAttribute(attributeName,((Integer) newEntityAttributeValue).intValue());
+                        }else if (newEntityAttributeValue instanceof Short) {
+                            attributeValue = targetEntity.addAttribute(attributeName,((Short) newEntityAttributeValue).shortValue());
+                        }else if (newEntityAttributeValue instanceof Long) {
+                            attributeValue = targetEntity.addAttribute(attributeName,((Long) newEntityAttributeValue).longValue());
+                        }else if (newEntityAttributeValue instanceof Float) {
+                            attributeValue = targetEntity.addAttribute(attributeName,((Float) newEntityAttributeValue).floatValue());
+                        }else if (newEntityAttributeValue instanceof Double) {
+                            attributeValue = targetEntity.addAttribute(attributeName,((Double) newEntityAttributeValue).doubleValue());
+                        }else if (newEntityAttributeValue instanceof Byte) {
+                            attributeValue = targetEntity.addAttribute(attributeName,((Byte) newEntityAttributeValue).byteValue());
+                        }else if (newEntityAttributeValue instanceof Date){
+                            attributeValue = targetEntity.addAttribute(attributeName,(Date)newEntityAttributeValue);
+                        }else if (newEntityAttributeValue instanceof LocalDateTime){
+                            attributeValue = targetEntity.addAttribute(attributeName,(LocalDateTime)newEntityAttributeValue);
+                        }else if (newEntityAttributeValue instanceof LocalDate){
+                            attributeValue = targetEntity.addAttribute(attributeName,(LocalDate)newEntityAttributeValue);
+                        }else if (newEntityAttributeValue instanceof LocalTime){
+                            attributeValue = targetEntity.addAttribute(attributeName,(LocalTime)newEntityAttributeValue);
+                        }else if (newEntityAttributeValue instanceof BigDecimal){
+                            attributeValue = targetEntity.addAttribute(attributeName,(BigDecimal)newEntityAttributeValue);
+                        }else if (newEntityAttributeValue instanceof String){
+                            attributeValue = targetEntity.addAttribute(attributeName,newEntityAttributeValue.toString());
+                        }
+                        if(attributeValue != null){
+                            ConceptionEntityAttributeAddedEvent conceptionEntityAttributeAddedEvent = new ConceptionEntityAttributeAddedEvent();
+                            conceptionEntityAttributeAddedEvent.setConceptionEntityUID(this.entityUID);
+                            conceptionEntityAttributeAddedEvent.setConceptionKindName(this.kindName);
+                            conceptionEntityAttributeAddedEvent.setAttributeValue(attributeValue);
+                            ResourceHolder.getApplicationBlackboard().fire(conceptionEntityAttributeAddedEvent);
+                            CommonUIOperationUtil.showPopupNotification("在 UID 为 "+ entityUID +" 的概念实体中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
+                            if(containerDialog != null){
+                                containerDialog.close();
+                            }
+                        }
+                    } catch (CoreRealmServiceRuntimeException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             }
