@@ -6,21 +6,32 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.Route;
 
-public class RelationEntityDetailView extends VerticalLayout {
+@Route("conceptionEntityDetailInfo/:relationKind/:relationEntityUID")
+public class RelationEntityDetailView extends VerticalLayout implements BeforeEnterObserver {
 
     private Dialog containerDialog;
     private VerticalLayout entityFieldsContainer;
     private VerticalLayout entityDetailContainer;
-    private String conceptionKind;
-    private String conceptionEntityUID;
-    private int conceptionEntityAttributesEditorHeightOffset = 135;
+    private String relationKind;
+    private String relationEntityUID;
+    private int relationEntityAttributesEditorHeightOffset = 135;
 
     public RelationEntityDetailView(){}
 
-    public RelationEntityDetailView(String conceptionKind,String conceptionEntityUID){
-        this.conceptionKind = conceptionKind;
-        this.conceptionEntityUID = conceptionEntityUID;
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        this.relationKind = beforeEnterEvent.getRouteParameters().get("relationKind").get();
+        this.relationEntityUID = beforeEnterEvent.getRouteParameters().get("relationEntityUID").get();
+        this.relationEntityAttributesEditorHeightOffset = 70;
+    }
+
+    public RelationEntityDetailView(String relationKind, String relationEntityUID){
+        this.relationKind = relationKind;
+        this.relationEntityUID = relationEntityUID;
     }
 
     @Override
@@ -39,13 +50,13 @@ public class RelationEntityDetailView extends VerticalLayout {
         this.entityDetailContainer = new VerticalLayout();
 
         RelationEntityAttributesEditorView conceptionEntityAttributesEditorView =
-                new RelationEntityAttributesEditorView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityAttributesEditorHeightOffset);
+                new RelationEntityAttributesEditorView(this.relationKind,this.relationEntityUID,relationEntityAttributesEditorHeightOffset);
 
-        //ConceptionEntityIntegratedInfoView conceptionEntityIntegratedInfoView =
-         //       new ConceptionEntityIntegratedInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityAttributesEditorHeightOffset);
+        RelationEntityIntegratedInfoView relationEntityIntegratedInfoView =
+                new RelationEntityIntegratedInfoView(this.relationKind,this.relationEntityUID,relationEntityAttributesEditorHeightOffset);
 
         this.entityFieldsContainer.add(conceptionEntityAttributesEditorView);
-        //this.entityDetailContainer.add(conceptionEntityIntegratedInfoView);
+        this.entityDetailContainer.add(relationEntityIntegratedInfoView);
 
         SplitLayout splitLayout = new SplitLayout(this.entityFieldsContainer, this.entityDetailContainer);
         splitLayout.setSplitterPosition(0);
@@ -63,15 +74,4 @@ public class RelationEntityDetailView extends VerticalLayout {
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
     }
-
-
-
-
-
-
-
-
-
-
-
 }

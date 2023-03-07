@@ -31,7 +31,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filtering
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.MultiValuePropertyInputWidget;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.math.BigDecimal;

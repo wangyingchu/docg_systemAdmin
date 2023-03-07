@@ -18,7 +18,6 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
     private ConceptionEntityRelationTopologyView conceptionEntityRelationTopologyView;
     private ConceptionEntitySpatialAttributeView conceptionEntitySpatialAttributeView;
     private ConceptionEntityTemporalInfoView conceptionEntityTemporalInfoView;
-
     private ConceptionEntitySpatialInfoView conceptionEntitySpatialInfoView;
     private boolean conceptionEntityRelationTopologyViewFirstRendered = false;
     private boolean conceptionEntitySpatialAttributeViewFirstRendered = false;
