@@ -46,6 +46,7 @@ import java.time.LocalTime;
 import java.util.Date;
 
 public class AttributeEditorItemWidget extends VerticalLayout {
+    public enum KindType {ConceptionKind,RelationKind}
     private Component valueEditor;
     private AttributeValue attributeValue;
     private String attributeName;
@@ -55,17 +56,21 @@ public class AttributeEditorItemWidget extends VerticalLayout {
     private Button confirmUpdateAttributeValueButton;
     private Button deleteAttributeButton;
     private Binder<String> attributeValueDataBinder;
-    private String conceptionKind;
-    private String conceptionEntityUID;
+    private String kindName;
+    private String entityUID;
     private AttributeValueOperateHandler attributeValueOperateHandler;
+    private KindType entityKindType = KindType.ConceptionKind;
 
-    public AttributeEditorItemWidget(String conceptionKind,String conceptionEntityUID,AttributeValue attributeValue){
+    public AttributeEditorItemWidget(String kindName, String entityUID, AttributeValue attributeValue,KindType entityKindType){
         this.attributeValue = attributeValue;
         this.attributeName = attributeValue.getAttributeName();
         this.attributeDataType = attributeValue.getAttributeDataType();
         this.attributeValueDataBinder = new Binder<>();
-        this.conceptionKind = conceptionKind;
-        this.conceptionEntityUID = conceptionEntityUID;
+        this.kindName = kindName;
+        this.entityUID = entityUID;
+        if(entityKindType != null){
+            this.entityKindType = entityKindType;
+        }
 
         this.setPadding(true);
         this.setMargin(false);
@@ -502,18 +507,18 @@ public class AttributeEditorItemWidget extends VerticalLayout {
 
             if(newEntityAttributeValue != null) {
                 this.attributeValue.setAttributeValue(newEntityAttributeValue);
-                if(this.conceptionEntityUID != null){
+                if(this.entityUID != null){
                     CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-                    ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+                    ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.kindName);
                     if (targetConceptionKind == null) {
-                        CommonUIOperationUtil.showPopupNotification("概念类型 " + conceptionKind + " 不存在", NotificationVariant.LUMO_ERROR);
+                        CommonUIOperationUtil.showPopupNotification("概念类型 " + kindName + " 不存在", NotificationVariant.LUMO_ERROR);
                     } else {
-                        ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+                        ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.entityUID);
                         if (targetConceptionEntity == null) {
-                            CommonUIOperationUtil.showPopupNotification("概念类型 " + conceptionKind + " 中不存在 UID 为" + conceptionEntityUID + " 的概念实体", NotificationVariant.LUMO_ERROR);
+                            CommonUIOperationUtil.showPopupNotification("概念类型 " + kindName + " 中不存在 UID 为" + entityUID + " 的概念实体", NotificationVariant.LUMO_ERROR);
                         } else {
                             if (!targetConceptionEntity.hasAttribute(attributeName)) {
-                                CommonUIOperationUtil.showPopupNotification("UID 为 " + conceptionEntityUID + " 的概念实体中不存在属性 " + attributeName, NotificationVariant.LUMO_ERROR);
+                                CommonUIOperationUtil.showPopupNotification("UID 为 " + entityUID + " 的概念实体中不存在属性 " + attributeName, NotificationVariant.LUMO_ERROR);
                             } else {
                                 try {
                                     AttributeValue attributeValue = null;
@@ -546,15 +551,15 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                                     }
                                     if (attributeValue != null) {
                                         ConceptionEntityAttributeUpdatedEvent conceptionEntityAttributeUpdatedEvent = new ConceptionEntityAttributeUpdatedEvent();
-                                        conceptionEntityAttributeUpdatedEvent.setConceptionEntityUID(this.conceptionEntityUID);
-                                        conceptionEntityAttributeUpdatedEvent.setConceptionKindName(this.conceptionKind);
+                                        conceptionEntityAttributeUpdatedEvent.setConceptionEntityUID(this.entityUID);
+                                        conceptionEntityAttributeUpdatedEvent.setConceptionKindName(this.kindName);
                                         conceptionEntityAttributeUpdatedEvent.setAttributeValue(attributeValue);
                                         ResourceHolder.getApplicationBlackboard().fire(conceptionEntityAttributeUpdatedEvent);
                                         updateAttributeValueButton.setVisible(true);
                                         cancelUpdateValueButton.setVisible(false);
                                         confirmUpdateAttributeValueButton.setVisible(false);
                                         ((AbstractField)valueEditor).setReadOnly(true);
-                                        CommonUIOperationUtil.showPopupNotification("在 UID 为 " + conceptionEntityUID + " 的概念实体中更新属性 " + attributeName + " 成功", NotificationVariant.LUMO_SUCCESS);
+                                        CommonUIOperationUtil.showPopupNotification("在 UID 为 " + entityUID + " 的概念实体中更新属性 " + attributeName + " 成功", NotificationVariant.LUMO_SUCCESS);
                                     }
                                 } catch (CoreRealmServiceRuntimeException e) {
                                     throw new RuntimeException(e);
@@ -715,8 +720,8 @@ public class AttributeEditorItemWidget extends VerticalLayout {
     }
 
     private void deleteAttribute(){
-        if(this.conceptionEntityUID != null){
-            DeleteConceptionEntityAttributeView deleteConceptionEntityAttributeView = new DeleteConceptionEntityAttributeView(this.conceptionKind,this.conceptionEntityUID,this.attributeName);
+        if(this.entityUID != null){
+            DeleteConceptionEntityAttributeView deleteConceptionEntityAttributeView = new DeleteConceptionEntityAttributeView(this.kindName,this.entityUID,this.attributeName);
             FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除概念实体属性",null,true,550,210,false);
             fixSizeWindow.setWindowContent(deleteConceptionEntityAttributeView);
             fixSizeWindow.setModel(true);

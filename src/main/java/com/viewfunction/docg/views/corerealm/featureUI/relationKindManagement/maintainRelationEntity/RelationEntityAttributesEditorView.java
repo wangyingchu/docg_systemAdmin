@@ -93,7 +93,7 @@ public class RelationEntityAttributesEditorView extends VerticalLayout implement
                 List<AttributeValue> allAttributesList = targetEntity.getAttributes();
                 if(allAttributesList != null){
                     for(AttributeValue currentAttributeValue:allAttributesList){
-                        AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.relationKind,this.relationEntityUID,currentAttributeValue);
+                        AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.relationKind,this.relationEntityUID,currentAttributeValue, AttributeEditorItemWidget.KindType.RelationKind);
                         attributeEditorsContainer.add(attributeEditorItemWidget);
                     }
                 }
@@ -149,7 +149,7 @@ public class RelationEntityAttributesEditorView extends VerticalLayout implement
         AttributeValue attributeValue = event.getAttributeValue();
         if(entityUID != null && attributeValue != null){
             if(this.relationEntityUID.equals(entityUID)){
-                AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.relationKind,this.relationEntityUID,attributeValue);
+                AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.relationKind,this.relationEntityUID,attributeValue, AttributeEditorItemWidget.KindType.RelationKind);
                 attributeEditorsContainer.add(attributeEditorItemWidget);
             }
         }

@@ -373,7 +373,7 @@ public class CreateRelationEntityView extends VerticalLayout {
                 if(relationAttributeEditorsMap.containsKey(attributeName)){
                     CommonUIOperationUtil.showPopupNotification("已经设置了名称为 "+attributeName+" 的关系属性",NotificationVariant.LUMO_ERROR);
                 }else{
-                    AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(null,null,attributeValue);
+                    AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(null,null,attributeValue, AttributeEditorItemWidget.KindType.RelationKind);
                     attributeEditorItemWidget.setWidth(350,Unit.PIXELS);
                     relationEntityAttributesContainer.add(attributeEditorItemWidget);
                     attributeEditorItemWidget.setAttributeValueOperateHandler(attributeValueOperateHandlerForDelete);
