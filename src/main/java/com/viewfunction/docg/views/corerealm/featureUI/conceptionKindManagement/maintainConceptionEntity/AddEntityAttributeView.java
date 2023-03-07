@@ -30,6 +30,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImp
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeAddedEvent;
+import com.viewfunction.docg.element.eventHandling.RelationEntityAttributeAddedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
@@ -687,12 +688,23 @@ public class AddEntityAttributeView extends VerticalLayout {
                             attributeValue = targetEntity.addAttribute(attributeName,newEntityAttributeValue.toString());
                         }
                         if(attributeValue != null){
-                            ConceptionEntityAttributeAddedEvent conceptionEntityAttributeAddedEvent = new ConceptionEntityAttributeAddedEvent();
-                            conceptionEntityAttributeAddedEvent.setConceptionEntityUID(this.entityUID);
-                            conceptionEntityAttributeAddedEvent.setConceptionKindName(this.kindName);
-                            conceptionEntityAttributeAddedEvent.setAttributeValue(attributeValue);
-                            ResourceHolder.getApplicationBlackboard().fire(conceptionEntityAttributeAddedEvent);
-                            CommonUIOperationUtil.showPopupNotification("在 UID 为 "+ entityUID +" 的概念实体中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
+                            switch (this.entityKindType){
+                                case ConceptionKind :
+                                    ConceptionEntityAttributeAddedEvent conceptionEntityAttributeAddedEvent = new ConceptionEntityAttributeAddedEvent();
+                                    conceptionEntityAttributeAddedEvent.setConceptionEntityUID(this.entityUID);
+                                    conceptionEntityAttributeAddedEvent.setConceptionKindName(this.kindName);
+                                    conceptionEntityAttributeAddedEvent.setAttributeValue(attributeValue);
+                                    ResourceHolder.getApplicationBlackboard().fire(conceptionEntityAttributeAddedEvent);
+                                    CommonUIOperationUtil.showPopupNotification("在 UID 为 "+ entityUID +" 的概念实体中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
+                                    break;
+                                case RelationKind:
+                                    RelationEntityAttributeAddedEvent relationEntityAttributeAddedEvent = new RelationEntityAttributeAddedEvent();
+                                    relationEntityAttributeAddedEvent.setRelationEntityUID(this.entityUID);
+                                    relationEntityAttributeAddedEvent.setRelationKindName(this.kindName);
+                                    relationEntityAttributeAddedEvent.setAttributeValue(attributeValue);
+                                    ResourceHolder.getApplicationBlackboard().fire(relationEntityAttributeAddedEvent);
+                                    CommonUIOperationUtil.showPopupNotification("在 UID 为 "+ entityUID +" 的关系实体中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
+                            }
                             if(containerDialog != null){
                                 containerDialog.close();
                             }

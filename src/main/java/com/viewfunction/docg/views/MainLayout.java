@@ -215,6 +215,12 @@ public class MainLayout extends AppLayout {
                 RelationEntitiesCreatedEvent.class);
         _BLACKBOARD.register(RelationKindQueriedEvent.RelationKindQueriedListener.class,
                 RelationKindQueriedEvent.class);
+        _BLACKBOARD.register(RelationEntityAttributeAddedEvent.RelationEntityAttributeAddedListener.class,
+                RelationEntityAttributeAddedEvent.class);
+        _BLACKBOARD.register(RelationEntityAttributeDeletedEvent.RelationEntityAttributeDeletedListener.class,
+                RelationEntityAttributeDeletedEvent.class);
+        _BLACKBOARD.register(RelationEntityAttributeUpdatedEvent.RelationEntityAttributeUpdatedListener.class,
+                RelationEntityAttributeUpdatedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

@@ -14,13 +14,17 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.element.eventHandling.RelationEntityAttributeAddedEvent;
+import com.viewfunction.docg.element.eventHandling.RelationEntityAttributeDeletedEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.AttributeEditorItemWidget;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityMetaInfoView;
 
 import java.util.List;
 
-public class RelationEntityAttributesEditorView extends VerticalLayout {
+public class RelationEntityAttributesEditorView extends VerticalLayout implements
+        RelationEntityAttributeAddedEvent.RelationEntityAttributeAddedListener,
+        RelationEntityAttributeDeletedEvent.RelationEntityAttributeDeletedListener {
     private String relationKind;
     private String relationEntityUID;
     private VerticalLayout attributeEditorsContainer;
@@ -118,7 +122,7 @@ public class RelationEntityAttributesEditorView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        //ResourceHolder.getApplicationBlackboard().addListener(this);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             attributeEditorsContainer.setHeight(event.getHeight()- relationEntityAttributesEditorHeightOffset,Unit.PIXELS);
@@ -136,27 +140,26 @@ public class RelationEntityAttributesEditorView extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
-    /*
     @Override
-    public void receivedConceptionEntityAttributeAddedEvent(ConceptionEntityAttributeAddedEvent event) {
-        String entityUID = event.getConceptionEntityUID();
+    public void receivedRelationEntityAttributeAddedEvent(RelationEntityAttributeAddedEvent event) {
+        String entityUID = event.getRelationEntityUID();
         AttributeValue attributeValue = event.getAttributeValue();
         if(entityUID != null && attributeValue != null){
-            if(this.conceptionEntityUID.equals(entityUID)){
-                AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.conceptionKind,this.conceptionEntityUID,attributeValue);
+            if(this.relationEntityUID.equals(entityUID)){
+                AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.relationKind,this.relationEntityUID,attributeValue);
                 attributeEditorsContainer.add(attributeEditorItemWidget);
             }
         }
     }
 
     @Override
-    public void receivedConceptionEntityAttributeDeletedEvent(ConceptionEntityAttributeDeletedEvent event) {
-        String entityUID = event.getConceptionEntityUID();
+    public void receivedRelationEntityAttributeDeletedEvent(RelationEntityAttributeDeletedEvent event) {
+        String entityUID = event.getRelationEntityUID();
         if(entityUID != null){
-            if(this.conceptionEntityUID.equals(entityUID)){
+            if(this.relationEntityUID.equals(entityUID)){
                 String attributeName = event.getAttributeName();
 
                 int attributeEditorItemWidgetCount = attributeEditorsContainer.getComponentCount();
@@ -171,5 +174,4 @@ public class RelationEntityAttributesEditorView extends VerticalLayout {
             }
         }
     }
-    */
 }
