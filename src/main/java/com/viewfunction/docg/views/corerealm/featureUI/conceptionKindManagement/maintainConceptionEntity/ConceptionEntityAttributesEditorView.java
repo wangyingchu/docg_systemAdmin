@@ -19,6 +19,8 @@ import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeAddedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeDeletedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
 
 import java.util.List;
 

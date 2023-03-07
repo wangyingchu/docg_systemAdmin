@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
+package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
@@ -36,6 +36,7 @@ import com.viewfunction.docg.element.eventHandling.RelationEntityAttributeUpdate
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.DeleteConceptionEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.DeleteRelationEntityAttributeView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
