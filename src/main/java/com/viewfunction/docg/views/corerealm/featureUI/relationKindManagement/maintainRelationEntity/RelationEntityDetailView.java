@@ -10,7 +10,7 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 
-@Route("conceptionEntityDetailInfo/:relationKind/:relationEntityUID")
+@Route("relationEntityDetailInfo/:relationKind/:relationEntityUID")
 public class RelationEntityDetailView extends VerticalLayout implements BeforeEnterObserver {
 
     private Dialog containerDialog;

@@ -1,9 +1,8 @@
 package com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import org.vaadin.tabs.PagedTabs;
@@ -31,9 +30,9 @@ public class RelationEntityIntegratedInfoView extends VerticalLayout {
 
         Tab tab0 = tabs.add("", relationEntityConnectedConceptionEntitiesPairView,false);
         Span relationConceptionEntitiesPairInfoSpan =new Span();
-        Icon relationConceptionEntitiesPairInfoIcon = new Icon(VaadinIcon.EXCHANGE);
+        FontAwesome.Solid.Icon relationConceptionEntitiesPairInfoIcon = FontAwesome.Solid.LINK.create();
         relationConceptionEntitiesPairInfoIcon.setSize("20px");
-        Label relationConceptionEntitiesPairInfoLabel = new Label(" 实体数据关联信息");
+        Label relationConceptionEntitiesPairInfoLabel = new Label(" 关系实体数据信息");
         relationConceptionEntitiesPairInfoSpan.add(relationConceptionEntitiesPairInfoIcon,relationConceptionEntitiesPairInfoLabel);
         tab0.add(relationConceptionEntitiesPairInfoSpan);
 
