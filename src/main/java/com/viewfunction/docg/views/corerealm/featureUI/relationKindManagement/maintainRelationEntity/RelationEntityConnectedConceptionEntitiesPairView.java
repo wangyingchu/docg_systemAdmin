@@ -1,17 +1,28 @@
 package com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+
+import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailView;
+import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +31,13 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
 
     private String relationKind;
     private String relationEntityUID;
+    private HorizontalLayout fromConceptionEntityOperateLayout;
+    private HorizontalLayout toConceptionEntityOperateLayout;
+    private String fromConceptionEntityKind;
+    private String fromConceptionEntityUID;
+    private String toConceptionEntityKind;
+    private String toConceptionEntityUID;
+
     public RelationEntityConnectedConceptionEntitiesPairView(String relationKind,String relationEntityUID,int relationEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
         this.relationKind = relationKind;
@@ -29,15 +47,35 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
         List<Component> actionComponentsList = new ArrayList<>();
 
         HorizontalLayout titleLayout = new HorizontalLayout();
-        secondaryTitleComponentsList.add(titleLayout);
-        SecondaryKeyValueDisplayItem relationCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(), "FROM 概念实体", "-");
+        titleLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+
+        HorizontalLayout fromConceptionEntityInfoLayout = new HorizontalLayout();
+        fromConceptionEntityInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Label fromConceptionEntityText = new Label("FROM 概念实体");
+        fromConceptionEntityText.addClassNames("text-xs","font-medium","text-secondary");
+        fromConceptionEntityInfoLayout.add(fromConceptionEntityText);
+        this.fromConceptionEntityOperateLayout = new HorizontalLayout();
+        this.fromConceptionEntityOperateLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        this.fromConceptionEntityOperateLayout.setSpacing(false);
+        fromConceptionEntityInfoLayout.add(this.fromConceptionEntityOperateLayout);
+        titleLayout.add(fromConceptionEntityInfoLayout);
 
         Icon divIcon = VaadinIcon.ANGLE_DOUBLE_RIGHT.create();
-        divIcon.setSize("10px");
+        divIcon.setSize("16px");
         titleLayout.add(divIcon);
-        titleLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
 
-        SecondaryKeyValueDisplayItem isDenseDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.BULLSEYE.create(), "TO 概念实体", "-");
+        HorizontalLayout toConceptionEntityInfoLayout = new HorizontalLayout();
+        toConceptionEntityInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Label toConceptionEntityText = new Label("TO 概念实体");
+        toConceptionEntityText.addClassNames("text-xs","font-medium","text-secondary");
+        toConceptionEntityInfoLayout.add(toConceptionEntityText);
+        this.toConceptionEntityOperateLayout = new HorizontalLayout();
+        this.toConceptionEntityOperateLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        this.toConceptionEntityOperateLayout.setSpacing(false);
+        toConceptionEntityInfoLayout.add(this.toConceptionEntityOperateLayout);
+        titleLayout.add(toConceptionEntityInfoLayout);
+
+        secondaryTitleComponentsList.add(titleLayout);
 
         Button addToProcessingDataListButton = new Button("加入待处理数据列表");
         addToProcessingDataListButton.setIcon(VaadinIcon.INBOX.create());
@@ -67,5 +105,141 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
         add(secondaryTitleActionBar);
     }
 
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        renderView();
+    }
 
+    private void renderView(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        RelationKind targetRelation = coreRealm.getRelationKind(this.relationKind);
+
+        if(targetRelation != null){
+            RelationEntity targetRelationEntity = targetRelation.getEntityByUID(this.relationEntityUID);
+            if(targetRelationEntity != null){
+                String relationFromConceptionEntityUID = targetRelationEntity.getFromConceptionEntityUID();
+                List<String> fromConceptionKinds = targetRelationEntity.getFromConceptionEntityKinds();
+                String relationToConceptionEntityUID = targetRelationEntity.getToConceptionEntityUID();
+                List<String> toConceptionKinds = targetRelationEntity.getToConceptionEntityKinds();
+
+                this.fromConceptionEntityKind = fromConceptionKinds.get(0);
+                this.fromConceptionEntityUID = relationFromConceptionEntityUID;
+                this.toConceptionEntityKind = toConceptionKinds.get(0);
+                this.toConceptionEntityUID = relationToConceptionEntityUID;
+
+                Icon fromConceptionKindIcon = VaadinIcon.CUBE.create();
+                fromConceptionKindIcon.setSize("12px");
+                fromConceptionKindIcon.getStyle().set("padding-right","3px");
+                Icon fromConceptionEntityIcon = VaadinIcon.KEY_O.create();
+                fromConceptionEntityIcon.setSize("18px");
+                fromConceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
+
+                String fromConceptionKindsTxt = "";
+                if(fromConceptionKinds !=null &&fromConceptionKinds.size()>0){
+                    for(int i=0; i<fromConceptionKinds.size(); i++){
+                        fromConceptionKindsTxt = fromConceptionKindsTxt+fromConceptionKinds.get(i);
+                        if(i<fromConceptionKinds.size()-1){
+                            fromConceptionKindsTxt = fromConceptionKindsTxt+" | ";
+                        }
+                    }
+                }
+                Label fromConceptionKindsLabel = new Label(fromConceptionKindsTxt);
+                fromConceptionKindsLabel.addClassNames("text-xs","font-medium");
+                Label fromConceptionEntityUIDLabel = new Label(fromConceptionEntityUID);
+                fromConceptionEntityUIDLabel.addClassNames("text-xs","font-medium");
+                Icon fromDivIcon = VaadinIcon.ITALIC.create();
+                fromDivIcon.setSize("12px");
+                fromDivIcon.getStyle().set("padding-left","5px");
+
+                Button showFromEntityDetailButton = new Button();
+                showFromEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+                showFromEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+                showFromEntityDetailButton.setIcon(VaadinIcon.EYE.create());
+                Tooltips.getCurrent().setTooltip(showFromEntityDetailButton, "显示 FROM 概念实体详情");
+                showFromEntityDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                        renderConceptionEntityUI(fromConceptionEntityKind,fromConceptionEntityUID);
+                    }
+                });
+                this.fromConceptionEntityOperateLayout.add(fromConceptionKindIcon,fromConceptionKindsLabel,fromDivIcon,fromConceptionEntityIcon,fromConceptionEntityUIDLabel,showFromEntityDetailButton);
+
+                Icon toConceptionKindIcon = VaadinIcon.CUBE.create();
+                toConceptionKindIcon.setSize("12px");
+                toConceptionKindIcon.getStyle().set("padding-right","3px");
+                Icon toConceptionEntityIcon = VaadinIcon.KEY_O.create();
+                toConceptionEntityIcon.setSize("18px");
+                toConceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
+
+                String toConceptionKindsTxt = "";
+                if(toConceptionKinds !=null &&toConceptionKinds.size()>0){
+                    for(int i=0; i<toConceptionKinds.size(); i++){
+                        toConceptionKindsTxt = toConceptionKindsTxt+toConceptionKinds.get(i);
+                        if(i<toConceptionKinds.size()-1){
+                            toConceptionKindsTxt = toConceptionKindsTxt+" | ";
+                        }
+                    }
+                }
+                Label toConceptionKindsLabel = new Label(toConceptionKindsTxt);
+                toConceptionKindsLabel.addClassNames("text-xs","font-medium");
+                Label toConceptionEntityUIDLabel = new Label(toConceptionEntityUID);
+                toConceptionEntityUIDLabel.addClassNames("text-xs","font-medium");
+                Icon toDivIcon = VaadinIcon.ITALIC.create();
+                toDivIcon.setSize("12px");
+                toDivIcon.getStyle().set("padding-left","5px");
+
+                Button showToEntityDetailButton = new Button();
+                showToEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+                showToEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+                showToEntityDetailButton.setIcon(VaadinIcon.EYE.create());
+                Tooltips.getCurrent().setTooltip(showToEntityDetailButton, "显示 TO 概念实体详情");
+                showToEntityDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                        renderConceptionEntityUI(toConceptionEntityKind,toConceptionEntityUID);
+                    }
+                });
+                this.toConceptionEntityOperateLayout.add(toConceptionKindIcon,toConceptionKindsLabel,toDivIcon,toConceptionEntityIcon,toConceptionEntityUIDLabel,showToEntityDetailButton);
+
+            }else{
+                CommonUIOperationUtil.showPopupNotification("关系类型 "+ relationKind +" 中不存在 UID 为"+ relationEntityUID +" 的关系实体", NotificationVariant.LUMO_ERROR);
+            }
+        }else{
+            CommonUIOperationUtil.showPopupNotification("关系类型 "+ relationKind +" 不存在", NotificationVariant.LUMO_ERROR);
+        }
+    }
+
+    private void renderConceptionEntityUI(String conceptionKindName,String conceptionEntityUID){
+        ConceptionEntityDetailView conceptionEntityDetailView = new ConceptionEntityDetailView(conceptionKindName,conceptionEntityUID);
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("22px");
+        footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
+        actionComponentList.add(footPrintStartIcon);
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("12px");
+        conceptionKindIcon.getStyle().set("padding-right","3px");
+        actionComponentList.add(conceptionKindIcon);
+        Label conceptionKindNameLabel = new Label(conceptionKindName);
+        actionComponentList.add(conceptionKindNameLabel);
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("12px");
+        divIcon.getStyle().set("padding-left","5px");
+        actionComponentList.add(divIcon);
+        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+        conceptionEntityIcon.setSize("18px");
+        conceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
+        actionComponentList.add(conceptionEntityIcon);
+
+        Label conceptionEntityUIDLabel = new Label(conceptionEntityUID);
+        actionComponentList.add(conceptionEntityUIDLabel);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailView);
+        conceptionEntityDetailView.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
+    }
 }
