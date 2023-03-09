@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Label;
@@ -13,6 +10,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
@@ -22,6 +20,7 @@ import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.EntitySyntheticAbstractInfoView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -37,11 +36,16 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
     private String fromConceptionEntityUID;
     private String toConceptionEntityKind;
     private String toConceptionEntityUID;
+    private Registration listener;
+    private EntitySyntheticAbstractInfoView entitySyntheticAbstractInfoView;
+    private int relationEntityIntegratedInfoViewHeightOffset;
+    private VerticalLayout relationConceptionEntitiesPairChart;
 
     public RelationEntityConnectedConceptionEntitiesPairView(String relationKind,String relationEntityUID,int relationEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
         this.relationKind = relationKind;
         this.relationEntityUID = relationEntityUID;
+        this.relationEntityIntegratedInfoViewHeightOffset = relationEntityIntegratedInfoViewHeightOffset;
 
         List<Component> secondaryTitleComponentsList = new ArrayList<>();
         List<Component> actionComponentsList = new ArrayList<>();
@@ -103,12 +107,50 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
         Icon relationsIcon = VaadinIcon.INFO_CIRCLE_O.create();
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon, "关系实体概要: ", secondaryTitleComponentsList, actionComponentsList);
         add(secondaryTitleActionBar);
+
+        HorizontalLayout relationEntitiesDetailLayout = new HorizontalLayout();
+        relationEntitiesDetailLayout.setWidthFull();
+        add(relationEntitiesDetailLayout);
+
+        relationConceptionEntitiesPairChart = new VerticalLayout();
+        relationEntitiesDetailLayout.add(relationConceptionEntitiesPairChart);
+
+        VerticalLayout selectedEntityInfoContainerLayout = new VerticalLayout();
+        selectedEntityInfoContainerLayout.setSpacing(false);
+        selectedEntityInfoContainerLayout.setMargin(false);
+        selectedEntityInfoContainerLayout.getStyle().set("padding-right","0px");
+        selectedEntityInfoContainerLayout.setWidth(330, Unit.PIXELS);
+        selectedEntityInfoContainerLayout.getStyle()
+                .set("border-left", "1px solid var(--lumo-contrast-20pct)");
+        relationEntitiesDetailLayout.add(selectedEntityInfoContainerLayout);
+        relationEntitiesDetailLayout.setFlexGrow(1,relationConceptionEntitiesPairChart);
+
+        this.entitySyntheticAbstractInfoView = new EntitySyntheticAbstractInfoView(330);
+        selectedEntityInfoContainerLayout.add(this.entitySyntheticAbstractInfoView);
+
     }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         renderView();
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            relationConceptionEntitiesPairChart.setHeight((event.getHeight()-this.relationEntityIntegratedInfoViewHeightOffset)-120, Unit.PIXELS);
+            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(event.getHeight()-this.relationEntityIntegratedInfoViewHeightOffset-120);
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            int browserHeight = receiver.getBodyClientHeight();
+            relationConceptionEntitiesPairChart.setHeight((browserHeight-this.relationEntityIntegratedInfoViewHeightOffset+40)-120,Unit.PIXELS);
+            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(browserHeight-this.relationEntityIntegratedInfoViewHeightOffset-120);
+        }));
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
+        super.onDetach(detachEvent);
     }
 
     private void renderView(){
