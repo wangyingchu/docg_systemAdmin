@@ -13,11 +13,14 @@ public class SecondaryKeyValueDisplayItem {
 
     public SecondaryKeyValueDisplayItem(HasComponents containComponent, String keyText, String valueText){
         Label conceptionEntityNumberText = new Label(keyText);
-        conceptionEntityNumberText.addClassNames("text-xs","font-medium","text-secondary");
+        conceptionEntityNumberText.getStyle().set("font-size","var(--lumo-font-size-xs)");
         containComponent.add(conceptionEntityNumberText);
         displayValue = new Label(valueText);
-        displayValue.addClassNames("text-s","font-extrabold","border-b","border-contrast-20");
-        displayValue.getStyle().set("color","#2e4e7e");
+        displayValue.getStyle()
+                .set("font-size","var(--lumo-font-size-s)")
+                .set("font-weight","bolder")
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("color","#2e4e7e");
         containComponent.add(displayValue);
     }
 
@@ -28,7 +31,6 @@ public class SecondaryKeyValueDisplayItem {
         horizontalLayout.setMargin(false);
         if(icon != null){
             icon.setSize("8px");
-            icon.addClassNames("text-secondary");
             horizontalLayout.add(icon);
             HorizontalLayout spaceDivHorizontalLayout = new HorizontalLayout();
             spaceDivHorizontalLayout.setWidth(3, Unit.PIXELS);
@@ -44,7 +46,6 @@ public class SecondaryKeyValueDisplayItem {
         horizontalLayout.setMargin(false);
         if(icon != null){
             icon.setSize("8px");
-            icon.addClassNames("text-secondary");
             horizontalLayout.add(icon);
             HorizontalLayout spaceDivHorizontalLayout = new HorizontalLayout();
             spaceDivHorizontalLayout.setWidth(3, Unit.PIXELS);
@@ -55,12 +56,15 @@ public class SecondaryKeyValueDisplayItem {
 
     private void addDisplayItemContent(HasComponents containComponent,HorizontalLayout keyHorizontalLayout,String keyText, String valueText){
         Label conceptionEntityNumberText = new Label(keyText);
-        conceptionEntityNumberText.addClassNames("text-xs","font-medium","text-secondary");
+        conceptionEntityNumberText.getStyle().set("font-size","var(--lumo-font-size-xs)");
         keyHorizontalLayout.add(conceptionEntityNumberText);
         containComponent.add(keyHorizontalLayout);
         displayValue = new Label(valueText);
-        displayValue.addClassNames("text-s","font-extrabold","border-b","border-contrast-20");
-        displayValue.getStyle().set("color","#2e4e7e");
+        displayValue.getStyle()
+                .set("font-size","var(--lumo-font-size-s)")
+                .set("font-weight","bolder")
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("color","#2e4e7e");
         containComponent.add(displayValue);
     }
 

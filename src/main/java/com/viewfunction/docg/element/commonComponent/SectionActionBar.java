@@ -14,9 +14,9 @@ public class SectionActionBar extends HorizontalLayout {
     public SectionActionBar(Icon sectionIcon, String sectionTitle, List<Component> actionComponentsList){
 
         this.setWidth(100, Unit.PERCENTAGE);
-        getStyle().set("padding-bottom", "5px");
-        this.addClassNames("border-contrast-20","border-b");
-
+        this.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-s)");
         if(sectionIcon != null){
             sectionIcon.setSize("16px");
             this.add(sectionIcon);
@@ -26,6 +26,9 @@ public class SectionActionBar extends HorizontalLayout {
         HorizontalLayout titleElementsContainer = new HorizontalLayout();
         Label sectionTitleLabel = new Label(sectionTitle);
         sectionTitleLabel.addClassNames("text-s","font-semibold");
+        sectionTitleLabel.getStyle()
+                .set("font-size","var(--lumo-font-size-s)")
+                .set("font-weight", "bold");
 
         titleElementsContainer.add(sectionTitleLabel);
 
@@ -54,9 +57,9 @@ public class SectionActionBar extends HorizontalLayout {
     public SectionActionBar(com.flowingcode.vaadin.addons.fontawesome.FontAwesome.Solid.Icon sectionIcon, String sectionTitle, List<Component> actionComponentsList){
 
         this.setWidth(100, Unit.PERCENTAGE);
-        getStyle().set("padding-bottom", "5px");
-        this.addClassNames("border-contrast-20","border-b");
-
+        this.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-s)");
         if(sectionIcon != null){
             sectionIcon.setSize("16px");
             this.add(sectionIcon);
@@ -65,7 +68,9 @@ public class SectionActionBar extends HorizontalLayout {
 
         HorizontalLayout titleElementsContainer = new HorizontalLayout();
         Label sectionTitleLabel = new Label(sectionTitle);
-        sectionTitleLabel.addClassNames("text-s","font-semibold");
+        sectionTitleLabel.getStyle()
+                .set("font-size","var(--lumo-font-size-s)")
+                .set("font-weight", "bold");
 
         titleElementsContainer.add(sectionTitleLabel);
 

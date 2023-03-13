@@ -53,12 +53,13 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         Icon realmIcon = VaadinIcon.ARCHIVE.create();
         realmIcon.getStyle().set("padding", "var(--lumo-space-xs");
         Span realmNameSpan = new Span( realmIcon,new Span("Default CoreRealm"));
-        realmNameSpan.addClassName("text-2xs");
+        realmNameSpan.getStyle().set("font-size","var(--lumo-font-size-xxs)");
+
         realmNameSpan.getElement().getThemeList().add("badge contrast");
         secTitleElementsList.add(realmNameSpan);
 
         Label coreRealmTechLabel = new Label(" NEO4J 实现");
-        coreRealmTechLabel.addClassName("text-2xs");
+        coreRealmTechLabel.getStyle().set("font-size","var(--lumo-font-size-xxs)");
         secTitleElementsList.add(coreRealmTechLabel);
         coreRealmTechLabel.getElement().getThemeList().add("badge success");
 
@@ -72,7 +73,8 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         leftSideContentContainerLayout = new VerticalLayout();
         leftSideContentContainerLayout.setSpacing(false);
         leftSideContentContainerLayout.setWidth(550, Unit.PIXELS);
-        leftSideContentContainerLayout.addClassNames("border-r","border-contrast-20");
+        leftSideContentContainerLayout.getStyle()
+                .set("border-right", "1px solid var(--lumo-contrast-20pct)");
         contentContainerLayout.add(leftSideContentContainerLayout);
 
         rightSideContentContainerLayout = new VerticalLayout();
@@ -183,7 +185,9 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         rightSideContentContainerLayout.add(widgetDivLayout);
 
         dataRelationDistributionWidget = new DataRelationDistributionWidget();
-        dataRelationDistributionWidget.addClassNames("border-r","border-contrast-10");
+        dataRelationDistributionWidget.getStyle()
+                .set("border-right", "1px solid var(--lumo-contrast-10pct)");
+
         widgetDivLayout.add(dataRelationDistributionWidget);
 
         relationAndConceptionKindAttachInfoWidget = new RelationAndConceptionKindAttachInfoWidget();
