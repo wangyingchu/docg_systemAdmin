@@ -4,7 +4,6 @@ import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.IronIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
@@ -38,7 +37,7 @@ public class SecondaryKeyValueDisplayItem {
         addDisplayItemContent(containComponent,horizontalLayout,keyText,valueText);
     }
 
-    public SecondaryKeyValueDisplayItem(HasComponents containComponent, IronIcon icon, String keyText, String valueText){
+    public SecondaryKeyValueDisplayItem(HasComponents containComponent, com.flowingcode.vaadin.addons.fontawesome.FontAwesome.Solid.Icon icon, String keyText, String valueText){
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
         horizontalLayout.setSpacing(false);

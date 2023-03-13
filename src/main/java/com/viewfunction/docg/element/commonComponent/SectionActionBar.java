@@ -4,7 +4,6 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.IronIcon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
@@ -52,7 +51,7 @@ public class SectionActionBar extends HorizontalLayout {
         }
     }
 
-    public SectionActionBar(IronIcon sectionIcon, String sectionTitle, List<Component> actionComponentsList){
+    public SectionActionBar(com.flowingcode.vaadin.addons.fontawesome.FontAwesome.Solid.Icon sectionIcon, String sectionTitle, List<Component> actionComponentsList){
 
         this.setWidth(100, Unit.PERCENTAGE);
         getStyle().set("padding-bottom", "5px");

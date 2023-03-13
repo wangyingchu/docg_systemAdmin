@@ -60,7 +60,18 @@ export const injectGlobalCss = (css, target, first) => {
     target.adoptedStyleSheets = [...target.adoptedStyleSheets, sheet];
   }
 };
-import stylesCss from 'themes/docg-pac/styles.css?inline';
+
+const addLumoImportStyleTag = (lumoStyles, target) => {
+  const styleTag = document.createElement('style');
+  styleTag.type = 'text/css';
+  styleTag.appendChild(document.createTextNode(lumoStyles));
+  // For target document append to head else append to target
+  if (target === document) {
+    document.head.appendChild(styleTag);
+  } else {
+    target.appendChild(styleTag);
+  }
+};
 import { typography } from '@vaadin/vaadin-lumo-styles/typography.js';
 import { color } from '@vaadin/vaadin-lumo-styles/color.js';
 import { spacing } from '@vaadin/vaadin-lumo-styles/spacing.js';
@@ -105,20 +116,19 @@ function getHash(input) {
 }
 export const applyTheme = (target) => {
   
-  injectGlobalCss(stylesCss.toString(), target);
-    
+  
   
   if (!document['_vaadintheme_docg-pac_componentCss']) {
     registerStyles(
-      'vaadin-grid',
-      unsafeCSS(vaadinGridCss.toString())
-    );
-    
+        'vaadin-grid',
+        unsafeCSS(vaadinGridCss.toString())
+      );
+      
     document['_vaadintheme_docg-pac_componentCss'] = true;
   }
-  injectGlobalCss(typography.cssText, target, true);
-injectGlobalCss(color.cssText, target, true);
-injectGlobalCss(spacing.cssText, target, true);
-injectGlobalCss(badge.cssText, target, true);
+  addLumoImportStyleTag(typography.cssText, target);
+addLumoImportStyleTag(color.cssText, target);
+addLumoImportStyleTag(spacing.cssText, target);
+addLumoImportStyleTag(badge.cssText, target);
 
 }
