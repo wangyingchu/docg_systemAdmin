@@ -340,7 +340,7 @@ public class AddEntityAttributeView extends VerticalLayout {
             case BOOLEAN:
                 currentConditionValueEditor = new ComboBox();
                 ((ComboBox)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
-                ((ComboBox)currentConditionValueEditor).setPreventInvalidInput(true);
+                //((ComboBox)currentConditionValueEditor).setPreventInvalidInput(true);
                 ((ComboBox)currentConditionValueEditor).setAllowCustomValue(false);
                 ((ComboBox)currentConditionValueEditor).setItems("true","false");
                 ((ComboBox)currentConditionValueEditor).setValue("true");

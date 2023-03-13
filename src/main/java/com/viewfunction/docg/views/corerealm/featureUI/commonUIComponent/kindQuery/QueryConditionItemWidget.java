@@ -252,7 +252,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
         this.filteringItemTypeSelection.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         this.filteringItemTypeSelection.setPageSize(11);
         this.filteringItemTypeSelection.setAllowCustomValue(false);
-        this.filteringItemTypeSelection.setPreventInvalidInput(true);
+        //this.filteringItemTypeSelection.setPreventInvalidInput(true);
 
         this.filteringItemTypeSelection.addValueChangeListener(new HasValue.ValueChangeListener<
                 AbstractField.ComponentValueChangeEvent<ComboBox<String>,String>>() {
@@ -708,7 +708,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 currentConditionValueEditor = new ComboBox();
                 ((ComboBox)currentConditionValueEditor).addThemeVariants(ComboBoxVariant.LUMO_SMALL);
                 ((ComboBox)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
-                ((ComboBox)currentConditionValueEditor).setPreventInvalidInput(true);
+               // ((ComboBox)currentConditionValueEditor).setPreventInvalidInput(true);
                 ((ComboBox)currentConditionValueEditor).setAllowCustomValue(false);
                 ((ComboBox)currentConditionValueEditor).setItems("true","false");
                 ((ComboBox)currentConditionValueEditor).setValue("true");
