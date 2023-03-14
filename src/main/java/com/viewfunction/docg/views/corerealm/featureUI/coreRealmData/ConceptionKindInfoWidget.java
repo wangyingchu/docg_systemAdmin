@@ -7,6 +7,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -22,7 +23,7 @@ public class ConceptionKindInfoWidget extends HorizontalLayout {
     public ConceptionKindInfoWidget(){
         this.setSpacing(false);
         this.setMargin(false);
-        this.addClassNames("bg-base");
+        this.addClassNames(LumoUtility.Background.BASE);
 
         VerticalLayout leftComponentContainer = new VerticalLayout();
         leftComponentContainer.setWidth(250,Unit.PIXELS);

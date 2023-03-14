@@ -76,6 +76,7 @@ import { typography } from '@vaadin/vaadin-lumo-styles/typography.js';
 import { color } from '@vaadin/vaadin-lumo-styles/color.js';
 import { spacing } from '@vaadin/vaadin-lumo-styles/spacing.js';
 import { badge } from '@vaadin/vaadin-lumo-styles/badge.js';
+import { utility } from '@vaadin/vaadin-lumo-styles/utility.js';
 import vaadinGridCss from 'themes/docg-pac/components/vaadin-grid.css?inline';
 
 window.Vaadin = window.Vaadin || {};
@@ -130,5 +131,6 @@ export const applyTheme = (target) => {
 addLumoImportStyleTag(color.cssText, target);
 addLumoImportStyleTag(spacing.cssText, target);
 addLumoImportStyleTag(badge.cssText, target);
+addLumoImportStyleTag(utility.cssText, target);
 
 }
