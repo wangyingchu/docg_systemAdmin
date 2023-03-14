@@ -353,7 +353,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
                 .setHeader("类型包含实体数量").setKey("idx_4")
                 .setFlexGrow(0).setWidth("150px").setResizable(false);
         relationKindMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_5")
-                .setFlexGrow(0).setWidth("140px").setResizable(false);
+                .setFlexGrow(0).setWidth("170px").setResizable(false);
 
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"关系类型名称");
         relationKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);

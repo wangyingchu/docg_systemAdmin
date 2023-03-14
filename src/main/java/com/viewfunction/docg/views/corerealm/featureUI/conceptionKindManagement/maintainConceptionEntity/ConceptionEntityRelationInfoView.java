@@ -145,7 +145,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         relationEntitiesGrid.addColumn(RelationEntity::getRelationEntityUID).setHeader("关系实体 UID").setKey("idx_2").setFlexGrow(0).setWidth("130px").setResizable(false);
         relationEntitiesGrid.addColumn(RelationEntity::getRelationKindName).setHeader("关系实体类型名称").setKey("idx_3").setResizable(true);
         relationEntitiesGrid.addComponentColumn(new RelatedConceptionEntityValueProvider()).setHeader("相关概念实体").setKey("idx_4").setFlexGrow(1).setResizable(true);
-        relationEntitiesGrid.addComponentColumn(new RelationEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_1").setFlexGrow(0).setWidth("110px").setResizable(false);
+        relationEntitiesGrid.addComponentColumn(new RelationEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_1").setFlexGrow(0).setWidth("120px").setResizable(false);
 
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
         relationEntitiesGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(false);
