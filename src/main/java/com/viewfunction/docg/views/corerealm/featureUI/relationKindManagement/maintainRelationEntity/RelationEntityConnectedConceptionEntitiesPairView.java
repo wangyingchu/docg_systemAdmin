@@ -39,7 +39,7 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
     private Registration listener;
     private EntitySyntheticAbstractInfoView entitySyntheticAbstractInfoView;
     private int relationEntityIntegratedInfoViewHeightOffset;
-    private VerticalLayout relationConceptionEntitiesPairChart;
+    private RelationConceptionEntitiesPairChart relationConceptionEntitiesPairChart;
 
     public RelationEntityConnectedConceptionEntitiesPairView(String relationKind,String relationEntityUID,int relationEntityIntegratedInfoViewHeightOffset) {
         this.setPadding(false);
@@ -112,7 +112,7 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
         relationEntitiesDetailLayout.setWidthFull();
         add(relationEntitiesDetailLayout);
 
-        relationConceptionEntitiesPairChart = new VerticalLayout();
+        relationConceptionEntitiesPairChart = new RelationConceptionEntitiesPairChart();
         relationEntitiesDetailLayout.add(relationConceptionEntitiesPairChart);
 
         VerticalLayout selectedEntityInfoContainerLayout = new VerticalLayout();
@@ -243,7 +243,7 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
                     }
                 });
                 this.toConceptionEntityOperateLayout.add(toConceptionKindIcon,toConceptionKindsLabel,toDivIcon,toConceptionEntityIcon,toConceptionEntityUIDLabel,showToEntityDetailButton);
-
+                this.relationConceptionEntitiesPairChart.setDate(this.relationKind,this.relationEntityUID,this.fromConceptionEntityUID,fromConceptionKinds,this.toConceptionEntityUID,toConceptionKinds);
             }else{
                 CommonUIOperationUtil.showPopupNotification("关系类型 "+ relationKind +" 中不存在 UID 为"+ relationEntityUID +" 的关系实体", NotificationVariant.LUMO_ERROR);
             }
