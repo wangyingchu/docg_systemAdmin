@@ -155,7 +155,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         attributesKindInSectionWallContainer.setOpened(false);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
-        spaceDivLayout.setHeight(20,Unit.PIXELS);
+        spaceDivLayout.setHeight(10,Unit.PIXELS);
         leftSideSectionContainerScrollLayout.add(spaceDivLayout);
 
         List<Component> actionComponentsList = new ArrayList<>();
