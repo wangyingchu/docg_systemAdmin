@@ -46,6 +46,7 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
     private List<String> fromConceptionKinds;
     private String relationToConceptionEntityUID;
     private List<String> toConceptionKinds;
+    private RelationEntityConnectedConceptionEntitiesPairView containerRelationEntityConnectedConceptionEntitiesPairView;
 
     public RelationConceptionEntitiesPairChart(){
         this.conceptionEntityUIDList = new ArrayList<>();
@@ -192,15 +193,6 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
         initLayoutGraph();
     }
 
-
-
-
-
-
-
-
-
-
     private void initLayoutGraph(){
         runBeforeClientResponse(ui -> {
             try {
@@ -250,22 +242,18 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
     public void unselectConceptionEntity(String entityType,String entityUID) {
         this.selectedConceptionEntityKind = null;
         this.selectedConceptionEntityUID = null;
-
+        if(containerRelationEntityConnectedConceptionEntitiesPairView != null){
+            containerRelationEntityConnectedConceptionEntitiesPairView.clearConceptionEntityAbstractInfo();
+        }
     }
 
     @ClientCallable
     public void selectConceptionEntity(String entityType,String entityUID) {
         this.selectedConceptionEntityKind = entityType;
         this.selectedConceptionEntityUID = entityUID;
-        /*
-        if(containerConceptionEntityRelationTopologyView != null){
-            int pageIndex = targetConceptionEntityRelationCurrentQueryPageMap.containsKey(entityUID) ?
-                    targetConceptionEntityRelationCurrentQueryPageMap.get(entityUID) : 1 ;
-            containerConceptionEntityRelationTopologyView.enableControlActionButtons(pageIndex);
-            containerConceptionEntityRelationTopologyView.renderSelectedConceptionEntityAbstractInfo(entityType,entityUID);
+        if(containerRelationEntityConnectedConceptionEntitiesPairView != null){
+            containerRelationEntityConnectedConceptionEntitiesPairView.renderSelectedConceptionEntityAbstractInfo(entityType,entityUID);
         }
-
-         */
     }
 
     @ClientCallable
@@ -275,12 +263,9 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
         String relationEntityUID = entityIDInfoArray[1];
         this.selectedRelationEntityKind = null;
         this.selectedRelationEntityUID = null;
-        /*
-        if(containerConceptionEntityRelationTopologyView != null){
-            containerConceptionEntityRelationTopologyView.clearRelationEntityAbstractInfo();
+        if(containerRelationEntityConnectedConceptionEntitiesPairView != null){
+            containerRelationEntityConnectedConceptionEntitiesPairView.clearRelationEntityAbstractInfo();
         }
-
-         */
     }
 
     @ClientCallable
@@ -290,12 +275,9 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
         String relationEntityUID = entityIDInfoArray[1];
         this.selectedRelationEntityKind = relationEntityType;
         this.selectedRelationEntityUID = relationEntityUID;
-        /*
-        if(containerConceptionEntityRelationTopologyView != null){
-            containerConceptionEntityRelationTopologyView.renderSelectedRelationEntityAbstractInfo(selectedRelationEntityKind,selectedRelationEntityUID);
+        if(containerRelationEntityConnectedConceptionEntitiesPairView != null){
+            containerRelationEntityConnectedConceptionEntitiesPairView.renderSelectedRelationEntityAbstractInfo(selectedRelationEntityKind,selectedRelationEntityUID);
         }
-
-         */
     }
 
     /*
@@ -461,20 +443,11 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
         }
     }
 
+    public RelationEntityConnectedConceptionEntitiesPairView getContainerRelationEntityConnectedConceptionEntitiesPairView() {
+        return containerRelationEntityConnectedConceptionEntitiesPairView;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public void setContainerRelationEntityConnectedConceptionEntitiesPairView(RelationEntityConnectedConceptionEntitiesPairView containerRelationEntityConnectedConceptionEntitiesPairView) {
+        this.containerRelationEntityConnectedConceptionEntitiesPairView = containerRelationEntityConnectedConceptionEntitiesPairView;
+    }
 }

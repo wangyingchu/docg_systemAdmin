@@ -114,6 +114,7 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
 
         relationConceptionEntitiesPairChart = new RelationConceptionEntitiesPairChart();
         relationEntitiesDetailLayout.add(relationConceptionEntitiesPairChart);
+        relationConceptionEntitiesPairChart.setContainerRelationEntityConnectedConceptionEntitiesPairView(this);
 
         VerticalLayout selectedEntityInfoContainerLayout = new VerticalLayout();
         selectedEntityInfoContainerLayout.setSpacing(false);
@@ -127,7 +128,6 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
 
         this.entitySyntheticAbstractInfoView = new EntitySyntheticAbstractInfoView(330);
         selectedEntityInfoContainerLayout.add(this.entitySyntheticAbstractInfoView);
-
     }
 
     @Override
@@ -283,5 +283,21 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
         fullScreenWindow.setWindowContent(conceptionEntityDetailView);
         conceptionEntityDetailView.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
+    }
+
+    public void renderSelectedConceptionEntityAbstractInfo(String entityType,String entityUID){
+        entitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(entityType,entityUID);
+    }
+
+    public void clearConceptionEntityAbstractInfo(){
+        entitySyntheticAbstractInfoView.cleanAbstractInfo();
+    }
+
+    public void renderSelectedRelationEntityAbstractInfo(String entityType,String entityUID){
+        entitySyntheticAbstractInfoView.renderRelationEntitySyntheticAbstractInfo(entityType,entityUID);
+    }
+
+    public void clearRelationEntityAbstractInfo(){
+        entitySyntheticAbstractInfoView.cleanAbstractInfo();
     }
 }
