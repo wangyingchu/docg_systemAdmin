@@ -30,6 +30,10 @@ public class AddConceptionEntityToProcessingListView  extends VerticalLayout {
         this.conceptionKind = conceptionKind;
         this.conceptionEntityValue = conceptionEntityValue;
         H5 viewTitle = new H5("将概念类型 "+conceptionKind+" 中的UID为 "+conceptionEntityValue.getConceptionEntityUID()+" 的概念实体添加入待处理数据列表,请确认执行操作。");
+        viewTitle.getStyle().set("padding-bottom", "10px").
+                set("padding-top", "20px").
+                set("padding-left", "5px").
+                set("padding-right", "5px");
         add(viewTitle);
 
         commentTextField = new TextArea();

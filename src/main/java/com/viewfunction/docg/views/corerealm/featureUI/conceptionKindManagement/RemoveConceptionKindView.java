@@ -30,6 +30,10 @@ public class RemoveConceptionKindView extends VerticalLayout {
 
         H4 viewTitle = new H4("本操作将删除概念类型 "+conceptionKind+" 以及该类型包含的所有概念实体,请确认执行操作。");
         viewTitle.getStyle().set("font-size","var(--lumo-font-size-m)").set("color","var(--lumo-error-color)");
+        viewTitle.getStyle().set("padding-bottom", "10px").
+                set("padding-top", "20px").
+                set("padding-left", "5px").
+                set("padding-right", "5px");
         add(viewTitle);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();

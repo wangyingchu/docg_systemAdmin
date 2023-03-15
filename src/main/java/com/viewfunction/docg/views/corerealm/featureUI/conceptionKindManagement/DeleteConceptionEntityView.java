@@ -34,6 +34,10 @@ public class DeleteConceptionEntityView extends VerticalLayout {
         this.conceptionEntityValue = conceptionEntityValue;
         H4 viewTitle = new H4("本操作将删除概念类型 "+conceptionKind+" 中的UID为 "+conceptionEntityValue.getConceptionEntityUID()+" 的概念实体以及与该实体相关的所有关系实体,请确认执行操作。");
         viewTitle.getStyle().set("font-size","var(--lumo-font-size-m)").set("color","var(--lumo-error-color)");
+        viewTitle.getStyle().set("padding-bottom", "10px").
+                set("padding-top", "20px").
+                set("padding-left", "5px").
+                set("padding-right", "5px");
         add(viewTitle);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();

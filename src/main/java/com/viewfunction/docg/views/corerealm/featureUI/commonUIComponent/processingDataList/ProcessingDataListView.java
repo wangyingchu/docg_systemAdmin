@@ -27,6 +27,7 @@ public class ProcessingDataListView extends VerticalLayout {
         conceptionEntityDataListContainer.add(processingConceptionEntityListView);
 
         ProcessingRelationEntityListView processingRelationEntityListView = new ProcessingRelationEntityListView(heightValue);
+        processingRelationEntityListView.showControllerToolbar(true);
         relationEntityDataListContainer.add(processingRelationEntityListView);
 
         PagedTabs tabs = new PagedTabs(container);
