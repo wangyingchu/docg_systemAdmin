@@ -136,13 +136,13 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
         renderView();
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             relationConceptionEntitiesPairChart.setHeight((event.getHeight()-this.relationEntityIntegratedInfoViewHeightOffset)-120, Unit.PIXELS);
-            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(event.getHeight()-this.relationEntityIntegratedInfoViewHeightOffset-120);
+            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(event.getHeight()-this.relationEntityIntegratedInfoViewHeightOffset-320);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             relationConceptionEntitiesPairChart.setHeight((browserHeight-this.relationEntityIntegratedInfoViewHeightOffset+40)-120,Unit.PIXELS);
-            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(browserHeight-this.relationEntityIntegratedInfoViewHeightOffset-120);
+            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(browserHeight-this.relationEntityIntegratedInfoViewHeightOffset-320);
         }));
     }
 
