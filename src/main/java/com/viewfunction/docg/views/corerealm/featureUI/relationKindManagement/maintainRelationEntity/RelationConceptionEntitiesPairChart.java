@@ -494,6 +494,9 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
         this.targetConceptionEntityRelationCurrentQueryPageMap.clear();
         clearGraph();
         setDate(this.relationKind,this.relationEntityUID,this.relationFromConceptionEntityUID,this.fromConceptionKinds,this.relationToConceptionEntityUID,this.toConceptionKinds);
+        if(containerRelationEntityConnectedConceptionEntitiesPairView != null){
+            containerRelationEntityConnectedConceptionEntitiesPairView.clearRelationEntityAbstractInfo();
+        }
     }
 
     public void expandSelectedEntityOneDegreeRelations() {
