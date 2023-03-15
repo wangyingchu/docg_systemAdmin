@@ -63,7 +63,11 @@ public class ConfirmWindow extends Dialog {
         this.add(titleElementsContainer);
 
         H5 viewTitle = new H5(messageContent);
-        viewTitle.getStyle().set("padding-bottom", "10px");
+        viewTitle.getStyle().
+                set("padding-bottom", "20px").
+                set("padding-top", "20px").
+                set("padding-left", "5px").
+                set("padding-right", "5px");
         add(viewTitle);
 
         HorizontalLayout footerElementsContainer = new HorizontalLayout();

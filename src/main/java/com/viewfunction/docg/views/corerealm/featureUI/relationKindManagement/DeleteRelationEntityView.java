@@ -49,6 +49,10 @@ public class DeleteRelationEntityView extends VerticalLayout {
     private void renderUIElement(){
         H4 viewTitle = new H4("本操作将删除关系类型 "+this.relationKindName+" 中的UID为 "+this.relationEntityUID+" 的关系实体,请确认执行操作。");
         viewTitle.getStyle().set("font-size","var(--lumo-font-size-m)").set("color","var(--lumo-error-color)");
+        viewTitle.getStyle().set("padding-bottom", "10px").
+                set("padding-top", "20px").
+                set("padding-left", "5px").
+                set("padding-right", "5px");
         add(viewTitle);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
