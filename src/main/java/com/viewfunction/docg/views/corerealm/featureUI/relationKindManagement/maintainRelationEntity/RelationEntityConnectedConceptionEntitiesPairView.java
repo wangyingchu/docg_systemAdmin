@@ -11,16 +11,20 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.EntitySyntheticAbstractInfoView;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.AddRelationEntityToProcessingListView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -87,7 +91,7 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
         addToProcessingDataListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //addConceptionEntityToProcessingList(conceptionKind,conceptionEntityUID);
+                addRelationEntityToProcessingList();
             }
         });
 
@@ -299,5 +303,16 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
 
     public void clearRelationEntityAbstractInfo(){
         entitySyntheticAbstractInfoView.cleanAbstractInfo();
+    }
+
+    private void addRelationEntityToProcessingList(){
+        RelationEntityValue relationEntityValue = new RelationEntityValue();
+        relationEntityValue.setRelationEntityUID(this.relationEntityUID);
+        AddRelationEntityToProcessingListView addRelationEntityToProcessingListView = new AddRelationEntityToProcessingListView(this.relationKind,relationEntityValue);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INBOX),"待处理数据列表添加概念实例",null,true,600,320,false);
+        fixSizeWindow.setWindowContent(addRelationEntityToProcessingListView);
+        fixSizeWindow.setModel(true);
+        addRelationEntityToProcessingListView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }

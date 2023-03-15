@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -14,10 +15,12 @@ import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.function.ValueProvider;
+import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelTitleActionBar;
 import com.viewfunction.docg.util.RelationEntityResourceHolderVO;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -110,7 +113,7 @@ public class ProcessingRelationEntityListView extends VerticalLayout {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(relationEntityValue != null){
-                        //renderConceptionEntityUI(conceptionEntityValue);
+                        renderRelationEntityUI(relationEntityValue);
                     }
                 }
             });
@@ -147,6 +150,39 @@ public class ProcessingRelationEntityListView extends VerticalLayout {
         dataProvider.getItems().removeAll(selectedEntitySet);
         dataProvider.refreshAll();
         removeSelectedButton.setEnabled(false);
+    }
+
+    private void renderRelationEntityUI(RelationEntityResourceHolderVO relationEntityValue){
+        RelationEntityDetailView relationEntityDetailView = new RelationEntityDetailView(relationEntityValue.getRelationKind(),relationEntityValue.getRelationEntityUID());
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("22px");
+        footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
+        actionComponentList.add(footPrintStartIcon);
+        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+        relationKindIcon.setSize("12px");
+        relationKindIcon.getStyle().set("padding-right","3px");
+        actionComponentList.add(relationKindIcon);
+        Label relationKindNameLabel = new Label(relationEntityValue.getRelationKind());
+        actionComponentList.add(relationKindNameLabel);
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("12px");
+        divIcon.getStyle().set("padding-left","5px");
+        actionComponentList.add(divIcon);
+        Icon relationEntityIcon = VaadinIcon.KEY_O.create();
+        relationEntityIcon.setSize("18px");
+        relationEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
+        actionComponentList.add(relationEntityIcon);
+
+        Label relationEntityUIDLabel = new Label(relationEntityValue.getRelationEntityUID());
+        actionComponentList.add(relationEntityUIDLabel);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"关系实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(relationEntityDetailView);
+        relationEntityDetailView.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
     }
 
     @Override

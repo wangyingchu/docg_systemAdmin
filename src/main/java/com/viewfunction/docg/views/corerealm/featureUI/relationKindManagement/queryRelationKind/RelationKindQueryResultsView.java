@@ -32,6 +32,7 @@ import com.viewfunction.docg.element.eventHandling.RelationEntityDeletedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.AddRelationEntityToProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.DeleteRelationEntityView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailView;
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -334,14 +335,12 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
     }
 
     private void addRelationEntityToProcessingList(RelationEntityValue relationEntityValue){
-        /*
-        AddConceptionEntityToProcessingListView addConceptionEntityToProcessingListView = new AddConceptionEntityToProcessingListView(conceptionKindName,conceptionEntityValue);
+        AddRelationEntityToProcessingListView addRelationEntityToProcessingListView = new AddRelationEntityToProcessingListView(relationKindName,relationEntityValue);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INBOX),"待处理数据列表添加概念实例",null,true,600,320,false);
-        fixSizeWindow.setWindowContent(addConceptionEntityToProcessingListView);
+        fixSizeWindow.setWindowContent(addRelationEntityToProcessingListView);
         fixSizeWindow.setModel(true);
-        addConceptionEntityToProcessingListView.setContainerDialog(fixSizeWindow);
+        addRelationEntityToProcessingListView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
-        */
     }
 
     private void deleteRelationEntity(RelationEntityValue relationEntityValue){

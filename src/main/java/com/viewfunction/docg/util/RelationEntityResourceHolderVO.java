@@ -6,6 +6,11 @@ public class RelationEntityResourceHolderVO {
     private String relationEntityUID;
     private String comment;
 
+    public RelationEntityResourceHolderVO(String relationKind,String relationEntityUID){
+        this.setRelationKind(relationKind);
+        this.setRelationEntityUID(relationEntityUID);
+    }
+
     public String getRelationKind() {
         return relationKind;
     }
