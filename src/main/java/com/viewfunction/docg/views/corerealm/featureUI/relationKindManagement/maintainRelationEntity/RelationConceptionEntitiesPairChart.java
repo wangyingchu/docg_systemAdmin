@@ -38,8 +38,6 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
     private Multimap<String,String> conception_relationEntityUIDMap;
     private String selectedRelationEntityUID;
     private String selectedRelationEntityKind;
-
-
     private String relationEntityUID;
     private String relationKind;
     private String relationFromConceptionEntityUID;
@@ -98,32 +96,9 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
         if(!conceptionEntityUIDList.contains(this.relationFromConceptionEntityUID)){
             conceptionEntityUIDList.add(this.relationFromConceptionEntityUID);
             CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
-            cytoscapeNodePayload.getData().put("shape","ellipse");
-            cytoscapeNodePayload.getData().put("background_color","#c00");
-            cytoscapeNodePayload.getData().put("size","4");
-            if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(this.fromConceptionKinds.get(0))!=null){
-                cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(this.fromConceptionKinds.get(0)));
-            }
-
-            if(fromConceptionKinds.get(0).startsWith(RealmConstant.TimeScaleEventClass)){
-                cytoscapeNodePayload.getData().put("shape","round-diamond");
-                cytoscapeNodePayload.getData().put("size","3");
-                cytoscapeNodePayload.getData().put("background_color","#40E0D0");
-            }
-            if(fromConceptionKinds.get(0).startsWith(RealmConstant.TimeScaleEntityClass)){
-                cytoscapeNodePayload.getData().put("shape","barrel");
-                cytoscapeNodePayload.getData().put("background_color","#40E0D0");
-            }
-            if(fromConceptionKinds.get(0).startsWith(RealmConstant.GeospatialScaleEventClass)){
-                cytoscapeNodePayload.getData().put("shape","round-diamond");
-                cytoscapeNodePayload.getData().put("size","3");
-                cytoscapeNodePayload.getData().put("background_color","#C71585");
-            }
-            if(fromConceptionKinds.get(0).startsWith(RealmConstant.GeospatialScaleEntityClass)){
-                cytoscapeNodePayload.getData().put("shape","barrel");
-                cytoscapeNodePayload.getData().put("background_color","#C71585");
-            }
-
+            cytoscapeNodePayload.getData().put("shape","barrel");
+            cytoscapeNodePayload.getData().put("background_color","#666666");
+            cytoscapeNodePayload.getData().put("size","6");
             cytoscapeNodePayload.getData().put("id",this.relationFromConceptionEntityUID);
             cytoscapeNodePayload.getData().put("kind",this.fromConceptionKinds.get(0));
             cytoscapeNodePayload.getData().put("desc",this.fromConceptionKinds.get(0)+":\n"+this.relationFromConceptionEntityUID);
@@ -138,31 +113,9 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
         if(!conceptionEntityUIDList.contains(this.relationToConceptionEntityUID)){
             conceptionEntityUIDList.add(this.relationToConceptionEntityUID);
             CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
-            cytoscapeNodePayload.getData().put("shape","ellipse");
-            cytoscapeNodePayload.getData().put("background_color","#c00");
-            cytoscapeNodePayload.getData().put("size","4");
-            if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(this.toConceptionKinds.get(0))!=null){
-                cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(this.toConceptionKinds.get(0)));
-            }
-
-            if(this.toConceptionKinds.get(0).startsWith(RealmConstant.TimeScaleEventClass)){
-                cytoscapeNodePayload.getData().put("shape","round-diamond");
-                cytoscapeNodePayload.getData().put("size","3");
-                cytoscapeNodePayload.getData().put("background_color","#40E0D0");
-            }
-            if(this.toConceptionKinds.get(0).startsWith(RealmConstant.TimeScaleEntityClass)){
-                cytoscapeNodePayload.getData().put("shape","barrel");
-                cytoscapeNodePayload.getData().put("background_color","#40E0D0");
-            }
-            if(this.toConceptionKinds.get(0).startsWith(RealmConstant.GeospatialScaleEventClass)){
-                cytoscapeNodePayload.getData().put("shape","round-diamond");
-                cytoscapeNodePayload.getData().put("size","3");
-                cytoscapeNodePayload.getData().put("background_color","#C71585");
-            }
-            if(this.toConceptionKinds.get(0).startsWith(RealmConstant.GeospatialScaleEntityClass)){
-                cytoscapeNodePayload.getData().put("shape","barrel");
-                cytoscapeNodePayload.getData().put("background_color","#C71585");
-            }
+            cytoscapeNodePayload.getData().put("shape","barrel");
+            cytoscapeNodePayload.getData().put("background_color","#666666");
+            cytoscapeNodePayload.getData().put("size","6");
             cytoscapeNodePayload.getData().put("id",this.relationToConceptionEntityUID);
             cytoscapeNodePayload.getData().put("kind",this.toConceptionKinds.get(0));
             cytoscapeNodePayload.getData().put("desc",this.toConceptionKinds.get(0)+":\n"+this.relationToConceptionEntityUID);
@@ -181,6 +134,11 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
             cytoscapeEdgePayload.getData().put("type", this.relationKind+":"+this.relationEntityUID);
             cytoscapeEdgePayload.getData().put("source", this.relationFromConceptionEntityUID);
             cytoscapeEdgePayload.getData().put("target", this.relationToConceptionEntityUID);
+            cytoscapeEdgePayload.getData().put("width","0.7");
+            cytoscapeEdgePayload.getData().put("lineColor","#BBBBBB");
+            cytoscapeEdgePayload.getData().put("sourceArrowColor","#BBBBBB");
+            cytoscapeEdgePayload.getData().put("targetArrowColor","#BBBBBB");
+            cytoscapeEdgePayload.getData().put("arrowScale","0.3");
             runBeforeClientResponse(ui -> {
                 try {
                     getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
@@ -189,8 +147,136 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
                 }
             });
         }
-
         initLayoutGraph();
+    }
+
+    public void setData(List<RelationEntity> conceptionEntityRelationEntityList){
+        if(conceptionEntityRelationEntityList != null){
+            for(RelationEntity currentRelationEntity:conceptionEntityRelationEntityList){
+                String relationKind = currentRelationEntity.getRelationKindName();
+                String relationEntityUID = currentRelationEntity.getRelationEntityUID();
+
+                List<String> fromConceptionEntityKind = currentRelationEntity.getFromConceptionEntityKinds();
+                String fromConceptionEntityUID = currentRelationEntity.getFromConceptionEntityUID();
+
+                List<String> toConceptionEntityKind = currentRelationEntity.getToConceptionEntityKinds();
+                String toConceptionEntityUID = currentRelationEntity.getToConceptionEntityUID();
+
+                if(!conception_relationEntityUIDMap.containsKey(fromConceptionEntityUID)){
+                    conception_relationEntityUIDMap.put(fromConceptionEntityUID,relationEntityUID);
+                }else{
+                    if(!conception_relationEntityUIDMap.get(fromConceptionEntityUID).contains(relationEntityUID)){
+                        conception_relationEntityUIDMap.put(fromConceptionEntityUID,relationEntityUID);
+                    }
+                }
+                if(!conception_relationEntityUIDMap.containsKey(toConceptionEntityUID)){
+                    conception_relationEntityUIDMap.put(toConceptionEntityUID,relationEntityUID);
+                }else{
+                    if(!conception_relationEntityUIDMap.get(toConceptionEntityUID).contains(relationEntityUID)){
+                        conception_relationEntityUIDMap.put(toConceptionEntityUID,relationEntityUID);
+                    }
+                }
+
+                if(!conceptionEntityUIDList.contains(fromConceptionEntityUID)){
+                    conceptionEntityUIDList.add(fromConceptionEntityUID);
+                    CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
+                    cytoscapeNodePayload.getData().put("shape","ellipse");
+                    cytoscapeNodePayload.getData().put("background_color","#c00");
+                    cytoscapeNodePayload.getData().put("size","4");
+                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0))!=null){
+                        cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0)));
+                    }
+
+                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEventClass)){
+                        cytoscapeNodePayload.getData().put("shape","round-diamond");
+                        cytoscapeNodePayload.getData().put("size","3");
+                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                    }
+                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEntityClass)){
+                        cytoscapeNodePayload.getData().put("shape","barrel");
+                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                    }
+                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEventClass)){
+                        cytoscapeNodePayload.getData().put("shape","round-diamond");
+                        cytoscapeNodePayload.getData().put("size","3");
+                        cytoscapeNodePayload.getData().put("background_color","#C71585");
+                    }
+                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEntityClass)){
+                        cytoscapeNodePayload.getData().put("shape","barrel");
+                        cytoscapeNodePayload.getData().put("background_color","#C71585");
+                    }
+
+                    cytoscapeNodePayload.getData().put("id",fromConceptionEntityUID);
+                    cytoscapeNodePayload.getData().put("kind",fromConceptionEntityKind.get(0));
+                    cytoscapeNodePayload.getData().put("desc",fromConceptionEntityKind.get(0)+":\n"+fromConceptionEntityUID);
+                    runBeforeClientResponse(ui -> {
+                        try {
+                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+                if(!conceptionEntityUIDList.contains(toConceptionEntityUID)){
+                    conceptionEntityUIDList.add(toConceptionEntityUID);
+                    CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
+                    cytoscapeNodePayload.getData().put("shape","ellipse");
+                    cytoscapeNodePayload.getData().put("background_color","#c00");
+                    cytoscapeNodePayload.getData().put("size","4");
+                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(toConceptionEntityKind.get(0))!=null){
+                        cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(toConceptionEntityKind.get(0)));
+                    }
+
+                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEventClass)){
+                        cytoscapeNodePayload.getData().put("shape","round-diamond");
+                        cytoscapeNodePayload.getData().put("size","3");
+                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                    }
+                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEntityClass)){
+                        cytoscapeNodePayload.getData().put("shape","barrel");
+                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                    }
+                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEventClass)){
+                        cytoscapeNodePayload.getData().put("shape","round-diamond");
+                        cytoscapeNodePayload.getData().put("size","3");
+                        cytoscapeNodePayload.getData().put("background_color","#C71585");
+                    }
+                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEntityClass)){
+                        cytoscapeNodePayload.getData().put("shape","barrel");
+                        cytoscapeNodePayload.getData().put("background_color","#C71585");
+                    }
+                    cytoscapeNodePayload.getData().put("id",toConceptionEntityUID);
+                    cytoscapeNodePayload.getData().put("kind",toConceptionEntityKind.get(0));
+                    cytoscapeNodePayload.getData().put("desc",toConceptionEntityKind.get(0)+":\n"+toConceptionEntityUID);
+                    runBeforeClientResponse(ui -> {
+                        try {
+                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+                if(!relationEntityUIDList.contains(relationEntityUID)){
+                    relationEntityUIDList.add(relationEntityUID);
+                    CytoscapeEdgePayload cytoscapeEdgePayload =new CytoscapeEdgePayload();
+                    cytoscapeEdgePayload.getData().put("type", relationKind+":"+relationEntityUID);
+                    cytoscapeEdgePayload.getData().put("source", fromConceptionEntityUID);
+                    cytoscapeEdgePayload.getData().put("target", toConceptionEntityUID);
+                    cytoscapeEdgePayload.getData().put("width","0.3");
+                    cytoscapeEdgePayload.getData().put("lineColor","#DDDDDD");
+                    cytoscapeEdgePayload.getData().put("sourceArrowColor","#DDDDDD");
+                    cytoscapeEdgePayload.getData().put("targetArrowColor","#DDDDDD");
+                    cytoscapeEdgePayload.getData().put("arrowScale","0.1");
+                    runBeforeClientResponse(ui -> {
+                        try {
+                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+            }
+        }
     }
 
     private void initLayoutGraph(){
@@ -366,10 +452,7 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
                     }
                     if(executeGraphIncreaseOperation){
                         lockGraph();
-
-                        //setData(totalKindsRelationEntitiesList);
-
-
+                        setData(totalKindsRelationEntitiesList);
                         currentEntityQueryPage++;
                         targetConceptionEntityRelationCurrentQueryPageMap.put(conceptionEntityUID,currentEntityQueryPage);
                         layoutGraph();
@@ -410,7 +493,7 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
         this.relationEntityUIDList.clear();
         this.targetConceptionEntityRelationCurrentQueryPageMap.clear();
         clearGraph();
-        //initLoadTargetConceptionEntityRelationData();
+        setDate(this.relationKind,this.relationEntityUID,this.relationFromConceptionEntityUID,this.fromConceptionKinds,this.relationToConceptionEntityUID,this.toConceptionKinds);
     }
 
     public void expandSelectedEntityOneDegreeRelations() {

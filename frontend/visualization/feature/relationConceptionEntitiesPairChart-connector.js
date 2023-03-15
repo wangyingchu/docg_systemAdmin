@@ -139,11 +139,11 @@ window.Vaadin.Flow.feature_RelationConceptionEntitiesPairChart = {
                 .selector('edge')
                 .css({
                     'content': 'data(type)',
-                    'width': 0.3,
-                    'line-color': '#DDDDDD',
-                    'source-arrow-color':'#DDDDDD',
-                    'target-arrow-color':'#DDDDDD',
-                    'arrow-scale': 0.1,
+                    'width': 'data(width)',
+                    'line-color': 'data(lineColor)',
+                    'source-arrow-color':'data(sourceArrowColor)',
+                    'target-arrow-color':'data(targetArrowColor)',
+                    'arrow-scale': 'data(arrowScale)',
                     'line-style': 'solid',
                     //'curve-style': 'unbundled-bezier',
                     //'curve-style': 'segments',

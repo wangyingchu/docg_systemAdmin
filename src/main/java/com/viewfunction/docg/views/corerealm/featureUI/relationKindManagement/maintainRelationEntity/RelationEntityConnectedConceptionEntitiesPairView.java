@@ -97,7 +97,7 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
         reloadRelationInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //refreshRelationsInfo();
+                relationConceptionEntitiesPairChart.reload();
             }
         });
 
