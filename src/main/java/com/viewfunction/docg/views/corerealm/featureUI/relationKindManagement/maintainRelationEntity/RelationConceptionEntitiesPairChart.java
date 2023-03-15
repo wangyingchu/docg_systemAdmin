@@ -366,54 +366,6 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
         }
     }
 
-    /*
-    public void initLoadTargetConceptionEntityRelationData(){
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        coreRealm.openGlobalSession();
-        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
-        if(targetConceptionKind != null) {
-            try {
-                ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
-                if (targetEntity != null) {
-                    List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
-                    List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
-                    List<String> attachedConceptionKinds = targetEntity.listAttachedConceptionKinds();
-                    generateConceptionKindColorMap(attachedConceptionKinds);
-                    QueryParameters relationshipQueryParameters = new QueryParameters();
-                    int currentEntityQueryPage = 1;
-                    if(targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.conceptionEntityUID)){
-                        currentEntityQueryPage = targetConceptionEntityRelationCurrentQueryPageMap.get(this.conceptionEntityUID);
-                    }
-                    relationshipQueryParameters.setStartPage(currentEntityQueryPage);
-                    relationshipQueryParameters.setEndPage(currentEntityQueryPage+1);
-                    relationshipQueryParameters.setPageSize(currentQueryPageSize);
-                    for (String currentRelationKind : attachedRelationKinds) {
-                        relationshipQueryParameters.setEntityKind(currentRelationKind);
-                        List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
-                        totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
-                    }
-                    if(totalKindsRelationEntitiesList.size()>0){
-                        setData(totalKindsRelationEntitiesList);
-                        initLayoutGraph();
-                        currentEntityQueryPage++;
-                        targetConceptionEntityRelationCurrentQueryPageMap.put(this.conceptionEntityUID,currentEntityQueryPage);
-                    }
-                }else{
-                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
-                }
-            } catch (CoreRealmServiceRuntimeException e) {
-                throw new RuntimeException(e);
-            }
-        }else{
-            CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
-        }
-        coreRealm.closeGlobalSession();
-        if(containerConceptionEntityRelationTopologyView != null){
-            containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
-        }
-    }
-    */
-
     private void loadAdditionalTargetConceptionEntityRelationData(String conceptionKind,String conceptionEntityUID){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
@@ -496,36 +448,6 @@ public class RelationConceptionEntitiesPairChart extends VerticalLayout {
         setDate(this.relationKind,this.relationEntityUID,this.relationFromConceptionEntityUID,this.fromConceptionKinds,this.relationToConceptionEntityUID,this.toConceptionKinds);
         if(containerRelationEntityConnectedConceptionEntitiesPairView != null){
             containerRelationEntityConnectedConceptionEntitiesPairView.clearRelationEntityAbstractInfo();
-        }
-    }
-
-    public void expandSelectedEntityOneDegreeRelations() {
-        loadAdditionalTargetConceptionEntityRelationData(this.selectedConceptionEntityKind,this.selectedConceptionEntityUID);
-    }
-
-    public void resetConceptionEntityRelationQueryPageIndex(){
-        if(this.targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.selectedConceptionEntityUID)){
-            this.targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
-        }
-    }
-
-    public void addConceptionEntityRelationQueryPageIndex(){
-        if(this.targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.selectedConceptionEntityUID)){
-            int currentValue = this.targetConceptionEntityRelationCurrentQueryPageMap.get(this.selectedConceptionEntityUID);
-            this.targetConceptionEntityRelationCurrentQueryPageMap.put(this.selectedConceptionEntityUID,currentValue+1);
-        }else{
-            this.targetConceptionEntityRelationCurrentQueryPageMap.put(this.selectedConceptionEntityUID,1);
-        }
-    }
-
-    public void minusConceptionEntityRelationQueryPageIndex(){
-        if(this.targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.selectedConceptionEntityUID)){
-            int currentValue = this.targetConceptionEntityRelationCurrentQueryPageMap.get(this.selectedConceptionEntityUID);
-            if(currentValue -1 >1){
-                this.targetConceptionEntityRelationCurrentQueryPageMap.put(this.selectedConceptionEntityUID,currentValue -1);
-            }else{
-                this.targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
-            }
         }
     }
 
