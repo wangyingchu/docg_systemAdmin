@@ -22,6 +22,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.*;
 
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailView;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -144,7 +145,23 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
         relationEntityUIDLabel.getStyle().set("font-weight","bold").set("color","#2e4e7e");
         relationEntityUIDInfoContainer.getStyle().set("padding-top","12px");
         relationEntityUIDInfoContainer.add(relationEntityUIDLabel);
+        relationEntityUIDInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,relationEntityUIDLabel);
         relationEntityUIDInfoContainer.getStyle().set("padding-bottom", "10px");
+
+        Button showDetailButton2 = new Button("显示关系实体详情");
+        showDetailButton2.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
+        showDetailButton2.getStyle().set("font-size","12px");
+        showDetailButton2.setIcon(VaadinIcon.EYE.create());
+        Tooltips.getCurrent().setTooltip(showDetailButton2, "显示关系实体详情");
+        showDetailButton2.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderRelatedRelationEntityUI();
+            }
+        });
+        relationEntityUIDInfoContainer.add(showDetailButton2);
+        relationEntityUIDInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,showDetailButton2);
+        relationEntityUIDInfoContainer.getStyle().set("padding-bottom", "3px");
 
         titleLayout1 = new HorizontalLayout();
         infoContentContainer.add(titleLayout1);
@@ -248,6 +265,30 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(conceptionEntityDetailView);
         conceptionEntityDetailView.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
+    }
+
+    private void renderRelatedRelationEntityUI(){
+        String relationKindName = this.currentRelationKindName;
+        String relationEntityUID = this.currentRelationEntityUID;
+
+        List<Component> actionComponentList = new ArrayList<>();
+        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+        relationKindIcon.setSize("12px");
+        relationKindIcon.getStyle().set("padding-right","3px");
+        Icon relationEntityIcon = VaadinIcon.KEY_O.create();
+        relationEntityIcon.setSize("18px");
+        relationEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
+        List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(relationKindIcon,relationKindName));
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(relationEntityIcon,relationEntityUID));
+        FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
+        actionComponentList.add(entityInfoFootprintMessageBar);
+
+        RelationEntityDetailView relationEntityDetailView = new RelationEntityDetailView(relationKindName,relationEntityUID);
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"关系实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(relationEntityDetailView);
+        relationEntityDetailView.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
     }
 
