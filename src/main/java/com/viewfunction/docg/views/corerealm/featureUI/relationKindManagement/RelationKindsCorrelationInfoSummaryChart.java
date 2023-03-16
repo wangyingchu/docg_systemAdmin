@@ -14,6 +14,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.chart.CartesianHeatmapChart;
+
 import elemental.json.Json;
 import elemental.json.JsonArray;
 
@@ -32,15 +33,20 @@ public class RelationKindsCorrelationInfoSummaryChart extends VerticalLayout {
         inDegreeCartesianHeatmapChart.setColorRange("#ABDCFF","#0396FF");
         inDegreeCartesianHeatmapChart.setName("领域概念与关系实体入度统计");
         inDegreeCartesianHeatmapChart.setTooltipPosition("left");
-        inDegreeCartesianHeatmapChart.setXAxisLabelRotateDegree(30);
+        inDegreeCartesianHeatmapChart.setXAxisLabelRotateDegree(45);
+        inDegreeCartesianHeatmapChart.setLeftMargin(50);
+        inDegreeCartesianHeatmapChart.displayYAxisLabelInside(true);
         heatMapsContainerLayout.add(inDegreeCartesianHeatmapChart);
 
         outDegreeCartesianHeatmapChart = new CartesianHeatmapChart(cartesianHeatmapChartWidth,windowHeight-100);
         outDegreeCartesianHeatmapChart.setColorRange("#FCCF31","#F55555");
         outDegreeCartesianHeatmapChart.setName("领域概念与关系实体出度统计");
         outDegreeCartesianHeatmapChart.setTooltipPosition("left");
-        outDegreeCartesianHeatmapChart.setXAxisLabelRotateDegree(30);
+        outDegreeCartesianHeatmapChart.setXAxisLabelRotateDegree(45);
         outDegreeCartesianHeatmapChart.setYAxisPosition("right");
+        outDegreeCartesianHeatmapChart.setLeftMargin(50);
+        outDegreeCartesianHeatmapChart.setRightMargin(20);
+        outDegreeCartesianHeatmapChart.displayYAxisLabelInside(true);
         heatMapsContainerLayout.add(outDegreeCartesianHeatmapChart);
         add(heatMapsContainerLayout);
     }
