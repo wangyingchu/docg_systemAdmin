@@ -118,6 +118,14 @@ public class CartesianHeatmapChart extends Div {
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setYAxisLabelRotateDegree", rotateDegree));
     }
 
+    public void setXAxisLabelFontSize(int fontsize){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setXAxisLabelFontSize", fontsize));
+    }
+
+    public void setYAxisLabelFontSize(int fontsize){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setYAxisLabelFontSize", fontsize));
+    }
+
     private void initConnector(Element layout) {
         runBeforeClientResponse(ui -> ui.getPage().executeJs(
                 "window.Vaadin.Flow.common_CartesianHeatmapChart_echarts.initLazy($0)", getElement()));

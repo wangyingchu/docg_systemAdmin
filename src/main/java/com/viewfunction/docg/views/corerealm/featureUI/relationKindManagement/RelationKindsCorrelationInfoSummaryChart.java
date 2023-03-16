@@ -12,6 +12,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatistics
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RuntimeRelationAndConceptionKindAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.chart.CartesianHeatmapChart;
 
@@ -34,8 +35,11 @@ public class RelationKindsCorrelationInfoSummaryChart extends VerticalLayout {
         inDegreeCartesianHeatmapChart.setName("领域概念与关系实体入度统计");
         inDegreeCartesianHeatmapChart.setTooltipPosition("right");
         inDegreeCartesianHeatmapChart.setXAxisLabelRotateDegree(45);
+        inDegreeCartesianHeatmapChart.setTopMargin(40);
         inDegreeCartesianHeatmapChart.setLeftMargin(50);
         inDegreeCartesianHeatmapChart.displayYAxisLabelInside(true);
+        inDegreeCartesianHeatmapChart.setXAxisLabelFontSize(9);
+        inDegreeCartesianHeatmapChart.setYAxisLabelFontSize(14);
         heatMapsContainerLayout.add(inDegreeCartesianHeatmapChart);
 
         outDegreeCartesianHeatmapChart = new CartesianHeatmapChart(cartesianHeatmapChartWidth,windowHeight-100);
@@ -44,9 +48,12 @@ public class RelationKindsCorrelationInfoSummaryChart extends VerticalLayout {
         outDegreeCartesianHeatmapChart.setTooltipPosition("left");
         outDegreeCartesianHeatmapChart.setXAxisLabelRotateDegree(45);
         outDegreeCartesianHeatmapChart.setYAxisPosition("right");
+        outDegreeCartesianHeatmapChart.setTopMargin(40);
         outDegreeCartesianHeatmapChart.setLeftMargin(50);
         outDegreeCartesianHeatmapChart.setRightMargin(20);
         outDegreeCartesianHeatmapChart.displayYAxisLabelInside(true);
+        outDegreeCartesianHeatmapChart.setXAxisLabelFontSize(9);
+        outDegreeCartesianHeatmapChart.setYAxisLabelFontSize(14);
         heatMapsContainerLayout.add(outDegreeCartesianHeatmapChart);
         add(heatMapsContainerLayout);
     }
@@ -63,7 +70,7 @@ public class RelationKindsCorrelationInfoSummaryChart extends VerticalLayout {
 
         long inDegreeMaxRelationCount = 0;
         try {
-            List<EntityStatisticsInfo> conceptionEntityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
+            List<EntityStatisticsInfo> conceptionEntityStatisticsInfoList = filterSystemConceptionKinds(coreRealm.getConceptionEntitiesStatistics());
             conceptionKindsLabel_x = new String[conceptionEntityStatisticsInfoList.size()];
             for(int i =0 ;i<conceptionEntityStatisticsInfoList.size();i++){
                 String conceptionKindName = conceptionEntityStatisticsInfoList.get(i).getEntityKindName();
@@ -71,7 +78,7 @@ public class RelationKindsCorrelationInfoSummaryChart extends VerticalLayout {
                 conceptionKindsLabel_x[i]=conceptionKindName;
             }
 
-            List<EntityStatisticsInfo> relationEntityStatisticsInfoList = coreRealm.getRelationEntitiesStatistics();
+            List<EntityStatisticsInfo> relationEntityStatisticsInfoList = filterSystemRelationKinds(coreRealm.getRelationEntitiesStatistics());
             relationKindsLabel_y = new String[relationEntityStatisticsInfoList.size()];
             for(int i =0 ;i<relationEntityStatisticsInfoList.size();i++){
                 String relationKindName =  relationEntityStatisticsInfoList.get(i).getEntityKindName();
@@ -133,7 +140,7 @@ public class RelationKindsCorrelationInfoSummaryChart extends VerticalLayout {
 
         long outDegreeMaxRelationCount = 0;
         try {
-            List<EntityStatisticsInfo> conceptionEntityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
+            List<EntityStatisticsInfo> conceptionEntityStatisticsInfoList = filterSystemConceptionKinds(coreRealm.getConceptionEntitiesStatistics());
             conceptionKindsLabel_x = new String[conceptionEntityStatisticsInfoList.size()];
             for(int i =0 ;i<conceptionEntityStatisticsInfoList.size();i++){
                 String conceptionKindName = conceptionEntityStatisticsInfoList.get(i).getEntityKindName();
@@ -141,7 +148,7 @@ public class RelationKindsCorrelationInfoSummaryChart extends VerticalLayout {
                 conceptionKindsLabel_x[i]=conceptionKindName;
             }
 
-            List<EntityStatisticsInfo> relationEntityStatisticsInfoList = coreRealm.getRelationEntitiesStatistics();
+            List<EntityStatisticsInfo> relationEntityStatisticsInfoList = filterSystemRelationKinds(coreRealm.getRelationEntitiesStatistics());
             relationKindsLabel_y = new String[relationEntityStatisticsInfoList.size()];
             for(int i =0 ;i<relationEntityStatisticsInfoList.size();i++){
                 String relationKindName =  relationEntityStatisticsInfoList.get(i).getEntityKindName();
@@ -211,6 +218,46 @@ public class RelationKindsCorrelationInfoSummaryChart extends VerticalLayout {
         //集合排序
         Collections.sort(total);
         return total.get(0);
+    }
+
+    private List<EntityStatisticsInfo> filterSystemConceptionKinds(List<EntityStatisticsInfo> entityStatisticsInfo){
+        if(entityStatisticsInfo != null){
+            ArrayList<EntityStatisticsInfo> resultList = new ArrayList<>();
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfo){
+                if(currentEntityStatisticsInfo.getEntityKindName().startsWith(RealmConstant.RealmInnerTypePerFix)){
+                    if(currentEntityStatisticsInfo.getEntityKindName().equals(RealmConstant.TimeScaleEventClass)){
+                        resultList.add(currentEntityStatisticsInfo);
+                    }
+                    if(currentEntityStatisticsInfo.getEntityKindName().equals(RealmConstant.GeospatialScaleEventClass)){
+                        resultList.add(currentEntityStatisticsInfo);
+                    }
+                }else{
+                    resultList.add(currentEntityStatisticsInfo);
+                }
+            }
+            return resultList;
+        }
+        return null;
+    }
+
+    private List<EntityStatisticsInfo> filterSystemRelationKinds(List<EntityStatisticsInfo> entityStatisticsInfo){
+        if(entityStatisticsInfo != null){
+            ArrayList<EntityStatisticsInfo> resultList = new ArrayList<>();
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfo){
+                if(currentEntityStatisticsInfo.getEntityKindName().startsWith(RealmConstant.RealmInnerTypePerFix)){
+                    if(currentEntityStatisticsInfo.getEntityKindName().equals(RealmConstant.TimeScale_TimeReferToRelationClass)){
+                        resultList.add(currentEntityStatisticsInfo);
+                    }
+                    if(currentEntityStatisticsInfo.getEntityKindName().equals(RealmConstant.GeospatialScale_GeospatialReferToRelationClass)){
+                        resultList.add(currentEntityStatisticsInfo);
+                    }
+                }else{
+                    resultList.add(currentEntityStatisticsInfo);
+                }
+            }
+            return resultList;
+        }
+        return null;
     }
 
     @Override

@@ -10,7 +10,7 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                 c.$connector.option.visualMap.inRange.color = colorArray;
             },
             setName:function(nameValue){
-                c.$connector.option.series[0].name = nameValue;
+                c.$connector.option.title.text = nameValue;
             },
             setTooltipPosition:function(positionValue){
                 c.$connector.option.tooltip.position = positionValue;
@@ -69,6 +69,12 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
             displayYAxisLabelInside:function(inside){
                 c.$connector.option.yAxis.axisLabel.inside = inside;
             },
+            setXAxisLabelFontSize:function(fontSize){
+                c.$connector.option.xAxis.axisLabel.fontSize = fontSize;
+            },
+            setYAxisLabelFontSize:function(fontSize){
+                c.$connector.option.yAxis.axisLabel.fontSize = fontSize;
+            },
             setData:function(dataObj){
                 let mapData = dataObj.map(function (item) {
                         return [item[1], item[0], item[2] || '-'];
@@ -102,6 +108,10 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
             });
 
         c.$connector.option = {
+            title: {
+                top: 5,
+                left: 'center'
+            },
             tooltip: {
                 position: 'left',
                 formatter: function(param,index){
