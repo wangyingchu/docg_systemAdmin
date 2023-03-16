@@ -38,10 +38,7 @@ import com.viewfunction.docg.element.eventHandling.RelationKindRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingDataListView;
-import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CleanRelationKindEntitiesView;
-import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CreateRelationKindView;
-import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
-import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RemoveRelationKindView;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.*;
 
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.queryRelationKind.RelationKindQueryUI;
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -108,7 +105,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
         relationKindRelationGuideButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderConceptionKindsCorrelationInfoSummaryUI(conceptionKindRelationGuideButton);
+                renderRelationKindsCorrelationInfoSummaryUI(relationKindRelationGuideButton);
             }
         });
 
@@ -693,5 +690,25 @@ public class RelationKindManagementUI extends VerticalLayout implements
                 resetSingleRelationKindSummaryInfoArea();
             }
         }
+    }
+
+    private void renderRelationKindsCorrelationInfoSummaryUI(Button relationKindRelationGuideButton){
+        RelationKindsCorrelationInfoSummaryChart relationKindsCorrelationInfoSummaryChart = new RelationKindsCorrelationInfoSummaryChart(1180,800);
+        /*
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+        Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.
+                getSystemConceptionKindsRelationDistributionStatistics();
+        relationKindsCorrelationInfoSummaryChart.setData(conceptionKindCorrelationInfoSet);
+        */
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"关系类型实体实时关联分布概览",null,true,1200,900,false);
+        fixSizeWindow.setWindowContent(relationKindsCorrelationInfoSummaryChart);
+        fixSizeWindow.show();
+        fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
+            @Override
+            public void onComponentEvent(DetachEvent detachEvent) {
+                relationKindRelationGuideButton.setEnabled(true);
+            }
+        });
     }
 }
