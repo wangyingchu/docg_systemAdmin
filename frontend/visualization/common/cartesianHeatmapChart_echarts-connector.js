@@ -19,6 +19,12 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
                 c.$connector.option.xAxis.axisLabel.show = false;
                 c.$connector.option.yAxis.axisLabel.show = false;
             },
+            hideXLabel:function(){
+                c.$connector.option.xAxis.axisLabel.show = false;
+            },
+            hideYLabel:function(){
+                c.$connector.option.yAxis.axisLabel.show = false;
+            },
             hideMapValues:function(){
                 c.$connector.option.series[0].label.show = false;
             },
@@ -47,6 +53,9 @@ window.Vaadin.Flow.common_CartesianHeatmapChart_echarts = {
             setYAxisLabel:function(yAxisLabel){
                 c.$connector.option.yAxis.data = yAxisLabel;
                 c.$connector.yAxisLabel = yAxisLabel;
+            },
+            setYAxisPosition:function(positionValue){
+                c.$connector.option.yAxis.position = positionValue;
             },
             setXAxisLabelRotateDegree:function(rotateDegree){
                 c.$connector.option.xAxis.axisLabel.rotate = rotateDegree;

@@ -289,7 +289,7 @@
  "frontendHashes": {
   "themes/docg-pac/components/vaadin-grid.css": "2fb27b1731db8d9f0dba5d5bbfe85dfb4fe2218840fd5094b80c3e1dce4a35c2",
   "visualization/common/barChart_echarts-connector.js": "486904a12fc451027fbfe1b9670fc07f4a23e1a4263aaccae4499374da152113",
-  "visualization/common/cartesianHeatmapChart_echarts-connector.js": "62c4e276669dff96e3bef50e638aa6b3be114d56053f0eeb77aae56510521bdf",
+  "visualization/common/cartesianHeatmapChart_echarts-connector.js": "8ff3549240f86919279d3ead1b913be1d9e1ae97606501123bc232358a1bb815",
   "visualization/common/pieChart_echarts-connector.js": "1043213cc8993cb0aa570b6c1a9716ff50a7dfed8f84e3ce946d46a4122873ef",
   "visualization/feature/conceptionEntityRelationsChart-connector.js": "ef3cf63a9558a6b25462f5db96a3cb029fd8f00d1a471faa095be031b758294b",
   "visualization/feature/conceptionEntitySpatialChart-connector.js": "6a047eec050a3ebc994b4d05990e739b22da52940c3c02b13d16a8aad106bb5c",
@@ -332,7 +332,7 @@
   "docg-pac": "{\n  \"lumoImports\" : [ \"typography\", \"color\", \"spacing\", \"badge\", \"utility\" ]\n}"
  },
  "entryScripts": [
-  "VAADIN/build/indexhtml-b707f77b.js"
+  "VAADIN/build/indexhtml-6df9b831.js"
  ],
  "webComponents": [],
  "packageJsonHash": "7630e2a1a29b49e2ef4170daabcb512b861277caccfcd4d00fc69c9426aa45d3"

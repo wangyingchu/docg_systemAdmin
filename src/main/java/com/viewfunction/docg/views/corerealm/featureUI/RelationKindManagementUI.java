@@ -693,15 +693,8 @@ public class RelationKindManagementUI extends VerticalLayout implements
     }
 
     private void renderRelationKindsCorrelationInfoSummaryUI(Button relationKindRelationGuideButton){
-        RelationKindsCorrelationInfoSummaryChart relationKindsCorrelationInfoSummaryChart = new RelationKindsCorrelationInfoSummaryChart(1180,800);
-        /*
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
-        Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.
-                getSystemConceptionKindsRelationDistributionStatistics();
-        relationKindsCorrelationInfoSummaryChart.setData(conceptionKindCorrelationInfoSet);
-        */
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"关系类型实体实时关联分布概览",null,true,1200,900,false);
+        RelationKindsCorrelationInfoSummaryChart relationKindsCorrelationInfoSummaryChart = new RelationKindsCorrelationInfoSummaryChart(1600,800);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"关系类型实体实时关联分布概览",null,true,1610,900,false);
         fixSizeWindow.setWindowContent(relationKindsCorrelationInfoSummaryChart);
         fixSizeWindow.show();
         fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {

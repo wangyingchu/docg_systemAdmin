@@ -55,6 +55,18 @@ public class CartesianHeatmapChart extends Div {
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.hideLabels", ""));
     }
 
+    public void hideXLabel(){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.hideXLabel", ""));
+    }
+
+    public void hideYLabel(){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.hideYLabel", ""));
+    }
+
+    public void setYAxisPosition(String positionValue){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setYAxisPosition", positionValue));
+    }
+
     public void setMinMapValue(int minValue){
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setMinMapValue", minValue));
     }
