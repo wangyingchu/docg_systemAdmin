@@ -32,7 +32,7 @@ public class RelationKindsCorrelationInfoSummaryChart extends VerticalLayout {
         inDegreeCartesianHeatmapChart = new CartesianHeatmapChart(cartesianHeatmapChartWidth,windowHeight-100);
         inDegreeCartesianHeatmapChart.setColorRange("#ABDCFF","#0396FF");
         inDegreeCartesianHeatmapChart.setName("领域概念与关系实体入度统计");
-        inDegreeCartesianHeatmapChart.setTooltipPosition("left");
+        inDegreeCartesianHeatmapChart.setTooltipPosition("right");
         inDegreeCartesianHeatmapChart.setXAxisLabelRotateDegree(45);
         inDegreeCartesianHeatmapChart.setLeftMargin(50);
         inDegreeCartesianHeatmapChart.displayYAxisLabelInside(true);
