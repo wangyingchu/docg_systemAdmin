@@ -10,6 +10,12 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
     private String conceptionKind;
 
+    public ConceptionKindDetailView(){}
+
+    public ConceptionKindDetailView(String conceptionKind){
+        this.conceptionKind = conceptionKind;
+    }
+
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.conceptionKind = beforeEnterEvent.getRouteParameters().get("conceptionKind").get();

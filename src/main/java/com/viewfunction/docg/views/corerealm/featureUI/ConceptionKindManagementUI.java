@@ -41,6 +41,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingDataListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.*;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.ConceptionKindDetailView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
 
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -535,16 +536,23 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
     }
 
     private void renderConceptionKindConfigurationUI(EntityStatisticsInfo entityStatisticsInfo){
-        Dialog dialog = new Dialog();
-        dialog.setModal(true);
-        dialog.setResizable(false);
-        dialog.setCloseOnEsc(false);
-        dialog.setCloseOnOutsideClick(false);
-        dialog.setSizeFull();
-        dialog.addThemeVariants(DialogVariant.LUMO_NO_PADDING);
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
-        dialog.add(cancelButton);
-        dialog.open();
+        ConceptionKindDetailView conceptionKindDetailView = new ConceptionKindDetailView(entityStatisticsInfo.getEntityKindName());
+        List<Component> actionComponentList = new ArrayList<>();
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("22px");
+        footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
+        actionComponentList.add(footPrintStartIcon);
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("12px");
+        conceptionKindIcon.getStyle().set("padding-right","3px");
+        actionComponentList.add(conceptionKindIcon);
+        Label conceptionKindName = new Label(entityStatisticsInfo.getEntityKindName());
+        actionComponentList.add(conceptionKindName);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"概念类型配置",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(conceptionKindDetailView);
+        fullScreenWindow.show();
     }
 
     private void renderConceptionKindQueryUI(EntityStatisticsInfo entityStatisticsInfo){
