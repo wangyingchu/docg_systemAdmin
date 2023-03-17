@@ -97,7 +97,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
 
         List<Component> relationKindManagementOperationButtonList = new ArrayList<>();
 
-        Button relationKindRelationGuideButton = new Button("关系实体关联分布概览",new Icon(VaadinIcon.SITEMAP));
+        Button relationKindRelationGuideButton = new Button("关系实体关联分布概览",new Icon(VaadinIcon.DASHBOARD));
         relationKindRelationGuideButton.setDisableOnClick(true);
         relationKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         relationKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -694,7 +694,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
 
     private void renderRelationKindsCorrelationInfoSummaryUI(Button relationKindRelationGuideButton){
         RelationKindsCorrelationInfoSummaryChart relationKindsCorrelationInfoSummaryChart = new RelationKindsCorrelationInfoSummaryChart(1600,700);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"关系类型实体实时关联分布概览",null,true,1600,720,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"关系类型实体实时关联分布概览",null,true,1600,720,false);
         fixSizeWindow.setWindowContent(relationKindsCorrelationInfoSummaryChart);
         fixSizeWindow.show();
         fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {

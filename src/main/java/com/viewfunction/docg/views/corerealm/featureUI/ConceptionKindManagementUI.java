@@ -99,7 +99,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
         List<Component> conceptionKindManagementOperationButtonList = new ArrayList<>();
 
-        Button conceptionKindRelationGuideButton = new Button("概念实体关联分布概览",new Icon(VaadinIcon.SITEMAP));
+        Button conceptionKindRelationGuideButton = new Button("概念实体关联分布概览",new Icon(VaadinIcon.DASHBOARD));
         conceptionKindRelationGuideButton.setDisableOnClick(true);
         conceptionKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         conceptionKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -593,7 +593,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.
                 getSystemConceptionKindsRelationDistributionStatistics();
         conceptionKindsCorrelationInfoSummaryChart.setData(conceptionKindCorrelationInfoSet);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.SITEMAP),"概念类型实体实时关联分布概览",null,true,1200,900,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"概念类型实体实时关联分布概览",null,true,1200,900,false);
         fixSizeWindow.setWindowContent(conceptionKindsCorrelationInfoSummaryChart);
         fixSizeWindow.show();
         fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
