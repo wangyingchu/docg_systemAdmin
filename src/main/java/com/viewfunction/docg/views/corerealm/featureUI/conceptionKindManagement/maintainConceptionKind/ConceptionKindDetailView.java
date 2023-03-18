@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Label;
@@ -14,27 +15,37 @@ import com.vaadin.flow.router.Route;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.ConceptionKind;
 
 @Route("conceptionKindDetailInfo/:conceptionKind")
 public class ConceptionKindDetailView extends VerticalLayout implements BeforeEnterObserver {
 
     private String conceptionKind;
+    private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
     private int conceptionKindDetailViewHeightOffset = 135;
 
-    public ConceptionKindDetailView(){}
+    public ConceptionKindDetailView(){
+    }
 
     public ConceptionKindDetailView(String conceptionKind){
         this.conceptionKind = conceptionKind;
-        renderConceptionKindData();
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.conceptionKind = beforeEnterEvent.getRouteParameters().get("conceptionKind").get();
         this.conceptionKindDetailViewHeightOffset = 70;
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        renderConceptionKindData();
     }
 
     private void renderConceptionKindData(){
@@ -49,14 +60,13 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
         conceptionKindNameLabel.getStyle()
                 .set("font-size","var(--lumo-font-size-l)")
-                //.set("color","#2e4e7e")
                 .set("color","var(--lumo-primary-text-color)")
                 .set("fount-weight","bold");
-
-
-
-
         secTitleElementsList.add(conceptionKindNameLabel);
+
+        //this.kindDescriptionEditorItemWidget = new KindDescriptionEditorItemWidget(this.conceptionKind,ConceptionKind);
+        //secTitleElementsList.add(this.kindDescriptionEditorItemWidget);
+
 
         TextField textField = new TextField();
 
