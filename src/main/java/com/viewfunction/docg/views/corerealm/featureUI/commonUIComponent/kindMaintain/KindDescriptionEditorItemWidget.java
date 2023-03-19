@@ -17,6 +17,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.eventHandling.ConceptionKindDescriptionUpdatedEvent;
+import com.viewfunction.docg.element.eventHandling.RelationKindDescriptionUpdatedEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 public class KindDescriptionEditorItemWidget extends HorizontalLayout {
@@ -157,6 +160,19 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
             this.updateAttributeValueButton.setVisible(true);
             this.confirmUpdateAttributeValueButton.setVisible(false);
             this.cancelUpdateValueButton.setVisible(false);
+            switch (this.currentKindType){
+                case ConceptionKind :
+                        ConceptionKindDescriptionUpdatedEvent conceptionKindDescriptionUpdatedEvent = new ConceptionKindDescriptionUpdatedEvent();
+                    conceptionKindDescriptionUpdatedEvent.setConceptionKindDesc(this.currentKindDescription);
+                    conceptionKindDescriptionUpdatedEvent.setConceptionKindName(this.currentKindName);
+                    ResourceHolder.getApplicationBlackboard().fire(conceptionKindDescriptionUpdatedEvent);
+                    break;
+                case RelationKind:
+                    RelationKindDescriptionUpdatedEvent relationKindDescriptionUpdatedEvent = new RelationKindDescriptionUpdatedEvent();
+                    relationKindDescriptionUpdatedEvent.setRelationKindName(this.currentKindName);
+                    relationKindDescriptionUpdatedEvent.setRelationKindDesc(this.currentKindDescription);
+                    ResourceHolder.getApplicationBlackboard().fire(relationKindDescriptionUpdatedEvent);
+            }
         }
     }
 }
