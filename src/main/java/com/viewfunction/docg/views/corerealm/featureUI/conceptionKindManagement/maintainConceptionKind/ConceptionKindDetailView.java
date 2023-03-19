@@ -2,11 +2,15 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.contextmenu.HasMenuItems;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -52,7 +56,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
         Label conceptionKindNameLabel = new Label(this.conceptionKind);
         conceptionKindNameLabel.getStyle()
-                .set("font-size","var(--lumo-font-size-l)")
+                .set("font-size","var(--lumo-font-size-xl)")
                 .set("color","var(--lumo-primary-text-color)")
                 .set("fount-weight","bold");
         secTitleElementsList.add(conceptionKindNameLabel);
@@ -62,12 +66,58 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
         List<Component> buttonList = new ArrayList<>();
 
-        Button addAttributeButton= new Button("添加实体属性");
-        addAttributeButton.setIcon(VaadinIcon.PLUS.create());
-        addAttributeButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        buttonList.add(addAttributeButton);
+        /*
+        Button imoprtConceptionEntitiesDataButton= new Button("导入概念实体数据");
+        imoprtConceptionEntitiesDataButton.setIcon(VaadinIcon.DOWNLOAD.create());
+        imoprtConceptionEntitiesDataButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
 
-        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"Conception Kind 概念类型 - ",secTitleElementsList,buttonList);
+        Button exoprtConceptionEntitiesDataButton= new Button("导出概念实体数据");
+        exoprtConceptionEntitiesDataButton.setIcon(VaadinIcon.UPLOAD.create());
+        exoprtConceptionEntitiesDataButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+
+        buttonList.add(imoprtConceptionEntitiesDataButton);
+        buttonList.add(exoprtConceptionEntitiesDataButton);
+        */
+
+        MenuBar importMenuBar = new MenuBar();
+        importMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+        MenuItem importDataMenu = createIconItem(importMenuBar, VaadinIcon.DOWNLOAD, "导入概念实体数据", null);
+        SubMenu importSubItems = importDataMenu.getSubMenu();
+        MenuItem csvImportItem = importSubItems.addItem("CSV 格式数据");
+        MenuItem arrowImportItem = importSubItems.addItem("ARROW 格式数据");
+        buttonList.add(importMenuBar);
+
+        MenuBar exportMenuBar = new MenuBar();
+        exportMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+        MenuItem exportDataMenu = createIconItem(exportMenuBar, VaadinIcon.UPLOAD, "导出概念实体数据", null);
+        SubMenu exportSubItems = exportDataMenu.getSubMenu();
+        MenuItem csvExportItem = exportSubItems.addItem("CSV 格式数据");
+        MenuItem arrowExportItem = exportSubItems.addItem("ARROW 格式数据");
+        buttonList.add(exportMenuBar);
+
+        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"Conception Kind 概念类型  ",secTitleElementsList,buttonList);
         add(secondaryTitleActionBar);
+    }
+
+    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
+        return createIconItem(menu, iconName, label, ariaLabel, false);
+    }
+
+    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName,String label, String ariaLabel, boolean isChild) {
+        Icon icon = new Icon(iconName);
+        if (isChild) {
+            icon.getStyle().set("width", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("height", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("marginRight", "var(--lumo-space-s)");
+        }
+        MenuItem item = menu.addItem(icon, e -> {
+        });
+        if (ariaLabel != null) {
+            item.getElement().setAttribute("aria-label", ariaLabel);
+        }
+        if (label != null) {
+            item.add(new Text(label));
+        }
+        return item;
     }
 }

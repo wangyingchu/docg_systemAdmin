@@ -45,7 +45,7 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
         add(this.kindDescriptionLabel);
 
         this.kindDescriptionEditor = new TextField();
-        this.kindDescriptionEditor.setWidth(200,Unit.PIXELS);
+        this.kindDescriptionEditor.setWidth(250,Unit.PIXELS);
         this.kindDescriptionEditor.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         add(this.kindDescriptionEditor);
         this.kindDescriptionEditor.setVisible(false);
