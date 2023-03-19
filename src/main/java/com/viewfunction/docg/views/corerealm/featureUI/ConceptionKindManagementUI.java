@@ -740,8 +740,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
             Collection<EntityStatisticsInfo> entityStatisticsInfoList = dtaProvider.getItems();
             for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
                 if(currentEntityStatisticsInfo.getEntityKindName().equals(event.getConceptionKindName())){
-                    //currentEntityStatisticsInfo.
-                    //set desc
+                    currentEntityStatisticsInfo.setEntityKindDesc(event.getConceptionKindDesc());
                 }
             }
             dtaProvider.refreshAll();
