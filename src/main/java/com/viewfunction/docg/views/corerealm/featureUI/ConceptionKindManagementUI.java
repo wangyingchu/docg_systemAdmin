@@ -33,10 +33,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
-import com.viewfunction.docg.element.eventHandling.ConceptionEntityDeletedEvent;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindCreatedEvent;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindRemovedEvent;
+import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingDataListView;
@@ -57,7 +54,8 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         ConceptionKindCreatedEvent.ConceptionKindCreatedListener,
         ConceptionKindCleanedEvent.ConceptionKindCleanedListener,
         ConceptionKindRemovedEvent.ConceptionKindRemovedListener,
-        ConceptionEntityDeletedEvent.ConceptionEntityDeletedListener{
+        ConceptionEntityDeletedEvent.ConceptionEntityDeletedListener,
+        ConceptionKindDescriptionUpdatedEvent.ConceptionKindDescriptionUpdatedListener {
 
     private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
     private Registration listener;
@@ -729,6 +727,21 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
                     if(orgEntitiesCount >=1){
                         currentEntityStatisticsInfo.setEntitiesCount(orgEntitiesCount-1);
                     }
+                }
+            }
+            dtaProvider.refreshAll();
+        }
+    }
+
+    @Override
+    public void receivedConceptionKindDescriptionUpdatedEvent(ConceptionKindDescriptionUpdatedEvent event) {
+        if(event.getConceptionKindName() != null && event.getConceptionKindDesc() != null){
+            ListDataProvider dtaProvider=(ListDataProvider)conceptionKindMetaInfoGrid.getDataProvider();
+            Collection<EntityStatisticsInfo> entityStatisticsInfoList = dtaProvider.getItems();
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
+                if(currentEntityStatisticsInfo.getEntityKindName().equals(event.getConceptionKindName())){
+                    //currentEntityStatisticsInfo.
+                    //set desc
                 }
             }
             dtaProvider.refreshAll();
