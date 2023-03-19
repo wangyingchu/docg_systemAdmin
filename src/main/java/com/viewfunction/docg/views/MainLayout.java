@@ -221,6 +221,8 @@ public class MainLayout extends AppLayout {
                 RelationEntityAttributeDeletedEvent.class);
         _BLACKBOARD.register(RelationEntityAttributeUpdatedEvent.RelationEntityAttributeUpdatedListener.class,
                 RelationEntityAttributeUpdatedEvent.class);
+        _BLACKBOARD.register(ConceptionKindDescriptionUpdatedEvent.ConceptionKindDescriptionUpdatedListener.class,
+                ConceptionKindDescriptionUpdatedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }
