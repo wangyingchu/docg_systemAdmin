@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
@@ -26,7 +23,6 @@ import com.vaadin.flow.router.Route;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
@@ -44,15 +40,14 @@ import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.
 
 @Route("conceptionKindDetailInfo/:conceptionKind")
 public class ConceptionKindDetailView extends VerticalLayout implements BeforeEnterObserver {
-
     private String conceptionKind;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
     private int conceptionKindDetailViewHeightOffset = 135;
-
     private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
+    private ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
+    private VerticalLayout leftSideContainerLayout;
 
-    public ConceptionKindDetailView(){
-    }
+    public ConceptionKindDetailView(){}
 
     public ConceptionKindDetailView(String conceptionKind){
         this.conceptionKind = conceptionKind;
@@ -68,6 +63,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         renderConceptionKindData();
+        loadConceptionKindInfoData();
     }
 
     private void renderConceptionKindData(){
@@ -89,6 +85,26 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         conceptionKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
         conceptionKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         buttonList.add(conceptionKindMetaInfoButton);
+
+        conceptionKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+
+                conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(500);
+                leftSideContainerLayout.add(conceptionKindCorrelationInfoChart);
+
+                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                coreRealm.openGlobalSession();
+                com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
+                List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(100000);
+                Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
+                coreRealm.closeGlobalSession();
+
+                conceptionKindCorrelationInfoChart.clearData();
+                conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,conceptionKind);
+
+            }
+        });
 
         MenuBar importMenuBar = new MenuBar();
         importMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
@@ -113,13 +129,11 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         mainContainerLayout.setWidthFull();
         add(mainContainerLayout);
 
-        VerticalLayout leftSideContainerLayout = new VerticalLayout();
+        leftSideContainerLayout = new VerticalLayout();
         mainContainerLayout.add(leftSideContainerLayout);
         leftSideContainerLayout.setWidth(800, Unit.PIXELS);
         leftSideContainerLayout.getStyle()
                 .set("border-right", "1px solid var(--lumo-contrast-20pct)");
-
-
         VerticalLayout rightSideContainerLayout = new VerticalLayout();
         mainContainerLayout.add(rightSideContainerLayout);
 
@@ -157,28 +171,34 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
         leftSideContainerLayout.add(infoTitle2);
+        this.conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(500);
 
+
+
+
+        leftSideContainerLayout.add(this.conceptionKindCorrelationInfoChart);
+    }
+
+    private void loadConceptionKindInfoData(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
         List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(100000);
-
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
         coreRealm.closeGlobalSession();
 
         conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
 
+        //this.conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(500);
+        //leftSideContainerLayout.add(conceptionKindCorrelationInfoChart);
 
-        ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(500);
-        leftSideContainerLayout.add(conceptionKindCorrelationInfoChart);
-        conceptionKindCorrelationInfoChart.clearData();
-        conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,this.conceptionKind);
+        //conceptionKindCorrelationInfoChart.clearData();
+        //conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,this.conceptionKind);
+
+
+
 
     }
-
-
-
-
 
 
 

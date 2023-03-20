@@ -280,6 +280,7 @@
   "Frontend/visualization/feature/conceptionEntityTemporalSunburstChart-connector.js",
   "Frontend/visualization/feature/conceptionEntityTemporalTimelineChart-connector.js",
   "Frontend/visualization/feature/conceptionKindCorrelationInfoChart-connector.js",
+  "Frontend/visualization/feature/conceptionKindCorrelationInfoDetailChart-connector.js",
   "Frontend/visualization/feature/conceptionKindsCorrelationInfoSummaryChart-connector.js",
   "Frontend/visualization/feature/dataRelationDistributionChart-connector.js",
   "Frontend/visualization/feature/relatedConceptionEntitiesDandelionGraphChart-connector.js",
@@ -297,6 +298,7 @@
   "visualization/feature/conceptionEntityTemporalSunburstChart-connector.js": "18d954b960a09e6f115cad354e10abdc12a659a2f23887bc75691dbed8c370d3",
   "visualization/feature/conceptionEntityTemporalTimelineChart-connector.js": "219ed0c7d0886080c3e6a3b792e7f24b5735206a15ed71d9f0f3b0497b51df92",
   "visualization/feature/conceptionKindCorrelationInfoChart-connector.js": "930c9ecbf663820393d3dbeacfec79ff316a6f5d2121d9da8928fb959a3621bb",
+  "visualization/feature/conceptionKindCorrelationInfoDetailChart-connector.js": "1f400846d2cecd8cc343a48c223a5af22a75bbe021c319ec5bc3961959593522",
   "visualization/feature/conceptionKindsCorrelationInfoSummaryChart-connector.js": "3fd20d1368cb4da26e3a2b19001a5209b063b967f4d2c3a8369ed10d8d584060",
   "visualization/feature/dataRelationDistributionChart-connector.js": "8cc4a28f9061d3faeed579c0c0e5eeafa563c524abf55bd734b3a772d928a0ef",
   "visualization/feature/relatedConceptionEntitiesDandelionGraphChart-connector.js": "21afd3810c07c4c900ffb96a3bc437c29628b0646c1d1de62dcf9d409d49eb54",
@@ -332,7 +334,7 @@
   "docg-pac": "{\n  \"lumoImports\" : [ \"typography\", \"color\", \"spacing\", \"badge\", \"utility\" ]\n}"
  },
  "entryScripts": [
-  "VAADIN/build/indexhtml-56bea56c.js"
+  "VAADIN/build/indexhtml-5a3033b0.js"
  ],
  "webComponents": [],
  "packageJsonHash": "7630e2a1a29b49e2ef4170daabcb512b861277caccfcd4d00fc69c9426aa45d3"
