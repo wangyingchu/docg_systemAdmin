@@ -3,6 +3,8 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
@@ -18,6 +20,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 
 import java.util.ArrayList;
@@ -66,18 +69,10 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
         List<Component> buttonList = new ArrayList<>();
 
-        /*
-        Button imoprtConceptionEntitiesDataButton= new Button("导入概念实体数据");
-        imoprtConceptionEntitiesDataButton.setIcon(VaadinIcon.DOWNLOAD.create());
-        imoprtConceptionEntitiesDataButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-
-        Button exoprtConceptionEntitiesDataButton= new Button("导出概念实体数据");
-        exoprtConceptionEntitiesDataButton.setIcon(VaadinIcon.UPLOAD.create());
-        exoprtConceptionEntitiesDataButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-
-        buttonList.add(imoprtConceptionEntitiesDataButton);
-        buttonList.add(exoprtConceptionEntitiesDataButton);
-        */
+        Button conceptionKindMetaInfoButton= new Button("概念类型元数据");
+        conceptionKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
+        conceptionKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        buttonList.add(conceptionKindMetaInfoButton);
 
         MenuBar importMenuBar = new MenuBar();
         importMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
@@ -97,6 +92,17 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"Conception Kind 概念类型  ",secTitleElementsList,buttonList);
         add(secondaryTitleActionBar);
+
+        //List<Component> secondaryTitleComponentsList = new ArrayList<>();
+        //List<Component> actionComponentsList = new ArrayList<>();
+        //Icon relationsIcon = VaadinIcon.AIRPLANE.create();
+        //SecondaryTitleActionBar secondaryTitleActionBar2 = new SecondaryTitleActionBar(relationsIcon, "关联关系探索: ", secondaryTitleComponentsList, actionComponentsList);
+        //add(secondaryTitleActionBar2);
+
+        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体概略采样数 "+100000+")");
+        add(infoTitle1);
+
+
     }
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
