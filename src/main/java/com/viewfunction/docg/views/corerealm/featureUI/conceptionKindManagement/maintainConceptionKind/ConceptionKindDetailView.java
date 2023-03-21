@@ -8,6 +8,7 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -16,6 +17,7 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -133,6 +135,10 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         add(mainContainerLayout);
 
         leftSideContainerLayout = new VerticalLayout();
+        leftSideContainerLayout.setSpacing(false);
+        leftSideContainerLayout.setPadding(false);
+        leftSideContainerLayout.setMargin(false);
+
         mainContainerLayout.add(leftSideContainerLayout);
         leftSideContainerLayout.setWidth(800, Unit.PIXELS);
         leftSideContainerLayout.getStyle()
@@ -141,6 +147,8 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         mainContainerLayout.add(rightSideContainerLayout);
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体概略采样数 "+10000+")");
+        infoTitle1.getStyle().set("padding-bottom","5px");
+
         leftSideContainerLayout.add(infoTitle1);
 
         conceptionKindAttributesInfoGrid = new Grid<>();
@@ -173,15 +181,25 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4);
 
         conceptionKindAttributesInfoGrid.setHeight(300,Unit.PIXELS);
-
         leftSideContainerLayout.add(conceptionKindAttributesInfoGrid);
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
+        infoTitle2.getStyle().set("padding-top","20px");
+
         leftSideContainerLayout.add(infoTitle2);
         this.conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(500);
 
-        //leftSideContainerLayout.add(this.conceptionKindCorrelationInfoChart);
-    }
+        TabSheet kindCorrelationInfoTabSheet = new TabSheet();
+        kindCorrelationInfoTabSheet.setWidthFull();
+        kindCorrelationInfoTabSheet.add("Dashboard",
+                new Div(new Text("This is the Dashboard tab content")));
+        kindCorrelationInfoTabSheet.add("Payment",
+                new Div(new Text("This is the Payment tab content")));
+        kindCorrelationInfoTabSheet.add("Shipping",
+                new Div(new Text("This is the Shipping tab content")));
+
+        leftSideContainerLayout.add(kindCorrelationInfoTabSheet);
+   }
 
     private void loadConceptionKindInfoData(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
