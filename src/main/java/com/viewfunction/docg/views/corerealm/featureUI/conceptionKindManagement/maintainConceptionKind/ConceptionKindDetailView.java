@@ -94,22 +94,23 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         conceptionKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-
                 conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(500);
                 leftSideContainerLayout.add(conceptionKindCorrelationInfoChart);
-
                 CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
                 coreRealm.openGlobalSession();
                 com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
-                List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(100000);
+                //List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(100000);
                 Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
                 coreRealm.closeGlobalSession();
-
                 conceptionKindCorrelationInfoChart.clearData();
                 conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,conceptionKind);
-
             }
         });
+
+        Button AddConceptionKindScopeAttributeButton= new Button("添加概念类型全局属性");
+        AddConceptionKindScopeAttributeButton.setIcon(VaadinIcon.TEXT_INPUT.create());
+        AddConceptionKindScopeAttributeButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        buttonList.add(AddConceptionKindScopeAttributeButton);
 
         MenuBar importMenuBar = new MenuBar();
         importMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
@@ -180,7 +181,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         LightGridColumnHeader gridColumnHeader_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4);
 
-        conceptionKindAttributesInfoGrid.setHeight(300,Unit.PIXELS);
+        conceptionKindAttributesInfoGrid.setHeight(252,Unit.PIXELS);
         leftSideContainerLayout.add(conceptionKindAttributesInfoGrid);
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
@@ -191,11 +192,11 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
         TabSheet kindCorrelationInfoTabSheet = new TabSheet();
         kindCorrelationInfoTabSheet.setWidthFull();
-        kindCorrelationInfoTabSheet.add("Dashboard",
+        kindCorrelationInfoTabSheet.add("关系关联实时分布",
                 new Div(new Text("This is the Dashboard tab content")));
-        kindCorrelationInfoTabSheet.add("Payment",
+        kindCorrelationInfoTabSheet.add("概念关联实时分布",
                 new Div(new Text("This is the Payment tab content")));
-        kindCorrelationInfoTabSheet.add("Shipping",
+        kindCorrelationInfoTabSheet.add("概念关联实时分布网络图",
                 new Div(new Text("This is the Shipping tab content")));
 
         leftSideContainerLayout.add(kindCorrelationInfoTabSheet);
@@ -235,7 +236,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         buttons.setSpacing(false);
         buttons.setMargin(false);
         buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        buttons.setHeight(15,Unit.PIXELS);
+        buttons.setHeight(10,Unit.PIXELS);
         buttons.setWidth(80,Unit.PIXELS);
         return new VerticalLayout(buttons);
     });
