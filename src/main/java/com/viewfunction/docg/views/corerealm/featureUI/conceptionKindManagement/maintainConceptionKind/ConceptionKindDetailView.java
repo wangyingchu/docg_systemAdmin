@@ -180,7 +180,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         leftSideContainerLayout.add(infoTitle2);
         this.conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(500);
 
-        leftSideContainerLayout.add(this.conceptionKindCorrelationInfoChart);
+        //leftSideContainerLayout.add(this.conceptionKindCorrelationInfoChart);
     }
 
     private void loadConceptionKindInfoData(){
