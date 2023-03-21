@@ -51,6 +51,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
     private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
     private ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
     private VerticalLayout leftSideContainerLayout;
+    private VerticalLayout conceptionKindCorrelationInfoChartContainer;
 
     public ConceptionKindDetailView(){}
 
@@ -95,7 +96,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(500);
-                leftSideContainerLayout.add(conceptionKindCorrelationInfoChart);
+                conceptionKindCorrelationInfoChartContainer.add(conceptionKindCorrelationInfoChart);
                 CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
                 coreRealm.openGlobalSession();
                 com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
@@ -190,14 +191,16 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         leftSideContainerLayout.add(infoTitle2);
         this.conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(500);
 
+
+        conceptionKindCorrelationInfoChartContainer = new VerticalLayout();
+
         TabSheet kindCorrelationInfoTabSheet = new TabSheet();
         kindCorrelationInfoTabSheet.setWidthFull();
         kindCorrelationInfoTabSheet.add("关系关联实时分布",
                 new Div(new Text("This is the Dashboard tab content")));
         kindCorrelationInfoTabSheet.add("概念关联实时分布",
                 new Div(new Text("This is the Payment tab content")));
-        kindCorrelationInfoTabSheet.add("概念关联实时分布网络图",
-                new Div(new Text("This is the Shipping tab content")));
+        kindCorrelationInfoTabSheet.add("概念关联实时分布网络图",conceptionKindCorrelationInfoChartContainer);
 
         leftSideContainerLayout.add(kindCorrelationInfoTabSheet);
    }
