@@ -16,12 +16,14 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -30,6 +32,7 @@ import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
+import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -137,7 +140,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         VerticalLayout rightSideContainerLayout = new VerticalLayout();
         mainContainerLayout.add(rightSideContainerLayout);
 
-        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体概略采样数 "+100000+")");
+        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体概略采样数 "+10000+")");
         leftSideContainerLayout.add(infoTitle1);
 
         conceptionKindAttributesInfoGrid = new Grid<>();
@@ -156,15 +159,19 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
                         (int)(entityStatisticsInfo1.getAttributeHitCount() - entityStatisticsInfo2.getAttributeHitCount()))
                 .setHeader("属性命中数").setKey("idx_3")
                 .setFlexGrow(0).setWidth("100px").setResizable(false);
-
+        conceptionKindAttributesInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("60px").setResizable(false);
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
-        conceptionKindAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
+        conceptionKindAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true)
+                .setTooltipGenerator(kindEntityAttributeRuntimeStatistics -> getAttributeName(kindEntityAttributeRuntimeStatistics));;
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.PASSWORD,"属性数据类型");
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.EYEDROPPER,"属性采样数");
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(VaadinIcon.CROSSHAIRS,"属性命中数");
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
+        conceptionKindAttributesInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4);
+
         conceptionKindAttributesInfoGrid.setHeight(300,Unit.PIXELS);
 
         leftSideContainerLayout.add(conceptionKindAttributesInfoGrid);
@@ -172,9 +179,6 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
         leftSideContainerLayout.add(infoTitle2);
         this.conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(500);
-
-
-
 
         leftSideContainerLayout.add(this.conceptionKindCorrelationInfoChart);
     }
@@ -194,24 +198,33 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
         //conceptionKindCorrelationInfoChart.clearData();
         //conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,this.conceptionKind);
-
-
-
-
     }
 
+    ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+        Icon queryIcon = new Icon(VaadinIcon.INPUT);
+        queryIcon.setSize("20px");
+        Button addAsAttributeKind = new Button(queryIcon, event -> {
+            if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
+            }
+        });
+        addAsAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        addAsAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        Tooltips.getCurrent().setTooltip(addAsAttributeKind, "添加为属性类型");
 
+        HorizontalLayout buttons = new HorizontalLayout(addAsAttributeKind);
+        buttons.setPadding(false);
+        buttons.setSpacing(false);
+        buttons.setMargin(false);
+        buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        buttons.setHeight(15,Unit.PIXELS);
+        buttons.setWidth(80,Unit.PIXELS);
+        return new VerticalLayout(buttons);
+    });
 
-
-
-
-
-
-
-
-
-
-
+    private String getAttributeName(KindEntityAttributeRuntimeStatistics kindEntityAttributeRuntimeStatistics){
+        return kindEntityAttributeRuntimeStatistics.getAttributeName();
+    }
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
         return createIconItem(menu, iconName, label, ariaLabel, false);
