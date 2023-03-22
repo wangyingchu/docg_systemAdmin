@@ -21,6 +21,7 @@ import com.vaadin.flow.component.tabs.TabSheet;
 
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
@@ -31,6 +32,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatistics
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+
+import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
@@ -63,6 +66,9 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
     private boolean conceptionRealTimeChartFirstLoaded = false;
     private Registration listener;
     private int currentBrowserHeight = 0;
+    private Grid<ConceptionKindCorrelationInfo> conceptionRelationRealtimeInfoGrid;
+    private boolean conceptionRealTimeInfoGridFirstLoaded = false;
+    private VerticalLayout conceptionKindCorrelationInfoGridContainer;
 
     public ConceptionKindDetailView(){}
 
@@ -85,7 +91,8 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             currentBrowserHeight = event.getHeight();
             int chartHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset - 340;
-            conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(chartHeight);
+            conceptionKindCorrelationInfoChart.setHeight(chartHeight,Unit.PIXELS);
+            this.conceptionRelationRealtimeInfoGrid.setHeight(chartHeight,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -174,7 +181,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
         conceptionKindAttributesInfoGrid = new Grid<>();
         conceptionKindAttributesInfoGrid.setWidth(100,Unit.PERCENTAGE);
-        conceptionKindAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        conceptionKindAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         conceptionKindAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         conceptionKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeName).setHeader("属性名称").setKey("idx_0");
         conceptionKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeDataType).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("130px").setResizable(false);
@@ -210,6 +217,11 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         leftSideContainerLayout.add(infoTitle2);
         this.conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(500);
 
+        conceptionKindCorrelationInfoGridContainer = new VerticalLayout();
+        conceptionKindCorrelationInfoGridContainer.setPadding(false);
+        conceptionKindCorrelationInfoGridContainer.setSpacing(false);
+        conceptionKindCorrelationInfoGridContainer.setMargin(false);
+
         conceptionKindCorrelationInfoChartContainer = new VerticalLayout();
         conceptionKindCorrelationInfoChartContainer.setPadding(false);
         conceptionKindCorrelationInfoChartContainer.setSpacing(false);
@@ -219,8 +231,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         kindCorrelationInfoTabSheet.setWidthFull();
         relationRealTimeInfoTab = kindCorrelationInfoTabSheet.add("关系关联实时分布",
                 new Div(new Text("This is the Dashboard tab content")));
-        conceptionRealTimeInfoTab = kindCorrelationInfoTabSheet.add("概念关联实时分布",
-                new Div(new Text("This is the Payment tab content")));
+        conceptionRealTimeInfoTab = kindCorrelationInfoTabSheet.add("概念关联实时分布",conceptionKindCorrelationInfoGridContainer);
         conceptionRealTimeChartTab = kindCorrelationInfoTabSheet.add("概念关联实时分布网络图",conceptionKindCorrelationInfoChartContainer);
         kindCorrelationInfoTabSheet.addSelectedChangeListener(new ComponentEventListener<TabSheet.SelectedChangeEvent>() {
             @Override
@@ -292,7 +303,16 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         if(relationRealTimeInfoTab.isSelected()){
 
         }else if(conceptionRealTimeInfoTab.isSelected()){
-
+            if(!this.conceptionRealTimeInfoGridFirstLoaded){
+                int chartHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset - 340;
+                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
+                Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
+                initConceptionRelationRealtimeInfoGrid(conceptionKindCorrelationInfoSet);
+                this.conceptionRelationRealtimeInfoGrid.setHeight(chartHeight,Unit.PIXELS);
+                this.conceptionKindCorrelationInfoGridContainer.add(this.conceptionRelationRealtimeInfoGrid);
+                this.conceptionRealTimeInfoGridFirstLoaded = true;
+            }
         }else if(conceptionRealTimeChartTab.isSelected()){
             if(!this.conceptionRealTimeChartFirstLoaded){
                 int chartHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset - 340;
@@ -306,5 +326,57 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
                 this.conceptionRealTimeChartFirstLoaded = true;
             }
         }else{}
+    }
+
+    private void initConceptionRelationRealtimeInfoGrid(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet){
+        this.conceptionRelationRealtimeInfoGrid = new Grid<>();
+        this.conceptionRelationRealtimeInfoGrid.setWidth(100,Unit.PERCENTAGE);
+        this.conceptionRelationRealtimeInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        this.conceptionRelationRealtimeInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
+        this.conceptionRelationRealtimeInfoGrid.addComponentColumn(new RelationDirectionIconValueProvider()).setHeader("").setKey("idx_0").setFlexGrow(0).setWidth("35px").setResizable(false);
+        this.conceptionRelationRealtimeInfoGrid.addColumn(ConceptionKindCorrelationInfo::getRelationKindName).setHeader("关系类型").setKey("idx_1");
+        this.conceptionRelationRealtimeInfoGrid.addComponentColumn(new RelatedConceptionKindValueProvider()).setHeader("关联概念类型").setKey("idx_2");
+        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.CONNECT_O,"关联关系类型");
+        conceptionRelationRealtimeInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(false);
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.CUBE,"关联概念类型");
+        conceptionRelationRealtimeInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(false);
+        this.conceptionRelationRealtimeInfoGrid.setItems(conceptionKindCorrelationInfoSet);
+    }
+
+    private class RelationDirectionIconValueProvider implements ValueProvider<ConceptionKindCorrelationInfo,Icon> {
+        @Override
+        public Icon apply(ConceptionKindCorrelationInfo conceptionKindCorrelationInfo) {
+            conceptionKindCorrelationInfo.getSourceConceptionKindName();
+            Icon relationDirectionIcon = null;
+            String fromConceptionKind = conceptionKindCorrelationInfo.getSourceConceptionKindName();
+            String toConceptionKind = conceptionKindCorrelationInfo.getTargetConceptionKindName();
+            if(conceptionKind.equals(fromConceptionKind)){
+                relationDirectionIcon = VaadinIcon.ANGLE_DOUBLE_RIGHT.create();
+            }
+            if(conceptionKind.equals(toConceptionKind)){
+                relationDirectionIcon = VaadinIcon.ANGLE_DOUBLE_LEFT.create();
+            }
+            if(relationDirectionIcon != null){
+                relationDirectionIcon.setSize("14px");
+            }
+            return relationDirectionIcon;
+        }
+    }
+
+    private class RelatedConceptionKindValueProvider implements ValueProvider<ConceptionKindCorrelationInfo,HorizontalLayout>{
+        public HorizontalLayout apply(ConceptionKindCorrelationInfo conceptionKindCorrelationInfo) {
+            HorizontalLayout conceptionKindContainerLayout = new HorizontalLayout();
+            String fromConceptionKind = conceptionKindCorrelationInfo.getSourceConceptionKindName();
+            String toConceptionKind = conceptionKindCorrelationInfo.getTargetConceptionKindName();
+            Label displayConceptionKind = null;
+            if(conceptionKind.equals(fromConceptionKind)){
+                displayConceptionKind = new Label(toConceptionKind);
+            }
+            if(conceptionKind.equals(toConceptionKind)){
+                displayConceptionKind = new Label(fromConceptionKind);
+            }
+            conceptionKindContainerLayout.add(displayConceptionKind);
+            return conceptionKindContainerLayout;
+        }
     }
 }
