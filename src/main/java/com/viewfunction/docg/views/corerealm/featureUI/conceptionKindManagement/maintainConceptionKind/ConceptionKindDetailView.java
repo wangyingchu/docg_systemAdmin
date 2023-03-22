@@ -198,7 +198,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         conceptionKindAttributesInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("60px").setResizable(false);
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true)
-                .setTooltipGenerator(kindEntityAttributeRuntimeStatistics -> getAttributeName(kindEntityAttributeRuntimeStatistics));;
+                .setTooltipGenerator(kindEntityAttributeRuntimeStatistics -> getAttributeName(kindEntityAttributeRuntimeStatistics));
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.PASSWORD,"属性数据类型");
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.EYEDROPPER,"属性采样数");
@@ -337,10 +337,26 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         this.conceptionRelationRealtimeInfoGrid.addColumn(ConceptionKindCorrelationInfo::getRelationKindName).setHeader("关系类型").setKey("idx_1");
         this.conceptionRelationRealtimeInfoGrid.addComponentColumn(new RelatedConceptionKindValueProvider()).setHeader("关联概念类型").setKey("idx_2");
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.CONNECT_O,"关联关系类型");
-        conceptionRelationRealtimeInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(false);
+        conceptionRelationRealtimeInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(false)
+                .setTooltipGenerator(conceptionKindCorrelationInfo -> getRelationKindName(conceptionKindCorrelationInfo));
         GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.CUBE,"关联概念类型");
-        conceptionRelationRealtimeInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(false);
+        conceptionRelationRealtimeInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(false)
+                .setTooltipGenerator(conceptionKindCorrelationInfo -> geConceptionKindName(conceptionKindCorrelationInfo));;
         this.conceptionRelationRealtimeInfoGrid.setItems(conceptionKindCorrelationInfoSet);
+    }
+
+    private String getRelationKindName(ConceptionKindCorrelationInfo conceptionKindCorrelationInfo){
+        return conceptionKindCorrelationInfo.getRelationKindName();
+    }
+
+    private String geConceptionKindName(ConceptionKindCorrelationInfo conceptionKindCorrelationInfo){
+        String fromConceptionKind = conceptionKindCorrelationInfo.getSourceConceptionKindName();
+        String toConceptionKind = conceptionKindCorrelationInfo.getTargetConceptionKindName();
+        if(conceptionKind.equals(fromConceptionKind)){
+            return toConceptionKind;
+        }else{
+            return fromConceptionKind;
+        }
     }
 
     private class RelationDirectionIconValueProvider implements ValueProvider<ConceptionKindCorrelationInfo,Icon> {
