@@ -33,15 +33,14 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttrib
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
-import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
-import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
-import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
-import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
+import com.viewfunction.docg.element.commonComponent.*;
 
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
 import dev.mett.vaadin.tooltip.Tooltips;
+import org.checkerframework.checker.units.qual.C;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -126,15 +125,25 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
         List<Component> buttonList = new ArrayList<>();
 
+        Button queryConceptionKindButton= new Button("概念类型实体数据查询");
+        queryConceptionKindButton.setIcon(VaadinIcon.RECORDS.create());
+        queryConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        queryConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderConceptionKindQueryUI();
+            }
+        });
+        buttonList.add(queryConceptionKindButton);
+
         Button conceptionKindMetaInfoButton= new Button("概念类型元数据");
         conceptionKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
         conceptionKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        buttonList.add(conceptionKindMetaInfoButton);
-
         conceptionKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {}
         });
+        buttonList.add(conceptionKindMetaInfoButton);
 
         Button AddConceptionKindScopeAttributeButton= new Button("添加概念类型全局属性");
         AddConceptionKindScopeAttributeButton.setIcon(VaadinIcon.TEXT_INPUT.create());
@@ -437,5 +446,25 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
             conceptionKindContainerLayout.add(displayConceptionKind);
             return conceptionKindContainerLayout;
         }
+    }
+
+    private void renderConceptionKindQueryUI(){
+        ConceptionKindQueryUI conceptionKindQueryUI = new ConceptionKindQueryUI(this.conceptionKind);
+        List<Component> actionComponentList = new ArrayList<>();
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("22px");
+        footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
+        actionComponentList.add(footPrintStartIcon);
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("12px");
+        conceptionKindIcon.getStyle().set("padding-right","3px");
+        actionComponentList.add(conceptionKindIcon);
+        Label conceptionKindName = new Label(this.conceptionKind);
+        actionComponentList.add(conceptionKindName);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念类型实体数据查询",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(conceptionKindQueryUI);
+        fullScreenWindow.show();
     }
 }
