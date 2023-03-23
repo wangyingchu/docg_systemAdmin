@@ -269,6 +269,9 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         kindConfigurationTabSheet.add("包含属性视图配置",new HorizontalLayout());
         kindConfigurationTabSheet.add("关联关系规则配置",new HorizontalLayout());
         kindConfigurationTabSheet.add("索引配置",new HorizontalLayout());
+        kindConfigurationTabSheet.add("元属性配置",new HorizontalLayout());
+        kindConfigurationTabSheet.add("分类配置",new HorizontalLayout());
+        kindConfigurationTabSheet.add("统计与评估计算",new HorizontalLayout());
     }
 
     private void loadConceptionKindInfoData(){
