@@ -40,7 +40,6 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
 import dev.mett.vaadin.tooltip.Tooltips;
-import org.checkerframework.checker.units.qual.C;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -296,11 +295,14 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         kindConfigurationTabSheet.setWidthFull();
         rightSideContainerLayout.add(kindConfigurationTabSheet);
         rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
+
+        ConceptionKindEntitiesConfigurationView conceptionKindEntitiesConfigurationView = new ConceptionKindEntitiesConfigurationView(this.conceptionKind);
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.CUBES,"概念实体数据配置"),conceptionKindEntitiesConfigurationView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),new HorizontalLayout());
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.ADD_DOCK,"索引配置"),new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.BOOKMARK,"元属性配置"),new HorizontalLayout());
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TAGS,"分类配置"),new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.ADD_DOCK,"索引配置"),new HorizontalLayout());
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.CALC,"统计与评估计算"),new HorizontalLayout());
     }
 
