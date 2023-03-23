@@ -58,6 +58,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
     private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
     private ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
     private VerticalLayout leftSideContainerLayout;
+    private VerticalLayout rightSideContainerLayout;
     private VerticalLayout conceptionKindCorrelationInfoChartContainer;
     private TabSheet kindCorrelationInfoTabSheet;
     private Tab conceptionRealTimeInfoTab;
@@ -68,6 +69,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
     private Grid<ConceptionKindCorrelationInfo> conceptionRelationRealtimeInfoGrid;
     private boolean conceptionRealTimeInfoGridFirstLoaded = false;
     private VerticalLayout conceptionKindCorrelationInfoGridContainer;
+    private TabSheet kindConfigurationTabSheet;
 
     public ConceptionKindDetailView(){}
 
@@ -171,8 +173,6 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         leftSideContainerLayout.setWidth(800, Unit.PIXELS);
         leftSideContainerLayout.getStyle()
                 .set("border-right", "1px solid var(--lumo-contrast-20pct)");
-        VerticalLayout rightSideContainerLayout = new VerticalLayout();
-        mainContainerLayout.add(rightSideContainerLayout);
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体概略采样数 "+10000+")");
         infoTitle1.getStyle().set("padding-bottom","5px");
@@ -253,7 +253,23 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
             }
         });
         leftSideContainerLayout.add(kindCorrelationInfoTabSheet);
-   }
+
+        rightSideContainerLayout = new VerticalLayout();
+        rightSideContainerLayout.setWidth(100,Unit.PERCENTAGE);
+        rightSideContainerLayout.setSpacing(false);
+        rightSideContainerLayout.setPadding(false);
+        rightSideContainerLayout.setMargin(false);
+        mainContainerLayout.add(rightSideContainerLayout);
+
+        kindConfigurationTabSheet = new TabSheet();
+        kindConfigurationTabSheet.setWidthFull();
+        rightSideContainerLayout.add(kindConfigurationTabSheet);
+        rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
+
+        kindConfigurationTabSheet.add("包含属性视图配置",new HorizontalLayout());
+        kindConfigurationTabSheet.add("关联关系规则配置",new HorizontalLayout());
+        kindConfigurationTabSheet.add("索引配置",new HorizontalLayout());
+    }
 
     private void loadConceptionKindInfoData(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
