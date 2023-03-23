@@ -179,6 +179,28 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
         leftSideContainerLayout.add(infoTitle1);
 
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+            Icon queryIcon = new Icon(VaadinIcon.INPUT);
+            queryIcon.setSize("20px");
+            Button addAsAttributeKind = new Button(queryIcon, event -> {
+                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                    //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
+                }
+            });
+            addAsAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            addAsAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(addAsAttributeKind, "添加为属性类型");
+
+            HorizontalLayout buttons = new HorizontalLayout(addAsAttributeKind);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(10,Unit.PIXELS);
+            buttons.setWidth(80,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
+
         conceptionKindAttributesInfoGrid = new Grid<>();
         conceptionKindAttributesInfoGrid.setWidth(100,Unit.PERCENTAGE);
         conceptionKindAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
@@ -240,7 +262,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
         conceptionRealTimeChartTab = kindCorrelationInfoTabSheet.add("",conceptionKindCorrelationInfoChartContainer);
         Span chartInfoSpan =new Span();
-        Icon chartInfoIcon = new Icon(VaadinIcon.OPTION_A);
+        Icon chartInfoIcon = new Icon(VaadinIcon.SPLIT);
         chartInfoIcon.setSize("12px");
         Label chartInfoLabel = new Label(" 概念关联实时分布网络图");
         chartInfoSpan.add(chartInfoIcon,chartInfoLabel);
@@ -265,13 +287,12 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         kindConfigurationTabSheet.setWidthFull();
         rightSideContainerLayout.add(kindConfigurationTabSheet);
         rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
-
-        kindConfigurationTabSheet.add("包含属性视图配置",new HorizontalLayout());
-        kindConfigurationTabSheet.add("关联关系规则配置",new HorizontalLayout());
-        kindConfigurationTabSheet.add("索引配置",new HorizontalLayout());
-        kindConfigurationTabSheet.add("元属性配置",new HorizontalLayout());
-        kindConfigurationTabSheet.add("分类配置",new HorizontalLayout());
-        kindConfigurationTabSheet.add("统计与评估计算",new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.ADD_DOCK,"索引配置"),new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.BOOKMARK,"元属性配置"),new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TAGS,"分类配置"),new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.CALC,"统计与评估计算"),new HorizontalLayout());
     }
 
     private void loadConceptionKindInfoData(){
@@ -283,27 +304,19 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
     }
 
-    ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
-        Icon queryIcon = new Icon(VaadinIcon.INPUT);
-        queryIcon.setSize("20px");
-        Button addAsAttributeKind = new Button(queryIcon, event -> {
-            if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
-            }
-        });
-        addAsAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        addAsAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        Tooltips.getCurrent().setTooltip(addAsAttributeKind, "添加为属性类型");
-
-        HorizontalLayout buttons = new HorizontalLayout(addAsAttributeKind);
-        buttons.setPadding(false);
-        buttons.setSpacing(false);
-        buttons.setMargin(false);
-        buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        buttons.setHeight(10,Unit.PIXELS);
-        buttons.setWidth(80,Unit.PIXELS);
-        return new VerticalLayout(buttons);
-    });
+    private HorizontalLayout generateKindConfigurationTabTitle(VaadinIcon tabIcon,String tabTitleTxt){
+        HorizontalLayout  kindConfigTabLayout = new HorizontalLayout();
+        kindConfigTabLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        kindConfigTabLayout.setHeight(26,Unit.PIXELS);
+        Icon configTabIcon = new Icon(tabIcon);
+        configTabIcon.setSize("12px");
+        Label configTabLabel = new Label(" "+tabTitleTxt);
+        configTabLabel.getStyle()
+                . set("font-size","var(--lumo-font-size-s)")
+                .set("font-weight", "bold");
+        kindConfigTabLayout.add(configTabIcon,configTabLabel);
+        return kindConfigTabLayout;
+    }
 
     private String getAttributeName(KindEntityAttributeRuntimeStatistics kindEntityAttributeRuntimeStatistics){
         return kindEntityAttributeRuntimeStatistics.getAttributeName();
