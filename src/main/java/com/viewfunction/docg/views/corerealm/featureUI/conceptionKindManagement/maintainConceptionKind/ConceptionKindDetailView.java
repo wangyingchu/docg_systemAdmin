@@ -8,8 +8,8 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -60,7 +60,6 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout conceptionKindCorrelationInfoChartContainer;
     private TabSheet kindCorrelationInfoTabSheet;
-    private Tab relationRealTimeInfoTab;
     private Tab conceptionRealTimeInfoTab;
     private Tab conceptionRealTimeChartTab;
     private boolean conceptionRealTimeChartFirstLoaded = false;
@@ -99,6 +98,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
             currentBrowserHeight = receiver.getBodyClientHeight();
             kindCorrelationInfoTabSheet.setHeight(currentBrowserHeight-conceptionKindDetailViewHeightOffset-290,Unit.PIXELS);
         }));
+        renderKindCorrelationInfoTabContent();
     }
 
     @Override
@@ -229,10 +229,23 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
         kindCorrelationInfoTabSheet = new TabSheet();
         kindCorrelationInfoTabSheet.setWidthFull();
-        relationRealTimeInfoTab = kindCorrelationInfoTabSheet.add("关系关联实时分布",
-                new Div(new Text("This is the Dashboard tab content")));
-        conceptionRealTimeInfoTab = kindCorrelationInfoTabSheet.add("概念关联实时分布",conceptionKindCorrelationInfoGridContainer);
-        conceptionRealTimeChartTab = kindCorrelationInfoTabSheet.add("概念关联实时分布网络图",conceptionKindCorrelationInfoChartContainer);
+
+        conceptionRealTimeInfoTab = kindCorrelationInfoTabSheet.add("",conceptionKindCorrelationInfoGridContainer);
+        Span relationInfoSpan =new Span();
+        Icon relationInfoIcon = new Icon(VaadinIcon.BULLETS);
+        relationInfoIcon.setSize("12px");
+        Label relationInfoLabel = new Label(" 概念关联实时分布");
+        relationInfoSpan.add(relationInfoIcon,relationInfoLabel);
+        conceptionRealTimeInfoTab.add(relationInfoSpan);
+
+        conceptionRealTimeChartTab = kindCorrelationInfoTabSheet.add("",conceptionKindCorrelationInfoChartContainer);
+        Span chartInfoSpan =new Span();
+        Icon chartInfoIcon = new Icon(VaadinIcon.OPTION_A);
+        chartInfoIcon.setSize("12px");
+        Label chartInfoLabel = new Label(" 概念关联实时分布网络图");
+        chartInfoSpan.add(chartInfoIcon,chartInfoLabel);
+        conceptionRealTimeChartTab.add(chartInfoSpan);
+
         kindCorrelationInfoTabSheet.addSelectedChangeListener(new ComponentEventListener<TabSheet.SelectedChangeEvent>() {
             @Override
             public void onComponentEvent(TabSheet.SelectedChangeEvent selectedChangeEvent) {
@@ -300,9 +313,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
     }
 
     private void renderKindCorrelationInfoTabContent(){
-        if(relationRealTimeInfoTab.isSelected()){
-
-        }else if(conceptionRealTimeInfoTab.isSelected()){
+        if(conceptionRealTimeInfoTab.isSelected()){
             if(!this.conceptionRealTimeInfoGridFirstLoaded){
                 int chartHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset - 340;
                 CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -379,7 +390,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         }
     }
 
-    private class RelatedConceptionKindValueProvider implements ValueProvider<ConceptionKindCorrelationInfo,HorizontalLayout>{
+    private class RelatedConceptionKindValueProvider implements ValueProvider<ConceptionKindCorrelationInfo,HorizontalLayout> {
         public HorizontalLayout apply(ConceptionKindCorrelationInfo conceptionKindCorrelationInfo) {
             HorizontalLayout conceptionKindContainerLayout = new HorizontalLayout();
             String fromConceptionKind = conceptionKindCorrelationInfo.getSourceConceptionKindName();
