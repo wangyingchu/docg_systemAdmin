@@ -3,17 +3,12 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.contextmenu.HasMenuItems;
-import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.menubar.MenuBar;
-import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -143,27 +138,6 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {}
         });
         buttonList.add(conceptionKindMetaInfoButton);
-
-        Button AddConceptionKindScopeAttributeButton= new Button("添加概念类型全局属性");
-        AddConceptionKindScopeAttributeButton.setIcon(VaadinIcon.TEXT_INPUT.create());
-        AddConceptionKindScopeAttributeButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        buttonList.add(AddConceptionKindScopeAttributeButton);
-
-        MenuBar importMenuBar = new MenuBar();
-        importMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
-        MenuItem importDataMenu = createIconItem(importMenuBar, VaadinIcon.DOWNLOAD, "导入概念实体数据", null);
-        SubMenu importSubItems = importDataMenu.getSubMenu();
-        MenuItem csvImportItem = importSubItems.addItem("CSV 格式数据");
-        MenuItem arrowImportItem = importSubItems.addItem("ARROW 格式数据");
-        buttonList.add(importMenuBar);
-
-        MenuBar exportMenuBar = new MenuBar();
-        exportMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
-        MenuItem exportDataMenu = createIconItem(exportMenuBar, VaadinIcon.UPLOAD, "导出概念实体数据", null);
-        SubMenu exportSubItems = exportDataMenu.getSubMenu();
-        MenuItem csvExportItem = exportSubItems.addItem("CSV 格式数据");
-        MenuItem arrowExportItem = exportSubItems.addItem("ARROW 格式数据");
-        buttonList.add(exportMenuBar);
 
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"Conception Kind 概念类型  ",secTitleElementsList,buttonList);
         add(secondaryTitleActionBar);
@@ -331,28 +305,6 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
 
     private String getAttributeName(KindEntityAttributeRuntimeStatistics kindEntityAttributeRuntimeStatistics){
         return kindEntityAttributeRuntimeStatistics.getAttributeName();
-    }
-
-    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
-        return createIconItem(menu, iconName, label, ariaLabel, false);
-    }
-
-    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName,String label, String ariaLabel, boolean isChild) {
-        Icon icon = new Icon(iconName);
-        if (isChild) {
-            icon.getStyle().set("width", "var(--lumo-icon-size-s)");
-            icon.getStyle().set("height", "var(--lumo-icon-size-s)");
-            icon.getStyle().set("marginRight", "var(--lumo-space-s)");
-        }
-        MenuItem item = menu.addItem(icon, e -> {
-        });
-        if (ariaLabel != null) {
-            item.getElement().setAttribute("aria-label", ariaLabel);
-        }
-        if (label != null) {
-            item.add(new Text(label));
-        }
-        return item;
     }
 
     private void renderKindCorrelationInfoTabContent(){
