@@ -40,8 +40,7 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
         this.kindDescriptionLabel = new Label("");
         this.kindDescriptionLabel.getStyle()
                 .set("font-size","var(--lumo-font-size-s)")
-                .set("color","var(--lumo-body-text-color)")
-                .set("fount-weight","bold");
+                .set("color","var(--lumo-body-text-color)");
         add(this.kindDescriptionLabel);
 
         this.kindDescriptionEditor = new TextField();
