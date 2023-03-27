@@ -34,20 +34,15 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
     public ConceptionKindEntitiesConfigurationView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
 
-
-        Icon icon = new Icon(VaadinIcon.LIST);
-        //SectionActionBar sectionActionBar = new SectionActionBar(icon,"概念类型定义:",new ArrayList<>());
-        //sectionActionBar.setWidth(140, Unit.PIXELS);
-       // add(sectionActionBar);
-
-        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.CUBES),"概念类型实体配置");
-        add(filterTitle2);
-
+        SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.CUBES),"概念类型实体配置");
+        add(filterTitle1);
 
         HorizontalLayout infoContainer = new HorizontalLayout();
         infoContainer.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-
         infoContainer.setWidthFull();
+        infoContainer.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-l)");
         add(infoContainer);
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -116,8 +111,6 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
         });
         infoContainer.add(cleanConceptionKindButton);
 
-
-
         Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
         deleteKindIcon.setSize("21px");
         Button removeConceptionKindButton = new Button("删除概念类型",deleteKindIcon, event -> {});
@@ -135,16 +128,30 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
         });
         infoContainer.add(removeConceptionKindButton);
 
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.BOOKMARK),"元属性配置");
+        filterTitle2.getStyle().set("padding-top", "var(--lumo-space-s)");
+        add(filterTitle2);
 
-        infoContainer.getStyle()
+        HorizontalLayout infoContainer2 = new HorizontalLayout();
+        infoContainer2.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        infoContainer2.setWidthFull();
+        infoContainer2.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
                 .set("padding-bottom", "var(--lumo-space-l)");
-
+        add(infoContainer2);
 
         SecondaryIconTitle filterTitle3 = new SecondaryIconTitle(new Icon(VaadinIcon.ADD_DOCK),"概念类型索引配置");
         filterTitle3.getStyle()
                 .set("padding-top", "var(--lumo-space-s)");
         add(filterTitle3);
+
+        HorizontalLayout infoContainer3 = new HorizontalLayout();
+        infoContainer3.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        infoContainer3.setWidthFull();
+        infoContainer3.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-l)");
+        add(infoContainer3);
     }
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
