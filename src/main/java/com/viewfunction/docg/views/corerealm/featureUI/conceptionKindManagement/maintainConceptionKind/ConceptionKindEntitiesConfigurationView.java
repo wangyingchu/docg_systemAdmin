@@ -84,6 +84,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
         SubMenu importSubItems = importDataMenu.getSubMenu();
         MenuItem csvImportItem = importSubItems.addItem("CSV 格式数据");
         MenuItem arrowImportItem = importSubItems.addItem("ARROW 格式数据");
+        MenuItem shpImportItem = importSubItems.addItem("SHP 格式数据");
         infoContainer.add(importMenuBar);
 
         MenuBar exportMenuBar = new MenuBar();
