@@ -274,10 +274,7 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"概念类型运行时配置"),conceptionKindEntitiesConfigurationView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),new HorizontalLayout());
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.BOOKMARK,"元属性配置"),new HorizontalLayout());
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TAGS,"分类配置"),new HorizontalLayout());
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.ADD_DOCK,"索引配置"),new HorizontalLayout());
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.CALC,"统计与评估计算"),new HorizontalLayout());
+        //kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.CALC,"统计与评估计算"),new HorizontalLayout());
     }
 
     private void loadConceptionKindInfoData(){

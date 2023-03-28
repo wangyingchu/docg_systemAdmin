@@ -23,6 +23,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -71,6 +72,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
         infoContainer.add(addConceptionKindScopeAttributeButton);
 
         Icon divIcon = VaadinIcon.LINE_V.create();
+        divIcon.setSize("8px");
         infoContainer.add(divIcon);
 
         MenuBar importMenuBar = new MenuBar();
@@ -90,10 +92,9 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
         MenuItem arrowExportItem = exportSubItems.addItem("ARROW 格式数据");
         infoContainer.add(exportMenuBar);
 
-
         Icon divIcon2 = VaadinIcon.LINE_V.create();
+        divIcon2.setSize("8px");
         infoContainer.add(divIcon2);
-
 
         Icon cleanKindIcon = new Icon(VaadinIcon.RECYCLE);
         cleanKindIcon.setSize("21px");
@@ -152,6 +153,19 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
                 .set("padding-bottom", "var(--lumo-space-l)");
         add(infoContainer3);
+
+        SecondaryIconTitle filterTitle4 = new SecondaryIconTitle(new Icon(VaadinIcon.TAGS),"分类配置");
+        filterTitle4.getStyle()
+                .set("padding-top", "var(--lumo-space-s)");
+        add(filterTitle4);
+
+        HorizontalLayout infoContainer4 = new HorizontalLayout();
+        infoContainer4.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        infoContainer4.setWidthFull();
+        infoContainer4.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-l)");
+        add(infoContainer4);
     }
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
