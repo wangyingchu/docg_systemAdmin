@@ -24,6 +24,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItem.MetaConfigItemsConfigView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -132,6 +133,9 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.BOOKMARK),"元属性配置");
         filterTitle2.getStyle().set("padding-top", "var(--lumo-space-s)");
         add(filterTitle2);
+
+        MetaConfigItemsConfigView metaConfigItemsConfigView = new MetaConfigItemsConfigView();
+        add(metaConfigItemsConfigView);
 
         HorizontalLayout infoContainer2 = new HorizontalLayout();
         infoContainer2.setDefaultVerticalComponentAlignment(Alignment.CENTER);
