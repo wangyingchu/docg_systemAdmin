@@ -32,8 +32,8 @@ import com.viewfunction.docg.element.commonComponent.*;
 
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
-
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
