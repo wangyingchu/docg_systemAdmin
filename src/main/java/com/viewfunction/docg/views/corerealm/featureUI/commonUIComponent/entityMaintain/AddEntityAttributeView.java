@@ -215,8 +215,12 @@ public class AddEntityAttributeView extends VerticalLayout {
                         errorMessage.setText("输入的属性值为空或格式不合法");
                         errorMessage.setVisible(true);
                     }else{
-                        if(kindName != null && entityUID != null){
-                            addEntityAttribute();
+                        if(metaConfigItemFeatureSupportable != null){
+                            addMetaConfigItem();
+                        }else{
+                            if(kindName != null && entityUID != null){
+                                addEntityAttribute();
+                            }
                         }
                         if(attributeValueOperateHandler != null){
                             attributeValueOperateHandler.handleAttributeValue(getAttributeValue());
@@ -715,6 +719,20 @@ public class AddEntityAttributeView extends VerticalLayout {
                     }
                 }
             }
+        }
+    }
+
+    private void addMetaConfigItem(){
+        String attributeName = attributeNameField.getValue();
+        Object newEntityAttributeValue = getAttributeValueObject();
+        boolean addResult = this.metaConfigItemFeatureSupportable.addOrUpdateMetaConfigItem(attributeName,newEntityAttributeValue);
+        if(addResult){
+            CommonUIOperationUtil.showPopupNotification("添加元属性 "+ attributeName +" : "+attributeName+newEntityAttributeValue +" 成功", NotificationVariant.LUMO_SUCCESS);
+            if(containerDialog != null){
+                containerDialog.close();
+            }
+        }else{
+            CommonUIOperationUtil.showPopupNotification("添加元属性 "+ attributeName +" : "+attributeName+newEntityAttributeValue +" 失败", NotificationVariant.LUMO_ERROR);
         }
     }
 

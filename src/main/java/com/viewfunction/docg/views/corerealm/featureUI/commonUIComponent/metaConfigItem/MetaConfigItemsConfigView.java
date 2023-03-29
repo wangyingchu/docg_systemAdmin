@@ -10,9 +10,11 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.MetaConfigItemFeatureSupportable;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -21,6 +23,7 @@ import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
+import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -117,7 +120,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             addItemButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             Tooltips.getCurrent().setTooltip(addItemButton, "更新元属性值");
 
-            Icon removeIcon = new Icon(VaadinIcon.MINUS);
+            Icon removeIcon = new Icon(VaadinIcon.ERASER);
             removeIcon.setSize("20px");
             Button removeItemButton = new Button(removeIcon, event -> {
                 if(entityStatisticsInfo instanceof MetaConfigItemValueObject){
@@ -159,7 +162,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         metaConfigItemValueGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         LightGridColumnHeader gridColumnHeader_idx3 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         metaConfigItemValueGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
-        metaConfigItemValueGrid.setHeight(200,Unit.PIXELS);
+        metaConfigItemValueGrid.setHeight(150,Unit.PIXELS);
         add(metaConfigItemValueGrid);
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -251,6 +254,21 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
     private void renderAddNewConfigItemUI(){
         AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.metaConfigItemName,null, null);
         addEntityAttributeView.setMetaConfigItemFeatureSupportable(this.metaConfigItemFeatureSupportable);
+        addEntityAttributeView.setAttributeValueOperateHandler(new AttributeValueOperateHandler() {
+            @Override
+            public void handleAttributeValue(AttributeValue attributeValue) {
+                if(attributeValue != null){
+                    String configItemName = attributeValue.getAttributeName();
+                    Object configItemValue = attributeValue.getAttributeValue();
+                    AttributeDataType attributeDataType = checkAttributeDataType(configItemValue);
+                    MetaConfigItemValueObject newMetaConfigItemValueObject =
+                            new MetaConfigItemValueObject(configItemName,attributeDataType,configItemValue);
+                    ListDataProvider dtaProvider=(ListDataProvider)metaConfigItemValueGrid.getDataProvider();
+                    dtaProvider.getItems().add(newMetaConfigItemValueObject);
+                    dtaProvider.refreshAll();
+                }
+            }
+        });
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加元属性",null,true,480,210,false);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
