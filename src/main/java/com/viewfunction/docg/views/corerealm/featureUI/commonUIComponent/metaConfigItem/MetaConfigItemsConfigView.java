@@ -14,13 +14,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -28,6 +28,42 @@ import java.util.List;
 import java.util.Map;
 
 public class MetaConfigItemsConfigView extends VerticalLayout {
+
+    private class MetaConfigItemValueObject{
+        private String itemName;
+        private Object itemValue;
+        private String itemType;
+
+        public MetaConfigItemValueObject(String itemName,String itemType,Object itemValue){
+            this.itemName = itemName;
+            this.itemType = itemType;
+            this.itemValue = itemValue;
+        }
+
+        public String getItemName() {
+            return itemName;
+        }
+
+        public void setItemName(String itemName) {
+            this.itemName = itemName;
+        }
+
+        public Object getItemValue() {
+            return itemValue;
+        }
+
+        public void setItemValue(Object itemValue) {
+            this.itemValue = itemValue;
+        }
+
+        public String getItemType() {
+            return itemType;
+        }
+
+        public void setItemType(String itemType) {
+            this.itemType = itemType;
+        }
+    }
 
     public enum MetaConfigItemType {AttributeKind,AttributesViewKind,ConceptionKind,RelationAttachKind,RelationKind}
     private String metaConfigItemUID;
@@ -58,7 +94,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             Icon editIcon = new Icon(VaadinIcon.EDIT);
             editIcon.setSize("20px");
             Button addItemButton = new Button(editIcon, event -> {
-                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                if(entityStatisticsInfo instanceof MetaConfigItemValueObject){
                     //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
                 }
             });
@@ -69,7 +105,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             Icon removeIcon = new Icon(VaadinIcon.MINUS);
             removeIcon.setSize("20px");
             Button removeItemButton = new Button(removeIcon, event -> {
-                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                if(entityStatisticsInfo instanceof MetaConfigItemValueObject){
                     //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
                 }
             });
@@ -91,14 +127,13 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONTROLLER),"元属性配置管理 ",secTitleElementsList,buttonList);
         add(metaConfigItemConfigActionBar);
 
-        Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid = new Grid<>();
+        Grid<MetaConfigItemValueObject> conceptionKindAttributesInfoGrid = new Grid<>();
         conceptionKindAttributesInfoGrid.setWidth(100, Unit.PERCENTAGE);
         conceptionKindAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         conceptionKindAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
-        conceptionKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeName).setHeader("属性名称").setKey("idx_0").setFlexGrow(0).setWidth("250px").setResizable(true);
-        conceptionKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeDataType).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("180px");
-        conceptionKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeDataType).setHeader("属性值").setKey("idx_2").setFlexGrow(1).setResizable(false);
-
+        conceptionKindAttributesInfoGrid.addColumn(MetaConfigItemValueObject::getItemName).setHeader("属性名称").setKey("idx_0").setFlexGrow(0).setWidth("250px").setResizable(true);
+        conceptionKindAttributesInfoGrid.addColumn(MetaConfigItemValueObject::getItemType).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("180px");
+        conceptionKindAttributesInfoGrid.addColumn(MetaConfigItemValueObject::getItemValue).setHeader("属性值").setKey("idx_2").setFlexGrow(1).setResizable(false);
         conceptionKindAttributesInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("120px").setResizable(false);
 
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"元属性名称");
