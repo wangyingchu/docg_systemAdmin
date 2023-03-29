@@ -32,6 +32,7 @@ import java.text.NumberFormat;
 public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
 
     private String conceptionKindName;
+    private MetaConfigItemsConfigView metaConfigItemsConfigView;
 
     public ConceptionKindEntitiesConfigurationView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
@@ -134,7 +135,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
         filterTitle2.getStyle().set("padding-top", "var(--lumo-space-s)");
         add(filterTitle2);
 
-        MetaConfigItemsConfigView metaConfigItemsConfigView = new MetaConfigItemsConfigView();
+        this.metaConfigItemsConfigView = new MetaConfigItemsConfigView(MetaConfigItemsConfigView.MetaConfigItemType.ConceptionKind,this.conceptionKindName);
         add(metaConfigItemsConfigView);
 
         HorizontalLayout infoContainer2 = new HorizontalLayout();
