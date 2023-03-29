@@ -128,54 +128,56 @@ public class DataRelationDistributionChart extends VerticalLayout {
                 String targetConceptionKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
                 String relationKindName = currentConceptionKindCorrelationInfo.getRelationKindName();
                 long relationEntityCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
-                boolean linkToTG = false;
-                if(sourceConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
-                        ||sourceConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
-                        ||targetConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
-                        ||targetConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)){
-                    linkToTG = true;
-                }
-                if(!linkToTG){
-                    if(!relationKindName.startsWith("DOCG_TS_NextIs") &&
-                            !relationKindName.startsWith("DOCG_TS_FirstChildIs") &&
-                            !relationKindName.startsWith("DOCG_TS_LastChildIs")){
-                        CytoscapeEdgePayload cytoscapeEdgePayload =new CytoscapeEdgePayload();
-                        cytoscapeEdgePayload.getData().put("type", relationKindName);
-                        cytoscapeEdgePayload.getData().put("source", sourceConceptionKindName);
-                        cytoscapeEdgePayload.getData().put("target", targetConceptionKindName);
+                if(!relationKindName.equals(RealmConstant.Kind_MetaConfigItemsStorageRelationClass)){
+                    boolean linkToTG = false;
+                    if(sourceConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
+                            ||sourceConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
+                            ||targetConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
+                            ||targetConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)){
+                        linkToTG = true;
+                    }
+                    if(!linkToTG){
+                        if(!relationKindName.startsWith("DOCG_TS_NextIs") &&
+                                !relationKindName.startsWith("DOCG_TS_FirstChildIs") &&
+                                !relationKindName.startsWith("DOCG_TS_LastChildIs")){
+                            CytoscapeEdgePayload cytoscapeEdgePayload =new CytoscapeEdgePayload();
+                            cytoscapeEdgePayload.getData().put("type", relationKindName);
+                            cytoscapeEdgePayload.getData().put("source", sourceConceptionKindName);
+                            cytoscapeEdgePayload.getData().put("target", targetConceptionKindName);
 
-                        if(relationKindName.startsWith("DOCG_TS")){
-                            cytoscapeEdgePayload.getData().put("lineWidth", "0.1");
-                            cytoscapeEdgePayload.getData().put("lineColor", "#40E0D0");
-                            cytoscapeEdgePayload.getData().put("sourceArrowColor", "#40E0D0");
-                            cytoscapeEdgePayload.getData().put("targetArrowColor", "#40E0D0");
-                            cytoscapeEdgePayload.getData().put("lineOpacity", "0.6");
-                            cytoscapeEdgePayload.getData().put("curveStyle", "segments");
-                            cytoscapeEdgePayload.getData().put("lineStyle", "solid");
-                        }else if(relationKindName.startsWith("DOCG_GS")){
-                            cytoscapeEdgePayload.getData().put("lineWidth", "0.1");
-                            cytoscapeEdgePayload.getData().put("lineColor", "#C71585");
-                            cytoscapeEdgePayload.getData().put("sourceArrowColor", "#C71585");
-                            cytoscapeEdgePayload.getData().put("targetArrowColor", "#C71585");
-                            cytoscapeEdgePayload.getData().put("lineOpacity", "0.6");
-                            cytoscapeEdgePayload.getData().put("curveStyle", "segments");
-                            cytoscapeEdgePayload.getData().put("lineStyle", "solid");
-                        }else{
-                            cytoscapeEdgePayload.getData().put("lineWidth", "0.2");
-                            cytoscapeEdgePayload.getData().put("lineColor", "#AAAAAA");
-                            cytoscapeEdgePayload.getData().put("sourceArrowColor", "#AAAAAA");
-                            cytoscapeEdgePayload.getData().put("targetArrowColor", "#AAAAAA");
-                            cytoscapeEdgePayload.getData().put("lineOpacity", "0.8");
-                            cytoscapeEdgePayload.getData().put("curveStyle", "unbundled-bezier");
-                            cytoscapeEdgePayload.getData().put("lineStyle", "solid");
-                        }
-                        runBeforeClientResponse(ui -> {
-                            try {
-                                getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
-                            } catch (JsonProcessingException e) {
-                                throw new RuntimeException(e);
+                            if(relationKindName.startsWith("DOCG_TS")){
+                                cytoscapeEdgePayload.getData().put("lineWidth", "0.1");
+                                cytoscapeEdgePayload.getData().put("lineColor", "#40E0D0");
+                                cytoscapeEdgePayload.getData().put("sourceArrowColor", "#40E0D0");
+                                cytoscapeEdgePayload.getData().put("targetArrowColor", "#40E0D0");
+                                cytoscapeEdgePayload.getData().put("lineOpacity", "0.6");
+                                cytoscapeEdgePayload.getData().put("curveStyle", "segments");
+                                cytoscapeEdgePayload.getData().put("lineStyle", "solid");
+                            }else if(relationKindName.startsWith("DOCG_GS")){
+                                cytoscapeEdgePayload.getData().put("lineWidth", "0.1");
+                                cytoscapeEdgePayload.getData().put("lineColor", "#C71585");
+                                cytoscapeEdgePayload.getData().put("sourceArrowColor", "#C71585");
+                                cytoscapeEdgePayload.getData().put("targetArrowColor", "#C71585");
+                                cytoscapeEdgePayload.getData().put("lineOpacity", "0.6");
+                                cytoscapeEdgePayload.getData().put("curveStyle", "segments");
+                                cytoscapeEdgePayload.getData().put("lineStyle", "solid");
+                            }else{
+                                cytoscapeEdgePayload.getData().put("lineWidth", "0.2");
+                                cytoscapeEdgePayload.getData().put("lineColor", "#AAAAAA");
+                                cytoscapeEdgePayload.getData().put("sourceArrowColor", "#AAAAAA");
+                                cytoscapeEdgePayload.getData().put("targetArrowColor", "#AAAAAA");
+                                cytoscapeEdgePayload.getData().put("lineOpacity", "0.8");
+                                cytoscapeEdgePayload.getData().put("curveStyle", "unbundled-bezier");
+                                cytoscapeEdgePayload.getData().put("lineStyle", "solid");
                             }
-                        });
+                            runBeforeClientResponse(ui -> {
+                                try {
+                                    getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
+                                } catch (JsonProcessingException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            });
+                        }
                     }
                 }
             }
