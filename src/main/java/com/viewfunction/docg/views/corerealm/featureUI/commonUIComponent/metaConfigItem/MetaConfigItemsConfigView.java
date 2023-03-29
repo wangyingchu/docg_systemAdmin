@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItem;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
@@ -15,13 +12,16 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.MetaConfigItemFeatureSupportable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.math.BigDecimal;
@@ -77,6 +77,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
     private MetaConfigItemType metaConfigItemType;
     private String metaConfigItemName;
     private Grid<MetaConfigItemValueObject> metaConfigItemValueGrid;
+    private MetaConfigItemFeatureSupportable metaConfigItemFeatureSupportable;
 
     public MetaConfigItemsConfigView(String metaConfigItemUID){
         this.metaConfigItemUID = metaConfigItemUID;
@@ -96,6 +97,12 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         createMetaConfigItemButton.setIcon(VaadinIcon.PLUS.create());
         createMetaConfigItemButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         Tooltips.getCurrent().setTooltip(createMetaConfigItemButton, "添加元属性配置");
+        createMetaConfigItemButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderAddNewConfigItemUI();
+            }
+        });
         buttonList.add(createMetaConfigItemButton);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
@@ -163,6 +170,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
                 switch(metaConfigItemType){
                     case ConceptionKind :
                         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(metaConfigItemName);
+                        this.metaConfigItemFeatureSupportable = targetConceptionKind;
                         Map<String,Object> metaConfigItemsMap = targetConceptionKind.getMetaConfigItems();
                         renderMetaConfigItemsData(metaConfigItemsMap);
                 }
@@ -197,8 +205,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         super.onDetach(detachEvent);
     }
 
-
-    public static AttributeDataType checkAttributeDataType(Object attributeValueObject){
+    private static AttributeDataType checkAttributeDataType(Object attributeValueObject){
         if(attributeValueObject instanceof Boolean){
             return AttributeDataType.BOOLEAN;
         }
@@ -239,5 +246,15 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             return AttributeDataType.TIME;
         }
         return null;
+    }
+
+    private void renderAddNewConfigItemUI(){
+        AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.metaConfigItemName,null, null);
+        addEntityAttributeView.setMetaConfigItemFeatureSupportable(this.metaConfigItemFeatureSupportable);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加元属性",null,true,480,210,false);
+        fixSizeWindow.setWindowContent(addEntityAttributeView);
+        fixSizeWindow.setModel(true);
+        addEntityAttributeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }

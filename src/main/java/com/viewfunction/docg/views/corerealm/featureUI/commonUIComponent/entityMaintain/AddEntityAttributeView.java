@@ -24,6 +24,7 @@ import com.vaadin.flow.function.ValueProvider;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.AttributesMeasurable;
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.MetaConfigItemFeatureSupportable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
@@ -58,6 +59,7 @@ public class AddEntityAttributeView extends VerticalLayout {
     private String entityUID;
     private AttributeValueOperateHandler attributeValueOperateHandler;
     private KindType entityKindType = KindType.ConceptionKind;
+    private MetaConfigItemFeatureSupportable metaConfigItemFeatureSupportable;
 
     public AddEntityAttributeView(String kindName, String entityUID,KindType entityKindType){
         this.setMargin(false);
@@ -185,7 +187,7 @@ public class AddEntityAttributeView extends VerticalLayout {
                 errorMessage.setVisible(false);
                 AttributeDataType changedAttributeDataType = comboBoxAttributeDataTypeComponentValueChangeEvent.getValue();
                 if(changedAttributeDataType != null){
-                    Component inputComponent = renderAttributeValueInputElement(changedAttributeDataType,340);
+                    Component inputComponent = renderAttributeValueInputElement(changedAttributeDataType);
                     attributeValueInputContainer.add(inputComponent);
                 }
             }
@@ -226,12 +228,12 @@ public class AddEntityAttributeView extends VerticalLayout {
         attributeValueFieldContainerLayout.add(confirmButton);
     }
 
-    private Component renderAttributeValueInputElement(AttributeDataType attributeDataType,int textFieldWidth){
+    private Component renderAttributeValueInputElement(AttributeDataType attributeDataType){
         Component currentConditionValueEditor = null;
         switch(attributeDataType){
             case INT:
                 currentConditionValueEditor = new TextField();
-                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
                 ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 binder.forField((TextField)currentConditionValueEditor).withConverter(new StringToIntegerConverter("该项属性值必须为INT类型"))
                         .withValidator(new IntegerRangeValidator("该项属性值必须为INT类型", null, null))
@@ -247,17 +249,17 @@ public class AddEntityAttributeView extends VerticalLayout {
                 break;
             case BYTE:
                 currentConditionValueEditor = new TextField();
-                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
                 ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 break;
             case DATE:
                 currentConditionValueEditor = new DatePicker();
-                ((DatePicker)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((DatePicker)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
                 ((DatePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 break;
             case LONG:
                 currentConditionValueEditor = new TextField();
-                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
                 ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 binder.forField((TextField)currentConditionValueEditor)
                         .withConverter(
@@ -275,7 +277,7 @@ public class AddEntityAttributeView extends VerticalLayout {
                 break;
             case FLOAT:
                 currentConditionValueEditor = new TextField();
-                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
                 ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 binder.forField((TextField)currentConditionValueEditor)
                         .withConverter(
@@ -293,7 +295,7 @@ public class AddEntityAttributeView extends VerticalLayout {
                 break;
             case SHORT:
                 currentConditionValueEditor = new TextField();
-                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
                 ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 binder.forField((TextField)currentConditionValueEditor)
                         .withConverter(
@@ -311,12 +313,12 @@ public class AddEntityAttributeView extends VerticalLayout {
                 break;
             case BINARY:
                 currentConditionValueEditor = new TextField();
-                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
                 ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 break;
             case DOUBLE:
                 currentConditionValueEditor = new TextField();
-                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
                 ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 binder.forField((TextField)currentConditionValueEditor)
                         .withConverter(
@@ -334,12 +336,12 @@ public class AddEntityAttributeView extends VerticalLayout {
                 break;
             case STRING:
                 currentConditionValueEditor = new TextField();
-                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
                 ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 break;
             case BOOLEAN:
                 currentConditionValueEditor = new ComboBox();
-                ((ComboBox)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((ComboBox)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
                 ((ComboBox)currentConditionValueEditor).setAllowCustomValue(false);
                 ((ComboBox)currentConditionValueEditor).setItems("true","false");
                 ((ComboBox)currentConditionValueEditor).setValue("true");
@@ -347,7 +349,7 @@ public class AddEntityAttributeView extends VerticalLayout {
                 break;
             case DECIMAL:
                 currentConditionValueEditor = new TextField();
-                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
                 ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 binder.forField((TextField)currentConditionValueEditor)
                         .withConverter(
@@ -365,7 +367,7 @@ public class AddEntityAttributeView extends VerticalLayout {
                 break;
             case TIMESTAMP:
                 currentConditionValueEditor = new TextField();
-                ((TextField)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TextField)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
                 ((TextField)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 binder.forField((TextField)currentConditionValueEditor)
                         .withConverter(
@@ -384,12 +386,12 @@ public class AddEntityAttributeView extends VerticalLayout {
             case TIME:
                 currentConditionValueEditor = new TimePicker();
                 ((TimePicker)currentConditionValueEditor).setAutoOpen(true);
-                ((TimePicker)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((TimePicker)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
                 ((TimePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
                 break;
             case DATETIME:
                 currentConditionValueEditor = new DateTimePicker();
-                ((DateTimePicker)currentConditionValueEditor).setWidth(textFieldWidth,Unit.PIXELS);
+                ((DateTimePicker)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
                 ((DateTimePicker)currentConditionValueEditor).getStyle().set("font-size","1.0rem");
         }
         return currentConditionValueEditor;
@@ -728,5 +730,9 @@ public class AddEntityAttributeView extends VerticalLayout {
 
     public void setAttributeValueOperateHandler(AttributeValueOperateHandler attributeValueOperateHandler) {
         this.attributeValueOperateHandler = attributeValueOperateHandler;
+    }
+
+    public void setMetaConfigItemFeatureSupportable(MetaConfigItemFeatureSupportable metaConfigItemFeatureSupportable) {
+        this.metaConfigItemFeatureSupportable = metaConfigItemFeatureSupportable;
     }
 }
