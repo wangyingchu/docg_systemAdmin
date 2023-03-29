@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -23,18 +24,24 @@ import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MetaConfigItemsConfigView extends VerticalLayout {
 
     private class MetaConfigItemValueObject{
         private String itemName;
         private Object itemValue;
-        private String itemType;
+        private AttributeDataType itemType;
 
-        public MetaConfigItemValueObject(String itemName,String itemType,Object itemValue){
+        public MetaConfigItemValueObject(String itemName,AttributeDataType itemType,Object itemValue){
             this.itemName = itemName;
             this.itemType = itemType;
             this.itemValue = itemValue;
@@ -56,11 +63,11 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             this.itemValue = itemValue;
         }
 
-        public String getItemType() {
+        public AttributeDataType getItemType() {
             return itemType;
         }
 
-        public void setItemType(String itemType) {
+        public void setItemType(AttributeDataType itemType) {
             this.itemType = itemType;
         }
     }
@@ -69,6 +76,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
     private String metaConfigItemUID;
     private MetaConfigItemType metaConfigItemType;
     private String metaConfigItemName;
+    private Grid<MetaConfigItemValueObject> metaConfigItemValueGrid;
 
     public MetaConfigItemsConfigView(String metaConfigItemUID){
         this.metaConfigItemUID = metaConfigItemUID;
@@ -127,25 +135,25 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONTROLLER),"元属性配置管理 ",secTitleElementsList,buttonList);
         add(metaConfigItemConfigActionBar);
 
-        Grid<MetaConfigItemValueObject> conceptionKindAttributesInfoGrid = new Grid<>();
-        conceptionKindAttributesInfoGrid.setWidth(100, Unit.PERCENTAGE);
-        conceptionKindAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        conceptionKindAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
-        conceptionKindAttributesInfoGrid.addColumn(MetaConfigItemValueObject::getItemName).setHeader("属性名称").setKey("idx_0").setFlexGrow(0).setWidth("250px").setResizable(true);
-        conceptionKindAttributesInfoGrid.addColumn(MetaConfigItemValueObject::getItemType).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("180px");
-        conceptionKindAttributesInfoGrid.addColumn(MetaConfigItemValueObject::getItemValue).setHeader("属性值").setKey("idx_2").setFlexGrow(1).setResizable(false);
-        conceptionKindAttributesInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("120px").setResizable(false);
+        metaConfigItemValueGrid = new Grid<>();
+        metaConfigItemValueGrid.setWidth(100, Unit.PERCENTAGE);
+        metaConfigItemValueGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        metaConfigItemValueGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
+        metaConfigItemValueGrid.addColumn(MetaConfigItemValueObject::getItemName).setHeader("属性名称").setKey("idx_0").setFlexGrow(0).setWidth("250px").setResizable(true);
+        metaConfigItemValueGrid.addColumn(MetaConfigItemValueObject::getItemType).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("180px");
+        metaConfigItemValueGrid.addColumn(MetaConfigItemValueObject::getItemValue).setHeader("属性值").setKey("idx_2").setFlexGrow(1).setResizable(false);
+        metaConfigItemValueGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("120px").setResizable(false);
 
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"元属性名称");
-        conceptionKindAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
+        metaConfigItemValueGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.PASSWORD,"元属性数据类型");
-        conceptionKindAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+        metaConfigItemValueGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.INPUT,"元属性值");
-        conceptionKindAttributesInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
+        metaConfigItemValueGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         LightGridColumnHeader gridColumnHeader_idx3 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
-        conceptionKindAttributesInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
-        conceptionKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
-        add(conceptionKindAttributesInfoGrid);
+        metaConfigItemValueGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
+        metaConfigItemValueGrid.setHeight(200,Unit.PIXELS);
+        add(metaConfigItemValueGrid);
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         if(metaConfigItemUID != null){
@@ -164,7 +172,18 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
     }
 
     private void renderMetaConfigItemsData(Map<String,Object> metaConfigItemsMap){
-
+        if(metaConfigItemsMap != null){
+            List<MetaConfigItemValueObject> metaConfigItemValueObjectList = new ArrayList<>();
+            Set<String> itemNameSet = metaConfigItemsMap.keySet();
+            for(String currentItemName:itemNameSet){
+                Object itemValue = metaConfigItemsMap.get(currentItemName);
+                AttributeDataType attributeDataType = checkAttributeDataType(itemValue);
+                MetaConfigItemValueObject currentMetaConfigItemValueObject =
+                        new MetaConfigItemValueObject(currentItemName,attributeDataType,itemValue);
+                metaConfigItemValueObjectList.add(currentMetaConfigItemValueObject);
+            }
+            metaConfigItemValueGrid.setItems(metaConfigItemValueObjectList);
+        }
     }
 
     @Override
@@ -176,5 +195,49 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
     @Override
     protected void onDetach(DetachEvent detachEvent) {
         super.onDetach(detachEvent);
+    }
+
+
+    public static AttributeDataType checkAttributeDataType(Object attributeValueObject){
+        if(attributeValueObject instanceof Boolean){
+            return AttributeDataType.BOOLEAN;
+        }
+        if(attributeValueObject instanceof Integer){
+            return AttributeDataType.INT;
+        }
+        if(attributeValueObject instanceof Short){
+            return AttributeDataType.SHORT;
+        }
+        if(attributeValueObject instanceof Long){
+            return AttributeDataType.LONG;
+        }
+        if(attributeValueObject instanceof Float){
+            return AttributeDataType.FLOAT;
+        }
+        if(attributeValueObject instanceof Double){
+            return AttributeDataType.DOUBLE;
+        }
+        if(attributeValueObject instanceof BigDecimal){
+            return AttributeDataType.DECIMAL;
+        }
+        if(attributeValueObject instanceof String){
+            return AttributeDataType.STRING;
+        }
+        if(attributeValueObject instanceof Byte){
+            return AttributeDataType.BINARY;
+        }
+        if(attributeValueObject instanceof ZonedDateTime){
+            return AttributeDataType.TIMESTAMP;
+        }
+        if(attributeValueObject instanceof LocalDateTime){
+            return AttributeDataType.DATETIME;
+        }
+        if(attributeValueObject instanceof LocalDate){
+            return AttributeDataType.DATE;
+        }
+        if(attributeValueObject instanceof LocalTime){
+            return AttributeDataType.TIME;
+        }
+        return null;
     }
 }
