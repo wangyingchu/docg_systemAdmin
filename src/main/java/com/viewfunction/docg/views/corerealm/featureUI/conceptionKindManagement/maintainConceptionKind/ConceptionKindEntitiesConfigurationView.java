@@ -25,6 +25,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndex.KindIndexConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItem.MetaConfigItemsConfigView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -33,7 +34,6 @@ import java.text.NumberFormat;
 public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
 
     private String conceptionKindName;
-    private MetaConfigItemsConfigView metaConfigItemsConfigView;
 
     public ConceptionKindEntitiesConfigurationView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
@@ -136,13 +136,17 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
         filterTitle2.getStyle().set("padding-top", "var(--lumo-space-s)");
         add(filterTitle2);
 
-        this.metaConfigItemsConfigView = new MetaConfigItemsConfigView(MetaConfigItemsConfigView.MetaConfigItemType.ConceptionKind,this.conceptionKindName);
-        this.metaConfigItemsConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
-        add(this.metaConfigItemsConfigView);
+        MetaConfigItemsConfigView metaConfigItemsConfigView = new MetaConfigItemsConfigView(MetaConfigItemsConfigView.MetaConfigItemType.ConceptionKind,this.conceptionKindName);
+        metaConfigItemsConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        add(metaConfigItemsConfigView);
 
         SecondaryIconTitle filterTitle3 = new SecondaryIconTitle(new Icon(VaadinIcon.ADD_DOCK),"概念类型索引配置");
         filterTitle3.getStyle().set("padding-top", "var(--lumo-space-s)");
         add(filterTitle3);
+
+        KindIndexConfigView kindIndexConfigView = new KindIndexConfigView(KindIndexConfigView.KindIndexType.ConceptionKind,this.conceptionKindName);
+        kindIndexConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        add(kindIndexConfigView);
 
         HorizontalLayout infoContainer3 = new HorizontalLayout();
         infoContainer3.setDefaultVerticalComponentAlignment(Alignment.CENTER);
