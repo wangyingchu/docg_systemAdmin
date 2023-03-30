@@ -137,19 +137,11 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
         add(filterTitle2);
 
         this.metaConfigItemsConfigView = new MetaConfigItemsConfigView(MetaConfigItemsConfigView.MetaConfigItemType.ConceptionKind,this.conceptionKindName);
-        add(metaConfigItemsConfigView);
-
-        HorizontalLayout infoContainer2 = new HorizontalLayout();
-        infoContainer2.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        infoContainer2.setWidthFull();
-        infoContainer2.getStyle()
-                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
-                .set("padding-bottom", "var(--lumo-space-l)");
-        add(infoContainer2);
+        this.metaConfigItemsConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        add(this.metaConfigItemsConfigView);
 
         SecondaryIconTitle filterTitle3 = new SecondaryIconTitle(new Icon(VaadinIcon.ADD_DOCK),"概念类型索引配置");
-        filterTitle3.getStyle()
-                .set("padding-top", "var(--lumo-space-s)");
+        filterTitle3.getStyle().set("padding-top", "var(--lumo-space-s)");
         add(filterTitle3);
 
         HorizontalLayout infoContainer3 = new HorizontalLayout();
