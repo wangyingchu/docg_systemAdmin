@@ -113,17 +113,18 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         buttonList.add(createMetaConfigItemButton);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+            /*
             Icon editIcon = new Icon(VaadinIcon.EDIT);
             editIcon.setSize("20px");
             Button addItemButton = new Button(editIcon, event -> {
                 if(entityStatisticsInfo instanceof MetaConfigItemValueObject){
-                    //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
+
                 }
             });
             addItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             addItemButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             Tooltips.getCurrent().setTooltip(addItemButton, "更新元属性值");
-
+            */
             Icon removeIcon = new Icon(VaadinIcon.ERASER);
             removeIcon.setSize("20px");
             Button removeItemButton = new Button(removeIcon, event -> {
@@ -136,7 +137,8 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
             Tooltips.getCurrent().setTooltip(removeItemButton, "删除元属性");
 
-            HorizontalLayout buttons = new HorizontalLayout(addItemButton,removeItemButton);
+            //HorizontalLayout buttons = new HorizontalLayout(addItemButton,removeItemButton);
+            HorizontalLayout buttons = new HorizontalLayout(removeItemButton);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -156,7 +158,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         metaConfigItemValueGrid.addColumn(MetaConfigItemValueObject::getItemName).setHeader("属性名称").setKey("idx_0").setFlexGrow(0).setWidth("250px").setResizable(true);
         metaConfigItemValueGrid.addColumn(MetaConfigItemValueObject::getItemType).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("180px");
         metaConfigItemValueGrid.addColumn(MetaConfigItemValueObject::getItemValue).setHeader("属性值").setKey("idx_2").setFlexGrow(1).setResizable(false);
-        metaConfigItemValueGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("120px").setResizable(false);
+        metaConfigItemValueGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("100px").setResizable(false);
 
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"元属性名称");
         metaConfigItemValueGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
