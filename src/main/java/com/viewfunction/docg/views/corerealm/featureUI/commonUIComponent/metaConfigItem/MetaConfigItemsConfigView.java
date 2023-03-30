@@ -7,6 +7,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -25,6 +26,7 @@ import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -283,7 +285,6 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
 
     private void renderDeleteConfigItemUI(MetaConfigItemValueObject metaConfigItemValueObject){
         List<Button> actionButtonList = new ArrayList<>();
-
         Button confirmButton = new Button("确认删除元属性",new Icon(VaadinIcon.CHECK_CIRCLE));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
         Button cancelButton = new Button("取消操作");
@@ -297,8 +298,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //doCreateRelationEntities();
-                confirmWindow.closeConfirmWindow();
+                doDeleteConfigItem(metaConfigItemValueObject,confirmWindow);
             }
         });
         cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -307,7 +307,18 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
                 confirmWindow.closeConfirmWindow();
             }
         });
+    }
 
-
+    private void doDeleteConfigItem(MetaConfigItemValueObject metaConfigItemValueObject,ConfirmWindow confirmWindow){
+        boolean deleteResult = this.metaConfigItemFeatureSupportable.deleteMetaConfigItem(metaConfigItemValueObject.itemName);
+        if(deleteResult){
+            CommonUIOperationUtil.showPopupNotification("删除元属性 "+ metaConfigItemValueObject.itemName +" 成功", NotificationVariant.LUMO_SUCCESS);
+            confirmWindow.closeConfirmWindow();
+            ListDataProvider dtaProvider=(ListDataProvider)metaConfigItemValueGrid.getDataProvider();
+            dtaProvider.getItems().remove(metaConfigItemValueObject);
+            dtaProvider.refreshAll();
+        }else{
+            CommonUIOperationUtil.showPopupNotification("删除元属性 "+ metaConfigItemValueObject.itemName +" 失败", NotificationVariant.LUMO_ERROR);
+        }
     }
 }
