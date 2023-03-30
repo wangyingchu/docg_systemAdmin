@@ -10,6 +10,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import java.util.List;
 
@@ -70,13 +71,16 @@ public class ConfirmWindow extends Dialog {
                 set("padding-right", "5px");
         add(viewTitle);
 
-        HorizontalLayout footerElementsContainer = new HorizontalLayout();
-        footerElementsContainer.setWidth(100, Unit.PERCENTAGE);
-        footerElementsContainer.getStyle()
+        VerticalLayout footerContainer = new VerticalLayout();
+        footerContainer.setWidth(100,Unit.PERCENTAGE);
+        footerContainer.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.END);
+        footerContainer.getStyle()
                 .set("border-top", "1px solid var(--lumo-contrast-20pct)")
                 .set("padding-top", "var(--lumo-space-m)");
-        add(footerElementsContainer);
+        add(footerContainer);
 
+        HorizontalLayout footerElementsContainer = new HorizontalLayout();
+        footerContainer.add(footerElementsContainer);
         if(actionButtons != null){
             for(Button currentButton:actionButtons){
                 footerElementsContainer.add(currentButton);

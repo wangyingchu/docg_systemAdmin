@@ -19,6 +19,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
@@ -32,10 +33,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class MetaConfigItemsConfigView extends VerticalLayout {
 
@@ -128,7 +126,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             removeIcon.setSize("20px");
             Button removeItemButton = new Button(removeIcon, event -> {
                 if(entityStatisticsInfo instanceof MetaConfigItemValueObject){
-                    //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
+                    renderDeleteConfigItemUI((MetaConfigItemValueObject)entityStatisticsInfo);
                 }
             });
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -252,6 +250,9 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         if(attributeValueObject instanceof LocalTime){
             return AttributeDataType.TIME;
         }
+        if(attributeValueObject instanceof Date){
+            return AttributeDataType.TIMESTAMP;
+        }
         return null;
     }
 
@@ -278,5 +279,35 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         fixSizeWindow.setModel(true);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    private void renderDeleteConfigItemUI(MetaConfigItemValueObject metaConfigItemValueObject){
+        List<Button> actionButtonList = new ArrayList<>();
+
+        Button confirmButton = new Button("确认删除元属性",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行删除元属性 "+metaConfigItemValueObject.itemName+" 的操作",actionButtonList,400,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //doCreateRelationEntities();
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+
+
     }
 }
