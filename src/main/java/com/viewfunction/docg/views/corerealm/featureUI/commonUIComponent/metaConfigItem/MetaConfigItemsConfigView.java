@@ -103,7 +103,6 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         Button createMetaConfigItemButton= new Button("添加元属性");
         createMetaConfigItemButton.setIcon(VaadinIcon.PLUS.create());
         createMetaConfigItemButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        Tooltips.getCurrent().setTooltip(createMetaConfigItemButton, "添加元属性配置");
         createMetaConfigItemButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -111,6 +110,8 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             }
         });
         buttonList.add(createMetaConfigItemButton);
+        SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONTROLLER),"元属性配置管理 ",secTitleElementsList,buttonList);
+        add(metaConfigItemConfigActionBar);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
             /*
@@ -147,9 +148,6 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             buttons.setWidth(80,Unit.PIXELS);
             return new VerticalLayout(buttons);
         });
-
-        SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONTROLLER),"元属性配置管理 ",secTitleElementsList,buttonList);
-        add(metaConfigItemConfigActionBar);
 
         metaConfigItemValueGrid = new Grid<>();
         metaConfigItemValueGrid.setWidth(100, Unit.PERCENTAGE);
