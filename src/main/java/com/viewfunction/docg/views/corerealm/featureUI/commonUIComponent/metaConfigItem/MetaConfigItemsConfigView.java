@@ -101,7 +101,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         List<Component> buttonList = new ArrayList<>();
 
         Button createMetaConfigItemButton= new Button("添加元属性");
-        createMetaConfigItemButton.setIcon(VaadinIcon.PLUS.create());
+        createMetaConfigItemButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
         createMetaConfigItemButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         createMetaConfigItemButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -276,7 +276,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
                 }
             }
         });
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加元属性",null,true,480,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加元属性",null,true,480,210,false);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);

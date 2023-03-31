@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndex;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
@@ -19,6 +16,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenan
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.SearchIndexInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
@@ -64,9 +62,15 @@ public class KindIndexConfigView extends VerticalLayout {
         List<Component> buttonList = new ArrayList<>();
 
         Button createKindIndexButton= new Button("创建类型索引");
-        createKindIndexButton.setIcon(VaadinIcon.PLUS.create());
+        createKindIndexButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
         createKindIndexButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         buttonList.add(createKindIndexButton);
+        createKindIndexButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderAddNewKindIndexUI();
+            }
+        });
 
         SecondaryTitleActionBar indexConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONTROLLER),"类型索引配置管理 ",secTitleElementsList,buttonList);
         add(indexConfigActionBar);
@@ -126,5 +130,32 @@ public class KindIndexConfigView extends VerticalLayout {
             System.out.println(currentSearchIndexInfo.getIndexedAttributeNames());
             System.out.println(currentSearchIndexInfo.getPopulationPercent());
         }
+    }
+
+    private void renderAddNewKindIndexUI(){
+        CreateKindIndexView createKindIndexView = new CreateKindIndexView(KindIndexType.ConceptionKind,this.kindName);
+        /*
+        addEntityAttributeView.setAttributeValueOperateHandler(new AttributeValueOperateHandler() {
+            @Override
+            public void handleAttributeValue(AttributeValue attributeValue) {
+                if(attributeValue != null){
+                    String configItemName = attributeValue.getAttributeName();
+                    Object configItemValue = attributeValue.getAttributeValue();
+                    AttributeDataType attributeDataType = checkAttributeDataType(configItemValue);
+                    MetaConfigItemsConfigView.MetaConfigItemValueObject newMetaConfigItemValueObject =
+                            new MetaConfigItemsConfigView.MetaConfigItemValueObject(configItemName,attributeDataType,configItemValue);
+                    ListDataProvider dtaProvider=(ListDataProvider)metaConfigItemValueGrid.getDataProvider();
+                    dtaProvider.getItems().add(newMetaConfigItemValueObject);
+                    dtaProvider.refreshAll();
+                }
+            }
+        });
+        */
+
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建类型索引",null,true,550,440,false);
+        fixSizeWindow.setWindowContent(createKindIndexView);
+        fixSizeWindow.setModel(true);
+        //addKindIndexView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }

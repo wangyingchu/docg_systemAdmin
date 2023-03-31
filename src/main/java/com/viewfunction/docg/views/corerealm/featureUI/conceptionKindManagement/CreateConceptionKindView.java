@@ -25,7 +25,6 @@ public class CreateConceptionKindView extends VerticalLayout {
     private TextField conceptionKindNameField;
     private TextField conceptionKindDescField;
     private H6 errorMessage;
-
     private Dialog containerDialog;
 
     public CreateConceptionKindView(){
