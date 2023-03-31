@@ -13,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.SearchIndexInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -130,32 +131,15 @@ public class KindIndexConfigView extends VerticalLayout {
             System.out.println(currentSearchIndexInfo.getIndexedAttributeNames());
             System.out.println(currentSearchIndexInfo.getPopulationPercent());
         }
+        List<AttributeSystemInfo> attributeSystemInfoList = systemMaintenanceOperator.getConceptionKindAttributesSystemInfo(this.kindName);
     }
 
     private void renderAddNewKindIndexUI(){
         CreateKindIndexView createKindIndexView = new CreateKindIndexView(KindIndexType.ConceptionKind,this.kindName);
-        /*
-        addEntityAttributeView.setAttributeValueOperateHandler(new AttributeValueOperateHandler() {
-            @Override
-            public void handleAttributeValue(AttributeValue attributeValue) {
-                if(attributeValue != null){
-                    String configItemName = attributeValue.getAttributeName();
-                    Object configItemValue = attributeValue.getAttributeValue();
-                    AttributeDataType attributeDataType = checkAttributeDataType(configItemValue);
-                    MetaConfigItemsConfigView.MetaConfigItemValueObject newMetaConfigItemValueObject =
-                            new MetaConfigItemsConfigView.MetaConfigItemValueObject(configItemName,attributeDataType,configItemValue);
-                    ListDataProvider dtaProvider=(ListDataProvider)metaConfigItemValueGrid.getDataProvider();
-                    dtaProvider.getItems().add(newMetaConfigItemValueObject);
-                    dtaProvider.refreshAll();
-                }
-            }
-        });
-        */
-
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建类型索引",null,true,550,440,false);
         fixSizeWindow.setWindowContent(createKindIndexView);
         fixSizeWindow.setModel(true);
-        //addKindIndexView.setContainerDialog(fixSizeWindow);
+        createKindIndexView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 }

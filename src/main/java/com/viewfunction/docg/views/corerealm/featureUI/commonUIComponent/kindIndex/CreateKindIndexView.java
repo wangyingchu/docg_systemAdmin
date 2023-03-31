@@ -1,5 +1,8 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndex;
 
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -13,10 +16,15 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.SearchIndexInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator.SearchIndexType.*;
 
@@ -105,9 +113,31 @@ public class CreateKindIndexView extends VerticalLayout {
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         add(confirmButton);
         setHorizontalComponentAlignment(Alignment.END,confirmButton);
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doCreateKindIndex();
+            }
+        });
     }
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
+    }
+
+    private void doCreateKindIndex(){
+        String kindIndexName = this.kindIndexNameField.getValue();
+        SystemMaintenanceOperator.SearchIndexType searchIndexType = this.searchIndexTypeSelect.getValue();
+        Set<String> indexProperties = this.indexPropertiesComboBox.getValue();
+
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+
+        List<AttributeSystemInfo> attributeSystemInfoList = systemMaintenanceOperator.getConceptionKindAttributesSystemInfo(this.kindName);
     }
 }
