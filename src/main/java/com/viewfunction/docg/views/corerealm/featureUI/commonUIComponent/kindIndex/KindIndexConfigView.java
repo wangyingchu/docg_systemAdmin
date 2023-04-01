@@ -125,11 +125,7 @@ public class KindIndexConfigView extends VerticalLayout {
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         Set<SearchIndexInfo> searchIndexInfoSet = systemMaintenanceOperator.listConceptionKindSearchIndex();
         for(SearchIndexInfo currentSearchIndexInfo:searchIndexInfoSet){
-            System.out.println(currentSearchIndexInfo.getIndexName());
-            System.out.println(currentSearchIndexInfo.getSearchIndexType());
-            System.out.println(currentSearchIndexInfo.getSearchKindName());
-            System.out.println(currentSearchIndexInfo.getIndexedAttributeNames());
-            System.out.println(currentSearchIndexInfo.getPopulationPercent());
+
         }
         List<AttributeSystemInfo> attributeSystemInfoList = systemMaintenanceOperator.getConceptionKindAttributesSystemInfo(this.kindName);
     }

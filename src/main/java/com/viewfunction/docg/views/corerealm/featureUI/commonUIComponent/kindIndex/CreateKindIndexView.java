@@ -3,6 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIn
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -11,18 +12,22 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H6;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.SearchIndexInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,7 +40,7 @@ public class CreateKindIndexView extends VerticalLayout {
     private H6 errorMessage;
     private TextField kindIndexNameField;
     private ComboBox<SystemMaintenanceOperator.SearchIndexType> searchIndexTypeSelect;
-    private MultiSelectComboBox<String> indexPropertiesComboBox;
+    private MultiSelectComboBox<AttributeSystemInfo> indexPropertiesComboBox;
     private Dialog containerDialog;
 
     public CreateKindIndexView(KindIndexConfigView.KindIndexType kindIndexType, String kindName){
@@ -95,11 +100,16 @@ public class CreateKindIndexView extends VerticalLayout {
         this.searchIndexTypeSelect.setValue(BTREE);
         add(this.searchIndexTypeSelect);
 
-        String[] options = new String[]{"a","b","c"};
+        ItemLabelGenerator<AttributeSystemInfo> itemLabelGenerator = new ItemLabelGenerator<AttributeSystemInfo>() {
+            @Override
+            public String apply(AttributeSystemInfo attributeSystemInfo) {
+                return attributeSystemInfo.getAttributeName()+ " ("+attributeSystemInfo.getDataType()+")";
+            }
+        };
         this.indexPropertiesComboBox = new MultiSelectComboBox<>("索引包含属性 - SearchIndex Properties");
         this.indexPropertiesComboBox.setWidthFull();
         this.indexPropertiesComboBox.setRequired(true);
-        this.indexPropertiesComboBox.setItems(options);
+        this.indexPropertiesComboBox.setItemLabelGenerator(itemLabelGenerator);
         add(this.indexPropertiesComboBox);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
@@ -128,8 +138,71 @@ public class CreateKindIndexView extends VerticalLayout {
     private void doCreateKindIndex(){
         String kindIndexName = this.kindIndexNameField.getValue();
         SystemMaintenanceOperator.SearchIndexType searchIndexType = this.searchIndexTypeSelect.getValue();
-        Set<String> indexProperties = this.indexPropertiesComboBox.getValue();
+        Set<AttributeSystemInfo> indexProperties = this.indexPropertiesComboBox.getValue();
+        boolean inputValidateResult = true;
+        if(kindIndexName.equals("")){
+            inputValidateResult = false;
+            this.kindIndexNameField.setInvalid(true);
+        }
+        if(searchIndexType == null){
+            inputValidateResult = false;
+            this.searchIndexTypeSelect.setInvalid(true);
+        }
+        if(indexProperties.size() ==0){
+            inputValidateResult = false;
+            this.indexPropertiesComboBox.setInvalid(true);
+        }
+        if(inputValidateResult){
+            hideErrorMessage();
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+            Set<SearchIndexInfo> searchIndexInfoSet = null;
+            switch(this.kindIndexType){
+                case ConceptionKind -> searchIndexInfoSet = systemMaintenanceOperator.listConceptionKindSearchIndex();
+                case RelationKind -> searchIndexInfoSet = systemMaintenanceOperator.listRelationKindSearchIndex();
+            }
+            for(SearchIndexInfo currentSearchIndexInfo:searchIndexInfoSet){
+                String indexName = currentSearchIndexInfo.getIndexName();
+                String kindName = currentSearchIndexInfo.getSearchKindName();
+                if(this.kindName.equals(kindName) && kindIndexName.equals(indexName)){
+                    showErrorMessage("类型索引 "+kindIndexName+" 已经存在");
+                }else{
+                    Set<String> indexPropertiesSet = new HashSet<>();
+                    for(AttributeSystemInfo currentAttributeSystemInfo:indexProperties){
+                        indexPropertiesSet.add(currentAttributeSystemInfo.getAttributeName());
+                    }
+                    boolean createIndexResult = false;
+                    try {
+                        switch(this.kindIndexType){
+                            case ConceptionKind -> createIndexResult = systemMaintenanceOperator.createConceptionKindSearchIndex(kindIndexName,searchIndexType,kindName,indexPropertiesSet);
+                            case RelationKind -> createIndexResult = systemMaintenanceOperator.createRelationKindSearchIndex(kindIndexName,searchIndexType,kindName,indexPropertiesSet);
+                        }
+                    } catch (CoreRealmServiceRuntimeException e) {
+                        throw new RuntimeException(e);
+                    }
+                    if(createIndexResult){
+                        if(this.containerDialog != null){
+                            this.containerDialog.close();
+                        }
+                        CommonUIOperationUtil.showPopupNotification("为类型 "+kindName+" 创建索引 "+kindIndexName+" 成功", NotificationVariant.LUMO_SUCCESS);
+                    }else{
+                        CommonUIOperationUtil.showPopupNotification("为类型 "+kindName+" 创建索引 "+kindIndexName+" 失败", NotificationVariant.LUMO_ERROR);
+                    }
+                }
+            }
+        }else{
+            showErrorMessage("请输入全部类型索引创建信息");
+            CommonUIOperationUtil.showPopupNotification("类型索引创建信息输入错误",NotificationVariant.LUMO_ERROR);
+        }
+    }
 
+    private void showErrorMessage(String errorMessageTxt){
+        this.errorMessage.setText(errorMessageTxt);
+        this.errorMessage.setVisible(true);
+    }
+
+    private void hideErrorMessage(){
+        this.errorMessage.setVisible(false);
     }
 
     @Override
@@ -137,7 +210,7 @@ public class CreateKindIndexView extends VerticalLayout {
         super.onAttach(attachEvent);
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
-
         List<AttributeSystemInfo> attributeSystemInfoList = systemMaintenanceOperator.getConceptionKindAttributesSystemInfo(this.kindName);
+        this.indexPropertiesComboBox.setItems(attributeSystemInfoList);
     }
 }
