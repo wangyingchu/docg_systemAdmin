@@ -10,10 +10,10 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.SearchIndexInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -123,15 +123,45 @@ public class KindIndexConfigView extends VerticalLayout {
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
-        Set<SearchIndexInfo> searchIndexInfoSet = systemMaintenanceOperator.listConceptionKindSearchIndex();
-        for(SearchIndexInfo currentSearchIndexInfo:searchIndexInfoSet){
-
+        Set<SearchIndexInfo> searchIndexInfoSet = null;
+        switch(this.kindIndexType){
+            case RelationKind -> searchIndexInfoSet = systemMaintenanceOperator.listRelationKindSearchIndex();
+            case ConceptionKind -> searchIndexInfoSet = systemMaintenanceOperator.listConceptionKindSearchIndex();
         }
-        List<AttributeSystemInfo> attributeSystemInfoList = systemMaintenanceOperator.getConceptionKindAttributesSystemInfo(this.kindName);
+        List<SearchIndexInfo> kindSearchIndexList = new ArrayList<>();
+        for(SearchIndexInfo currentSearchIndexInfo:searchIndexInfoSet){
+            String kindName = currentSearchIndexInfo.getSearchKindName();
+            if(this.kindName.equals(kindName)){
+                kindSearchIndexList.add(currentSearchIndexInfo);
+            }
+        }
+        searchIndexValueGrid.setItems(kindSearchIndexList);
+    }
+
+    public void refreshKindIndex(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+        Set<SearchIndexInfo> searchIndexInfoSet = null;
+        switch(this.kindIndexType){
+            case RelationKind -> searchIndexInfoSet = systemMaintenanceOperator.listRelationKindSearchIndex();
+            case ConceptionKind -> searchIndexInfoSet = systemMaintenanceOperator.listConceptionKindSearchIndex();
+        }
+        List<SearchIndexInfo> kindSearchIndexList = new ArrayList<>();
+        for(SearchIndexInfo currentSearchIndexInfo:searchIndexInfoSet){
+            String kindName = currentSearchIndexInfo.getSearchKindName();
+            if(this.kindName.equals(kindName)){
+                kindSearchIndexList.add(currentSearchIndexInfo);
+            }
+        }
+        ListDataProvider dtaProvider=(ListDataProvider)searchIndexValueGrid.getDataProvider();
+        dtaProvider.getItems().clear();
+        dtaProvider.getItems().addAll(kindSearchIndexList);
+        dtaProvider.refreshAll();
     }
 
     private void renderAddNewKindIndexUI(){
         CreateKindIndexView createKindIndexView = new CreateKindIndexView(KindIndexType.ConceptionKind,this.kindName);
+        createKindIndexView.setContainerKindIndexConfigView(this);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建类型索引",null,true,550,440,false);
         fixSizeWindow.setWindowContent(createKindIndexView);
         fixSizeWindow.setModel(true);

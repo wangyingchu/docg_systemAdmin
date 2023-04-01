@@ -42,6 +42,7 @@ public class CreateKindIndexView extends VerticalLayout {
     private ComboBox<SystemMaintenanceOperator.SearchIndexType> searchIndexTypeSelect;
     private MultiSelectComboBox<AttributeSystemInfo> indexPropertiesComboBox;
     private Dialog containerDialog;
+    private KindIndexConfigView containerKindIndexConfigView;
 
     public CreateKindIndexView(KindIndexConfigView.KindIndexType kindIndexType, String kindName){
         this.kindIndexType = kindIndexType;
@@ -161,33 +162,39 @@ public class CreateKindIndexView extends VerticalLayout {
                 case ConceptionKind -> searchIndexInfoSet = systemMaintenanceOperator.listConceptionKindSearchIndex();
                 case RelationKind -> searchIndexInfoSet = systemMaintenanceOperator.listRelationKindSearchIndex();
             }
+            boolean indexNameValidate = true;
             for(SearchIndexInfo currentSearchIndexInfo:searchIndexInfoSet){
                 String indexName = currentSearchIndexInfo.getIndexName();
                 String kindName = currentSearchIndexInfo.getSearchKindName();
                 if(this.kindName.equals(kindName) && kindIndexName.equals(indexName)){
                     showErrorMessage("类型索引 "+kindIndexName+" 已经存在");
+                    indexNameValidate = false;
+                }
+            }
+            if(indexNameValidate){
+                Set<String> indexPropertiesSet = new HashSet<>();
+                for(AttributeSystemInfo currentAttributeSystemInfo:indexProperties){
+                    indexPropertiesSet.add(currentAttributeSystemInfo.getAttributeName());
+                }
+                boolean createIndexResult = false;
+                try {
+                    switch(this.kindIndexType){
+                        case ConceptionKind -> createIndexResult = systemMaintenanceOperator.createConceptionKindSearchIndex(kindIndexName,searchIndexType,kindName,indexPropertiesSet);
+                        case RelationKind -> createIndexResult = systemMaintenanceOperator.createRelationKindSearchIndex(kindIndexName,searchIndexType,kindName,indexPropertiesSet);
+                    }
+                } catch (CoreRealmServiceRuntimeException e) {
+                    throw new RuntimeException(e);
+                }
+                if(createIndexResult){
+                    if(this.containerDialog != null){
+                        this.containerDialog.close();
+                    }
+                    if(containerKindIndexConfigView != null){
+                        containerKindIndexConfigView.refreshKindIndex();
+                    }
+                    CommonUIOperationUtil.showPopupNotification("为类型 "+kindName+" 创建索引 "+kindIndexName+" 成功", NotificationVariant.LUMO_SUCCESS);
                 }else{
-                    Set<String> indexPropertiesSet = new HashSet<>();
-                    for(AttributeSystemInfo currentAttributeSystemInfo:indexProperties){
-                        indexPropertiesSet.add(currentAttributeSystemInfo.getAttributeName());
-                    }
-                    boolean createIndexResult = false;
-                    try {
-                        switch(this.kindIndexType){
-                            case ConceptionKind -> createIndexResult = systemMaintenanceOperator.createConceptionKindSearchIndex(kindIndexName,searchIndexType,kindName,indexPropertiesSet);
-                            case RelationKind -> createIndexResult = systemMaintenanceOperator.createRelationKindSearchIndex(kindIndexName,searchIndexType,kindName,indexPropertiesSet);
-                        }
-                    } catch (CoreRealmServiceRuntimeException e) {
-                        throw new RuntimeException(e);
-                    }
-                    if(createIndexResult){
-                        if(this.containerDialog != null){
-                            this.containerDialog.close();
-                        }
-                        CommonUIOperationUtil.showPopupNotification("为类型 "+kindName+" 创建索引 "+kindIndexName+" 成功", NotificationVariant.LUMO_SUCCESS);
-                    }else{
-                        CommonUIOperationUtil.showPopupNotification("为类型 "+kindName+" 创建索引 "+kindIndexName+" 失败", NotificationVariant.LUMO_ERROR);
-                    }
+                    CommonUIOperationUtil.showPopupNotification("为类型 "+kindName+" 创建索引 "+kindIndexName+" 失败", NotificationVariant.LUMO_ERROR);
                 }
             }
         }else{
@@ -212,5 +219,9 @@ public class CreateKindIndexView extends VerticalLayout {
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         List<AttributeSystemInfo> attributeSystemInfoList = systemMaintenanceOperator.getConceptionKindAttributesSystemInfo(this.kindName);
         this.indexPropertiesComboBox.setItems(attributeSystemInfoList);
+    }
+
+    public void setContainerKindIndexConfigView(KindIndexConfigView containerKindIndexConfigView) {
+        this.containerKindIndexConfigView = containerKindIndexConfigView;
     }
 }
