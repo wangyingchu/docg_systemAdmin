@@ -78,6 +78,13 @@ public class KindIndexConfigView extends VerticalLayout {
             }
         });
 
+        Button refreshMetaConfigItemsInfoButton = new Button("刷新类型索引信息",new Icon(VaadinIcon.REFRESH));
+        refreshMetaConfigItemsInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        refreshMetaConfigItemsInfoButton.addClickListener((ClickEvent<Button> click) ->{
+            refreshKindIndex();
+        });
+        buttonList.add(refreshMetaConfigItemsInfoButton);
+
         SecondaryTitleActionBar indexConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.ADD_DOCK),"类型索引配置管理 ",secTitleElementsList,buttonList);
         add(indexConfigActionBar);
 

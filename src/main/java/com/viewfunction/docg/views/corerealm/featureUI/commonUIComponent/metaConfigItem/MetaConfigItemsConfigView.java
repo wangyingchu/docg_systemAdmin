@@ -19,6 +19,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
@@ -110,6 +111,14 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             }
         });
         buttonList.add(createMetaConfigItemButton);
+
+        Button refreshMetaConfigItemsInfoButton = new Button("刷新元属性信息",new Icon(VaadinIcon.REFRESH));
+        refreshMetaConfigItemsInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        refreshMetaConfigItemsInfoButton.addClickListener((ClickEvent<Button> click) ->{
+            refreshMetaConfigItemsInfo();
+        });
+        buttonList.add(refreshMetaConfigItemsInfoButton);
+
         SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.BOOKMARK),"元属性配置管理 ",secTitleElementsList,buttonList);
         add(metaConfigItemConfigActionBar);
 
@@ -320,5 +329,33 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         }else{
             CommonUIOperationUtil.showPopupNotification("删除元属性 "+ metaConfigItemValueObject.itemName +" 失败", NotificationVariant.LUMO_ERROR);
         }
+    }
+
+    private void refreshMetaConfigItemsInfo(){
+        Map<String,Object> metaConfigItemsMap = null;
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        switch(metaConfigItemType){
+            case ConceptionKind :
+                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(metaConfigItemName);
+                metaConfigItemsMap = targetConceptionKind.getMetaConfigItems();
+                break;
+            case RelationKind:
+                RelationKind targetRelationKind = coreRealm.getRelationKind(metaConfigItemName);
+                metaConfigItemsMap = targetRelationKind.getMetaConfigItems();
+
+        }
+        List<MetaConfigItemValueObject> metaConfigItemValueObjectList = new ArrayList<>();
+        Set<String> itemNameSet = metaConfigItemsMap.keySet();
+        for(String currentItemName:itemNameSet){
+            Object itemValue = metaConfigItemsMap.get(currentItemName);
+            AttributeDataType attributeDataType = checkAttributeDataType(itemValue);
+            MetaConfigItemValueObject currentMetaConfigItemValueObject =
+                    new MetaConfigItemValueObject(currentItemName,attributeDataType,itemValue);
+            metaConfigItemValueObjectList.add(currentMetaConfigItemValueObject);
+        }
+        ListDataProvider dtaProvider=(ListDataProvider)metaConfigItemValueGrid.getDataProvider();
+        dtaProvider.getItems().clear();
+        dtaProvider.getItems().addAll(metaConfigItemValueObjectList);
+        dtaProvider.refreshAll();
     }
 }
