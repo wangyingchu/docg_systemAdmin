@@ -166,8 +166,8 @@ public class CreateKindIndexView extends VerticalLayout {
             for(SearchIndexInfo currentSearchIndexInfo:searchIndexInfoSet){
                 String indexName = currentSearchIndexInfo.getIndexName();
                 String kindName = currentSearchIndexInfo.getSearchKindName();
-                if(this.kindName.equals(kindName) && kindIndexName.equals(indexName)){
-                    showErrorMessage("类型索引 "+kindIndexName+" 已经存在");
+                if(kindIndexName.equals(indexName)){
+                    showErrorMessage("索引名称 "+kindIndexName+" 已被其他类型索引定义使用");
                     indexNameValidate = false;
                 }
             }

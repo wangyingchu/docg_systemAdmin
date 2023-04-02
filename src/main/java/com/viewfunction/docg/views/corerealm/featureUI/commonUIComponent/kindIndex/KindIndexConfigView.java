@@ -7,19 +7,24 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.SearchIndexInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -81,7 +86,7 @@ public class KindIndexConfigView extends VerticalLayout {
             removeIcon.setSize("20px");
             Button removeItemButton = new Button(removeIcon, event -> {
                 if(entityStatisticsInfo instanceof SearchIndexInfo){
-                    //renderDeleteConfigItemUI((MetaConfigItemsConfigView.MetaConfigItemValueObject)entityStatisticsInfo);
+                    renderDeleteKindIndexUI((SearchIndexInfo)entityStatisticsInfo);
                 }
             });
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -118,7 +123,7 @@ public class KindIndexConfigView extends VerticalLayout {
         searchIndexValueGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
         LightGridColumnHeader gridColumnHeader_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         searchIndexValueGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4);
-        searchIndexValueGrid.setHeight(100,Unit.PIXELS);
+        searchIndexValueGrid.setHeight(110,Unit.PIXELS);
         add(searchIndexValueGrid);
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -167,5 +172,54 @@ public class KindIndexConfigView extends VerticalLayout {
         fixSizeWindow.setModel(true);
         createKindIndexView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    private void renderDeleteKindIndexUI(SearchIndexInfo searchIndexInfo){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认删除类型索引",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行删除类型索引 "+searchIndexInfo.getIndexName()+" ("+searchIndexInfo.getSearchKindName()+") 的操作",actionButtonList,650,190);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doDeleteKindIndex(searchIndexInfo,confirmWindow);
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doDeleteKindIndex(SearchIndexInfo searchIndexInfo, ConfirmWindow confirmWindow){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+        boolean deleteResult = false;
+        try {
+            switch(this.kindIndexType){
+                case RelationKind -> deleteResult = systemMaintenanceOperator.removeRelationKindSearchIndex(searchIndexInfo.getIndexName());
+                case ConceptionKind -> deleteResult = systemMaintenanceOperator.removeConceptionKindSearchIndex(searchIndexInfo.getIndexName());
+            }
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+        if(deleteResult){
+            CommonUIOperationUtil.showPopupNotification("删除类型索引 "+ searchIndexInfo.getIndexName()+" ("+searchIndexInfo.getSearchKindName()+") 操作" +"成功", NotificationVariant.LUMO_SUCCESS);
+            confirmWindow.closeConfirmWindow();
+            ListDataProvider dtaProvider=(ListDataProvider)searchIndexValueGrid.getDataProvider();
+            dtaProvider.getItems().remove(searchIndexInfo);
+            dtaProvider.refreshAll();
+        }else{
+            CommonUIOperationUtil.showPopupNotification("删除类型索引 "+ searchIndexInfo.getIndexName()+" ("+searchIndexInfo.getSearchKindName()+") 操作" +"失败", NotificationVariant.LUMO_ERROR);
+        }
     }
 }
