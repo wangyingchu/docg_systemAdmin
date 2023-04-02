@@ -2,10 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
@@ -22,6 +19,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServi
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 
@@ -69,6 +67,12 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
         addConceptionEntityButton.setIcon(VaadinIcon.PLUS_CIRCLE.create());
         addConceptionEntityButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         infoContainer.add(addConceptionEntityButton);
+        addConceptionEntityButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderAddConceptionEntityView();
+            }
+        });
 
         Button addConceptionKindScopeAttributeButton= new Button("添加概念类型全局属性");
         addConceptionKindScopeAttributeButton.setIcon(VaadinIcon.TEXT_INPUT.create());
@@ -170,5 +174,13 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
             item.add(new Text(label));
         }
         return item;
+    }
+
+    private void renderAddConceptionEntityView(){
+        AddConceptionEntityView addConceptionEntityView = new AddConceptionEntityView(this.conceptionKindName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加概念类型实体",null,true,480,210,false);
+        fixSizeWindow.setWindowContent(addConceptionEntityView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }
