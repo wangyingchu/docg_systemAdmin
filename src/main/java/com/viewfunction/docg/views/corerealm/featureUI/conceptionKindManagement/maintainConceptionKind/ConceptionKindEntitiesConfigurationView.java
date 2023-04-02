@@ -148,14 +148,6 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
         kindIndexConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(kindIndexConfigView);
 
-        HorizontalLayout infoContainer3 = new HorizontalLayout();
-        infoContainer3.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        infoContainer3.setWidthFull();
-        infoContainer3.getStyle()
-                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
-                .set("padding-bottom", "var(--lumo-space-l)");
-        add(infoContainer3);
-
         SecondaryIconTitle filterTitle4 = new SecondaryIconTitle(new Icon(VaadinIcon.TAGS),"分类配置");
         filterTitle4.getStyle()
                 .set("padding-top", "var(--lumo-space-s)");
