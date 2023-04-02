@@ -123,7 +123,7 @@ public class KindIndexConfigView extends VerticalLayout {
         searchIndexValueGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
         LightGridColumnHeader gridColumnHeader_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         searchIndexValueGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4);
-        searchIndexValueGrid.setHeight(110,Unit.PIXELS);
+        searchIndexValueGrid.setHeight(150,Unit.PIXELS);
         add(searchIndexValueGrid);
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
