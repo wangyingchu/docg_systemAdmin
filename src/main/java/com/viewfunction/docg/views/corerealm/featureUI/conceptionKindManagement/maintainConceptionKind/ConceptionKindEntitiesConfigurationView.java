@@ -25,6 +25,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classification.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndex.KindIndexConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItem.MetaConfigItemsConfigView;
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -132,7 +133,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
         });
         infoContainer.add(removeConceptionKindButton);
 
-        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.BOOKMARK),"元属性配置");
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.CONTROLLER),"概念类型组件运行时配置");
         filterTitle2.getStyle().set("padding-top", "var(--lumo-space-s)");
         add(filterTitle2);
 
@@ -140,26 +141,13 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
         metaConfigItemsConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(metaConfigItemsConfigView);
 
-        SecondaryIconTitle filterTitle3 = new SecondaryIconTitle(new Icon(VaadinIcon.ADD_DOCK),"概念类型索引配置");
-        filterTitle3.getStyle().set("padding-top", "var(--lumo-space-s)");
-        add(filterTitle3);
-
         KindIndexConfigView kindIndexConfigView = new KindIndexConfigView(KindIndexConfigView.KindIndexType.ConceptionKind,this.conceptionKindName);
         kindIndexConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(kindIndexConfigView);
 
-        SecondaryIconTitle filterTitle4 = new SecondaryIconTitle(new Icon(VaadinIcon.TAGS),"分类配置");
-        filterTitle4.getStyle()
-                .set("padding-top", "var(--lumo-space-s)");
-        add(filterTitle4);
-
-        HorizontalLayout infoContainer4 = new HorizontalLayout();
-        infoContainer4.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        infoContainer4.setWidthFull();
-        infoContainer4.getStyle()
-                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
-                .set("padding-bottom", "var(--lumo-space-l)");
-        add(infoContainer4);
+        ClassificationConfigView classificationConfigView = new ClassificationConfigView();
+        classificationConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        add(classificationConfigView);
     }
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {

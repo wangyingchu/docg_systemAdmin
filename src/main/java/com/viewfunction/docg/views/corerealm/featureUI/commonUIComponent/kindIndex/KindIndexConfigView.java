@@ -78,7 +78,7 @@ public class KindIndexConfigView extends VerticalLayout {
             }
         });
 
-        SecondaryTitleActionBar indexConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONTROLLER),"类型索引配置管理 ",secTitleElementsList,buttonList);
+        SecondaryTitleActionBar indexConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.ADD_DOCK),"类型索引配置管理 ",secTitleElementsList,buttonList);
         add(indexConfigActionBar);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
