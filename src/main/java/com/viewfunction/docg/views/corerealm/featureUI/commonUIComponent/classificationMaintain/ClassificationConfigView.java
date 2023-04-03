@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classification;
+package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;

@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItem;
+package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;

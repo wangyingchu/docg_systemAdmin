@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndex;
+package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndexMaintain;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;

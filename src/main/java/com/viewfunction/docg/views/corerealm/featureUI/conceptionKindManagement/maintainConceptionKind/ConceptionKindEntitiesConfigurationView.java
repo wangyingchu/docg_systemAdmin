@@ -23,9 +23,9 @@ import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classification.ClassificationConfigView;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndex.KindIndexConfigView;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItem.MetaConfigItemsConfigView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndexMaintain.KindIndexConfigView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
