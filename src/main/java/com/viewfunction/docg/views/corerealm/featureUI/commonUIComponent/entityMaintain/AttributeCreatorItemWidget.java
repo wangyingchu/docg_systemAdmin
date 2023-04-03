@@ -139,10 +139,6 @@ public class AttributeCreatorItemWidget extends VerticalLayout {
         this.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
     }
 
-    public String getAttributeName(){
-        return this.attributeName;
-    }
-
     private Component generateValueEditorTextField() {
         if (this.attributeDataType != null) {
             Component currentConditionValueEditor = null;
@@ -450,5 +446,67 @@ public class AttributeCreatorItemWidget extends VerticalLayout {
 
     public void setAddConceptionEntityView(AddConceptionEntityView addConceptionEntityView) {
         this.addConceptionEntityView = addConceptionEntityView;
+    }
+
+    public Object getAttributeValue(){
+        if(validateAttributeValue()){
+            Object attributeValue = null;
+            Component currentConditionValueEditor = valueEditor;
+            AttributeDataType attributeDataType = this.attributeDataType;
+            switch (attributeDataType) {
+                case INT:
+                    attributeValue = ((TextField) currentConditionValueEditor).getValue();
+                    break;
+                case BYTE:
+                    attributeValue = ((TextField) currentConditionValueEditor).getValue();
+                    break;
+                case DATE:
+                    attributeValue = ((DatePicker) currentConditionValueEditor).getValue();
+                    break;
+                case LONG:
+                    attributeValue = ((TextField) currentConditionValueEditor).getValue();
+                    break;
+                case FLOAT:
+                    attributeValue = ((TextField) currentConditionValueEditor).getValue();
+                    break;
+                case SHORT:
+                    attributeValue = ((TextField) currentConditionValueEditor).getValue();
+                    break;
+                case BINARY:
+                    attributeValue = ((TextField) currentConditionValueEditor).getValue();
+                    break;
+                case DOUBLE:
+                    attributeValue = ((TextField) currentConditionValueEditor).getValue();
+                    break;
+                case STRING:
+                    attributeValue = ((TextField) currentConditionValueEditor).getValue();
+                    break;
+                case BOOLEAN:
+                    attributeValue = ((ComboBox) currentConditionValueEditor).getValue();
+                    break;
+                case DECIMAL:
+                    attributeValue = ((TextField) currentConditionValueEditor).getValue();
+                    break;
+                case TIMESTAMP:
+                    attributeValue = ((TextField) currentConditionValueEditor).getValue();
+                    break;
+                case TIME:
+                    attributeValue = ((TimePicker) currentConditionValueEditor).getValue();
+                    break;
+                case DATETIME:
+                    attributeValue = ((DateTimePicker) currentConditionValueEditor).getValue();
+            }
+            return attributeValue;
+        }else{
+            return null;
+        }
+    }
+
+    public String getAttributeName(){
+        return this.attributeName;
+    }
+
+    public AttributeDataType getAttributeDataType() {
+        return attributeDataType;
     }
 }

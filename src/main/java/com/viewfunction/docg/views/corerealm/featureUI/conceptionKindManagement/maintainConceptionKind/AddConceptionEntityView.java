@@ -28,6 +28,7 @@ import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class AddConceptionEntityView extends VerticalLayout {
 
@@ -209,6 +210,15 @@ public class AddConceptionEntityView extends VerticalLayout {
     }
 
     private void doAddConceptionEntity(){
+        criteriaItemsContainer.getChildren().forEach(new Consumer<Component>() {
+            @Override
+            public void accept(Component component) {
+                AttributeCreatorItemWidget currentAttributeCreatorItemWidget = (AttributeCreatorItemWidget)component;
+                String attributeName = currentAttributeCreatorItemWidget.getAttributeName();
+                Object attributeValue = currentAttributeCreatorItemWidget.getAttributeValue();
+                AttributeDataType attributeDataType = currentAttributeCreatorItemWidget.getAttributeDataType();
+            }
+        });
 
     }
 }
