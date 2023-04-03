@@ -13,15 +13,16 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddCustomEntityAttributeUI;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeCreatorItemWidget;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -34,11 +35,16 @@ public class AddConceptionEntityView extends VerticalLayout {
     private VerticalLayout criteriaItemsContainer;
     private List<String> resultAttributesList;
     private ComboBox<KindEntityAttributeRuntimeStatistics> kindExistingAttributeFilterSelect;
+    private int viewWidth;
+    private int viewHeight;
 
-    public AddConceptionEntityView(String conceptionKindName){
+    public AddConceptionEntityView(String conceptionKindName,int viewWidth,int viewHeight){
         this.conceptionKindName = conceptionKindName;
         this.setMargin(false);
         this.setWidthFull();
+
+        this.viewWidth = viewWidth;
+        this.viewHeight = viewHeight;
 
         Icon kindIcon = VaadinIcon.CUBE.create();
         kindIcon.setSize("12px");
@@ -92,29 +98,22 @@ public class AddConceptionEntityView extends VerticalLayout {
                 if(changedItem != null){
                     kindExistingAttributeFilterSelect.setValue(null);
                     String selectedAttribute = changedItem.getAttributeName();
-                    addQueryConditionItem(selectedAttribute,changedItem.getAttributeDataType());
+                    addAttributeCreatorItem(selectedAttribute,changedItem.getAttributeDataType());
                 }
             }
         });
         kindExistingAttributeFilterSelect.setRenderer(createRenderer());
         kindExistingAttributeFilterSelect.getStyle().set("--vaadin-combo-box-overlay-width", "270px");
 
-
-
-
-
-
-
-
         Button addCustomQueryCriteriaButton = new Button();
-        Tooltips.getCurrent().setTooltip(addCustomQueryCriteriaButton, "添加自定义查询条件/显示属性");
+        Tooltips.getCurrent().setTooltip(addCustomQueryCriteriaButton, "输入要添加的实体属性");
         addCustomQueryCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         addCustomQueryCriteriaButton.addThemeVariants(ButtonVariant.LUMO_LARGE);
         addCustomQueryCriteriaButton.setIcon(VaadinIcon.KEYBOARD_O.create());
         addCustomQueryCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAddCustomQueryCriteriaUI();
+                renderAddCustomAttributeUI();
             }
         });
 
@@ -135,52 +134,45 @@ public class AddConceptionEntityView extends VerticalLayout {
         //scroller.getStyle().set("padding", "var(--lumo-space-m)");
         add(queryConditionItemsScroller);
 
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidthFull();
+        spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        add(spaceDivLayout2);
 
+        HorizontalLayout buttonsContainerLayout = new HorizontalLayout();
+        buttonsContainerLayout.setMargin(false);
+        buttonsContainerLayout.setSpacing(false);
+        buttonsContainerLayout.setPadding(false);
+        add(buttonsContainerLayout);
+
+        Button addEntityButton = new Button("添加概念类型实体");
+        addEntityButton.setIcon(new Icon(VaadinIcon.CHECK));
+        addEntityButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        addEntityButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //queryConceptionEntities();
+            }
+        });
+        buttonsContainerLayout.add(addEntityButton);
     }
 
-
-    public void addQueryConditionItem(String attributeName, AttributeDataType attributeDataType){
+    public void addAttributeCreatorItem(String attributeName, AttributeDataType attributeDataType){
         if(!resultAttributesList.contains(attributeName)){
             resultAttributesList.add(attributeName);
-
-            //QueryConditionItemWidget queryConditionItemWidget = new QueryConditionItemWidget(attributeName,attributeDataType,this.queryConditionDataBinder);
-            //queryConditionItemWidget.setContainerDataInstanceQueryCriteriaView(this);
-           // if(resultAttributesList.size()==1){
-                //this one is the default query condition
-             //   queryConditionItemWidget.setAsDefaultQueryConditionItem();
-           // }
-            AttributeValue attributeValue = new AttributeValue();
-            attributeValue.setAttributeName(attributeName);
-            attributeValue.setAttributeDataType(attributeDataType);
-            attributeValue.setAttributeValue("");
-
-
-            AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.conceptionKindName,null,attributeValue, com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget.KindType.ConceptionKind);
-            attributeEditorItemWidget.setWidth(100,Unit.PERCENTAGE);
-
-            criteriaItemsContainer.add(attributeEditorItemWidget);
+            AttributeCreatorItemWidget attributeCreatorItemWidget = new AttributeCreatorItemWidget(this.conceptionKindName,attributeName,attributeDataType,this.viewWidth);
+            criteriaItemsContainer.add(attributeCreatorItemWidget);
         }
     }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        /*
-        // Add browser window listener to observe size change
-        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            criteriaItemsContainer.setHeight(event.getHeight()-280,Unit.PIXELS);
-        }));
-        // Adjust size according to initial width of the screen
-        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            int browserHeight = receiver.getBodyClientHeight();
-            criteriaItemsContainer.setHeight(browserHeight-280,Unit.PIXELS);
-        }));
-
-         */
-        loadQueryCriteriaComboBox();
+        criteriaItemsContainer.setHeight(this.viewHeight-210,Unit.PIXELS);
+        loadKindExistingAttributeFilterComboBox();
     }
 
-    private void loadQueryCriteriaComboBox(){
+    private void loadKindExistingAttributeFilterComboBox(){
         int entityAttributesDistributionStatisticSampleRatio = 20000;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
@@ -203,5 +195,15 @@ public class AddConceptionEntityView extends VerticalLayout {
         return LitRenderer.<KindEntityAttributeRuntimeStatistics>of(tpl.toString())
                 .withProperty("attributeName", KindEntityAttributeRuntimeStatistics::getAttributeName)
                 .withProperty("attributeDataType", KindEntityAttributeRuntimeStatistics::getAttributeDataType);
+    }
+
+    private void renderAddCustomAttributeUI(){
+        AddCustomEntityAttributeUI addCustomEntityAttributeUI = new AddCustomEntityAttributeUI();
+        addCustomEntityAttributeUI.setAddConceptionEntityView(this);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"输入要添加的实体属性",null,true,570,180,false);
+        fixSizeWindow.setWindowContent(addCustomEntityAttributeUI);
+        fixSizeWindow.setModel(true);
+        addCustomEntityAttributeUI.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }
