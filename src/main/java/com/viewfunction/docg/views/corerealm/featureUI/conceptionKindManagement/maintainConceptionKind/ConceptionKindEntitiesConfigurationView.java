@@ -178,7 +178,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
 
     private void renderAddConceptionEntityView(){
         AddConceptionEntityView addConceptionEntityView = new AddConceptionEntityView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加概念类型实体",null,true,480,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加概念类型实体",null,true,500,700,false);
         fixSizeWindow.setWindowContent(addConceptionEntityView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
