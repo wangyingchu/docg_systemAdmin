@@ -1,7 +1,11 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain;
 
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -24,7 +28,9 @@ import com.vaadin.flow.data.validator.*;
 import com.vaadin.flow.function.ValueProvider;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
-import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.AddConceptionEntityView;
+
+import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -38,7 +44,7 @@ public class AttributeCreatorItemWidget extends VerticalLayout {
     private AttributeDataType attributeDataType;
     private Binder<String> attributeValueDataBinder;
     private String kindName;
-    private AttributeValueOperateHandler attributeValueOperateHandler;
+    private AddConceptionEntityView addConceptionEntityView;
 
     public AttributeCreatorItemWidget(String kindName, String attributeName, AttributeDataType attributeDataType,int widgetWidth){
         this.attributeName = attributeName;
@@ -100,7 +106,24 @@ public class AttributeCreatorItemWidget extends VerticalLayout {
         attributeTypeLabel.getStyle().set("font-size","0.7rem").set("color","var(--lumo-contrast-70pct)").set("padding-left","20px");
         attributeMetaLayout.setVerticalComponentAlignment(Alignment.CENTER,attributeMetaInfoContainer);
         attributeMetaLayout.add(attributeTypeLabel);
-        attributeMetaLayout.setVerticalComponentAlignment(Alignment.START,attributeTypeLabel);
+        attributeMetaLayout.setVerticalComponentAlignment(Alignment.CENTER,attributeTypeLabel);
+
+        Button clearAttributeButton = new Button();
+        clearAttributeButton.addThemeVariants(ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY);
+        clearAttributeButton.setIcon(VaadinIcon.ERASER.create());
+        Tooltips.getCurrent().setTooltip(clearAttributeButton, "撤销此属性");
+        attributeMetaLayout.add(clearAttributeButton);
+        attributeMetaLayout.setVerticalComponentAlignment(Alignment.CENTER,clearAttributeButton);
+
+        AttributeCreatorItemWidget that = this;
+        clearAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                if(getAddConceptionEntityView() != null){
+                    getAddConceptionEntityView().removeAttributeCreatorItemWidget(that);
+                }
+            }
+        });
 
         HorizontalLayout attributeValueInfoContainerLayout = new HorizontalLayout();
         attributeValueInfoContainerLayout.setWidth(100,Unit.PERCENTAGE);
@@ -419,5 +442,13 @@ public class AttributeCreatorItemWidget extends VerticalLayout {
             }
         }
         return false;
+    }
+
+    public AddConceptionEntityView getAddConceptionEntityView() {
+        return addConceptionEntityView;
+    }
+
+    public void setAddConceptionEntityView(AddConceptionEntityView addConceptionEntityView) {
+        this.addConceptionEntityView = addConceptionEntityView;
     }
 }

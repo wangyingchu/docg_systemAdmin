@@ -139,28 +139,23 @@ public class AddConceptionEntityView extends VerticalLayout {
         spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(spaceDivLayout2);
 
-        HorizontalLayout buttonsContainerLayout = new HorizontalLayout();
-        buttonsContainerLayout.setMargin(false);
-        buttonsContainerLayout.setSpacing(false);
-        buttonsContainerLayout.setPadding(false);
-        add(buttonsContainerLayout);
-
-        Button addEntityButton = new Button("添加概念类型实体");
-        addEntityButton.setIcon(new Icon(VaadinIcon.CHECK));
-        addEntityButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        addEntityButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button confirmButton = new Button("确认添加概念类型实体",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        add(confirmButton);
+        setHorizontalComponentAlignment(Alignment.END,confirmButton);
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //queryConceptionEntities();
+                doAddConceptionEntity();
             }
         });
-        buttonsContainerLayout.add(addEntityButton);
     }
 
     public void addAttributeCreatorItem(String attributeName, AttributeDataType attributeDataType){
         if(!resultAttributesList.contains(attributeName)){
             resultAttributesList.add(attributeName);
             AttributeCreatorItemWidget attributeCreatorItemWidget = new AttributeCreatorItemWidget(this.conceptionKindName,attributeName,attributeDataType,this.viewWidth);
+            attributeCreatorItemWidget.setAddConceptionEntityView(this);
             criteriaItemsContainer.add(attributeCreatorItemWidget);
         }
     }
@@ -205,5 +200,15 @@ public class AddConceptionEntityView extends VerticalLayout {
         fixSizeWindow.setModel(true);
         addCustomEntityAttributeUI.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    public void removeAttributeCreatorItemWidget(AttributeCreatorItemWidget attributeCreatorItemWidget){
+        String attributeName = attributeCreatorItemWidget.getAttributeName();
+        resultAttributesList.remove(attributeName);
+        criteriaItemsContainer.remove(attributeCreatorItemWidget);
+    }
+
+    private void doAddConceptionEntity(){
+
     }
 }
