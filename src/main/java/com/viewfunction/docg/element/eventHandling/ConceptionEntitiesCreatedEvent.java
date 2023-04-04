@@ -3,9 +3,10 @@ package com.viewfunction.docg.element.eventHandling;
 import com.github.wolfie.blackboard.Event;
 import com.github.wolfie.blackboard.Listener;
 
-public class ConceptionEntityCreatedEvent implements Event {
+public class ConceptionEntitiesCreatedEvent implements Event {
     private String conceptionEntityUID;
     private String conceptionKindName;
+    private long newConceptionEntitiesCount;
 
     public String getConceptionEntityUID() {
         return conceptionEntityUID;
@@ -23,7 +24,15 @@ public class ConceptionEntityCreatedEvent implements Event {
         this.conceptionKindName = conceptionKindName;
     }
 
-    public interface ConceptionEntityCreatedListener extends Listener {
-        public void receivedConceptionEntityCreatedEvent(final ConceptionEntityCreatedEvent event);
+    public long getNewConceptionEntitiesCount() {
+        return newConceptionEntitiesCount;
+    }
+
+    public void setNewConceptionEntitiesCount(long newConceptionEntitiesCount) {
+        this.newConceptionEntitiesCount = newConceptionEntitiesCount;
+    }
+
+    public interface ConceptionEntitiesCreatedListener extends Listener {
+        public void receivedConceptionEntitiesCreatedEvent(final ConceptionEntitiesCreatedEvent event);
     }
 }

@@ -23,7 +23,7 @@ import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 
-import com.viewfunction.docg.element.eventHandling.ConceptionEntityCreatedEvent;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCreatedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndexMaintain.KindIndexConfigView;
@@ -33,9 +33,10 @@ import dev.mett.vaadin.tooltip.Tooltips;
 import java.text.NumberFormat;
 
 public class ConceptionKindEntitiesConfigurationView extends VerticalLayout implements
-        ConceptionEntityCreatedEvent.ConceptionEntityCreatedListener{
+        ConceptionEntitiesCreatedEvent.ConceptionEntitiesCreatedListener {
 
     private String conceptionKindName;
+    private long conceptionEntitiesCount;
 
     public ConceptionKindEntitiesConfigurationView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
@@ -52,7 +53,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         add(infoContainer);
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        long conceptionEntitiesCount = 0;
+        conceptionEntitiesCount = 0;
         try {
             conceptionEntitiesCount = coreRealm.getConceptionKind(this.conceptionKindName).countConceptionEntities();
         } catch (CoreRealmServiceRuntimeException e) {
@@ -200,7 +201,11 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     }
 
     @Override
-    public void receivedConceptionEntityCreatedEvent(ConceptionEntityCreatedEvent event) {
-
+    public void receivedConceptionEntitiesCreatedEvent(ConceptionEntitiesCreatedEvent event) {
+        if(event.getConceptionKindName() != null){
+            if(this.conceptionKindName.equals(event.getConceptionKindName())){
+                this.conceptionEntitiesCount = this.conceptionEntitiesCount + event.getNewConceptionEntitiesCount();
+            }
+        }
     }
 }
