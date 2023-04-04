@@ -9,14 +9,16 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class PrimaryKeyValueDisplayItem {
 
+    private Label displayValue;
+
     public PrimaryKeyValueDisplayItem(HasComponents containComponent, String keyText, String valueText){
         Label conceptionEntityNumberText = new Label(keyText);
         conceptionEntityNumberText.addClassNames("text-xs","font-semibold","text-secondary");
         containComponent.add(conceptionEntityNumberText);
-        Label conceptionEntityNumberValue = new Label(valueText);
-        conceptionEntityNumberValue.addClassNames("text-xl","text-primary","font-extrabold","border-b","border-contrast-20");
-        conceptionEntityNumberValue.getStyle().set("color","#2e4e7e");
-        containComponent.add(conceptionEntityNumberValue);
+        displayValue = new Label(valueText);
+        displayValue.addClassNames("text-xl","text-primary","font-extrabold","border-b","border-contrast-20");
+        displayValue.getStyle().set("color","#2e4e7e");
+        containComponent.add(displayValue);
     }
 
     public PrimaryKeyValueDisplayItem(HasComponents containComponent, Icon icon, String keyText, String valueText){
@@ -56,9 +58,13 @@ public class PrimaryKeyValueDisplayItem {
         conceptionEntityNumberText.addClassNames("text-xs","font-semibold","text-secondary");
         keyHorizontalLayout.add(conceptionEntityNumberText);
         containComponent.add(keyHorizontalLayout);
-        Label conceptionEntityNumberValue = new Label(valueText);
-        conceptionEntityNumberValue.addClassNames("text-xl","text-primary","font-extrabold","border-b","border-contrast-20");
-        conceptionEntityNumberValue.getStyle().set("color","#2e4e7e");
-        containComponent.add(conceptionEntityNumberValue);
+        displayValue = new Label(valueText);
+        displayValue.addClassNames("text-xl","text-primary","font-extrabold","border-b","border-contrast-20");
+        displayValue.getStyle().set("color","#2e4e7e");
+        containComponent.add(displayValue);
+    }
+
+    public void updateDisplayValue(String newValue){
+        displayValue.setText(newValue);
     }
 }

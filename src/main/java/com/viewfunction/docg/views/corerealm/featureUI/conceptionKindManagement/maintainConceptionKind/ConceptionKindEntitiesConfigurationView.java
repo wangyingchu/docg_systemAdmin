@@ -8,12 +8,10 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -22,6 +20,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
+import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCreatedEvent;
 
@@ -29,6 +28,7 @@ import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndexMaintain.KindIndexConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -39,7 +39,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     private String conceptionKindName;
     private long conceptionEntitiesCount;
     private NumberFormat numberFormat;
-    private Label conceptionEntityNumberValue;
+    private PrimaryKeyValueDisplayItem conceptionEntitiesCountDisplayItem;
 
     public ConceptionKindEntitiesConfigurationView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
@@ -64,30 +64,8 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         }
 
         this.numberFormat = NumberFormat.getInstance();
-
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
-        horizontalLayout.setSpacing(false);
-        horizontalLayout.setMargin(false);
-
-        Icon icon = FontAwesome.Solid.CIRCLE.create();
-        icon.setSize("10px");
-        icon.addClassNames("text-secondary");
-        horizontalLayout.add(icon);
-        HorizontalLayout spaceDivHorizontalLayout = new HorizontalLayout();
-        spaceDivHorizontalLayout.setWidth(5, Unit.PIXELS);
-        horizontalLayout.add(spaceDivHorizontalLayout);
-
-        Label conceptionEntityNumberText = new Label("概念实体数量:");
-        conceptionEntityNumberText.addClassNames("text-xs","font-semibold","text-secondary");
-        conceptionEntityNumberText.getStyle().set("padding-right","10px");
-
-        horizontalLayout.add(conceptionEntityNumberText);
-        conceptionEntityNumberValue = new Label(numberFormat.format(conceptionEntitiesCount));
-        conceptionEntityNumberValue.addClassNames("text-xl","text-primary","font-extrabold","border-b","border-contrast-20");
-        conceptionEntityNumberValue.getStyle().set("color","#2e4e7e");
-        horizontalLayout.add(conceptionEntityNumberValue);
-        infoContainer.add(horizontalLayout);
+        this.conceptionEntitiesCountDisplayItem =
+                new PrimaryKeyValueDisplayItem(infoContainer, FontAwesome.Solid.CIRCLE.create(),"概念实体数量:",this.numberFormat.format(conceptionEntitiesCount));
 
         HorizontalLayout horSpaceDiv = new HorizontalLayout();
         horSpaceDiv.setWidth(30,Unit.PIXELS);
@@ -231,7 +209,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         if(event.getConceptionKindName() != null){
             if(this.conceptionKindName.equals(event.getConceptionKindName())){
                 this.conceptionEntitiesCount = this.conceptionEntitiesCount + event.getNewConceptionEntitiesCount();
-                this.conceptionEntityNumberValue.setText(this.numberFormat.format(this.conceptionEntitiesCount));
+                this.conceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(this.conceptionEntitiesCount));
             }
         }
     }
