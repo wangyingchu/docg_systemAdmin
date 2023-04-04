@@ -195,6 +195,8 @@ public class MainLayout extends AppLayout {
                 ConceptionKindQueriedEvent.class);
         _BLACKBOARD.register(ConceptionEntityDeletedEvent.ConceptionEntityDeletedListener.class,
                 ConceptionEntityDeletedEvent.class);
+        _BLACKBOARD.register(ConceptionEntityCreatedEvent.ConceptionEntityCreatedListener.class,
+                ConceptionEntityCreatedEvent.class);
         _BLACKBOARD.register(ConceptionEntityAttributeAddedEvent.ConceptionEntityAttributeAddedListener.class,
                 ConceptionEntityAttributeAddedEvent.class);
         _BLACKBOARD.register(ConceptionEntityAttributeUpdatedEvent.ConceptionEntityAttributeUpdatedListener.class,

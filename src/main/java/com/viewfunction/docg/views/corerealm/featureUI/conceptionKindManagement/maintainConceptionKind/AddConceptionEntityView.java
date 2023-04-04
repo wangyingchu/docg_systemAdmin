@@ -24,7 +24,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntityCreatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddCustomEntityAttributeUI;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeCreatorItemWidget;
 
@@ -247,7 +249,12 @@ public class AddConceptionEntityView extends VerticalLayout {
             ConceptionEntity newConceptionEntity = targetConceptionKind.newEntity(conceptionEntityValue,false);
             if(newConceptionEntity != null){
                 CommonUIOperationUtil.showPopupNotification("添加概念类型实体 "+ conceptionKindName +" : "+newConceptionEntity.getConceptionEntityUID() +" 成功", NotificationVariant.LUMO_SUCCESS);
-
+                ConceptionEntityCreatedEvent conceptionEntityCreatedEvent = new ConceptionEntityCreatedEvent();
+                conceptionEntityCreatedEvent.setConceptionKindName(newConceptionEntity.getConceptionKindName());
+                conceptionEntityCreatedEvent.setConceptionEntityUID(newConceptionEntity.getConceptionEntityUID());
+                ResourceHolder.getApplicationBlackboard().fire(conceptionEntityCreatedEvent);
+                resultAttributesList.clear();
+                criteriaItemsContainer.removeAll();
             }else{
                 CommonUIOperationUtil.showPopupNotification("为概念类型实体 "+ conceptionKindName +" 添加实体失败", NotificationVariant.LUMO_ERROR);
             }
