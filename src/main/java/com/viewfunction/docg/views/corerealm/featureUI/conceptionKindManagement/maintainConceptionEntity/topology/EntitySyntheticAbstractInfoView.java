@@ -22,7 +22,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.*;
 
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
-import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailView;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -285,10 +285,10 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         actionComponentList.add(entityInfoFootprintMessageBar);
 
-        RelationEntityDetailView relationEntityDetailView = new RelationEntityDetailView(relationKindName,relationEntityUID);
+        RelationEntityDetailUI relationEntityDetailUI = new RelationEntityDetailUI(relationKindName,relationEntityUID);
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"关系实体详情",actionComponentList,null,true);
-        fullScreenWindow.setWindowContent(relationEntityDetailView);
-        relationEntityDetailView.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.setWindowContent(relationEntityDetailUI);
+        relationEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
     }
 

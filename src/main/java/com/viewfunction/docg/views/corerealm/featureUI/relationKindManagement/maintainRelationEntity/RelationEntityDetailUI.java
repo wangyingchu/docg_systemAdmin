@@ -11,7 +11,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 
 @Route("relationEntityDetailInfo/:relationKind/:relationEntityUID")
-public class RelationEntityDetailView extends VerticalLayout implements BeforeEnterObserver {
+public class RelationEntityDetailUI extends VerticalLayout implements BeforeEnterObserver {
 
     private Dialog containerDialog;
     private VerticalLayout entityFieldsContainer;
@@ -20,7 +20,7 @@ public class RelationEntityDetailView extends VerticalLayout implements BeforeEn
     private String relationEntityUID;
     private int relationEntityAttributesEditorHeightOffset = 135;
 
-    public RelationEntityDetailView(){}
+    public RelationEntityDetailUI(){}
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
@@ -29,7 +29,7 @@ public class RelationEntityDetailView extends VerticalLayout implements BeforeEn
         this.relationEntityAttributesEditorHeightOffset = 70;
     }
 
-    public RelationEntityDetailView(String relationKind, String relationEntityUID){
+    public RelationEntityDetailUI(String relationKind, String relationEntityUID){
         this.relationKind = relationKind;
         this.relationEntityUID = relationEntityUID;
     }

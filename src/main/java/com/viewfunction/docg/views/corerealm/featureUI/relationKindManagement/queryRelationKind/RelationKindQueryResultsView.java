@@ -34,7 +34,7 @@ import com.viewfunction.docg.util.ResourceHolder;
 
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.AddRelationEntityToProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.DeleteRelationEntityView;
-import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailView;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.time.ZoneId;
@@ -302,7 +302,7 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
     }
 
     private void renderRelationEntityUI(RelationEntityValue relationEntityValue){
-        RelationEntityDetailView relationEntityDetailView = new RelationEntityDetailView(relationKindName,relationEntityValue.getRelationEntityUID());
+        RelationEntityDetailUI relationEntityDetailUI = new RelationEntityDetailUI(relationKindName,relationEntityValue.getRelationEntityUID());
 
         List<Component> actionComponentList = new ArrayList<>();
 
@@ -329,8 +329,8 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
         actionComponentList.add(relationEntityUIDLabel);
 
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"关系实体详情",actionComponentList,null,true);
-        fullScreenWindow.setWindowContent(relationEntityDetailView);
-        relationEntityDetailView.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.setWindowContent(relationEntityDetailUI);
+        relationEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
     }
 
