@@ -22,7 +22,7 @@ import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.EntitySyntheticAbstractInfoView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.AddRelationEntityToProcessingListView;
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -257,7 +257,7 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
     }
 
     private void renderConceptionEntityUI(String conceptionKindName,String conceptionEntityUID){
-        ConceptionEntityDetailView conceptionEntityDetailView = new ConceptionEntityDetailView(conceptionKindName,conceptionEntityUID);
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(conceptionKindName,conceptionEntityUID);
 
         List<Component> actionComponentList = new ArrayList<>();
 
@@ -284,8 +284,8 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
         actionComponentList.add(conceptionEntityUIDLabel);
 
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
-        fullScreenWindow.setWindowContent(conceptionEntityDetailView);
-        conceptionEntityDetailView.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
     }
 

@@ -11,7 +11,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 
 @Route("conceptionEntityDetailInfo/:conceptionKind/:conceptionEntityUID")
-public class ConceptionEntityDetailView extends VerticalLayout implements BeforeEnterObserver {
+public class ConceptionEntityDetailUI extends VerticalLayout implements BeforeEnterObserver {
 
     private Dialog containerDialog;
     private VerticalLayout entityFieldsContainer;
@@ -20,7 +20,7 @@ public class ConceptionEntityDetailView extends VerticalLayout implements Before
     private String conceptionEntityUID;
     private int conceptionEntityAttributesEditorHeightOffset = 135;
 
-    public ConceptionEntityDetailView(){}
+    public ConceptionEntityDetailUI(){}
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
@@ -29,7 +29,7 @@ public class ConceptionEntityDetailView extends VerticalLayout implements Before
         this.conceptionEntityAttributesEditorHeightOffset = 70;
     }
 
-    public ConceptionEntityDetailView(String conceptionKind,String conceptionEntityUID){
+    public ConceptionEntityDetailUI(String conceptionKind, String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
     }

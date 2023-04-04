@@ -34,7 +34,7 @@ import com.viewfunction.docg.util.ResourceHolder;
 
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.AddConceptionEntityToProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.DeleteConceptionEntityView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -294,7 +294,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     }
 
     private void renderConceptionEntityUI(ConceptionEntityValue conceptionEntityValue){
-        ConceptionEntityDetailView conceptionEntityDetailView = new ConceptionEntityDetailView(conceptionKindName,conceptionEntityValue.getConceptionEntityUID());
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(conceptionKindName,conceptionEntityValue.getConceptionEntityUID());
 
         List<Component> actionComponentList = new ArrayList<>();
 
@@ -321,8 +321,8 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         actionComponentList.add(conceptionEntityUIDLabel);
 
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
-        fullScreenWindow.setWindowContent(conceptionEntityDetailView);
-        conceptionEntityDetailView.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
     }
 

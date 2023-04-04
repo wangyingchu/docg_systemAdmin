@@ -533,10 +533,10 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         actionComponentList.add(entityInfoFootprintMessageBar);
 
-        ConceptionEntityDetailView conceptionEntityDetailView = new ConceptionEntityDetailView(targetConceptionKind,targetConceptionEntityUID);
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(targetConceptionKind,targetConceptionEntityUID);
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
-        fullScreenWindow.setWindowContent(conceptionEntityDetailView);
-        conceptionEntityDetailView.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
     }
 

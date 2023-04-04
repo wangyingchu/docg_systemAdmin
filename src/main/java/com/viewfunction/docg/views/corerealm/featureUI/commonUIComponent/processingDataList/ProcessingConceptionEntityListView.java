@@ -21,7 +21,7 @@ import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelTitleActionBar;
 import com.viewfunction.docg.util.ConceptionEntityResourceHolderVO;
 import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -159,7 +159,7 @@ public class ProcessingConceptionEntityListView extends VerticalLayout {
     }
 
     private void renderConceptionEntityUI(ConceptionEntityResourceHolderVO conceptionEntityValue){
-        ConceptionEntityDetailView conceptionEntityDetailView = new ConceptionEntityDetailView(conceptionEntityValue.getConceptionKind(),conceptionEntityValue.getConceptionEntityUID());
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(conceptionEntityValue.getConceptionKind(),conceptionEntityValue.getConceptionEntityUID());
 
         List<Component> actionComponentList = new ArrayList<>();
 
@@ -186,8 +186,8 @@ public class ProcessingConceptionEntityListView extends VerticalLayout {
         actionComponentList.add(conceptionEntityUIDLabel);
 
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
-        fullScreenWindow.setWindowContent(conceptionEntityDetailView);
-        conceptionEntityDetailView.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
     }
 

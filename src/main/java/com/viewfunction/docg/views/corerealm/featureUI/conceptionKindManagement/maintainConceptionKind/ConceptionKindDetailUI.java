@@ -44,7 +44,7 @@ import java.util.Set;
 import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.ConceptionKind;
 
 @Route("conceptionKindDetailInfo/:conceptionKind")
-public class ConceptionKindDetailView extends VerticalLayout implements BeforeEnterObserver {
+public class ConceptionKindDetailUI extends VerticalLayout implements BeforeEnterObserver {
     private String conceptionKind;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
     private int conceptionKindDetailViewHeightOffset = 135;
@@ -64,9 +64,9 @@ public class ConceptionKindDetailView extends VerticalLayout implements BeforeEn
     private VerticalLayout conceptionKindCorrelationInfoGridContainer;
     private TabSheet kindConfigurationTabSheet;
 
-    public ConceptionKindDetailView(){}
+    public ConceptionKindDetailUI(){}
 
-    public ConceptionKindDetailView(String conceptionKind){
+    public ConceptionKindDetailUI(String conceptionKind){
         this.conceptionKind = conceptionKind;
     }
 

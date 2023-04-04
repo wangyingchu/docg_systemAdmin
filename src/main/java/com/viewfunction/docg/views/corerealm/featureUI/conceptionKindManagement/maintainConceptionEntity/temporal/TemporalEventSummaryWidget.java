@@ -15,7 +15,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEvent;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.time.LocalDateTime;
@@ -114,10 +114,10 @@ public class TemporalEventSummaryWidget extends HorizontalLayout {
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         actionComponentList.add(entityInfoFootprintMessageBar);
 
-        ConceptionEntityDetailView conceptionEntityDetailView = new ConceptionEntityDetailView(targetConceptionKind,targetConceptionEntityUID);
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(targetConceptionKind,targetConceptionEntityUID);
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.CALENDAR),"时间关联事件详情",actionComponentList,null,true);
-        fullScreenWindow.setWindowContent(conceptionEntityDetailView);
-        conceptionEntityDetailView.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
     }
 }

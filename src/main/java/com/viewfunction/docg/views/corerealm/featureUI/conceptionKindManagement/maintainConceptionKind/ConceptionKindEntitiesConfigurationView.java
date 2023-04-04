@@ -23,6 +23,8 @@ import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 
+import com.viewfunction.docg.element.eventHandling.ConceptionEntityCreatedEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndexMaintain.KindIndexConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
@@ -30,7 +32,8 @@ import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
 
-public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
+public class ConceptionKindEntitiesConfigurationView extends VerticalLayout implements
+        ConceptionEntityCreatedEvent.ConceptionEntityCreatedListener{
 
     private String conceptionKindName;
 
@@ -182,5 +185,22 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout {
         fixSizeWindow.setWindowContent(addConceptionEntityView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
+
+    @Override
+    public void receivedConceptionEntityCreatedEvent(ConceptionEntityCreatedEvent event) {
+
     }
 }

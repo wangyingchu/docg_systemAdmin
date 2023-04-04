@@ -3,8 +3,6 @@ package com.viewfunction.docg.views.corerealm.featureUI;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.dialog.DialogVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
@@ -38,7 +36,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingDataListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.*;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.ConceptionKindDetailView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.ConceptionKindDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
 
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -535,7 +533,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
     }
 
     private void renderConceptionKindConfigurationUI(EntityStatisticsInfo entityStatisticsInfo){
-        ConceptionKindDetailView conceptionKindDetailView = new ConceptionKindDetailView(entityStatisticsInfo.getEntityKindName());
+        ConceptionKindDetailUI conceptionKindDetailUI = new ConceptionKindDetailUI(entityStatisticsInfo.getEntityKindName());
         List<Component> actionComponentList = new ArrayList<>();
 
         Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
@@ -550,7 +548,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         actionComponentList.add(conceptionKindName);
 
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"概念类型配置",actionComponentList,null,true);
-        fullScreenWindow.setWindowContent(conceptionKindDetailView);
+        fullScreenWindow.setWindowContent(conceptionKindDetailUI);
         fullScreenWindow.show();
     }
 
