@@ -33,24 +33,18 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Date;
 
 public class AttributeCreatorItemWidget extends VerticalLayout {
     private Component valueEditor;
     private String attributeName;
     private AttributeDataType attributeDataType;
     private Binder<String> attributeValueDataBinder;
-    private String kindName;
     private AddConceptionEntityView addConceptionEntityView;
 
-    public AttributeCreatorItemWidget(String kindName, String attributeName, AttributeDataType attributeDataType,int widgetWidth){
+    public AttributeCreatorItemWidget(String attributeName, AttributeDataType attributeDataType,int widgetWidth){
         this.attributeName = attributeName;
         this.attributeDataType = attributeDataType;
         this.attributeValueDataBinder = new Binder<>();
-        this.kindName = kindName;
 
         this.setPadding(true);
         this.setMargin(false);
@@ -154,7 +148,7 @@ public class AttributeCreatorItemWidget extends VerticalLayout {
                     ((ComboBox)currentConditionValueEditor).setWidth(100,Unit.PERCENTAGE);
                     ((ComboBox)currentConditionValueEditor).setAllowCustomValue(false);
                     ((ComboBox)currentConditionValueEditor).setItems("true","false");
-                    //((ComboBox)currentConditionValueEditor).setValue("true");
+                    ((ComboBox)currentConditionValueEditor).setValue("true");
                     break;
                 case DATE:
                     currentConditionValueEditor = new DatePicker();
@@ -449,7 +443,7 @@ public class AttributeCreatorItemWidget extends VerticalLayout {
     }
 
     public Object getAttributeValue(){
-        if(validateAttributeValue()){
+        if(!validateAttributeValue()){
             Object attributeValue = null;
             Component currentConditionValueEditor = valueEditor;
             AttributeDataType attributeDataType = this.attributeDataType;

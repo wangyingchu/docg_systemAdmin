@@ -7,27 +7,31 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddCustomEntityAttributeUI;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeCreatorItemWidget;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class AddConceptionEntityView extends VerticalLayout {
@@ -155,7 +159,7 @@ public class AddConceptionEntityView extends VerticalLayout {
     public void addAttributeCreatorItem(String attributeName, AttributeDataType attributeDataType){
         if(!resultAttributesList.contains(attributeName)){
             resultAttributesList.add(attributeName);
-            AttributeCreatorItemWidget attributeCreatorItemWidget = new AttributeCreatorItemWidget(this.conceptionKindName,attributeName,attributeDataType,this.viewWidth);
+            AttributeCreatorItemWidget attributeCreatorItemWidget = new AttributeCreatorItemWidget(attributeName,attributeDataType,this.viewWidth);
             attributeCreatorItemWidget.setAddConceptionEntityView(this);
             criteriaItemsContainer.add(attributeCreatorItemWidget);
         }
@@ -209,16 +213,92 @@ public class AddConceptionEntityView extends VerticalLayout {
         criteriaItemsContainer.remove(attributeCreatorItemWidget);
     }
 
+    private boolean conceptionEntityAttributesValid = true;
+    private void setConceptionEntityAttributesValid(boolean validFlag){
+        conceptionEntityAttributesValid = validFlag;
+    }
+
     private void doAddConceptionEntity(){
+        Map<String,Object> entityAttributesMap = new HashMap<>();
+        conceptionEntityAttributesValid = true;
         criteriaItemsContainer.getChildren().forEach(new Consumer<Component>() {
+
             @Override
             public void accept(Component component) {
                 AttributeCreatorItemWidget currentAttributeCreatorItemWidget = (AttributeCreatorItemWidget)component;
                 String attributeName = currentAttributeCreatorItemWidget.getAttributeName();
                 Object attributeValue = currentAttributeCreatorItemWidget.getAttributeValue();
                 AttributeDataType attributeDataType = currentAttributeCreatorItemWidget.getAttributeDataType();
+                if(attributeValue == null){
+                    setConceptionEntityAttributesValid(false);
+                }else{
+                    Object entityAttributeValue = getPropertyValue(attributeDataType,attributeValue);
+                    if(entityAttributeValue != null){
+                        entityAttributesMap.put(attributeName,entityAttributeValue);
+                    }
+                }
             }
         });
+        if(conceptionEntityAttributesValid){
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+            ConceptionEntityValue conceptionEntityValue = new ConceptionEntityValue();
+            conceptionEntityValue.setEntityAttributesValue(entityAttributesMap);
+            ConceptionEntity newConceptionEntity = targetConceptionKind.newEntity(conceptionEntityValue,false);
+            if(newConceptionEntity != null){
+                CommonUIOperationUtil.showPopupNotification("添加概念类型实体 "+ conceptionKindName +" : "+newConceptionEntity.getConceptionEntityUID() +" 成功", NotificationVariant.LUMO_SUCCESS);
 
+            }else{
+                CommonUIOperationUtil.showPopupNotification("为概念类型实体 "+ conceptionKindName +" 添加实体失败", NotificationVariant.LUMO_ERROR);
+            }
+        }else{
+            CommonUIOperationUtil.showPopupNotification("请为所有的概念实体属性输入非空并合法的属性值", NotificationVariant.LUMO_ERROR);
+        }
+    }
+
+    private Object getPropertyValue(AttributeDataType attributeDataType,Object attributeValue){
+        switch (attributeDataType) {
+            case INT:
+                attributeValue = Integer.valueOf(attributeValue.toString());
+                break;
+            case BYTE:
+                attributeValue = Byte.valueOf(attributeValue.toString());
+                break;
+            case DATE:
+                attributeValue = attributeValue;
+                break;
+            case LONG:
+                attributeValue = Long.valueOf(attributeValue.toString());
+                break;
+            case FLOAT:
+                attributeValue = Float.valueOf(attributeValue.toString());
+                break;
+            case SHORT:
+                attributeValue = Short.valueOf(attributeValue.toString());
+                break;
+            case BINARY:
+                break;
+            case DOUBLE:
+                attributeValue = Double.valueOf(attributeValue.toString());
+                break;
+            case STRING:
+                attributeValue = attributeValue.toString();
+                break;
+            case BOOLEAN:
+                attributeValue = Boolean.valueOf(attributeValue.toString());
+                break;
+            case DECIMAL:
+                attributeValue =  new BigDecimal(attributeValue.toString());
+                break;
+            case TIMESTAMP:
+                attributeValue = new Date(Long.valueOf(attributeValue.toString()));
+                break;
+            case TIME:
+                attributeValue = attributeValue;
+                break;
+            case DATETIME:
+                attributeValue = attributeValue;
+        }
+        return attributeValue;
     }
 }
