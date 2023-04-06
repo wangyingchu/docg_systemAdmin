@@ -26,12 +26,15 @@ import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCreatedEven
 
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndexMaintain.KindIndexConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
+
+import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView.KindType.ConceptionKind;
 
 public class ConceptionKindEntitiesConfigurationView extends VerticalLayout implements
         ConceptionEntitiesCreatedEvent.ConceptionEntitiesCreatedListener {
@@ -86,6 +89,12 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         addConceptionKindScopeAttributeButton.setIcon(VaadinIcon.TEXT_INPUT.create());
         addConceptionKindScopeAttributeButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         infoContainer.add(addConceptionKindScopeAttributeButton);
+        addConceptionKindScopeAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderAddConceptionKindGlobalAttributeView();
+            }
+        });
 
         Icon divIcon = VaadinIcon.LINE_V.create();
         divIcon.setSize("8px");
@@ -188,6 +197,16 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         AddConceptionEntityView addConceptionEntityView = new AddConceptionEntityView(this.conceptionKindName,410,650);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加概念类型实体",null,true,500,700,false);
         fixSizeWindow.setWindowContent(addConceptionEntityView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderAddConceptionKindGlobalAttributeView(){
+        AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.conceptionKindName,null,ConceptionKind);
+        addEntityAttributeView.setKindScopeAttribute(true);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TEXT_INPUT),"添加概念类型全局属性",null,true,480,240,false);
+        addEntityAttributeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }

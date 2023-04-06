@@ -41,9 +41,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class AddEntityAttributeView extends VerticalLayout {
 
@@ -60,6 +58,8 @@ public class AddEntityAttributeView extends VerticalLayout {
     private AttributeValueOperateHandler attributeValueOperateHandler;
     private KindType entityKindType = KindType.ConceptionKind;
     private MetaConfigItemFeatureSupportable metaConfigItemFeatureSupportable;
+    private boolean isKindScopeAttribute = false;
+    private FootprintMessageBar entityInfoFootprintMessageBar;
 
     public AddEntityAttributeView(String kindName, String entityUID,KindType entityKindType){
         this.setMargin(false);
@@ -82,10 +82,13 @@ public class AddEntityAttributeView extends VerticalLayout {
         entityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
         List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
         footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(kindIcon, kindName));
-        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(entityIcon, entityUID));
-        FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         if(this.entityUID != null){
-            add(entityInfoFootprintMessageBar);
+            footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(entityIcon, entityUID));
+        }
+        entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
+        add(entityInfoFootprintMessageBar);
+        if(this.entityUID == null){
+            entityInfoFootprintMessageBar.setVisible(false);
         }
 
         HorizontalLayout errorMessageContainer = new HorizontalLayout();
@@ -218,8 +221,14 @@ public class AddEntityAttributeView extends VerticalLayout {
                         if(metaConfigItemFeatureSupportable != null){
                             addMetaConfigItem();
                         }else{
-                            if(kindName != null && entityUID != null){
-                                addEntityAttribute();
+                            if(isKindScopeAttribute){
+                                if(kindName != null){
+                                    addKindScopeAttribute();
+                                }
+                            }else{
+                                if(kindName != null && entityUID != null){
+                                    addEntityAttribute();
+                                }
                             }
                         }
                         if(attributeValueOperateHandler != null){
@@ -727,12 +736,56 @@ public class AddEntityAttributeView extends VerticalLayout {
         Object newEntityAttributeValue = getAttributeValueObject();
         boolean addResult = this.metaConfigItemFeatureSupportable.addOrUpdateMetaConfigItem(attributeName,newEntityAttributeValue);
         if(addResult){
-            CommonUIOperationUtil.showPopupNotification("添加元属性 "+ attributeName +" : "+attributeName+newEntityAttributeValue +" 成功", NotificationVariant.LUMO_SUCCESS);
+            CommonUIOperationUtil.showPopupNotification("添加元属性 "+ attributeName +" : "+newEntityAttributeValue +" 成功", NotificationVariant.LUMO_SUCCESS);
             if(containerDialog != null){
                 containerDialog.close();
             }
         }else{
-            CommonUIOperationUtil.showPopupNotification("添加元属性 "+ attributeName +" : "+attributeName+newEntityAttributeValue +" 失败", NotificationVariant.LUMO_ERROR);
+            CommonUIOperationUtil.showPopupNotification("添加元属性 "+ attributeName +" : "+newEntityAttributeValue +" 失败", NotificationVariant.LUMO_ERROR);
+        }
+    }
+
+    private void addKindScopeAttribute(){
+        String attributeName = attributeNameField.getValue();
+        Object newEntityAttributeValue = getAttributeValueObject();
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        long addedEntitiesCount = 0;
+        switch (this.entityKindType){
+            case ConceptionKind :
+                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.kindName);
+                if(targetConceptionKind == null){
+                    CommonUIOperationUtil.showPopupNotification("概念类型 "+ kindName +" 不存在", NotificationVariant.LUMO_ERROR);
+                }else{
+                    Map<String,Object> attributeMap = new HashMap<>();
+                    attributeMap.put(attributeName,newEntityAttributeValue);
+                    addedEntitiesCount = targetConceptionKind.setKindScopeAttributes(attributeMap);
+                    if(addedEntitiesCount > 0 ){
+                        CommonUIOperationUtil.showPopupNotification("向概念类型 "+this.kindName+ " 添加全局属性 "+ attributeName +" : "+newEntityAttributeValue +" 成功,成功添加属性实体数: "+addedEntitiesCount, NotificationVariant.LUMO_SUCCESS);
+                        if(containerDialog != null){
+                            containerDialog.close();
+                        }
+                    }else{
+                        CommonUIOperationUtil.showPopupNotification("向概念类型 "+this.kindName+ " 添加全局属性 "+ attributeName +" : "+newEntityAttributeValue +"向概念类型 "+this.kindName+ " 添加全局属性 "+ attributeName +" : "+newEntityAttributeValue +" 失败", NotificationVariant.LUMO_ERROR);
+                    }
+                }
+                break;
+            case RelationKind :
+                RelationKind targetRelationKind = coreRealm.getRelationKind(this.kindName);
+                if(targetRelationKind == null){
+                    CommonUIOperationUtil.showPopupNotification("关系类型 "+ kindName +" 不存在", NotificationVariant.LUMO_ERROR);
+                }else{
+                    Map<String,Object> attributeMap = new HashMap<>();
+                    attributeMap.put(attributeName,newEntityAttributeValue);
+                    addedEntitiesCount = targetRelationKind.setKindScopeAttributes(attributeMap);
+                    if(addedEntitiesCount > 0 ){
+                        CommonUIOperationUtil.showPopupNotification("向关系类型 "+this.kindName+ " 添加全局属性 "+ attributeName +" : "+newEntityAttributeValue +" 成功,成功添加属性实体数: "+addedEntitiesCount, NotificationVariant.LUMO_SUCCESS);
+                        if(containerDialog != null){
+                            containerDialog.close();
+                        }
+                    }else{
+                        CommonUIOperationUtil.showPopupNotification("向关系类型 "+this.kindName+ " 添加全局属性 "+ attributeName +" : "+newEntityAttributeValue +"向概念类型 "+this.kindName+ " 添加全局属性 "+ attributeName +" : "+newEntityAttributeValue +" 失败", NotificationVariant.LUMO_ERROR);
+                    }
+                }
         }
     }
 
@@ -752,5 +805,12 @@ public class AddEntityAttributeView extends VerticalLayout {
 
     public void setMetaConfigItemFeatureSupportable(MetaConfigItemFeatureSupportable metaConfigItemFeatureSupportable) {
         this.metaConfigItemFeatureSupportable = metaConfigItemFeatureSupportable;
+    }
+
+    public void setKindScopeAttribute(boolean kindScopeAttribute) {
+        isKindScopeAttribute = kindScopeAttribute;
+        if(kindScopeAttribute){
+            entityInfoFootprintMessageBar.setVisible(true);
+        }
     }
 }
