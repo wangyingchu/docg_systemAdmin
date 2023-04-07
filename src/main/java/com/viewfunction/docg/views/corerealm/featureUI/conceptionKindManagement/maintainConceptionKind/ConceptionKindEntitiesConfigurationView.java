@@ -24,12 +24,14 @@ import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCreatedEvent;
 
+import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndexMaintain.KindIndexConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -37,7 +39,8 @@ import java.text.NumberFormat;
 import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView.KindType.ConceptionKind;
 
 public class ConceptionKindEntitiesConfigurationView extends VerticalLayout implements
-        ConceptionEntitiesCreatedEvent.ConceptionEntitiesCreatedListener {
+        ConceptionEntitiesCreatedEvent.ConceptionEntitiesCreatedListener,
+        ConceptionKindCleanedEvent.ConceptionKindCleanedListener{
 
     private String conceptionKindName;
     private long conceptionEntitiesCount;
@@ -130,29 +133,10 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         cleanConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                //    renderCleanConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
-                //}
+                renderCleanConceptionKindEntitiesUI();
             }
         });
         infoContainer.add(cleanConceptionKindButton);
-
-        Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
-        deleteKindIcon.setSize("21px");
-        Button removeConceptionKindButton = new Button("删除概念类型",deleteKindIcon, event -> {});
-        removeConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        removeConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        removeConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        Tooltips.getCurrent().setTooltip(removeConceptionKindButton, "删除概念类型");
-        removeConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                //    renderRemoveConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
-                //}
-            }
-        });
-        infoContainer.add(removeConceptionKindButton);
 
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.CONTROLLER),"概念类型组件运行时配置");
         filterTitle2.getStyle().set("padding-top", "var(--lumo-space-s)");
@@ -211,6 +195,15 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         fixSizeWindow.show();
     }
 
+    private void renderCleanConceptionKindEntitiesUI(){
+        CleanConceptionKindEntitiesView cleanConceptionKindEntitiesView = new CleanConceptionKindEntitiesView(this.conceptionKindName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"清除概念类型所有实例",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(cleanConceptionKindEntitiesView);
+        fixSizeWindow.setModel(true);
+        cleanConceptionKindEntitiesView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
@@ -228,6 +221,16 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         if(event.getConceptionKindName() != null){
             if(this.conceptionKindName.equals(event.getConceptionKindName())){
                 this.conceptionEntitiesCount = this.conceptionEntitiesCount + event.getNewConceptionEntitiesCount();
+                this.conceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(this.conceptionEntitiesCount));
+            }
+        }
+    }
+
+    @Override
+    public void receivedConceptionKindCleanedEvent(ConceptionKindCleanedEvent event) {
+        if(event.getConceptionKindName() != null){
+            if(this.conceptionKindName.equals(event.getConceptionKindName())){
+                this.conceptionEntitiesCount = 0;
                 this.conceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(this.conceptionEntitiesCount));
             }
         }
