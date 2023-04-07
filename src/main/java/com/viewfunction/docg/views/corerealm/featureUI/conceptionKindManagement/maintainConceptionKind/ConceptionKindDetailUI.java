@@ -135,7 +135,9 @@ public class ConceptionKindDetailUI extends VerticalLayout implements BeforeEnte
         conceptionKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         conceptionKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {}
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderShowMetaInfoUI();
+            }
         });
         buttonList.add(conceptionKindMetaInfoButton);
 
@@ -417,5 +419,13 @@ public class ConceptionKindDetailUI extends VerticalLayout implements BeforeEnte
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念类型实体数据查询",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(conceptionKindQueryUI);
         fullScreenWindow.show();
+    }
+
+    private void renderShowMetaInfoUI(){
+        ConceptionKindMetaInfoView conceptionKindMetaInfoView = new ConceptionKindMetaInfoView(this.conceptionKind);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"概念类型元数据信息",null,true,500,380,false);
+        fixSizeWindow.setWindowContent(conceptionKindMetaInfoView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }
