@@ -308,7 +308,7 @@
   "cookieConsentConnector.js": "cc362ee370ce0a48d6c0f6882a5faf7fefbda89ea7ac9f483b7b4d65eab9cdf5",
   "datepickerConnector.js": "84d25236e1e478c2e181a7881464ad75228a30ccd99d60f78186f0804b6a4a37",
   "dndConnector-es6.js": "d1923b7ec5655346bc130c7ce477d69eb3776417ddc942dd7f69fee1188e0ddf",
-  "flow-component-renderer.js": "69175eaf0e9c85e3e6574203778bdaeb2de62735c2b7279d1925d780797c2018",
+  "flow-component-renderer.js": "f45de3d78e4719c2eb7aa09b48ec758e1e44e171cd4ad545ac9e33c3623dcfb1",
   "font-awesome-iron-iconset/fab.js": "d6f106dafa645db5f1a5ffb4cf90dbe6394c4265ed9775552cf09172b7b54da4",
   "font-awesome-iron-iconset/far.js": "9b638b8cdb41d7ec0099130fffa08a03052d836f147b36cb3de9d172f49cec38",
   "font-awesome-iron-iconset/fas.js": "eb6726c4304cd9b4dec6b956bc0f31d1e4e3623d7874b861d9c656573226fcb2",
@@ -332,7 +332,7 @@
   "docg-pac": "{\n  \"lumoImports\" : [ \"typography\", \"color\", \"spacing\", \"badge\", \"utility\" ]\n}"
  },
  "entryScripts": [
-  "VAADIN/build/indexhtml-46daaa41.js"
+  "VAADIN/build/indexhtml-fd6cc067.js"
  ],
  "webComponents": [],
  "packageJsonHash": "354525379fa6650e695caaae1984b80f51180484852895edad11971fe8d81bc0"
