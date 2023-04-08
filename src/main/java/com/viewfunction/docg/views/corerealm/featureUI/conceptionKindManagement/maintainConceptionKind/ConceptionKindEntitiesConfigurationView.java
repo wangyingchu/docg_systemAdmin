@@ -213,7 +213,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
     private void renderLoadCSVFormatConceptionEntitiesView(){
         LoadCSVFormatConceptionEntitiesView loadCSVFormatConceptionEntitiesView = new LoadCSVFormatConceptionEntitiesView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导入 CSV 格式概念实体数据",null,true,500,700,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导入 CSV 格式概念实体数据",null,true,550,700,false);
         fixSizeWindow.setWindowContent(loadCSVFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
