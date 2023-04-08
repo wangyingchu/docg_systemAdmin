@@ -32,6 +32,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindInd
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadCSVFormatConceptionEntitiesView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -108,6 +109,12 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         MenuItem importDataMenu = createIconItem(importMenuBar, VaadinIcon.DOWNLOAD, "导入概念实体数据", null);
         SubMenu importSubItems = importDataMenu.getSubMenu();
         MenuItem csvImportItem = importSubItems.addItem("CSV 格式数据");
+        csvImportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                renderLoadCSVFormatConceptionEntitiesView();
+            }
+        });
         MenuItem arrowImportItem = importSubItems.addItem("ARROW 格式数据");
         MenuItem shpImportItem = importSubItems.addItem("SHP 格式数据");
         infoContainer.add(importMenuBar);
@@ -201,6 +208,14 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         fixSizeWindow.setWindowContent(cleanConceptionKindEntitiesView);
         fixSizeWindow.setModel(true);
         cleanConceptionKindEntitiesView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderLoadCSVFormatConceptionEntitiesView(){
+        LoadCSVFormatConceptionEntitiesView loadCSVFormatConceptionEntitiesView = new LoadCSVFormatConceptionEntitiesView(this.conceptionKindName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导入 CSV 格式概念实体数据",null,true,500,700,false);
+        fixSizeWindow.setWindowContent(loadCSVFormatConceptionEntitiesView);
+        fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
 
