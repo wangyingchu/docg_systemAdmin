@@ -36,12 +36,10 @@ public class MainLayout extends AppLayout {
     public static class MenuItemInfo {
 
         private String text;
-        private String iconClass;
         private Class<? extends Component> view;
 
-        public MenuItemInfo(String text, String iconClass, Class<? extends Component> view) {
+        public MenuItemInfo(String text, Class<? extends Component> view) {
             this.text = text;
-            this.iconClass = iconClass;
             this.view = view;
         }
 
@@ -49,14 +47,9 @@ public class MainLayout extends AppLayout {
             return text;
         }
 
-        public String getIconClass() {
-            return iconClass;
-        }
-
         public Class<? extends Component> getView() {
             return view;
         }
-
     }
 
     private final Tabs menu;
@@ -124,18 +117,12 @@ public class MainLayout extends AppLayout {
 
     private List<Tab> createMenuItems() {
         MenuItemInfo[] menuItems = new MenuItemInfo[]{ //
-               // new MenuItemInfo("概览 [ General Information ]", "la la-chalkboard", GeneralInformationView.class), //
-
-                new MenuItemInfo("核心领域模型 [ Core Realm ]", "la la-cubes", CoreRealmView.class), //
-
-                new MenuItemInfo("计算网格 [ Compute Grid ]", "la la-calculator", ComputeGridView.class), //
-
-                new MenuItemInfo("数据分析 [ Data Analysis ]", "la la-brain", DataAnalysisView.class), //
-
-                new MenuItemInfo("知识融合 [ Knowledge Fusion ]", "lab la-mendeley", KnowledgeFusionView.class), //
-
-                new MenuItemInfo("关于 [ About ]", "la la-info-circle", AboutView.class), //
-
+               // new MenuItemInfo("概览 [ General Information ]", GeneralInformationView.class), //
+                new MenuItemInfo("核心领域模型 [ Core Realm ]", CoreRealmView.class),
+                new MenuItemInfo("计算网格 [ Compute Grid ]", ComputeGridView.class),
+                new MenuItemInfo("数据分析 [ Data Analysis ]", DataAnalysisView.class),
+                new MenuItemInfo("知识融合 [ Knowledge Fusion ]", KnowledgeFusionView.class),
+                new MenuItemInfo("关于 [ About ]",  AboutView.class),
         };
         List<Tab> tabs = new ArrayList<>();
         for (MenuItemInfo menuItemInfo : menuItems) {
@@ -149,10 +136,7 @@ public class MainLayout extends AppLayout {
         RouterLink link = new RouterLink();
         link.setRoute(menuItemInfo.getView());
         Span iconElement = new Span();
-        iconElement.addClassNames("text-l", "pr-s");
-        if (!menuItemInfo.getIconClass().isEmpty()) {
-            iconElement.addClassNames(menuItemInfo.getIconClass());
-        }
+        iconElement.addClassNames("text-xs","font-semibold");
         link.add(iconElement, new Text(menuItemInfo.getText()));
         tab.add(link);
         ComponentUtil.setData(tab, Class.class, menuItemInfo.getView());

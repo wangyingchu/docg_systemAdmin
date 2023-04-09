@@ -13,8 +13,6 @@ import com.vaadin.flow.component.dependency.NpmPackage;
  * The entry point of the Spring Boot application.
  */
 @SpringBootApplication
-@NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
-@NpmPackage(value = "line-awesome", version = "1.3.0")
 @Theme("docg-pac")
 @PWA(name = "DOCG Platform System Administrator Console", shortName = "DOCG-SAC", offlineResources = {})
 public class ApplicationLaunchpad extends SpringBootServletInitializer implements AppShellConfigurator{
