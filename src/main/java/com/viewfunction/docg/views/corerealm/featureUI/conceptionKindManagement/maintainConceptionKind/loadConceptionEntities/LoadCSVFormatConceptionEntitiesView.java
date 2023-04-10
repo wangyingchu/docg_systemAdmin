@@ -30,6 +30,12 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         Upload upload = new Upload(buffer);
         upload.setWidth(100, Unit.PERCENTAGE);
         upload.setHeight(100,Unit.PIXELS);
+        upload.setAcceptedFileTypes(".csv");
+
+
+
+        upload.setMaxFileSize(100000000);
+
         upload.addSucceededListener(event -> {
             String fileName = event.getFileName();
             InputStream inputStream = buffer.getInputStream();
