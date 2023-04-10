@@ -8,12 +8,15 @@ import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 
-import java.io.InputStream;
+import java.io.*;
 
 public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
 
     private String conceptionKindName;
+    private String TEMP_FILES_STORAGE_LOCATION =
+            SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.TEMP_FILES_STORAGE_LOCATION);
 
     public LoadCSVFormatConceptionEntitiesView(String conceptionKindName){
         this.setWidth(100,Unit.PERCENTAGE);
@@ -32,9 +35,25 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
             InputStream inputStream = buffer.getInputStream();
 
             // Do something with the file data
-            // processFile(inputStream, fileName);
+            processFile(inputStream, fileName);
         });
 
         add(upload);
+    }
+
+    private void processFile(InputStream inputStream,String fileName){
+        try {
+            File targetFile = new File(TEMP_FILES_STORAGE_LOCATION+"/"+fileName);
+            FileOutputStream outStream  = new FileOutputStream(targetFile);
+            int byteRead = 0;
+            byte[] buffer = new byte[8192];
+            while((byteRead = inputStream.read(buffer,0,8192)) != -1){
+                outStream.write(buffer,0,byteRead);
+            }
+            outStream.close();
+            inputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

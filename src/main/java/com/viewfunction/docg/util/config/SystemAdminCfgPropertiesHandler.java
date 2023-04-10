@@ -7,6 +7,8 @@ import java.util.Properties;
 
 public class SystemAdminCfgPropertiesHandler {
 
+    public static String TEMP_FILES_STORAGE_LOCATION = "TEMP_FILES_STORAGE_LOCATION";
+
     private static Properties _properties;
 
     public static String getPropertyValue(String propertyName) {
