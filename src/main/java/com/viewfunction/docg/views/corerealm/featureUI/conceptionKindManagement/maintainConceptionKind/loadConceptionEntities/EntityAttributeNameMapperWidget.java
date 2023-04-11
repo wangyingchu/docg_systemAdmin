@@ -22,7 +22,7 @@ public class EntityAttributeNameMapperWidget extends VerticalLayout {
         add(attributeNameLabel);
 
         ComboBox<String > searchIndexTypeSelect = new ComboBox();
-        searchIndexTypeSelect.setWidth(95,Unit.PERCENTAGE);
+        searchIndexTypeSelect.setWidth(98,Unit.PERCENTAGE);
         searchIndexTypeSelect.setRequired(true);
         searchIndexTypeSelect.setRequiredIndicatorVisible(true);
         searchIndexTypeSelect.setPageSize(10);

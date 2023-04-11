@@ -32,6 +32,10 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private EntityAttributeNamesMappingView entityAttributeNamesMappingView;
     private VerticalLayout attributeMappingLayout;
 
+    private String tabSplitSequence = "\t";
+    private String spaceSplitSequence = " ";
+    private String commaSplitSequence = ",";
+
     public LoadCSVFormatConceptionEntitiesView(String conceptionKindName,int viewWidth){
         this.setWidth(100,Unit.PERCENTAGE);
         this.conceptionKindName = conceptionKindName;
