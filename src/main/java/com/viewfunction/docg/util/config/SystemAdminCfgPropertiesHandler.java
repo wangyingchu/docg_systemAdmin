@@ -8,6 +8,7 @@ import java.util.Properties;
 public class SystemAdminCfgPropertiesHandler {
 
     public static String TEMP_FILES_STORAGE_LOCATION = "TEMP_FILES_STORAGE_LOCATION";
+    public static String MAX_SIZE_OF_FILE_IN_MB_FOR_UPLOAD = "MAX_SIZE_OF_FILE_IN_MB_FOR_UPLOAD";
 
     private static Properties _properties;
 

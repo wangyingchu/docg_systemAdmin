@@ -1,6 +1,9 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities;
 
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -17,22 +20,43 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private String conceptionKindName;
     private String TEMP_FILES_STORAGE_LOCATION =
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.TEMP_FILES_STORAGE_LOCATION);
+    private Upload upload;
+
+    private int maxSizeOfFileInMBForUpload = 0;
 
     public LoadCSVFormatConceptionEntitiesView(String conceptionKindName){
         this.setWidth(100,Unit.PERCENTAGE);
         this.conceptionKindName = conceptionKindName;
 
         SecondaryIconTitle iconTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.FILE_O),"上传 CSV 格式文件");
+        iconTitle1.setWidth(100,Unit.PERCENTAGE);
         iconTitle1.getStyle().set("padding-top", "var(--lumo-space-s)");
+        iconTitle1.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-10pct)")
+                .set("padding-bottom", "var(--lumo-space-s)");
         add(iconTitle1);
 
         MemoryBuffer buffer = new MemoryBuffer();
-        Upload upload = new Upload(buffer);
+        upload = new Upload(buffer);
         upload.setWidth(100, Unit.PERCENTAGE);
         upload.setHeight(150,Unit.PIXELS);
-        upload.setAcceptedFileTypes(".csv");
+        upload.setAutoUpload(false);
 
-        upload.setMaxFileSize(100);
+        //MIME types
+        //https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+        upload.setAcceptedFileTypes("text/csv",".csv");
+
+        maxSizeOfFileInMBForUpload = Integer.valueOf(
+                SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.MAX_SIZE_OF_FILE_IN_MB_FOR_UPLOAD));
+        int maxFileSizeInBytes = maxSizeOfFileInMBForUpload * 1024 * 1024; // 10MB
+        upload.setMaxFileSize(maxFileSizeInBytes);
+
+        Button uploadButton = new Button("上传 CSV 文件 ...");
+        uploadButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        upload.setUploadButton(uploadButton);
+        Span dropLabel = new Span("请将 CSV 文件 拖放到此处");
+        dropLabel.addClassNames("text-xs","text-secondary");
+        upload.setDropLabel(dropLabel);
 
         upload.addSucceededListener(event -> {
             String fileName = event.getFileName();
@@ -40,14 +64,32 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
             processFile(inputStream, fileName);
         });
 
-
-
-
+        upload.addFailedListener(event ->{
+            System.out.println(event.getFileName());
+            System.out.println(event.getReason());
+            System.out.println(event.getMIMEType());
+        });
+        upload.addFileRejectedListener(event ->{
+            System.out.println(event.getErrorMessage());
+        });
         add(upload);
+
+        SecondaryIconTitle iconTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.FLIP_H),"概念实体属性映射");
+        iconTitle2.setWidth(100,Unit.PERCENTAGE);
+        iconTitle2.getStyle().set("padding-top", "var(--lumo-space-s)");
+        iconTitle2.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-10pct)")
+                .set("padding-bottom", "var(--lumo-space-s)");
+
+        add(iconTitle2);
     }
 
     private void processFile(InputStream inputStream,String fileName){
         try {
+            File fileFolder = new File(TEMP_FILES_STORAGE_LOCATION);
+            if(!fileFolder.exists()){
+                fileFolder.mkdirs();
+            }
             File targetFile = new File(TEMP_FILES_STORAGE_LOCATION+"/"+fileName);
             FileOutputStream outStream  = new FileOutputStream(targetFile);
             int byteRead = 0;
