@@ -3,8 +3,10 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.MyIconsSvg;
 
 public class EntityAttributeNameMapperWidget extends VerticalLayout {
 
@@ -14,6 +16,9 @@ public class EntityAttributeNameMapperWidget extends VerticalLayout {
         this.setSpacing(true);
         this.setWidth(100, Unit.PERCENTAGE);
         Label attributeNameLabel = new Label(attributeName);
+
+        Icon icon = MyIconsSvg._500PX.create();
+        add(icon);
 
         attributeNameLabel.getStyle()
                 .set("font-size","0.8rem")

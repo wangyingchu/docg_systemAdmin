@@ -73,9 +73,7 @@
   "construct-style-sheets-polyfill": "3.1.0",
   "date-fns": "2.29.3",
   "echarts": "5.1.2",
-  "line-awesome": "1.3.0",
   "lit": "2.6.1",
-  "lumo-css-framework": "^4.0.10",
   "proj4": "2.8.1",
   "retry": "0.12.0",
   "tippy.js": "6.3.1"
@@ -271,6 +269,7 @@
   "Frontend/generated/jar-resources/vaadin-map/mapConnector.js",
   "Frontend/generated/jar-resources/vaadin-time-picker/timepickerConnector.js",
   "Frontend/generated/jar-resources/virtualListConnector.js",
+  "Frontend/icons/my-icons-svg.js",
   "Frontend/visualization/common/barChart_echarts-connector.js",
   "Frontend/visualization/common/cartesianHeatmapChart_echarts-connector.js",
   "Frontend/visualization/common/pieChart_echarts-connector.js",
@@ -288,6 +287,7 @@
  ],
  "frontendHashes": {
   "themes/docg-pac/components/vaadin-grid.css": "2fb27b1731db8d9f0dba5d5bbfe85dfb4fe2218840fd5094b80c3e1dce4a35c2",
+  "icons/my-icons-svg.js": "46467d2dcd4c79c154cc7cc1fd4dc88b82b7ecec9f45111dee2c4aefd3250064",
   "visualization/common/barChart_echarts-connector.js": "486904a12fc451027fbfe1b9670fc07f4a23e1a4263aaccae4499374da152113",
   "visualization/common/cartesianHeatmapChart_echarts-connector.js": "16e806d637b8ac69a52dffb7f738c3f25a46b95611a77ffdf100f022e5a83b9c",
   "visualization/common/pieChart_echarts-connector.js": "1043213cc8993cb0aa570b6c1a9716ff50a7dfed8f84e3ce946d46a4122873ef",
@@ -332,8 +332,8 @@
   "docg-pac": "{\n  \"lumoImports\" : [ \"typography\", \"color\", \"spacing\", \"badge\", \"utility\" ]\n}"
  },
  "entryScripts": [
-  "VAADIN/build/indexhtml-fd6cc067.js"
+  "VAADIN/build/indexhtml-a2eadc5e.js"
  ],
  "webComponents": [],
- "packageJsonHash": "354525379fa6650e695caaae1984b80f51180484852895edad11971fe8d81bc0"
+ "packageJsonHash": "680d2f11f67e986ee13729bd9aea870263c798cad405ac5560426c0e0b883c7b"
 }
