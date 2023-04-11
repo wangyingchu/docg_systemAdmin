@@ -9,6 +9,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
@@ -28,8 +29,10 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private Upload upload;
     private Button confirmButton;
     private int maxSizeOfFileInMBForUpload = 0;
+    private EntityAttributeNamesMappingView entityAttributeNamesMappingView;
+    private VerticalLayout attributeMappingLayout;
 
-    public LoadCSVFormatConceptionEntitiesView(String conceptionKindName){
+    public LoadCSVFormatConceptionEntitiesView(String conceptionKindName,int viewWidth){
         this.setWidth(100,Unit.PERCENTAGE);
         this.conceptionKindName = conceptionKindName;
 
@@ -68,8 +71,9 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
             InputStream inputStream = buffer.getInputStream();
             String processedFileURI = processFile(inputStream, fileName);
             List<String> attributeList = getAttributesFromHeader(processedFileURI);
-            System.out.println(attributeList);
-            System.out.println(attributeList);
+            entityAttributeNamesMappingView = new EntityAttributeNamesMappingView(attributeList);
+            attributeMappingLayout.add(entityAttributeNamesMappingView);
+
             parseCSVFile(processedFileURI);
         });
 
@@ -91,10 +95,15 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                 .set("padding-bottom", "var(--lumo-space-s)");
         add(iconTitle2);
 
-        VerticalLayout attributeMappingLayout = new VerticalLayout();
-        attributeMappingLayout.setWidthFull();
-        attributeMappingLayout.setHeight(300,Unit.PIXELS);
-        add(attributeMappingLayout);
+        attributeMappingLayout = new VerticalLayout();
+        attributeMappingLayout.setWidth(viewWidth - 10,Unit.PIXELS);
+        attributeMappingLayout.setPadding(false);
+        attributeMappingLayout.setMargin(false);
+        attributeMappingLayout.setSpacing(false);
+
+        Scroller scroller = new Scroller(attributeMappingLayout);
+        scroller.setHeight(300,Unit.PIXELS);
+        add(scroller);
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidthFull();
@@ -141,7 +150,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         confirmButton.setEnabled(true);
     }
 
-    public static List<String> getAttributesFromHeader(String csvLocation){
+    public List<String> getAttributesFromHeader(String csvLocation){
         if(csvLocation == null){
             return null;
         }else{
@@ -151,7 +160,8 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                 List<String> attributesList = new ArrayList<>();
                 String[] attributesArray = header.split(",");
                 for(String currentStr : attributesArray){
-                    attributesList.add(currentStr.replaceAll("\"",""));
+                    String formattedStr = currentStr.replaceAll("\"","");
+                    attributesList.add(formattedStr);
                 }
                 return attributesList;
             } catch (Exception e) {
