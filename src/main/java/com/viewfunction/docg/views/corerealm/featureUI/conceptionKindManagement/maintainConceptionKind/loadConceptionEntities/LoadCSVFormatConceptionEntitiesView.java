@@ -1,11 +1,14 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities;
 
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
@@ -14,6 +17,8 @@ import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
 
@@ -21,7 +26,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private String TEMP_FILES_STORAGE_LOCATION =
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.TEMP_FILES_STORAGE_LOCATION);
     private Upload upload;
-
+    private Button confirmButton;
     private int maxSizeOfFileInMBForUpload = 0;
 
     public LoadCSVFormatConceptionEntitiesView(String conceptionKindName){
@@ -54,14 +59,18 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         Button uploadButton = new Button("上传 CSV 文件 ...");
         uploadButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         upload.setUploadButton(uploadButton);
-        Span dropLabel = new Span("请将 CSV 文件 拖放到此处");
+        Span dropLabel = new Span("请将 CSV 文件拖放到此处");
         dropLabel.addClassNames("text-xs","text-secondary");
         upload.setDropLabel(dropLabel);
 
         upload.addSucceededListener(event -> {
             String fileName = event.getFileName();
             InputStream inputStream = buffer.getInputStream();
-            processFile(inputStream, fileName);
+            String processedFileURI = processFile(inputStream, fileName);
+            List<String> attributeList = getAttributesFromHeader(processedFileURI);
+            System.out.println(attributeList);
+            System.out.println(attributeList);
+            parseCSVFile(processedFileURI);
         });
 
         upload.addFailedListener(event ->{
@@ -80,17 +89,40 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         iconTitle2.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-10pct)")
                 .set("padding-bottom", "var(--lumo-space-s)");
-
         add(iconTitle2);
+
+        VerticalLayout attributeMappingLayout = new VerticalLayout();
+        attributeMappingLayout.setWidthFull();
+        attributeMappingLayout.setHeight(300,Unit.PIXELS);
+        add(attributeMappingLayout);
+
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidthFull();
+        spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        add(spaceDivLayout2);
+
+        confirmButton = new Button("确认导入概念类型实体数据",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        add(confirmButton);
+        confirmButton.setEnabled(false);
+        setHorizontalComponentAlignment(Alignment.END,confirmButton);
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //doAddConceptionEntity();
+            }
+        });
     }
 
-    private void processFile(InputStream inputStream,String fileName){
+    private String processFile(InputStream inputStream,String fileName){
         try {
             File fileFolder = new File(TEMP_FILES_STORAGE_LOCATION);
             if(!fileFolder.exists()){
                 fileFolder.mkdirs();
             }
-            File targetFile = new File(TEMP_FILES_STORAGE_LOCATION+"/"+fileName);
+
+            String savedFileURI = TEMP_FILES_STORAGE_LOCATION+"/"+System.currentTimeMillis()+"_"+fileName;
+            File targetFile = new File(savedFileURI);
             FileOutputStream outStream  = new FileOutputStream(targetFile);
             int byteRead = 0;
             byte[] buffer = new byte[8192];
@@ -99,8 +131,33 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
             }
             outStream.close();
             inputStream.close();
+            return savedFileURI;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void parseCSVFile(String fileURI){
+        confirmButton.setEnabled(true);
+    }
+
+    public static List<String> getAttributesFromHeader(String csvLocation){
+        if(csvLocation == null){
+            return null;
+        }else{
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(csvLocation));
+                String header = reader.readLine();
+                List<String> attributesList = new ArrayList<>();
+                String[] attributesArray = header.split(",");
+                for(String currentStr : attributesArray){
+                    attributesList.add(currentStr.replaceAll("\"",""));
+                }
+                return attributesList;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }
