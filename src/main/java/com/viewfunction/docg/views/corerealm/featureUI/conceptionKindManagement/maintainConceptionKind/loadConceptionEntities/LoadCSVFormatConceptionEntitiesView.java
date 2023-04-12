@@ -43,20 +43,24 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private String commaSplitSequence = ",";
     private RadioButtonGroup<String> splitCharGroup;
     private Checkbox useZipCheckbox;
+    private SecondaryIconTitle uploadSectionTitle;
+    private HorizontalLayout controlOptionsLayout;
+    private SecondaryIconTitle attributesMappingSectionTitle;
+    private Scroller scroller;
 
     public LoadCSVFormatConceptionEntitiesView(String conceptionKindName,int viewWidth){
         this.setWidth(100,Unit.PERCENTAGE);
         this.conceptionKindName = conceptionKindName;
 
-        SecondaryIconTitle iconTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.FILE_O),"上传 CSV 格式文件");
-        iconTitle1.setWidth(100,Unit.PERCENTAGE);
-        iconTitle1.getStyle().set("padding-top", "var(--lumo-space-s)");
-        iconTitle1.getStyle()
+        uploadSectionTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILE_O),"上传 CSV 格式文件");
+        uploadSectionTitle.setWidth(100,Unit.PERCENTAGE);
+        uploadSectionTitle.getStyle().set("padding-top", "var(--lumo-space-s)");
+        uploadSectionTitle.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-10pct)")
                 .set("padding-bottom", "var(--lumo-space-s)");
-        add(iconTitle1);
+        add(uploadSectionTitle);
 
-        HorizontalLayout controlOptionsLayout = new HorizontalLayout();
+        controlOptionsLayout = new HorizontalLayout();
         controlOptionsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         add(controlOptionsLayout);
 
@@ -136,6 +140,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                 entityAttributeNamesMappingView = new EntityAttributeNamesMappingView(attributeList,kindExistingStringFormatAttributesList);
                 attributeMappingLayout.add(entityAttributeNamesMappingView);
 
+                displayAttributesMappingUI();
                 confirmButton.setEnabled(true);
             }
         });
@@ -154,13 +159,13 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         upload.addStartedListener(event ->{});
         add(upload);
 
-        SecondaryIconTitle iconTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.FLIP_H),"概念实体属性映射");
-        iconTitle2.setWidth(100,Unit.PERCENTAGE);
-        iconTitle2.getStyle().set("padding-top", "var(--lumo-space-s)");
-        iconTitle2.getStyle()
+        attributesMappingSectionTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FLIP_H),"概念实体属性映射");
+        attributesMappingSectionTitle.setWidth(100,Unit.PERCENTAGE);
+        attributesMappingSectionTitle.getStyle().set("padding-top", "var(--lumo-space-s)");
+        attributesMappingSectionTitle.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-10pct)")
                 .set("padding-bottom", "var(--lumo-space-s)");
-        add(iconTitle2);
+        add(attributesMappingSectionTitle);
 
         attributeMappingLayout = new VerticalLayout();
         attributeMappingLayout.setWidth(viewWidth - 10,Unit.PIXELS);
@@ -168,7 +173,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         attributeMappingLayout.setMargin(false);
         attributeMappingLayout.setSpacing(false);
 
-        Scroller scroller = new Scroller(attributeMappingLayout);
+        scroller = new Scroller(attributeMappingLayout);
         scroller.setHeight(300,Unit.PIXELS);
         add(scroller);
 
@@ -188,6 +193,8 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                 //doAddConceptionEntity();
             }
         });
+
+        displayUploadUI();
     }
 
     private String processFile(InputStream inputStream,String fileName){
@@ -243,5 +250,23 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
             }
         }
         return null;
+    }
+
+    private void displayUploadUI(){
+        uploadSectionTitle.setVisible(true);
+        controlOptionsLayout.setVisible(true);
+        useZipCheckbox.setVisible(true);
+        upload.setVisible(true);
+        attributesMappingSectionTitle.setVisible(false);
+        scroller.setVisible(false);
+    }
+
+    private void displayAttributesMappingUI(){
+        uploadSectionTitle.setVisible(false);
+        controlOptionsLayout.setVisible(false);
+        useZipCheckbox.setVisible(false);
+        upload.setVisible(false);
+        attributesMappingSectionTitle.setVisible(true);
+        scroller.setVisible(true);
     }
 }
