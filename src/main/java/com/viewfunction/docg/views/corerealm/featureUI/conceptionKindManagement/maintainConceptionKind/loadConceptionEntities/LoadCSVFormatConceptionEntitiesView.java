@@ -38,7 +38,6 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private int maxSizeOfFileInMBForUpload = 0;
     private EntityAttributeNamesMappingView entityAttributeNamesMappingView;
     private VerticalLayout attributeMappingLayout;
-
     private String tabSplitSequence = "\t";
     private String spaceSplitSequence = " ";
     private String commaSplitSequence = ",";
