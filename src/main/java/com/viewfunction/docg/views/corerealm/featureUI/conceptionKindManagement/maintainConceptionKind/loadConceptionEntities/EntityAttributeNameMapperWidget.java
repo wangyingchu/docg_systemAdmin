@@ -6,7 +6,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.MyIconsSvg;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
 public class EntityAttributeNameMapperWidget extends VerticalLayout {
 
@@ -17,7 +17,7 @@ public class EntityAttributeNameMapperWidget extends VerticalLayout {
         this.setWidth(100, Unit.PERCENTAGE);
         Label attributeNameLabel = new Label(attributeName);
 
-        Icon icon = MyIconsSvg._500PX.create();
+        Icon icon = LineAwesomeIconsSvg.ACCUSOFT.create();
         add(icon);
 
         attributeNameLabel.getStyle()

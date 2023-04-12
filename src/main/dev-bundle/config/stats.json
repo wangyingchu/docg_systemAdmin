@@ -269,7 +269,7 @@
   "Frontend/generated/jar-resources/vaadin-map/mapConnector.js",
   "Frontend/generated/jar-resources/vaadin-time-picker/timepickerConnector.js",
   "Frontend/generated/jar-resources/virtualListConnector.js",
-  "Frontend/icons/my-icons-svg.js",
+  "Frontend/icons/line-awesome-icons-svg.js",
   "Frontend/visualization/common/barChart_echarts-connector.js",
   "Frontend/visualization/common/cartesianHeatmapChart_echarts-connector.js",
   "Frontend/visualization/common/pieChart_echarts-connector.js",
@@ -287,7 +287,7 @@
  ],
  "frontendHashes": {
   "themes/docg-pac/components/vaadin-grid.css": "2fb27b1731db8d9f0dba5d5bbfe85dfb4fe2218840fd5094b80c3e1dce4a35c2",
-  "icons/my-icons-svg.js": "46467d2dcd4c79c154cc7cc1fd4dc88b82b7ecec9f45111dee2c4aefd3250064",
+  "icons/line-awesome-icons-svg.js": "a3b0d645e8aaa91364f0fc311397b520b1ebbf5ba3889713fc6be3f5c9cabff3",
   "visualization/common/barChart_echarts-connector.js": "486904a12fc451027fbfe1b9670fc07f4a23e1a4263aaccae4499374da152113",
   "visualization/common/cartesianHeatmapChart_echarts-connector.js": "16e806d637b8ac69a52dffb7f738c3f25a46b95611a77ffdf100f022e5a83b9c",
   "visualization/common/pieChart_echarts-connector.js": "1043213cc8993cb0aa570b6c1a9716ff50a7dfed8f84e3ce946d46a4122873ef",
@@ -332,7 +332,7 @@
   "docg-pac": "{\n  \"lumoImports\" : [ \"typography\", \"color\", \"spacing\", \"badge\", \"utility\" ]\n}"
  },
  "entryScripts": [
-  "VAADIN/build/indexhtml-a2eadc5e.js"
+  "VAADIN/build/indexhtml-a0ea7812.js"
  ],
  "webComponents": [],
  "packageJsonHash": "680d2f11f67e986ee13729bd9aea870263c798cad405ac5560426c0e0b883c7b"
