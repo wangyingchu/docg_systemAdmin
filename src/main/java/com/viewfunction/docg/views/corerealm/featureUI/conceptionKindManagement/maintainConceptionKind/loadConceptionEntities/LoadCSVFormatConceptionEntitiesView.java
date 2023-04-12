@@ -5,15 +5,19 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 
@@ -47,6 +51,29 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                 .set("border-bottom", "1px solid var(--lumo-contrast-10pct)")
                 .set("padding-bottom", "var(--lumo-space-s)");
         add(iconTitle1);
+
+        HorizontalLayout controlOptionsLayout = new HorizontalLayout();
+        controlOptionsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        add(controlOptionsLayout);
+
+        Label dataSplitChar = new Label("分隔符:");
+        dataSplitChar.addClassNames("text-xs","text-secondary");
+        controlOptionsLayout.add(dataSplitChar);
+
+        RadioButtonGroup<String> radioGroup = new RadioButtonGroup<>();
+        radioGroup.setItems("逗号[ , ]", "制表符[Tab]", "空格[ _ ]");
+        radioGroup.setValue("逗号[ , ]");
+        radioGroup.setRenderer(new ComponentRenderer<>(option -> {
+            Label optionLabel = new Label(option);
+            optionLabel.addClassNames("text-xs","text-secondary");
+            return optionLabel;
+        }));
+        controlOptionsLayout.add(radioGroup);
+
+        Checkbox useZipCheckbox = new Checkbox();
+        useZipCheckbox.setLabel(".zip 格式压缩文件");
+        useZipCheckbox.addClassNames("text-xs","text-secondary");
+        add(useZipCheckbox);
 
         MemoryBuffer buffer = new MemoryBuffer();
         upload = new Upload(buffer);
