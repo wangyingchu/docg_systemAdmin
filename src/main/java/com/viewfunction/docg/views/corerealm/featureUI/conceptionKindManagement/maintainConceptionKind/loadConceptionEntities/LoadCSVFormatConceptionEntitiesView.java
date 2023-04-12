@@ -35,6 +35,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.TEMP_FILES_STORAGE_LOCATION);
     private Upload upload;
     private Button confirmButton;
+    private Button cancelImportButton;
     private int maxSizeOfFileInMBForUpload = 0;
     private EntityAttributeNamesMappingView entityAttributeNamesMappingView;
     private VerticalLayout attributeMappingLayout;
@@ -150,6 +151,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
 
                 displayAttributesMappingUI();
                 confirmButton.setEnabled(true);
+                cancelImportButton.setEnabled(true);
             }
         });
 
@@ -190,18 +192,26 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(spaceDivLayout2);
 
+        HorizontalLayout buttonbarLayout = new HorizontalLayout();
+        add(buttonbarLayout);
+        setHorizontalComponentAlignment(Alignment.END,buttonbarLayout);
+
         confirmButton = new Button("确认导入概念类型实体数据",new Icon(VaadinIcon.CHECK_CIRCLE));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        add(confirmButton);
         confirmButton.setEnabled(false);
-        setHorizontalComponentAlignment(Alignment.END,confirmButton);
+
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 //doAddConceptionEntity();
             }
         });
+        buttonbarLayout.add(confirmButton);
 
+        cancelImportButton = new Button("取消导入已上传文件数据");
+        cancelImportButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        cancelImportButton.setEnabled(false);
+        buttonbarLayout.add(cancelImportButton);
         displayUploadUI();
     }
 
