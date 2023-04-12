@@ -1,8 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -39,6 +37,8 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private String tabSplitSequence = "\t";
     private String spaceSplitSequence = " ";
     private String commaSplitSequence = ",";
+    private RadioButtonGroup<String> splitCharGroup;
+    private Checkbox useZipCheckbox;
 
     public LoadCSVFormatConceptionEntitiesView(String conceptionKindName,int viewWidth){
         this.setWidth(100,Unit.PERCENTAGE);
@@ -60,19 +60,30 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         dataSplitChar.addClassNames("text-xs","text-secondary");
         controlOptionsLayout.add(dataSplitChar);
 
-        RadioButtonGroup<String> radioGroup = new RadioButtonGroup<>();
-        radioGroup.setItems("逗号[ , ]", "制表符[Tab]", "空格[ _ ]");
-        radioGroup.setValue("逗号[ , ]");
-        radioGroup.setRenderer(new ComponentRenderer<>(option -> {
+        splitCharGroup = new RadioButtonGroup<>();
+        splitCharGroup.setItems("逗号[ , ]", "制表符[Tab]", "空格[ _ ]");
+        splitCharGroup.setValue("逗号[ , ]");
+        splitCharGroup.setRenderer(new ComponentRenderer<>(option -> {
             Label optionLabel = new Label(option);
             optionLabel.addClassNames("text-xs","text-secondary");
             return optionLabel;
         }));
-        controlOptionsLayout.add(radioGroup);
+        controlOptionsLayout.add(splitCharGroup);
 
-        Checkbox useZipCheckbox = new Checkbox();
+        useZipCheckbox = new Checkbox();
         useZipCheckbox.setLabel(".zip 格式压缩文件");
         useZipCheckbox.addClassNames("text-xs","text-secondary");
+        useZipCheckbox.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<Checkbox, Boolean>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<Checkbox, Boolean> checkboxBooleanComponentValueChangeEvent) {
+                boolean useZipFileFlag = checkboxBooleanComponentValueChangeEvent.getValue();
+                if(useZipFileFlag){
+                    upload.setAcceptedFileTypes("application/zip",".zip");
+                }else{
+                    upload.setAcceptedFileTypes("text/csv",".csv");
+                }
+            }
+        });
         add(useZipCheckbox);
 
         MemoryBuffer buffer = new MemoryBuffer();
@@ -186,10 +197,21 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
             return null;
         }else{
             try {
+                String splitChar = commaSplitSequence;
+                String lineSplitCharOption = splitCharGroup.getValue();
+                if(lineSplitCharOption.equals("逗号[ , ]")){
+                    splitChar = commaSplitSequence;
+                }
+                if(lineSplitCharOption.equals("制表符[Tab]")){
+                    splitChar = tabSplitSequence;
+                }
+                if(lineSplitCharOption.equals("空格[ _ ]")){
+                    splitChar = spaceSplitSequence;
+                }
                 BufferedReader reader = new BufferedReader(new FileReader(csvLocation));
                 String header = reader.readLine();
                 List<String> attributesList = new ArrayList<>();
-                String[] attributesArray = header.split(",");
+                String[] attributesArray = header.split(splitChar);
                 for(String currentStr : attributesArray){
                     String formattedStr = currentStr.replaceAll("\"","");
                     attributesList.add(formattedStr);
