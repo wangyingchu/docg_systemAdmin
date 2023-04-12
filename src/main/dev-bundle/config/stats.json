@@ -13,7 +13,7 @@
   "@vaadin/checkbox": "24.0.2",
   "@vaadin/checkbox-group": "24.0.2",
   "@vaadin/combo-box": "24.0.2",
-  "@vaadin/common-frontend": "0.0.17",
+  "@vaadin/common-frontend": "0.0.18",
   "@vaadin/component-base": "24.0.2",
   "@vaadin/confirm-dialog": "24.0.2",
   "@vaadin/context-menu": "24.0.2",
@@ -93,7 +93,7 @@
   "@vaadin/checkbox": "24.0.2",
   "@vaadin/checkbox-group": "24.0.2",
   "@vaadin/combo-box": "24.0.2",
-  "@vaadin/common-frontend": "0.0.17",
+  "@vaadin/common-frontend": "0.0.18",
   "@vaadin/component-base": "24.0.2",
   "@vaadin/confirm-dialog": "24.0.2",
   "@vaadin/context-menu": "24.0.2",
@@ -332,8 +332,8 @@
   "docg-pac": "{\n  \"lumoImports\" : [ \"typography\", \"color\", \"spacing\", \"badge\", \"utility\" ]\n}"
  },
  "entryScripts": [
-  "VAADIN/build/indexhtml-a0ea7812.js"
+  "VAADIN/build/indexhtml-f80d032a.js"
  ],
  "webComponents": [],
- "packageJsonHash": "680d2f11f67e986ee13729bd9aea870263c798cad405ac5560426c0e0b883c7b"
+ "packageJsonHash": "7b778e50879668124b57aadc3d1ee12fbb1eb51f063505f76492c2aed2365e77"
 }
