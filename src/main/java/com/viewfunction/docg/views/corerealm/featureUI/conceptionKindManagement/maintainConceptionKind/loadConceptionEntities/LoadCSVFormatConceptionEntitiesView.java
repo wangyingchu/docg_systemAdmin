@@ -52,17 +52,25 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         this.setWidth(100,Unit.PERCENTAGE);
         this.conceptionKindName = conceptionKindName;
 
+        VerticalLayout operationAreaLayout = new VerticalLayout();
+        operationAreaLayout.setWidth(100,Unit.PERCENTAGE);
+        operationAreaLayout.setHeight(400,Unit.PIXELS);
+        operationAreaLayout.setSpacing(false);
+        operationAreaLayout.setPadding(false);
+        operationAreaLayout.setMargin(false);
+        add(operationAreaLayout);
+
         uploadSectionTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILE_O),"上传 CSV 格式文件");
         uploadSectionTitle.setWidth(100,Unit.PERCENTAGE);
         uploadSectionTitle.getStyle().set("padding-top", "var(--lumo-space-s)");
         uploadSectionTitle.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-10pct)")
                 .set("padding-bottom", "var(--lumo-space-s)");
-        add(uploadSectionTitle);
+        operationAreaLayout.add(uploadSectionTitle);
 
         controlOptionsLayout = new HorizontalLayout();
         controlOptionsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        add(controlOptionsLayout);
+        operationAreaLayout.add(controlOptionsLayout);
 
         Label dataSplitChar = new Label("分隔符:");
         dataSplitChar.addClassNames("text-xs","text-secondary");
@@ -92,12 +100,12 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                 }
             }
         });
-        add(useZipCheckbox);
+        operationAreaLayout.add(useZipCheckbox);
 
         MemoryBuffer buffer = new MemoryBuffer();
         upload = new Upload(buffer);
         upload.setWidth(100, Unit.PERCENTAGE);
-        upload.setHeight(150,Unit.PIXELS);
+        upload.setHeight(350,Unit.PIXELS);
         upload.setAutoUpload(false);
 
         //MIME types
@@ -157,7 +165,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
 
         });
         upload.addStartedListener(event ->{});
-        add(upload);
+        operationAreaLayout.add(upload);
 
         attributesMappingSectionTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FLIP_H),"概念实体属性映射");
         attributesMappingSectionTitle.setWidth(100,Unit.PERCENTAGE);
@@ -165,7 +173,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         attributesMappingSectionTitle.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-10pct)")
                 .set("padding-bottom", "var(--lumo-space-s)");
-        add(attributesMappingSectionTitle);
+        operationAreaLayout.add(attributesMappingSectionTitle);
 
         attributeMappingLayout = new VerticalLayout();
         attributeMappingLayout.setWidth(viewWidth - 10,Unit.PIXELS);
@@ -174,8 +182,8 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         attributeMappingLayout.setSpacing(false);
 
         scroller = new Scroller(attributeMappingLayout);
-        scroller.setHeight(300,Unit.PIXELS);
-        add(scroller);
+        scroller.setHeight(500,Unit.PIXELS);
+        operationAreaLayout.add(scroller);
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidthFull();
