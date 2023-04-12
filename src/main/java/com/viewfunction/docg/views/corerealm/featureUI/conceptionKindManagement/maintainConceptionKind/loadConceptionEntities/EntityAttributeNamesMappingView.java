@@ -7,14 +7,15 @@ import java.util.List;
 
 public class EntityAttributeNamesMappingView extends VerticalLayout {
 
-    public EntityAttributeNamesMappingView(List<String> attributesList){
+    public EntityAttributeNamesMappingView(List<String> attributesList,List<String> existingKindAttributesList){
         this.setPadding(false);
         this.setMargin(false);
         this.setSpacing(false);
         this.setWidth(100, Unit.PERCENTAGE);
+
         if(attributesList != null){
             for(String currentAttribute : attributesList){
-                EntityAttributeNameMapperWidget currentEntityAttributeNameMapperWidget = new EntityAttributeNameMapperWidget(currentAttribute);
+                EntityAttributeNameMapperWidget currentEntityAttributeNameMapperWidget = new EntityAttributeNameMapperWidget(currentAttribute,existingKindAttributesList);
                 add(currentEntityAttributeNameMapperWidget);
             }
         }

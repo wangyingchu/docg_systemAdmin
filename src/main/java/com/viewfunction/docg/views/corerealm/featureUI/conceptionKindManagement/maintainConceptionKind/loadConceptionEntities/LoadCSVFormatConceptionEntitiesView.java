@@ -16,6 +16,11 @@ import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 
@@ -113,10 +118,27 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
             InputStream inputStream = buffer.getInputStream();
             String processedFileURI = processFile(inputStream, fileName);
             List<String> attributeList = getAttributesFromHeader(processedFileURI);
-            entityAttributeNamesMappingView = new EntityAttributeNamesMappingView(attributeList);
-            attributeMappingLayout.add(entityAttributeNamesMappingView);
 
-            parseCSVFile(processedFileURI);
+            if(attributeList == null || attributeList.size() == 0){
+
+            }else{
+                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+                List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(10000);
+                List<String> kindExistingStringFormatAttributesList = new ArrayList<>();
+                if(kindEntityAttributeRuntimeStatisticsList != null){
+                    for(KindEntityAttributeRuntimeStatistics currentKindEntityAttributeRuntimeStatistics:kindEntityAttributeRuntimeStatisticsList){
+                        currentKindEntityAttributeRuntimeStatistics.getAttributeName();
+                        if(currentKindEntityAttributeRuntimeStatistics.getAttributeDataType().equals(AttributeDataType.STRING)){
+                            kindExistingStringFormatAttributesList.add(currentKindEntityAttributeRuntimeStatistics.getAttributeName());
+                        }
+                    }
+                }
+                entityAttributeNamesMappingView = new EntityAttributeNamesMappingView(attributeList,kindExistingStringFormatAttributesList);
+                attributeMappingLayout.add(entityAttributeNamesMappingView);
+
+                confirmButton.setEnabled(true);
+            }
         });
 
         upload.addFailedListener(event ->{
@@ -127,6 +149,10 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         upload.addFileRejectedListener(event ->{
             System.out.println(event.getErrorMessage());
         });
+        upload.addFinishedListener(event ->{
+
+        });
+        upload.addStartedListener(event ->{});
         add(upload);
 
         SecondaryIconTitle iconTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.FLIP_H),"概念实体属性映射");
@@ -186,10 +212,6 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void parseCSVFile(String fileURI){
-        confirmButton.setEnabled(true);
     }
 
     public List<String> getAttributesFromHeader(String csvLocation){

@@ -9,9 +9,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
+import java.util.List;
+
 public class EntityAttributeNameMapperWidget extends VerticalLayout {
 
-    public EntityAttributeNameMapperWidget(String attributeName){
+    public EntityAttributeNameMapperWidget(String attributeName, List<String> existingKindAttributesList){
         this.setPadding(false);
         this.setMargin(false);
         this.setSpacing(true);
@@ -37,14 +39,15 @@ public class EntityAttributeNameMapperWidget extends VerticalLayout {
                 .set("font-weight","bold");
         attributeOriginalNameInfo.add(attributeNameLabel);
 
-        ComboBox<String > searchIndexTypeSelect = new ComboBox();
-        searchIndexTypeSelect.setWidth(98,Unit.PERCENTAGE);
-        searchIndexTypeSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+        ComboBox<String> existingKindAttributesSelect = new ComboBox();
+        existingKindAttributesSelect.setWidth(98,Unit.PERCENTAGE);
+        existingKindAttributesSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+        existingKindAttributesSelect.setItems(existingKindAttributesList);
 
-        searchIndexTypeSelect.setRequired(true);
-        searchIndexTypeSelect.setRequiredIndicatorVisible(true);
-        searchIndexTypeSelect.setPageSize(10);
-        add(searchIndexTypeSelect);
+        existingKindAttributesSelect.setRequired(false);
+        existingKindAttributesSelect.setAllowCustomValue(true);
+        existingKindAttributesSelect.setPageSize(10);
+        add(existingKindAttributesSelect);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setHeight(10,Unit.PIXELS);
