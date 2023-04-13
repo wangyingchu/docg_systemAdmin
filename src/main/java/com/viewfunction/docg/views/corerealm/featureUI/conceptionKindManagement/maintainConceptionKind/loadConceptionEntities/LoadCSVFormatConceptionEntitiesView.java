@@ -48,6 +48,9 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private HorizontalLayout controlOptionsLayout;
     private SecondaryIconTitle attributesMappingSectionTitle;
     private Scroller scroller;
+    private String currentSavedCSVFile;
+    private HorizontalLayout uploadedFileInfoLayout;
+    private Label fileNameLabel;
 
     public LoadCSVFormatConceptionEntitiesView(String conceptionKindName,int viewWidth){
         this.setWidth(100,Unit.PERCENTAGE);
@@ -90,6 +93,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         useZipCheckbox = new Checkbox();
         useZipCheckbox.setLabel(".zip 格式压缩文件");
         useZipCheckbox.addClassNames("text-xs","text-secondary");
+        useZipCheckbox.getStyle().set("padding-bottom", "5px");
         useZipCheckbox.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<Checkbox, Boolean>>() {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<Checkbox, Boolean> checkboxBooleanComponentValueChangeEvent) {
@@ -134,6 +138,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
             if(attributeList == null || attributeList.size() == 0){
 
             }else{
+                fileNameLabel.setText(fileName);
                 CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
                 ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
                 List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(10000);
@@ -177,6 +182,16 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                 .set("padding-bottom", "var(--lumo-space-s)");
         operationAreaLayout.add(attributesMappingSectionTitle);
 
+        uploadedFileInfoLayout = new HorizontalLayout();
+        uploadedFileInfoLayout.getStyle().set("padding-top", "10px").set("padding-bottom", "5px");
+        uploadedFileInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        operationAreaLayout.add(uploadedFileInfoLayout);
+        Icon fileIcon = VaadinIcon.FILE.create();
+        fileIcon.setSize("8px");
+        fileNameLabel = new Label("");
+        fileNameLabel.addClassNames("text-xs","text-secondary");
+        uploadedFileInfoLayout.add(fileIcon,fileNameLabel);
+
         attributeMappingLayout = new VerticalLayout();
         attributeMappingLayout.setWidth(viewWidth - 10,Unit.PIXELS);
         attributeMappingLayout.setPadding(false);
@@ -199,7 +214,6 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         confirmButton = new Button("确认导入概念类型实体数据",new Icon(VaadinIcon.CHECK_CIRCLE));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.setEnabled(false);
-
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -211,7 +225,15 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         cancelImportButton = new Button("取消导入已上传文件数据");
         cancelImportButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
         cancelImportButton.setEnabled(false);
+        cancelImportButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                cancelImportUploadedFile();
+            }
+        });
+
         buttonbarLayout.add(cancelImportButton);
+
         displayUploadUI();
     }
 
@@ -224,6 +246,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
 
             String savedFileURI = TEMP_FILES_STORAGE_LOCATION+"/"+System.currentTimeMillis()+"_"+fileName;
             File targetFile = new File(savedFileURI);
+            currentSavedCSVFile = savedFileURI;
             FileOutputStream outStream  = new FileOutputStream(targetFile);
             int byteRead = 0;
             byte[] buffer = new byte[8192];
@@ -276,6 +299,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         useZipCheckbox.setVisible(true);
         upload.setVisible(true);
         attributesMappingSectionTitle.setVisible(false);
+        uploadedFileInfoLayout.setVisible(false);
         scroller.setVisible(false);
     }
 
@@ -285,6 +309,20 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         useZipCheckbox.setVisible(false);
         upload.setVisible(false);
         attributesMappingSectionTitle.setVisible(true);
+        uploadedFileInfoLayout.setVisible(true);
         scroller.setVisible(true);
+    }
+
+    private void cancelImportUploadedFile(){
+        if(currentSavedCSVFile != null){
+            File currentSaveCSVFile = new File(currentSavedCSVFile);
+            if(currentSaveCSVFile.exists()){
+                currentSaveCSVFile.delete();
+            }
+        }
+        upload.clearFileList();
+        displayUploadUI();
+        cancelImportButton.setEnabled(false);
+        confirmButton.setEnabled(false);
     }
 }

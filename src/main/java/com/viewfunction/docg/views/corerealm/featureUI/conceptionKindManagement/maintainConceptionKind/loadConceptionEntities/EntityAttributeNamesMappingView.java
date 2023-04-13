@@ -20,4 +20,8 @@ public class EntityAttributeNamesMappingView extends VerticalLayout {
             }
         }
     }
+
+    public void clearEntityAttributeNameMapperWidgets(){
+        this.removeAll();
+    }
 }
