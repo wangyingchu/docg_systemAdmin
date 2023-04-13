@@ -151,8 +151,12 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                         }
                     }
                 }
-                entityAttributeNamesMappingView = new EntityAttributeNamesMappingView(attributeList,kindExistingStringFormatAttributesList);
-                attributeMappingLayout.add(entityAttributeNamesMappingView);
+                if(entityAttributeNamesMappingView == null){
+                    entityAttributeNamesMappingView = new EntityAttributeNamesMappingView(attributeList,kindExistingStringFormatAttributesList);
+                    attributeMappingLayout.add(entityAttributeNamesMappingView);
+                }else{
+                    entityAttributeNamesMappingView.refreshEntityAttributeNamesMappingInfo(attributeList,kindExistingStringFormatAttributesList);
+                }
 
                 displayAttributesMappingUI();
                 confirmButton.setEnabled(true);

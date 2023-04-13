@@ -21,7 +21,13 @@ public class EntityAttributeNamesMappingView extends VerticalLayout {
         }
     }
 
-    public void clearEntityAttributeNameMapperWidgets(){
+    public void refreshEntityAttributeNamesMappingInfo(List<String> attributesList,List<String> existingKindAttributesList){
         this.removeAll();
+        if(attributesList != null){
+            for(String currentAttribute : attributesList){
+                EntityAttributeNameMapperWidget currentEntityAttributeNameMapperWidget = new EntityAttributeNameMapperWidget(currentAttribute,existingKindAttributesList);
+                add(currentEntityAttributeNameMapperWidget);
+            }
+        }
     }
 }
