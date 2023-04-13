@@ -54,6 +54,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         ConceptionKindRemovedEvent.ConceptionKindRemovedListener,
         ConceptionEntityDeletedEvent.ConceptionEntityDeletedListener,
         ConceptionEntitiesCreatedEvent.ConceptionEntitiesCreatedListener,
+        ConceptionEntitiesCountRefreshEvent.ConceptionEntitiesCountRefreshListener,
         ConceptionKindDescriptionUpdatedEvent.ConceptionKindDescriptionUpdatedListener {
 
     private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
@@ -741,6 +742,20 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
                 if(event.getConceptionKindName().equals(currentEntityStatisticsInfo.getEntityKindName())){
                     long orgEntitiesCount = currentEntityStatisticsInfo.getEntitiesCount();
                     currentEntityStatisticsInfo.setEntitiesCount(orgEntitiesCount+event.getNewConceptionEntitiesCount());
+                }
+            }
+            dtaProvider.refreshAll();
+        }
+    }
+
+    @Override
+    public void receivedConceptionEntitiesCountRefreshEvent(ConceptionEntitiesCountRefreshEvent event) {
+        if(event.getConceptionKindName() != null){
+            ListDataProvider dtaProvider=(ListDataProvider)conceptionKindMetaInfoGrid.getDataProvider();
+            Collection<EntityStatisticsInfo> entityStatisticsInfoList = dtaProvider.getItems();
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
+                if(event.getConceptionKindName().equals(currentEntityStatisticsInfo.getEntityKindName())){
+                    currentEntityStatisticsInfo.setEntitiesCount(event.getConceptionEntitiesCount());
                 }
             }
             dtaProvider.refreshAll();

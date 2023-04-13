@@ -211,6 +211,8 @@ public class MainLayout extends AppLayout {
                 ConceptionKindDescriptionUpdatedEvent.class);
         _BLACKBOARD.register(RelationKindDescriptionUpdatedEvent.RelationKindDescriptionUpdatedListener.class,
                 RelationKindDescriptionUpdatedEvent.class);
+        _BLACKBOARD.register(ConceptionEntitiesCountRefreshEvent.ConceptionEntitiesCountRefreshListener.class,
+                ConceptionEntitiesCountRefreshEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

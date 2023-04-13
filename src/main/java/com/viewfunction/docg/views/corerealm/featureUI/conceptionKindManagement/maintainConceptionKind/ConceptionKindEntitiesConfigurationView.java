@@ -22,6 +22,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefreshEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCreatedEvent;
 
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
@@ -41,6 +42,7 @@ import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.
 
 public class ConceptionKindEntitiesConfigurationView extends VerticalLayout implements
         ConceptionEntitiesCreatedEvent.ConceptionEntitiesCreatedListener,
+        ConceptionEntitiesCountRefreshEvent.ConceptionEntitiesCountRefreshListener,
         ConceptionKindCleanedEvent.ConceptionKindCleanedListener{
 
     private String conceptionKindName;
@@ -246,6 +248,16 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         if(event.getConceptionKindName() != null){
             if(this.conceptionKindName.equals(event.getConceptionKindName())){
                 this.conceptionEntitiesCount = 0;
+                this.conceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(this.conceptionEntitiesCount));
+            }
+        }
+    }
+
+    @Override
+    public void receivedConceptionEntitiesCountRefreshEvent(ConceptionEntitiesCountRefreshEvent event) {
+        if(event.getConceptionKindName() != null){
+            if(this.conceptionKindName.equals(event.getConceptionKindName())){
+                this.conceptionEntitiesCount = event.getConceptionEntitiesCount();
                 this.conceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(this.conceptionEntitiesCount));
             }
         }

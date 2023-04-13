@@ -26,7 +26,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefreshEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 
 import java.io.*;
@@ -353,9 +355,11 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                     if(importResult){
                         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
                         try {
-                            long ConceptionEntitiesCount = targetConceptionKind.countConceptionEntities();
-
-
+                            long conceptionEntitiesCount = targetConceptionKind.countConceptionEntities();
+                            ConceptionEntitiesCountRefreshEvent conceptionEntitiesCountRefreshEvent = new ConceptionEntitiesCountRefreshEvent();
+                            conceptionEntitiesCountRefreshEvent.setConceptionEntitiesCount(conceptionEntitiesCount);
+                            conceptionEntitiesCountRefreshEvent.setConceptionKindName(this.conceptionKindName);
+                            ResourceHolder.getApplicationBlackboard().fire(conceptionEntitiesCountRefreshEvent);
                         } catch (CoreRealmServiceRuntimeException e) {
                             throw new RuntimeException(e);
                         }
