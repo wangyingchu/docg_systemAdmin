@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -22,11 +23,14 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
 
@@ -221,7 +225,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //doAddConceptionEntity();
+                doImportCSVFile();
             }
         });
         buttonbarLayout.add(confirmButton);
@@ -328,5 +332,27 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         displayUploadUI();
         cancelImportButton.setEnabled(false);
         confirmButton.setEnabled(false);
+    }
+
+    private void doImportCSVFile(){
+        if(currentSavedCSVFile != null){
+            Map<String,String> attributeMap = entityAttributeNamesMappingView.getAttributesMapping();
+            Set<String> orgAttributeNames = attributeMap.keySet();
+            List<String> existingMappedValue = new ArrayList<>();
+            boolean attributeMappingCheckResult = true;
+            for(String currentOrgAttributeName : orgAttributeNames){
+                String currentMappedNewName = attributeMap.get(currentOrgAttributeName);
+                if(existingMappedValue.contains(currentMappedNewName)){
+                    CommonUIOperationUtil.showPopupNotification("属性 "+currentOrgAttributeName+" 映射的新名称 "+currentMappedNewName +"已经被使用", NotificationVariant.LUMO_ERROR);
+                    attributeMappingCheckResult = false;
+                }else{
+                    existingMappedValue.add(currentMappedNewName);
+                }
+            }
+            if(attributeMappingCheckResult){
+
+
+            }
+        }
     }
 }

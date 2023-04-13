@@ -7,17 +7,23 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ListDataProvider;
+
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
 import java.util.List;
 
 public class EntityAttributeNameMapperWidget extends VerticalLayout {
 
+    private String attributeName;
+    private ComboBox<String> attributeMappingSelect;
+
     public EntityAttributeNameMapperWidget(String attributeName, List<String> existingKindAttributesList){
         this.setPadding(false);
         this.setMargin(false);
         this.setSpacing(true);
         this.setWidth(100, Unit.PERCENTAGE);
+        this.attributeName = attributeName;
 
         HorizontalLayout attributeOriginalNameInfo = new HorizontalLayout();
         attributeOriginalNameInfo.setSpacing(false);
@@ -39,15 +45,21 @@ public class EntityAttributeNameMapperWidget extends VerticalLayout {
                 .set("font-weight","bold");
         attributeOriginalNameInfo.add(attributeNameLabel);
 
-        ComboBox<String> existingKindAttributesSelect = new ComboBox();
-        existingKindAttributesSelect.setWidth(98,Unit.PERCENTAGE);
-        existingKindAttributesSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
-        existingKindAttributesSelect.setItems(existingKindAttributesList);
-
-        existingKindAttributesSelect.setRequired(false);
-        existingKindAttributesSelect.setAllowCustomValue(true);
-        existingKindAttributesSelect.setPageSize(10);
-        add(existingKindAttributesSelect);
+        attributeMappingSelect = new ComboBox();
+        attributeMappingSelect.setWidth(98,Unit.PERCENTAGE);
+        attributeMappingSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+        attributeMappingSelect.setItems(existingKindAttributesList);
+        attributeMappingSelect.setRequired(false);
+        attributeMappingSelect.setAllowCustomValue(true);
+        attributeMappingSelect.setPageSize(10);
+        attributeMappingSelect.addCustomValueSetListener(e -> {
+            String customValue = e.getDetail();
+            ListDataProvider dtaProvider = (ListDataProvider) attributeMappingSelect.getDataProvider();
+            dtaProvider.getItems().add(customValue);
+            dtaProvider.refreshAll();
+            attributeMappingSelect.setValue(customValue);
+        });
+        add(attributeMappingSelect);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setHeight(10,Unit.PIXELS);
@@ -55,5 +67,14 @@ public class EntityAttributeNameMapperWidget extends VerticalLayout {
         spaceDivLayout.getStyle()
                 .set("border-top", "1px solid var(--lumo-contrast-20pct)");
         add(spaceDivLayout);
+    }
+
+    public String getAttributeName(){
+        return this.attributeName;
+    }
+
+    public String getAttributeMapping(){
+        String currentMapping = attributeMappingSelect.getValue();
+        return currentMapping != null ? currentMapping : this.attributeName;
     }
 }
