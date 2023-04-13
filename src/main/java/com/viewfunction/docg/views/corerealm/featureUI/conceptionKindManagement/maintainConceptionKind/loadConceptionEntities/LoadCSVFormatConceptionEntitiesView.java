@@ -17,10 +17,13 @@ import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.internal.neo4j.util.BatchDataOperationUtil;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -168,17 +171,9 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
             }
         });
 
-        upload.addFailedListener(event ->{
-            System.out.println(event.getFileName());
-            System.out.println(event.getReason());
-            System.out.println(event.getMIMEType());
-        });
-        upload.addFileRejectedListener(event ->{
-            System.out.println(event.getErrorMessage());
-        });
-        upload.addFinishedListener(event ->{
-
-        });
+        upload.addFailedListener(event ->{});
+        upload.addFileRejectedListener(event ->{});
+        upload.addFinishedListener(event ->{});
         upload.addStartedListener(event ->{});
         operationAreaLayout.add(upload);
 
@@ -350,8 +345,22 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                 }
             }
             if(attributeMappingCheckResult){
+                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                if(coreRealm.getStorageImplTech().equals(CoreRealmStorageImplTech.NEO4J)){
+                    File currentSaveCSVFile = new File(currentSavedCSVFile);
+                    String filePath = currentSaveCSVFile.getAbsolutePath();
+                    boolean importResult = BatchDataOperationUtil.importConceptionEntitiesFromCSV(filePath,this.conceptionKindName,attributeMap);
+                    if(importResult){
+                        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+                        try {
+                            long ConceptionEntitiesCount = targetConceptionKind.countConceptionEntities();
 
 
+                        } catch (CoreRealmServiceRuntimeException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
             }
         }
     }
