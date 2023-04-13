@@ -357,7 +357,18 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                 if(coreRealm.getStorageImplTech().equals(CoreRealmStorageImplTech.NEO4J)){
                     File currentSaveCSVFile = new File(currentSavedCSVFile);
                     String filePath = currentSaveCSVFile.getAbsolutePath();
-                    boolean importResult = BatchDataOperationUtil.importConceptionEntitiesFromCSV(filePath,this.conceptionKindName,attributeMap);
+                    String splitChar = commaSplitSequence;
+                    String lineSplitCharOption = splitCharGroup.getValue();
+                    if(lineSplitCharOption.equals("逗号[ , ]")){
+                        splitChar = commaSplitSequence;
+                    }
+                    if(lineSplitCharOption.equals("制表符[Tab]")){
+                        splitChar = tabSplitSequence;
+                    }
+                    if(lineSplitCharOption.equals("空格[ _ ]")){
+                        splitChar = spaceSplitSequence;
+                    }
+                    boolean importResult = BatchDataOperationUtil.importConceptionEntitiesFromCSV(filePath,this.conceptionKindName,attributeMap,splitChar);
                     if(importResult){
                         long conceptionEntitiesCount = 0 ;
                         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
