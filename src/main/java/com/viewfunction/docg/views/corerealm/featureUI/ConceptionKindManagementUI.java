@@ -669,7 +669,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
     private void renderRemoveConceptionKindEntitiesUI(EntityStatisticsInfo entityStatisticsInfo){
         String conceptionKindName = entityStatisticsInfo.getEntityKindName();
         RemoveConceptionKindView removeConceptionKindView = new RemoveConceptionKindView(conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除概念类型",null,true,600,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除概念类型",null,true,600,220,false);
         fixSizeWindow.setWindowContent(removeConceptionKindView);
         fixSizeWindow.setModel(true);
         removeConceptionKindView.setContainerDialog(fixSizeWindow);
