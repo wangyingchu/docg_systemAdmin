@@ -29,7 +29,6 @@ import com.viewfunction.docg.util.ResourceHolder;
 public class CleanConceptionKindEntitiesView extends VerticalLayout {
 
     private String conceptionKind;
-
     private Dialog containerDialog;
 
     public CleanConceptionKindEntitiesView(String conceptionKind){

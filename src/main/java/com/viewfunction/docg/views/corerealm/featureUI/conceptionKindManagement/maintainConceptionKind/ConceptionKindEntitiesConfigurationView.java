@@ -218,6 +218,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导入 CSV 格式概念实体数据",null,true,550,560,false);
         fixSizeWindow.setWindowContent(loadCSVFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
+        loadCSVFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 

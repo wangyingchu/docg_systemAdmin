@@ -4,6 +4,7 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -60,6 +61,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private String currentSavedCSVFile;
     private HorizontalLayout uploadedFileInfoLayout;
     private Label fileNameLabel;
+    private Dialog containerDialog;
 
     public LoadCSVFormatConceptionEntitiesView(String conceptionKindName,int viewWidth){
         this.setWidth(100,Unit.PERCENTAGE);
@@ -363,9 +365,21 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                         } catch (CoreRealmServiceRuntimeException e) {
                             throw new RuntimeException(e);
                         }
+                        if(currentSaveCSVFile.exists()){
+                            currentSaveCSVFile.delete();
+                        }
+                        if(containerDialog != null){
+                            containerDialog.close();
+                        }
+                    }else{
+
                     }
                 }
             }
         }
+    }
+
+    public void setContainerDialog(Dialog containerDialog) {
+        this.containerDialog = containerDialog;
     }
 }
