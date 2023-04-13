@@ -5,10 +5,12 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -62,6 +64,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private HorizontalLayout uploadedFileInfoLayout;
     private Label fileNameLabel;
     private Dialog containerDialog;
+    private String uploadedFileName;
 
     public LoadCSVFormatConceptionEntitiesView(String conceptionKindName,int viewWidth){
         this.setWidth(100,Unit.PERCENTAGE);
@@ -142,6 +145,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
 
         upload.addSucceededListener(event -> {
             String fileName = event.getFileName();
+            uploadedFileName = fileName;
             InputStream inputStream = buffer.getInputStream();
             String processedFileURI = processFile(inputStream, fileName);
             List<String> attributeList = getAttributesFromHeader(processedFileURI);
@@ -355,9 +359,10 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                     String filePath = currentSaveCSVFile.getAbsolutePath();
                     boolean importResult = BatchDataOperationUtil.importConceptionEntitiesFromCSV(filePath,this.conceptionKindName,attributeMap);
                     if(importResult){
+                        long conceptionEntitiesCount = 0 ;
                         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
                         try {
-                            long conceptionEntitiesCount = targetConceptionKind.countConceptionEntities();
+                            conceptionEntitiesCount = targetConceptionKind.countConceptionEntities();
                             ConceptionEntitiesCountRefreshEvent conceptionEntitiesCountRefreshEvent = new ConceptionEntitiesCountRefreshEvent();
                             conceptionEntitiesCountRefreshEvent.setConceptionEntitiesCount(conceptionEntitiesCount);
                             conceptionEntitiesCountRefreshEvent.setConceptionKindName(this.conceptionKindName);
@@ -371,8 +376,27 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                         if(containerDialog != null){
                             containerDialog.close();
                         }
-                    }else{
 
+                        Notification notification = new Notification();
+                        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                        Div text = new Div(new Text("概念类型 "+conceptionKindName+" 数据导入操作成功"));
+                        Button closeButton = new Button(new Icon("lumo", "cross"));
+                        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+                        closeButton.addClickListener(event -> {
+                            notification.close();
+                        });
+                        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+                        layout.setWidth(100, Unit.PERCENTAGE);
+                        layout.setFlexGrow(1,text);
+                        notification.add(layout);
+
+                        VerticalLayout notificationMessageContainer = new VerticalLayout();
+                        notificationMessageContainer.add(new Div(new Text("CSV数据文件: "+uploadedFileName)));
+                        notificationMessageContainer.add(new Div(new Text("当前概念实体总数: " + conceptionEntitiesCount)));
+                        notification.add(notificationMessageContainer);
+                        notification.open();
+                    }else{
+                        CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKindName+" 导入数据实例操作发生服务器端错误",NotificationVariant.LUMO_ERROR);
                     }
                 }
             }
