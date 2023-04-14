@@ -1,6 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities;
 
 import cn.hutool.core.io.FileTypeUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import com.vaadin.flow.component.*;
@@ -70,6 +71,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private Dialog containerDialog;
     private String uploadedFileName;
     private ProgressBar importProgressBar;
+    private boolean processFileSuccess = true;
 
     public LoadCSVFormatConceptionEntitiesView(String conceptionKindName,int viewWidth){
         this.setWidth(100,Unit.PERCENTAGE);
@@ -154,38 +156,40 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
             uploadedFileName = fileName;
             InputStream inputStream = buffer.getInputStream();
             String processedFileURI = processFile(inputStream, fileName,isZipFile);
-            List<String> attributeList = getAttributesFromHeader(processedFileURI);
 
-            if(attributeList == null || attributeList.size() == 0){
-                CommonUIOperationUtil.showPopupNotification("已上传文件 "+fileName+" 中不包含合法的概念实体属性信息", NotificationVariant.LUMO_ERROR);
-                File currentSaveCSVFile = new File(currentSavedCSVFile);
-                if(currentSaveCSVFile.exists()){
-                    currentSaveCSVFile.delete();
-                }
-            }else{
-                fileNameLabel.setText(fileName);
-                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
-                List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(10000);
-                List<String> kindExistingStringFormatAttributesList = new ArrayList<>();
-                if(kindEntityAttributeRuntimeStatisticsList != null){
-                    for(KindEntityAttributeRuntimeStatistics currentKindEntityAttributeRuntimeStatistics:kindEntityAttributeRuntimeStatisticsList){
-                        currentKindEntityAttributeRuntimeStatistics.getAttributeName();
-                        if(currentKindEntityAttributeRuntimeStatistics.getAttributeDataType().equals(AttributeDataType.STRING)){
-                            kindExistingStringFormatAttributesList.add(currentKindEntityAttributeRuntimeStatistics.getAttributeName());
+            if(processFileSuccess){
+                List<String> attributeList = getAttributesFromHeader(processedFileURI);
+                if(attributeList == null || attributeList.size() == 0){
+                    CommonUIOperationUtil.showPopupNotification("已上传文件 "+fileName+" 中不包含合法的概念实体属性信息", NotificationVariant.LUMO_ERROR);
+                    File currentSaveCSVFile = new File(currentSavedCSVFile);
+                    if(currentSaveCSVFile.exists()){
+                        currentSaveCSVFile.delete();
+                    }
+                }else{
+                    fileNameLabel.setText(fileName);
+                    CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                    ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+                    List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(10000);
+                    List<String> kindExistingStringFormatAttributesList = new ArrayList<>();
+                    if(kindEntityAttributeRuntimeStatisticsList != null){
+                        for(KindEntityAttributeRuntimeStatistics currentKindEntityAttributeRuntimeStatistics:kindEntityAttributeRuntimeStatisticsList){
+                            currentKindEntityAttributeRuntimeStatistics.getAttributeName();
+                            if(currentKindEntityAttributeRuntimeStatistics.getAttributeDataType().equals(AttributeDataType.STRING)){
+                                kindExistingStringFormatAttributesList.add(currentKindEntityAttributeRuntimeStatistics.getAttributeName());
+                            }
                         }
                     }
-                }
-                if(entityAttributeNamesMappingView == null){
-                    entityAttributeNamesMappingView = new EntityAttributeNamesMappingView(attributeList,kindExistingStringFormatAttributesList);
-                    attributeMappingLayout.add(entityAttributeNamesMappingView);
-                }else{
-                    entityAttributeNamesMappingView.refreshEntityAttributeNamesMappingInfo(attributeList,kindExistingStringFormatAttributesList);
-                }
+                    if(entityAttributeNamesMappingView == null){
+                        entityAttributeNamesMappingView = new EntityAttributeNamesMappingView(attributeList,kindExistingStringFormatAttributesList);
+                        attributeMappingLayout.add(entityAttributeNamesMappingView);
+                    }else{
+                        entityAttributeNamesMappingView.refreshEntityAttributeNamesMappingInfo(attributeList,kindExistingStringFormatAttributesList);
+                    }
 
-                displayAttributesMappingUI();
-                confirmButton.setEnabled(true);
-                cancelImportButton.setEnabled(true);
+                    displayAttributesMappingUI();
+                    confirmButton.setEnabled(true);
+                    cancelImportButton.setEnabled(true);
+                }
             }
         });
 
@@ -281,10 +285,12 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
             }
             outStream.close();
             inputStream.close();
+            processFileSuccess = true;
 
             if(isZipFile){
                 File unzippedFileFolder = ZipUtil.unzip(targetFile);
                 if(unzippedFileFolder.list().length != 1){
+                    processFileSuccess = false;
                     CommonUIOperationUtil.showPopupNotification("已上传 ZIP 文件 "+fileName+" 中只允许包含一个CSV格式的数据文件", NotificationVariant.LUMO_ERROR);
                 }else{
                     File targetCSVFile = unzippedFileFolder.listFiles()[0];
@@ -294,12 +300,14 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                         targetCSVFile.renameTo(new File(formattedCSVFileName));
                         savedFileURI = formattedCSVFileName;
                         currentSavedCSVFile = savedFileURI;
+                        processFileSuccess = true;
                     }else{
+                        processFileSuccess = false;
                         CommonUIOperationUtil.showPopupNotification("已上传数据文件 "+targetCSVFile.getName()+" 必须是CSV格式文件", NotificationVariant.LUMO_ERROR);
                     }
                 }
-                unzippedFileFolder.delete();
-                targetFile.delete();
+                FileUtil.del(unzippedFileFolder);
+                FileUtil.del(targetFile);
             }
             return savedFileURI;
         } catch (IOException e) {
