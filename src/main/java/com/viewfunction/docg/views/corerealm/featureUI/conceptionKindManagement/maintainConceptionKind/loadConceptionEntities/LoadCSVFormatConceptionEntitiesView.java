@@ -1,5 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities;
 
+import cn.hutool.core.io.FileTypeUtil;
+import cn.hutool.core.util.ZipUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
@@ -148,13 +150,18 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
 
         upload.addSucceededListener(event -> {
             String fileName = event.getFileName();
+            boolean isZipFile = event.getMIMEType().equals("application/zip") ? true:false;
             uploadedFileName = fileName;
             InputStream inputStream = buffer.getInputStream();
-            String processedFileURI = processFile(inputStream, fileName);
+            String processedFileURI = processFile(inputStream, fileName,isZipFile);
             List<String> attributeList = getAttributesFromHeader(processedFileURI);
 
             if(attributeList == null || attributeList.size() == 0){
-
+                CommonUIOperationUtil.showPopupNotification("已上传文件 "+fileName+" 中不包含合法的概念实体属性信息", NotificationVariant.LUMO_ERROR);
+                File currentSaveCSVFile = new File(currentSavedCSVFile);
+                if(currentSaveCSVFile.exists()){
+                    currentSaveCSVFile.delete();
+                }
             }else{
                 fileNameLabel.setText(fileName);
                 CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -256,7 +263,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         displayUploadUI();
     }
 
-    private String processFile(InputStream inputStream,String fileName){
+    private String processFile(InputStream inputStream,String fileName,boolean isZipFile){
         try {
             File fileFolder = new File(TEMP_FILES_STORAGE_LOCATION);
             if(!fileFolder.exists()){
@@ -274,6 +281,26 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
             }
             outStream.close();
             inputStream.close();
+
+            if(isZipFile){
+                File unzippedFileFolder = ZipUtil.unzip(targetFile);
+                if(unzippedFileFolder.list().length != 1){
+                    CommonUIOperationUtil.showPopupNotification("已上传 ZIP 文件 "+fileName+" 中只允许包含一个CSV格式的数据文件", NotificationVariant.LUMO_ERROR);
+                }else{
+                    File targetCSVFile = unzippedFileFolder.listFiles()[0];
+                    String fileType = FileTypeUtil.getType(targetCSVFile);
+                    if(fileType.equals("csv")){
+                        String formattedCSVFileName = TEMP_FILES_STORAGE_LOCATION+"/"+System.currentTimeMillis()+"_"+ PinyinUtil.getPinyin(targetCSVFile.getName(),"");
+                        targetCSVFile.renameTo(new File(formattedCSVFileName));
+                        savedFileURI = formattedCSVFileName;
+                        currentSavedCSVFile = savedFileURI;
+                    }else{
+                        CommonUIOperationUtil.showPopupNotification("已上传数据文件 "+targetCSVFile.getName()+" 必须是CSV格式文件", NotificationVariant.LUMO_ERROR);
+                    }
+                }
+                unzippedFileFolder.delete();
+                targetFile.delete();
+            }
             return savedFileURI;
         } catch (IOException e) {
             throw new RuntimeException(e);
