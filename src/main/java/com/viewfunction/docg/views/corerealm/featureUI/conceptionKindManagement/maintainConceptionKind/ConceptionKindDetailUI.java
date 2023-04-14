@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.TabSheet;
 
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.function.ValueProvider;
@@ -30,6 +31,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 
 import com.viewfunction.docg.element.commonComponent.*;
 
+import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefreshEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
@@ -44,7 +47,9 @@ import java.util.Set;
 import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.ConceptionKind;
 
 @Route("conceptionKindDetailInfo/:conceptionKind")
-public class ConceptionKindDetailUI extends VerticalLayout implements BeforeEnterObserver {
+public class ConceptionKindDetailUI extends VerticalLayout implements
+        BeforeEnterObserver,
+        ConceptionEntitiesCountRefreshEvent.ConceptionEntitiesCountRefreshListener{
     private String conceptionKind;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
     private int conceptionKindDetailViewHeightOffset = 135;
@@ -94,6 +99,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements BeforeEnte
             kindCorrelationInfoTabSheet.setHeight(currentBrowserHeight-conceptionKindDetailViewHeightOffset-290,Unit.PIXELS);
         }));
         renderKindCorrelationInfoTabContent();
+        ResourceHolder.getApplicationBlackboard().addListener(this);
     }
 
     @Override
@@ -101,7 +107,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements BeforeEnte
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     private void renderConceptionKindData(){
@@ -362,6 +368,19 @@ public class ConceptionKindDetailUI extends VerticalLayout implements BeforeEnte
         }else{
             return fromConceptionKind;
         }
+    }
+
+    @Override
+    public void receivedConceptionEntitiesCountRefreshEvent(ConceptionEntitiesCountRefreshEvent event) {
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(10000);
+        coreRealm.closeGlobalSession();
+        ListDataProvider dataProvider=(ListDataProvider)conceptionKindAttributesInfoGrid.getDataProvider();
+        dataProvider.getItems().clear();
+        dataProvider.refreshAll();
+        conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
     }
 
     private class RelationDirectionIconValueProvider implements ValueProvider<ConceptionKindCorrelationInfo,Icon> {
