@@ -34,7 +34,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaCon
 
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadCSVFormatConceptionEntitiesView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadShpFormatConceptionEntitiesView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadSHPFormatConceptionEntitiesView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -223,7 +223,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
     private void renderLoadCSVFormatConceptionEntitiesView(){
         LoadCSVFormatConceptionEntitiesView loadCSVFormatConceptionEntitiesView = new LoadCSVFormatConceptionEntitiesView(this.conceptionKindName,500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 CSV 格式概念实体数据",null,true,550,580,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 CSV 格式概念实体数据",null,true,550,560,false);
         fixSizeWindow.setWindowContent(loadCSVFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
         loadCSVFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
@@ -231,8 +231,8 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     }
 
     private void renderLoadSHPFormatConceptionEntitiesView(){
-        LoadShpFormatConceptionEntitiesView loadShpFormatConceptionEntitiesView = new LoadShpFormatConceptionEntitiesView(this.conceptionKindName,500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 SHP 格式概念实体数据",null,true,550,580,false);
+        LoadSHPFormatConceptionEntitiesView loadShpFormatConceptionEntitiesView = new LoadSHPFormatConceptionEntitiesView(this.conceptionKindName,500);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 SHP 格式概念实体数据",null,true,550,560,false);
         fixSizeWindow.setWindowContent(loadShpFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
         loadShpFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);

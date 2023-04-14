@@ -70,7 +70,6 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private Label fileNameLabel;
     private Dialog containerDialog;
     private String uploadedFileName;
-    private ProgressBar importProgressBar;
     private boolean processFileSuccess = true;
 
     public LoadCSVFormatConceptionEntitiesView(String conceptionKindName,int viewWidth){
@@ -232,11 +231,6 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(spaceDivLayout2);
 
-        importProgressBar = new ProgressBar();
-        importProgressBar.setIndeterminate(true);
-        importProgressBar.setVisible(false);
-        add(importProgressBar);
-
         HorizontalLayout buttonbarLayout = new HorizontalLayout();
         add(buttonbarLayout);
         setHorizontalComponentAlignment(Alignment.END,buttonbarLayout);
@@ -244,6 +238,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         confirmButton = new Button("确认导入概念类型实体数据",new Icon(VaadinIcon.CHECK_CIRCLE));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.setEnabled(false);
+        confirmButton.setDisableOnClick(true);
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -411,9 +406,6 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                     if(lineSplitCharOption.equals("空格[ _ ]")){
                         splitChar = spaceSplitSequence;
                     }
-                    importProgressBar.setVisible(true);
-                    confirmButton.setEnabled(false);
-                    cancelImportButton.setEnabled(false);
 
                     boolean importResult = BatchDataOperationUtil.importConceptionEntitiesFromCSV(filePath,this.conceptionKindName,attributeMap,splitChar);
                     if(importResult){
@@ -456,9 +448,6 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                     }else{
                         CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKindName+" 导入数据实例操作发生服务器端错误",NotificationVariant.LUMO_ERROR);
                     }
-                    confirmButton.setEnabled(true);
-                    cancelImportButton.setEnabled(true);
-                    importProgressBar.setVisible(false);
                 }
             }
         }
