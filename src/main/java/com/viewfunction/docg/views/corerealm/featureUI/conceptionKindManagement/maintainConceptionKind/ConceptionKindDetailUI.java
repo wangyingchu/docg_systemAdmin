@@ -32,6 +32,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.*;
 
 import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefreshEvent;
+import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
@@ -49,7 +50,8 @@ import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.
 @Route("conceptionKindDetailInfo/:conceptionKind")
 public class ConceptionKindDetailUI extends VerticalLayout implements
         BeforeEnterObserver,
-        ConceptionEntitiesCountRefreshEvent.ConceptionEntitiesCountRefreshListener{
+        ConceptionEntitiesCountRefreshEvent.ConceptionEntitiesCountRefreshListener,
+        ConceptionKindCleanedEvent.ConceptionKindCleanedListener{
     private String conceptionKind;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
     private int conceptionKindDetailViewHeightOffset = 135;
@@ -372,6 +374,15 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
     @Override
     public void receivedConceptionEntitiesCountRefreshEvent(ConceptionEntitiesCountRefreshEvent event) {
+        refreshConceptionKindAttributesInfoGrid();
+    }
+
+    @Override
+    public void receivedConceptionKindCleanedEvent(ConceptionKindCleanedEvent event) {
+        refreshConceptionKindAttributesInfoGrid();
+    }
+
+    private void refreshConceptionKindAttributesInfoGrid(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
