@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities;
 
+import cn.hutool.extra.pinyin.PinyinUtil;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -262,7 +263,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                 fileFolder.mkdirs();
             }
 
-            String savedFileURI = TEMP_FILES_STORAGE_LOCATION+"/"+System.currentTimeMillis()+"_"+fileName;
+            String savedFileURI = TEMP_FILES_STORAGE_LOCATION+"/"+System.currentTimeMillis()+"_"+ PinyinUtil.getPinyin(fileName,"");
             File targetFile = new File(savedFileURI);
             currentSavedCSVFile = savedFileURI;
             FileOutputStream outStream  = new FileOutputStream(targetFile);
