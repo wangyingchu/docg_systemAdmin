@@ -15,6 +15,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
@@ -65,6 +66,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private Label fileNameLabel;
     private Dialog containerDialog;
     private String uploadedFileName;
+    private ProgressBar importProgressBar;
 
     public LoadCSVFormatConceptionEntitiesView(String conceptionKindName,int viewWidth){
         this.setWidth(100,Unit.PERCENTAGE);
@@ -218,6 +220,11 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(spaceDivLayout2);
 
+        importProgressBar = new ProgressBar();
+        importProgressBar.setIndeterminate(true);
+        importProgressBar.setVisible(false);
+        add(importProgressBar);
+
         HorizontalLayout buttonbarLayout = new HorizontalLayout();
         add(buttonbarLayout);
         setHorizontalComponentAlignment(Alignment.END,buttonbarLayout);
@@ -368,7 +375,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                     if(lineSplitCharOption.equals("空格[ _ ]")){
                         splitChar = spaceSplitSequence;
                     }
-
+                    importProgressBar.setVisible(true);
                     confirmButton.setEnabled(false);
                     cancelImportButton.setEnabled(false);
 
@@ -415,6 +422,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                     }
                     confirmButton.setEnabled(true);
                     cancelImportButton.setEnabled(true);
+                    importProgressBar.setVisible(false);
                 }
             }
         }
