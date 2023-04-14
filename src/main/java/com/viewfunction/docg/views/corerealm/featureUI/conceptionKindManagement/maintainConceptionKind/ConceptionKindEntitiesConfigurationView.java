@@ -34,6 +34,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaCon
 
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadCSVFormatConceptionEntitiesView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadShpFormatConceptionEntitiesView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -108,7 +109,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
         MenuBar importMenuBar = new MenuBar();
         importMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
-        MenuItem importDataMenu = createIconItem(importMenuBar, VaadinIcon.DOWNLOAD, "导入概念实体数据", null);
+        MenuItem importDataMenu = createIconItem(importMenuBar, VaadinIcon.UPLOAD, "导入概念实体数据", null);
         SubMenu importSubItems = importDataMenu.getSubMenu();
         MenuItem csvImportItem = importSubItems.addItem("CSV 格式数据");
         csvImportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
@@ -119,11 +120,18 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         });
         MenuItem arrowImportItem = importSubItems.addItem("ARROW 格式数据");
         MenuItem shpImportItem = importSubItems.addItem("SHP 格式数据");
+        shpImportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                renderLoadSHPFormatConceptionEntitiesView();
+            }
+        });
+
         infoContainer.add(importMenuBar);
 
         MenuBar exportMenuBar = new MenuBar();
         exportMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
-        MenuItem exportDataMenu = createIconItem(exportMenuBar, VaadinIcon.UPLOAD, "导出概念实体数据", null);
+        MenuItem exportDataMenu = createIconItem(exportMenuBar, VaadinIcon.DOWNLOAD, "导出概念实体数据", null);
         SubMenu exportSubItems = exportDataMenu.getSubMenu();
         MenuItem csvExportItem = exportSubItems.addItem("CSV 格式数据");
         MenuItem arrowExportItem = exportSubItems.addItem("ARROW 格式数据");
@@ -215,10 +223,19 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
     private void renderLoadCSVFormatConceptionEntitiesView(){
         LoadCSVFormatConceptionEntitiesView loadCSVFormatConceptionEntitiesView = new LoadCSVFormatConceptionEntitiesView(this.conceptionKindName,500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导入 CSV 格式概念实体数据",null,true,550,580,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 CSV 格式概念实体数据",null,true,550,580,false);
         fixSizeWindow.setWindowContent(loadCSVFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
         loadCSVFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderLoadSHPFormatConceptionEntitiesView(){
+        LoadShpFormatConceptionEntitiesView loadShpFormatConceptionEntitiesView = new LoadShpFormatConceptionEntitiesView(this.conceptionKindName,500);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 SHP 格式概念实体数据",null,true,550,580,false);
+        fixSizeWindow.setWindowContent(loadShpFormatConceptionEntitiesView);
+        fixSizeWindow.setModel(true);
+        loadShpFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 
