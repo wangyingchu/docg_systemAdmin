@@ -368,6 +368,10 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                     if(lineSplitCharOption.equals("空格[ _ ]")){
                         splitChar = spaceSplitSequence;
                     }
+
+                    confirmButton.setEnabled(false);
+                    cancelImportButton.setEnabled(false);
+
                     boolean importResult = BatchDataOperationUtil.importConceptionEntitiesFromCSV(filePath,this.conceptionKindName,attributeMap,splitChar);
                     if(importResult){
                         long conceptionEntitiesCount = 0 ;
@@ -409,6 +413,8 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
                     }else{
                         CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKindName+" 导入数据实例操作发生服务器端错误",NotificationVariant.LUMO_ERROR);
                     }
+                    confirmButton.setEnabled(true);
+                    cancelImportButton.setEnabled(true);
                 }
             }
         }
