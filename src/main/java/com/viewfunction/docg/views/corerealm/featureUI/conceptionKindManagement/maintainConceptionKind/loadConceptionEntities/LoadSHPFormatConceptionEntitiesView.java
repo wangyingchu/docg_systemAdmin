@@ -9,10 +9,12 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -20,13 +22,17 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.geospatial.GeospatialOperationUtil;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefreshEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 
 import java.io.File;
@@ -52,7 +58,8 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
     private int maxSizeOfFileInMBForUpload = 0;
     private String uploadedFileName;
     private boolean processFileSuccess;
-    private String currentSavedCSVFile;
+    private File targetSHPFile;
+    private File importWorkingFolder;
 
     public LoadSHPFormatConceptionEntitiesView(String conceptionKindName, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
@@ -119,44 +126,12 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
             String fileName = event.getFileName();
             uploadedFileName = fileName;
             InputStream inputStream = buffer.getInputStream();
-            String processedFileURI = processFile(inputStream, fileName);
-            /*
-            if(processFileSuccess){
-                List<String> attributeList = getAttributesFromHeader(processedFileURI);
-                if(attributeList == null || attributeList.size() == 0){
-                    CommonUIOperationUtil.showPopupNotification("已上传文件 "+fileName+" 中不包含合法的概念实体属性信息", NotificationVariant.LUMO_ERROR);
-                    File currentSaveCSVFile = new File(currentSavedCSVFile);
-                    if(currentSaveCSVFile.exists()){
-                        currentSaveCSVFile.delete();
-                    }
-                }else{
-                    fileNameLabel.setText(fileName);
-                    CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-                    ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
-                    List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(10000);
-                    List<String> kindExistingStringFormatAttributesList = new ArrayList<>();
-                    if(kindEntityAttributeRuntimeStatisticsList != null){
-                        for(KindEntityAttributeRuntimeStatistics currentKindEntityAttributeRuntimeStatistics:kindEntityAttributeRuntimeStatisticsList){
-                            currentKindEntityAttributeRuntimeStatistics.getAttributeName();
-                            if(currentKindEntityAttributeRuntimeStatistics.getAttributeDataType().equals(AttributeDataType.STRING)){
-                                kindExistingStringFormatAttributesList.add(currentKindEntityAttributeRuntimeStatistics.getAttributeName());
-                            }
-                        }
-                    }
-                    if(entityAttributeNamesMappingView == null){
-                        entityAttributeNamesMappingView = new EntityAttributeNamesMappingView(attributeList,kindExistingStringFormatAttributesList);
-                        attributeMappingLayout.add(entityAttributeNamesMappingView);
-                    }else{
-                        entityAttributeNamesMappingView.refreshEntityAttributeNamesMappingInfo(attributeList,kindExistingStringFormatAttributesList);
-                    }
-
-                    displayAttributesMappingUI();
-                    confirmButton.setEnabled(true);
-                    cancelImportButton.setEnabled(true);
-                }
+            File shpFile = processFile(inputStream, fileName);
+            if(processFileSuccess && shpFile != null){
+                targetSHPFile = shpFile;
+                confirmButton.setEnabled(true);
+                cancelImportButton.setEnabled(true);
             }
-            */
-
         });
 
         upload.addFailedListener(event ->{});
@@ -181,7 +156,7 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //doImportCSVFile();
+                doImportSHPFile();
             }
         });
         buttonbarLayout.add(confirmButton);
@@ -192,14 +167,15 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
         cancelImportButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //cancelImportUploadedFile();
+                cancelImportUploadedFile();
             }
         });
 
         buttonbarLayout.add(cancelImportButton);
     }
 
-    private String processFile(InputStream inputStream,String fileName){
+    private File processFile(InputStream inputStream,String fileName){
+        File currentSHPFile = null;
         try {
             File fileFolder = new File(TEMP_FILES_STORAGE_LOCATION);
             if(!fileFolder.exists()){
@@ -208,7 +184,6 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
 
             String savedFileURI = TEMP_FILES_STORAGE_LOCATION+"/"+System.currentTimeMillis()+"_"+ PinyinUtil.getPinyin(fileName,"");
             File targetFile = new File(savedFileURI);
-            currentSavedCSVFile = savedFileURI;
             FileOutputStream outStream  = new FileOutputStream(targetFile);
             int byteRead = 0;
             byte[] buffer = new byte[8192];
@@ -218,33 +193,87 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
             outStream.close();
             inputStream.close();
             processFileSuccess = true;
-            /*
-            if(isZipFile){
-                File unzippedFileFolder = ZipUtil.unzip(targetFile);
-                if(unzippedFileFolder.list().length != 1){
-                    processFileSuccess = false;
-                    CommonUIOperationUtil.showPopupNotification("已上传 ZIP 文件 "+fileName+" 中只允许包含一个CSV格式的数据文件", NotificationVariant.LUMO_ERROR);
-                }else{
-                    File targetCSVFile = unzippedFileFolder.listFiles()[0];
-                    String fileType = FileTypeUtil.getType(targetCSVFile);
-                    if(fileType.equals("csv")){
-                        String formattedCSVFileName = TEMP_FILES_STORAGE_LOCATION+"/"+System.currentTimeMillis()+"_"+ PinyinUtil.getPinyin(targetCSVFile.getName(),"");
-                        targetCSVFile.renameTo(new File(formattedCSVFileName));
-                        savedFileURI = formattedCSVFileName;
-                        currentSavedCSVFile = savedFileURI;
-                        processFileSuccess = true;
-                    }else{
-                        processFileSuccess = false;
-                        CommonUIOperationUtil.showPopupNotification("已上传数据文件 "+targetCSVFile.getName()+" 必须是CSV格式文件", NotificationVariant.LUMO_ERROR);
-                    }
+
+            File unzippedFileFolder = ZipUtil.unzip(targetFile);
+
+            File[] childFileList = unzippedFileFolder.listFiles();
+            int containsShpFileNumber = 0;
+            for(File currentFile : childFileList){
+                String currentFileType = FileTypeUtil.getType(currentFile);
+                if(currentFileType.equals("shp")||currentFileType.equals("SHP")){
+                    containsShpFileNumber++;
+                    currentSHPFile = currentFile;
                 }
-                FileUtil.del(unzippedFileFolder);
-                FileUtil.del(targetFile);
             }
-            */
-            return savedFileURI;
+            if(containsShpFileNumber != 1){
+                CommonUIOperationUtil.showPopupNotification("已上传数据压缩文件 "+fileName+" 中必须包含且只能包含一个SHP格式文件", NotificationVariant.LUMO_ERROR);
+                processFileSuccess = false;
+                importWorkingFolder = null;
+                FileUtil.del(unzippedFileFolder);
+            }else{
+                processFileSuccess = true;
+                importWorkingFolder = unzippedFileFolder;
+            }
+            FileUtil.del(targetFile);
+            return currentSHPFile;
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void doImportSHPFile(){
+        boolean removeExistingDataFlag = removeExistDataCheckbox.getValue();
+        String charEncode = fileEncodeInput.getValue().equals("") ? "UTF-8" : fileEncodeInput.getValue();
+        try {
+            GeospatialOperationUtil.importSHPDataDirectlyToConceptionKind(conceptionKindName,removeExistingDataFlag,targetSHPFile,charEncode);
+            ConceptionEntitiesCountRefreshEvent conceptionEntitiesCountRefreshEvent = new ConceptionEntitiesCountRefreshEvent();
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+            long conceptionEntitiesCount = targetConceptionKind.countConceptionEntities();
+            conceptionEntitiesCountRefreshEvent.setConceptionEntitiesCount(conceptionEntitiesCount);
+            conceptionEntitiesCountRefreshEvent.setConceptionKindName(this.conceptionKindName);
+            ResourceHolder.getApplicationBlackboard().fire(conceptionEntitiesCountRefreshEvent);
+
+            Notification notification = new Notification();
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            Div text = new Div(new Text("概念类型 "+conceptionKindName+" 数据导入操作成功"));
+            Button closeButton = new Button(new Icon("lumo", "cross"));
+            closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+            closeButton.addClickListener(event -> {
+                notification.close();
+            });
+            HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+            layout.setWidth(100, Unit.PERCENTAGE);
+            layout.setFlexGrow(1,text);
+            notification.add(layout);
+
+            VerticalLayout notificationMessageContainer = new VerticalLayout();
+            notificationMessageContainer.add(new Div(new Text("CSV数据文件: "+uploadedFileName)));
+            notificationMessageContainer.add(new Div(new Text("当前概念实体总数: " + conceptionEntitiesCount)));
+            notification.add(notificationMessageContainer);
+            notification.open();
+
+            if(containerDialog != null){
+                containerDialog.close();
+            }
+        } catch (IOException e) {
+            CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKindName+" 导入数据实例操作发生服务器端错误",NotificationVariant.LUMO_ERROR);
+            throw new RuntimeException(e);
+        } catch (CoreRealmServiceRuntimeException e) {
+            CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKindName+" 导入数据实例操作发生服务器端错误",NotificationVariant.LUMO_ERROR);
+            throw new RuntimeException(e);
+        }
+        if(importWorkingFolder != null){
+            FileUtil.del(importWorkingFolder);
+        }
+    }
+
+    private void cancelImportUploadedFile(){
+        upload.clearFileList();
+        confirmButton.setEnabled(false);
+        cancelImportButton.setEnabled(false);
+        if(importWorkingFolder != null){
+            FileUtil.del(importWorkingFolder);
         }
     }
 
