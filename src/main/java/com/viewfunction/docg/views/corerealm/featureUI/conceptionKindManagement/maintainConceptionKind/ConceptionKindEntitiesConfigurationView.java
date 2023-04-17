@@ -33,6 +33,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindInd
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadARROWFormatConceptionEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadCSVFormatConceptionEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadSHPFormatConceptionEntitiesView;
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -119,6 +120,12 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
             }
         });
         MenuItem arrowImportItem = importSubItems.addItem("ARROW 格式数据");
+        arrowImportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                renderLoadARROWFormatConceptionEntitiesView();
+            }
+        });
         MenuItem shpImportItem = importSubItems.addItem("SHP 格式数据");
         shpImportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
@@ -236,6 +243,15 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         fixSizeWindow.setWindowContent(loadShpFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
         loadShpFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderLoadARROWFormatConceptionEntitiesView(){
+        LoadARROWFormatConceptionEntitiesView loadARROWFormatConceptionEntitiesView = new LoadARROWFormatConceptionEntitiesView(this.conceptionKindName,500);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 ARROW 格式概念实体数据",null,true,550,560,false);
+        fixSizeWindow.setWindowContent(loadARROWFormatConceptionEntitiesView);
+        fixSizeWindow.setModel(true);
+        loadARROWFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 
