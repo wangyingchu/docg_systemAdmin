@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileTypeUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
+
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -17,14 +18,14 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -39,8 +40,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
 
@@ -60,6 +59,11 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
     private boolean processFileSuccess;
     private File targetSHPFile;
     private File importWorkingFolder;
+    private SecondaryIconTitle uploadZipFileInfoSectionTitle;
+    private HorizontalLayout uploadedFileInfoLayout;
+    private Label fileNameLabel;
+    private VerticalLayout zipFileContentLayout;
+    private Scroller scroller;
 
     public LoadSHPFormatConceptionEntitiesView(String conceptionKindName, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
@@ -131,6 +135,28 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
                 targetSHPFile = shpFile;
                 confirmButton.setEnabled(true);
                 cancelImportButton.setEnabled(true);
+                fileNameLabel.setText(fileName);
+                zipFileContentLayout.removeAll();
+                if(importWorkingFolder != null){
+                    File[] childFileArray = importWorkingFolder.listFiles();
+                    for(File currentFile:childFileArray){
+                        String currentFileName = currentFile.getName();
+                        Icon fileIcon = null;
+                        if(currentFile.isDirectory()){
+                            fileIcon = VaadinIcon.FOLDER.create();
+                        }else{
+                            fileIcon = VaadinIcon.FILE.create();
+                        }
+                        fileIcon.setSize("8px");
+                        fileIcon.getStyle().set("padding-left","10px");
+                        Label fileNameLabel = new Label(currentFileName);
+                        fileNameLabel.addClassNames("text-xs","text-secondary");
+                        HorizontalLayout fileInfoLayout = new HorizontalLayout(fileIcon,fileNameLabel);
+                        fileInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                        zipFileContentLayout.add(fileInfoLayout);
+                    }
+                }
+                displayAttributesMappingUI();
             }
         });
 
@@ -139,6 +165,34 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
         upload.addFinishedListener(event ->{});
         upload.addStartedListener(event ->{});
         operationAreaLayout.add(upload);
+
+        uploadZipFileInfoSectionTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILE_ZIP),"已上传压缩文件信息");
+        uploadZipFileInfoSectionTitle.setWidth(100,Unit.PERCENTAGE);
+        uploadZipFileInfoSectionTitle.getStyle().set("padding-top", "var(--lumo-space-s)");
+        uploadZipFileInfoSectionTitle.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-10pct)")
+                .set("padding-bottom", "var(--lumo-space-s)");
+        operationAreaLayout.add(uploadZipFileInfoSectionTitle);
+
+        uploadedFileInfoLayout = new HorizontalLayout();
+        uploadedFileInfoLayout.getStyle().set("padding-top", "10px").set("padding-bottom", "5px");
+        uploadedFileInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        operationAreaLayout.add(uploadedFileInfoLayout);
+        Icon fileIcon = VaadinIcon.FILE.create();
+        fileIcon.setSize("8px");
+        fileNameLabel = new Label("");
+        fileNameLabel.addClassNames("text-xs","text-secondary");
+        uploadedFileInfoLayout.add(fileIcon,fileNameLabel);
+
+        zipFileContentLayout = new VerticalLayout();
+        zipFileContentLayout.setWidth(viewWidth - 10,Unit.PIXELS);
+        zipFileContentLayout.setPadding(false);
+        zipFileContentLayout.setMargin(false);
+        zipFileContentLayout.setSpacing(false);
+
+        scroller = new Scroller(zipFileContentLayout);
+        scroller.setHeight(500,Unit.PIXELS);
+        operationAreaLayout.add(scroller);
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidthFull();
@@ -172,6 +226,7 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
         });
 
         buttonbarLayout.add(cancelImportButton);
+        displayUploadUI();
     }
 
     private File processFile(InputStream inputStream,String fileName){
@@ -270,11 +325,32 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
 
     private void cancelImportUploadedFile(){
         upload.clearFileList();
+        displayUploadUI();
         confirmButton.setEnabled(false);
         cancelImportButton.setEnabled(false);
         if(importWorkingFolder != null){
             FileUtil.del(importWorkingFolder);
         }
+    }
+
+    private void displayUploadUI(){
+        uploadSectionTitle.setVisible(true);
+        controlOptionsLayout.setVisible(true);
+        removeExistDataCheckbox.setVisible(true);
+        upload.setVisible(true);
+        uploadZipFileInfoSectionTitle.setVisible(false);
+        uploadedFileInfoLayout.setVisible(false);
+        scroller.setVisible(false);
+    }
+
+    private void displayAttributesMappingUI(){
+        uploadSectionTitle.setVisible(false);
+        controlOptionsLayout.setVisible(false);
+        removeExistDataCheckbox.setVisible(false);
+        upload.setVisible(false);
+        uploadZipFileInfoSectionTitle.setVisible(true);
+        uploadedFileInfoLayout.setVisible(true);
+        scroller.setVisible(true);
     }
 
     public void setContainerDialog(Dialog containerDialog) {
