@@ -4,24 +4,31 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.EntitiesExchangeOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefreshEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 
 import java.io.File;
@@ -224,7 +231,48 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
         EntitiesExchangeOperator entitiesExchangeOperator = coreRealm.getEntitiesExchangeOperator();
         EntitiesOperationStatistics importResult =
                 entitiesExchangeOperator.importConceptionEntitiesFromArrow(this.conceptionKindName,targetArrowFile.getAbsolutePath());
+        if(importResult.getSuccessItemsCount() >0 ){
+            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+            long conceptionEntitiesCount = 0;
+            try {
+                conceptionEntitiesCount = targetConceptionKind.countConceptionEntities();
+                ConceptionEntitiesCountRefreshEvent conceptionEntitiesCountRefreshEvent = new ConceptionEntitiesCountRefreshEvent();
+                conceptionEntitiesCountRefreshEvent.setConceptionEntitiesCount(conceptionEntitiesCount);
+                conceptionEntitiesCountRefreshEvent.setConceptionKindName(this.conceptionKindName);
+                ResourceHolder.getApplicationBlackboard().fire(conceptionEntitiesCountRefreshEvent);
+            } catch (CoreRealmServiceRuntimeException e) {
+                throw new RuntimeException(e);
+            }
+            if(targetArrowFile.exists()){
+                FileUtil.del(targetArrowFile);
+            }
+            if(containerDialog != null){
+                containerDialog.close();
+            }
 
+            Notification notification = new Notification();
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            Div text = new Div(new Text("概念类型 "+conceptionKindName+" 数据导入操作成功"));
+            Button closeButton = new Button(new Icon("lumo", "cross"));
+            closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+            closeButton.addClickListener(event -> {
+                notification.close();
+            });
+            HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+            layout.setWidth(100, Unit.PERCENTAGE);
+            layout.setFlexGrow(1,text);
+            notification.add(layout);
+
+            VerticalLayout notificationMessageContainer = new VerticalLayout();
+            notificationMessageContainer.add(new Div(new Text("Arrow 数据文件: "+uploadedFileName)));
+            notificationMessageContainer.add(new Div(new Text("当前概念实体总数: " + conceptionEntitiesCount)));
+            //notificationMessageContainer.add(new Div(new Text("操作摘要: "+importResult.getOperationSummary())));
+            notificationMessageContainer.add(new Div(new Text("导入成功实体数: "+importResult.getSuccessItemsCount())));
+            notificationMessageContainer.add(new Div(new Text("导入失败实体数: "+importResult.getFailItemsCount())));
+            notificationMessageContainer.add(new Div(new Text("操作开始时间: "+importResult.getStartTime())));
+            notificationMessageContainer.add(new Div(new Text("操作结束时间: "+importResult.getFinishTime())));
+            notification.add(notificationMessageContainer);
+            notification.open();
+        }
     }
-
 }
