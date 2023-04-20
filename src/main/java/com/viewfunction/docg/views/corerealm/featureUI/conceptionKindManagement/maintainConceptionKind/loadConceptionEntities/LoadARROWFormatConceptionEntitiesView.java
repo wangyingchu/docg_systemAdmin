@@ -1,11 +1,14 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.extra.pinyin.PinyinUtil;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -14,19 +17,17 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.EntitiesExchangeOperator;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
-import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
 
@@ -40,6 +41,11 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
     private Button confirmButton;
     private Button cancelImportButton;
     private int maxSizeOfFileInMBForUpload = 0;
+    private String uploadedFileName;
+    private SecondaryIconTitle uploadZipFileInfoSectionTitle;
+    private HorizontalLayout uploadedFileInfoLayout;
+    private Label fileNameLabel;
+    private File targetArrowFile;
 
     public LoadARROWFormatConceptionEntitiesView(String conceptionKindName, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
@@ -90,7 +96,16 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
         upload.setDropLabel(dropLabel);
 
         upload.addSucceededListener(event -> {
-
+            String fileName = event.getFileName();
+            uploadedFileName = fileName;
+            InputStream inputStream = buffer.getInputStream();
+            File arrowFile = processFile(inputStream, fileName);
+            if(arrowFile != null){
+                confirmButton.setEnabled(true);
+                cancelImportButton.setEnabled(true);
+                fileNameLabel.setText(uploadedFileName);
+                displayAttributesMappingUI();
+            }
         });
 
         upload.addFailedListener(event ->{});
@@ -98,6 +113,24 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
         upload.addFinishedListener(event ->{});
         upload.addStartedListener(event ->{});
         operationAreaLayout.add(upload);
+
+        uploadZipFileInfoSectionTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILE_ZIP),"已上传压缩文件信息");
+        uploadZipFileInfoSectionTitle.setWidth(100,Unit.PERCENTAGE);
+        uploadZipFileInfoSectionTitle.getStyle().set("padding-top", "var(--lumo-space-s)");
+        uploadZipFileInfoSectionTitle.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-10pct)")
+                .set("padding-bottom", "var(--lumo-space-s)");
+        operationAreaLayout.add(uploadZipFileInfoSectionTitle);
+
+        uploadedFileInfoLayout = new HorizontalLayout();
+        uploadedFileInfoLayout.getStyle().set("padding-top", "10px").set("padding-bottom", "5px");
+        uploadedFileInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        operationAreaLayout.add(uploadedFileInfoLayout);
+        Icon fileIcon = VaadinIcon.FILE.create();
+        fileIcon.setSize("8px");
+        fileNameLabel = new Label("");
+        fileNameLabel.addClassNames("text-xs","text-secondary");
+        uploadedFileInfoLayout.add(fileIcon,fileNameLabel);
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidthFull();
@@ -115,7 +148,7 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //doImportCSVFile();
+                doImportARROWFile();
             }
         });
         buttonbarLayout.add(confirmButton);
@@ -126,14 +159,72 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
         cancelImportButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //cancelImportUploadedFile();
+                cancelImportUploadedFile();
             }
         });
 
         buttonbarLayout.add(cancelImportButton);
+        displayUploadUI();
     }
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
     }
+
+    private File processFile(InputStream inputStream,String fileName){
+        try {
+            File fileFolder = new File(TEMP_FILES_STORAGE_LOCATION);
+            if(!fileFolder.exists()){
+                fileFolder.mkdirs();
+            }
+            String savedFileURI = TEMP_FILES_STORAGE_LOCATION+"/"+System.currentTimeMillis()+"_"+ PinyinUtil.getPinyin(fileName,"");
+            targetArrowFile = new File(savedFileURI);
+            FileOutputStream outStream  = new FileOutputStream(targetArrowFile);
+            int byteRead = 0;
+            byte[] buffer = new byte[8192];
+            while((byteRead = inputStream.read(buffer,0,8192)) != -1){
+                outStream.write(buffer,0,byteRead);
+            }
+            outStream.close();
+            inputStream.close();
+            return targetArrowFile;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void displayUploadUI(){
+        uploadSectionTitle.setVisible(true);
+        controlOptionsLayout.setVisible(true);
+        upload.setVisible(true);
+        uploadZipFileInfoSectionTitle.setVisible(false);
+        uploadedFileInfoLayout.setVisible(false);
+    }
+
+    private void displayAttributesMappingUI(){
+        uploadSectionTitle.setVisible(false);
+        controlOptionsLayout.setVisible(false);
+        upload.setVisible(false);
+        uploadZipFileInfoSectionTitle.setVisible(true);
+        uploadedFileInfoLayout.setVisible(true);
+    }
+
+    private void cancelImportUploadedFile(){
+        upload.clearFileList();
+        displayUploadUI();
+        confirmButton.setEnabled(false);
+        cancelImportButton.setEnabled(false);
+        if(targetArrowFile != null){
+            FileUtil.del(targetArrowFile);
+        }
+    }
+
+    private void doImportARROWFile(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        EntitiesExchangeOperator entitiesExchangeOperator = coreRealm.getEntitiesExchangeOperator();
+        EntitiesOperationStatistics importResult =
+                entitiesExchangeOperator.importConceptionEntitiesFromArrow(this.conceptionKindName,targetArrowFile.getAbsolutePath());
+
+    }
+
 }
