@@ -97,9 +97,10 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
             return optionLabel;
         }));
         controlOptionsLayout.add(arrowFileSourceGroup);
+
         fileEncodeInput = new TextField();
         fileEncodeInput.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        controlOptionsLayout.add(fileEncodeInput);
+        operationAreaLayout.add(fileEncodeInput);
 
         MemoryBuffer buffer = new MemoryBuffer();
         upload = new Upload(buffer);
