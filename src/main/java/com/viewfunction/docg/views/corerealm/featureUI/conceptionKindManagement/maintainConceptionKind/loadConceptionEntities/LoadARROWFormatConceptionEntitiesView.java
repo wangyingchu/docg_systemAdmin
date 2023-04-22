@@ -6,14 +6,19 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
@@ -40,6 +45,8 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
     private Button confirmButton;
     private Button cancelImportButton;
     private int maxSizeOfFileInMBForUpload = 0;
+    private RadioButtonGroup<String> arrowFileSourceGroup;
+    private TextField fileEncodeInput;
 
     public LoadARROWFormatConceptionEntitiesView(String conceptionKindName, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
@@ -53,7 +60,7 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
         operationAreaLayout.setMargin(false);
         add(operationAreaLayout);
 
-        uploadSectionTitle = new SecondaryIconTitle(new Icon(VaadinIcon.ANGLE_DOUBLE_RIGHT),"上传 Apache Arrow 格式文件");
+        uploadSectionTitle = new SecondaryIconTitle(new Icon(VaadinIcon.ANGLE_DOUBLE_RIGHT),"指定 Apache Arrow 格式文件");
         uploadSectionTitle.setWidth(100,Unit.PERCENTAGE);
         uploadSectionTitle.getStyle().set("padding-top", "var(--lumo-space-s)");
         uploadSectionTitle.getStyle()
@@ -63,8 +70,26 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
 
         controlOptionsLayout = new HorizontalLayout();
         controlOptionsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        controlOptionsLayout.setHeight(10,Unit.PIXELS);
         operationAreaLayout.add(controlOptionsLayout);
+
+        Label dataSplitChar = new Label("Arrow 文件来源:");
+        dataSplitChar.addClassNames("text-xs","text-secondary");
+        controlOptionsLayout.add(dataSplitChar);
+
+        arrowFileSourceGroup = new RadioButtonGroup<>();
+        arrowFileSourceGroup.setItems("客户端上传", "服务器本地路径");
+        arrowFileSourceGroup.setValue("客户端上传");
+        arrowFileSourceGroup.setRenderer(new ComponentRenderer<>(option -> {
+            Label optionLabel = new Label(option);
+            optionLabel.addClassNames("text-xs","text-secondary");
+            return optionLabel;
+        }));
+        controlOptionsLayout.add(arrowFileSourceGroup);
+
+        fileEncodeInput = new TextField();
+        fileEncodeInput.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        fileEncodeInput.setValue("UTF-8");
+        controlOptionsLayout.add(fileEncodeInput);
 
         MemoryBuffer buffer = new MemoryBuffer();
         upload = new Upload(buffer);
