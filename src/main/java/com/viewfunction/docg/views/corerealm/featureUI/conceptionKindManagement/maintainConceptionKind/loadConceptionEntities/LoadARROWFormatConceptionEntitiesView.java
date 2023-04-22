@@ -18,8 +18,10 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.EntitiesExchangeOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
@@ -53,6 +55,7 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
     private HorizontalLayout uploadedFileInfoLayout;
     private Label fileNameLabel;
     private File targetArrowFile;
+    private RadioButtonGroup<String> arrowFileSourceGroup;
 
     public LoadARROWFormatConceptionEntitiesView(String conceptionKindName, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
@@ -76,8 +79,21 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
 
         controlOptionsLayout = new HorizontalLayout();
         controlOptionsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        controlOptionsLayout.setHeight(10,Unit.PIXELS);
         operationAreaLayout.add(controlOptionsLayout);
+
+        Label dataSplitChar = new Label("Arrow 文件来源:");
+        dataSplitChar.addClassNames("text-xs","text-secondary");
+        controlOptionsLayout.add(dataSplitChar);
+
+        arrowFileSourceGroup = new RadioButtonGroup<>();
+        arrowFileSourceGroup.setItems("客户端上传", "服务器本地路径");
+        arrowFileSourceGroup.setValue("客户端上传");
+        arrowFileSourceGroup.setRenderer(new ComponentRenderer<>(option -> {
+            Label optionLabel = new Label(option);
+            optionLabel.addClassNames("text-xs","text-secondary");
+            return optionLabel;
+        }));
+        controlOptionsLayout.add(arrowFileSourceGroup);
 
         MemoryBuffer buffer = new MemoryBuffer();
         upload = new Upload(buffer);
