@@ -19,6 +19,8 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -56,6 +58,7 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
     private Label fileNameLabel;
     private File targetArrowFile;
     private RadioButtonGroup<String> arrowFileSourceGroup;
+    private TextField fileEncodeInput;
 
     public LoadARROWFormatConceptionEntitiesView(String conceptionKindName, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
@@ -94,6 +97,9 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
             return optionLabel;
         }));
         controlOptionsLayout.add(arrowFileSourceGroup);
+        fileEncodeInput = new TextField();
+        fileEncodeInput.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        controlOptionsLayout.add(fileEncodeInput);
 
         MemoryBuffer buffer = new MemoryBuffer();
         upload = new Upload(buffer);
