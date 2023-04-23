@@ -98,7 +98,6 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<RadioButtonGroup<String>, String> radioButtonGroupStringComponentValueChangeEvent) {
                 String currentValue = radioButtonGroupStringComponentValueChangeEvent.getValue();
-                System.out.println(currentValue);
                 if(currentValue.equals("客户端上传")){
                     filePathInput.setEnabled(false);
                     ((Button)upload.getUploadButton()).setEnabled(true);
@@ -123,6 +122,18 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
         filePathInput.setWidth(350,Unit.PIXELS);
         filePathInput.setEnabled(false);
         arrowFilePathInfoLayout.add(filePathInput);
+
+        filePathInput.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<TextField, String>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<TextField, String> textFieldStringComponentValueChangeEvent) {
+                String currentPathValue = textFieldStringComponentValueChangeEvent.getValue();
+                if(currentPathValue != null && !currentPathValue.equals("")){
+                    confirmButton.setEnabled(true);
+                }else{
+                    confirmButton.setEnabled(false);
+                }
+            }
+        });
 
         MemoryBuffer buffer = new MemoryBuffer();
         upload = new Upload(buffer);
@@ -274,8 +285,16 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
     private void doImportARROWFile(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         EntitiesExchangeOperator entitiesExchangeOperator = coreRealm.getEntitiesExchangeOperator();
+        String importFileSourceType = arrowFileSourceGroup.getValue();
+        String targetArrowFilePath = "";
+        if(importFileSourceType.equals("客户端上传")){
+            targetArrowFilePath = targetArrowFile.getAbsolutePath();
+        }
+        if(importFileSourceType.equals("服务器本地路径")){
+            targetArrowFilePath = filePathInput.getValue().trim();
+        }
         EntitiesOperationStatistics importResult =
-                entitiesExchangeOperator.importConceptionEntitiesFromArrow(this.conceptionKindName,targetArrowFile.getAbsolutePath());
+                entitiesExchangeOperator.importConceptionEntitiesFromArrow(this.conceptionKindName,targetArrowFilePath);
         if(importResult.getSuccessItemsCount() >0 ){
             ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
             long conceptionEntitiesCount = 0;
@@ -288,7 +307,7 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
             } catch (CoreRealmServiceRuntimeException e) {
                 throw new RuntimeException(e);
             }
-            if(targetArrowFile.exists()){
+            if(targetArrowFile != null && targetArrowFile.exists()){
                 FileUtil.del(targetArrowFile);
             }
             if(containerDialog != null){
