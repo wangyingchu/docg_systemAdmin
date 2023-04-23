@@ -2,10 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -58,7 +55,7 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
     private Label fileNameLabel;
     private File targetArrowFile;
     private RadioButtonGroup<String> arrowFileSourceGroup;
-    private TextField fileEncodeInput;
+    private TextField filePathInput;
 
     public LoadARROWFormatConceptionEntitiesView(String conceptionKindName, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
@@ -97,15 +94,40 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
             return optionLabel;
         }));
         controlOptionsLayout.add(arrowFileSourceGroup);
+        arrowFileSourceGroup.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<RadioButtonGroup<String>, String>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<RadioButtonGroup<String>, String> radioButtonGroupStringComponentValueChangeEvent) {
+                String currentValue = radioButtonGroupStringComponentValueChangeEvent.getValue();
+                System.out.println(currentValue);
+                if(currentValue.equals("客户端上传")){
+                    filePathInput.setEnabled(false);
+                    ((Button)upload.getUploadButton()).setEnabled(true);
+                }
+                if(currentValue.equals("服务器本地路径")){
+                    filePathInput.setEnabled(true);
+                    upload.clearFileList();
+                    ((Button)upload.getUploadButton()).setEnabled(false);
+                }
+            }
+        });
 
-        fileEncodeInput = new TextField();
-        fileEncodeInput.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        operationAreaLayout.add(fileEncodeInput);
+        HorizontalLayout arrowFilePathInfoLayout = new HorizontalLayout();
+        arrowFilePathInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        operationAreaLayout.add(arrowFilePathInfoLayout);
+
+        Label filePathPrompt = new Label("Arrow 文件服务器路径:");
+        filePathPrompt.addClassNames("text-xs","text-secondary");
+        arrowFilePathInfoLayout.add(filePathPrompt);
+        filePathInput = new TextField();
+        filePathInput.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        filePathInput.setWidth(350,Unit.PIXELS);
+        filePathInput.setEnabled(false);
+        arrowFilePathInfoLayout.add(filePathInput);
 
         MemoryBuffer buffer = new MemoryBuffer();
         upload = new Upload(buffer);
         upload.setWidth(100, Unit.PERCENTAGE);
-        upload.setHeight(360,Unit.PIXELS);
+        upload.setHeight(350,Unit.PIXELS);
         upload.setAutoUpload(false);
 
         //MIME types
