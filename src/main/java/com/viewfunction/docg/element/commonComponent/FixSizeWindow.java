@@ -18,6 +18,7 @@ import java.util.List;
 public class FixSizeWindow extends Dialog {
 
     private VerticalLayout windowsContentContainerLayout;
+    private Button closeButton;
 
     public FixSizeWindow(Icon titleIcon, String titleContent, List<Component> actionComponentsList,boolean displayCloseButton,int windowWidth, int windowHeight,boolean isResizable){
         this.setModal(false);
@@ -68,7 +69,7 @@ public class FixSizeWindow extends Dialog {
         }
         if(displayCloseButton){
             Icon closeIcon = new Icon(VaadinIcon.CLOSE_SMALL);
-            Button closeButton = new Button(closeIcon, e -> this.close());
+            closeButton = new Button(closeIcon, e -> this.close());
             closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             closeButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             titleElementsContainer.add(closeButton);
@@ -96,5 +97,17 @@ public class FixSizeWindow extends Dialog {
 
     public void show(){
         this.open();
+    }
+
+    public void disableCloseButton(){
+        if(closeButton != null){
+            closeButton.setEnabled(false);
+        }
+    }
+
+    public void enableCloseButton(){
+        if(closeButton != null){
+            closeButton.setEnabled(true);
+        }
     }
 }

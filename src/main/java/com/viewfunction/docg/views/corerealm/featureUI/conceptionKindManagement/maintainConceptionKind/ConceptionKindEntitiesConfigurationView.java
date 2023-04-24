@@ -271,7 +271,8 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
     private void renderDownloadARROWFormatConceptionEntitiesView(){
         DownloadARROWFormatConceptionEntitiesView downloadARROWFormatConceptionEntitiesView = new DownloadARROWFormatConceptionEntitiesView(this.conceptionKindName,500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 ARROW 格式概念实体数据",null,true,550,380,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 ARROW 格式概念实体数据",null,true,550,290,false);
+        fixSizeWindow.disableCloseButton();
         fixSizeWindow.setWindowContent(downloadARROWFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
         downloadARROWFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);

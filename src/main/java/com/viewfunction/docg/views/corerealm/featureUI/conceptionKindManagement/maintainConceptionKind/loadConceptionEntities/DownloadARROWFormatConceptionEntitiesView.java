@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
@@ -11,24 +12,65 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 import org.vaadin.olli.FileDownloadWrapper;
 
 import java.io.File;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
     private String conceptionKindName;
     private String TEMP_FILES_STORAGE_LOCATION =
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.TEMP_FILES_STORAGE_LOCATION);
     private Dialog containerDialog;
-
-    private Button confirmButton;
     private Button cancelImportButton;
+    private Button generateArrowButton;
 
     public DownloadARROWFormatConceptionEntitiesView(String conceptionKindName, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
         this.conceptionKindName = conceptionKindName;
 
+        Icon kindIcon = VaadinIcon.CUBE.create();
+        kindIcon.setSize("12px");
+        kindIcon.getStyle().set("padding-right","3px");
+        Icon entityIcon = VaadinIcon.KEY_O.create();
+        entityIcon.setSize("18px");
+        entityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
+        List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(kindIcon, this.conceptionKindName));
+        FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
+        add(entityInfoFootprintMessageBar);
+
+        long conceptionEntitiesCount = 0;
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+        try {
+            conceptionEntitiesCount = targetConceptionKind.countConceptionEntities();
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        HorizontalLayout entitiesCountContainer = new HorizontalLayout();
+        entitiesCountContainer.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        add(entitiesCountContainer);
+        new PrimaryKeyValueDisplayItem(entitiesCountContainer, FontAwesome.Solid.CIRCLE.create(),"概念实体数量:",numberFormat.format(conceptionEntitiesCount));
+
+        HorizontalLayout spaceDiv = new HorizontalLayout();
+        spaceDiv.setWidth(20,Unit.PIXELS);
+        entitiesCountContainer.add(spaceDiv);
+
+        generateArrowButton = new Button("生成 Arrow 格式数据文件",new Icon(VaadinIcon.PLAY));
+        generateArrowButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        generateArrowButton.setDisableOnClick(true);
+        entitiesCountContainer.add(generateArrowButton);
 
         TextField textField = new TextField("Enter file contents");
         FileDownloadWrapper link = new FileDownloadWrapper("textfield.txt", () -> textField.getValue().getBytes());
@@ -38,12 +80,6 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
         Button button = new Button("Click to download");
 
         FileDownloadWrapper buttonWrapper = new FileDownloadWrapper("entinfo.arrow",new File("/home/wangychu/Desktop/tess/entinfo.arrow"));
-       // FileDownloadWrapper buttonWrapper = new FileDownloadWrapper(
-        //        new StreamResource("entinfo.arrow", () -> new ByteArrayInputStream("/home/wangychu/Desktop/tess/entinfo.arrow".getBytes())));
-
-
-
-
         buttonWrapper.wrapComponent(button);
         add(buttonWrapper);
 
@@ -56,24 +92,14 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
         add(buttonbarLayout);
         setHorizontalComponentAlignment(Alignment.END,buttonbarLayout);
 
-        confirmButton = new Button("确认导入概念类型实体数据",new Icon(VaadinIcon.CHECK_CIRCLE));
-        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        confirmButton.setEnabled(false);
-        confirmButton.setDisableOnClick(true);
-        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //doImportARROWFile();
-            }
-        });
-        buttonbarLayout.add(confirmButton);
-
-        cancelImportButton = new Button("取消导入已上传文件数据");
+        cancelImportButton = new Button("取消导出 ARROW 格式概念实体数据");
         cancelImportButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
-        cancelImportButton.setEnabled(false);
         cancelImportButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                if(containerDialog != null){
+                    containerDialog.close();
+                }
                 //cancelImportUploadedFile();
             }
         });
