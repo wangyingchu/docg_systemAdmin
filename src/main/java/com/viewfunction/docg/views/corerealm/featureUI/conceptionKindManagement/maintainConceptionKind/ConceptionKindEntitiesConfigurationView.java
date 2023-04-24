@@ -26,6 +26,7 @@ import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefres
 import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCreatedEvent;
 
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
+import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
@@ -46,12 +47,16 @@ import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.
 public class ConceptionKindEntitiesConfigurationView extends VerticalLayout implements
         ConceptionEntitiesCreatedEvent.ConceptionEntitiesCreatedListener,
         ConceptionEntitiesCountRefreshEvent.ConceptionEntitiesCountRefreshListener,
-        ConceptionKindCleanedEvent.ConceptionKindCleanedListener{
+        ConceptionKindCleanedEvent.ConceptionKindCleanedListener,
+        ConceptionKindConfigurationInfoRefreshEvent.ConceptionKindConfigurationInfoRefreshListener{
 
     private String conceptionKindName;
     private long conceptionEntitiesCount;
     private NumberFormat numberFormat;
     private PrimaryKeyValueDisplayItem conceptionEntitiesCountDisplayItem;
+    private MetaConfigItemsConfigView metaConfigItemsConfigView;
+    private KindIndexConfigView kindIndexConfigView;
+    private ClassificationConfigView classificationConfigView;
 
     public ConceptionKindEntitiesConfigurationView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
@@ -175,15 +180,15 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         filterTitle2.getStyle().set("padding-top", "var(--lumo-space-s)");
         add(filterTitle2);
 
-        MetaConfigItemsConfigView metaConfigItemsConfigView = new MetaConfigItemsConfigView(MetaConfigItemsConfigView.MetaConfigItemType.ConceptionKind,this.conceptionKindName);
+        metaConfigItemsConfigView = new MetaConfigItemsConfigView(MetaConfigItemsConfigView.MetaConfigItemType.ConceptionKind,this.conceptionKindName);
         metaConfigItemsConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(metaConfigItemsConfigView);
 
-        KindIndexConfigView kindIndexConfigView = new KindIndexConfigView(KindIndexConfigView.KindIndexType.ConceptionKind,this.conceptionKindName);
+        kindIndexConfigView = new KindIndexConfigView(KindIndexConfigView.KindIndexType.ConceptionKind,this.conceptionKindName);
         kindIndexConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(kindIndexConfigView);
 
-        ClassificationConfigView classificationConfigView = new ClassificationConfigView();
+        classificationConfigView = new ClassificationConfigView();
         classificationConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(classificationConfigView);
     }
@@ -310,6 +315,25 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         if(event.getConceptionKindName() != null){
             if(this.conceptionKindName.equals(event.getConceptionKindName())){
                 this.conceptionEntitiesCount = event.getConceptionEntitiesCount();
+                this.conceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(this.conceptionEntitiesCount));
+            }
+        }
+    }
+
+    @Override
+    public void receivedConceptionKindConfigurationInfoRefreshEvent(ConceptionKindConfigurationInfoRefreshEvent event) {
+        if(event.getConceptionKindName() != null){
+            if(this.conceptionKindName.equals(event.getConceptionKindName())){
+                metaConfigItemsConfigView.refreshMetaConfigItemsInfo();
+                kindIndexConfigView.refreshKindIndex();
+                //classificationConfigView;
+                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+                try {
+                    this.conceptionEntitiesCount = targetConceptionKind.countConceptionEntities();
+                } catch (CoreRealmServiceRuntimeException e) {
+                    throw new RuntimeException(e);
+                }
                 this.conceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(this.conceptionEntitiesCount));
             }
         }

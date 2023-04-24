@@ -331,7 +331,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         }
     }
 
-    private void refreshMetaConfigItemsInfo(){
+    public void refreshMetaConfigItemsInfo(){
         Map<String,Object> metaConfigItemsMap = null;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         switch(metaConfigItemType){
