@@ -52,7 +52,8 @@ import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.
 public class ConceptionKindDetailUI extends VerticalLayout implements
         BeforeEnterObserver,
         ConceptionEntitiesCountRefreshEvent.ConceptionEntitiesCountRefreshListener,
-        ConceptionKindCleanedEvent.ConceptionKindCleanedListener{
+        ConceptionKindCleanedEvent.ConceptionKindCleanedListener,
+        ConceptionKindConfigurationInfoRefreshEvent.ConceptionKindConfigurationInfoRefreshListener{
     private String conceptionKind;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
     private int conceptionKindDetailViewHeightOffset = 135;
@@ -330,27 +331,32 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
     private void renderKindCorrelationInfoTabContent(){
         if(conceptionRealTimeInfoTab.isSelected()){
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
+            Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
             if(!this.conceptionRealTimeInfoGridFirstLoaded){
                 int chartHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset - 340;
-                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-                com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
-                Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
                 initConceptionRelationRealtimeInfoGrid(conceptionKindCorrelationInfoSet);
                 this.conceptionRelationRealtimeInfoGrid.setHeight(chartHeight,Unit.PIXELS);
                 this.conceptionKindCorrelationInfoGridContainer.add(this.conceptionRelationRealtimeInfoGrid);
                 this.conceptionRealTimeInfoGridFirstLoaded = true;
+            }else{
+                refreshConceptionRelationRealtimeInfoGrid(conceptionKindCorrelationInfoSet);
             }
         }else if(conceptionRealTimeChartTab.isSelected()){
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
+            Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
             if(!this.conceptionRealTimeChartFirstLoaded){
                 int chartHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset - 340;
                 conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(chartHeight);
                 conceptionKindCorrelationInfoChartContainer.add(conceptionKindCorrelationInfoChart);
-                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-                com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
-                Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
                 conceptionKindCorrelationInfoChart.clearData();
                 conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,conceptionKind);
                 this.conceptionRealTimeChartFirstLoaded = true;
+            }else{
+                conceptionKindCorrelationInfoChart.clearData();
+                conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,conceptionKind);
             }
         }else{}
     }
@@ -370,6 +376,13 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         conceptionRelationRealtimeInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(false)
                 .setTooltipGenerator(conceptionKindCorrelationInfo -> geConceptionKindName(conceptionKindCorrelationInfo));;
         this.conceptionRelationRealtimeInfoGrid.setItems(conceptionKindCorrelationInfoSet);
+    }
+
+    private void refreshConceptionRelationRealtimeInfoGrid(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet){
+        ListDataProvider dtaProvider= (ListDataProvider)this.conceptionRelationRealtimeInfoGrid.getDataProvider();
+        dtaProvider.getItems().clear();
+        dtaProvider.getItems().addAll(conceptionKindCorrelationInfoSet);
+        dtaProvider.refreshAll();
     }
 
     private String getRelationKindName(ConceptionKindCorrelationInfo conceptionKindCorrelationInfo){
@@ -394,6 +407,13 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
     @Override
     public void receivedConceptionKindCleanedEvent(ConceptionKindCleanedEvent event) {
         refreshConceptionKindAttributesInfoGrid();
+        renderKindCorrelationInfoTabContent();
+    }
+
+    @Override
+    public void receivedConceptionKindConfigurationInfoRefreshEvent(ConceptionKindConfigurationInfoRefreshEvent event) {
+        refreshConceptionKindAttributesInfoGrid();
+        renderKindCorrelationInfoTabContent();
     }
 
     private void refreshConceptionKindAttributesInfoGrid(){
