@@ -33,6 +33,7 @@ import com.viewfunction.docg.element.commonComponent.*;
 
 import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefreshEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
+import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
@@ -126,6 +127,19 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         secTitleElementsList.add(this.kindDescriptionEditorItemWidget);
 
         List<Component> buttonList = new ArrayList<>();
+
+        Button refreshConceptionKindConfigInfoButton= new Button("刷新概念类型配置信息");
+        refreshConceptionKindConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
+        refreshConceptionKindConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        refreshConceptionKindConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                ConceptionKindConfigurationInfoRefreshEvent conceptionKindConfigurationInfoRefreshEvent = new ConceptionKindConfigurationInfoRefreshEvent();
+                conceptionKindConfigurationInfoRefreshEvent.setConceptionKindName(conceptionKind);
+                ResourceHolder.getApplicationBlackboard().fire(conceptionKindConfigurationInfoRefreshEvent);
+            }
+        });
+        buttonList.add(refreshConceptionKindConfigInfoButton);
 
         Button queryConceptionKindButton= new Button("概念类型实体数据查询");
         queryConceptionKindButton.setIcon(VaadinIcon.RECORDS.create());
