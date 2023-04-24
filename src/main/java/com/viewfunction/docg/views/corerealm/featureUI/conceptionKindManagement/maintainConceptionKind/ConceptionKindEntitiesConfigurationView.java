@@ -33,6 +33,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindInd
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.DownloadARROWFormatConceptionEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadARROWFormatConceptionEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadCSVFormatConceptionEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadSHPFormatConceptionEntitiesView;
@@ -142,6 +143,14 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         SubMenu exportSubItems = exportDataMenu.getSubMenu();
         MenuItem csvExportItem = exportSubItems.addItem("CSV 格式数据");
         MenuItem arrowExportItem = exportSubItems.addItem("ARROW 格式数据");
+
+        arrowExportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                renderDownloadARROWFormatConceptionEntitiesView();
+            }
+        });
+
         infoContainer.add(exportMenuBar);
 
         Icon divIcon2 = VaadinIcon.LINE_V.create();
@@ -252,6 +261,15 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         fixSizeWindow.setWindowContent(loadARROWFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
         loadARROWFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderDownloadARROWFormatConceptionEntitiesView(){
+        DownloadARROWFormatConceptionEntitiesView downloadARROWFormatConceptionEntitiesView = new DownloadARROWFormatConceptionEntitiesView(this.conceptionKindName,500);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 ARROW 格式概念实体数据",null,true,550,380,false);
+        fixSizeWindow.setWindowContent(downloadARROWFormatConceptionEntitiesView);
+        fixSizeWindow.setModel(true);
+        downloadARROWFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 
