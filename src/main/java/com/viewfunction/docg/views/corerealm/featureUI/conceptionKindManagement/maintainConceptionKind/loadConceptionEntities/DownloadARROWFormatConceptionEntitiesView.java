@@ -67,7 +67,7 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
         spaceDiv.setWidth(20,Unit.PIXELS);
         entitiesCountContainer.add(spaceDiv);
 
-        generateArrowButton = new Button("生成 Arrow 格式数据文件",new Icon(VaadinIcon.PLAY));
+        generateArrowButton = new Button("生成 ARROW 格式数据文件",new Icon(VaadinIcon.PLAY));
         generateArrowButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         generateArrowButton.setDisableOnClick(true);
         entitiesCountContainer.add(generateArrowButton);
