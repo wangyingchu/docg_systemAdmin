@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities;
 
+import cn.hutool.extra.pinyin.PinyinUtil;
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -13,6 +14,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.EntitiesExchangeOperator;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
@@ -32,6 +35,7 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
     private Dialog containerDialog;
     private Button cancelImportButton;
     private Button generateArrowButton;
+    private FileDownloadWrapper arrowFileDownloader;
 
     public DownloadARROWFormatConceptionEntitiesView(String conceptionKindName, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
@@ -71,6 +75,13 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
         generateArrowButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         generateArrowButton.setDisableOnClick(true);
         entitiesCountContainer.add(generateArrowButton);
+        generateArrowButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                generateArrowDataFile();
+            }
+        });
+
 
         TextField textField = new TextField("Enter file contents");
         FileDownloadWrapper link = new FileDownloadWrapper("textfield.txt", () -> textField.getValue().getBytes());
@@ -79,9 +90,9 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
 
         Button button = new Button("Click to download");
 
-        FileDownloadWrapper buttonWrapper = new FileDownloadWrapper("entinfo.arrow",new File("/home/wangychu/Desktop/tess/entinfo.arrow"));
-        buttonWrapper.wrapComponent(button);
-        add(buttonWrapper);
+        arrowFileDownloader = new FileDownloadWrapper("data.arrow",new File("/home/wangychu/Desktop/tess/entinfo.arrow"));
+        arrowFileDownloader.wrapComponent(button);
+        add(arrowFileDownloader);
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidthFull();
@@ -109,5 +120,17 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
+    }
+
+    private EntitiesOperationStatistics generateArrowDataFile(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        EntitiesExchangeOperator entitiesExchangeOperator = coreRealm.getEntitiesExchangeOperator();
+        String dataFileName = PinyinUtil.getPinyin(this.conceptionKindName,"")+"_"+System.currentTimeMillis()+"_EXPORT.arrow";
+        String arrowDataFileURI = TEMP_FILES_STORAGE_LOCATION+"/"+ dataFileName;
+
+        EntitiesOperationStatistics entitiesOperationStatistics = entitiesExchangeOperator.exportConceptionEntitiesToArrow(this.conceptionKindName,arrowDataFileURI);
+        arrowFileDownloader.setText(dataFileName);
+        arrowFileDownloader.setFile(new File(arrowDataFileURI));
+        return entitiesOperationStatistics;
     }
 }
