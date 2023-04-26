@@ -5,13 +5,17 @@ import cn.hutool.extra.pinyin.PinyinUtil;
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -41,6 +45,7 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
     private Label arrowFileName;
     private HorizontalLayout downloaderContainer;
     private String arrowDataFileURI;
+    private long conceptionEntitiesCount;
 
     public DownloadARROWFormatConceptionEntitiesView(String conceptionKindName, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
@@ -57,7 +62,6 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
 
-        long conceptionEntitiesCount = 0;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
         try {
@@ -110,7 +114,7 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
         add(buttonbarLayout);
         setHorizontalComponentAlignment(Alignment.END,buttonbarLayout);
 
-        cancelImportButton = new Button("取消导出 ARROW 格式概念实体数据");
+        cancelImportButton = new Button("取消或结束导出 ARROW 格式概念实体数据");
         cancelImportButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
         cancelImportButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -128,7 +132,7 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
         this.containerDialog = containerDialog;
     }
 
-    private EntitiesOperationStatistics generateArrowDataFile(){
+    private void generateArrowDataFile(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         EntitiesExchangeOperator entitiesExchangeOperator = coreRealm.getEntitiesExchangeOperator();
         File fileFolder = new File(TEMP_FILES_STORAGE_LOCATION);
@@ -150,7 +154,28 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
         downloaderContainer.add(arrowFileDownloader);
         arrowFileDownloader.setFile(new File(arrowDataFileURI));
 
-        return entitiesOperationStatistics;
+        Notification notification = new Notification();
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        Div text = new Div(new Text("概念类型 "+conceptionKindName+" 创建 ARROW 数据文件操作成功"));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
+
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        notificationMessageContainer.add(new Div(new Text("Arrow 数据文件: "+dataFileName)));
+        notificationMessageContainer.add(new Div(new Text("当前概念实体总数: " + conceptionEntitiesCount)));
+        notificationMessageContainer.add(new Div(new Text("创建成功实体数: "+entitiesOperationStatistics.getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("创建失败实体数: "+entitiesOperationStatistics.getFailItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("操作开始时间: "+entitiesOperationStatistics.getStartTime())));
+        notificationMessageContainer.add(new Div(new Text("操作结束时间: "+entitiesOperationStatistics.getFinishTime())));
+        notification.add(notificationMessageContainer);
+        notification.open();
     }
 
     private void deleteArrowDataFile(){
