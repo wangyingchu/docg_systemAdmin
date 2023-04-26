@@ -8,6 +8,7 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -35,7 +36,9 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
     private Dialog containerDialog;
     private Button cancelImportButton;
     private Button generateArrowButton;
+    private Button downloadButton;
     private FileDownloadWrapper arrowFileDownloader;
+    private Label arrowFileName;
 
     public DownloadARROWFormatConceptionEntitiesView(String conceptionKindName, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
@@ -82,16 +85,22 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
             }
         });
 
+        HorizontalLayout dataFileInfoLayout = new HorizontalLayout();
+        dataFileInfoLayout.getStyle().set("padding-top","10px");
+        Label messageContentLabel = new Label("ARROW 数据文件: ");
+        messageContentLabel.addClassNames("text-xs","text-secondary");
 
-        TextField textField = new TextField("Enter file contents");
-        FileDownloadWrapper link = new FileDownloadWrapper("textfield.txt", () -> textField.getValue().getBytes());
-        link.setText("Download textfield.txt that has contents of the TextField");
-        add(link);
+        arrowFileName = new Label();
+        arrowFileName.addClassNames("text-xxs");
+        dataFileInfoLayout.add(messageContentLabel,arrowFileName);
+        add(dataFileInfoLayout);
 
-        Button button = new Button("Click to download");
+        downloadButton = new Button("点击下载 ARROW 数据文件");
+        downloadButton.setIcon(VaadinIcon.DOWNLOAD_ALT.create());
+        downloadButton.setEnabled(false);
 
-        arrowFileDownloader = new FileDownloadWrapper("data.arrow",new File("/home/wangychu/Desktop/tess/entinfo.arrow"));
-        arrowFileDownloader.wrapComponent(button);
+        arrowFileDownloader = new FileDownloadWrapper("data.arrow",new File(TEMP_FILES_STORAGE_LOCATION));
+        arrowFileDownloader.wrapComponent(downloadButton);
         add(arrowFileDownloader);
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
@@ -114,7 +123,6 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
                 //cancelImportUploadedFile();
             }
         });
-
         buttonbarLayout.add(cancelImportButton);
     }
 
@@ -125,12 +133,19 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
     private EntitiesOperationStatistics generateArrowDataFile(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         EntitiesExchangeOperator entitiesExchangeOperator = coreRealm.getEntitiesExchangeOperator();
+        File fileFolder = new File(TEMP_FILES_STORAGE_LOCATION);
+        if(!fileFolder.exists()){
+            fileFolder.mkdirs();
+        }
+
         String dataFileName = PinyinUtil.getPinyin(this.conceptionKindName,"")+"_"+System.currentTimeMillis()+"_EXPORT.arrow";
-        String arrowDataFileURI = TEMP_FILES_STORAGE_LOCATION+"/"+ dataFileName;
+        String arrowDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
 
         EntitiesOperationStatistics entitiesOperationStatistics = entitiesExchangeOperator.exportConceptionEntitiesToArrow(this.conceptionKindName,arrowDataFileURI);
-        arrowFileDownloader.setText(dataFileName);
         arrowFileDownloader.setFile(new File(arrowDataFileURI));
+        arrowFileDownloader.setFileName(dataFileName);
+        arrowFileName.setText(dataFileName);
+        arrowFileName.setEnabled(true);
         return entitiesOperationStatistics;
     }
 }
