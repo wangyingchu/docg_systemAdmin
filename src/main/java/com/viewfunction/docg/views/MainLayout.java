@@ -11,6 +11,7 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -19,6 +20,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.router.PageTitle;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.CoreRealmView;
@@ -37,8 +39,10 @@ public class MainLayout extends AppLayout {
 
         private String text;
         private Class<? extends Component> view;
+        private Icon linkIcon;
 
-        public MenuItemInfo(String text, Class<? extends Component> view) {
+        public MenuItemInfo(Icon linkIcon,String text, Class<? extends Component> view) {
+            this.linkIcon = linkIcon;
             this.text = text;
             this.view = view;
         }
@@ -99,7 +103,6 @@ public class MainLayout extends AppLayout {
         image.setHeight(39, Unit.PIXELS);
         image.setWidth(128, Unit.PIXELS);
         logoLayout.add(image);
-        //logoLayout.add(new H1(" SAC"));
         layout.add(logoLayout, menu);
         return layout;
     }
@@ -116,13 +119,12 @@ public class MainLayout extends AppLayout {
     }
 
     private List<Tab> createMenuItems() {
-        MenuItemInfo[] menuItems = new MenuItemInfo[]{ //
-               // new MenuItemInfo("概览 [ General Information ]", GeneralInformationView.class), //
-                new MenuItemInfo("核心领域模型 [ Core Realm ]", CoreRealmView.class),
-                new MenuItemInfo("计算网格 [ Compute Grid ]", ComputeGridView.class),
-                new MenuItemInfo("数据分析 [ Data Analysis ]", DataAnalysisView.class),
-                new MenuItemInfo("知识融合 [ Knowledge Fusion ]", KnowledgeFusionView.class),
-                new MenuItemInfo("关于 [ About ]",  AboutView.class),
+        MenuItemInfo[] menuItems = new MenuItemInfo[]{
+                new MenuItemInfo(LineAwesomeIconsSvg.MEMORY_SOLID.create(),"核心领域模型 [ Core Realm ]", CoreRealmView.class),
+                new MenuItemInfo(LineAwesomeIconsSvg.BUROMOBELEXPERTE.create(),"计算网格 [ Compute Grid ]", ComputeGridView.class),
+                new MenuItemInfo(LineAwesomeIconsSvg.BRAIN_SOLID.create(),"数据分析 [ Data Analysis ]", DataAnalysisView.class),
+                new MenuItemInfo(LineAwesomeIconsSvg.CLONE_SOLID.create(),"知识融合 [ Knowledge Fusion ]", KnowledgeFusionView.class),
+                new MenuItemInfo(LineAwesomeIconsSvg.FINGERPRINT_SOLID.create(),"关于 [ About ]",  AboutView.class),
         };
         List<Tab> tabs = new ArrayList<>();
         for (MenuItemInfo menuItemInfo : menuItems) {
@@ -136,8 +138,15 @@ public class MainLayout extends AppLayout {
         RouterLink link = new RouterLink();
         link.setRoute(menuItemInfo.getView());
         Span iconElement = new Span();
-        iconElement.addClassNames("text-xs","font-semibold");
-        link.add(iconElement, new Text(menuItemInfo.getText()));
+        Icon linkIcon =menuItemInfo.linkIcon;
+        if(linkIcon != null){
+            iconElement.add(linkIcon);
+            linkIcon.setSize("18px");
+            linkIcon.getStyle().set("padding-right","5px");
+        }
+
+        Text linkText = new Text(menuItemInfo.getText());
+        link.add(iconElement, linkText);
         tab.add(link);
         ComponentUtil.setData(tab, Class.class, menuItemInfo.getView());
         return tab;
