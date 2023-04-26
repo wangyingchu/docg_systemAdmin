@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.ClickEvent;
@@ -13,7 +14,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.EntitiesExchangeOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
@@ -22,6 +23,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
+
 import org.vaadin.olli.FileDownloadWrapper;
 
 import java.io.File;
@@ -36,9 +38,9 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
     private Dialog containerDialog;
     private Button cancelImportButton;
     private Button generateArrowButton;
-    private Button downloadButton;
-    private FileDownloadWrapper arrowFileDownloader;
     private Label arrowFileName;
+    private HorizontalLayout downloaderContainer;
+    private String arrowDataFileURI;
 
     public DownloadARROWFormatConceptionEntitiesView(String conceptionKindName, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
@@ -91,17 +93,13 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
         messageContentLabel.addClassNames("text-xs","text-secondary");
 
         arrowFileName = new Label();
-        arrowFileName.addClassNames("text-xxs");
+        arrowFileName.addClassNames("text-xs");
         dataFileInfoLayout.add(messageContentLabel,arrowFileName);
         add(dataFileInfoLayout);
 
-        downloadButton = new Button("点击下载 ARROW 数据文件");
-        downloadButton.setIcon(VaadinIcon.DOWNLOAD_ALT.create());
-        downloadButton.setEnabled(false);
-
-        arrowFileDownloader = new FileDownloadWrapper("data.arrow",new File(TEMP_FILES_STORAGE_LOCATION));
-        arrowFileDownloader.wrapComponent(downloadButton);
-        add(arrowFileDownloader);
+        downloaderContainer = new HorizontalLayout();
+        downloaderContainer.setHeight(40,Unit.PIXELS);
+        add(downloaderContainer);
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidthFull();
@@ -120,7 +118,7 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
                 if(containerDialog != null){
                     containerDialog.close();
                 }
-                //cancelImportUploadedFile();
+                deleteArrowDataFile();
             }
         });
         buttonbarLayout.add(cancelImportButton);
@@ -139,13 +137,25 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
         }
 
         String dataFileName = PinyinUtil.getPinyin(this.conceptionKindName,"")+"_"+System.currentTimeMillis()+"_EXPORT.arrow";
-        String arrowDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
+        arrowDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
 
         EntitiesOperationStatistics entitiesOperationStatistics = entitiesExchangeOperator.exportConceptionEntitiesToArrow(this.conceptionKindName,arrowDataFileURI);
-        arrowFileDownloader.setFile(new File(arrowDataFileURI));
-        arrowFileDownloader.setFileName(dataFileName);
         arrowFileName.setText(dataFileName);
-        arrowFileName.setEnabled(true);
+
+        Button downloadButton = new Button("点击下载 ARROW 数据文件");
+        downloadButton.setIcon(VaadinIcon.DOWNLOAD_ALT.create());
+
+        FileDownloadWrapper arrowFileDownloader = new FileDownloadWrapper(dataFileName,new File(TEMP_FILES_STORAGE_LOCATION));
+        arrowFileDownloader.wrapComponent(downloadButton);
+        downloaderContainer.add(arrowFileDownloader);
+        arrowFileDownloader.setFile(new File(arrowDataFileURI));
+
         return entitiesOperationStatistics;
+    }
+
+    private void deleteArrowDataFile(){
+        if(arrowDataFileURI != null){
+            FileUtil.del(arrowDataFileURI);
+        }
     }
 }
