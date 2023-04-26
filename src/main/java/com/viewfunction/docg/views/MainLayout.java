@@ -57,7 +57,7 @@ public class MainLayout extends AppLayout {
     }
 
     private final Tabs menu;
-    private H1 viewTitle;
+    private HorizontalLayout viewTitle;
 
     public MainLayout() {
         setPrimarySection(Section.DRAWER);
@@ -78,7 +78,7 @@ public class MainLayout extends AppLayout {
         layout.setSpacing(false);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.add(new DrawerToggle());
-        viewTitle = new H1();
+        viewTitle = new HorizontalLayout();
         layout.add(viewTitle);
 
         Avatar avatar = new Avatar();
@@ -123,7 +123,7 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo(LineAwesomeIconsSvg.MEMORY_SOLID.create(),"核心领域模型 [ Core Realm ]", CoreRealmView.class),
                 new MenuItemInfo(LineAwesomeIconsSvg.BUROMOBELEXPERTE.create(),"计算网格 [ Compute Grid ]", ComputeGridView.class),
                 new MenuItemInfo(LineAwesomeIconsSvg.BRAIN_SOLID.create(),"数据分析 [ Data Analysis ]", DataAnalysisView.class),
-                new MenuItemInfo(LineAwesomeIconsSvg.CLONE_SOLID.create(),"知识融合 [ Knowledge Fusion ]", KnowledgeFusionView.class),
+                new MenuItemInfo(LineAwesomeIconsSvg.CLONE.create(),"知识融合 [ Knowledge Fusion ]", KnowledgeFusionView.class),
                 new MenuItemInfo(LineAwesomeIconsSvg.FINGERPRINT_SOLID.create(),"关于 [ About ]",  AboutView.class),
         };
         List<Tab> tabs = new ArrayList<>();
@@ -156,7 +156,34 @@ public class MainLayout extends AppLayout {
     protected void afterNavigation() {
         super.afterNavigation();
         getTabForComponent(getContent()).ifPresent(menu::setSelectedTab);
-        viewTitle.setText(getCurrentPageTitle());
+        viewTitle.removeAll();
+        String currentPageTitle = getCurrentPageTitle();
+        if(currentPageTitle.equals("数海云图 - 核心领域模型 [ Core Realm ]")){
+            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.MEMORY_SOLID.create(),"核心领域模型 [ Core Realm ]"));
+        }
+        if(currentPageTitle.equals("数海云图 - 计算网格 [ Compute Grid ]")){
+            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.BUROMOBELEXPERTE.create(),"计算网格 [ Compute Grid ]"));
+        }
+        if(currentPageTitle.equals("数海云图 - 数据分析 [ Data Analysis ]")){
+            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.BRAIN_SOLID.create(),"数据分析 [ Data Analysis ]"));
+        }
+        if(currentPageTitle.equals("数海云图 - 知识融合 [ Knowledge Fusion ]")){
+            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.CLONE.create(),"知识融合 [ Knowledge Fusion ]"));
+        }
+        if(currentPageTitle.equals("数海云图 - 关于 [ About ]")){
+            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.FINGERPRINT_SOLID.create(),"关于 [ About ]"));
+        }
+    }
+
+    private HorizontalLayout getTitleViewComponent(Icon viewIcon,String viewName){
+        HorizontalLayout titleViewLayout = new HorizontalLayout();
+        titleViewLayout.setSpacing(false);
+        titleViewLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        viewIcon.setSize("26px");
+        H1 viewNameHeader = new H1(viewName);
+        viewNameHeader.getStyle().set("padding-left","5px");
+        titleViewLayout.add(viewIcon,viewNameHeader);
+        return titleViewLayout;
     }
 
     private Optional<Tab> getTabForComponent(Component component) {
