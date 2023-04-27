@@ -34,10 +34,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindInd
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.DownloadARROWFormatConceptionEntitiesView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadARROWFormatConceptionEntitiesView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadCSVFormatConceptionEntitiesView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.LoadSHPFormatConceptionEntitiesView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities.*;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -147,8 +144,14 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         MenuItem exportDataMenu = createIconItem(exportMenuBar, VaadinIcon.DOWNLOAD, "导出概念实体数据", null);
         SubMenu exportSubItems = exportDataMenu.getSubMenu();
         MenuItem csvExportItem = exportSubItems.addItem("CSV 格式数据");
-        MenuItem arrowExportItem = exportSubItems.addItem("ARROW 格式数据");
+        csvExportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                renderDownloadCSVFormatConceptionEntitiesView();
+            }
+        });
 
+        MenuItem arrowExportItem = exportSubItems.addItem("ARROW 格式数据");
         arrowExportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
@@ -276,6 +279,16 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         fixSizeWindow.setWindowContent(downloadARROWFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
         downloadARROWFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderDownloadCSVFormatConceptionEntitiesView(){
+        DownloadCSVFormatConceptionEntitiesView downloadCSVFormatConceptionEntitiesView = new DownloadCSVFormatConceptionEntitiesView(this.conceptionKindName,500);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 CSV 格式概念实体数据",null,true,550,290,false);
+        fixSizeWindow.disableCloseButton();
+        fixSizeWindow.setWindowContent(downloadCSVFormatConceptionEntitiesView);
+        fixSizeWindow.setModel(true);
+        downloadCSVFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 
