@@ -78,6 +78,6 @@
         background: rgba(0,0,0,0);
     }
     100% {
-        background: rgba(0,0,0,.5); /* Darkens the UI */
+        background: rgba(0,0,0,.2); /* Darkens the UI */
     }
 }
