@@ -58,3 +58,26 @@
       background-color:#fff;
       -webkit-border-radius:0;
 }
+
+
+
+.v-loading-indicator {
+    position: fixed; /* Occupy whole screen even if scrolled */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* Eat mouse events when visible, doesn't prevent scrolling */
+    pointer-events: auto;
+    /* Animated with delay to prevent flashing */
+    animation: fadein 0.3s ease-out 0.2s normal 1 both;
+    z-index: 2147483647;
+}
+@keyframes fadein {
+    0% {
+        background: rgba(0,0,0,0);
+    }
+    100% {
+        background: rgba(0,0,0,.5); /* Darkens the UI */
+    }
+}
