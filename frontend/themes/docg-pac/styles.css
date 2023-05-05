@@ -81,6 +81,38 @@
     }
 }
 
+.v-loading-indicator:before {
+    width: 76px;
+    height: 76px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -38px 0 0 -38px;
+    border-radius: 100%;
+    animation: bouncedelay 1.2s infinite 0.4s ease-in-out both;
+    content: "";
+}
+
+.v-loading-indicator.first:before {
+    background-color: skyblue;
+}
+
+.v-loading-indicator.second:before {
+    background-color: salmon;
+}
+
+.v-loading-indicator.third:before {
+    background-color: red;
+}
+
+@keyframes bouncedelay {
+    0%, 80%, 100% {
+        transform: scale(0);
+    } 40% {
+          transform: scale(1.0);
+      }
+}
+
 /*此 CSS 用来控制 vaadin 连接状态文本的显示样式*/
 .v-status-message {
     position: fixed;
