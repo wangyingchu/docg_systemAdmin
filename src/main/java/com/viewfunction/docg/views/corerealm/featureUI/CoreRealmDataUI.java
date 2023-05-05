@@ -6,10 +6,15 @@ import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.contextmenu.HasMenuItems;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
@@ -18,6 +23,7 @@ import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.CheckSystemRuntimeInfoEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.*;
+import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +51,16 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
             ResourceHolder.getApplicationBlackboard().fire(checkSystemRuntimeInfoEvent);
         });
 
+        MenuBar advancedConfigItemsMenuBar = new MenuBar();
+        Tooltips.getCurrent().setTooltip(advancedConfigItemsMenuBar, "高级配置管理");
+        advancedConfigItemsMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL,MenuBarVariant.LUMO_CONTRAST);
+        MenuItem advancedConfigMenu = createIconItem(advancedConfigItemsMenuBar, VaadinIcon.AUTOMATION, null, null);
+        SubMenu advancedConfigMenuItems = advancedConfigMenu.getSubMenu();
+        MenuItem arrowFormatDataExportItem = advancedConfigMenuItems.addItem("导出 ARROW 格式领域模型数据");
+
         List<Component> buttonList = new ArrayList<>();
         buttonList.add(refreshDataButton);
+        buttonList.add(advancedConfigItemsMenuBar);
 
         List<Component> secTitleElementsList = new ArrayList<>();
 
@@ -230,5 +244,28 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         systemRuntimeInfoWidget.refreshSystemRuntimeInfo();
         dataRelationDistributionWidget.refreshDataRelationDistributionData();
         relationAndConceptionKindAttachInfoWidget.renderRelationAndConceptionKindAttachInfo();
+    }
+
+    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
+        return createIconItem(menu, iconName, label, ariaLabel, false);
+    }
+
+    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName,String label, String ariaLabel, boolean isChild) {
+        Icon icon = new Icon(iconName);
+        icon.setSize("16px");
+        if (isChild) {
+            icon.getStyle().set("width", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("height", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("marginRight", "var(--lumo-space-s)");
+        }
+        MenuItem item = menu.addItem(icon, e -> {
+        });
+        if (ariaLabel != null) {
+            item.getElement().setAttribute("aria-label", ariaLabel);
+        }
+        if (label != null) {
+            item.add(new Text(label));
+        }
+        return item;
     }
 }
