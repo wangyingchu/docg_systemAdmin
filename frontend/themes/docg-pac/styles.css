@@ -81,3 +81,14 @@
         background: rgba(0,0,0,.2); /* Darkens the UI */
     }
 }
+
+/*此 CSS 用来控制vaadin连接状态文本的显示样式*/
+.v-status-message {
+    /*position: absolute*/;
+    /*position: fixed;*/
+    top: 0;
+    left: 0;
+    /*right: 0;*/
+    /*bottom: 0;*/
+    /*display:none;*/
+}
