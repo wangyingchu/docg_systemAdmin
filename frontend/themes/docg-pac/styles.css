@@ -59,8 +59,7 @@
       -webkit-border-radius:0;
 }
 
-
-
+/*此 CSS 用来控制 vaadin loading 状态时的 UI 显示样式*/
 .v-loading-indicator {
     position: fixed; /* Occupy whole screen even if scrolled */
     top: 0;
@@ -88,4 +87,5 @@
     top: 62px;
     right: 5px;
     font-size: 0.75em;
+    color: #3e8f3e;
 }
