@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.loadConceptionEntities;
+package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.exchangeConceptionEntities;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
@@ -18,6 +18,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.EntitiesExchangeOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
@@ -26,6 +27,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
+
 import org.vaadin.olli.FileDownloadWrapper;
 
 import java.io.File;
@@ -33,19 +35,19 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DownloadCSVFormatConceptionEntitiesView extends VerticalLayout {
+public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
     private String conceptionKindName;
     private String TEMP_FILES_STORAGE_LOCATION =
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.TEMP_FILES_STORAGE_LOCATION);
     private Dialog containerDialog;
     private Button cancelImportButton;
-    private Button generateCsvButton;
-    private Label csvFileName;
+    private Button generateArrowButton;
+    private Label arrowFileName;
     private HorizontalLayout downloaderContainer;
-    private String csvDataFileURI;
+    private String arrowDataFileURI;
     private long conceptionEntitiesCount;
 
-    public DownloadCSVFormatConceptionEntitiesView(String conceptionKindName, int viewWidth){
+    public DownloadARROWFormatConceptionEntitiesView(String conceptionKindName, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
         this.conceptionKindName = conceptionKindName;
 
@@ -78,11 +80,11 @@ public class DownloadCSVFormatConceptionEntitiesView extends VerticalLayout {
         spaceDiv.setWidth(20,Unit.PIXELS);
         entitiesCountContainer.add(spaceDiv);
 
-        generateCsvButton = new Button("生成 CSV 格式数据文件",new Icon(VaadinIcon.PLAY));
-        generateCsvButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        generateCsvButton.setDisableOnClick(true);
-        entitiesCountContainer.add(generateCsvButton);
-        generateCsvButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        generateArrowButton = new Button("生成 ARROW 格式数据文件",new Icon(VaadinIcon.PLAY));
+        generateArrowButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        generateArrowButton.setDisableOnClick(true);
+        entitiesCountContainer.add(generateArrowButton);
+        generateArrowButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 generateArrowDataFile();
@@ -91,12 +93,12 @@ public class DownloadCSVFormatConceptionEntitiesView extends VerticalLayout {
 
         HorizontalLayout dataFileInfoLayout = new HorizontalLayout();
         dataFileInfoLayout.getStyle().set("padding-top","10px");
-        Label messageContentLabel = new Label("CSV 数据文件: ");
+        Label messageContentLabel = new Label("ARROW 数据文件: ");
         messageContentLabel.addClassNames("text-xs","text-secondary");
 
-        csvFileName = new Label();
-        csvFileName.addClassNames("text-xs");
-        dataFileInfoLayout.add(messageContentLabel, csvFileName);
+        arrowFileName = new Label();
+        arrowFileName.addClassNames("text-xs");
+        dataFileInfoLayout.add(messageContentLabel,arrowFileName);
         add(dataFileInfoLayout);
 
         downloaderContainer = new HorizontalLayout();
@@ -112,7 +114,7 @@ public class DownloadCSVFormatConceptionEntitiesView extends VerticalLayout {
         add(buttonbarLayout);
         setHorizontalComponentAlignment(Alignment.END,buttonbarLayout);
 
-        cancelImportButton = new Button("取消或结束导出 CSV 格式概念实体数据");
+        cancelImportButton = new Button("取消或结束导出 ARROW 格式概念实体数据");
         cancelImportButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
         cancelImportButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -138,23 +140,23 @@ public class DownloadCSVFormatConceptionEntitiesView extends VerticalLayout {
             fileFolder.mkdirs();
         }
 
-        String dataFileName = PinyinUtil.getPinyin(this.conceptionKindName,"")+"_"+System.currentTimeMillis()+"_EXPORT.csv";
-        csvDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
+        String dataFileName = PinyinUtil.getPinyin(this.conceptionKindName,"")+"_"+System.currentTimeMillis()+"_EXPORT.arrow";
+        arrowDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
 
-        EntitiesOperationStatistics entitiesOperationStatistics = entitiesExchangeOperator.exportConceptionEntitiesToCSV(this.conceptionKindName, csvDataFileURI);
-        csvFileName.setText(dataFileName);
+        EntitiesOperationStatistics entitiesOperationStatistics = entitiesExchangeOperator.exportConceptionEntitiesToArrow(this.conceptionKindName,arrowDataFileURI);
+        arrowFileName.setText(dataFileName);
 
-        Button downloadButton = new Button("点击下载 CSV 数据文件");
+        Button downloadButton = new Button("点击下载 ARROW 数据文件");
         downloadButton.setIcon(VaadinIcon.DOWNLOAD_ALT.create());
 
         FileDownloadWrapper arrowFileDownloader = new FileDownloadWrapper(dataFileName,new File(TEMP_FILES_STORAGE_LOCATION));
         arrowFileDownloader.wrapComponent(downloadButton);
         downloaderContainer.add(arrowFileDownloader);
-        arrowFileDownloader.setFile(new File(csvDataFileURI));
+        arrowFileDownloader.setFile(new File(arrowDataFileURI));
 
         Notification notification = new Notification();
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-        Div text = new Div(new Text("概念类型 "+conceptionKindName+" 创建 CSV 数据文件操作成功"));
+        Div text = new Div(new Text("概念类型 "+conceptionKindName+" 创建 ARROW 数据文件操作成功"));
         Button closeButton = new Button(new Icon("lumo", "cross"));
         closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         closeButton.addClickListener(event -> {
@@ -166,7 +168,7 @@ public class DownloadCSVFormatConceptionEntitiesView extends VerticalLayout {
         notification.add(layout);
 
         VerticalLayout notificationMessageContainer = new VerticalLayout();
-        notificationMessageContainer.add(new Div(new Text("CSV 数据文件: "+dataFileName)));
+        notificationMessageContainer.add(new Div(new Text("Arrow 数据文件: "+dataFileName)));
         notificationMessageContainer.add(new Div(new Text("当前概念实体总数: " + conceptionEntitiesCount)));
         notificationMessageContainer.add(new Div(new Text("创建成功实体数: "+entitiesOperationStatistics.getSuccessItemsCount())));
         notificationMessageContainer.add(new Div(new Text("创建失败实体数: "+entitiesOperationStatistics.getFailItemsCount())));
@@ -177,8 +179,8 @@ public class DownloadCSVFormatConceptionEntitiesView extends VerticalLayout {
     }
 
     private void deleteArrowDataFile(){
-        if(csvDataFileURI != null){
-            FileUtil.del(csvDataFileURI);
+        if(arrowDataFileURI != null){
+            FileUtil.del(arrowDataFileURI);
         }
     }
 }
