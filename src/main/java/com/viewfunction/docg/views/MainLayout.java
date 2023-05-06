@@ -20,9 +20,11 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.server.VaadinSession;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 import com.viewfunction.docg.views.corerealm.CoreRealmView;
 import com.viewfunction.docg.views.computegrid.ComputeGridView;
 import com.viewfunction.docg.views.dataAnalysis.DataAnalysisView;
@@ -34,6 +36,8 @@ import com.vaadin.flow.component.avatar.Avatar;
  * The main view is a top-level placeholder for other views.
  */
 public class MainLayout extends AppLayout {
+    private final String SESSION_MAX_INACTIVE_INTERVAL_IN_SECOND =
+            SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.SESSION_MAX_INACTIVE_INTERVAL_IN_SECOND);
 
     public static class MenuItemInfo {
 
@@ -68,6 +72,12 @@ public class MainLayout extends AppLayout {
         this.setDrawerOpened(false);
 
         initBlackboard();
+
+        if(SESSION_MAX_INACTIVE_INTERVAL_IN_SECOND != null){
+            int maxInactiveInterval = Integer.parseInt(SESSION_MAX_INACTIVE_INTERVAL_IN_SECOND);
+            //be default session MaxInactiveInterval is 1800s = 30min
+            VaadinSession.getCurrent().getSession().setMaxInactiveInterval(maxInactiveInterval);
+        }
     }
 
     private Component createHeaderContent() {
