@@ -167,8 +167,8 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
         VerticalLayout notificationMessageContainer = new VerticalLayout();
         notificationMessageContainer.add(new Div(new Text("Arrow 数据文件: "+dataFileName)));
         notificationMessageContainer.add(new Div(new Text("当前概念实体总数: " + conceptionEntitiesCount)));
-        notificationMessageContainer.add(new Div(new Text("创建成功实体数: "+entitiesOperationStatistics.getSuccessItemsCount())));
-        notificationMessageContainer.add(new Div(new Text("创建失败实体数: "+entitiesOperationStatistics.getFailItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("导出成功实体数: "+entitiesOperationStatistics.getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("导出失败实体数: "+entitiesOperationStatistics.getFailItemsCount())));
         notificationMessageContainer.add(new Div(new Text("操作开始时间: "+entitiesOperationStatistics.getStartTime())));
         notificationMessageContainer.add(new Div(new Text("操作结束时间: "+entitiesOperationStatistics.getFinishTime())));
         notification.add(notificationMessageContainer);

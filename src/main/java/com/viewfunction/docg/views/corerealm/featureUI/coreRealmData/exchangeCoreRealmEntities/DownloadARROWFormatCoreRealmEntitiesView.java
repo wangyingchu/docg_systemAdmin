@@ -2,7 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.exchangeCo
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
-import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
+
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Text;
@@ -18,18 +18,17 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.EntitiesExchangeOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
-import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
+
 import org.vaadin.olli.FileDownloadWrapper;
 
 import java.io.File;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +42,6 @@ public class DownloadARROWFormatCoreRealmEntitiesView extends VerticalLayout {
     private Label arrowFileName;
     private HorizontalLayout downloaderContainer;
     private String arrowDataFileURI;
-    private long conceptionEntitiesCount;
 
     public DownloadARROWFormatCoreRealmEntitiesView(){
         this.setWidth(100, Unit.PERCENTAGE);
@@ -57,31 +55,10 @@ public class DownloadARROWFormatCoreRealmEntitiesView extends VerticalLayout {
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
 
-
-        /*
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
-        try {
-            conceptionEntitiesCount = targetConceptionKind.countConceptionEntities();
-        } catch (CoreRealmServiceRuntimeException e) {
-            throw new RuntimeException(e);
-        }
-        */
-
-        NumberFormat numberFormat = NumberFormat.getInstance();
-        HorizontalLayout entitiesCountContainer = new HorizontalLayout();
-        entitiesCountContainer.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        add(entitiesCountContainer);
-        new PrimaryKeyValueDisplayItem(entitiesCountContainer, FontAwesome.Solid.CIRCLE.create(),"概念实体数量:",numberFormat.format(conceptionEntitiesCount));
-
-        HorizontalLayout spaceDiv = new HorizontalLayout();
-        spaceDiv.setWidth(20,Unit.PIXELS);
-        entitiesCountContainer.add(spaceDiv);
-
         generateArrowButton = new Button("生成 ARROW 格式数据文件",new Icon(VaadinIcon.PLAY));
         generateArrowButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         generateArrowButton.setDisableOnClick(true);
-        entitiesCountContainer.add(generateArrowButton);
+        add(generateArrowButton);
         generateArrowButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -112,7 +89,7 @@ public class DownloadARROWFormatCoreRealmEntitiesView extends VerticalLayout {
         add(buttonbarLayout);
         setHorizontalComponentAlignment(Alignment.END,buttonbarLayout);
 
-        cancelImportButton = new Button("取消或结束导出 ARROW 格式概念实体数据");
+        cancelImportButton = new Button("取消或结束导出 ARROW 格式领域模型全量数据");
         cancelImportButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
         cancelImportButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -169,9 +146,8 @@ public class DownloadARROWFormatCoreRealmEntitiesView extends VerticalLayout {
 
         VerticalLayout notificationMessageContainer = new VerticalLayout();
         notificationMessageContainer.add(new Div(new Text("Arrow 数据文件: "+dataFileName)));
-        notificationMessageContainer.add(new Div(new Text("当前概念实体总数: " + conceptionEntitiesCount)));
-        notificationMessageContainer.add(new Div(new Text("创建成功实体数: "+entitiesOperationStatistics.getSuccessItemsCount())));
-        notificationMessageContainer.add(new Div(new Text("创建失败实体数: "+entitiesOperationStatistics.getFailItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("导出成功实体数: "+entitiesOperationStatistics.getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("导出失败实体数: "+entitiesOperationStatistics.getFailItemsCount())));
         notificationMessageContainer.add(new Div(new Text("操作开始时间: "+entitiesOperationStatistics.getStartTime())));
         notificationMessageContainer.add(new Div(new Text("操作结束时间: "+entitiesOperationStatistics.getFinishTime())));
         notification.add(notificationMessageContainer);
