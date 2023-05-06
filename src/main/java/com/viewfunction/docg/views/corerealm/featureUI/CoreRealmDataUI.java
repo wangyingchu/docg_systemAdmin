@@ -23,6 +23,7 @@ import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.CheckSystemRuntimeInfoEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.*;
+import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.exchangeCoreRealmEntities.DownloadARROWFormatCoreRealmEntitiesView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -56,7 +57,13 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         advancedConfigItemsMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL,MenuBarVariant.LUMO_CONTRAST);
         MenuItem advancedConfigMenu = createIconItem(advancedConfigItemsMenuBar, VaadinIcon.AUTOMATION, null, null);
         SubMenu advancedConfigMenuItems = advancedConfigMenu.getSubMenu();
-        MenuItem arrowFormatDataExportItem = advancedConfigMenuItems.addItem("导出 ARROW 格式领域模型数据");
+        MenuItem arrowFormatDataExportItem = advancedConfigMenuItems.addItem("导出 ARROW 格式领域模型全量数据");
+        arrowFormatDataExportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                renderDownloadARROWFormatCoreRealmEntitiesView();
+            }
+        });
 
         List<Component> buttonList = new ArrayList<>();
         buttonList.add(refreshDataButton);
@@ -267,5 +274,15 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
             item.add(new Text(label));
         }
         return item;
+    }
+
+    private void renderDownloadARROWFormatCoreRealmEntitiesView(){
+        DownloadARROWFormatCoreRealmEntitiesView downloadARROWFormatCoreRealmEntitiesView = new DownloadARROWFormatCoreRealmEntitiesView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 ARROW 格式领域模型全量数据",null,true,550,290,false);
+        fixSizeWindow.disableCloseButton();
+        fixSizeWindow.setWindowContent(downloadARROWFormatCoreRealmEntitiesView);
+        fixSizeWindow.setModel(true);
+        downloadARROWFormatCoreRealmEntitiesView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }

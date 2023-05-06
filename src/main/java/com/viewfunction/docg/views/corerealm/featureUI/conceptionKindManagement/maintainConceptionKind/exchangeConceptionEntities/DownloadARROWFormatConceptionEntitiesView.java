@@ -54,9 +54,6 @@ public class DownloadARROWFormatConceptionEntitiesView extends VerticalLayout {
         Icon kindIcon = VaadinIcon.CUBE.create();
         kindIcon.setSize("12px");
         kindIcon.getStyle().set("padding-right","3px");
-        Icon entityIcon = VaadinIcon.KEY_O.create();
-        entityIcon.setSize("18px");
-        entityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
         List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
         footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(kindIcon, this.conceptionKindName));
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
