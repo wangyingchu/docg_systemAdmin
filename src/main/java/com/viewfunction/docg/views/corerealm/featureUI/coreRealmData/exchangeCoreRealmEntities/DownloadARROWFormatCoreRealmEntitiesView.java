@@ -118,9 +118,7 @@ public class DownloadARROWFormatCoreRealmEntitiesView extends VerticalLayout {
         String dataFileName = PinyinUtil.getPinyin("CoreRealm","")+"_"+System.currentTimeMillis()+"_EXPORT.arrow";
         arrowDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
 
-        EntitiesOperationStatistics entitiesOperationStatistics = entitiesExchangeOperator
-
-                .exportConceptionEntitiesToArrow("this.conceptionKindName",arrowDataFileURI);
+        EntitiesOperationStatistics entitiesOperationStatistics = entitiesExchangeOperator.exportCoreRealmEntitiesToArrow(arrowDataFileURI);
         arrowFileName.setText(dataFileName);
 
         Button downloadButton = new Button("点击下载 ARROW 数据文件");
