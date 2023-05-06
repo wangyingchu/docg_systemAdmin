@@ -137,7 +137,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                     ZonedDateTime startZonedDateTime = ZonedDateTime.ofInstant(startDateTime.toInstant(), id);
                     String startTimeStr = startZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
                     startTimeDisplayItem.updateDisplayValue(startTimeStr);
-                    Date finishDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime();
+                    Date finishDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getFinishTime();
                     ZonedDateTime finishZonedDateTime = ZonedDateTime.ofInstant(finishDateTime.toInstant(), id);
                     String finishTimeStr = finishZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
                     finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
