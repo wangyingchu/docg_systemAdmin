@@ -64,7 +64,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
                 renderDownloadARROWFormatCoreRealmEntitiesView();
             }
         });
-
+        advancedConfigItemsMenuBar.setEnabled(false);
         List<Component> buttonList = new ArrayList<>();
         buttonList.add(refreshDataButton);
         buttonList.add(advancedConfigItemsMenuBar);
