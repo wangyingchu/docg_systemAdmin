@@ -49,7 +49,7 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
                     .width(200)
                     .height(200)
                     .nodeRelSize(6)
-                    .nodeResolution(20)
+                    .nodeResolution(15)
                     .nodeOpacity(0.85)
                     .linkOpacity(0.7)
                     .linkDirectionalArrowLength(4)
