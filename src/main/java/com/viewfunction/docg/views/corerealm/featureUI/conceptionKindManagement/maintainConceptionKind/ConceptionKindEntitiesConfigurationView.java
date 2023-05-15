@@ -191,7 +191,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         kindIndexConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(kindIndexConfigView);
 
-        classificationConfigView = new ClassificationConfigView();
+        classificationConfigView = new ClassificationConfigView(ClassificationConfigView.ClassificationRelatedObjectType.ConceptionKind,this.conceptionKindName);
         classificationConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(classificationConfigView);
     }

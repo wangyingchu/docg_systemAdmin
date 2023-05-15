@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
@@ -14,7 +15,17 @@ import java.util.List;
 
 public class ClassificationConfigView extends VerticalLayout {
 
-    public ClassificationConfigView(){
+    public enum ClassificationRelatedObjectType {
+        ConceptionKind,RelationKind,AttributeKind,AttributesViewKind,ConceptionEntity
+    }
+
+    private ClassificationConfigView.ClassificationRelatedObjectType classificationRelatedObjectType;
+    private String relatedObjectID;
+
+    public ClassificationConfigView(ClassificationConfigView.ClassificationRelatedObjectType
+                                            classificationRelatedObjectType,String relatedObjectID){
+        this.classificationRelatedObjectType = classificationRelatedObjectType;
+        this.relatedObjectID = relatedObjectID;
         this.setSpacing(false);
         this.setMargin(false);
         this.setPadding(false);
@@ -44,7 +55,7 @@ public class ClassificationConfigView extends VerticalLayout {
         relateToClassificationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAddNewKindIndexUI();
+                renderRelateClassificationViewUI();
             }
         });
 
@@ -58,4 +69,16 @@ public class ClassificationConfigView extends VerticalLayout {
         SecondaryTitleActionBar relatedClassificationConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAGS),"分类配置管理 ",secTitleElementsList,buttonList);
         add(relatedClassificationConfigActionBar);
     }
+
+    private void renderRelateClassificationViewUI(){
+        RelateClassificationView relateClassificationView = new RelateClassificationView(this.classificationRelatedObjectType,this.relatedObjectID);
+        relateClassificationView.setContainerClassificationConfigView(this);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.BOOKMARK),"关联分类",null,true,550,440,false);
+        fixSizeWindow.setWindowContent(relateClassificationView);
+        fixSizeWindow.setModel(true);
+        relateClassificationView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+
 }
