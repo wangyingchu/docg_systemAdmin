@@ -59,10 +59,6 @@ public class KindIndexConfigView extends VerticalLayout {
     }
 
     private void renderKindIndexConfigUI(){
-        this.setSpacing(false);
-        this.setMargin(false);
-        this.setPadding(false);
-
         this.setWidth(100, Unit.PERCENTAGE);
         List<Component> secTitleElementsList = new ArrayList<>();
         List<Component> buttonList = new ArrayList<>();
