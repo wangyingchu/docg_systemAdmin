@@ -114,6 +114,10 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         MenuBar importMenuBar = new MenuBar();
         importMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
         MenuItem importDataMenu = createIconItem(importMenuBar, VaadinIcon.UPLOAD, "导入概念实体数据", null);
+        Icon downArrowIcon1 = new Icon(VaadinIcon.CHEVRON_DOWN);
+        downArrowIcon1.setSize("14px");
+        importDataMenu.add(downArrowIcon1);
+
         SubMenu importSubItems = importDataMenu.getSubMenu();
         MenuItem csvImportItem = importSubItems.addItem("CSV 格式数据");
         csvImportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
@@ -142,6 +146,10 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         MenuBar exportMenuBar = new MenuBar();
         exportMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
         MenuItem exportDataMenu = createIconItem(exportMenuBar, VaadinIcon.DOWNLOAD, "导出概念实体数据", null);
+        Icon downArrowIcon2 = new Icon(VaadinIcon.CHEVRON_DOWN);
+        downArrowIcon2.setSize("14px");
+        exportDataMenu.add(downArrowIcon2);
+
         SubMenu exportSubItems = exportDataMenu.getSubMenu();
         MenuItem csvExportItem = exportSubItems.addItem("CSV 格式数据");
         csvExportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {

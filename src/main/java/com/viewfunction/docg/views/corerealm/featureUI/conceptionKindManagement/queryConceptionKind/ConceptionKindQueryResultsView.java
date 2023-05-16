@@ -95,14 +95,23 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         actionButtonLayout.add(queryResultOperationMenuBar);
         actionButtonLayout.setVerticalComponentAlignment(Alignment.START,queryResultOperationMenuBar);
 
-        Icon analysisMenuIcon =  LineAwesomeIconsSvg.BONG_SOLID.create();
+        Icon analysisMenuIcon = VaadinIcon.AUTOMATION.create();
         analysisMenuIcon.setSize("16px");
         MenuItem analysisMenuItem = queryResultOperationMenuBar.addItem(analysisMenuIcon);
-        analysisMenuItem.add("查询结果分析操作");
+        analysisMenuItem.add("查询结果数据处理");
+        Icon downArrowIcon = new Icon(VaadinIcon.CHEVRON_DOWN);
+        downArrowIcon.setSize("12px");
+        analysisMenuItem.add(downArrowIcon);
         analysisMenuItem.getStyle().set("font-size","0.85em");
+
         SubMenu subMenu = analysisMenuItem.getSubMenu();
-        subMenu.addItem("导出 CSV 格式查询结果");
-        subMenu.addItem("导出 ARROW 格式查询结果");
+        MenuItem exportDataSubMenu = subMenu.addItem(VaadinIcon.DOWNLOAD.create());
+        exportDataSubMenu.add(" 数据导出");
+        exportDataSubMenu.getSubMenu().addItem("导出 CSV 格式查询结果");
+        exportDataSubMenu.getSubMenu().addItem("导出 ARROW 格式查询结果");
+
+        MenuItem analyzeDataSubMenu = subMenu.addItem(LineAwesomeIconsSvg.BONG_SOLID.create());
+        analyzeDataSubMenu.add(" 数据分析");
 
         queryResultGrid = new Grid<>();
         queryResultGrid.setWidth(100,Unit.PERCENTAGE);
