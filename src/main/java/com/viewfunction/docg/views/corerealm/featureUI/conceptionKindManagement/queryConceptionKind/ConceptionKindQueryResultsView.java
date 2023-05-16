@@ -4,6 +4,8 @@ import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
@@ -11,6 +13,8 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -28,6 +32,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityDeletedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
@@ -55,6 +60,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     private SecondaryKeyValueDisplayItem dataCountDisplayItem;
     private final ZoneId id = ZoneId.systemDefault();
     private final String _rowIndexPropertyName = "ROW_INDEX";
+    private MenuBar queryResultOperationMenuBar;
 
     private List<String> currentRowKeyList;
     public ConceptionKindQueryResultsView(String conceptionKindName){
@@ -62,13 +68,41 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         this.setPadding(true);
         this.setSpacing(true);
 
+        HorizontalLayout toolbarLayout = new HorizontalLayout();
+        add(toolbarLayout);
         HorizontalLayout titleLayout = new HorizontalLayout();
-        add(titleLayout);
+        toolbarLayout.add(titleLayout);
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.HARDDRIVE_O),"查询结果");
         titleLayout.add(filterTitle2);
         startTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询开始时间","-");
         finishTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询结束时间","-");
         dataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"结果集数据量","-");
+
+        HorizontalLayout actionButtonLayout = new HorizontalLayout();
+        toolbarLayout.add(actionButtonLayout);
+
+        Icon divIcon = new Icon(VaadinIcon.LINE_V);
+        divIcon.setSize("12px");
+        divIcon.getStyle().set("top","-8px").set("position","relative");
+        actionButtonLayout.add(divIcon);
+        actionButtonLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+
+        queryResultOperationMenuBar = new MenuBar();
+        queryResultOperationMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+        queryResultOperationMenuBar.getStyle().set("top","-8px").set("position","relative");
+        queryResultOperationMenuBar.setEnabled(false);
+
+        actionButtonLayout.add(queryResultOperationMenuBar);
+        actionButtonLayout.setVerticalComponentAlignment(Alignment.START,queryResultOperationMenuBar);
+
+        Icon analysisMenuIcon =  LineAwesomeIconsSvg.BONG_SOLID.create();
+        analysisMenuIcon.setSize("16px");
+        MenuItem analysisMenuItem = queryResultOperationMenuBar.addItem(analysisMenuIcon);
+        analysisMenuItem.add("查询结果分析操作");
+        analysisMenuItem.getStyle().set("font-size","0.85em");
+        SubMenu subMenu = analysisMenuItem.getSubMenu();
+        subMenu.addItem("导出 CSV 格式查询结果");
+        subMenu.addItem("导出 ARROW 格式查询结果");
 
         queryResultGrid = new Grid<>();
         queryResultGrid.setWidth(100,Unit.PERCENTAGE);
@@ -164,6 +198,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                         }
                     }
                     queryResultGrid.setItems(conceptionEntityValueList);
+                    queryResultOperationMenuBar.setEnabled(true);
                 }
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
@@ -177,12 +212,12 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         ResourceHolder.getApplicationBlackboard().addListener(this);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            queryResultGrid.setHeight(event.getHeight()-140,Unit.PIXELS);
+            queryResultGrid.setHeight(event.getHeight()-155,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            queryResultGrid.setHeight(browserHeight-140,Unit.PIXELS);
+            queryResultGrid.setHeight(browserHeight-155,Unit.PIXELS);
         }));
     }
 
