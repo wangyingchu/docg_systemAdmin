@@ -1,27 +1,32 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.ItemLabelGenerator;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
-import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingConceptionEntityListView;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -35,15 +40,9 @@ public class RelateClassificationView extends VerticalLayout {
     private String relatedObjectID;
     private Dialog containerDialog;
     private ClassificationConfigView containerClassificationConfigView;
-
-
-
     private ComboBox<KindMetaInfo> relationKindSelect;
     private RadioButtonGroup<String> relationDirectionRadioGroup;
     private ProcessingConceptionEntityListView processingConceptionEntityListView;
-    private Checkbox allowDupTypeRelationCheckbox;
-    private String conceptionKind;
-    private String conceptionEntityUID;
     private VerticalLayout relationEntityAttributesContainer;
     private Map<String, AttributeEditorItemWidget> relationAttributeEditorsMap;
     private Button clearAttributeButton;
@@ -75,7 +74,7 @@ public class RelateClassificationView extends VerticalLayout {
                 viewTitleText = "关系类型索引信息";
                 break;
             case ConceptionEntity:
-                kindIcon = LineAwesomeIconsSvg.KEYCDN.create();
+                kindIcon = VaadinIcon.CUBES.create();
                 viewTitleText = "关系类型索引信息";
                 break;
         }
@@ -88,13 +87,6 @@ public class RelateClassificationView extends VerticalLayout {
         footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(kindIcon, relatedObjectID));
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
-
-
-
-
-
-
-
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setWidthFull();
@@ -153,7 +145,7 @@ public class RelateClassificationView extends VerticalLayout {
         addAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAddNewAttributeUI();
+                renderAddNewAttributeUI();
             }
         });
         addRelationAttributesUIContainerLayout.add(addAttributeButton);
@@ -167,7 +159,7 @@ public class RelateClassificationView extends VerticalLayout {
         clearAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //cleanRelationAttributes();
+                cleanRelationAttributes();
             }
         });
         addRelationAttributesUIContainerLayout.add(clearAttributeButton);
@@ -192,7 +184,7 @@ public class RelateClassificationView extends VerticalLayout {
         buttonsContainerLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         basicInfoContainerLayout.add(buttonsContainerLayout);
 
-        Button executeCreateRelationButton = new Button("创建实体关联");
+        Button executeCreateRelationButton = new Button("创建分类关联");
         executeCreateRelationButton.setIcon(new Icon(VaadinIcon.LINK));
         executeCreateRelationButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         executeCreateRelationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -203,85 +195,29 @@ public class RelateClassificationView extends VerticalLayout {
         });
         buttonsContainerLayout.add(executeCreateRelationButton);
 
-        allowDupTypeRelationCheckbox = new Checkbox();
-        buttonsContainerLayout.add(allowDupTypeRelationCheckbox);
-        Label chechboxDescLabel = new Label("允许重复创建同类型关系");
-        chechboxDescLabel.addClassNames("text-xs","text-tertiary");
-        chechboxDescLabel.setWidth(80,Unit.PIXELS);
-        buttonsContainerLayout.add(chechboxDescLabel);
-
         VerticalLayout targetConceptionEntitiesInfoContainerLayout = new VerticalLayout();
         targetConceptionEntitiesInfoContainerLayout.setSpacing(false);
         mainContainerLayout.add(targetConceptionEntitiesInfoContainerLayout);
 
-        ThirdLevelIconTitle infoTitle4 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CUBES),"选择目标概念实体");
+        ThirdLevelIconTitle infoTitle4 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CUBES),"选择目标分类");
         targetConceptionEntitiesInfoContainerLayout.add(infoTitle4);
 
         processingConceptionEntityListView = new ProcessingConceptionEntityListView(500);
         targetConceptionEntitiesInfoContainerLayout.add(processingConceptionEntityListView);
 
         this.relationAttributeEditorsMap = new HashMap<>();
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT_O),"选择关系类型");
-        add(infoTitle1);
-
-        ComboBox relationKindSelect = new ComboBox();
-        relationKindSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
-        relationKindSelect.setPageSize(30);
-        relationKindSelect.setPlaceholder("选择关系类型定义");
-        relationKindSelect.setWidth(100, Unit.PERCENTAGE);
-
-        relationKindSelect.setItemLabelGenerator(new ItemLabelGenerator<KindMetaInfo>() {
-            @Override
-            public String apply(KindMetaInfo kindMetaInfo) {
-                String itemLabelValue = kindMetaInfo.getKindName()+ " ("+
-                        kindMetaInfo.getKindDesc()+")";
-                return itemLabelValue;
-            }
-        });
-        add(relationKindSelect);
-
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.EXCHANGE),"选择关系方向");
-        add(infoTitle2);
-
-        RadioButtonGroup<String> relationDirectionRadioGroup = new RadioButtonGroup<>();
-        relationDirectionRadioGroup.setItems("FROM", "TO");
-        relationDirectionRadioGroup.setValue("FROM");
-        add(relationDirectionRadioGroup);
-
-        ThirdLevelIconTitle infoTitle3 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT_O),"选择分类");
-        add(infoTitle3);
-
-        ComboBox classificationSelect = new ComboBox();
-        classificationSelect.setPageSize(30);
-        classificationSelect.setPlaceholder("选择分类");
-        classificationSelect.setWidth(100, Unit.PERCENTAGE);
-        add(classificationSelect);
-*/
-
-
-
-
-
-
-
-
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        try {
+            List<KindMetaInfo> reltionKindsList = coreRealm.getRelationKindsMetaInfo();
+            relationKindSelect.setItems(reltionKindsList);
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void setContainerDialog(Dialog containerDialog) {
@@ -290,5 +226,53 @@ public class RelateClassificationView extends VerticalLayout {
 
     public void setContainerClassificationConfigView(ClassificationConfigView containerClassificationConfigView) {
         this.containerClassificationConfigView = containerClassificationConfigView;
+    }
+
+    private void renderAddNewAttributeUI(){
+        AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(null,null, AddEntityAttributeView.KindType.RelationKind);
+        AttributeValueOperateHandler attributeValueOperateHandlerForDelete = new AttributeValueOperateHandler(){
+            @Override
+            public void handleAttributeValue(AttributeValue attributeValue) {
+                String attributeName = attributeValue.getAttributeName();
+                if(relationAttributeEditorsMap.containsKey(attributeName)){
+                    relationEntityAttributesContainer.remove(relationAttributeEditorsMap.get(attributeName));
+                }
+                relationAttributeEditorsMap.remove(attributeName);
+                if(relationAttributeEditorsMap.size()==0) {
+                    clearAttributeButton.setEnabled(false);
+                }
+            }
+        };
+        AttributeValueOperateHandler attributeValueOperateHandlerForAdd = new AttributeValueOperateHandler() {
+            @Override
+            public void handleAttributeValue(AttributeValue attributeValue) {
+                String attributeName = attributeValue.getAttributeName();
+                if(relationAttributeEditorsMap.containsKey(attributeName)){
+                    CommonUIOperationUtil.showPopupNotification("已经设置了名称为 "+attributeName+" 的关系属性", NotificationVariant.LUMO_ERROR);
+                }else{
+                    AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(null,null,attributeValue, AttributeEditorItemWidget.KindType.RelationKind);
+                    attributeEditorItemWidget.setWidth(350,Unit.PIXELS);
+                    relationEntityAttributesContainer.add(attributeEditorItemWidget);
+                    attributeEditorItemWidget.setAttributeValueOperateHandler(attributeValueOperateHandlerForDelete);
+                    relationAttributeEditorsMap.put(attributeName,attributeEditorItemWidget);
+                }
+                if(relationAttributeEditorsMap.size()>0){
+                    clearAttributeButton.setEnabled(true);
+                }
+            }
+        };
+        addEntityAttributeView.setAttributeValueOperateHandler(attributeValueOperateHandlerForAdd);
+
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加关系实体属性",null,true,480,210,false);
+        fixSizeWindow.setWindowContent(addEntityAttributeView);
+        fixSizeWindow.setModel(true);
+        addEntityAttributeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void cleanRelationAttributes(){
+        relationEntityAttributesContainer.removeAll();
+        relationAttributeEditorsMap.clear();
+        clearAttributeButton.setEnabled(false);
     }
 }

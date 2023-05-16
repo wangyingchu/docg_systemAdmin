@@ -8,7 +8,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
-import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,7 @@ public class ClassificationConfigView extends VerticalLayout {
         List<Component> buttonList = new ArrayList<>();
 
         Button relateToClassificationButton= new Button("关联分类");
-        relateToClassificationButton.setIcon(LineAwesomeIconsSvg.BOOKMARK.create());
+        relateToClassificationButton.setIcon(VaadinIcon.BOOKMARK.create());
         relateToClassificationButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         buttonList.add(relateToClassificationButton);
         relateToClassificationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -79,6 +78,4 @@ public class ClassificationConfigView extends VerticalLayout {
         relateClassificationView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
-
-
 }
