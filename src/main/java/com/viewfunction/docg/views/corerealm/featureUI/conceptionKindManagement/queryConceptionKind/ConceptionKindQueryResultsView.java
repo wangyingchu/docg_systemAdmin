@@ -25,6 +25,7 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.EntitiesExchangeOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
@@ -61,8 +62,8 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     private final ZoneId id = ZoneId.systemDefault();
     private final String _rowIndexPropertyName = "ROW_INDEX";
     private MenuBar queryResultOperationMenuBar;
-
     private List<String> currentRowKeyList;
+    private QueryParameters lastQueryParameters;
     public ConceptionKindQueryResultsView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
         this.setPadding(true);
@@ -107,8 +108,21 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         SubMenu subMenu = analysisMenuItem.getSubMenu();
         MenuItem exportDataSubMenu = subMenu.addItem(VaadinIcon.DOWNLOAD.create());
         exportDataSubMenu.add(" 数据导出");
-        exportDataSubMenu.getSubMenu().addItem("导出 CSV 格式查询结果");
-        exportDataSubMenu.getSubMenu().addItem("导出 ARROW 格式查询结果");
+        MenuItem exportCSVItem = exportDataSubMenu.getSubMenu().addItem("导出 CSV 格式查询结果");
+        exportCSVItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                exportCSVQueryResult();
+            }
+        });
+
+        MenuItem exportArrowItem = exportDataSubMenu.getSubMenu().addItem("导出 ARROW 格式查询结果");
+        exportArrowItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                exportArrowQueryResult();
+            }
+        });
 
         MenuItem analyzeDataSubMenu = subMenu.addItem(LineAwesomeIconsSvg.BONG_SOLID.create());
         analyzeDataSubMenu.add(" 数据分析");
@@ -161,6 +175,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             ConceptionKind targetConception = coreRealm.getConceptionKind(conceptionKindName);
             QueryParameters queryParameters = eventQueryParameters != null ? eventQueryParameters : new QueryParameters();
+            lastQueryParameters = queryParameters;
             try {
                 List<String> attributesList = new ArrayList<>();
                 if(resultAttributesList != null && resultAttributesList.size() > 0){
@@ -212,6 +227,8 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
             }
+        }else{
+            lastQueryParameters = null;
         }
     }
 
@@ -386,5 +403,20 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         fixSizeWindow.setModel(true);
         deleteConceptionEntityView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    private void exportCSVQueryResult(){
+        DownloadCSVFormatQueryResultsView downloadCSVFormatQueryResultsView = new DownloadCSVFormatQueryResultsView(this.conceptionKindName,lastQueryParameters,500);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 CSV 格式概念类型实体数据查询结果",null,true,550,290,false);
+        fixSizeWindow.disableCloseButton();
+        fixSizeWindow.setWindowContent(downloadCSVFormatQueryResultsView);
+        fixSizeWindow.setModel(true);
+        downloadCSVFormatQueryResultsView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void exportArrowQueryResult(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        EntitiesExchangeOperator entitiesExchangeOperator = coreRealm.getEntitiesExchangeOperator();
     }
 }
