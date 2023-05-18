@@ -140,6 +140,13 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
                 renderLoadSHPFormatConceptionEntitiesView();
             }
         });
+        MenuItem excelImportItem = importSubItems.addItem("Excel 格式数据");
+        shpImportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                renderLoadExcelFormatConceptionEntitiesView();
+            }
+        });
 
         infoContainer.add(importMenuBar);
 
@@ -278,6 +285,10 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         fixSizeWindow.setModel(true);
         loadARROWFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    private void renderLoadExcelFormatConceptionEntitiesView(){
+
     }
 
     private void renderDownloadARROWFormatConceptionEntitiesView(){
