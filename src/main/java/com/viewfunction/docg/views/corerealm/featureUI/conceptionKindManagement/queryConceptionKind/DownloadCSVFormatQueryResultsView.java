@@ -1,6 +1,8 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.text.csv.CsvUtil;
+import cn.hutool.core.text.csv.CsvWriter;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.ClickEvent;
@@ -18,22 +20,26 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
-import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.EntitiesExchangeOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
+import io.netty.util.CharsetUtil;
 import org.vaadin.olli.FileDownloadWrapper;
 
 import java.io.File;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
     private String conceptionKindName;
@@ -41,7 +47,6 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.TEMP_FILES_STORAGE_LOCATION);
     private Dialog containerDialog;
     private Button cancelImportButton;
-    private Button generateCsvButton;
     private Label csvFileName;
     private HorizontalLayout downloaderContainer;
     private String csvDataFileURI;
@@ -61,37 +66,19 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
 
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        EntitiesExchangeOperator entitiesExchangeOperator = coreRealm.getEntitiesExchangeOperator();
+        conceptionEntitiesCount = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount();
 
-
-        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
-        try {
-            conceptionEntitiesCount = targetConceptionKind.countConceptionEntities();
-        } catch (CoreRealmServiceRuntimeException e) {
-            throw new RuntimeException(e);
-        }
+        generateCSVFromAttributesRetrieveResult();
 
         NumberFormat numberFormat = NumberFormat.getInstance();
         HorizontalLayout entitiesCountContainer = new HorizontalLayout();
         entitiesCountContainer.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         add(entitiesCountContainer);
-        new PrimaryKeyValueDisplayItem(entitiesCountContainer, FontAwesome.Solid.CIRCLE.create(),"概念实体数量:",numberFormat.format(conceptionEntitiesCount));
+        new PrimaryKeyValueDisplayItem(entitiesCountContainer, FontAwesome.Solid.CIRCLE.create(),"查询结果实体数量:",numberFormat.format(conceptionEntitiesCount));
 
         HorizontalLayout spaceDiv = new HorizontalLayout();
         spaceDiv.setWidth(20,Unit.PIXELS);
         entitiesCountContainer.add(spaceDiv);
-
-        generateCsvButton = new Button("生成 CSV 格式数据文件",new Icon(VaadinIcon.PLAY));
-        generateCsvButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        generateCsvButton.setDisableOnClick(true);
-        entitiesCountContainer.add(generateCsvButton);
-        generateCsvButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                generateArrowDataFile();
-            }
-        });
 
         HorizontalLayout dataFileInfoLayout = new HorizontalLayout();
         dataFileInfoLayout.getStyle().set("padding-top","10px");
@@ -132,6 +119,47 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
+    }
+
+    private void generateCSVFromAttributesRetrieveResult(){
+
+        File fileFolder = new File(TEMP_FILES_STORAGE_LOCATION);
+        if(!fileFolder.exists()){
+            fileFolder.mkdirs();
+        }
+
+        String dataFileName = PinyinUtil.getPinyin(this.conceptionKindName,"")+"_"+System.currentTimeMillis()+"_QUERY_EXPORT.csv";
+        csvDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
+
+        List<ConceptionEntityValue> conceptionEntityValueList = this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
+        List<String[]> csvRowDataList = new ArrayList<>();
+
+        ConceptionEntityValue firstEntityValue = conceptionEntityValueList.get(0);
+        Set<String> attributeNameSet = firstEntityValue.getEntityAttributesValue().keySet();
+        List<String> attributeNameList = new ArrayList<>(attributeNameSet);
+        String[] headerRow = new String[attributeNameList.size()];
+
+        for(int i =0;i<attributeNameList.size();i++){
+            headerRow[i] = attributeNameList.get(i);
+        }
+        csvRowDataList.add(headerRow);
+
+        if(conceptionEntityValueList != null && conceptionEntityValueList.size() >0){
+            for(ConceptionEntityValue currentConceptionEntityValue:conceptionEntityValueList){
+                String[] currentDataRow = new String[attributeNameList.size()];
+                Map<String,Object> entityAttributesValueMap = currentConceptionEntityValue.getEntityAttributesValue();
+                for(int i =0;i<attributeNameList.size();i++){
+                    String attributeName = attributeNameList.get(i);
+                    currentDataRow[i] = entityAttributesValueMap.get(attributeName) != null ?
+                            entityAttributesValueMap.get(attributeName).toString(): null;
+                }
+                csvRowDataList.add(currentDataRow);
+            }
+        }
+
+        CsvWriter writer = CsvUtil.getWriter(csvDataFileURI, CharsetUtil.UTF_8);
+        writer.write(csvRowDataList);
+        writer.close();
     }
 
     private void generateArrowDataFile(){
