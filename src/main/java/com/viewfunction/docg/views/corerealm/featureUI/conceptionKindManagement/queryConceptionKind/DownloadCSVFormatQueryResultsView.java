@@ -4,29 +4,22 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.csv.CsvUtil;
 import cn.hutool.core.text.csv.CsvWriter;
 import cn.hutool.extra.pinyin.PinyinUtil;
+
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.operator.EntitiesExchangeOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
@@ -67,8 +60,6 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
         add(entityInfoFootprintMessageBar);
 
         conceptionEntitiesCount = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount();
-
-        generateCSVFromAttributesRetrieveResult();
 
         NumberFormat numberFormat = NumberFormat.getInstance();
         HorizontalLayout entitiesCountContainer = new HorizontalLayout();
@@ -115,6 +106,8 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
             }
         });
         buttonbarLayout.add(cancelImportButton);
+
+        generateCSVFromAttributesRetrieveResult();
     }
 
     public void setContainerDialog(Dialog containerDialog) {
@@ -160,20 +153,7 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
         CsvWriter writer = CsvUtil.getWriter(csvDataFileURI, CharsetUtil.UTF_8);
         writer.write(csvRowDataList);
         writer.close();
-    }
 
-    private void generateArrowDataFile(){
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        EntitiesExchangeOperator entitiesExchangeOperator = coreRealm.getEntitiesExchangeOperator();
-        File fileFolder = new File(TEMP_FILES_STORAGE_LOCATION);
-        if(!fileFolder.exists()){
-            fileFolder.mkdirs();
-        }
-
-        String dataFileName = PinyinUtil.getPinyin(this.conceptionKindName,"")+"_"+System.currentTimeMillis()+"_EXPORT.csv";
-        csvDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
-
-        EntitiesOperationStatistics entitiesOperationStatistics = entitiesExchangeOperator.exportConceptionEntitiesToCSV(this.conceptionKindName, csvDataFileURI);
         csvFileName.setText(dataFileName);
 
         Button downloadButton = new Button("点击下载 CSV 数据文件");
@@ -183,29 +163,6 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
         arrowFileDownloader.wrapComponent(downloadButton);
         downloaderContainer.add(arrowFileDownloader);
         arrowFileDownloader.setFile(new File(csvDataFileURI));
-
-        Notification notification = new Notification();
-        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-        Div text = new Div(new Text("概念类型 "+conceptionKindName+" 创建 CSV 数据文件操作成功"));
-        Button closeButton = new Button(new Icon("lumo", "cross"));
-        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-        closeButton.addClickListener(event -> {
-            notification.close();
-        });
-        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
-        layout.setWidth(100, Unit.PERCENTAGE);
-        layout.setFlexGrow(1,text);
-        notification.add(layout);
-
-        VerticalLayout notificationMessageContainer = new VerticalLayout();
-        notificationMessageContainer.add(new Div(new Text("CSV 数据文件: "+dataFileName)));
-        notificationMessageContainer.add(new Div(new Text("当前概念实体总数: " + conceptionEntitiesCount)));
-        notificationMessageContainer.add(new Div(new Text("导出成功实体数: "+entitiesOperationStatistics.getSuccessItemsCount())));
-        notificationMessageContainer.add(new Div(new Text("导出失败实体数: "+entitiesOperationStatistics.getFailItemsCount())));
-        notificationMessageContainer.add(new Div(new Text("操作开始时间: "+entitiesOperationStatistics.getStartTime())));
-        notificationMessageContainer.add(new Div(new Text("操作结束时间: "+entitiesOperationStatistics.getFinishTime())));
-        notification.add(notificationMessageContainer);
-        notification.open();
     }
 
     private void deleteArrowDataFile(){
