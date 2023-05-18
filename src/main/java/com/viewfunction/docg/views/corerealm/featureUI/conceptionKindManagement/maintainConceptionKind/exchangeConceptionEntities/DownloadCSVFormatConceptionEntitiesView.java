@@ -82,7 +82,7 @@ public class DownloadCSVFormatConceptionEntitiesView extends VerticalLayout {
         generateCsvButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                generateArrowDataFile();
+                generateCsvDataFile();
             }
         });
 
@@ -117,7 +117,7 @@ public class DownloadCSVFormatConceptionEntitiesView extends VerticalLayout {
                 if(containerDialog != null){
                     containerDialog.close();
                 }
-                deleteArrowDataFile();
+                deleteCsvDataFile();
             }
         });
         buttonbarLayout.add(cancelImportButton);
@@ -127,7 +127,7 @@ public class DownloadCSVFormatConceptionEntitiesView extends VerticalLayout {
         this.containerDialog = containerDialog;
     }
 
-    private void generateArrowDataFile(){
+    private void generateCsvDataFile(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         EntitiesExchangeOperator entitiesExchangeOperator = coreRealm.getEntitiesExchangeOperator();
         File fileFolder = new File(TEMP_FILES_STORAGE_LOCATION);
@@ -173,7 +173,7 @@ public class DownloadCSVFormatConceptionEntitiesView extends VerticalLayout {
         notification.open();
     }
 
-    private void deleteArrowDataFile(){
+    private void deleteCsvDataFile(){
         if(csvDataFileURI != null){
             FileUtil.del(csvDataFileURI);
         }

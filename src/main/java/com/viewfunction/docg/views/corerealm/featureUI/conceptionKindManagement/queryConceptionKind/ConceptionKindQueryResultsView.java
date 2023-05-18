@@ -63,7 +63,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     private final String _rowIndexPropertyName = "ROW_INDEX";
     private MenuBar queryResultOperationMenuBar;
     private List<String> currentRowKeyList;
-    private QueryParameters lastQueryParameters;
+    private ConceptionEntitiesAttributesRetrieveResult lastConceptionEntitiesAttributesRetrieveResult;
     public ConceptionKindQueryResultsView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
         this.setPadding(true);
@@ -175,7 +175,6 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             ConceptionKind targetConception = coreRealm.getConceptionKind(conceptionKindName);
             QueryParameters queryParameters = eventQueryParameters != null ? eventQueryParameters : new QueryParameters();
-            lastQueryParameters = queryParameters;
             try {
                 List<String> attributesList = new ArrayList<>();
                 if(resultAttributesList != null && resultAttributesList.size() > 0){
@@ -223,12 +222,14 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                     }
                     queryResultGrid.setItems(conceptionEntityValueList);
                     queryResultOperationMenuBar.setEnabled(true);
+
+                    lastConceptionEntitiesAttributesRetrieveResult = conceptionEntitiesAttributesRetrieveResult;
                 }
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
             }
         }else{
-            lastQueryParameters = null;
+            lastConceptionEntitiesAttributesRetrieveResult = null;
         }
     }
 
@@ -406,7 +407,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     }
 
     private void exportCSVQueryResult(){
-        DownloadCSVFormatQueryResultsView downloadCSVFormatQueryResultsView = new DownloadCSVFormatQueryResultsView(this.conceptionKindName,lastQueryParameters,500);
+        DownloadCSVFormatQueryResultsView downloadCSVFormatQueryResultsView = new DownloadCSVFormatQueryResultsView(this.conceptionKindName,lastConceptionEntitiesAttributesRetrieveResult,500);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 CSV 格式概念类型实体数据查询结果",null,true,550,290,false);
         fixSizeWindow.disableCloseButton();
         fixSizeWindow.setWindowContent(downloadCSVFormatQueryResultsView);

@@ -21,6 +21,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.EntitiesExchangeOperator;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -45,12 +46,12 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
     private HorizontalLayout downloaderContainer;
     private String csvDataFileURI;
     private long conceptionEntitiesCount;
-    private QueryParameters queryParameters;
+    private ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult;
 
-    public DownloadCSVFormatQueryResultsView(String conceptionKindName, QueryParameters queryParameters, int viewWidth){
+    public DownloadCSVFormatQueryResultsView(String conceptionKindName, ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
         this.conceptionKindName = conceptionKindName;
-        this.queryParameters = queryParameters;
+        this.conceptionEntitiesAttributesRetrieveResult = conceptionEntitiesAttributesRetrieveResult;
 
         Icon kindIcon = VaadinIcon.CUBE.create();
         kindIcon.setSize("12px");
