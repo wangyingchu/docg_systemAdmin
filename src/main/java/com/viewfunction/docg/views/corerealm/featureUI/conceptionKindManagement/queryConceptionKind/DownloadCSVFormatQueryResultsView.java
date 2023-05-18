@@ -129,23 +129,30 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
 
         ConceptionEntityValue firstEntityValue = conceptionEntityValueList.get(0);
         Set<String> attributeNameSet = firstEntityValue.getEntityAttributesValue().keySet();
+        attributeNameSet.remove("ROW_INDEX");
+        attributeNameSet.remove("dataOrigin");
+        attributeNameSet.remove("lastModifyDate");
+        attributeNameSet.remove("createDate");
+
         List<String> attributeNameList = new ArrayList<>(attributeNameSet);
-        String[] headerRow = new String[attributeNameList.size()];
+        String[] headerRow = new String[attributeNameList.size()+1];
 
         for(int i =0;i<attributeNameList.size();i++){
             headerRow[i] = attributeNameList.get(i);
         }
+        headerRow[attributeNameList.size()] = "Entity_UID";
         csvRowDataList.add(headerRow);
 
         if(conceptionEntityValueList != null && conceptionEntityValueList.size() >0){
             for(ConceptionEntityValue currentConceptionEntityValue:conceptionEntityValueList){
-                String[] currentDataRow = new String[attributeNameList.size()];
+                String[] currentDataRow = new String[attributeNameList.size()+1];
                 Map<String,Object> entityAttributesValueMap = currentConceptionEntityValue.getEntityAttributesValue();
                 for(int i =0;i<attributeNameList.size();i++){
                     String attributeName = attributeNameList.get(i);
                     currentDataRow[i] = entityAttributesValueMap.get(attributeName) != null ?
                             entityAttributesValueMap.get(attributeName).toString(): null;
                 }
+                currentDataRow[attributeNameList.size()] = currentConceptionEntityValue.getConceptionEntityUID();
                 csvRowDataList.add(currentDataRow);
             }
         }
