@@ -19,8 +19,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.AttributesParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.FilteringItem;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
@@ -30,10 +34,14 @@ import org.apache.arrow.vector.IntVector;
 import org.apache.arrow.vector.VarCharVector;
 import org.apache.arrow.vector.VectorSchemaRoot;
 import org.apache.arrow.vector.ipc.ArrowFileWriter;
+import org.apache.arrow.vector.types.DateUnit;
+import org.apache.arrow.vector.types.FloatingPointPrecision;
+import org.apache.arrow.vector.types.TimeUnit;
 import org.apache.arrow.vector.types.pojo.ArrowType;
 import org.apache.arrow.vector.types.pojo.Field;
 import org.apache.arrow.vector.types.pojo.FieldType;
 import org.apache.arrow.vector.types.pojo.Schema;
+import org.eclipse.emf.ecore.util.Switch;
 import org.vaadin.olli.FileDownloadWrapper;
 
 import java.io.File;
@@ -138,22 +146,19 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         List<ConceptionEntityValue> conceptionEntityValueList = this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
         List<List<Object>> excelRowDataList = new ArrayList<>();
 
-        ConceptionEntityValue firstEntityValue = conceptionEntityValueList.get(0);
-        Set<String> attributeNameSet = firstEntityValue.getEntityAttributesValue().keySet();
-
-        List<String> resultAttributeNamesList = new ArrayList<>();
+        Set<String> resultAttributeNamesSet = new HashSet<>();
         QueryParameters queryParameters = this.conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getQueryParameters();
         AttributesParameters attributesParameters = queryParameters.getAttributesParameters();
 
         if(attributesParameters.getDefaultFilteringItem() != null){
-            resultAttributeNamesList.add(attributesParameters.getDefaultFilteringItem().getAttributeName());
+            resultAttributeNamesSet.add(attributesParameters.getDefaultFilteringItem().getAttributeName());
         }
 
         List<FilteringItem> andFilterList = attributesParameters.getAndFilteringItemsList();
         if(andFilterList != null){
             for(FilteringItem currentFilteringItem:andFilterList){
                 String attributeName = currentFilteringItem.getAttributeName();
-                resultAttributeNamesList.add(attributeName);
+                resultAttributeNamesSet.add(attributeName);
             }
         }
 
@@ -161,24 +166,33 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         if(orFilterList != null){
             for(FilteringItem currentFilteringItem:orFilterList){
                 String attributeName = currentFilteringItem.getAttributeName();
-                resultAttributeNamesList.add(attributeName);
+                resultAttributeNamesSet.add(attributeName);
             }
         }
 
-        attributeNameSet.remove("ROW_INDEX");
-        if(!resultAttributeNamesList.contains("dataOrigin")){
-            attributeNameSet.remove("dataOrigin");
-        }
-        if(!resultAttributeNamesList.contains("lastModifyDate")){
-            attributeNameSet.remove("lastModifyDate");
-        }
-        if(!resultAttributeNamesList.contains("createDate")){
-            attributeNameSet.remove("createDate");
+        List<String> attributeNameList = new ArrayList<>(resultAttributeNamesSet);
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+
+        List<AttributeSystemInfo> attributeSystemInfoList = systemMaintenanceOperator.getConceptionKindAttributesSystemInfo(this.conceptionKindName);
+        Map<String,String> attributeDataTypeMapping = new HashMap<>();
+        for(AttributeSystemInfo currentAttributeSystemInfo:attributeSystemInfoList){
+            attributeDataTypeMapping.put(currentAttributeSystemInfo.getAttributeName(),currentAttributeSystemInfo.getDataType());
         }
 
-        //List<String> attributeNameList = new ArrayList<>(attributeNameSet);
+        List<Field> headerFieldList = new ArrayList<>();
 
-        List<String> attributeNameList = resultAttributeNamesList;
+        for(String currentFieldName : attributeNameList){
+            String currentFieldDataType = attributeDataTypeMapping.get(currentFieldName);
+            headerFieldList.add(getArrowField(currentFieldName,currentFieldDataType));
+        }
+        headerFieldList.add(getArrowField("Entity_UID","STRING"));
+        Schema arrorSchema = new Schema(headerFieldList);
+
+
+        
+
         String[] headerRow = new String[attributeNameList.size()+1];
 
         for(int i =0;i<attributeNameList.size();i++){
@@ -202,12 +216,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
             }
         }
 
-        /*
-        ExcelWriter excelWriter= ExcelUtil.getWriter(excelDataFileURI);
-        excelWriter.writeHeadRow(Arrays.asList(headerRow));
-        excelWriter.write(excelRowDataList,true);
-        excelWriter.close();
-        */
+
 
 
 
@@ -275,5 +284,52 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         if(excelDataFileURI != null){
             FileUtil.del(excelDataFileURI);
         }
+    }
+
+    private Field getArrowField(String fieldName,String fieldDataType){
+        //BOOLEAN,INT,SHORT,LONG,FLOAT,DOUBLE,TIMESTAMP,DATE,DATETIME,TIME,STRING,BYTE,DECIMAL
+        Field resultField = null;
+        switch(fieldDataType){
+            case "BOOLEAN":
+                resultField = new Field(fieldName,FieldType.nullable(new ArrowType.Bool()),/*children*/ null);
+                break;
+            case "INT":
+                resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Int(32, true)),/*children*/ null);
+                break;
+            case "SHORT":
+                resultField = new Field(fieldName,FieldType.nullable(new ArrowType.Int(16, true)),/*children*/ null);
+                break;
+            case "LONG":
+                resultField = new Field(fieldName,FieldType.nullable(new ArrowType.Int(64, true)),/*children*/ null);
+                break;
+            case "FLOAT":
+                resultField = new Field(fieldName,FieldType.nullable(new ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE)),/*children*/ null);
+                break;
+            case "DOUBLE":
+                resultField = new Field(fieldName,FieldType.nullable(new ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE)),/*children*/ null);
+                break;
+            case "TIMESTAMP":
+                 resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Timestamp(TimeUnit.SECOND,TimeZone.getDefault().toString())),/*children*/ null);
+                break;
+            case "DATE":
+                resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Date(DateUnit.DAY)),/*children*/ null);
+                break;
+            case "DATETIME":
+                resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Date(DateUnit.MILLISECOND)),/*children*/ null);
+                break;
+            case "TIME":
+                resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Time(TimeUnit.SECOND,32)),/*children*/ null);
+                break;
+            case "STRING":
+                resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Utf8()),/*children*/ null);
+                break;
+            case "BYTE":
+                resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Int(8, true)),/*children*/ null);
+                break;
+            case "DECIMAL":
+                resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Decimal(1,1,1)),/*children*/ null);
+                break;
+        }
+        return resultField;
     }
 }
