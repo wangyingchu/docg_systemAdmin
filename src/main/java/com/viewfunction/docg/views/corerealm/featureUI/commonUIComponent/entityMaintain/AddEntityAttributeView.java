@@ -223,7 +223,11 @@ public class AddEntityAttributeView extends VerticalLayout {
                         }else{
                             if(isKindScopeAttribute){
                                 if(kindName != null){
-                                    addKindScopeAttribute();
+                                    try {
+                                        addKindScopeAttribute();
+                                    } catch (CoreRealmServiceRuntimeException e) {
+                                        throw new RuntimeException(e);
+                                    }
                                 }
                             }else{
                                 if(kindName != null && entityUID != null){
@@ -745,7 +749,7 @@ public class AddEntityAttributeView extends VerticalLayout {
         }
     }
 
-    private void addKindScopeAttribute(){
+    private void addKindScopeAttribute() throws CoreRealmServiceRuntimeException {
         String attributeName = attributeNameField.getValue();
         Object newEntityAttributeValue = getAttributeValueObject();
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -758,7 +762,7 @@ public class AddEntityAttributeView extends VerticalLayout {
                 }else{
                     Map<String,Object> attributeMap = new HashMap<>();
                     attributeMap.put(attributeName,newEntityAttributeValue);
-                    addedEntitiesCount = targetConceptionKind.setKindScopeAttributes(attributeMap);
+                    addedEntitiesCount = targetConceptionKind.setKindScopeAttributes(attributeMap).getSuccessItemsCount();
                     if(addedEntitiesCount > 0 ){
                         CommonUIOperationUtil.showPopupNotification("向概念类型 "+this.kindName+ " 添加全局属性 "+ attributeName +" : "+newEntityAttributeValue +" 成功,成功添加属性实体数: "+addedEntitiesCount, NotificationVariant.LUMO_SUCCESS);
                         if(containerDialog != null){
@@ -776,7 +780,7 @@ public class AddEntityAttributeView extends VerticalLayout {
                 }else{
                     Map<String,Object> attributeMap = new HashMap<>();
                     attributeMap.put(attributeName,newEntityAttributeValue);
-                    addedEntitiesCount = targetRelationKind.setKindScopeAttributes(attributeMap);
+                    addedEntitiesCount = targetRelationKind.setKindScopeAttributes(attributeMap).getSuccessItemsCount();
                     if(addedEntitiesCount > 0 ){
                         CommonUIOperationUtil.showPopupNotification("向关系类型 "+this.kindName+ " 添加全局属性 "+ attributeName +" : "+newEntityAttributeValue +" 成功,成功添加属性实体数: "+addedEntitiesCount, NotificationVariant.LUMO_SUCCESS);
                         if(containerDialog != null){

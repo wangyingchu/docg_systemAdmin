@@ -124,6 +124,14 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             }
         });
 
+        MenuItem exportExcelItem = exportDataSubMenu.getSubMenu().addItem("导出 EXCEL 格式查询结果");
+        exportExcelItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                exportExcelQueryResult();
+            }
+        });
+
         MenuItem analyzeDataSubMenu = subMenu.addItem(LineAwesomeIconsSvg.BONG_SOLID.create());
         analyzeDataSubMenu.add(" 数据分析");
 
@@ -419,5 +427,15 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     private void exportArrowQueryResult(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         EntitiesExchangeOperator entitiesExchangeOperator = coreRealm.getEntitiesExchangeOperator();
+    }
+
+    private void exportExcelQueryResult(){
+        DownloadExcelFormatQueryResultsView downloadExcelFormatQueryResultsView = new DownloadExcelFormatQueryResultsView(this.conceptionKindName,lastConceptionEntitiesAttributesRetrieveResult,500);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 EXCEL 格式概念类型实体数据查询结果",null,true,550,290,false);
+        fixSizeWindow.disableCloseButton();
+        fixSizeWindow.setWindowContent(downloadExcelFormatQueryResultsView);
+        fixSizeWindow.setModel(true);
+        downloadExcelFormatQueryResultsView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }

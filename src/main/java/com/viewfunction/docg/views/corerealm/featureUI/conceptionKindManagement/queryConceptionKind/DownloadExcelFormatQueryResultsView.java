@@ -1,10 +1,10 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.text.csv.CsvUtil;
-import cn.hutool.core.text.csv.CsvWriter;
 import cn.hutool.extra.pinyin.PinyinUtil;
 
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -23,18 +23,14 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntity
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
-import io.netty.util.CharsetUtil;
 import org.vaadin.olli.FileDownloadWrapper;
 
 import java.io.File;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
+public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
     private String conceptionKindName;
     private String TEMP_FILES_STORAGE_LOCATION =
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.TEMP_FILES_STORAGE_LOCATION);
@@ -42,11 +38,11 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
     private Button cancelImportButton;
     private Label csvFileName;
     private HorizontalLayout downloaderContainer;
-    private String csvDataFileURI;
+    private String excelDataFileURI;
     private long conceptionEntitiesCount;
     private ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult;
 
-    public DownloadCSVFormatQueryResultsView(String conceptionKindName, ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult, int viewWidth){
+    public DownloadExcelFormatQueryResultsView(String conceptionKindName, ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult, int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
         this.conceptionKindName = conceptionKindName;
         this.conceptionEntitiesAttributesRetrieveResult = conceptionEntitiesAttributesRetrieveResult;
@@ -102,30 +98,31 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
                 if(containerDialog != null){
                     containerDialog.close();
                 }
-                deleteCsvDataFile();
+                deleteArrowDataFile();
             }
         });
         buttonbarLayout.add(cancelImportButton);
 
-        generateCSVFromAttributesRetrieveResult();
+        generateExcelFromAttributesRetrieveResult();
     }
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
     }
 
-    private void generateCSVFromAttributesRetrieveResult(){
+    private void generateExcelFromAttributesRetrieveResult(){
 
         File fileFolder = new File(TEMP_FILES_STORAGE_LOCATION);
         if(!fileFolder.exists()){
             fileFolder.mkdirs();
         }
 
-        String dataFileName = PinyinUtil.getPinyin(this.conceptionKindName,"")+"_"+System.currentTimeMillis()+"_QUERY_EXPORT.csv";
-        csvDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
+        String dataFileName = PinyinUtil.getPinyin(this.conceptionKindName,"")+"_"+System.currentTimeMillis()+"_QUERY_EXPORT.xlsx";
+        excelDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
 
         List<ConceptionEntityValue> conceptionEntityValueList = this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
-        List<String[]> csvRowDataList = new ArrayList<>();
+        //List<String[]> csvRowDataList = new ArrayList<>();
+        List<List<Object>> excelRowDataList = new ArrayList<>();
 
         ConceptionEntityValue firstEntityValue = conceptionEntityValueList.get(0);
         Set<String> attributeNameSet = firstEntityValue.getEntityAttributesValue().keySet();
@@ -141,40 +138,51 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
             headerRow[i] = attributeNameList.get(i);
         }
         headerRow[attributeNameList.size()] = "Entity_UID";
-        csvRowDataList.add(headerRow);
+        //csvRowDataList.add(headerRow);
 
         if(conceptionEntityValueList != null && conceptionEntityValueList.size() >0){
             for(ConceptionEntityValue currentConceptionEntityValue:conceptionEntityValueList){
-                String[] currentDataRow = new String[attributeNameList.size()+1];
+                ArrayList<Object> currentRowList = new ArrayList();
+                excelRowDataList.add(currentRowList);
+
+
+                //String[] currentDataRow = new String[attributeNameList.size()+1];
                 Map<String,Object> entityAttributesValueMap = currentConceptionEntityValue.getEntityAttributesValue();
                 for(int i =0;i<attributeNameList.size();i++){
                     String attributeName = attributeNameList.get(i);
-                    currentDataRow[i] = entityAttributesValueMap.get(attributeName) != null ?
+                    Object currentAttributeValue = entityAttributesValueMap.get(attributeName) != null ?
                             entityAttributesValueMap.get(attributeName).toString(): null;
+                    currentRowList.add(currentAttributeValue);
+
                 }
-                currentDataRow[attributeNameList.size()] = currentConceptionEntityValue.getConceptionEntityUID();
-                csvRowDataList.add(currentDataRow);
+                //currentDataRow[attributeNameList.size()] = currentConceptionEntityValue.getConceptionEntityUID();
+
+                currentRowList.add(currentConceptionEntityValue.getConceptionEntityUID());
+
+
+                //csvRowDataList.add(currentDataRow);
             }
         }
 
-        CsvWriter writer = CsvUtil.getWriter(csvDataFileURI, CharsetUtil.UTF_8);
-        writer.write(csvRowDataList);
-        writer.close();
+        ExcelWriter excelWriter= ExcelUtil.getWriter(excelDataFileURI);
+        excelWriter.writeHeadRow(Arrays.asList(headerRow));
+        excelWriter.write(excelRowDataList,true);
+        excelWriter.close();
 
         csvFileName.setText(dataFileName);
 
-        Button downloadButton = new Button("点击下载 CSV 数据文件");
+        Button downloadButton = new Button("点击下载 Excel 数据文件");
         downloadButton.setIcon(VaadinIcon.DOWNLOAD_ALT.create());
 
-        FileDownloadWrapper csvFileDownloader = new FileDownloadWrapper(dataFileName,new File(TEMP_FILES_STORAGE_LOCATION));
-        csvFileDownloader.wrapComponent(downloadButton);
-        downloaderContainer.add(csvFileDownloader);
-        csvFileDownloader.setFile(new File(csvDataFileURI));
+        FileDownloadWrapper arrowFileDownloader = new FileDownloadWrapper(dataFileName,new File(TEMP_FILES_STORAGE_LOCATION));
+        arrowFileDownloader.wrapComponent(downloadButton);
+        downloaderContainer.add(arrowFileDownloader);
+        arrowFileDownloader.setFile(new File(excelDataFileURI));
     }
 
-    private void deleteCsvDataFile(){
-        if(csvDataFileURI != null){
-            FileUtil.del(csvDataFileURI);
+    private void deleteArrowDataFile(){
+        if(excelDataFileURI != null){
+            FileUtil.del(excelDataFileURI);
         }
     }
 }
