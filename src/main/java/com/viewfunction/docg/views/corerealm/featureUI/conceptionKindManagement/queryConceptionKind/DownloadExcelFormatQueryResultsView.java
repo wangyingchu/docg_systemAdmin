@@ -126,19 +126,19 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
         List<ConceptionEntityValue> conceptionEntityValueList = this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
         List<List<Object>> excelRowDataList = new ArrayList<>();
 
-        List<String> resultAttributeNamesList = new ArrayList<>();
+        Set<String> resultAttributeNamesSet = new HashSet<>();
         QueryParameters queryParameters = this.conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getQueryParameters();
         AttributesParameters attributesParameters = queryParameters.getAttributesParameters();
 
         if(attributesParameters.getDefaultFilteringItem() != null){
-            resultAttributeNamesList.add(attributesParameters.getDefaultFilteringItem().getAttributeName());
+            resultAttributeNamesSet.add(attributesParameters.getDefaultFilteringItem().getAttributeName());
         }
 
         List<FilteringItem> andFilterList = attributesParameters.getAndFilteringItemsList();
         if(andFilterList != null){
             for(FilteringItem currentFilteringItem:andFilterList){
                 String attributeName = currentFilteringItem.getAttributeName();
-                resultAttributeNamesList.add(attributeName);
+                resultAttributeNamesSet.add(attributeName);
             }
         }
 
@@ -146,11 +146,11 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
         if(orFilterList != null){
             for(FilteringItem currentFilteringItem:orFilterList){
                 String attributeName = currentFilteringItem.getAttributeName();
-                resultAttributeNamesList.add(attributeName);
+                resultAttributeNamesSet.add(attributeName);
             }
         }
 
-        List<String> attributeNameList = resultAttributeNamesList;
+        List<String> attributeNameList = new ArrayList<>(resultAttributeNamesSet);
         String[] headerRow = new String[attributeNameList.size()+1];
 
         for(int i =0;i<attributeNameList.size();i++){
