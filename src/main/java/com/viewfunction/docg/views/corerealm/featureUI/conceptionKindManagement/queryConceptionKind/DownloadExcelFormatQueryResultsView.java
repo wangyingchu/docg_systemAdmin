@@ -126,9 +126,6 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
         List<ConceptionEntityValue> conceptionEntityValueList = this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
         List<List<Object>> excelRowDataList = new ArrayList<>();
 
-        ConceptionEntityValue firstEntityValue = conceptionEntityValueList.get(0);
-        Set<String> attributeNameSet = firstEntityValue.getEntityAttributesValue().keySet();
-
         List<String> resultAttributeNamesList = new ArrayList<>();
         QueryParameters queryParameters = this.conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getQueryParameters();
         AttributesParameters attributesParameters = queryParameters.getAttributesParameters();
@@ -153,18 +150,7 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
             }
         }
 
-        attributeNameSet.remove("ROW_INDEX");
-        if(!resultAttributeNamesList.contains("dataOrigin")){
-            attributeNameSet.remove("dataOrigin");
-        }
-        if(!resultAttributeNamesList.contains("lastModifyDate")){
-            attributeNameSet.remove("lastModifyDate");
-        }
-        if(!resultAttributeNamesList.contains("createDate")){
-            attributeNameSet.remove("createDate");
-        }
-
-        List<String> attributeNameList = new ArrayList<>(attributeNameSet);
+        List<String> attributeNameList = resultAttributeNamesList;
         String[] headerRow = new String[attributeNameList.size()+1];
 
         for(int i =0;i<attributeNameList.size();i++){
@@ -195,7 +181,7 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
 
         excelFileName.setText(dataFileName);
 
-        Button downloadButton = new Button("点击下载 Excel 数据文件");
+        Button downloadButton = new Button("点击下载 EXCEL 数据文件");
         downloadButton.setIcon(VaadinIcon.DOWNLOAD_ALT.create());
 
         FileDownloadWrapper arrowFileDownloader = new FileDownloadWrapper(dataFileName,new File(TEMP_FILES_STORAGE_LOCATION));

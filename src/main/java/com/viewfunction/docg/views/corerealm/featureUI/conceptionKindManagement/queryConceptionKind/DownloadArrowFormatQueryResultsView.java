@@ -24,11 +24,26 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntity
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
+import org.apache.arrow.memory.BufferAllocator;
+import org.apache.arrow.memory.RootAllocator;
+import org.apache.arrow.vector.IntVector;
+import org.apache.arrow.vector.VarCharVector;
+import org.apache.arrow.vector.VectorSchemaRoot;
+import org.apache.arrow.vector.ipc.ArrowFileWriter;
+import org.apache.arrow.vector.types.pojo.ArrowType;
+import org.apache.arrow.vector.types.pojo.Field;
+import org.apache.arrow.vector.types.pojo.FieldType;
+import org.apache.arrow.vector.types.pojo.Schema;
 import org.vaadin.olli.FileDownloadWrapper;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.*;
+
+import static java.util.Arrays.asList;
 
 public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
     private String conceptionKindName;
@@ -103,21 +118,21 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         });
         buttonbarLayout.add(cancelImportButton);
 
-        //generateExcelFromAttributesRetrieveResult();
+        generateArrowFromAttributesRetrieveResult();
     }
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
     }
 
-    private void generateExcelFromAttributesRetrieveResult(){
+    private void generateArrowFromAttributesRetrieveResult(){
 
         File fileFolder = new File(TEMP_FILES_STORAGE_LOCATION);
         if(!fileFolder.exists()){
             fileFolder.mkdirs();
         }
 
-        String dataFileName = PinyinUtil.getPinyin(this.conceptionKindName,"")+"_"+System.currentTimeMillis()+"_QUERY_EXPORT.xlsx";
+        String dataFileName = PinyinUtil.getPinyin(this.conceptionKindName,"")+"_"+System.currentTimeMillis()+"_QUERY_EXPORT.arrow";
         excelDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
 
         List<ConceptionEntityValue> conceptionEntityValueList = this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
@@ -161,7 +176,9 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
             attributeNameSet.remove("createDate");
         }
 
-        List<String> attributeNameList = new ArrayList<>(attributeNameSet);
+        //List<String> attributeNameList = new ArrayList<>(attributeNameSet);
+
+        List<String> attributeNameList = resultAttributeNamesList;
         String[] headerRow = new String[attributeNameList.size()+1];
 
         for(int i =0;i<attributeNameList.size();i++){
@@ -185,14 +202,67 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
             }
         }
 
+        /*
         ExcelWriter excelWriter= ExcelUtil.getWriter(excelDataFileURI);
         excelWriter.writeHeadRow(Arrays.asList(headerRow));
         excelWriter.write(excelRowDataList,true);
         excelWriter.close();
+        */
+
+
+
+
+
+
+        Field age = new Field("age",
+                FieldType.nullable(new ArrowType.Int(32, true)),
+                /*children*/ null);
+        Field name = new Field("name",
+                FieldType.nullable(new ArrowType.Utf8()),
+                /*children*/ null);
+        Schema schema = new Schema(asList(age, name));
+        try(
+                BufferAllocator allocator = new RootAllocator();
+                VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator);
+                IntVector ageVector = (IntVector) root.getVector("age");
+                VarCharVector nameVector = (VarCharVector) root.getVector("name");
+        ){
+            ageVector.allocateNew(3);
+            ageVector.set(0, 10);
+            ageVector.set(1, 20);
+            ageVector.set(2, 30);
+            nameVector.allocateNew(3);
+            nameVector.set(0, "Dave".getBytes(StandardCharsets.UTF_8));
+            nameVector.set(1, "Peter".getBytes(StandardCharsets.UTF_8));
+            nameVector.set(2, "Mary".getBytes(StandardCharsets.UTF_8));
+            root.setRowCount(3);
+            File file = new File(excelDataFileURI);
+            try (
+                    FileOutputStream fileOutputStream = new FileOutputStream(file);
+                    ArrowFileWriter writer = new ArrowFileWriter(root, /*provider*/ null, fileOutputStream.getChannel());
+            ) {
+                writer.start();
+                writer.writeBatch();
+                writer.end();
+                System.out.println("Record batches written: " + writer.getRecordBlocks().size()
+                        + ". Number of rows written: " + root.getRowCount());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+
+
+
+
+
+
 
         excelFileName.setText(dataFileName);
 
-        Button downloadButton = new Button("点击下载 Excel 数据文件");
+        Button downloadButton = new Button("点击下载 ARROW 数据文件");
         downloadButton.setIcon(VaadinIcon.DOWNLOAD_ALT.create());
 
         FileDownloadWrapper arrowFileDownloader = new FileDownloadWrapper(dataFileName,new File(TEMP_FILES_STORAGE_LOCATION));

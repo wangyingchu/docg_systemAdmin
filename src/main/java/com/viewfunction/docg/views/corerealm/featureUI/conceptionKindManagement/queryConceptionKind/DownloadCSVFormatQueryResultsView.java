@@ -130,9 +130,6 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
         List<ConceptionEntityValue> conceptionEntityValueList = this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
         List<String[]> csvRowDataList = new ArrayList<>();
 
-        ConceptionEntityValue firstEntityValue = conceptionEntityValueList.get(0);
-        Set<String> attributeNameSet = firstEntityValue.getEntityAttributesValue().keySet();
-
         List<String> resultAttributeNamesList = new ArrayList<>();
         QueryParameters queryParameters = this.conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getQueryParameters();
         AttributesParameters attributesParameters = queryParameters.getAttributesParameters();
@@ -157,18 +154,7 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
             }
         }
 
-        attributeNameSet.remove("ROW_INDEX");
-        if(!resultAttributeNamesList.contains("dataOrigin")){
-            attributeNameSet.remove("dataOrigin");
-        }
-        if(!resultAttributeNamesList.contains("lastModifyDate")){
-            attributeNameSet.remove("lastModifyDate");
-        }
-        if(!resultAttributeNamesList.contains("createDate")){
-            attributeNameSet.remove("createDate");
-        }
-
-        List<String> attributeNameList = new ArrayList<>(attributeNameSet);
+        List<String> attributeNameList = new ArrayList<>(resultAttributeNamesList);
         String[] headerRow = new String[attributeNameList.size()+1];
 
         for(int i =0;i<attributeNameList.size();i++){
