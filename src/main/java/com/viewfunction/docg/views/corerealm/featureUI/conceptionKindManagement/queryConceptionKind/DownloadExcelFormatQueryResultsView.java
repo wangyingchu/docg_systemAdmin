@@ -72,7 +72,7 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
 
         HorizontalLayout dataFileInfoLayout = new HorizontalLayout();
         dataFileInfoLayout.getStyle().set("padding-top","10px");
-        Label messageContentLabel = new Label("CSV 数据文件: ");
+        Label messageContentLabel = new Label("EXCEL 数据文件: ");
         messageContentLabel.addClassNames("text-xs","text-secondary");
 
         excelFileName = new Label();
@@ -93,7 +93,7 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
         add(buttonbarLayout);
         setHorizontalComponentAlignment(Alignment.END,buttonbarLayout);
 
-        cancelImportButton = new Button("取消或结束导出 CSV 格式概念实体数据");
+        cancelImportButton = new Button("取消或结束导出 EXCEL 格式概念实体数据");
         cancelImportButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
         cancelImportButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override

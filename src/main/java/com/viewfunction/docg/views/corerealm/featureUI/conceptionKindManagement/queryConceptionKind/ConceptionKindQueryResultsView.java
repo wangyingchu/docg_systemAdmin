@@ -425,8 +425,13 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     }
 
     private void exportArrowQueryResult(){
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        EntitiesExchangeOperator entitiesExchangeOperator = coreRealm.getEntitiesExchangeOperator();
+        DownloadArrowFormatQueryResultsView downloadArrowFormatQueryResultsView = new DownloadArrowFormatQueryResultsView(this.conceptionKindName,lastConceptionEntitiesAttributesRetrieveResult,500);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 ARROW 格式概念类型实体数据查询结果",null,true,550,290,false);
+        fixSizeWindow.disableCloseButton();
+        fixSizeWindow.setWindowContent(downloadArrowFormatQueryResultsView);
+        fixSizeWindow.setModel(true);
+        downloadArrowFormatQueryResultsView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 
     private void exportExcelQueryResult(){
