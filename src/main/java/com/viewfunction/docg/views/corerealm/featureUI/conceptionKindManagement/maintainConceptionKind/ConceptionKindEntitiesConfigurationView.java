@@ -140,13 +140,6 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
                 renderLoadSHPFormatConceptionEntitiesView();
             }
         });
-        MenuItem excelImportItem = importSubItems.addItem("EXCEL 格式数据");
-        shpImportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                renderLoadExcelFormatConceptionEntitiesView();
-            }
-        });
 
         infoContainer.add(importMenuBar);
 
