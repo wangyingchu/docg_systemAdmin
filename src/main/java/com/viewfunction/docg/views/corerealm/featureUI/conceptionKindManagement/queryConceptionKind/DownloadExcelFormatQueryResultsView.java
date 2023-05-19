@@ -18,6 +18,9 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.AttributesParameters;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.FilteringItem;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
@@ -36,7 +39,7 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.TEMP_FILES_STORAGE_LOCATION);
     private Dialog containerDialog;
     private Button cancelImportButton;
-    private Label csvFileName;
+    private Label excelFileName;
     private HorizontalLayout downloaderContainer;
     private String excelDataFileURI;
     private long conceptionEntitiesCount;
@@ -72,9 +75,9 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
         Label messageContentLabel = new Label("CSV 数据文件: ");
         messageContentLabel.addClassNames("text-xs","text-secondary");
 
-        csvFileName = new Label();
-        csvFileName.addClassNames("text-xs");
-        dataFileInfoLayout.add(messageContentLabel, csvFileName);
+        excelFileName = new Label();
+        excelFileName.addClassNames("text-xs");
+        dataFileInfoLayout.add(messageContentLabel, excelFileName);
         add(dataFileInfoLayout);
 
         downloaderContainer = new HorizontalLayout();
@@ -121,15 +124,45 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
         excelDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
 
         List<ConceptionEntityValue> conceptionEntityValueList = this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
-        //List<String[]> csvRowDataList = new ArrayList<>();
         List<List<Object>> excelRowDataList = new ArrayList<>();
 
         ConceptionEntityValue firstEntityValue = conceptionEntityValueList.get(0);
         Set<String> attributeNameSet = firstEntityValue.getEntityAttributesValue().keySet();
+
+        List<String> resultAttributeNamesList = new ArrayList<>();
+        QueryParameters queryParameters = this.conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getQueryParameters();
+        AttributesParameters attributesParameters = queryParameters.getAttributesParameters();
+
+        if(attributesParameters.getDefaultFilteringItem() != null){
+            resultAttributeNamesList.add(attributesParameters.getDefaultFilteringItem().getAttributeName());
+        }
+
+        List<FilteringItem> andFilterList = attributesParameters.getAndFilteringItemsList();
+        if(andFilterList != null){
+            for(FilteringItem currentFilteringItem:andFilterList){
+                String attributeName = currentFilteringItem.getAttributeName();
+                resultAttributeNamesList.add(attributeName);
+            }
+        }
+
+        List<FilteringItem> orFilterList = attributesParameters.getOrFilteringItemsList();
+        if(orFilterList != null){
+            for(FilteringItem currentFilteringItem:orFilterList){
+                String attributeName = currentFilteringItem.getAttributeName();
+                resultAttributeNamesList.add(attributeName);
+            }
+        }
+
         attributeNameSet.remove("ROW_INDEX");
-        attributeNameSet.remove("dataOrigin");
-        attributeNameSet.remove("lastModifyDate");
-        attributeNameSet.remove("createDate");
+        if(!resultAttributeNamesList.contains("dataOrigin")){
+            attributeNameSet.remove("dataOrigin");
+        }
+        if(!resultAttributeNamesList.contains("lastModifyDate")){
+            attributeNameSet.remove("lastModifyDate");
+        }
+        if(!resultAttributeNamesList.contains("createDate")){
+            attributeNameSet.remove("createDate");
+        }
 
         List<String> attributeNameList = new ArrayList<>(attributeNameSet);
         String[] headerRow = new String[attributeNameList.size()+1];
@@ -138,29 +171,20 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
             headerRow[i] = attributeNameList.get(i);
         }
         headerRow[attributeNameList.size()] = "Entity_UID";
-        //csvRowDataList.add(headerRow);
 
         if(conceptionEntityValueList != null && conceptionEntityValueList.size() >0){
             for(ConceptionEntityValue currentConceptionEntityValue:conceptionEntityValueList){
                 ArrayList<Object> currentRowList = new ArrayList();
                 excelRowDataList.add(currentRowList);
 
-
-                //String[] currentDataRow = new String[attributeNameList.size()+1];
                 Map<String,Object> entityAttributesValueMap = currentConceptionEntityValue.getEntityAttributesValue();
                 for(int i =0;i<attributeNameList.size();i++){
                     String attributeName = attributeNameList.get(i);
                     Object currentAttributeValue = entityAttributesValueMap.get(attributeName) != null ?
-                            entityAttributesValueMap.get(attributeName).toString(): null;
+                            entityAttributesValueMap.get(attributeName): "NULL";
                     currentRowList.add(currentAttributeValue);
-
                 }
-                //currentDataRow[attributeNameList.size()] = currentConceptionEntityValue.getConceptionEntityUID();
-
                 currentRowList.add(currentConceptionEntityValue.getConceptionEntityUID());
-
-
-                //csvRowDataList.add(currentDataRow);
             }
         }
 
@@ -169,7 +193,7 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
         excelWriter.write(excelRowDataList,true);
         excelWriter.close();
 
-        csvFileName.setText(dataFileName);
+        excelFileName.setText(dataFileName);
 
         Button downloadButton = new Button("点击下载 Excel 数据文件");
         downloadButton.setIcon(VaadinIcon.DOWNLOAD_ALT.create());

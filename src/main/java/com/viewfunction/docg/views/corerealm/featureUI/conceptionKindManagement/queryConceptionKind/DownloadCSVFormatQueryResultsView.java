@@ -18,6 +18,9 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.AttributesParameters;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.FilteringItem;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
@@ -129,10 +132,41 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
 
         ConceptionEntityValue firstEntityValue = conceptionEntityValueList.get(0);
         Set<String> attributeNameSet = firstEntityValue.getEntityAttributesValue().keySet();
+
+        List<String> resultAttributeNamesList = new ArrayList<>();
+        QueryParameters queryParameters = this.conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getQueryParameters();
+        AttributesParameters attributesParameters = queryParameters.getAttributesParameters();
+
+        if(attributesParameters.getDefaultFilteringItem() != null){
+            resultAttributeNamesList.add(attributesParameters.getDefaultFilteringItem().getAttributeName());
+        }
+
+        List<FilteringItem> andFilterList = attributesParameters.getAndFilteringItemsList();
+        if(andFilterList != null){
+            for(FilteringItem currentFilteringItem:andFilterList){
+                String attributeName = currentFilteringItem.getAttributeName();
+                resultAttributeNamesList.add(attributeName);
+            }
+        }
+
+        List<FilteringItem> orFilterList = attributesParameters.getOrFilteringItemsList();
+        if(orFilterList != null){
+            for(FilteringItem currentFilteringItem:orFilterList){
+                String attributeName = currentFilteringItem.getAttributeName();
+                resultAttributeNamesList.add(attributeName);
+            }
+        }
+
         attributeNameSet.remove("ROW_INDEX");
-        attributeNameSet.remove("dataOrigin");
-        attributeNameSet.remove("lastModifyDate");
-        attributeNameSet.remove("createDate");
+        if(!resultAttributeNamesList.contains("dataOrigin")){
+            attributeNameSet.remove("dataOrigin");
+        }
+        if(!resultAttributeNamesList.contains("lastModifyDate")){
+            attributeNameSet.remove("lastModifyDate");
+        }
+        if(!resultAttributeNamesList.contains("createDate")){
+            attributeNameSet.remove("createDate");
+        }
 
         List<String> attributeNameList = new ArrayList<>(attributeNameSet);
         String[] headerRow = new String[attributeNameList.size()+1];
