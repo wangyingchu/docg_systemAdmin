@@ -2,8 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
-import cn.hutool.poi.excel.ExcelUtil;
-import cn.hutool.poi.excel.ExcelWriter;
+
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -28,20 +27,17 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
+import com.viewfunction.docg.util.helper.ArrowOperationHelper;
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
 import org.apache.arrow.vector.IntVector;
 import org.apache.arrow.vector.VarCharVector;
 import org.apache.arrow.vector.VectorSchemaRoot;
 import org.apache.arrow.vector.ipc.ArrowFileWriter;
-import org.apache.arrow.vector.types.DateUnit;
-import org.apache.arrow.vector.types.FloatingPointPrecision;
-import org.apache.arrow.vector.types.TimeUnit;
 import org.apache.arrow.vector.types.pojo.ArrowType;
 import org.apache.arrow.vector.types.pojo.Field;
 import org.apache.arrow.vector.types.pojo.FieldType;
 import org.apache.arrow.vector.types.pojo.Schema;
-import org.eclipse.emf.ecore.util.Switch;
 import org.vaadin.olli.FileDownloadWrapper;
 
 import java.io.File;
@@ -185,9 +181,9 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
 
         for(String currentFieldName : attributeNameList){
             String currentFieldDataType = attributeDataTypeMapping.get(currentFieldName);
-            headerFieldList.add(getArrowField(currentFieldName,currentFieldDataType));
+            headerFieldList.add(ArrowOperationHelper.getArrowField(currentFieldName,currentFieldDataType));
         }
-        headerFieldList.add(getArrowField("Entity_UID","STRING"));
+        headerFieldList.add(ArrowOperationHelper.getArrowField("Entity_UID","STRING"));
         Schema arrorSchema = new Schema(headerFieldList);
 
 
@@ -286,50 +282,5 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         }
     }
 
-    private Field getArrowField(String fieldName,String fieldDataType){
-        //BOOLEAN,INT,SHORT,LONG,FLOAT,DOUBLE,TIMESTAMP,DATE,DATETIME,TIME,STRING,BYTE,DECIMAL
-        Field resultField = null;
-        switch(fieldDataType){
-            case "BOOLEAN":
-                resultField = new Field(fieldName,FieldType.nullable(new ArrowType.Bool()),/*children*/ null);
-                break;
-            case "INT":
-                resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Int(32, true)),/*children*/ null);
-                break;
-            case "SHORT":
-                resultField = new Field(fieldName,FieldType.nullable(new ArrowType.Int(16, true)),/*children*/ null);
-                break;
-            case "LONG":
-                resultField = new Field(fieldName,FieldType.nullable(new ArrowType.Int(64, true)),/*children*/ null);
-                break;
-            case "FLOAT":
-                resultField = new Field(fieldName,FieldType.nullable(new ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE)),/*children*/ null);
-                break;
-            case "DOUBLE":
-                resultField = new Field(fieldName,FieldType.nullable(new ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE)),/*children*/ null);
-                break;
-            case "TIMESTAMP":
-                 resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Timestamp(TimeUnit.SECOND,TimeZone.getDefault().toString())),/*children*/ null);
-                break;
-            case "DATE":
-                resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Date(DateUnit.DAY)),/*children*/ null);
-                break;
-            case "DATETIME":
-                resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Date(DateUnit.MILLISECOND)),/*children*/ null);
-                break;
-            case "TIME":
-                resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Time(TimeUnit.SECOND,32)),/*children*/ null);
-                break;
-            case "STRING":
-                resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Utf8()),/*children*/ null);
-                break;
-            case "BYTE":
-                resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Int(8, true)),/*children*/ null);
-                break;
-            case "DECIMAL":
-                resultField = new Field(fieldName, FieldType.nullable(new ArrowType.Decimal(1,1,1)),/*children*/ null);
-                break;
-        }
-        return resultField;
-    }
+
 }
