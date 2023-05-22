@@ -1,5 +1,6 @@
 package com.viewfunction.docg.util.helper;
 
+import org.apache.arrow.vector.*;
 import org.apache.arrow.vector.types.DateUnit;
 import org.apache.arrow.vector.types.FloatingPointPrecision;
 import org.apache.arrow.vector.types.TimeUnit;
@@ -56,5 +57,55 @@ public class ArrowOperationHelper {
                 break;
         }
         return resultField;
+    }
+
+    public static FieldVector setArrowVector(VectorSchemaRoot root,String fieldName, String fieldDataType){
+        FieldVector resultVector = null;
+        switch(fieldDataType){
+            case "BOOLEAN":
+
+                break;
+            case "INT":
+                resultVector = (IntVector) root.getVector(fieldName);
+                break;
+            case "SHORT":
+
+                break;
+            case "LONG":
+
+                break;
+            case "FLOAT":
+
+                break;
+            case "DOUBLE":
+
+                break;
+            case "TIMESTAMP":
+
+                break;
+            case "DATE":
+
+                break;
+            case "DATETIME":
+
+                break;
+            case "TIME":
+
+                break;
+            case "STRING":
+                resultVector = (VarCharVector) root.getVector(fieldName);
+                break;
+            case "BYTE":
+
+                break;
+            case "DECIMAL":
+
+                break;
+        }
+
+
+
+
+        return resultVector;
     }
 }

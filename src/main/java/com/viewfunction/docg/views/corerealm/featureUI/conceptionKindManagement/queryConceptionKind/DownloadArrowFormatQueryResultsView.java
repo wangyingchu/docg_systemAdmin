@@ -15,6 +15,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.AttributesParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.FilteringItem;
@@ -28,16 +29,16 @@ import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 import com.viewfunction.docg.util.helper.ArrowOperationHelper;
+
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
-import org.apache.arrow.vector.IntVector;
-import org.apache.arrow.vector.VarCharVector;
-import org.apache.arrow.vector.VectorSchemaRoot;
+import org.apache.arrow.vector.*;
 import org.apache.arrow.vector.ipc.ArrowFileWriter;
 import org.apache.arrow.vector.types.pojo.ArrowType;
 import org.apache.arrow.vector.types.pojo.Field;
 import org.apache.arrow.vector.types.pojo.FieldType;
 import org.apache.arrow.vector.types.pojo.Schema;
+
 import org.vaadin.olli.FileDownloadWrapper;
 
 import java.io.File;
@@ -140,7 +141,6 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         arrowDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
 
         List<ConceptionEntityValue> conceptionEntityValueList = this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
-        List<List<Object>> excelRowDataList = new ArrayList<>();
 
         Set<String> resultAttributeNamesSet = new HashSet<>();
         QueryParameters queryParameters = this.conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getQueryParameters();
@@ -178,7 +178,6 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         }
 
         List<Field> headerFieldList = new ArrayList<>();
-
         for(String currentFieldName : attributeNameList){
             String currentFieldDataType = attributeDataTypeMapping.get(currentFieldName);
             headerFieldList.add(ArrowOperationHelper.getArrowField(currentFieldName,currentFieldDataType));
@@ -186,18 +185,93 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         headerFieldList.add(ArrowOperationHelper.getArrowField("Entity_UID","STRING"));
         Schema arrorSchema = new Schema(headerFieldList);
 
-
-        try(
-                BufferAllocator allocator = new RootAllocator();
-                VectorSchemaRoot root = VectorSchemaRoot.create(arrorSchema, allocator);
-                IntVector ageVector = (IntVector) root.getVector("age");
-                VarCharVector nameVector = (VarCharVector) root.getVector("name");
-        ){
+        BufferAllocator allocator = new RootAllocator();
+        VectorSchemaRoot root = VectorSchemaRoot.create(arrorSchema, allocator);
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+        root.setRowCount((int)conceptionEntitiesCount);
+        File file = new File(arrowDataFileURI);
+        try (
+                FileOutputStream fileOutputStream = new FileOutputStream(file);
+                ArrowFileWriter writer = new ArrowFileWriter(root, /*provider*/ null, fileOutputStream.getChannel());
+        ) {
+            writer.start();
+            writer.writeBatch();
+            writer.end();
+            System.out.println("Record batches written: " + writer.getRecordBlocks().size()
+                    + ". Number of rows written: " + root.getRowCount());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+
+        if(conceptionEntityValueList != null){
+            for(String currentFieldName : attributeNameList){
+                String currentFieldDataType = attributeDataTypeMapping.get(currentFieldName);
+                if(currentFieldDataType != null) {
+                    switch (currentFieldDataType) {
+                        case "STRING":
+                            VarCharVector varCharVector = (VarCharVector) root.getVector(currentFieldName);
+                            varCharVector.allocateNew((int)conceptionEntitiesCount);
+                            break;
+                        case "INT":
+                            IntVector intVector = (IntVector) root.getVector(currentFieldName);
+                            intVector.allocateNew((int)conceptionEntitiesCount);
+                            break;
+                        case "LONG":
+                            BigIntVector bigIntVector = (BigIntVector) root.getVector(currentFieldName);
+                            bigIntVector.allocateNew((int)conceptionEntitiesCount);
+                            break;
+                        case "SHORT":
+                            SmallIntVector smallIntVector = (SmallIntVector) root.getVector(currentFieldName);
+                            smallIntVector.allocateNew((int)conceptionEntitiesCount);
+                            break;
+
+
+
+                    }
+                }
+            }
+
+
+
+
+
+
+
+
+            for(int i=0; i< conceptionEntityValueList.size(); i++){
+                ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
+                Map<String,Object> currentEntityAttributesValue = currentConceptionEntityValue.getEntityAttributesValue();
+
+                Set<String> keySet = currentEntityAttributesValue.keySet();
+                for(String currentKey:keySet){
+                    String currentAttributeDataType = attributeDataTypeMapping.get(currentKey);
+                    if(currentAttributeDataType != null) {
+                        switch (currentAttributeDataType) {
+                            case "STRING":
+                                VarCharVector varCharVector = (VarCharVector) root.getVector(currentKey);
+                                varCharVector.set(i, currentEntityAttributesValue.get(currentKey).toString().getBytes(StandardCharsets.UTF_8));
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
+
 
 
 
@@ -224,7 +298,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         if(conceptionEntityValueList != null && conceptionEntityValueList.size() >0){
             for(ConceptionEntityValue currentConceptionEntityValue:conceptionEntityValueList){
                 ArrayList<Object> currentRowList = new ArrayList();
-                excelRowDataList.add(currentRowList);
+               // excelRowDataList.add(currentRowList);
 
                 Map<String,Object> entityAttributesValueMap = currentConceptionEntityValue.getEntityAttributesValue();
                 for(int i =0;i<attributeNameList.size();i++){
@@ -242,14 +316,14 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
 
 
 
-
+/*
 
         Field age = new Field("age",
                 FieldType.nullable(new ArrowType.Int(32, true)),
-                /*children*/ null);
+                 null);
         Field name = new Field("name",
                 FieldType.nullable(new ArrowType.Utf8()),
-                /*children*/ null);
+                null);
         Schema schema = new Schema(asList(age, name));
         try(
                 BufferAllocator allocator = new RootAllocator();
@@ -265,11 +339,14 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
             nameVector.set(0, "Dave".getBytes(StandardCharsets.UTF_8));
             nameVector.set(1, "Peter".getBytes(StandardCharsets.UTF_8));
             nameVector.set(2, "Mary".getBytes(StandardCharsets.UTF_8));
+
+
+
             root.setRowCount(3);
             File file = new File(arrowDataFileURI);
             try (
                     FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    ArrowFileWriter writer = new ArrowFileWriter(root, /*provider*/ null, fileOutputStream.getChannel());
+                    ArrowFileWriter writer = new ArrowFileWriter(root,  null, fileOutputStream.getChannel());
             ) {
                 writer.start();
                 writer.writeBatch();
@@ -282,7 +359,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         }
 
 
-
+*/
 
 
 
