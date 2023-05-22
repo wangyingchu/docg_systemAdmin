@@ -55,9 +55,9 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.TEMP_FILES_STORAGE_LOCATION);
     private Dialog containerDialog;
     private Button cancelImportButton;
-    private Label excelFileName;
+    private Label arrowFileName;
     private HorizontalLayout downloaderContainer;
-    private String excelDataFileURI;
+    private String arrowDataFileURI;
     private long conceptionEntitiesCount;
     private ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult;
 
@@ -91,9 +91,9 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         Label messageContentLabel = new Label("ARROW 数据文件: ");
         messageContentLabel.addClassNames("text-xs","text-secondary");
 
-        excelFileName = new Label();
-        excelFileName.addClassNames("text-xs");
-        dataFileInfoLayout.add(messageContentLabel, excelFileName);
+        arrowFileName = new Label();
+        arrowFileName.addClassNames("text-xs");
+        dataFileInfoLayout.add(messageContentLabel, arrowFileName);
         add(dataFileInfoLayout);
 
         downloaderContainer = new HorizontalLayout();
@@ -137,7 +137,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         }
 
         String dataFileName = PinyinUtil.getPinyin(this.conceptionKindName,"")+"_"+System.currentTimeMillis()+"_QUERY_EXPORT.arrow";
-        excelDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
+        arrowDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
 
         List<ConceptionEntityValue> conceptionEntityValueList = this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
         List<List<Object>> excelRowDataList = new ArrayList<>();
@@ -185,6 +185,31 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         }
         headerFieldList.add(ArrowOperationHelper.getArrowField("Entity_UID","STRING"));
         Schema arrorSchema = new Schema(headerFieldList);
+
+
+        try(
+                BufferAllocator allocator = new RootAllocator();
+                VectorSchemaRoot root = VectorSchemaRoot.create(arrorSchema, allocator);
+                IntVector ageVector = (IntVector) root.getVector("age");
+                VarCharVector nameVector = (VarCharVector) root.getVector("name");
+        ){
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         
@@ -241,7 +266,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
             nameVector.set(1, "Peter".getBytes(StandardCharsets.UTF_8));
             nameVector.set(2, "Mary".getBytes(StandardCharsets.UTF_8));
             root.setRowCount(3);
-            File file = new File(excelDataFileURI);
+            File file = new File(arrowDataFileURI);
             try (
                     FileOutputStream fileOutputStream = new FileOutputStream(file);
                     ArrowFileWriter writer = new ArrowFileWriter(root, /*provider*/ null, fileOutputStream.getChannel());
@@ -265,7 +290,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
 
 
 
-        excelFileName.setText(dataFileName);
+        arrowFileName.setText(dataFileName);
 
         Button downloadButton = new Button("点击下载 ARROW 数据文件");
         downloadButton.setIcon(VaadinIcon.DOWNLOAD_ALT.create());
@@ -273,12 +298,12 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         FileDownloadWrapper arrowFileDownloader = new FileDownloadWrapper(dataFileName,new File(TEMP_FILES_STORAGE_LOCATION));
         arrowFileDownloader.wrapComponent(downloadButton);
         downloaderContainer.add(arrowFileDownloader);
-        arrowFileDownloader.setFile(new File(excelDataFileURI));
+        arrowFileDownloader.setFile(new File(arrowDataFileURI));
     }
 
     private void deleteArrowDataFile(){
-        if(excelDataFileURI != null){
-            FileUtil.del(excelDataFileURI);
+        if(arrowDataFileURI != null){
+            FileUtil.del(arrowDataFileURI);
         }
     }
 
