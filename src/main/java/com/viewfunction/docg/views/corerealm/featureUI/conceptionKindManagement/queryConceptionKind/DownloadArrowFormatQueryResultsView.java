@@ -46,8 +46,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.*;
 
-import static java.util.Arrays.asList;
-
 public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
     private String conceptionKindName;
     private String TEMP_FILES_STORAGE_LOCATION =
@@ -163,10 +161,25 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
                 resultAttributeNamesSet.add(attributeName);
             }
         }
+        System.out.println(attributesParameters.getDefaultFilteringItem());
+        System.out.println(attributesParameters.getAndFilteringItemsList());
+        System.out.println(attributesParameters.getOrFilteringItemsList());
 
+
+        System.out.println(resultAttributeNamesSet);
+        System.out.println(resultAttributeNamesSet);
+        System.out.println(resultAttributeNamesSet);
+
+        System.out.println("==================================");
         List<String> attributeNameList = new ArrayList<>(resultAttributeNamesSet);
 
+        System.out.println(attributeNameList);
+        System.out.println(attributeNameList);
+        System.out.println(attributeNameList);
+        System.out.println(attributeNameList);
+
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
 
         List<AttributeSystemInfo> attributeSystemInfoList = systemMaintenanceOperator.getConceptionKindAttributesSystemInfo(this.conceptionKindName);
@@ -205,8 +218,14 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         entityUIDFieldVector = fieldVectorMap.get("Entity_UID");
         ArrowOperationHelper.allocateNewArrowVector(entityUIDFieldVector,"STRING",(int)conceptionEntitiesCount);
 
+
+        System.out.println(arrorSchema.getFields());
+        System.out.println(arrorSchema.getFields());
+        System.out.println(arrorSchema.getFields());
+
         //set vectorsData
         if(conceptionEntityValueList != null){
+            VarCharVector entityUIDCharVector = (VarCharVector)fieldVectorMap.get("Entity_UID");
             for(int i=0; i< conceptionEntityValueList.size(); i++){
                 ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
                 Map<String,Object> currentEntityAttributesValue = currentConceptionEntityValue.getEntityAttributesValue();
@@ -229,8 +248,8 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
                         }
                     }
                 }
-                //VarCharVector entityUIDCharVector = (VarCharVector)fieldVectorMap.get("Entity_UID");
-                //entityUIDCharVector.set(i, currentConceptionEntityValue.getConceptionEntityUID().getBytes(StandardCharsets.UTF_8));
+
+                entityUIDCharVector.set(i, currentConceptionEntityValue.getConceptionEntityUID().getBytes(StandardCharsets.UTF_8));
             }
         }
 

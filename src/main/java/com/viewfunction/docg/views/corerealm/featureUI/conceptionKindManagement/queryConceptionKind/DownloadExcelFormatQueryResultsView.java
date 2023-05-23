@@ -2,9 +2,9 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
-
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -18,9 +18,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.AttributesParameters;
-import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
-import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.FilteringItem;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
@@ -44,11 +41,13 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
     private String excelDataFileURI;
     private long conceptionEntitiesCount;
     private ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult;
+    private  List<String> queryAttributesList;
 
-    public DownloadExcelFormatQueryResultsView(String conceptionKindName, ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult, int viewWidth){
+    public DownloadExcelFormatQueryResultsView(String conceptionKindName, ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult, List<String> queryAttributesList,int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
         this.conceptionKindName = conceptionKindName;
         this.conceptionEntitiesAttributesRetrieveResult = conceptionEntitiesAttributesRetrieveResult;
+        this.queryAttributesList = queryAttributesList;
 
         Icon kindIcon = VaadinIcon.CUBE.create();
         kindIcon.setSize("12px");
@@ -126,31 +125,7 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
         List<ConceptionEntityValue> conceptionEntityValueList = this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
         List<List<Object>> excelRowDataList = new ArrayList<>();
 
-        Set<String> resultAttributeNamesSet = new HashSet<>();
-        QueryParameters queryParameters = this.conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getQueryParameters();
-        AttributesParameters attributesParameters = queryParameters.getAttributesParameters();
-
-        if(attributesParameters.getDefaultFilteringItem() != null){
-            resultAttributeNamesSet.add(attributesParameters.getDefaultFilteringItem().getAttributeName());
-        }
-
-        List<FilteringItem> andFilterList = attributesParameters.getAndFilteringItemsList();
-        if(andFilterList != null){
-            for(FilteringItem currentFilteringItem:andFilterList){
-                String attributeName = currentFilteringItem.getAttributeName();
-                resultAttributeNamesSet.add(attributeName);
-            }
-        }
-
-        List<FilteringItem> orFilterList = attributesParameters.getOrFilteringItemsList();
-        if(orFilterList != null){
-            for(FilteringItem currentFilteringItem:orFilterList){
-                String attributeName = currentFilteringItem.getAttributeName();
-                resultAttributeNamesSet.add(attributeName);
-            }
-        }
-
-        List<String> attributeNameList = new ArrayList<>(resultAttributeNamesSet);
+        List<String> attributeNameList = new ArrayList<>(queryAttributesList);
         String[] headerRow = new String[attributeNameList.size()+1];
 
         for(int i =0;i<attributeNameList.size();i++){
@@ -166,9 +141,7 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
                 Map<String,Object> entityAttributesValueMap = currentConceptionEntityValue.getEntityAttributesValue();
                 for(int i =0;i<attributeNameList.size();i++){
                     String attributeName = attributeNameList.get(i);
-                    Object currentAttributeValue = entityAttributesValueMap.get(attributeName) != null ?
-                            entityAttributesValueMap.get(attributeName): "NULL";
-                    currentRowList.add(currentAttributeValue);
+                    currentRowList.add(entityAttributesValueMap.get(attributeName));
                 }
                 currentRowList.add(currentConceptionEntityValue.getConceptionEntityUID());
             }

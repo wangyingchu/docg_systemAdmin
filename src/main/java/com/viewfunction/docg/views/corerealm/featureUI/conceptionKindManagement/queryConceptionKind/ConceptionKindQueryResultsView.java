@@ -25,7 +25,6 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.operator.EntitiesExchangeOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
@@ -64,6 +63,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     private MenuBar queryResultOperationMenuBar;
     private List<String> currentRowKeyList;
     private ConceptionEntitiesAttributesRetrieveResult lastConceptionEntitiesAttributesRetrieveResult;
+    private  List<String> lastQueryAttributesList;
     public ConceptionKindQueryResultsView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
         this.setPadding(true);
@@ -176,6 +176,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         }
         queryResultGrid.setItems(new ArrayList<>());
         this.currentRowKeyList.clear();
+        this.lastQueryAttributesList = null;
         String conceptionKindName = event.getConceptionKindName();
         List<String> resultAttributesList = event.getResultAttributesList();
         QueryParameters eventQueryParameters = event.getQueryParameters();
@@ -193,6 +194,8 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                     attributesList.add(RealmConstant._creatorIdProperty);
                     attributesList.add(RealmConstant._dataOriginProperty);
                 }
+
+                this.lastQueryAttributesList = attributesList;
 
                 ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
                         targetConception.getSingleValueEntityAttributesByAttributeNames(attributesList,queryParameters);
@@ -435,7 +438,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     }
 
     private void exportExcelQueryResult(){
-        DownloadExcelFormatQueryResultsView downloadExcelFormatQueryResultsView = new DownloadExcelFormatQueryResultsView(this.conceptionKindName,lastConceptionEntitiesAttributesRetrieveResult,500);
+        DownloadExcelFormatQueryResultsView downloadExcelFormatQueryResultsView = new DownloadExcelFormatQueryResultsView(this.conceptionKindName,lastConceptionEntitiesAttributesRetrieveResult,this.lastQueryAttributesList,500);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 EXCEL 格式概念类型实体数据查询结果",null,true,550,290,false);
         fixSizeWindow.disableCloseButton();
         fixSizeWindow.setWindowContent(downloadExcelFormatQueryResultsView);
