@@ -34,9 +34,7 @@ import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
 import org.apache.arrow.vector.*;
 import org.apache.arrow.vector.ipc.ArrowFileWriter;
-import org.apache.arrow.vector.types.pojo.ArrowType;
 import org.apache.arrow.vector.types.pojo.Field;
-import org.apache.arrow.vector.types.pojo.FieldType;
 import org.apache.arrow.vector.types.pojo.Schema;
 
 import org.vaadin.olli.FileDownloadWrapper;
@@ -188,18 +186,53 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         BufferAllocator allocator = new RootAllocator();
         VectorSchemaRoot root = VectorSchemaRoot.create(arrorSchema, allocator);
 
+        //create vectors
+        Map<String,FieldVector> fieldVectorMap = new HashMap<>();
+        for(String currentFieldName : attributeNameList){
+            String currentFieldDataType = attributeDataTypeMapping.get(currentFieldName);
+            FieldVector currentFieldVector = ArrowOperationHelper.getArrowVector(root,currentFieldName,currentFieldDataType);
+            fieldVectorMap.put(currentFieldName,currentFieldVector);
+        }
+        FieldVector entityUIDFieldVector = ArrowOperationHelper.getArrowVector(root,"Entity_UID","STRING");
+        fieldVectorMap.put("Entity_UID",entityUIDFieldVector);
 
+        //allocateNew vectors
+        for(String currentFieldName : attributeNameList){
+            String currentFieldDataType = attributeDataTypeMapping.get(currentFieldName);
+            FieldVector currentFieldVector = fieldVectorMap.get(currentFieldName);
+            ArrowOperationHelper.allocateNewArrowVector(currentFieldVector,currentFieldDataType,(int)conceptionEntitiesCount);
+        }
+        entityUIDFieldVector = fieldVectorMap.get("Entity_UID");
+        ArrowOperationHelper.allocateNewArrowVector(entityUIDFieldVector,"STRING",(int)conceptionEntitiesCount);
 
+        //set vectorsData
+        if(conceptionEntityValueList != null){
+            for(int i=0; i< conceptionEntityValueList.size(); i++){
+                ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
+                Map<String,Object> currentEntityAttributesValue = currentConceptionEntityValue.getEntityAttributesValue();
 
-
-
-
-
-
-
-
-
-
+                Set<String> keySet = currentEntityAttributesValue.keySet();
+                for(String currentKey:keySet){
+                    String currentAttributeDataType = attributeDataTypeMapping.get(currentKey);
+                    if(currentAttributeDataType != null) {
+                        switch (currentAttributeDataType) {
+                            case "STRING":
+                                VarCharVector varCharVector = (VarCharVector)fieldVectorMap.get(currentKey);
+                                if(varCharVector != null){
+                                    if(currentEntityAttributesValue.get(currentKey) != null){
+                                        varCharVector.set(i, currentEntityAttributesValue.get(currentKey).toString().getBytes(StandardCharsets.UTF_8));
+                                    }  if(currentEntityAttributesValue.get(currentKey) != null){
+                                        varCharVector.set(i, currentEntityAttributesValue.get(currentKey).toString().getBytes(StandardCharsets.UTF_8));
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
+                //VarCharVector entityUIDCharVector = (VarCharVector)fieldVectorMap.get("Entity_UID");
+                //entityUIDCharVector.set(i, currentConceptionEntityValue.getConceptionEntityUID().getBytes(StandardCharsets.UTF_8));
+            }
+        }
 
         root.setRowCount((int)conceptionEntitiesCount);
         File file = new File(arrowDataFileURI);
@@ -215,157 +248,11 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        if(conceptionEntityValueList != null){
-            for(String currentFieldName : attributeNameList){
-                String currentFieldDataType = attributeDataTypeMapping.get(currentFieldName);
-                if(currentFieldDataType != null) {
-                    switch (currentFieldDataType) {
-                        case "STRING":
-                            VarCharVector varCharVector = (VarCharVector) root.getVector(currentFieldName);
-                            varCharVector.allocateNew((int)conceptionEntitiesCount);
-                            break;
-                        case "INT":
-                            IntVector intVector = (IntVector) root.getVector(currentFieldName);
-                            intVector.allocateNew((int)conceptionEntitiesCount);
-                            break;
-                        case "LONG":
-                            BigIntVector bigIntVector = (BigIntVector) root.getVector(currentFieldName);
-                            bigIntVector.allocateNew((int)conceptionEntitiesCount);
-                            break;
-                        case "SHORT":
-                            SmallIntVector smallIntVector = (SmallIntVector) root.getVector(currentFieldName);
-                            smallIntVector.allocateNew((int)conceptionEntitiesCount);
-                            break;
-
-
-
-                    }
-                }
-            }
-
-
-
-
-
-
-
-
-            for(int i=0; i< conceptionEntityValueList.size(); i++){
-                ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
-                Map<String,Object> currentEntityAttributesValue = currentConceptionEntityValue.getEntityAttributesValue();
-
-                Set<String> keySet = currentEntityAttributesValue.keySet();
-                for(String currentKey:keySet){
-                    String currentAttributeDataType = attributeDataTypeMapping.get(currentKey);
-                    if(currentAttributeDataType != null) {
-                        switch (currentAttributeDataType) {
-                            case "STRING":
-                                VarCharVector varCharVector = (VarCharVector) root.getVector(currentKey);
-                                varCharVector.set(i, currentEntityAttributesValue.get(currentKey).toString().getBytes(StandardCharsets.UTF_8));
-                                break;
-                        }
-                    }
-                }
-            }
+        //close vectors
+        Collection<FieldVector> fieldVectors = fieldVectorMap.values();
+        for(FieldVector currentFieldVector:fieldVectors){
+            currentFieldVector.close();
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-        String[] headerRow = new String[attributeNameList.size()+1];
-
-        for(int i =0;i<attributeNameList.size();i++){
-            headerRow[i] = attributeNameList.get(i);
-        }
-        headerRow[attributeNameList.size()] = "Entity_UID";
-
-        if(conceptionEntityValueList != null && conceptionEntityValueList.size() >0){
-            for(ConceptionEntityValue currentConceptionEntityValue:conceptionEntityValueList){
-                ArrayList<Object> currentRowList = new ArrayList();
-               // excelRowDataList.add(currentRowList);
-
-                Map<String,Object> entityAttributesValueMap = currentConceptionEntityValue.getEntityAttributesValue();
-                for(int i =0;i<attributeNameList.size();i++){
-                    String attributeName = attributeNameList.get(i);
-                    Object currentAttributeValue = entityAttributesValueMap.get(attributeName) != null ?
-                            entityAttributesValueMap.get(attributeName): "NULL";
-                    currentRowList.add(currentAttributeValue);
-                }
-                currentRowList.add(currentConceptionEntityValue.getConceptionEntityUID());
-            }
-        }
-
-
-
-
-
-
-/*
-
-        Field age = new Field("age",
-                FieldType.nullable(new ArrowType.Int(32, true)),
-                 null);
-        Field name = new Field("name",
-                FieldType.nullable(new ArrowType.Utf8()),
-                null);
-        Schema schema = new Schema(asList(age, name));
-        try(
-                BufferAllocator allocator = new RootAllocator();
-                VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator);
-                IntVector ageVector = (IntVector) root.getVector("age");
-                VarCharVector nameVector = (VarCharVector) root.getVector("name");
-        ){
-            ageVector.allocateNew(3);
-            ageVector.set(0, 10);
-            ageVector.set(1, 20);
-            ageVector.set(2, 30);
-            nameVector.allocateNew(3);
-            nameVector.set(0, "Dave".getBytes(StandardCharsets.UTF_8));
-            nameVector.set(1, "Peter".getBytes(StandardCharsets.UTF_8));
-            nameVector.set(2, "Mary".getBytes(StandardCharsets.UTF_8));
-
-
-
-            root.setRowCount(3);
-            File file = new File(arrowDataFileURI);
-            try (
-                    FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    ArrowFileWriter writer = new ArrowFileWriter(root,  null, fileOutputStream.getChannel());
-            ) {
-                writer.start();
-                writer.writeBatch();
-                writer.end();
-                System.out.println("Record batches written: " + writer.getRecordBlocks().size()
-                        + ". Number of rows written: " + root.getRowCount());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-*/
-
-
-
-
-
-
 
         arrowFileName.setText(dataFileName);
 
@@ -383,6 +270,4 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
             FileUtil.del(arrowDataFileURI);
         }
     }
-
-
 }

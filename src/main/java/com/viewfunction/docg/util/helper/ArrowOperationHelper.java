@@ -59,38 +59,31 @@ public class ArrowOperationHelper {
         return resultField;
     }
 
-    public static FieldVector setArrowVector(VectorSchemaRoot root,String fieldName, String fieldDataType){
+    public static FieldVector getArrowVector(VectorSchemaRoot root,String fieldName, String fieldDataType){
         FieldVector resultVector = null;
         switch(fieldDataType){
             case "BOOLEAN":
-
                 break;
             case "INT":
                 resultVector = (IntVector) root.getVector(fieldName);
                 break;
             case "SHORT":
-
+                resultVector = (SmallIntVector) root.getVector(fieldName);
                 break;
             case "LONG":
-
+                resultVector = (BigIntVector) root.getVector(fieldName);
                 break;
             case "FLOAT":
-
                 break;
             case "DOUBLE":
-
                 break;
             case "TIMESTAMP":
-
                 break;
             case "DATE":
-
                 break;
             case "DATETIME":
-
                 break;
             case "TIME":
-
                 break;
             case "STRING":
                 resultVector = (VarCharVector) root.getVector(fieldName);
@@ -99,13 +92,29 @@ public class ArrowOperationHelper {
 
                 break;
             case "DECIMAL":
-
                 break;
         }
-
-
-
-
         return resultVector;
+    }
+
+    public static void allocateNewArrowVector(FieldVector fieldVector, String fieldDataType,int allocateNewCount){
+        switch (fieldDataType) {
+            case "STRING":
+                VarCharVector varCharVector = (VarCharVector) fieldVector;
+                varCharVector.allocateNew(allocateNewCount);
+                break;
+            case "INT":
+                IntVector intVector = (IntVector) fieldVector;
+                intVector.allocateNew(allocateNewCount);
+                break;
+            case "LONG":
+                BigIntVector bigIntVector = (BigIntVector) fieldVector;
+                bigIntVector.allocateNew(allocateNewCount);
+                break;
+            case "SHORT":
+                SmallIntVector smallIntVector = (SmallIntVector)fieldVector;
+                smallIntVector.allocateNew(allocateNewCount);
+                break;
+        }
     }
 }
