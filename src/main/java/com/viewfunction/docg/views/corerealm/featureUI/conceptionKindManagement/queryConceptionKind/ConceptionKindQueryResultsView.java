@@ -428,7 +428,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     }
 
     private void exportArrowQueryResult(){
-        DownloadArrowFormatQueryResultsView downloadArrowFormatQueryResultsView = new DownloadArrowFormatQueryResultsView(this.conceptionKindName,this.lastConceptionEntitiesAttributesRetrieveResult,500);
+        DownloadArrowFormatQueryResultsView downloadArrowFormatQueryResultsView = new DownloadArrowFormatQueryResultsView(this.conceptionKindName,this.lastConceptionEntitiesAttributesRetrieveResult,this.lastQueryAttributesList,500);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 ARROW 格式概念类型实体数据查询结果",null,true,550,290,false);
         fixSizeWindow.disableCloseButton();
         fixSizeWindow.setWindowContent(downloadArrowFormatQueryResultsView);

@@ -126,8 +126,6 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
         List<ConceptionEntityValue> conceptionEntityValueList = this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
         List<String[]> csvRowDataList = new ArrayList<>();
 
-
-
         List<String> attributeNameList = new ArrayList<>(queryAttributesList);
         String[] headerRow = new String[attributeNameList.size()+1];
 

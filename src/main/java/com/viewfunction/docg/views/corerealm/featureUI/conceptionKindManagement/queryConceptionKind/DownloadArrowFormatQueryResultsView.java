@@ -57,11 +57,13 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
     private String arrowDataFileURI;
     private long conceptionEntitiesCount;
     private ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult;
+    private  List<String> queryAttributesList;
 
-    public DownloadArrowFormatQueryResultsView(String conceptionKindName, ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult, int viewWidth){
+    public DownloadArrowFormatQueryResultsView(String conceptionKindName, ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult, List<String> queryAttributesList,int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
         this.conceptionKindName = conceptionKindName;
         this.conceptionEntitiesAttributesRetrieveResult = conceptionEntitiesAttributesRetrieveResult;
+        this.queryAttributesList = queryAttributesList;
 
         Icon kindIcon = VaadinIcon.CUBE.create();
         kindIcon.setSize("12px");
@@ -137,7 +139,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         arrowDataFileURI = fileFolder.getAbsolutePath()+"/"+ dataFileName;
 
         List<ConceptionEntityValue> conceptionEntityValueList = this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
-
+/*
         Set<String> resultAttributeNamesSet = new HashSet<>();
         QueryParameters queryParameters = this.conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getQueryParameters();
         AttributesParameters attributesParameters = queryParameters.getAttributesParameters();
@@ -161,6 +163,8 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
                 resultAttributeNamesSet.add(attributeName);
             }
         }
+
+
         System.out.println(attributesParameters.getDefaultFilteringItem());
         System.out.println(attributesParameters.getAndFilteringItemsList());
         System.out.println(attributesParameters.getOrFilteringItemsList());
@@ -169,9 +173,9 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         System.out.println(resultAttributeNamesSet);
         System.out.println(resultAttributeNamesSet);
         System.out.println(resultAttributeNamesSet);
-
+ */
         System.out.println("==================================");
-        List<String> attributeNameList = new ArrayList<>(resultAttributeNamesSet);
+        List<String> attributeNameList = new ArrayList<>(queryAttributesList);
 
         System.out.println(attributeNameList);
         System.out.println(attributeNameList);
