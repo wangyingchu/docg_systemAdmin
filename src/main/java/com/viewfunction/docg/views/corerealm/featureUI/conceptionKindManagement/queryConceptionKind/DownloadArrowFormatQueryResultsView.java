@@ -180,8 +180,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         //set vectorsData
         if(conceptionEntityValueList != null){
             VarCharVector entityUIDCharVector = (VarCharVector)fieldVectorMap.get("Entity_UID");
-            //for(int i=0; i< conceptionEntityValueList.size(); i++){
-            for(int i=0; i< 2000; i++){
+            for(int i=0; i< conceptionEntityValueList.size(); i++){
                 ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
                 Map<String,Object> currentEntityAttributesValue = currentConceptionEntityValue.getEntityAttributesValue();
 
@@ -208,7 +207,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
             }
         }
 
-        root.setRowCount((int)conceptionEntitiesCount);
+        root.setRowCount(conceptionEntityValueList.size());
         File file = new File(arrowDataFileURI);
         try (
                 FileOutputStream fileOutputStream = new FileOutputStream(file);
