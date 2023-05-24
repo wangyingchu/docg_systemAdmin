@@ -18,9 +18,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.AttributesParameters;
-import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
-import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.FilteringItem;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
@@ -45,11 +42,13 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
     private String csvDataFileURI;
     private long conceptionEntitiesCount;
     private ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult;
+    private  List<String> queryAttributesList;
 
-    public DownloadCSVFormatQueryResultsView(String conceptionKindName, ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult, int viewWidth){
+    public DownloadCSVFormatQueryResultsView(String conceptionKindName, ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult, List<String> queryAttributesList,int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
         this.conceptionKindName = conceptionKindName;
         this.conceptionEntitiesAttributesRetrieveResult = conceptionEntitiesAttributesRetrieveResult;
+        this.queryAttributesList = queryAttributesList;
 
         Icon kindIcon = VaadinIcon.CUBE.create();
         kindIcon.setSize("12px");
@@ -127,31 +126,9 @@ public class DownloadCSVFormatQueryResultsView extends VerticalLayout {
         List<ConceptionEntityValue> conceptionEntityValueList = this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
         List<String[]> csvRowDataList = new ArrayList<>();
 
-        Set<String> resultAttributeNamesSet = new HashSet<>();
-        QueryParameters queryParameters = this.conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getQueryParameters();
-        AttributesParameters attributesParameters = queryParameters.getAttributesParameters();
 
-        if(attributesParameters.getDefaultFilteringItem() != null){
-            resultAttributeNamesSet.add(attributesParameters.getDefaultFilteringItem().getAttributeName());
-        }
 
-        List<FilteringItem> andFilterList = attributesParameters.getAndFilteringItemsList();
-        if(andFilterList != null){
-            for(FilteringItem currentFilteringItem:andFilterList){
-                String attributeName = currentFilteringItem.getAttributeName();
-                resultAttributeNamesSet.add(attributeName);
-            }
-        }
-
-        List<FilteringItem> orFilterList = attributesParameters.getOrFilteringItemsList();
-        if(orFilterList != null){
-            for(FilteringItem currentFilteringItem:orFilterList){
-                String attributeName = currentFilteringItem.getAttributeName();
-                resultAttributeNamesSet.add(attributeName);
-            }
-        }
-
-        List<String> attributeNameList = new ArrayList<>(resultAttributeNamesSet);
+        List<String> attributeNameList = new ArrayList<>(queryAttributesList);
         String[] headerRow = new String[attributeNameList.size()+1];
 
         for(int i =0;i<attributeNameList.size();i++){

@@ -418,7 +418,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     }
 
     private void exportCSVQueryResult(){
-        DownloadCSVFormatQueryResultsView downloadCSVFormatQueryResultsView = new DownloadCSVFormatQueryResultsView(this.conceptionKindName,lastConceptionEntitiesAttributesRetrieveResult,500);
+        DownloadCSVFormatQueryResultsView downloadCSVFormatQueryResultsView = new DownloadCSVFormatQueryResultsView(this.conceptionKindName,this.lastConceptionEntitiesAttributesRetrieveResult,this.lastQueryAttributesList,500);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 CSV 格式概念类型实体数据查询结果",null,true,550,290,false);
         fixSizeWindow.disableCloseButton();
         fixSizeWindow.setWindowContent(downloadCSVFormatQueryResultsView);
@@ -428,7 +428,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     }
 
     private void exportArrowQueryResult(){
-        DownloadArrowFormatQueryResultsView downloadArrowFormatQueryResultsView = new DownloadArrowFormatQueryResultsView(this.conceptionKindName,lastConceptionEntitiesAttributesRetrieveResult,500);
+        DownloadArrowFormatQueryResultsView downloadArrowFormatQueryResultsView = new DownloadArrowFormatQueryResultsView(this.conceptionKindName,this.lastConceptionEntitiesAttributesRetrieveResult,500);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 ARROW 格式概念类型实体数据查询结果",null,true,550,290,false);
         fixSizeWindow.disableCloseButton();
         fixSizeWindow.setWindowContent(downloadArrowFormatQueryResultsView);
@@ -438,7 +438,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     }
 
     private void exportExcelQueryResult(){
-        DownloadExcelFormatQueryResultsView downloadExcelFormatQueryResultsView = new DownloadExcelFormatQueryResultsView(this.conceptionKindName,lastConceptionEntitiesAttributesRetrieveResult,this.lastQueryAttributesList,500);
+        DownloadExcelFormatQueryResultsView downloadExcelFormatQueryResultsView = new DownloadExcelFormatQueryResultsView(this.conceptionKindName,this.lastConceptionEntitiesAttributesRetrieveResult,this.lastQueryAttributesList,500);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 EXCEL 格式概念类型实体数据查询结果",null,true,550,290,false);
         fixSizeWindow.disableCloseButton();
         fixSizeWindow.setWindowContent(downloadExcelFormatQueryResultsView);
