@@ -216,8 +216,8 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                         ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
                         currentConceptionEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName,i+1);
                     }
-                    if (resultAttributesList != null && resultAttributesList.size() > 0) {
-                        for (String currentProperty : resultAttributesList) {
+                    if (attributesList != null && attributesList.size() > 0) {
+                        for (String currentProperty : attributesList) {
                             if (!currentProperty.equals(_rowIndexPropertyName)) {
                             queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
                                     @Override
