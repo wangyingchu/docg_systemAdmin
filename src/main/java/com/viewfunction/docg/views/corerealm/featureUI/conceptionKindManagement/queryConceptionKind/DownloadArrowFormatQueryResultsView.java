@@ -15,7 +15,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
@@ -34,6 +34,8 @@ import org.apache.arrow.vector.ipc.ArrowFileWriter;
 import org.apache.arrow.vector.types.pojo.Field;
 import org.apache.arrow.vector.types.pojo.Schema;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vaadin.olli.FileDownloadWrapper;
 
 import java.io.File;
@@ -55,7 +57,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
     private long conceptionEntitiesCount;
     private ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult;
     private  List<String> queryAttributesList;
-
+    private static Logger logger = LoggerFactory.getLogger(DownloadArrowFormatQueryResultsView.class);
     public DownloadArrowFormatQueryResultsView(String conceptionKindName, ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult, List<String> queryAttributesList,int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
         this.conceptionKindName = conceptionKindName;
@@ -213,8 +215,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
             writer.start();
             writer.writeBatch();
             writer.end();
-            System.out.println("Record batches written: " + writer.getRecordBlocks().size()
-                    + ". Number of rows written: " + root.getRowCount());
+            logger.debug("ArrowRecord batches written: {}. Number of rows written: {}", writer.getRecordBlocks().size(),root.getRowCount());
         } catch (IOException e) {
             e.printStackTrace();
         }
