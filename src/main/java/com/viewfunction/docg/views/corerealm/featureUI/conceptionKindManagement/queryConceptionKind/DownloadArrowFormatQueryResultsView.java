@@ -41,8 +41,13 @@ import org.vaadin.olli.FileDownloadWrapper;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
@@ -189,15 +194,66 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
                 Set<String> keySet = currentEntityAttributesValue.keySet();
                 for(String currentKey:keySet){
                     String currentAttributeDataType = attributeDataTypeMapping.get(currentKey);
-                    if(currentAttributeDataType != null) {
+                    FieldVector currentFieldVector = fieldVectorMap.get(currentKey);
+                    Object currentAttributeValue = currentEntityAttributesValue.get(currentKey);
+                    if(currentAttributeDataType != null && currentFieldVector!= null && currentAttributeValue != null) {
                         switch (currentAttributeDataType) {
+                            case "BOOLEAN":
+                                BitVector bitVector = (BitVector) currentFieldVector;
+
+
+                                break;
+                            case "INT":
+                                IntVector intVector = (IntVector) currentFieldVector;
+                                intVector.setSafe(i,(Integer)currentAttributeValue);
+                                break;
+                            case "SHORT":
+                                SmallIntVector smallIntVector = (SmallIntVector) currentFieldVector;
+                                smallIntVector.setSafe(i,(Integer)currentAttributeValue);
+                                break;
+                            case "LONG":
+                                BigIntVector bigIntVector = (BigIntVector) currentFieldVector;
+                                bigIntVector.setSafe(i,(Long)currentAttributeValue);
+                                break;
+                            case "FLOAT":
+                                Float4Vector float4Vector = (Float4Vector) currentFieldVector;
+                                float4Vector.setSafe(i,((Double)currentAttributeValue).floatValue());
+                                break;
+                            case "DOUBLE":
+                                Float8Vector float8Vector = (Float8Vector) currentFieldVector;
+                                float8Vector.setSafe(i,(Double) currentAttributeValue);
+                                break;
+
+                            case "TIMESTAMP":
+                                TimeStampVector timeStampVector = (TimeStampVector) currentFieldVector;
+                                timeStampVector.setSafe(i,(Long) currentAttributeValue);
+                                break;
+                            case "DATE":
+                                DateDayVector dateDayVector = (DateDayVector) currentFieldVector;
+                                dateDayVector.setSafe(i,(int)((LocalDate) currentAttributeValue).toEpochDay());
+                                break;
+                            case "DATETIME":
+                                DateMilliVector dateMilliVector = (DateMilliVector) currentFieldVector;
+                                dateMilliVector.setSafe(i,((LocalDateTime)currentAttributeValue).toEpochSecond(ZoneOffset.ofHours(8)));
+                                //dateMilliVector.set
+                                break;
+                            case "TIME":
+                                TimeSecVector timeSecVector = (TimeSecVector) currentFieldVector;
+                                timeSecVector.setSafe(i,(int)((LocalTime)currentAttributeValue).toNanoOfDay());
+                                break;
+
+
                             case "STRING":
-                                VarCharVector varCharVector = (VarCharVector)fieldVectorMap.get(currentKey);
-                                if(varCharVector != null){
-                                    if(currentEntityAttributesValue.get(currentKey) != null){
-                                        varCharVector.setSafe(i, currentEntityAttributesValue.get(currentKey).toString().getBytes(StandardCharsets.UTF_8));
-                                    }
-                                }
+                                VarCharVector varCharVector = (VarCharVector)currentFieldVector;
+                                varCharVector.setSafe(i, currentAttributeValue.toString().getBytes(StandardCharsets.UTF_8));
+                                break;
+                            case "BYTE":
+                                TinyIntVector tinyIntVector = (TinyIntVector) currentFieldVector;
+                                tinyIntVector.setSafe(i,(Integer)currentAttributeValue);
+                                break;
+                            case "DECIMAL":
+                                DecimalVector decimalVector = (DecimalVector) currentFieldVector;
+                                decimalVector.setSafe(i,(BigDecimal)currentAttributeValue);
                                 break;
                         }
                     }
