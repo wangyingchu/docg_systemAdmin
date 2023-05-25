@@ -63,6 +63,7 @@ public class ArrowOperationHelper {
         FieldVector resultVector = null;
         switch(fieldDataType){
             case "BOOLEAN":
+                resultVector = (BitVector) root.getVector(fieldName);
                 break;
             case "INT":
                 resultVector = (IntVector) root.getVector(fieldName);
@@ -74,24 +75,31 @@ public class ArrowOperationHelper {
                 resultVector = (BigIntVector) root.getVector(fieldName);
                 break;
             case "FLOAT":
+                resultVector = (Float4Vector) root.getVector(fieldName);
                 break;
             case "DOUBLE":
+                resultVector = (Float8Vector) root.getVector(fieldName);
                 break;
             case "TIMESTAMP":
+                resultVector = (TimeStampVector) root.getVector(fieldName);
                 break;
             case "DATE":
+                resultVector = (DateDayVector) root.getVector(fieldName);
                 break;
             case "DATETIME":
+                resultVector = (DateMilliVector) root.getVector(fieldName);
                 break;
             case "TIME":
+                resultVector = (TimeSecVector) root.getVector(fieldName);
                 break;
             case "STRING":
                 resultVector = (VarCharVector) root.getVector(fieldName);
                 break;
             case "BYTE":
-
+                resultVector = (TinyIntVector) root.getVector(fieldName);
                 break;
             case "DECIMAL":
+                resultVector = (DecimalVector) root.getVector(fieldName);
                 break;
         }
         return resultVector;
@@ -99,21 +107,57 @@ public class ArrowOperationHelper {
 
     public static void allocateNewArrowVector(FieldVector fieldVector, String fieldDataType,int allocateNewCount){
         switch (fieldDataType) {
-            case "STRING":
-                VarCharVector varCharVector = (VarCharVector) fieldVector;
-                varCharVector.allocateNew(allocateNewCount);
+            case "BOOLEAN":
+                BitVector bitVector = (BitVector) fieldVector;
+                bitVector.allocateNew(allocateNewCount);
                 break;
             case "INT":
                 IntVector intVector = (IntVector) fieldVector;
                 intVector.allocateNew(allocateNewCount);
                 break;
+            case "SHORT":
+                SmallIntVector smallIntVector = (SmallIntVector) fieldVector;
+                smallIntVector.allocateNew(allocateNewCount);
+                break;
             case "LONG":
                 BigIntVector bigIntVector = (BigIntVector) fieldVector;
                 bigIntVector.allocateNew(allocateNewCount);
                 break;
-            case "SHORT":
-                SmallIntVector smallIntVector = (SmallIntVector)fieldVector;
-                smallIntVector.allocateNew(allocateNewCount);
+            case "FLOAT":
+                Float4Vector float4Vector = (Float4Vector) fieldVector;
+                float4Vector.allocateNew(allocateNewCount);
+                break;
+            case "DOUBLE":
+                Float8Vector float8Vector = (Float8Vector) fieldVector;
+                float8Vector.allocateNew(allocateNewCount);
+                break;
+            case "TIMESTAMP":
+                TimeStampVector timeStampVector = (TimeStampVector) fieldVector;
+                timeStampVector.allocateNew(allocateNewCount);
+                break;
+            case "DATE":
+                DateDayVector dateDayVector = (DateDayVector) fieldVector;
+                dateDayVector.allocateNew(allocateNewCount);
+                break;
+            case "DATETIME":
+                DateMilliVector dateMilliVector = (DateMilliVector) fieldVector;
+                dateMilliVector.allocateNew(allocateNewCount);
+                break;
+            case "TIME":
+                TimeSecVector timeSecVector = (TimeSecVector) fieldVector;
+                timeSecVector.allocateNew(allocateNewCount);
+                break;
+            case "STRING":
+                VarCharVector varCharVector = (VarCharVector) fieldVector;
+                varCharVector.allocateNew(allocateNewCount);
+                break;
+            case "BYTE":
+                TinyIntVector tinyIntVector = (TinyIntVector) fieldVector;
+                tinyIntVector.allocateNew(allocateNewCount);
+                break;
+            case "DECIMAL":
+                DecimalVector decimalVector = (DecimalVector) fieldVector;
+                decimalVector.allocateNew(allocateNewCount);
                 break;
         }
     }
