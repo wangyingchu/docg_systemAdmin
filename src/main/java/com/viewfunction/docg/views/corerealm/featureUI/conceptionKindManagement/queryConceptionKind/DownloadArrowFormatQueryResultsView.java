@@ -206,6 +206,11 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
             }
         }
 
+        Collection<FieldVector> fieldVectors = fieldVectorMap.values();
+        for(FieldVector currentFieldVector:fieldVectors){
+            currentFieldVector.setValueCount(conceptionEntityValueList.size());
+        }
+
         root.setRowCount(conceptionEntityValueList.size());
         File file = new File(arrowDataFileURI);
         try (
@@ -220,7 +225,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
             e.printStackTrace();
         }
         //close vectors
-        Collection<FieldVector> fieldVectors = fieldVectorMap.values();
+        fieldVectors = fieldVectorMap.values();
         for(FieldVector currentFieldVector:fieldVectors){
             currentFieldVector.close();
         }
