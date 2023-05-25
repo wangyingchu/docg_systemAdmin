@@ -21,6 +21,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemI
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
@@ -154,6 +155,11 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
             attributeDataTypeMapping.put(currentAttributeSystemInfo.getAttributeName(),currentAttributeSystemInfo.getDataType());
         }
 
+        attributeDataTypeMapping.put(RealmConstant._createDateProperty,"TIMESTAMP");
+        attributeDataTypeMapping.put(RealmConstant._lastModifyDateProperty,"TIMESTAMP");
+        attributeDataTypeMapping.put(RealmConstant._creatorIdProperty,"STRING");
+        attributeDataTypeMapping.put(RealmConstant._dataOriginProperty,"STRING");
+
         List<Field> headerFieldList = new ArrayList<>();
         for(String currentFieldName : attributeNameList){
             String currentFieldDataType = attributeDataTypeMapping.get(currentFieldName);
@@ -223,11 +229,13 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
                                 Float8Vector float8Vector = (Float8Vector) currentFieldVector;
                                 float8Vector.setSafe(i,(Double) currentAttributeValue);
                                 break;
-
                             case "TIMESTAMP":
                                 TimeStampVector timeStampVector = (TimeStampVector) currentFieldVector;
-                                timeStampVector.setSafe(i,(Long) currentAttributeValue);
+                                timeStampVector.setSafe(i,((Date) currentAttributeValue).getTime());
                                 break;
+
+
+
                             case "DATE":
                                 DateDayVector dateDayVector = (DateDayVector) currentFieldVector;
                                 dateDayVector.setSafe(i,(int)((LocalDate) currentAttributeValue).toEpochDay());
@@ -241,6 +249,8 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
                                 TimeSecVector timeSecVector = (TimeSecVector) currentFieldVector;
                                 timeSecVector.setSafe(i,(int)((LocalTime)currentAttributeValue).toNanoOfDay());
                                 break;
+
+
 
 
                             case "STRING":
