@@ -193,17 +193,14 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
                                 VarCharVector varCharVector = (VarCharVector)fieldVectorMap.get(currentKey);
                                 if(varCharVector != null){
                                     if(currentEntityAttributesValue.get(currentKey) != null){
-
-                                        System.out.println(i);
-
-                                        varCharVector.set(i, currentEntityAttributesValue.get(currentKey).toString().getBytes(StandardCharsets.UTF_8));
+                                        varCharVector.setSafe(i, currentEntityAttributesValue.get(currentKey).toString().getBytes(StandardCharsets.UTF_8));
                                     }
                                 }
                                 break;
                         }
                     }
                 }
-                entityUIDCharVector.set(i, currentConceptionEntityValue.getConceptionEntityUID().getBytes(StandardCharsets.UTF_8));
+                entityUIDCharVector.setSafe(i, currentConceptionEntityValue.getConceptionEntityUID().getBytes(StandardCharsets.UTF_8));
             }
         }
 
@@ -226,6 +223,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         for(FieldVector currentFieldVector:fieldVectors){
             currentFieldVector.close();
         }
+        allocator.close();
 
         arrowFileName.setText(dataFileName);
 
