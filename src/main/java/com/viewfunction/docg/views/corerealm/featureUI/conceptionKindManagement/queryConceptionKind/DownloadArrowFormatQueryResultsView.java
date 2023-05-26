@@ -206,8 +206,12 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
                         switch (currentAttributeDataType) {
                             case "BOOLEAN":
                                 BitVector bitVector = (BitVector) currentFieldVector;
-
-
+                                Boolean boolValue = (Boolean)currentAttributeValue;
+                                if(boolValue){
+                                    bitVector.set(i,1);
+                                }else{
+                                    bitVector.set(i,0);
+                                }
                                 break;
                             case "INT":
                                 IntVector intVector = (IntVector) currentFieldVector;
