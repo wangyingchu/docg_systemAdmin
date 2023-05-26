@@ -295,6 +295,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         for(FieldVector currentFieldVector:fieldVectors){
             currentFieldVector.close();
         }
+        root.close();
         allocator.close();
 
         arrowFileName.setText(dataFileName);
