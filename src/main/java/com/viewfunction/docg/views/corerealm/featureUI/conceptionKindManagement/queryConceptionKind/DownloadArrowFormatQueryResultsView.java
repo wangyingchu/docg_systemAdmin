@@ -45,10 +45,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.*;
 
 public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
@@ -64,6 +61,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
     private ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult;
     private  List<String> queryAttributesList;
     private static Logger logger = LoggerFactory.getLogger(DownloadArrowFormatQueryResultsView.class);
+
     public DownloadArrowFormatQueryResultsView(String conceptionKindName, ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult, List<String> queryAttributesList,int viewWidth){
         this.setWidth(100, Unit.PERCENTAGE);
         this.conceptionKindName = conceptionKindName;
@@ -246,8 +244,7 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
                                 break;
                             case "DATETIME":
                                 DateMilliVector dateMilliVector = (DateMilliVector) currentFieldVector;
-                                dateMilliVector.setSafe(i,((LocalDateTime)currentAttributeValue).toEpochSecond(ZoneOffset.ofHours(8)));
-                                //dateMilliVector.set
+                                dateMilliVector.setSafe(i,((LocalDateTime)currentAttributeValue).toEpochSecond(OffsetDateTime.now().getOffset()));
                                 break;
                             case "TIME":
                                 TimeSecVector timeSecVector = (TimeSecVector) currentFieldVector;
