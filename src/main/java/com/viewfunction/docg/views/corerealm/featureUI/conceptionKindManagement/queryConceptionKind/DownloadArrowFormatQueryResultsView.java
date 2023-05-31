@@ -161,6 +161,13 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
         List<Field> headerFieldList = new ArrayList<>();
         for(String currentFieldName : attributeNameList){
             String currentFieldDataType = attributeDataTypeMapping.get(currentFieldName);
+
+
+            System.out.println(currentFieldDataType);
+            System.out.println(currentFieldDataType);
+            System.out.println(currentFieldDataType);
+            System.out.println(currentFieldDataType);
+
             headerFieldList.add(ArrowOperationHelper.getArrowField(currentFieldName,currentFieldDataType));
         }
         headerFieldList.add(ArrowOperationHelper.getArrowField("Entity_UID","STRING"));
@@ -235,21 +242,34 @@ public class DownloadArrowFormatQueryResultsView extends VerticalLayout {
                                 TimeStampVector timeStampVector = (TimeStampVector) currentFieldVector;
                                 timeStampVector.setSafe(i,((Date) currentAttributeValue).getTime());
                                 break;
-
-
-
                             case "DATE":
                                 DateDayVector dateDayVector = (DateDayVector) currentFieldVector;
                                 dateDayVector.setSafe(i,(int)((LocalDate) currentAttributeValue).toEpochDay());
                                 break;
-                            case "DATETIME":
-                                DateMilliVector dateMilliVector = (DateMilliVector) currentFieldVector;
-                                dateMilliVector.setSafe(i,((LocalDateTime)currentAttributeValue).toEpochSecond(OffsetDateTime.now().getOffset()));
-                                break;
                             case "TIME":
                                 TimeSecVector timeSecVector = (TimeSecVector) currentFieldVector;
-                                timeSecVector.setSafe(i,(int)((LocalTime)currentAttributeValue).toNanoOfDay());
+                                timeSecVector.setSafe(i,((LocalTime)currentAttributeValue).toSecondOfDay());
                                 break;
+
+
+
+                            case "DATETIME":
+                                DateMilliVector dateMilliVector = (DateMilliVector) currentFieldVector;
+                                System.out.println(((LocalDateTime)currentAttributeValue).toString());
+                                System.out.println(((LocalDateTime)currentAttributeValue).toString());
+                                System.out.println(((LocalDateTime)currentAttributeValue).toString());
+                                System.out.println(((LocalDateTime)currentAttributeValue).toString());
+                                long dateTimeValue = ((LocalDateTime)currentAttributeValue).atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
+
+                                System.out.println(dateTimeValue);
+                                System.out.println(dateTimeValue);
+                                System.out.println(dateTimeValue);
+                                System.out.println(dateTimeValue);
+                                dateMilliVector.setSafe(i,dateTimeValue);
+                                break;
+
+
+
 
 
 
