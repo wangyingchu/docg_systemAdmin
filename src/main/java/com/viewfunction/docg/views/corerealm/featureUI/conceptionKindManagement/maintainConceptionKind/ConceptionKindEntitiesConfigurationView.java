@@ -54,6 +54,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     private MetaConfigItemsConfigView metaConfigItemsConfigView;
     private KindIndexConfigView kindIndexConfigView;
     private ClassificationConfigView classificationConfigView;
+    private Button addConceptionKindScopeAttributeButton;
 
     public ConceptionKindEntitiesConfigurationView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
@@ -96,7 +97,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
             }
         });
 
-        Button addConceptionKindScopeAttributeButton= new Button("添加概念类型全局属性");
+        addConceptionKindScopeAttributeButton= new Button("添加概念类型全局属性");
         addConceptionKindScopeAttributeButton.setIcon(VaadinIcon.TEXT_INPUT.create());
         addConceptionKindScopeAttributeButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         infoContainer.add(addConceptionKindScopeAttributeButton);
@@ -106,6 +107,9 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
                 renderAddConceptionKindGlobalAttributeView();
             }
         });
+        if(conceptionEntitiesCount == 0){
+            addConceptionKindScopeAttributeButton.setEnabled(false);
+        }
 
         Icon divIcon = VaadinIcon.LINE_V.create();
         divIcon.setSize("8px");
@@ -280,10 +284,6 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         fixSizeWindow.show();
     }
 
-    private void renderLoadExcelFormatConceptionEntitiesView(){
-
-    }
-
     private void renderDownloadARROWFormatConceptionEntitiesView(){
         DownloadARROWFormatConceptionEntitiesView downloadARROWFormatConceptionEntitiesView = new DownloadARROWFormatConceptionEntitiesView(this.conceptionKindName,500);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 ARROW 格式概念实体数据",null,true,550,290,false);
@@ -322,6 +322,11 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
             if(this.conceptionKindName.equals(event.getConceptionKindName())){
                 this.conceptionEntitiesCount = this.conceptionEntitiesCount + event.getNewConceptionEntitiesCount();
                 this.conceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(this.conceptionEntitiesCount));
+                if(this.conceptionEntitiesCount > 0){
+                    this.addConceptionKindScopeAttributeButton.setEnabled(true);
+                }else{
+                    this.addConceptionKindScopeAttributeButton.setEnabled(false);
+                }
             }
         }
     }
@@ -332,6 +337,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
             if(this.conceptionKindName.equals(event.getConceptionKindName())){
                 this.conceptionEntitiesCount = 0;
                 this.conceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(this.conceptionEntitiesCount));
+                this.addConceptionKindScopeAttributeButton.setEnabled(false);
             }
         }
     }
@@ -342,6 +348,11 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
             if(this.conceptionKindName.equals(event.getConceptionKindName())){
                 this.conceptionEntitiesCount = event.getConceptionEntitiesCount();
                 this.conceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(this.conceptionEntitiesCount));
+                if(this.conceptionEntitiesCount > 0){
+                    this.addConceptionKindScopeAttributeButton.setEnabled(true);
+                }else{
+                    this.addConceptionKindScopeAttributeButton.setEnabled(false);
+                }
             }
         }
     }
