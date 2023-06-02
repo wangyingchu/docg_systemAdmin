@@ -5,6 +5,15 @@
 @import url('./views/data-analysis-view.css');
 @import url('./views/knowledge-fusion-view.css');
 @import url('./views/about-view.css');
+@font-face {
+    /*
+        https://www.ibm.com/plex/
+        https://github.com/IBM/plex/releases/tag/v6.3.0
+    */
+    font-family: "Plex";
+    font-style: normal;
+    src: url("./font/IBMPlexSans-Regular.ttf") format("TrueType");
+}
     html {
       --lumo-body-text-color: hsla(214, 42%, 9%, 0.94);
       --lumo-font-size: 1rem;
@@ -30,6 +39,8 @@
       --lumo-space-m: 0.625rem;
       --lumo-space-s: 0.3125rem;
       --lumo-space-xs: 0.1875rem;
+      /*for add IBM Carbon Design Plex font family*/
+      --lumo-font-family: "Plex";
     }
 
 /*—滚动条默认显示样式–*/

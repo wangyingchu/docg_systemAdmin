@@ -15,7 +15,7 @@ import org.vaadin.artur.helpers.LaunchUtil;
  * The entry point of the Spring Boot application.
  */
 @SpringBootApplication
-@Theme("docg-pac")
+@Theme(value="docg-pac")
 @PWA(name = "DOCG Platform System Administrator Console", shortName = "DOCG-SAC", offlineResources = {})
 public class ApplicationLaunchpad extends SpringBootServletInitializer implements AppShellConfigurator, VaadinServiceInitListener {
 
