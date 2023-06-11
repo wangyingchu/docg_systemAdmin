@@ -9,10 +9,22 @@
     /*
         https://www.ibm.com/plex/
         https://github.com/IBM/plex/releases/tag/v6.3.0
-    */
     font-family: "Plex";
     font-style: normal;
     src: url("./font/IBMPlexSans-Regular.ttf") format("TrueType");
+    */
+    /*
+    https://www.googlefonts.cn/
+    font-family: "Raleway";
+    font-style: normal;
+    src: url("./font/Roboto-Regular.ttf") format("TrueType");
+    */
+    /*
+        https://www.googlefonts.cn/
+    */
+    font-family: "Raleway";
+    font-style: normal;
+    src: url("./font/Raleway-Regular.ttf") format("TrueType");
 }
     html {
       --lumo-body-text-color: hsla(214, 42%, 9%, 0.94);
@@ -40,7 +52,11 @@
       --lumo-space-s: 0.3125rem;
       --lumo-space-xs: 0.1875rem;
       /*for add IBM Carbon Design Plex font family*/
-      --lumo-font-family: "Plex";
+      /*--lumo-font-family: "Plex";*/
+      /*for add Google fonts Roboto font*/
+      /*--lumo-font-family: "Roboto";*/
+      /*for add Google fonts Raleway font*/
+      --lumo-font-family: "Raleway";
     }
 
 /*—滚动条默认显示样式–*/
