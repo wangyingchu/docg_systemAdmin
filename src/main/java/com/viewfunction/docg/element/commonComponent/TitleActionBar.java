@@ -35,7 +35,8 @@ public class TitleActionBar extends HorizontalLayout {
 
         Label titleLabel = new Label(titleContent);
         titleLabel.getStyle().set("font-size","var(--lumo-font-size-xl)")
-                .set("color","#2e4e7e");
+                .set("color","#2e4e7e")
+                .set("font-weight","bold");
                 //.set("color","var(--lumo-primary-color)");
 
         titleElementsContainer.add(titleLabel);
