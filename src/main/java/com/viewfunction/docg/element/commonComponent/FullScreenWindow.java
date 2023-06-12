@@ -41,7 +41,8 @@ public class FullScreenWindow extends Dialog {
 
         if(titleIcon != null){
             titleIcon.setSize("16px");
-            titleIcon.getStyle().set("color","var(--lumo-primary-color)");
+            //titleIcon.getStyle().set("color","var(--lumo-primary-color)");
+            titleIcon.getStyle().set("color","#2e4e7e");
             titleElementsContainer.add(titleIcon);
             titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.AUTO,titleIcon);
         }
@@ -52,7 +53,11 @@ public class FullScreenWindow extends Dialog {
         titleElementsLeftContainer.setMargin(false);
 
         Label titleLabel = new Label(titleContent);
-        titleLabel.getStyle().set("font-size","var(--lumo-font-size-m)").set("color","var(--lumo-primary-color)").set("padding-right","10px");
+        titleLabel.getStyle().
+                set("font-size","var(--lumo-font-size-m)").
+                //set("color","var(--lumo-primary-color)").
+                set("color","#2e4e7e").
+                set("padding-right","10px");
         titleElementsLeftContainer.add(titleLabel);
 
         titleElementsContainer.add(titleElementsLeftContainer);

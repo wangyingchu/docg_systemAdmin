@@ -44,14 +44,18 @@ public class FixSizeWindow extends Dialog {
 
         if(titleIcon != null){
             titleIcon.setSize("18px");
-            titleIcon.getStyle().set("color","var(--lumo-primary-color)")
+            titleIcon.getStyle()
+                    //.set("color","var(--lumo-primary-color)")
+                    .set("color","#2e4e7e")
                     .set("padding-right", "5px");
             titleElementsContainer.add(titleIcon);
             titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.AUTO,titleIcon);
         }
 
         Label titleLabel = new Label(titleContent);
-        titleLabel.getStyle().set("font-size","var(--lumo-font-size-m)").set("color","var(--lumo-primary-color)");
+        titleLabel.getStyle().set("font-size","var(--lumo-font-size-m)")
+                //.set("color","var(--lumo-primary-color)").
+                .set("color","#2e4e7e");
 
         titleElementsContainer.add(titleLabel);
         titleElementsContainer.setFlexGrow(1,titleLabel);
