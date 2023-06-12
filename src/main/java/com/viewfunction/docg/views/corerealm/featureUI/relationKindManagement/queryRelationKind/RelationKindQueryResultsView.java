@@ -37,6 +37,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.De
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
 import dev.mett.vaadin.tooltip.Tooltips;
 
+import java.text.NumberFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -57,7 +58,7 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
     private SecondaryKeyValueDisplayItem dataCountDisplayItem;
     private final ZoneId id = ZoneId.systemDefault();
     private final String _rowIndexPropertyName = "ROW_INDEX";
-
+    private NumberFormat numberFormat;
     private List<String> currentRowKeyList;
     public RelationKindQueryResultsView(String relationKindName){
         this.relationKindName = relationKindName;
@@ -71,6 +72,7 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
         startTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询开始时间","-");
         finishTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询结束时间","-");
         dataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"结果集数据量","-");
+        numberFormat = NumberFormat.getInstance();
 
         queryResultGrid = new Grid<>();
         queryResultGrid.setWidth(100, Unit.PERCENTAGE);
@@ -149,7 +151,7 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
                     ZonedDateTime finishZonedDateTime = ZonedDateTime.ofInstant(finishDateTime.toInstant(), id);
                     String finishTimeStr = finishZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
                     finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
-                    dataCountDisplayItem.updateDisplayValue(""+relationEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount());
+                    dataCountDisplayItem.updateDisplayValue(""+numberFormat.format(relationEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount()));
 
                     List<RelationEntityValue> relationEntityValueList = relationEntitiesAttributesRetrieveResult.getRelationEntityValues();
                     for(int i=0 ; i<relationEntityValueList.size();i++){

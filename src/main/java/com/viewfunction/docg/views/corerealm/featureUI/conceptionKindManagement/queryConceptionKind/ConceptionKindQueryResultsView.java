@@ -43,6 +43,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
+import java.text.NumberFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -64,6 +65,8 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     private List<String> currentRowKeyList;
     private ConceptionEntitiesAttributesRetrieveResult lastConceptionEntitiesAttributesRetrieveResult;
     private  List<String> lastQueryAttributesList;
+    private NumberFormat numberFormat;
+
     public ConceptionKindQueryResultsView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
         this.setPadding(true);
@@ -78,6 +81,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         startTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询开始时间","-");
         finishTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询结束时间","-");
         dataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"结果集数据量","-");
+        numberFormat = NumberFormat.getInstance();
 
         HorizontalLayout actionButtonLayout = new HorizontalLayout();
         toolbarLayout.add(actionButtonLayout);
@@ -209,7 +213,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                     ZonedDateTime finishZonedDateTime = ZonedDateTime.ofInstant(finishDateTime.toInstant(), id);
                     String finishTimeStr = finishZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
                     finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
-                    dataCountDisplayItem.updateDisplayValue(""+conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount());
+                    dataCountDisplayItem.updateDisplayValue(""+   numberFormat.format(conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount()));
 
                     List<ConceptionEntityValue> conceptionEntityValueList = conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
                     for(int i=0 ; i<conceptionEntityValueList.size();i++){
