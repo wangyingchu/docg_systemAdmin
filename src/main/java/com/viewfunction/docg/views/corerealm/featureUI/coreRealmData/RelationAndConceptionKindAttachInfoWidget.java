@@ -9,6 +9,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
@@ -28,6 +29,7 @@ import dev.mett.vaadin.tooltip.Tooltips;
 import elemental.json.Json;
 import elemental.json.JsonArray;
 
+import java.text.NumberFormat;
 import java.util.*;
 
 public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
@@ -71,8 +73,10 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
                 .setTooltipGenerator(runtimeRelationAndConceptionKindAttachInfo -> getRelationKindName(runtimeRelationAndConceptionKindAttachInfo));
         runtimeRelationAndConceptionKindAttachInfoGrid.addComponentColumn(new RelationDirectionIconValueProvider()).setHeader("").setKey("idx_2").setFlexGrow(0).setWidth("35px").setResizable(false)
                 .setTooltipGenerator(runtimeRelationAndConceptionKindAttachInfo -> getRelationDirection(runtimeRelationAndConceptionKindAttachInfo));
-        runtimeRelationAndConceptionKindAttachInfoGrid.addColumn(RuntimeRelationAndConceptionKindAttachInfo::getRelationEntityCount).setHeader("关系数量").setKey("idx_3").setWidth("50px");
-
+        runtimeRelationAndConceptionKindAttachInfoGrid.addColumn(new NumberRenderer<>(RuntimeRelationAndConceptionKindAttachInfo::getRelationEntityCount, NumberFormat.getIntegerInstance()))
+                .setComparator((entityStatisticsInfo1, entityStatisticsInfo2) ->
+                        (int)(entityStatisticsInfo1.getRelationEntityCount() - entityStatisticsInfo2.getRelationEntityCount()))
+                .setHeader("关系数量").setKey("idx_3").setWidth("50px");
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.CUBE,"概念类型");
         runtimeRelationAndConceptionKindAttachInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.CONNECT_O,"关系类型");
