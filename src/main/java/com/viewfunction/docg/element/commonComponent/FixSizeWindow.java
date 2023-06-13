@@ -55,7 +55,8 @@ public class FixSizeWindow extends Dialog {
         Label titleLabel = new Label(titleContent);
         titleLabel.getStyle().set("font-size","var(--lumo-font-size-m)")
                 //.set("color","var(--lumo-primary-color)").
-                .set("color","#2e4e7e");
+                .set("color","#2e4e7e").
+                set("font-weight","bold");
 
         titleElementsContainer.add(titleLabel);
         titleElementsContainer.setFlexGrow(1,titleLabel);

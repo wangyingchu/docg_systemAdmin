@@ -57,7 +57,8 @@ public class FullScreenWindow extends Dialog {
                 set("font-size","var(--lumo-font-size-m)").
                 //set("color","var(--lumo-primary-color)").
                 set("color","#2e4e7e").
-                set("padding-right","10px");
+                set("padding-right","10px").
+                set("font-weight","bold");
         titleElementsLeftContainer.add(titleLabel);
 
         titleElementsContainer.add(titleElementsLeftContainer);
