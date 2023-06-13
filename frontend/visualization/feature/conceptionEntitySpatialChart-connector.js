@@ -128,21 +128,70 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
                 }).addTo(map);
             }
         };
+        /* access_token doesn't work anymore,so stop use mapbox
         const mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
         const grayscale = L.tileLayer(mbUrl, {id: 'mapbox/light-v10'}), streets  = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11'});
         const satellite = L.tileLayer(mbUrl, {id: 'mapbox/satellite-v9', tileSize: 512, zoomOffset: -1});
+         let baseLayers = {
+            "灰度模式": grayscale,
+            "道路模式": streets,
+            "卫星模式": satellite
+        };
+        */
+
+        /* use opencyclemap for most tile layer
+          https://www.thunderforest.com/maps/opencyclemap/
+        */
+        const atlas = L.tileLayer('https://{s}.tile.thunderforest.com/atlas/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
+            {maxZoom: 19}
+        );
+        const cycle = L.tileLayer('https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
+            {maxZoom: 19}
+        );
+        const transport = L.tileLayer('https://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
+            {maxZoom: 19}
+        );
+        const transport_dark = L.tileLayer('https://{s}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
+            {maxZoom: 19}
+        );
+        const landscape = L.tileLayer('https://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
+            {maxZoom: 19}
+        );
+        const outdoors = L.tileLayer('https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
+            {maxZoom: 19}
+        );
+        const neighbourhood = L.tileLayer('https://{s}.tile.thunderforest.com/neighbourhood/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
+            {maxZoom: 19}
+        );
+        const mobile_atlas = L.tileLayer('https://{s}.tile.thunderforest.com/mobile-atlas/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
+            {maxZoom: 19}
+        );
+        const pioneer = L.tileLayer('https://{s}.tile.thunderforest.com/pioneer/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
+            {maxZoom: 19}
+        );
+        const osmHOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+        });
+
         const map = L.map(c,{
             attributionControl:false,
-            //layers: [streets]
-            layers: [grayscale],
+            layers: [atlas],
             //crs: L.CRS.EPSG4326
             crs: L.CRS.EPSG3857
         });
 
-        let baseLayers = {
-            "灰度模式": grayscale,
-            "道路模式": streets,
-            "卫星模式": satellite
+        const baseLayers = {
+            'Atlas': atlas,
+            'Cycle': cycle,
+            'Transport': transport,
+            'Transport Dark': transport_dark,
+            'Landscape': landscape,
+            'Outdoors': outdoors,
+            'Neighbourhood': neighbourhood,
+            'Mobile Atlas': mobile_atlas,
+            'Pioneer': pioneer,
+            'OpenStreetMap': osmHOT
         };
         L.control.layers(baseLayers).addTo(map);
     }
