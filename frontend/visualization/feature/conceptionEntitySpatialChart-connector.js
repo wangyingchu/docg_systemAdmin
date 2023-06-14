@@ -174,6 +174,15 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
         });
 
+
+        //const tdtu = L.tileLayer('http://t0.tianditu.gov.cn/img_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX={z}&TILEROW={x}&TILECOL={y}&tk=8d790e1213b4d044f195e0710f7842eb',
+        //    {maxZoom: 19}
+       // );
+        //https://segmentfault.com/a/1190000021467375?sort=votes
+        const tdtu = L.tileLayer('http://t1.tianditu.com/vec_c/wmts?layer=vec&style=default&tilematrixset=c&Service=WMTS&Request=GetTile&Version=1.0.0&Format=tiles&TileMatrix={z}&TileCol={x}&TileRow={y}&tk=8d790e1213b4d044f195e0710f7842eb',
+            {maxZoom: 19}
+        );
+
         const map = L.map(c,{
             attributionControl:false,
             layers: [atlas],
@@ -191,7 +200,8 @@ window.Vaadin.Flow.feature_ConceptionEntitySpatialChart = {
             'Neighbourhood': neighbourhood,
             'Mobile Atlas': mobile_atlas,
             'Pioneer': pioneer,
-            'OpenStreetMap': osmHOT
+            'OpenStreetMap': osmHOT,
+            'tdtu':tdtu
         };
         L.control.layers(baseLayers).addTo(map);
     }
