@@ -115,6 +115,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         Icon conceptionKindInfoTitleIcon = new Icon(VaadinIcon.CUBE);
         conceptionKindInfoTitleIcon.setSize("18px");
         Label conceptionKindInfoTitleLabel = new Label("ConceptionKind-概念类型");
+        conceptionKindInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle conceptionKindInfoSectionWallTitle = new SectionWallTitle(conceptionKindInfoTitleIcon,conceptionKindInfoTitleLabel);
         ConceptionKindInfoWidget conceptionKindInfoWidget = new ConceptionKindInfoWidget();
         SectionWallContainer conceptionKindInfoSectionWallContainer = new SectionWallContainer(conceptionKindInfoSectionWallTitle,conceptionKindInfoWidget);
@@ -124,6 +125,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         Icon relationKindInfoTitleIcon = new Icon(VaadinIcon.CONNECT_O);
         relationKindInfoTitleIcon.setSize("18px");
         Label relationKindInfoTitleLabel = new Label("RelationKind-关系类型");
+        relationKindInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle relationKindInfoSectionWallTitle = new SectionWallTitle(relationKindInfoTitleIcon,relationKindInfoTitleLabel);
         RelationKindInfoWidget relationKindInfoWidget = new RelationKindInfoWidget();
         SectionWallContainer relationKindInfoSectionWallContainer = new SectionWallContainer(relationKindInfoSectionWallTitle,relationKindInfoWidget);
@@ -133,6 +135,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         Icon classificationInfoTitleIcon = new Icon(VaadinIcon.TAGS);
         classificationInfoTitleIcon.setSize("18px");
         Label classificationInfoTitleLabel = new Label("Classification-分类");
+        classificationInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle classificationInfoSectionWallTitle = new SectionWallTitle(classificationInfoTitleIcon,classificationInfoTitleLabel);
         ClassificationInfoWidget classificationInfoWidget = new ClassificationInfoWidget();
         SectionWallContainer classificationInSectionWallContainer = new SectionWallContainer(classificationInfoSectionWallTitle,classificationInfoWidget);
@@ -142,6 +145,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         Icon geospatialRegionInfoTitleIcon = new Icon(VaadinIcon.GLOBE_WIRE);
         geospatialRegionInfoTitleIcon.setSize("18px");
         Label geospatialRegionInfoTitleLabel = new Label("GeospatialRegion-地理空间区域");
+        geospatialRegionInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle geospatialRegionInfoSectionWallTitle = new SectionWallTitle(geospatialRegionInfoTitleIcon,geospatialRegionInfoTitleLabel);
         GeospatialRegionInfoWidget geospatialRegionInfoWidget = new GeospatialRegionInfoWidget();
         SectionWallContainer geospatialRegionInSectionWallContainer = new SectionWallContainer(geospatialRegionInfoSectionWallTitle,geospatialRegionInfoWidget);
@@ -151,6 +155,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         Icon timeFlowInfoTitleIcon = new Icon(VaadinIcon.TIMER);
         timeFlowInfoTitleIcon.setSize("18px");
         Label timeFlowInfoTitleLabel = new Label("TimeFlow-时间流");
+        timeFlowInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle timeFlowInfoSectionWallTitle = new SectionWallTitle(timeFlowInfoTitleIcon,timeFlowInfoTitleLabel);
         TimeFlowInfoWidget timeFlowInfoWidget = new TimeFlowInfoWidget();
         SectionWallContainer timeFlowInSectionWallContainer = new SectionWallContainer(timeFlowInfoSectionWallTitle,timeFlowInfoWidget);
@@ -160,6 +165,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         Icon attributesViewKindInfoTitleIcon = new Icon(VaadinIcon.TASKS);
         attributesViewKindInfoTitleIcon.setSize("18px");
         Label attributesViewKindInfoTitleLabel = new Label("AttributesViewKind-属性视图类型");
+        attributesViewKindInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle attributesViewKindInfoSectionWallTitle = new SectionWallTitle(attributesViewKindInfoTitleIcon,attributesViewKindInfoTitleLabel);
         AttributeViewKindInfoWidget attributeViewKindInfoWidget = new AttributeViewKindInfoWidget();
         SectionWallContainer attributesViewKindInSectionWallContainer = new SectionWallContainer(attributesViewKindInfoSectionWallTitle, attributeViewKindInfoWidget);
@@ -169,6 +175,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         Icon attributesKindInfoTitleIcon = new Icon(VaadinIcon.INPUT);
         attributesKindInfoTitleIcon.setSize("18px");
         Label attributesKindInfoTitleLabel = new Label("AttributesKind-属性类型");
+        attributesKindInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle attributesKindInfoSectionWallTitle = new SectionWallTitle(attributesKindInfoTitleIcon,attributesKindInfoTitleLabel);
         AttributeKindInfoWidget attributeKindInfoWidget = new AttributeKindInfoWidget();
         SectionWallContainer attributesKindInSectionWallContainer = new SectionWallContainer(attributesKindInfoSectionWallTitle, attributeKindInfoWidget);

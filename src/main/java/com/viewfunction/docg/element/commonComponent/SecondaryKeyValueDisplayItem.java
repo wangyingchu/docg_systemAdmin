@@ -56,12 +56,12 @@ public class SecondaryKeyValueDisplayItem {
 
     private void addDisplayItemContent(HasComponents containComponent,HorizontalLayout keyHorizontalLayout,String keyText, String valueText){
         Label conceptionEntityNumberText = new Label(keyText);
-        conceptionEntityNumberText.getStyle().set("font-size","var(--lumo-font-size-xs)");
+        conceptionEntityNumberText.getStyle().set("font-size","var(--lumo-font-size-s)");
         keyHorizontalLayout.add(conceptionEntityNumberText);
         containComponent.add(keyHorizontalLayout);
         displayValue = new Label(valueText);
         displayValue.getStyle()
-                .set("font-size","var(--lumo-font-size-s)")
+                .set("font-size","var(--lumo-font-size-m)")
                 .set("font-weight","bolder")
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
                 .set("color","#2e4e7e");
