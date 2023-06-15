@@ -130,11 +130,11 @@ public class MainLayout extends AppLayout {
 
     private List<Tab> createMenuItems() {
         MenuItemInfo[] menuItems = new MenuItemInfo[]{
-                new MenuItemInfo(LineAwesomeIconsSvg.CONNECTDEVELOP.create(),"核心领域模型 [ Core Realm ]", CoreRealmView.class),
-                new MenuItemInfo(LineAwesomeIconsSvg.NETWORK_WIRED_SOLID.create(),"计算网格 [ Compute Grid ]", ComputeGridView.class),
-                new MenuItemInfo(LineAwesomeIconsSvg.FLASK_SOLID.create(),"数据分析 [ Data Analysis ]", DataAnalysisView.class),
-                new MenuItemInfo(LineAwesomeIconsSvg.WINDOW_RESTORE.create(),"知识融合 [ Knowledge Fusion ]", KnowledgeFusionView.class),
-                new MenuItemInfo(LineAwesomeIconsSvg.FINGERPRINT_SOLID.create(),"关于 [ About ]",  AboutView.class),
+                new MenuItemInfo(LineAwesomeIconsSvg.CONNECTDEVELOP.create(),"核心领域模型 [Core Realm]", CoreRealmView.class),
+                new MenuItemInfo(LineAwesomeIconsSvg.NETWORK_WIRED_SOLID.create(),"计算网格 [Compute Grid]", ComputeGridView.class),
+                new MenuItemInfo(LineAwesomeIconsSvg.FLASK_SOLID.create(),"数据分析 [Data Analysis]", DataAnalysisView.class),
+                new MenuItemInfo(LineAwesomeIconsSvg.WINDOW_RESTORE.create(),"知识融合 [Knowledge Fusion]", KnowledgeFusionView.class),
+                new MenuItemInfo(LineAwesomeIconsSvg.FINGERPRINT_SOLID.create(),"关于 [About]",  AboutView.class),
         };
         List<Tab> tabs = new ArrayList<>();
         for (MenuItemInfo menuItemInfo : menuItems) {
