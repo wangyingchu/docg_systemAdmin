@@ -46,6 +46,7 @@ public class CoreRealmView extends Div {
         Icon coreRealmLogo = new Icon(VaadinIcon.CLUSTER);
         coreRealmLogo.setSize("20px");
         Label coreRealmLabel = new Label(" CoreRealm-领域数据");
+        coreRealmLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         coreRealmSpan.add(coreRealmLogo,coreRealmLabel);
         Tab coreRealmTab = new Tab(coreRealmSpan);
         coreRealmTab.setId("coreRealmTab");
@@ -54,6 +55,7 @@ public class CoreRealmView extends Div {
         Icon conceptionKindLogo = new Icon(VaadinIcon.CUBE);
         conceptionKindLogo.setSize("20px");
         Label conceptionKindLabel = new Label(" ConceptionKind-概念类型");
+        conceptionKindLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         conceptionKindSpan.add(conceptionKindLogo,conceptionKindLabel);
         Tab conceptionKindTab = new Tab(conceptionKindSpan);
         conceptionKindTab.setId("conceptionKindTab");
@@ -62,6 +64,7 @@ public class CoreRealmView extends Div {
         Icon relationKindLogo = new Icon(VaadinIcon.CONNECT_O);
         relationKindLogo.setSize("20px");
         Label relationKindLabel = new Label(" RelationKind-关系类型");
+        relationKindLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         relationKindSpan.add(relationKindLogo,relationKindLabel);
         Tab relationKindTab = new Tab(relationKindSpan);
         relationKindTab.setId("relationKindTab");
@@ -70,6 +73,7 @@ public class CoreRealmView extends Div {
         Icon attributeKindLogo = new Icon(VaadinIcon.INPUT);
         attributeKindLogo.setSize("20px");
         Label attributeKindLabel = new Label(" AttributeKind-属性类型");
+        attributeKindLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         attributeKindSpan.add(attributeKindLogo,attributeKindLabel);
         Tab attributeKindTab = new Tab(attributeKindSpan);
         attributeKindTab.setId("attributeKindTab");
@@ -78,6 +82,7 @@ public class CoreRealmView extends Div {
         Icon attributesViewKindLogo = new Icon(VaadinIcon.TASKS);
         attributesViewKindLogo.setSize("20px");
         Label attributesViewKindLabel = new Label(" AttributesViewKind-属性视图类型");
+        attributesViewKindLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         attributesViewKindSpan.add(attributesViewKindLogo,attributesViewKindLabel);
         Tab attributesViewKindTab = new Tab(attributesViewKindSpan);
         attributesViewKindTab.setId("attributesViewKindTab");
@@ -86,6 +91,7 @@ public class CoreRealmView extends Div {
         Icon classificationLogo = new Icon(VaadinIcon.TAGS);
         classificationLogo.setSize("20px");
         Label classificationLabel = new Label(" Classification-分类");
+        classificationLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         classificationSpan.add(classificationLogo,classificationLabel);
         Tab classificationTab = new Tab(classificationSpan);
         classificationTab.setId("classificationTab");
@@ -94,6 +100,7 @@ public class CoreRealmView extends Div {
         Icon geospatialRegionLogo = new Icon(VaadinIcon.GLOBE_WIRE);
         geospatialRegionLogo.setSize("20px");
         Label geospatialRegionLabel = new Label(" GeospatialRegion-地理空间区域");
+        geospatialRegionLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         geospatialRegionSpan.add(geospatialRegionLogo,geospatialRegionLabel);
         Tab geospatialRegionTab = new Tab(geospatialRegionSpan);
         geospatialRegionTab.setId("geospatialRegionTab");
@@ -102,6 +109,7 @@ public class CoreRealmView extends Div {
         Icon timeFlowLogo = new Icon(VaadinIcon.TIMER);
         timeFlowLogo.setSize("20px");
         Label timeFlowLabel = new Label(" TimeFlow-时间流");
+        timeFlowLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         timeFlowSpan.add(timeFlowLogo,timeFlowLabel);
         Tab timeFlowTab = new Tab(timeFlowSpan);
         timeFlowTab.setId("timeFlowTab");
