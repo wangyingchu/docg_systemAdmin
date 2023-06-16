@@ -539,7 +539,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
 
     private void deleteRelationEntity(RelationEntity relationEntity){
         DeleteRelationEntityView deleteRelationEntityView = new DeleteRelationEntityView(relationEntity);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除关系实体",null,true,600,220,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除关系实体",null,true,600,210,false);
         fixSizeWindow.setWindowContent(deleteRelationEntityView);
         fixSizeWindow.setModel(true);
         deleteRelationEntityView.setContainerDialog(fixSizeWindow);
