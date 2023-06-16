@@ -300,7 +300,6 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             actionButtonContainerLayout.setSpacing(false);
             Button showDetailButton = new Button();
             showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            showDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             showDetailButton.setIcon(VaadinIcon.EYE.create());
             Tooltips.getCurrent().setTooltip(showDetailButton, "显示概念实体详情");
             actionButtonContainerLayout.add(showDetailButton);
@@ -315,7 +314,6 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
             Button addToProcessListButton = new Button();
             addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             addToProcessListButton.setIcon(VaadinIcon.INBOX.create());
             Tooltips.getCurrent().setTooltip(addToProcessListButton, "加入待处理数据列表");
             actionButtonContainerLayout.add(addToProcessListButton);
@@ -330,7 +328,6 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
             Button deleteButton = new Button();
             deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            deleteButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
             deleteButton.setIcon(VaadinIcon.TRASH.create());
             Tooltips.getCurrent().setTooltip(deleteButton, "删除概念实体");

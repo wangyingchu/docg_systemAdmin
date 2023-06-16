@@ -390,7 +390,6 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
             actionButtonContainerLayout.setSpacing(false);
             Button showDetailButton = new Button();
             showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            showDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             showDetailButton.setIcon(VaadinIcon.EYE.create());
             Tooltips.getCurrent().setTooltip(showDetailButton, "显示关联概念实体详情");
             actionButtonContainerLayout.add(showDetailButton);
@@ -405,7 +404,6 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
 
             Button addToProcessListButton = new Button();
             addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             addToProcessListButton.setIcon(VaadinIcon.INBOX.create());
             Tooltips.getCurrent().setTooltip(addToProcessListButton, "将关联概念实体加入待处理数据列表");
             actionButtonContainerLayout.add(addToProcessListButton);
@@ -429,7 +427,6 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
 
             Button deleteButton = new Button();
             deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            deleteButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
             deleteButton.setIcon(VaadinIcon.UNLINK.create());
             Tooltips.getCurrent().setTooltip(deleteButton, "删除实体关联");
