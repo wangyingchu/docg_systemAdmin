@@ -105,7 +105,7 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
 
     private void renderAddNewAttributeUI(){
         AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.conceptionKind,this.conceptionEntityUID, AddEntityAttributeView.KindType.ConceptionKind);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加实体属性",null,true,480,230,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加实体属性",null,true,480,200,false);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
@@ -114,7 +114,7 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
 
     private void renderShowMetaInfoUI(){
         ConceptionEntityMetaInfoView conceptionEntityMetaInfoView = new ConceptionEntityMetaInfoView(this.conceptionKind,this.conceptionEntityUID);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"概念实体元数据信息",null,true,500,440,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"概念实体元数据信息",null,true,500,400,false);
         fixSizeWindow.setWindowContent(conceptionEntityMetaInfoView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();

@@ -259,14 +259,14 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            conceptionEntityRelationsChart.setHeight((event.getHeight()-this.conceptionEntityRelationInfoViewHeightOffset)+38, Unit.PIXELS);
-            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(event.getHeight()-this.conceptionEntityRelationInfoViewHeightOffset-200);
+            conceptionEntityRelationsChart.setHeight((event.getHeight()-this.conceptionEntityRelationInfoViewHeightOffset)+55, Unit.PIXELS);
+            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(event.getHeight()-this.conceptionEntityRelationInfoViewHeightOffset-160);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            conceptionEntityRelationsChart.setHeight((browserHeight-this.conceptionEntityRelationInfoViewHeightOffset+38),Unit.PIXELS);
-            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(browserHeight-this.conceptionEntityRelationInfoViewHeightOffset-200);
+            conceptionEntityRelationsChart.setHeight((browserHeight-this.conceptionEntityRelationInfoViewHeightOffset+55),Unit.PIXELS);
+            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(browserHeight-this.conceptionEntityRelationInfoViewHeightOffset-160);
         }));
     }
 
