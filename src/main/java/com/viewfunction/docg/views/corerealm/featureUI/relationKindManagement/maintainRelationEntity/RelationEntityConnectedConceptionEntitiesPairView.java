@@ -139,14 +139,14 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
         super.onAttach(attachEvent);
         renderView();
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            relationConceptionEntitiesPairChart.setHeight((event.getHeight()-this.relationEntityIntegratedInfoViewHeightOffset)-120, Unit.PIXELS);
-            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(event.getHeight()-this.relationEntityIntegratedInfoViewHeightOffset-320);
+            relationConceptionEntitiesPairChart.setHeight((event.getHeight()-this.relationEntityIntegratedInfoViewHeightOffset)-95, Unit.PIXELS);
+            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(event.getHeight()-this.relationEntityIntegratedInfoViewHeightOffset-270);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            relationConceptionEntitiesPairChart.setHeight((browserHeight-this.relationEntityIntegratedInfoViewHeightOffset+40)-120,Unit.PIXELS);
-            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(browserHeight-this.relationEntityIntegratedInfoViewHeightOffset-320);
+            relationConceptionEntitiesPairChart.setHeight((browserHeight-this.relationEntityIntegratedInfoViewHeightOffset+40)-95,Unit.PIXELS);
+            entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(browserHeight-this.relationEntityIntegratedInfoViewHeightOffset-270);
         }));
     }
 

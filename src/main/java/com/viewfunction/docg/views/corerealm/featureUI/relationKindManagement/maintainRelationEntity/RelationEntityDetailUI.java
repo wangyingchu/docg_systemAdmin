@@ -18,7 +18,7 @@ public class RelationEntityDetailUI extends VerticalLayout implements BeforeEnte
     private VerticalLayout entityDetailContainer;
     private String relationKind;
     private String relationEntityUID;
-    private int relationEntityAttributesEditorHeightOffset = 135;
+    private int relationEntityAttributesEditorHeightOffset = 130;
 
     public RelationEntityDetailUI(){}
 
@@ -26,7 +26,7 @@ public class RelationEntityDetailUI extends VerticalLayout implements BeforeEnte
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.relationKind = beforeEnterEvent.getRouteParameters().get("relationKind").get();
         this.relationEntityUID = beforeEnterEvent.getRouteParameters().get("relationEntityUID").get();
-        this.relationEntityAttributesEditorHeightOffset = 70;
+        this.relationEntityAttributesEditorHeightOffset = 65;
     }
 
     public RelationEntityDetailUI(String relationKind, String relationEntityUID){
