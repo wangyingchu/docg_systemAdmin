@@ -104,7 +104,7 @@ public class RelationEntityAttributesEditorView extends VerticalLayout implement
     private void renderAddNewAttributeUI(){
         AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.relationKind,this.relationEntityUID, AddEntityAttributeView.KindType.RelationKind);
 
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加实体属性",null,true,480,230,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加实体属性",null,true,480,200,false);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
@@ -113,7 +113,7 @@ public class RelationEntityAttributesEditorView extends VerticalLayout implement
 
     private void renderShowMetaInfoUI(){
         RelationEntityMetaInfoView relationEntityMetaInfoView = new RelationEntityMetaInfoView(this.relationKind,this.relationEntityUID);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"关系实体元数据信息",null,true,500,380,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"关系实体元数据信息",null,true,500,340,false);
         fixSizeWindow.setWindowContent(relationEntityMetaInfoView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();

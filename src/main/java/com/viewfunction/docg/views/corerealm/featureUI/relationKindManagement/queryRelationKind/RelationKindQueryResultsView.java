@@ -233,7 +233,6 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
             actionButtonContainerLayout.setSpacing(false);
             Button showDetailButton = new Button();
             showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            showDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             showDetailButton.setIcon(VaadinIcon.EYE.create());
             Tooltips.getCurrent().setTooltip(showDetailButton, "显示关系实体详情");
             actionButtonContainerLayout.add(showDetailButton);
@@ -248,7 +247,6 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
 
             Button addToProcessListButton = new Button();
             addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             addToProcessListButton.setIcon(VaadinIcon.INBOX.create());
             Tooltips.getCurrent().setTooltip(addToProcessListButton, "加入待处理数据列表");
             actionButtonContainerLayout.add(addToProcessListButton);
@@ -263,7 +261,6 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
 
             Button deleteButton = new Button();
             deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            deleteButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
             deleteButton.setIcon(VaadinIcon.UNLINK.create());
             Tooltips.getCurrent().setTooltip(deleteButton, "删除关系实体");
@@ -338,7 +335,7 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
 
     private void addRelationEntityToProcessingList(RelationEntityValue relationEntityValue){
         AddRelationEntityToProcessingListView addRelationEntityToProcessingListView = new AddRelationEntityToProcessingListView(relationKindName,relationEntityValue);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INBOX),"待处理数据列表添加概念实例",null,true,600,320,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INBOX),"待处理数据列表添加概念实例",null,true,600,300,false);
         fixSizeWindow.setWindowContent(addRelationEntityToProcessingListView);
         fixSizeWindow.setModel(true);
         addRelationEntityToProcessingListView.setContainerDialog(fixSizeWindow);
@@ -347,7 +344,7 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
 
     private void deleteRelationEntity(RelationEntityValue relationEntityValue){
         DeleteRelationEntityView deleteRelationEntityView = new DeleteRelationEntityView(relationKindName,relationEntityValue);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除关系实体",null,true,600,220,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除关系实体",null,true,600,210,false);
         fixSizeWindow.setWindowContent(deleteRelationEntityView);
         fixSizeWindow.setModel(true);
         deleteRelationEntityView.setContainerDialog(fixSizeWindow);

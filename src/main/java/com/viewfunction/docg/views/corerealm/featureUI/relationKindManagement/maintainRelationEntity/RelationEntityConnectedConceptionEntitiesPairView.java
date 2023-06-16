@@ -309,7 +309,7 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
         RelationEntityValue relationEntityValue = new RelationEntityValue();
         relationEntityValue.setRelationEntityUID(this.relationEntityUID);
         AddRelationEntityToProcessingListView addRelationEntityToProcessingListView = new AddRelationEntityToProcessingListView(this.relationKind,relationEntityValue);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INBOX),"待处理数据列表添加概念实例",null,true,600,320,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INBOX),"待处理数据列表添加概念实例",null,true,600,300,false);
         fixSizeWindow.setWindowContent(addRelationEntityToProcessingListView);
         fixSizeWindow.setModel(true);
         addRelationEntityToProcessingListView.setContainerDialog(fixSizeWindow);
