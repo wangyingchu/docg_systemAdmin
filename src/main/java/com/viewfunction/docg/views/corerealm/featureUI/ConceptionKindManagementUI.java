@@ -443,12 +443,12 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         loadConceptionKindsInfo();
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            conceptionKindMetaInfoGrid.setHeight(event.getHeight()-280,Unit.PIXELS);
+            conceptionKindMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            conceptionKindMetaInfoGrid.setHeight(browserHeight-280,Unit.PIXELS);
+            conceptionKindMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
             conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-600);
             singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
         }));
@@ -612,7 +612,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
     private void renderCreateConceptionKindUI(){
         CreateConceptionKindView createConceptionKindView = new CreateConceptionKindView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建概念类型",null,true,630,335,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建概念类型",null,true,630,290,false);
         fixSizeWindow.setWindowContent(createConceptionKindView);
         fixSizeWindow.setModel(true);
         createConceptionKindView.setContainerDialog(fixSizeWindow);
@@ -778,7 +778,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
     private void renderProcessingDataListUI(Button processingDataListButton){
         ProcessingDataListView processingDataListView = new ProcessingDataListView(510);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.MAILBOX),"待处理数据",null,true,760,690,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.MAILBOX),"待处理数据",null,true,760,670,false);
         fixSizeWindow.setWindowContent(processingDataListView);
         fixSizeWindow.setModel(false);
         fixSizeWindow.show();
