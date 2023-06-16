@@ -55,14 +55,14 @@ public class ConceptionKindQueryUI extends VerticalLayout {
 
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            queryFieldsContainer.setHeight(event.getHeight()-90,Unit.PIXELS);
-            queryResultContainer.setHeight(event.getHeight()-90,Unit.PIXELS);
+            queryFieldsContainer.setHeight(event.getHeight()-80,Unit.PIXELS);
+            queryResultContainer.setHeight(event.getHeight()-80,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            queryFieldsContainer.setHeight(browserHeight-90,Unit.PIXELS);
-            queryResultContainer.setHeight(browserHeight-90,Unit.PIXELS);
+            queryFieldsContainer.setHeight(browserHeight-80,Unit.PIXELS);
+            queryResultContainer.setHeight(browserHeight-80,Unit.PIXELS);
         }));
     }
 

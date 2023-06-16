@@ -107,7 +107,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         Icon downArrowIcon = new Icon(VaadinIcon.CHEVRON_DOWN);
         downArrowIcon.setSize("12px");
         analysisMenuItem.add(downArrowIcon);
-        analysisMenuItem.getStyle().set("font-size","0.85em");
+        analysisMenuItem.getStyle().set("font-size","1em");
 
         SubMenu subMenu = analysisMenuItem.getSubMenu();
         MenuItem exportDataSubMenu = subMenu.addItem(VaadinIcon.DOWNLOAD.create());
@@ -254,12 +254,12 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         ResourceHolder.getApplicationBlackboard().addListener(this);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            queryResultGrid.setHeight(event.getHeight()-155,Unit.PIXELS);
+            queryResultGrid.setHeight(event.getHeight()-140,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            queryResultGrid.setHeight(browserHeight-155,Unit.PIXELS);
+            queryResultGrid.setHeight(browserHeight-140,Unit.PIXELS);
         }));
     }
 
