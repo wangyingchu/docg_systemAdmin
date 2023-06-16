@@ -145,12 +145,12 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         conceptionEntitySpatialChart = new ConceptionEntitySpatialChart();
         conceptionEntitySpatialChart.setWidth(100,Unit.PERCENTAGE);
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            conceptionEntitySpatialChart.setHeight(event.getHeight()-this.conceptionEntitySpatialInfoViewHeightOffset, Unit.PIXELS);
+            conceptionEntitySpatialChart.setHeight(event.getHeight()-this.conceptionEntitySpatialInfoViewHeightOffset+20, Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            conceptionEntitySpatialChart.setHeight(browserHeight-this.conceptionEntitySpatialInfoViewHeightOffset,Unit.PIXELS);
+            conceptionEntitySpatialChart.setHeight(browserHeight-this.conceptionEntitySpatialInfoViewHeightOffset+20,Unit.PIXELS);
         }));
         add(conceptionEntitySpatialChart);
         conceptionEntitySpatialChart.setVisible(false);
