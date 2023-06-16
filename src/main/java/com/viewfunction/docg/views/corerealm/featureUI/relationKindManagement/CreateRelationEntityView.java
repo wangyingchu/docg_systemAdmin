@@ -386,7 +386,7 @@ public class CreateRelationEntityView extends VerticalLayout {
         };
         addEntityAttributeView.setAttributeValueOperateHandler(attributeValueOperateHandlerForAdd);
 
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加关系实体属性",null,true,480,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加关系实体属性",null,true,480,190,false);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
