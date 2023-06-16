@@ -228,18 +228,18 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            this.leftSideContentContainerLayout.setHeight(event.getHeight()-185,Unit.PIXELS);
+            this.leftSideContentContainerLayout.setHeight(event.getHeight()-175,Unit.PIXELS);
             this.rightSideContentContainerLayout.setWidth(event.getWidth()-580,Unit.PIXELS);
-            this.dataRelationDistributionWidget.setHeight(event.getHeight()-220,Unit.PIXELS);
+            this.dataRelationDistributionWidget.setHeight(event.getHeight()-205,Unit.PIXELS);
             this.dataRelationDistributionWidget.setWidth(event.getWidth()-550-420-50,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserWidth = receiver.getBodyClientWidth();
             int browserHeight = receiver.getBodyClientHeight();
-            this.leftSideContentContainerLayout.setHeight(browserHeight-185,Unit.PIXELS);
+            this.leftSideContentContainerLayout.setHeight(browserHeight-175,Unit.PIXELS);
             this.rightSideContentContainerLayout.setWidth(browserWidth-580,Unit.PIXELS);
-            this.dataRelationDistributionWidget.setHeight(browserHeight-220,Unit.PIXELS);
+            this.dataRelationDistributionWidget.setHeight(browserHeight-205,Unit.PIXELS);
             this.dataRelationDistributionWidget.setWidth(browserWidth-550-420-50,Unit.PIXELS);
         }));
         ResourceHolder.getApplicationBlackboard().addListener(this);

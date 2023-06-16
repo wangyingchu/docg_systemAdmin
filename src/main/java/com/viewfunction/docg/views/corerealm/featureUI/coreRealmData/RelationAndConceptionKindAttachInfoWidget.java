@@ -119,12 +119,12 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            this.runtimeRelationAndConceptionKindAttachInfoGrid.setHeight(event.getHeight()-295,Unit.PIXELS);
+            this.runtimeRelationAndConceptionKindAttachInfoGrid.setHeight(event.getHeight()-270,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            this.runtimeRelationAndConceptionKindAttachInfoGrid.setHeight(browserHeight-295,Unit.PIXELS);
+            this.runtimeRelationAndConceptionKindAttachInfoGrid.setHeight(browserHeight-270,Unit.PIXELS);
         }));
         renderRelationAndConceptionKindAttachInfo();
     }
