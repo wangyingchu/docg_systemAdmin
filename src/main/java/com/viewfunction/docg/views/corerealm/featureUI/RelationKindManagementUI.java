@@ -440,13 +440,13 @@ public class RelationKindManagementUI extends VerticalLayout implements
         loadRelationKindsInfo();
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            relationKindMetaInfoGrid.setHeight(event.getHeight()-280,Unit.PIXELS);
+            relationKindMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            relationKindMetaInfoGrid.setHeight(browserHeight-280,Unit.PIXELS);
-            relationKindCorrelationInfoChart = new RelationKindCorrelationInfoChart(browserHeight-550);
+            relationKindMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
+            relationKindCorrelationInfoChart = new RelationKindCorrelationInfoChart(browserHeight-520);
             singleRelationKindSummaryInfoContainerLayout.add(relationKindCorrelationInfoChart);
         }));
     }
@@ -541,7 +541,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
 
     private void renderCreateRelationKindUI(){
         CreateRelationKindView createRelationKindView = new CreateRelationKindView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建关系类型",null,true,630,335,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建关系类型",null,true,630,290,false);
         fixSizeWindow.setWindowContent(createRelationKindView);
         fixSizeWindow.setModel(true);
         createRelationKindView.setContainerDialog(fixSizeWindow);
@@ -603,7 +603,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
 
     private void renderProcessingDataListUI(Button processingDataListButton){
         ProcessingDataListView processingDataListView = new ProcessingDataListView(510);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.MAILBOX),"待处理数据",null,true,760,690,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.MAILBOX),"待处理数据",null,true,760,670,false);
         fixSizeWindow.setWindowContent(processingDataListView);
         fixSizeWindow.setModel(false);
         fixSizeWindow.show();
