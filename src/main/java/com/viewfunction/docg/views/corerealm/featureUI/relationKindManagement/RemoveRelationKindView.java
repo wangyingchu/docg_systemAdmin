@@ -27,7 +27,7 @@ public class RemoveRelationKindView extends VerticalLayout {
         this.relationKind = relationKind;
 
         H4 viewTitle = new H4("本操作将删除关系类型 "+ relationKind +" 以及该类型包含的所有关系实体,请确认执行操作。");
-        viewTitle.getStyle().set("font-size","var(--lumo-font-size-m)").set("color","var(--lumo-error-color)");
+        viewTitle.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","var(--lumo-error-color)");
         viewTitle.getStyle().set("padding-bottom", "10px").
                 set("padding-top", "20px").
                 set("padding-left", "5px").
