@@ -180,12 +180,12 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         ResourceHolder.getApplicationBlackboard().addListener(this);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            relationEntitiesGrid.setHeight(event.getHeight()-this.conceptionEntityRelationInfoViewHeightOffset, Unit.PIXELS);
+            relationEntitiesGrid.setHeight(event.getHeight()-this.conceptionEntityRelationInfoViewHeightOffset+25, Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            relationEntitiesGrid.setHeight(browserHeight-this.conceptionEntityRelationInfoViewHeightOffset,Unit.PIXELS);
+            relationEntitiesGrid.setHeight(browserHeight-this.conceptionEntityRelationInfoViewHeightOffset+25,Unit.PIXELS);
         }));
     }
 

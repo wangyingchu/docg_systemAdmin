@@ -18,7 +18,7 @@ public class ConceptionEntityDetailUI extends VerticalLayout implements BeforeEn
     private VerticalLayout entityDetailContainer;
     private String conceptionKind;
     private String conceptionEntityUID;
-    private int conceptionEntityAttributesEditorHeightOffset = 135;
+    private int conceptionEntityAttributesEditorHeightOffset = 130;
 
     public ConceptionEntityDetailUI(){}
 
@@ -26,7 +26,7 @@ public class ConceptionEntityDetailUI extends VerticalLayout implements BeforeEn
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.conceptionKind = beforeEnterEvent.getRouteParameters().get("conceptionKind").get();
         this.conceptionEntityUID = beforeEnterEvent.getRouteParameters().get("conceptionEntityUID").get();
-        this.conceptionEntityAttributesEditorHeightOffset = 70;
+        this.conceptionEntityAttributesEditorHeightOffset = 65;
     }
 
     public ConceptionEntityDetailUI(String conceptionKind, String conceptionEntityUID){
