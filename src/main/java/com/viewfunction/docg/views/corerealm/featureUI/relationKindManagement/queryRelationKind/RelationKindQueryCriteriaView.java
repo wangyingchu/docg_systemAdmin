@@ -170,7 +170,6 @@ public class RelationKindQueryCriteriaView extends VerticalLayout implements Kin
             }
         });
         resultSetConfigButton.getStyle()
-                .set("font-size","0.7rem")
                 .set("padding-left","20px");
         buttonsContainerLayout.add(resultSetConfigButton);
         buttonsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,resultSetConfigButton);
@@ -223,12 +222,12 @@ public class RelationKindQueryCriteriaView extends VerticalLayout implements Kin
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            criteriaItemsContainer.setHeight(event.getHeight()-280,Unit.PIXELS);
+            criteriaItemsContainer.setHeight(event.getHeight()-250,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            criteriaItemsContainer.setHeight(browserHeight-280,Unit.PIXELS);
+            criteriaItemsContainer.setHeight(browserHeight-250,Unit.PIXELS);
         }));
         loadQueryCriteriaComboBox();
     }
@@ -282,7 +281,7 @@ public class RelationKindQueryCriteriaView extends VerticalLayout implements Kin
 
     private void renderQueryResultSetConfigUI(){
         QueryResultSetConfigView queryResultSetConfigView = new QueryResultSetConfigView(this.queryParameters);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"查询结果集参数",null,true,350,580,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"查询结果集参数",null,true,350,500,false);
         fixSizeWindow.setWindowContent(queryResultSetConfigView);
         fixSizeWindow.setModel(true);
         queryResultSetConfigView.setContainerDialog(fixSizeWindow);
@@ -292,7 +291,7 @@ public class RelationKindQueryCriteriaView extends VerticalLayout implements Kin
     private void renderAddCustomQueryCriteriaUI(){
         AddCustomQueryCriteriaUI addCustomQueryCriteriaUI = new AddCustomQueryCriteriaUI();
         addCustomQueryCriteriaUI.setKindQueryCriteriaView(this);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"添加自定义查询/显示属性",null,true,470,180,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"添加自定义查询/显示属性",null,true,470,150,false);
         fixSizeWindow.setWindowContent(addCustomQueryCriteriaUI);
         fixSizeWindow.setModel(true);
         addCustomQueryCriteriaUI.setContainerDialog(fixSizeWindow);
