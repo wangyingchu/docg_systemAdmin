@@ -56,7 +56,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         ConceptionKindConfigurationInfoRefreshEvent.ConceptionKindConfigurationInfoRefreshListener{
     private String conceptionKind;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
-    private int conceptionKindDetailViewHeightOffset = 135;
+    private int conceptionKindDetailViewHeightOffset = 110;
     private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
     private ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
     private VerticalLayout leftSideContainerLayout;
@@ -82,7 +82,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.conceptionKind = beforeEnterEvent.getRouteParameters().get("conceptionKind").get();
-        this.conceptionKindDetailViewHeightOffset = 70;
+        this.conceptionKindDetailViewHeightOffset = 45;
     }
 
     @Override
@@ -487,7 +487,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
     private void renderShowMetaInfoUI(){
         ConceptionKindMetaInfoView conceptionKindMetaInfoView = new ConceptionKindMetaInfoView(this.conceptionKind);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"概念类型元数据信息",null,true,500,380,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"概念类型元数据信息",null,true,500,340,false);
         fixSizeWindow.setWindowContent(conceptionKindMetaInfoView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();

@@ -170,7 +170,7 @@ public class KindIndexConfigView extends VerticalLayout {
     private void renderAddNewKindIndexUI(){
         CreateKindIndexView createKindIndexView = new CreateKindIndexView(KindIndexType.ConceptionKind,this.kindName);
         createKindIndexView.setContainerKindIndexConfigView(this);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建类型索引",null,true,550,440,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建类型索引",null,true,550,390,false);
         fixSizeWindow.setWindowContent(createKindIndexView);
         fixSizeWindow.setModel(true);
         createKindIndexView.setContainerDialog(fixSizeWindow);
