@@ -1,14 +1,34 @@
 package com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationKind;
 
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
+import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.RelationKind;
 
 public class RelationKindDetailUI extends VerticalLayout implements
         BeforeEnterObserver {
 
     private String relationKind;
+    private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
     private int relationKindDetailViewHeightOffset = 110;
+    private Registration listener;
+    private int currentBrowserHeight = 0;
 
     public RelationKindDetailUI(){}
 
@@ -22,8 +42,94 @@ public class RelationKindDetailUI extends VerticalLayout implements
         this.relationKindDetailViewHeightOffset = 45;
     }
 
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        renderConceptionKindData();
+        //loadConceptionKindInfoData();
+        // Add browser window listener to observe size change
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            currentBrowserHeight = event.getHeight();
+            int chartHeight = currentBrowserHeight - relationKindDetailViewHeightOffset - 340;
+            //conceptionKindCorrelationInfoChart.setHeight(chartHeight, Unit.PIXELS);
+            //this.conceptionRelationRealtimeInfoGrid.setHeight(chartHeight,Unit.PIXELS);
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            currentBrowserHeight = receiver.getBodyClientHeight();
+            //kindCorrelationInfoTabSheet.setHeight(currentBrowserHeight-relationKindDetailViewHeightOffset-290,Unit.PIXELS);
+        }));
+       // renderKindCorrelationInfoTabContent();
+        //ResourceHolder.getApplicationBlackboard().addListener(this);
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
+        super.onDetach(detachEvent);
+        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
+
+    private void renderConceptionKindData(){
+        List<Component> secTitleElementsList = new ArrayList<>();
+
+        Label conceptionKindNameLabel = new Label(this.relationKind);
+        conceptionKindNameLabel.getStyle()
+                .set("font-size","var(--lumo-font-size-xl)")
+                .set("color","var(--lumo-primary-text-color)")
+                .set("fount-weight","bold");
+        secTitleElementsList.add(conceptionKindNameLabel);
+
+        this.kindDescriptionEditorItemWidget = new KindDescriptionEditorItemWidget(this.relationKind,RelationKind);
+        secTitleElementsList.add(this.kindDescriptionEditorItemWidget);
+
+        List<Component> buttonList = new ArrayList<>();
+
+        Button refreshConceptionKindConfigInfoButton= new Button("刷新关系类型配置信息");
+        refreshConceptionKindConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
+        refreshConceptionKindConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        refreshConceptionKindConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                ConceptionKindConfigurationInfoRefreshEvent conceptionKindConfigurationInfoRefreshEvent = new ConceptionKindConfigurationInfoRefreshEvent();
+                conceptionKindConfigurationInfoRefreshEvent.setConceptionKindName(relationKind);
+                ResourceHolder.getApplicationBlackboard().fire(conceptionKindConfigurationInfoRefreshEvent);
+            }
+        });
+        buttonList.add(refreshConceptionKindConfigInfoButton);
+
+        Button queryConceptionKindButton= new Button("关系类型实体数据查询");
+        queryConceptionKindButton.setIcon(VaadinIcon.RECORDS.create());
+        queryConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        queryConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //renderConceptionKindQueryUI();
+            }
+        });
+        buttonList.add(queryConceptionKindButton);
+
+        Button conceptionKindMetaInfoButton= new Button("关系类型元数据");
+        conceptionKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
+        conceptionKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        conceptionKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //renderShowMetaInfoUI();
+            }
+        });
+        buttonList.add(conceptionKindMetaInfoButton);
+
+        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"Relation Kind 关系类型  ",secTitleElementsList,buttonList);
+        add(secondaryTitleActionBar);
+
+        HorizontalLayout mainContainerLayout = new HorizontalLayout();
+        mainContainerLayout.setWidthFull();
+        add(mainContainerLayout);
 
 
+    }
 
 
 
