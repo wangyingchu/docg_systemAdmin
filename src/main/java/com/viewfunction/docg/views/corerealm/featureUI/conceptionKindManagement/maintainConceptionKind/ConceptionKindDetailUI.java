@@ -363,7 +363,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
     private void initConceptionRelationRealtimeInfoGrid(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet){
         this.conceptionRelationRealtimeInfoGrid = new Grid<>();
-        this.conceptionRelationRealtimeInfoGrid.setWidth(100,Unit.PERCENTAGE);
+        this.conceptionRelationRealtimeInfoGrid.setWidth(99,Unit.PERCENTAGE);
         this.conceptionRelationRealtimeInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         this.conceptionRelationRealtimeInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         this.conceptionRelationRealtimeInfoGrid.addComponentColumn(new RelationDirectionIconValueProvider()).setHeader("").setKey("idx_0").setFlexGrow(0).setWidth("35px").setResizable(false);
