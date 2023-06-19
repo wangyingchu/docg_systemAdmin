@@ -63,20 +63,20 @@ public class FullScreenWindow extends Dialog {
 
         titleElementsContainer.add(titleElementsLeftContainer);
         titleElementsContainer.setFlexGrow(1,titleElementsLeftContainer);
-        titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER,titleElementsContainer);
+        titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.END,titleElementsLeftContainer);
         titleElementsContainer.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
         if(titleComponentsList != null){
             for(Component currentComponent:titleComponentsList){
                 titleElementsLeftContainer.add(currentComponent);
-                titleElementsLeftContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER,currentComponent);
+                titleElementsLeftContainer.setVerticalComponentAlignment(FlexComponent.Alignment.STRETCH,currentComponent);
             }
         }
 
         if(actionComponentsList != null){
             for(Component currentComponent:actionComponentsList){
                 titleElementsContainer.add(currentComponent);
-                titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.START,currentComponent);
+                titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.BASELINE,currentComponent);
                 Span spacingSpan = new Span();
                 spacingSpan.setWidth(10,Unit.PIXELS);
                 titleElementsContainer.add(spacingSpan);
