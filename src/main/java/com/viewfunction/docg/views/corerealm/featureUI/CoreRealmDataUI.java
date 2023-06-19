@@ -74,8 +74,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         Icon realmIcon = VaadinIcon.ARCHIVE.create();
         realmIcon.getStyle().set("padding", "var(--lumo-space-xs");
         Span realmNameSpan = new Span( realmIcon,new Span("Default CoreRealm"));
-        realmNameSpan.getStyle().set("font-size","var(--lumo-font-size-xxs)");
-
+        realmNameSpan.getStyle().set("font-size","var(--lumo-font-size-xs)");
         realmNameSpan.getElement().getThemeList().add("badge contrast");
         secTitleElementsList.add(realmNameSpan);
 
