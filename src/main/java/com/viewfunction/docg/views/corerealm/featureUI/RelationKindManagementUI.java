@@ -40,6 +40,7 @@ import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingDataListView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.*;
 
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationKind.RelationKindDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.queryRelationKind.RelationKindQueryUI;
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -589,16 +590,24 @@ public class RelationKindManagementUI extends VerticalLayout implements
     }
 
     private void renderRelationKindConfigurationUI(EntityStatisticsInfo entityStatisticsInfo){
-        Dialog dialog = new Dialog();
-        dialog.setModal(true);
-        dialog.setResizable(false);
-        dialog.setCloseOnEsc(false);
-        dialog.setCloseOnOutsideClick(false);
-        dialog.setSizeFull();
-        dialog.addThemeVariants(DialogVariant.LUMO_NO_PADDING);
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
-        dialog.add(cancelButton);
-        dialog.open();
+        RelationKindDetailUI relationKindDetailUI = new RelationKindDetailUI(entityStatisticsInfo.getEntityKindName());
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("22px");
+        footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
+        actionComponentList.add(footPrintStartIcon);
+        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+        relationKindIcon.setSize("14px");
+        relationKindIcon.getStyle().set("padding-right","3px");
+        actionComponentList.add(relationKindIcon);
+        Label conceptionKindName = new Label(entityStatisticsInfo.getEntityKindName());
+        actionComponentList.add(conceptionKindName);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"关系类型配置",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(relationKindDetailUI);
+        fullScreenWindow.show();
     }
 
     private void renderProcessingDataListUI(Button processingDataListButton){
