@@ -241,12 +241,10 @@ public class RelationKindDetailUI extends VerticalLayout implements
         rightSideContainerLayout.add(kindConfigurationTabSheet);
         rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
 
-        //ConceptionKindEntitiesConfigurationView conceptionKindEntitiesConfigurationView = new ConceptionKindEntitiesConfigurationView(this.relationKind);
-       // kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"概念类型运行时配置"),conceptionKindEntitiesConfigurationView);
+        RelationKindEntitiesConfigurationView relationKindEntitiesConfigurationView = new RelationKindEntitiesConfigurationView(this.relationKind);
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"概念类型运行时配置"),relationKindEntitiesConfigurationView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),new HorizontalLayout());
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
-
-
     }
 
 
