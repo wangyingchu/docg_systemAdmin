@@ -10,6 +10,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -23,6 +24,7 @@ import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.ConceptionKindEntitiesConfigurationView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -42,6 +44,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout rightSideContainerLayout;
     private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
+    private TabSheet kindConfigurationTabSheet;
 
     public RelationKindDetailUI(){}
 
@@ -195,12 +198,10 @@ public class RelationKindDetailUI extends VerticalLayout implements
                 .setHeader("属性命中数").setKey("idx_3")
                 .setFlexGrow(0).setWidth("100px").setResizable(false);
         conceptionKindAttributesInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("60px").setResizable(false);
-        /*
+
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true)
                 .setTooltipGenerator(kindEntityAttributeRuntimeStatistics -> getAttributeName(kindEntityAttributeRuntimeStatistics));
-        */
-
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.PASSWORD,"属性数据类型");
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.EYEDROPPER,"属性采样数");
@@ -213,9 +214,57 @@ public class RelationKindDetailUI extends VerticalLayout implements
         conceptionKindAttributesInfoGrid.setHeight(218,Unit.PIXELS);
         leftSideContainerLayout.add(conceptionKindAttributesInfoGrid);
 
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
+        infoTitle2.getStyle().set("padding-top","20px");
+
+
+
+
+
+
+
+
+
+
+
+
+
+        rightSideContainerLayout = new VerticalLayout();
+        rightSideContainerLayout.setWidth(100,Unit.PERCENTAGE);
+        rightSideContainerLayout.setSpacing(false);
+        rightSideContainerLayout.setPadding(false);
+        rightSideContainerLayout.setMargin(false);
+        mainContainerLayout.add(rightSideContainerLayout);
+
+        kindConfigurationTabSheet = new TabSheet();
+        kindConfigurationTabSheet.setWidthFull();
+        rightSideContainerLayout.add(kindConfigurationTabSheet);
+        rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
+
+        //ConceptionKindEntitiesConfigurationView conceptionKindEntitiesConfigurationView = new ConceptionKindEntitiesConfigurationView(this.relationKind);
+       // kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"概念类型运行时配置"),conceptionKindEntitiesConfigurationView);
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
+
 
     }
 
 
+    private String getAttributeName(KindEntityAttributeRuntimeStatistics kindEntityAttributeRuntimeStatistics){
+        return kindEntityAttributeRuntimeStatistics.getAttributeName();
+    }
 
+    private HorizontalLayout generateKindConfigurationTabTitle(VaadinIcon tabIcon,String tabTitleTxt){
+        HorizontalLayout  kindConfigTabLayout = new HorizontalLayout();
+        kindConfigTabLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        kindConfigTabLayout.setHeight(26,Unit.PIXELS);
+        Icon configTabIcon = new Icon(tabIcon);
+        configTabIcon.setSize("12px");
+        Label configTabLabel = new Label(" "+tabTitleTxt);
+        configTabLabel.getStyle()
+                . set("font-size","var(--lumo-font-size-s)")
+                .set("font-weight", "bold");
+        kindConfigTabLayout.add(configTabIcon,configTabLabel);
+        return kindConfigTabLayout;
+    }
 }
