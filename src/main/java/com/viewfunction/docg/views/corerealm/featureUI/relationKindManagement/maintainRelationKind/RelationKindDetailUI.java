@@ -18,13 +18,14 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.ConceptionKindEntitiesConfigurationView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -62,7 +63,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         renderConceptionKindData();
-        //loadConceptionKindInfoData();
+        loadConceptionKindInfoData();
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             currentBrowserHeight = event.getHeight();
@@ -137,7 +138,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
         });
         buttonList.add(conceptionKindMetaInfoButton);
 
-        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"Relation Kind 关系类型  ",secTitleElementsList,buttonList);
+        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONNECT_O),"Relation Kind 关系类型  ",secTitleElementsList,buttonList);
         add(secondaryTitleActionBar);
 
         HorizontalLayout mainContainerLayout = new HorizontalLayout();
@@ -247,6 +248,14 @@ public class RelationKindDetailUI extends VerticalLayout implements
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
     }
 
+    private void loadConceptionKindInfoData(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind targetRelationKind = coreRealm.getRelationKind(this.relationKind);
+        List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetRelationKind.statisticEntityAttributesDistribution(10000);
+        coreRealm.closeGlobalSession();
+        conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
+    }
 
     private String getAttributeName(KindEntityAttributeRuntimeStatistics kindEntityAttributeRuntimeStatistics){
         return kindEntityAttributeRuntimeStatistics.getAttributeName();
