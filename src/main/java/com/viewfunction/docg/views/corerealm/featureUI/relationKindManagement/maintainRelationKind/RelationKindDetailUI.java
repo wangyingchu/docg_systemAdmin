@@ -22,7 +22,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttrib
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
+import com.viewfunction.docg.element.eventHandling.RelationKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.queryRelationKind.RelationKindQueryUI;
@@ -110,9 +110,9 @@ public class RelationKindDetailUI extends VerticalLayout implements
         refreshRelationKindConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                ConceptionKindConfigurationInfoRefreshEvent conceptionKindConfigurationInfoRefreshEvent = new ConceptionKindConfigurationInfoRefreshEvent();
-                conceptionKindConfigurationInfoRefreshEvent.setConceptionKindName(relationKind);
-                ResourceHolder.getApplicationBlackboard().fire(conceptionKindConfigurationInfoRefreshEvent);
+                RelationKindConfigurationInfoRefreshEvent relationKindConfigurationInfoRefreshEvent = new RelationKindConfigurationInfoRefreshEvent();
+                relationKindConfigurationInfoRefreshEvent.setRelationKindName(relationKind);
+                ResourceHolder.getApplicationBlackboard().fire(relationKindConfigurationInfoRefreshEvent);
             }
         });
         buttonList.add(refreshRelationKindConfigInfoButton);
