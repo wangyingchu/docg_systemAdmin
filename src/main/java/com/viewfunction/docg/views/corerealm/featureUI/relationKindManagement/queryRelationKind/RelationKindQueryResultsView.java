@@ -305,27 +305,50 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
 
         List<Component> actionComponentList = new ArrayList<>();
 
-        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
-        footPrintStartIcon.setSize("22px");
-        footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
-        actionComponentList.add(footPrintStartIcon);
-        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
-        relationKindIcon.setSize("12px");
-        relationKindIcon.getStyle().set("padding-right","3px");
-        actionComponentList.add(relationKindIcon);
-        Label relationKindNameLabel = new Label(relationKindName);
-        actionComponentList.add(relationKindNameLabel);
-        Icon divIcon = VaadinIcon.ITALIC.create();
-        divIcon.setSize("12px");
-        divIcon.getStyle().set("padding-left","5px");
-        actionComponentList.add(divIcon);
-        Icon relationEntityIcon = VaadinIcon.KEY_O.create();
-        relationEntityIcon.setSize("18px");
-        relationEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
-        actionComponentList.add(relationEntityIcon);
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
 
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+        relationKindIcon.setSize("10px");
+        titleDetailLayout.add(relationKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        Label conceptionKindNameLabel = new Label(relationKindName);
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon relationEntityIcon = VaadinIcon.KEY_O.create();
+        relationEntityIcon.setSize("10px");
+        titleDetailLayout.add(relationEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
         Label relationEntityUIDLabel = new Label(relationEntityValue.getRelationEntityUID());
-        actionComponentList.add(relationEntityUIDLabel);
+        titleDetailLayout.add(relationEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
 
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"关系实体详情",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(relationEntityDetailUI);

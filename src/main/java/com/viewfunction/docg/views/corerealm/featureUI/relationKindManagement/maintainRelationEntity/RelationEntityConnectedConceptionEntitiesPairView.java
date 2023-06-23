@@ -261,27 +261,50 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
 
         List<Component> actionComponentList = new ArrayList<>();
 
-        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
-        footPrintStartIcon.setSize("22px");
-        footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
-        actionComponentList.add(footPrintStartIcon);
-        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
-        conceptionKindIcon.setSize("12px");
-        conceptionKindIcon.getStyle().set("padding-right","3px");
-        actionComponentList.add(conceptionKindIcon);
-        Label conceptionKindNameLabel = new Label(conceptionKindName);
-        actionComponentList.add(conceptionKindNameLabel);
-        Icon divIcon = VaadinIcon.ITALIC.create();
-        divIcon.setSize("12px");
-        divIcon.getStyle().set("padding-left","5px");
-        actionComponentList.add(divIcon);
-        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
-        conceptionEntityIcon.setSize("18px");
-        conceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
-        actionComponentList.add(conceptionEntityIcon);
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
 
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("10px");
+        titleDetailLayout.add(conceptionKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        Label conceptionKindNameLabel = new Label(conceptionKindName);
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+        conceptionEntityIcon.setSize("10px");
+        titleDetailLayout.add(conceptionEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
         Label conceptionEntityUIDLabel = new Label(conceptionEntityUID);
-        actionComponentList.add(conceptionEntityUIDLabel);
+        titleDetailLayout.add(conceptionEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
 
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(conceptionEntityDetailUI);

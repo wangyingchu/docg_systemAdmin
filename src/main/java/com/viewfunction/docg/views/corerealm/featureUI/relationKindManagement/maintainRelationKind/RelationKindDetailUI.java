@@ -280,16 +280,27 @@ public class RelationKindDetailUI extends VerticalLayout implements
         RelationKindQueryUI relationKindQueryUI = new RelationKindQueryUI(this.relationKind);
         List<Component> actionComponentList = new ArrayList<>();
 
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
         Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
-        footPrintStartIcon.setSize("22px");
-        footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
-        actionComponentList.add(footPrintStartIcon);
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
         Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
-        relationKindIcon.setSize("12px");
-        relationKindIcon.getStyle().set("padding-right","3px");
-        actionComponentList.add(relationKindIcon);
+        relationKindIcon.setSize("10px");
+        titleDetailLayout.add(relationKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
         Label relationKindName = new Label(this.relationKind);
-        actionComponentList.add(relationKindName);
+        titleDetailLayout.add(relationKindName);
+        actionComponentList.add(titleDetailLayout);
 
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"关系类型实体数据查询",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(relationKindQueryUI);
