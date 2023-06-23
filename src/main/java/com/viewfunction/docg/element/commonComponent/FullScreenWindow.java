@@ -44,7 +44,7 @@ public class FullScreenWindow extends Dialog {
             //titleIcon.getStyle().set("color","var(--lumo-primary-color)");
             titleIcon.getStyle().set("color","#2e4e7e");
             titleElementsContainer.add(titleIcon);
-            titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.AUTO,titleIcon);
+            titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER,titleIcon);
         }
 
         HorizontalLayout titleElementsLeftContainer = new HorizontalLayout();
@@ -63,8 +63,7 @@ public class FullScreenWindow extends Dialog {
 
         titleElementsContainer.add(titleElementsLeftContainer);
         titleElementsContainer.setFlexGrow(1,titleElementsLeftContainer);
-        titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.END,titleElementsLeftContainer);
-        titleElementsContainer.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER,titleElementsLeftContainer);
 
         if(titleComponentsList != null){
             for(Component currentComponent:titleComponentsList){
