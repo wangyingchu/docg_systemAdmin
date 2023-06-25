@@ -5,7 +5,7 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.accordion.AccordionPanel;
 import com.vaadin.flow.component.details.DetailsVariant;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
@@ -37,7 +37,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
 
         HorizontalLayout horizontalLayout3 = new HorizontalLayout();
         horizontalLayout3.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        Label label3 = new Label("ContinentEntities:");
+        NativeLabel label3 = new NativeLabel("ContinentEntities:");
         label3.getElement().getThemeList().add("badge success small");
         horizontalLayout3.add(label3);
         new SecondaryKeyValueDisplayItem(horizontalLayout3,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
@@ -46,7 +46,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
 
         HorizontalLayout horizontalLayout4 = new HorizontalLayout();
         horizontalLayout4.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        Label label4 = new Label("CountryRegionEntities:");
+        NativeLabel label4 = new NativeLabel("CountryRegionEntities:");
         label4.getElement().getThemeList().add("badge success small");
         horizontalLayout4.add(label4);
         new SecondaryKeyValueDisplayItem(horizontalLayout4,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
@@ -55,7 +55,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
 
         HorizontalLayout horizontalLayout5 = new HorizontalLayout();
         horizontalLayout5.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        Label label5 = new Label("ProvinceEntities:");
+        NativeLabel label5 = new NativeLabel("ProvinceEntities:");
         label5.getElement().getThemeList().add("badge success small");
         horizontalLayout5.add(label5);
         new SecondaryKeyValueDisplayItem(horizontalLayout5,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
@@ -64,7 +64,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
 
         HorizontalLayout horizontalLayout6 = new HorizontalLayout();
         horizontalLayout6.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        Label label6 = new Label("PrefectureEntities:");
+        NativeLabel label6 = new NativeLabel("PrefectureEntities:");
         label6.getElement().getThemeList().add("badge success small");
         horizontalLayout6.add(label6);
         new SecondaryKeyValueDisplayItem(horizontalLayout6,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
@@ -73,7 +73,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
 
         HorizontalLayout horizontalLayout7 = new HorizontalLayout();
         horizontalLayout7.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        Label label7 = new Label("CountyEntities:");
+        NativeLabel label7 = new NativeLabel("CountyEntities:");
         label7.getElement().getThemeList().add("badge success small");
         horizontalLayout7.add(label7);
         new SecondaryKeyValueDisplayItem(horizontalLayout7,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
@@ -82,7 +82,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
 
         HorizontalLayout horizontalLayout8 = new HorizontalLayout();
         horizontalLayout8.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        Label label8 = new Label("TownshipEntities:");
+        NativeLabel label8 = new NativeLabel("TownshipEntities:");
         label8.getElement().getThemeList().add("badge success small");
         horizontalLayout8.add(label8);
         new SecondaryKeyValueDisplayItem(horizontalLayout8,FontAwesome.Solid.MAP.create(),"","1,000,000,000");
@@ -91,7 +91,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
 
         HorizontalLayout horizontalLayout9 = new HorizontalLayout();
         horizontalLayout9.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        Label label9 = new Label("VillageEntities:");
+        NativeLabel label9 = new NativeLabel("VillageEntities:");
         label9.getElement().getThemeList().add("badge success small");
         horizontalLayout9.add(label9);
         new SecondaryKeyValueDisplayItem(horizontalLayout9,FontAwesome.Solid.MAP.create(),"","1,000,000,000");

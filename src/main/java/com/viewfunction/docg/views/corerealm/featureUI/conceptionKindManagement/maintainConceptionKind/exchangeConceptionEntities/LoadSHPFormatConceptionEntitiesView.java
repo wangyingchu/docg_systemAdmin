@@ -11,7 +11,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -61,7 +61,7 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
     private File importWorkingFolder;
     private SecondaryIconTitle uploadZipFileInfoSectionTitle;
     private HorizontalLayout uploadedFileInfoLayout;
-    private Label fileNameLabel;
+    private NativeLabel fileNameLabel;
     private VerticalLayout zipFileContentLayout;
     private Scroller scroller;
 
@@ -89,7 +89,7 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
         controlOptionsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         operationAreaLayout.add(controlOptionsLayout);
 
-        Label dataSplitChar = new Label("分隔符:");
+        NativeLabel dataSplitChar = new NativeLabel("分隔符:");
         dataSplitChar.addClassNames("text-xs","text-secondary");
         controlOptionsLayout.add(dataSplitChar);
 
@@ -149,7 +149,7 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
                         }
                         fileIcon.setSize("8px");
                         fileIcon.getStyle().set("padding-left","10px");
-                        Label fileNameLabel = new Label(currentFileName);
+                        NativeLabel fileNameLabel = new NativeLabel(currentFileName);
                         fileNameLabel.addClassNames("text-xs","text-secondary");
                         HorizontalLayout fileInfoLayout = new HorizontalLayout(fileIcon,fileNameLabel);
                         fileInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -180,7 +180,7 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
         operationAreaLayout.add(uploadedFileInfoLayout);
         Icon fileIcon = VaadinIcon.FILE.create();
         fileIcon.setSize("8px");
-        fileNameLabel = new Label("");
+        fileNameLabel = new NativeLabel("");
         fileNameLabel.addClassNames("text-xs","text-secondary");
         uploadedFileInfoLayout.add(fileIcon,fileNameLabel);
 

@@ -2,7 +2,7 @@ package com.viewfunction.docg.element.commonComponent;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SecondaryTitleActionBar extends HorizontalLayout {
 
-    private Label titleLabel;
+    private NativeLabel titleLabel;
 
     public SecondaryTitleActionBar(Icon titleIcon, String titleContent, List<Component> secondaryTitleComponentsList, List<Component> actionComponentsList){
 
@@ -35,7 +35,7 @@ public class SecondaryTitleActionBar extends HorizontalLayout {
 
         HorizontalLayout titleElementsContainer = new HorizontalLayout();
 
-        titleLabel = new Label(titleContent);
+        titleLabel = new NativeLabel(titleContent);
         titleLabel.getStyle().set("font-size","var(--lumo-font-size-m)")
                 .set("color","#2e4e7e");
                 //.set("color","var(--lumo-primary-color)");

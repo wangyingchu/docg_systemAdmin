@@ -2,7 +2,7 @@ package com.viewfunction.docg.element.commonComponent;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -10,7 +10,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import java.util.List;
 
 public class ThirdLevelTitleActionBar extends HorizontalLayout {
-    private Label titleLabel;
+    private NativeLabel titleLabel;
 
     public ThirdLevelTitleActionBar(Icon titleIcon, String titleContent, List<Component> thirdLevelTitleComponentsList, List<Component> actionComponentsList){
 
@@ -29,7 +29,7 @@ public class ThirdLevelTitleActionBar extends HorizontalLayout {
 
         HorizontalLayout titleElementsContainer = new HorizontalLayout();
 
-        titleLabel = new Label(titleContent);
+        titleLabel = new NativeLabel(titleContent);
         titleLabel.addClassNames("text-xs","text-tertiary");
         titleElementsContainer.add(titleLabel);
 

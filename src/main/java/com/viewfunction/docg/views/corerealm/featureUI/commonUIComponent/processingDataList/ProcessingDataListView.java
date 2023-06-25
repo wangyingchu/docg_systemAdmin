@@ -1,6 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList;
 
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -37,7 +37,7 @@ public class ProcessingDataListView extends VerticalLayout {
         Span relationInfoSpan =new Span();
         Icon relationInfoIcon = new Icon(VaadinIcon.CUBE);
         relationInfoIcon.setSize("20px");
-        Label relationInfoLabel = new Label(" 概念实体数据");
+        NativeLabel relationInfoLabel = new NativeLabel(" 概念实体数据");
         relationInfoSpan.add(relationInfoIcon,relationInfoLabel);
         tab0.add(relationInfoSpan);
 
@@ -45,7 +45,7 @@ public class ProcessingDataListView extends VerticalLayout {
         Span networkGraphSpan =new Span();
         Icon networkGraphIcon = new Icon(VaadinIcon.CONNECT_O);
         networkGraphIcon.setSize("20px");
-        Label networkGraphLabel = new Label(" 关系实体数据");
+        NativeLabel networkGraphLabel = new NativeLabel(" 关系实体数据");
         networkGraphSpan.add(networkGraphIcon,networkGraphLabel);
         tab1.add(networkGraphSpan);
 

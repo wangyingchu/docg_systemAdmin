@@ -11,7 +11,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -40,7 +40,7 @@ public class DownloadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private Dialog containerDialog;
     private Button cancelImportButton;
     private Button generateCsvButton;
-    private Label csvFileName;
+    private NativeLabel csvFileName;
     private HorizontalLayout downloaderContainer;
     private String csvDataFileURI;
     private long conceptionEntitiesCount;
@@ -88,10 +88,10 @@ public class DownloadCSVFormatConceptionEntitiesView extends VerticalLayout {
 
         HorizontalLayout dataFileInfoLayout = new HorizontalLayout();
         dataFileInfoLayout.getStyle().set("padding-top","10px");
-        Label messageContentLabel = new Label("CSV 数据文件: ");
+        NativeLabel messageContentLabel = new NativeLabel("CSV 数据文件: ");
         messageContentLabel.addClassNames("text-xs","text-secondary");
 
-        csvFileName = new Label();
+        csvFileName = new NativeLabel();
         csvFileName.addClassNames("text-xs");
         dataFileInfoLayout.add(messageContentLabel, csvFileName);
         add(dataFileInfoLayout);

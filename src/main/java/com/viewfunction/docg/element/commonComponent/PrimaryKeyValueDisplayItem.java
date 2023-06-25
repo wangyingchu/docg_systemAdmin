@@ -2,20 +2,20 @@ package com.viewfunction.docg.element.commonComponent;
 
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class PrimaryKeyValueDisplayItem {
 
-    private Label displayValue;
+    private NativeLabel displayValue;
 
     public PrimaryKeyValueDisplayItem(HasComponents containComponent, String keyText, String valueText){
-        Label conceptionEntityNumberText = new Label(keyText);
+        NativeLabel conceptionEntityNumberText = new NativeLabel(keyText);
         conceptionEntityNumberText.addClassNames("text-xs","font-semibold","text-secondary");
         containComponent.add(conceptionEntityNumberText);
-        displayValue = new Label(valueText);
+        displayValue = new NativeLabel(valueText);
         displayValue.addClassNames("text-xl","text-primary","font-extrabold","border-b","border-contrast-20");
         displayValue.getStyle().set("color","#2e4e7e");
         containComponent.add(displayValue);
@@ -54,11 +54,11 @@ public class PrimaryKeyValueDisplayItem {
     }
 
     private void addDisplayItemContent(HasComponents containComponent, HorizontalLayout keyHorizontalLayout, String keyText, String valueText){
-        Label conceptionEntityNumberText = new Label(keyText);
+        NativeLabel conceptionEntityNumberText = new NativeLabel(keyText);
         conceptionEntityNumberText.addClassNames("text-xs","font-semibold","text-secondary");
         keyHorizontalLayout.add(conceptionEntityNumberText);
         containComponent.add(keyHorizontalLayout);
-        displayValue = new Label(valueText);
+        displayValue = new NativeLabel(valueText);
         displayValue.addClassNames("text-xl","text-primary","font-extrabold","border-b","border-contrast-20");
         displayValue.getStyle().set("color","#2e4e7e");
         containComponent.add(displayValue);

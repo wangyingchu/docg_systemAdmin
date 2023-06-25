@@ -6,7 +6,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -67,7 +67,7 @@ public class TemporalEventSummaryWidget extends HorizontalLayout {
         summaryIcon.getStyle().set("padding-right","5px");
         dateInfoContainer.add(summaryIcon);
 
-        Label temporalTextLabel = new Label(referTimeString);
+        NativeLabel temporalTextLabel = new NativeLabel(referTimeString);
         temporalTextLabel.addClassNames("text-xs","font-semibold","text-secondary");
         dateInfoContainer.add(temporalTextLabel);
 
@@ -75,11 +75,11 @@ public class TemporalEventSummaryWidget extends HorizontalLayout {
         divIcon1.setSize("8px");
         dateInfoContainer.add(divIcon1);
 
-        Label timeScaleGradeLabel = new Label(timeScaleGrade.toString());
+        NativeLabel timeScaleGradeLabel = new NativeLabel(timeScaleGrade.toString());
         timeScaleGradeLabel.addClassNames("text-xs","font-semibold","text-secondary");
         dateInfoContainer.add(timeScaleGradeLabel);
 
-        Label eventTitleLabel = new Label(this.timeScaleEvent.getEventComment());
+        NativeLabel eventTitleLabel = new NativeLabel(this.timeScaleEvent.getEventComment());
         add(eventTitleLabel);
 
         Button showEventButton = new Button("事件详情");
@@ -121,7 +121,7 @@ public class TemporalEventSummaryWidget extends HorizontalLayout {
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout2);
-        Label conceptionKindNameLabel = new Label(targetConceptionKind);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(targetConceptionKind);
         titleDetailLayout.add(conceptionKindNameLabel);
 
         HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
@@ -143,7 +143,7 @@ public class TemporalEventSummaryWidget extends HorizontalLayout {
         HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
         spaceDivLayout5.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout5);
-        Label conceptionEntityUIDLabel = new Label(targetConceptionEntityUID);
+        NativeLabel conceptionEntityUIDLabel = new NativeLabel(targetConceptionEntityUID);
         titleDetailLayout.add(conceptionEntityUIDLabel);
 
         actionComponentList.add(titleDetailLayout);

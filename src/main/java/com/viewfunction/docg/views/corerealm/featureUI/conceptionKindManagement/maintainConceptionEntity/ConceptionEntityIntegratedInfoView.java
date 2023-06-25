@@ -1,6 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -44,7 +44,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         Span relationInfoSpan =new Span();
         Icon relationInfoIcon = new Icon(VaadinIcon.EXCHANGE);
         relationInfoIcon.setSize("20px");
-        Label relationInfoLabel = new Label(" 实体数据关联信息");
+        NativeLabel relationInfoLabel = new NativeLabel(" 实体数据关联信息");
         relationInfoSpan.add(relationInfoIcon,relationInfoLabel);
         tab0.add(relationInfoSpan);
 
@@ -52,7 +52,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         Span networkGraphSpan =new Span();
         Icon networkGraphIcon = new Icon(VaadinIcon.CLUSTER);
         networkGraphIcon.setSize("20px");
-        Label networkGraphLabel = new Label(" 实体数据关联网络图");
+        NativeLabel networkGraphLabel = new NativeLabel(" 实体数据关联网络图");
         networkGraphSpan.add(networkGraphIcon,networkGraphLabel);
         tab1.add(networkGraphSpan);
 
@@ -60,7 +60,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         Span earthMapSpan =new Span();
         Icon earthMapIcon = new Icon(VaadinIcon.GLOBE);
         earthMapIcon.setSize("20px");
-        Label earthMapLabel = new Label(" 实体地理空间属性信息");
+        NativeLabel earthMapLabel = new NativeLabel(" 实体地理空间属性信息");
         earthMapSpan.add(earthMapIcon,earthMapLabel);
         tab2.add(earthMapSpan);
 
@@ -68,7 +68,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         Span timeChartSpan =new Span();
         Icon timeChartIcon = new Icon(VaadinIcon.CALENDAR_CLOCK);
         timeChartIcon.setSize("20px");
-        Label timeChartLabel = new Label(" 实体时间序列相关信息");
+        NativeLabel timeChartLabel = new NativeLabel(" 实体时间序列相关信息");
         timeChartSpan.add(timeChartIcon,timeChartLabel);
         tab3.add(timeChartSpan);
 
@@ -76,7 +76,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         Span spatialInfoSpan =new Span();
         Icon spatialInfoIcon = new Icon(VaadinIcon.MAP_MARKER);
         spatialInfoIcon.setSize("18px");
-        Label spatialInfoLabel = new Label(" 实体地理空间相关信息");
+        NativeLabel spatialInfoLabel = new NativeLabel(" 实体地理空间相关信息");
         spatialInfoSpan.add(spatialInfoIcon,spatialInfoLabel);
         tab4.add(spatialInfoSpan);
 

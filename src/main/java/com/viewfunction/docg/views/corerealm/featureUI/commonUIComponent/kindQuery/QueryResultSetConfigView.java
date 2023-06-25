@@ -7,7 +7,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H6;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -73,7 +73,7 @@ public class QueryResultSetConfigView extends VerticalLayout {
         infoIcon.setSize("10px");
         infoIcon.getStyle().set("color","var(--lumo-contrast-80pct)");
         messageTitleLayout.add(infoIcon);
-        Label attributeTypeLabel = new Label("设置大于0的查询起始页和查询结束页将覆盖最大返回结果数中设置的返回参数值");
+        NativeLabel attributeTypeLabel = new NativeLabel("设置大于0的查询起始页和查询结束页将覆盖最大返回结果数中设置的返回参数值");
         attributeTypeLabel.addClassNames("text-tertiary");
         attributeTypeLabel.getStyle().set("font-size","0.7rem").set("color","var(--lumo-contrast-80pct)");
         messageTitleLayout.add(attributeTypeLabel);

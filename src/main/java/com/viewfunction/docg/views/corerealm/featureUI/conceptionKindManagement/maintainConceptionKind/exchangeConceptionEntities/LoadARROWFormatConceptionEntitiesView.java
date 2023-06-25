@@ -7,7 +7,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -52,7 +52,7 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
     private String uploadedFileName;
     private SecondaryIconTitle uploadZipFileInfoSectionTitle;
     private HorizontalLayout uploadedFileInfoLayout;
-    private Label fileNameLabel;
+    private NativeLabel fileNameLabel;
     private File targetArrowFile;
     private RadioButtonGroup<String> arrowFileSourceGroup;
     private TextField filePathInput;
@@ -81,7 +81,7 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
         controlOptionsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         operationAreaLayout.add(controlOptionsLayout);
 
-        Label dataSplitChar = new Label("Arrow 文件来源:");
+        NativeLabel dataSplitChar = new NativeLabel("Arrow 文件来源:");
         dataSplitChar.addClassNames("text-xs","text-secondary");
         controlOptionsLayout.add(dataSplitChar);
 
@@ -89,7 +89,7 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
         arrowFileSourceGroup.setItems("客户端上传", "服务器本地路径");
         arrowFileSourceGroup.setValue("客户端上传");
         arrowFileSourceGroup.setRenderer(new ComponentRenderer<>(option -> {
-            Label optionLabel = new Label(option);
+            NativeLabel optionLabel = new NativeLabel(option);
             optionLabel.addClassNames("text-xs","text-secondary");
             return optionLabel;
         }));
@@ -114,7 +114,7 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
         arrowFilePathInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         operationAreaLayout.add(arrowFilePathInfoLayout);
 
-        Label filePathPrompt = new Label("Arrow 文件服务器路径:");
+        NativeLabel filePathPrompt = new NativeLabel("Arrow 文件服务器路径:");
         filePathPrompt.addClassNames("text-xs","text-secondary");
         arrowFilePathInfoLayout.add(filePathPrompt);
         filePathInput = new TextField();
@@ -191,7 +191,7 @@ public class LoadARROWFormatConceptionEntitiesView extends VerticalLayout {
         operationAreaLayout.add(uploadedFileInfoLayout);
         Icon fileIcon = VaadinIcon.FILE.create();
         fileIcon.setSize("8px");
-        fileNameLabel = new Label("");
+        fileNameLabel = new NativeLabel("");
         fileNameLabel.addClassNames("text-xs","text-secondary");
         uploadedFileInfoLayout.add(fileIcon,fileNameLabel);
 

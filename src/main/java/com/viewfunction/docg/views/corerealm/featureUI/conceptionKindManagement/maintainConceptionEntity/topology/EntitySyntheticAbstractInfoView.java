@@ -8,7 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -31,10 +31,10 @@ import java.util.List;
 public class EntitySyntheticAbstractInfoView extends VerticalLayout{
 
     private VerticalLayout infoContentContainer;
-    private Label conceptionKindLabel;
-    private Label conceptionEntityUIDLabel;
-    private Label relationKindLabel;
-    private Label relationEntityUIDLabel;
+    private NativeLabel conceptionKindLabel;
+    private NativeLabel conceptionEntityUIDLabel;
+    private NativeLabel relationKindLabel;
+    private NativeLabel relationEntityUIDLabel;
     private SecondaryKeyValueDisplayItem relationCountDisplayItem;
     private SecondaryKeyValueDisplayItem inDegreeDisplayItem;
     private SecondaryKeyValueDisplayItem outDegreeDisplayItem;
@@ -83,7 +83,7 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
         conceptionKindIcon.getStyle().set("padding-right","3px");
         conceptionKindNameInfoContainer.add(conceptionKindIcon);
         conceptionKindNameInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindIcon);
-        conceptionKindLabel = new Label();
+        conceptionKindLabel = new NativeLabel();
         conceptionKindLabel.addClassNames("text-s","font-extrabold","border-b","border-contrast-10");
         conceptionKindLabel.getStyle().set("font-weight","bold").set("color","#2e4e7e");
         conceptionKindNameInfoContainer.getStyle().set("padding-top","15px");
@@ -97,7 +97,7 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
         conceptionEntityIcon.getStyle().set("padding-right","3px");
         conceptionEntityUIDInfoContainer.add(conceptionEntityIcon);
         conceptionEntityUIDInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,conceptionEntityIcon);
-        conceptionEntityUIDLabel = new Label();
+        conceptionEntityUIDLabel = new NativeLabel();
         conceptionEntityUIDLabel.addClassNames("text-s","font-extrabold","border-b","border-contrast-10");
         conceptionEntityUIDLabel.getStyle().set("font-weight","bold").set("color","#2e4e7e");
         conceptionEntityUIDInfoContainer.getStyle().set("padding-top","5px");
@@ -126,7 +126,7 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
         relationKindIcon.getStyle().set("padding-right","3px");
         relationKindNameInfoContainer.add(relationKindIcon);
         relationKindNameInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,relationKindIcon);
-        relationKindLabel = new Label();
+        relationKindLabel = new NativeLabel();
         relationKindLabel.addClassNames("text-s","font-extrabold","border-b","border-contrast-10");
         relationKindLabel.getStyle().set("font-weight","bold").set("color","#2e4e7e");
         relationKindNameInfoContainer.getStyle().set("padding-top","15px");
@@ -140,7 +140,7 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
         relationEntityIcon.getStyle().set("padding-right","3px");
         relationEntityUIDInfoContainer.add(relationEntityIcon);
         relationEntityUIDInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,relationEntityIcon);
-        relationEntityUIDLabel = new Label();
+        relationEntityUIDLabel = new NativeLabel();
         relationEntityUIDLabel.addClassNames("text-s","font-extrabold","border-b","border-contrast-10");
         relationEntityUIDLabel.getStyle().set("font-weight","bold").set("color","#2e4e7e");
         relationEntityUIDInfoContainer.getStyle().set("padding-top","12px");
@@ -268,7 +268,7 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout2);
-        Label conceptionKindNameLabel = new Label(targetConceptionKind);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(targetConceptionKind);
         titleDetailLayout.add(conceptionKindNameLabel);
 
         HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
@@ -290,7 +290,7 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
         HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
         spaceDivLayout5.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout5);
-        Label conceptionEntityUIDLabel = new Label(targetConceptionEntityUID);
+        NativeLabel conceptionEntityUIDLabel = new NativeLabel(targetConceptionEntityUID);
         titleDetailLayout.add(conceptionEntityUIDLabel);
 
         actionComponentList.add(titleDetailLayout);
@@ -326,7 +326,7 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout2);
-        Label conceptionKindNameLabel = new Label(relationKindName);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(relationKindName);
         titleDetailLayout.add(conceptionKindNameLabel);
 
         HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
@@ -348,7 +348,7 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
         HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
         spaceDivLayout5.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout5);
-        Label relationEntityUIDLabel = new Label(relationEntityUID);
+        NativeLabel relationEntityUIDLabel = new NativeLabel(relationEntityUID);
         titleDetailLayout.add(relationEntityUIDLabel);
 
         actionComponentList.add(titleDetailLayout);
@@ -406,7 +406,7 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
                 conceptionKindIcon0.setSize("8px");
                 fromConceptionEntityInfo.add(conceptionKindIcon0);
                 fromConceptionEntityInfo.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindIcon0);
-                Label fromConceptionKind = new Label(fromConceptionKinds.get(0));
+                NativeLabel fromConceptionKind = new NativeLabel(fromConceptionKinds.get(0));
                 fromConceptionKind.addClassNames("border-b","border-contrast-10");
                 fromConceptionKind.getStyle().set("font-size","12px");
                 fromConceptionEntityInfo.add(fromConceptionKind);
@@ -419,7 +419,7 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
                 conceptionEntityIcon0.setSize("8px");
                 fromConceptionEntityInfo.add(conceptionEntityIcon0);
                 fromConceptionEntityInfo.setVerticalComponentAlignment(Alignment.CENTER,conceptionEntityIcon0);
-                Label fromConceptionEntityUIDLabel = new Label(fromConceptionEntityUID);
+                NativeLabel fromConceptionEntityUIDLabel = new NativeLabel(fromConceptionEntityUID);
                 fromConceptionEntityUIDLabel.addClassNames("border-b","border-contrast-10");
                 fromConceptionEntityUIDLabel.getStyle().set("font-size","12px");
                 fromConceptionEntityInfo.add(fromConceptionEntityUIDLabel);
@@ -437,7 +437,7 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
                 conceptionKindIcon1.setSize("8px");
                 toConceptionEntityInfo.add(conceptionKindIcon1);
                 toConceptionEntityInfo.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindIcon1);
-                Label toConceptionKind = new Label(toConceptionKinds.get(0));
+                NativeLabel toConceptionKind = new NativeLabel(toConceptionKinds.get(0));
                 toConceptionKind.addClassNames("border-b","border-contrast-10");
                 toConceptionKind.getStyle().set("font-size","12px");
                 toConceptionEntityInfo.add(toConceptionKind);
@@ -450,7 +450,7 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
                 conceptionEntityIcon1.setSize("8px");
                 toConceptionEntityInfo.add(conceptionEntityIcon1);
                 toConceptionEntityInfo.setVerticalComponentAlignment(Alignment.CENTER,conceptionEntityIcon1);
-                Label toConceptionEntityUIDLabel = new Label(toConceptionEntityUID);
+                NativeLabel toConceptionEntityUIDLabel = new NativeLabel(toConceptionEntityUID);
                 toConceptionEntityUIDLabel.addClassNames("border-b","border-contrast-10");
                 toConceptionEntityUIDLabel.getStyle().set("font-size","12px");
                 toConceptionEntityInfo.add(toConceptionEntityUIDLabel);

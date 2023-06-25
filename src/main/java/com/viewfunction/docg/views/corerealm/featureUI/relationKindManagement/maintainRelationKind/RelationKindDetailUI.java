@@ -5,7 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -92,7 +92,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
     private void renderRelationKindData(){
         List<Component> secTitleElementsList = new ArrayList<>();
 
-        Label relationKindNameLabel = new Label(this.relationKind);
+        NativeLabel relationKindNameLabel = new NativeLabel(this.relationKind);
         relationKindNameLabel.getStyle()
                 .set("font-size","var(--lumo-font-size-xl)")
                 .set("color","var(--lumo-primary-text-color)")
@@ -268,7 +268,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
         kindConfigTabLayout.setHeight(26,Unit.PIXELS);
         Icon configTabIcon = new Icon(tabIcon);
         configTabIcon.setSize("12px");
-        Label configTabLabel = new Label(" "+tabTitleTxt);
+        NativeLabel configTabLabel = new NativeLabel(" "+tabTitleTxt);
         configTabLabel.getStyle()
                 . set("font-size","var(--lumo-font-size-s)")
                 .set("font-weight", "bold");
@@ -298,7 +298,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout2);
-        Label relationKindName = new Label(this.relationKind);
+        NativeLabel relationKindName = new NativeLabel(this.relationKind);
         titleDetailLayout.add(relationKindName);
         actionComponentList.add(titleDetailLayout);
 

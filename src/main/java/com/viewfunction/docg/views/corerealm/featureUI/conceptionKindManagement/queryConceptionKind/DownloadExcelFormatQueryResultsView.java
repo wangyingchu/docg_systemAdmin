@@ -12,7 +12,7 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -36,7 +36,7 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.TEMP_FILES_STORAGE_LOCATION);
     private Dialog containerDialog;
     private Button cancelImportButton;
-    private Label excelFileName;
+    private NativeLabel excelFileName;
     private HorizontalLayout downloaderContainer;
     private String excelDataFileURI;
     private long conceptionEntitiesCount;
@@ -71,10 +71,10 @@ public class DownloadExcelFormatQueryResultsView extends VerticalLayout {
 
         HorizontalLayout dataFileInfoLayout = new HorizontalLayout();
         dataFileInfoLayout.getStyle().set("padding-top","10px");
-        Label messageContentLabel = new Label("EXCEL 数据文件: ");
+        NativeLabel messageContentLabel = new NativeLabel("EXCEL 数据文件: ");
         messageContentLabel.addClassNames("text-xs","text-secondary");
 
-        excelFileName = new Label();
+        excelFileName = new NativeLabel();
         excelFileName.addClassNames("text-xs");
         dataFileInfoLayout.add(messageContentLabel, excelFileName);
         add(dataFileInfoLayout);

@@ -2,7 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -49,7 +49,7 @@ public class ConceptionEntitySpatialAttributeView extends VerticalLayout {
         Span globalInfoSpan =new Span();
         Icon globalInfoIcon = new Icon(VaadinIcon.GLOBE_WIRE);
         globalInfoIcon.setSize("14px");
-        Label globalInfoLabel = new Label(" 全球坐标系地理空间信息");
+        NativeLabel globalInfoLabel = new NativeLabel(" 全球坐标系地理空间信息");
         globalInfoSpan.add(globalInfoIcon,globalInfoLabel);
         tab0.add(globalInfoSpan);
 
@@ -58,7 +58,7 @@ public class ConceptionEntitySpatialAttributeView extends VerticalLayout {
         Span countryInfoSpan =new Span();
         Icon countryInfoIcon = new Icon(VaadinIcon.LOCATION_ARROW_CIRCLE);
         countryInfoIcon.setSize("14px");
-        Label countryInfoLabel = new Label(" 国家坐标系地理空间信息");
+        NativeLabel countryInfoLabel = new NativeLabel(" 国家坐标系地理空间信息");
         countryInfoSpan.add(countryInfoIcon,countryInfoLabel);
         tab1.add(countryInfoSpan);
 
@@ -67,7 +67,7 @@ public class ConceptionEntitySpatialAttributeView extends VerticalLayout {
         Span localInfoSpan =new Span();
         Icon localInfoIcon = new Icon(VaadinIcon.HOME);
         localInfoIcon.setSize("14px");
-        Label localInfoLabel = new Label(" 本地坐标系地理空间信息");
+        NativeLabel localInfoLabel = new NativeLabel(" 本地坐标系地理空间信息");
         localInfoSpan.add(localInfoIcon,localInfoLabel);
         tab2.add(localInfoSpan);
 

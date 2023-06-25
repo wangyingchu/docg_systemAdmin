@@ -10,7 +10,7 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.datepicker.DatePickerVariant;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.datetimepicker.DateTimePickerVariant;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -73,9 +73,9 @@ public class QueryConditionItemWidget extends VerticalLayout {
     private Icon multiIcon;
     private Icon notIcon;
     private KindQueryCriteriaView containerDataInstanceQueryCriteriaView;
-    private Label isDefaultLabel;
-    private Label joinTypeLabel;
-    private Label isConvertedLabel;
+    private NativeLabel isDefaultLabel;
+    private NativeLabel joinTypeLabel;
+    private NativeLabel isConvertedLabel;
     private Component singleQueryValueTextField;
     private Component multiValuePropertyInput;
     private Component betweenQueryFromValueTextField;
@@ -127,7 +127,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
         attributeNameInfoContainer.add(propertyTypeIcon);
         attributeNameInfoContainer.setVerticalComponentAlignment(Alignment.STRETCH,propertyTypeIcon);
 
-        Label attributeNameLabel = new Label(attributeName);
+        NativeLabel attributeNameLabel = new NativeLabel(attributeName);
         attributeNameLabel.getStyle().set("font-size","0.75rem").set("font-weight","bold").set("padding-right","5px");
         attributeNameInfoContainer.add(attributeNameLabel);
         attributeNameInfoContainer.setFlexGrow(1,attributeNameLabel);
@@ -138,22 +138,22 @@ public class QueryConditionItemWidget extends VerticalLayout {
         conditionStatusContainer.setSpacing(false);
         attributeMetaInfoContainer.add(conditionStatusContainer);
 
-        Label attributeTypeLabel = new Label(attributeDataType.toString());
+        NativeLabel attributeTypeLabel = new NativeLabel(attributeDataType.toString());
         attributeTypeLabel.addClassNames("text-tertiary");
         attributeTypeLabel.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-70pct)").set("padding-left","20px");
         conditionStatusContainer.add(attributeTypeLabel);
 
-        isDefaultLabel = new Label("DEFAULT");
+        isDefaultLabel = new NativeLabel("DEFAULT");
         isDefaultLabel.addClassNames("text-tertiary");
         isDefaultLabel.getStyle().set("font-size","0.5rem").set("color","var(--lumo-contrast-50pct)").set("padding-left","15px");
         conditionStatusContainer.add(isDefaultLabel);
 
-        joinTypeLabel = new Label("AND");
+        joinTypeLabel = new NativeLabel("AND");
         joinTypeLabel.addClassNames("text-tertiary");
         joinTypeLabel.getStyle().set("font-size","0.5rem").set("color","var(--lumo-contrast-50pct)").set("padding-left","15px");
         conditionStatusContainer.add(joinTypeLabel);
 
-        isConvertedLabel = new Label("| NOT");
+        isConvertedLabel = new NativeLabel("| NOT");
         isConvertedLabel.addClassNames("text-tertiary");
         isConvertedLabel.getStyle().set("font-size","0.5rem").set("color","var(--lumo-contrast-50pct)").set("padding-left","5px");
         conditionStatusContainer.add(isConvertedLabel);

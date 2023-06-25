@@ -3,7 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.ComboBoxVariant;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -38,7 +38,7 @@ public class EntityAttributeNameMapperWidget extends VerticalLayout {
         icon.setSize("10px");
         attributeOriginalNameInfo.add(icon);
 
-        Label attributeNameLabel = new Label(attributeName);
+        NativeLabel attributeNameLabel = new NativeLabel(attributeName);
         attributeNameLabel.getStyle()
                 .set("padding-left","5px")
                 .set("font-size","0.8rem")

@@ -1,6 +1,6 @@
 package com.viewfunction.docg.element.commonComponent;
 
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -33,7 +33,7 @@ public class FootprintMessageBar extends HorizontalLayout {
                 FootprintMessageVO currentFootprintMessageVO = messageFootprints.get(i);
                 this.add(currentFootprintMessageVO.messageIcon);
                 this.setVerticalComponentAlignment(Alignment.CENTER,currentFootprintMessageVO.messageIcon);
-                Label messageContentLabel = new Label(currentFootprintMessageVO.messageContent);
+                NativeLabel messageContentLabel = new NativeLabel(currentFootprintMessageVO.messageContent);
                 this.add(messageContentLabel);
                 this.setVerticalComponentAlignment(Alignment.CENTER,messageContentLabel);
                 if(i<messageFootprints.size()-1){
@@ -62,7 +62,7 @@ public class FootprintMessageBar extends HorizontalLayout {
                 FootprintMessageVO currentFootprintMessageVO = messageFootprints.get(i);
                 this.add(currentFootprintMessageVO.messageIcon);
                 this.setVerticalComponentAlignment(Alignment.CENTER,currentFootprintMessageVO.messageIcon);
-                Label messageContentLabel = new Label(currentFootprintMessageVO.messageContent);
+                NativeLabel messageContentLabel = new NativeLabel(currentFootprintMessageVO.messageContent);
                 this.add(messageContentLabel);
                 this.setVerticalComponentAlignment(Alignment.CENTER,messageContentLabel);
                 if(i<messageFootprints.size()-1){

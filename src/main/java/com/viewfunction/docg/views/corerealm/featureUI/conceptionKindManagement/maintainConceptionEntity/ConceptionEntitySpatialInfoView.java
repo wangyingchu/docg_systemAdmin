@@ -3,7 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -50,7 +50,7 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
         messageLogo.getStyle()
                 .set("color","#2e4e7e").set("padding-right", "5px");
         messageLogo.setSize("30px");
-        Label messageLabel = new Label(" 当前概念实体中不包含地理空间相关信息");
+        NativeLabel messageLabel = new NativeLabel(" 当前概念实体中不包含地理空间相关信息");
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
         doesNotContainsSpatialInfoMessage.add(messageLogo,messageLabel);
         add(doesNotContainsSpatialInfoMessage);

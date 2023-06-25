@@ -12,7 +12,7 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.datepicker.DatePickerVariant;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.datetimepicker.DateTimePickerVariant;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -84,7 +84,7 @@ public class AttributeCreatorItemWidget extends VerticalLayout {
         attributeNameInfoContainer.add(propertyTypeIcon);
         attributeNameInfoContainer.setVerticalComponentAlignment(Alignment.STRETCH,propertyTypeIcon);
 
-        Label attributeNameLabel = new Label(attributeName);
+        NativeLabel attributeNameLabel = new NativeLabel(attributeName);
         attributeNameLabel.getStyle().set("font-size","0.75rem").set("font-weight","bold").set("padding-right","5px");
         attributeNameInfoContainer.add(attributeNameLabel);
         attributeNameInfoContainer.setFlexGrow(1,attributeNameLabel);
@@ -95,7 +95,7 @@ public class AttributeCreatorItemWidget extends VerticalLayout {
         attributeStatusContainer.setSpacing(false);
         attributeMetaInfoContainer.add(attributeStatusContainer);
 
-        Label attributeTypeLabel = new Label(attributeDataType.toString());
+        NativeLabel attributeTypeLabel = new NativeLabel(attributeDataType.toString());
         attributeTypeLabel.addClassNames("text-tertiary");
         attributeTypeLabel.getStyle().set("font-size","0.7rem").set("color","var(--lumo-contrast-70pct)").set("padding-left","20px");
         attributeMetaLayout.setVerticalComponentAlignment(Alignment.CENTER,attributeMetaInfoContainer);

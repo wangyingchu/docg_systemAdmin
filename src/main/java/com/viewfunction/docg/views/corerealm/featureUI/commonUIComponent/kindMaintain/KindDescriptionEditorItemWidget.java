@@ -6,7 +6,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -28,7 +28,7 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
     private KindType currentKindType;
     private String currentKindName;
     private String currentKindDescription;
-    private Label kindDescriptionLabel;
+    private NativeLabel kindDescriptionLabel;
     private TextField kindDescriptionEditor;
     private Button updateAttributeValueButton;
     private Button confirmUpdateAttributeValueButton;
@@ -37,7 +37,7 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
         this.currentKindName = kindName;
         this.currentKindType = kindType;
         this.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        this.kindDescriptionLabel = new Label("");
+        this.kindDescriptionLabel = new NativeLabel("");
         this.kindDescriptionLabel.getStyle()
                 .set("font-size","var(--lumo-font-size-s)")
                 .set("color","var(--lumo-body-text-color)");

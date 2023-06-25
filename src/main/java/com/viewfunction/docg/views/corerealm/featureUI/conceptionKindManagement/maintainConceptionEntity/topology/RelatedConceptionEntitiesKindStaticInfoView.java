@@ -1,7 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology;
 
 import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -100,7 +100,7 @@ public class RelatedConceptionEntitiesKindStaticInfoView extends VerticalLayout 
                     conceptionKindIcon.setSize("8px");
                     conceptionKindInfoItem.add(conceptionKindIcon);
                     conceptionKindInfoItem.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindIcon);
-                    Label currentConceptionKind = new Label(relationKindName);
+                    NativeLabel currentConceptionKind = new NativeLabel(relationKindName);
                     currentConceptionKind.getStyle().set("font-size","var(--lumo-font-size-xs)").set("padding-left","5px");
                     currentConceptionKind.addClassNames("text-tertiary");
                     conceptionKindInfoItem.add(currentConceptionKind);

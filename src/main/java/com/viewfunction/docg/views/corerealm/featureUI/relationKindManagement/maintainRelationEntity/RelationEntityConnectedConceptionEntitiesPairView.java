@@ -3,7 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.m
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -59,7 +59,7 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
 
         HorizontalLayout fromConceptionEntityInfoLayout = new HorizontalLayout();
         fromConceptionEntityInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        Label fromConceptionEntityText = new Label("FROM 概念实体");
+        NativeLabel fromConceptionEntityText = new NativeLabel("FROM 概念实体");
         fromConceptionEntityText.addClassNames("text-xs","font-medium","text-secondary");
         fromConceptionEntityInfoLayout.add(fromConceptionEntityText);
         this.fromConceptionEntityOperateLayout = new HorizontalLayout();
@@ -74,7 +74,7 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
 
         HorizontalLayout toConceptionEntityInfoLayout = new HorizontalLayout();
         toConceptionEntityInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        Label toConceptionEntityText = new Label("TO 概念实体");
+        NativeLabel toConceptionEntityText = new NativeLabel("TO 概念实体");
         toConceptionEntityText.addClassNames("text-xs","font-medium","text-secondary");
         toConceptionEntityInfoLayout.add(toConceptionEntityText);
         this.toConceptionEntityOperateLayout = new HorizontalLayout();
@@ -190,9 +190,9 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
                         }
                     }
                 }
-                Label fromConceptionKindsLabel = new Label(fromConceptionKindsTxt);
+                NativeLabel fromConceptionKindsLabel = new NativeLabel(fromConceptionKindsTxt);
                 fromConceptionKindsLabel.addClassNames("text-xs","font-medium");
-                Label fromConceptionEntityUIDLabel = new Label(fromConceptionEntityUID);
+                NativeLabel fromConceptionEntityUIDLabel = new NativeLabel(fromConceptionEntityUID);
                 fromConceptionEntityUIDLabel.addClassNames("text-xs","font-medium");
                 Icon fromDivIcon = VaadinIcon.ITALIC.create();
                 fromDivIcon.setSize("12px");
@@ -227,9 +227,9 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
                         }
                     }
                 }
-                Label toConceptionKindsLabel = new Label(toConceptionKindsTxt);
+                NativeLabel toConceptionKindsLabel = new NativeLabel(toConceptionKindsTxt);
                 toConceptionKindsLabel.addClassNames("text-xs","font-medium");
-                Label toConceptionEntityUIDLabel = new Label(toConceptionEntityUID);
+                NativeLabel toConceptionEntityUIDLabel = new NativeLabel(toConceptionEntityUID);
                 toConceptionEntityUIDLabel.addClassNames("text-xs","font-medium");
                 Icon toDivIcon = VaadinIcon.ITALIC.create();
                 toDivIcon.setSize("12px");
@@ -279,7 +279,7 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout2);
-        Label conceptionKindNameLabel = new Label(conceptionKindName);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(conceptionKindName);
         titleDetailLayout.add(conceptionKindNameLabel);
 
         HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
@@ -301,7 +301,7 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
         HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
         spaceDivLayout5.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout5);
-        Label conceptionEntityUIDLabel = new Label(conceptionEntityUID);
+        NativeLabel conceptionEntityUIDLabel = new NativeLabel(conceptionEntityUID);
         titleDetailLayout.add(conceptionEntityUIDLabel);
 
         actionComponentList.add(titleDetailLayout);

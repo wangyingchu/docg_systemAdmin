@@ -9,7 +9,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -537,7 +537,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout2);
-        Label conceptionKindNameLabel = new Label(targetConceptionKind);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(targetConceptionKind);
         titleDetailLayout.add(conceptionKindNameLabel);
 
         HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
@@ -559,7 +559,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
         spaceDivLayout5.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout5);
-        Label conceptionEntityUIDLabel = new Label(targetConceptionEntityUID);
+        NativeLabel conceptionEntityUIDLabel = new NativeLabel(targetConceptionEntityUID);
         titleDetailLayout.add(conceptionEntityUIDLabel);
 
         actionComponentList.add(titleDetailLayout);

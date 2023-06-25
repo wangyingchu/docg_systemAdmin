@@ -6,7 +6,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -204,9 +204,9 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         ComponentRenderer _createDateComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
             if(entityStatisticsInfo instanceof EntityStatisticsInfo && ((EntityStatisticsInfo)entityStatisticsInfo).getCreateDateTime() != null){
                 ZonedDateTime createZonedDateTime = ((EntityStatisticsInfo)entityStatisticsInfo).getCreateDateTime();
-                return new Label(createZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
+                return new NativeLabel(createZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
             }else{
-                return new Label("-");
+                return new NativeLabel("-");
             }
         });
 
@@ -233,9 +233,9 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         ComponentRenderer _lastUpdateDateComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
             if(entityStatisticsInfo instanceof EntityStatisticsInfo && ((EntityStatisticsInfo)entityStatisticsInfo).getLastModifyDateTime() != null){
                 ZonedDateTime createZonedDateTime = ((EntityStatisticsInfo)entityStatisticsInfo).getLastModifyDateTime();
-                return new Label(createZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
+                return new NativeLabel(createZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
             }else{
-                return new Label("-");
+                return new NativeLabel("-");
             }
         });
 
@@ -555,7 +555,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout2);
-        Label conceptionKindName = new Label(entityStatisticsInfo.getEntityKindName());
+        NativeLabel conceptionKindName = new NativeLabel(entityStatisticsInfo.getEntityKindName());
         titleDetailLayout.add(conceptionKindName);
         actionComponentList.add(titleDetailLayout);
 
@@ -586,7 +586,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout2);
-        Label conceptionKindName = new Label(entityStatisticsInfo.getEntityKindName());
+        NativeLabel conceptionKindName = new NativeLabel(entityStatisticsInfo.getEntityKindName());
         titleDetailLayout.add(conceptionKindName);
         actionComponentList.add(titleDetailLayout);
 

@@ -2,20 +2,20 @@ package com.viewfunction.docg.element.commonComponent;
 
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class SecondaryKeyValueDisplayItem {
 
-    private Label displayValue;
+    private NativeLabel displayValue;
 
     public SecondaryKeyValueDisplayItem(HasComponents containComponent, String keyText, String valueText){
-        Label conceptionEntityNumberText = new Label(keyText);
+        NativeLabel conceptionEntityNumberText = new NativeLabel(keyText);
         conceptionEntityNumberText.getStyle().set("font-size","var(--lumo-font-size-xs)");
         containComponent.add(conceptionEntityNumberText);
-        displayValue = new Label(valueText);
+        displayValue = new NativeLabel(valueText);
         displayValue.getStyle()
                 .set("font-size","var(--lumo-font-size-s)")
                 .set("font-weight","bolder")
@@ -55,11 +55,11 @@ public class SecondaryKeyValueDisplayItem {
     }
 
     private void addDisplayItemContent(HasComponents containComponent,HorizontalLayout keyHorizontalLayout,String keyText, String valueText){
-        Label conceptionEntityNumberText = new Label(keyText);
+        NativeLabel conceptionEntityNumberText = new NativeLabel(keyText);
         conceptionEntityNumberText.getStyle().set("font-size","var(--lumo-font-size-s)");
         keyHorizontalLayout.add(conceptionEntityNumberText);
         containComponent.add(keyHorizontalLayout);
-        displayValue = new Label(valueText);
+        displayValue = new NativeLabel(valueText);
         displayValue.getStyle()
                 .set("font-size","var(--lumo-font-size-m)")
                 .set("font-weight","bolder")

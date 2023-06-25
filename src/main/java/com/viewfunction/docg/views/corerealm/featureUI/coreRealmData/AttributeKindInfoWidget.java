@@ -3,7 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
@@ -28,7 +28,7 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
         spaceDivLayout.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout);
 
-        Label messageText = new Label("Top 10 Used AttributeKinds ->");
+        NativeLabel messageText = new NativeLabel("Top 10 Used AttributeKinds ->");
         leftComponentContainer.add(messageText);
         messageText.addClassNames("text-xs","text-tertiary");
 

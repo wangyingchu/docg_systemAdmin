@@ -2,7 +2,7 @@ package com.viewfunction.docg.element.commonComponent;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -24,7 +24,7 @@ public class SectionActionBar extends HorizontalLayout {
         }
 
         HorizontalLayout titleElementsContainer = new HorizontalLayout();
-        Label sectionTitleLabel = new Label(sectionTitle);
+        NativeLabel sectionTitleLabel = new NativeLabel(sectionTitle);
         sectionTitleLabel.addClassNames("text-s","font-semibold");
         sectionTitleLabel.getStyle()
                 .set("font-size","var(--lumo-font-size-s)")
@@ -67,7 +67,7 @@ public class SectionActionBar extends HorizontalLayout {
         }
 
         HorizontalLayout titleElementsContainer = new HorizontalLayout();
-        Label sectionTitleLabel = new Label(sectionTitle);
+        NativeLabel sectionTitleLabel = new NativeLabel(sectionTitle);
         sectionTitleLabel.getStyle()
                 .set("font-size","var(--lumo-font-size-s)")
                 .set("font-weight", "bold");

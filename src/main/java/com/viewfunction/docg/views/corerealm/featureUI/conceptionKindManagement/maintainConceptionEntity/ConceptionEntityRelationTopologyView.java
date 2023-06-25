@@ -3,7 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -25,7 +25,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private String conceptionEntityUID;
     private SecondaryKeyValueDisplayItem relationEntityCountDisplayItem;
     private SecondaryKeyValueDisplayItem conceptionEntityCountDisplayItem;
-    private Label currentPageIndexValue;
+    private NativeLabel currentPageIndexValue;
     private int conceptionEntityRelationInfoViewHeightOffset;
     private ConceptionEntityRelationsChart conceptionEntityRelationsChart;
     private Registration listener;
@@ -191,7 +191,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         titleLayout.setVerticalComponentAlignment(Alignment.CENTER,currentPageIndexIcon);
         Tooltips.getCurrent().setTooltip(currentPageIndexIcon, "选中概念实体的当前关联查询分页");
 
-        currentPageIndexValue = new Label("-");
+        currentPageIndexValue = new NativeLabel("-");
         currentPageIndexValue.getStyle().set("font-size","10px").set("padding-right","30px");
         currentPageIndexValue.addClassNames("text-tertiary");
         titleLayout.add(currentPageIndexValue);
@@ -200,7 +200,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         conceptionEntityCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CIRCLE_THIN.create(), "当前显示概念实体总量", "-");
         relationEntityCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.EXPAND.create(), "当前显示关系实体总量", "-");
 
-        Label selectMethodMessage = new Label("单击选中实体，双击概念实体获取其一度关联实体信息展开");
+        NativeLabel selectMethodMessage = new NativeLabel("单击选中实体，双击概念实体获取其一度关联实体信息展开");
         selectMethodMessage.getStyle().set("font-size","10px").set("padding-left","30px");
         selectMethodMessage.addClassNames("text-tertiary");
         titleLayout.add(selectMethodMessage);

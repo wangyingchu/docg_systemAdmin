@@ -7,7 +7,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -179,10 +179,10 @@ public class CreateRelationEntityView extends VerticalLayout {
 
         allowDupTypeRelationCheckbox = new Checkbox();
         buttonsContainerLayout.add(allowDupTypeRelationCheckbox);
-        Label chechboxDescLabel = new Label("允许重复创建同类型关系");
-        chechboxDescLabel.addClassNames("text-xs","text-tertiary");
-        chechboxDescLabel.setWidth(80,Unit.PIXELS);
-        buttonsContainerLayout.add(chechboxDescLabel);
+        NativeLabel checkboxDescLabel = new NativeLabel("允许重复创建同类型关系");
+        checkboxDescLabel.addClassNames("text-xs","text-tertiary");
+        checkboxDescLabel.setWidth(80,Unit.PIXELS);
+        buttonsContainerLayout.add(checkboxDescLabel);
 
         VerticalLayout targetConceptionEntitiesInfoContainerLayout = new VerticalLayout();
         targetConceptionEntitiesInfoContainerLayout.setSpacing(false);

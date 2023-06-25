@@ -7,7 +7,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -48,7 +48,7 @@ public class AddEntityAttributeView extends VerticalLayout {
     public enum KindType {ConceptionKind,RelationKind}
 
     private Dialog containerDialog;
-    private Label errorMessage;
+    private NativeLabel errorMessage;
     private TextField attributeNameField;
     private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
     private Binder<String> binder;
@@ -97,11 +97,11 @@ public class AddEntityAttributeView extends VerticalLayout {
         errorMessageContainer.setMargin(false);
         errorMessageContainer.getStyle().set("padding-top","3px").set("padding-bottom","3px");
 
-        Label viewTitle = new Label("新属性信息:");
+        NativeLabel viewTitle = new NativeLabel("新属性信息:");
         viewTitle.getStyle().set("color","var(--lumo-contrast-50pct)").set("font-size","0.8rem");
         errorMessageContainer.add(viewTitle);
 
-        errorMessage = new Label("-");
+        errorMessage = new NativeLabel("-");
         errorMessage.getStyle().set("color","var(--lumo-error-text-color)").set("font-size","0.8rem");
         errorMessage.setVisible(false);
         errorMessageContainer.add(errorMessage);

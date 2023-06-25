@@ -5,7 +5,7 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -45,7 +45,7 @@ public class CoreRealmView extends Div {
         Span coreRealmSpan =new Span();
         Icon coreRealmLogo = new Icon(VaadinIcon.CLUSTER);
         coreRealmLogo.setSize("20px");
-        Label coreRealmLabel = new Label(" CoreRealm-领域数据");
+        NativeLabel coreRealmLabel = new NativeLabel(" CoreRealm-领域数据");
         coreRealmLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         coreRealmSpan.add(coreRealmLogo,coreRealmLabel);
         Tab coreRealmTab = new Tab(coreRealmSpan);
@@ -54,7 +54,7 @@ public class CoreRealmView extends Div {
         Span conceptionKindSpan =new Span();
         Icon conceptionKindLogo = new Icon(VaadinIcon.CUBE);
         conceptionKindLogo.setSize("20px");
-        Label conceptionKindLabel = new Label(" ConceptionKind-概念类型");
+        NativeLabel conceptionKindLabel = new NativeLabel(" ConceptionKind-概念类型");
         conceptionKindLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         conceptionKindSpan.add(conceptionKindLogo,conceptionKindLabel);
         Tab conceptionKindTab = new Tab(conceptionKindSpan);
@@ -63,7 +63,7 @@ public class CoreRealmView extends Div {
         Span relationKindSpan =new Span();
         Icon relationKindLogo = new Icon(VaadinIcon.CONNECT_O);
         relationKindLogo.setSize("20px");
-        Label relationKindLabel = new Label(" RelationKind-关系类型");
+        NativeLabel relationKindLabel = new NativeLabel(" RelationKind-关系类型");
         relationKindLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         relationKindSpan.add(relationKindLogo,relationKindLabel);
         Tab relationKindTab = new Tab(relationKindSpan);
@@ -72,7 +72,7 @@ public class CoreRealmView extends Div {
         Span attributeKindSpan =new Span();
         Icon attributeKindLogo = new Icon(VaadinIcon.INPUT);
         attributeKindLogo.setSize("20px");
-        Label attributeKindLabel = new Label(" AttributeKind-属性类型");
+        NativeLabel attributeKindLabel = new NativeLabel(" AttributeKind-属性类型");
         attributeKindLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         attributeKindSpan.add(attributeKindLogo,attributeKindLabel);
         Tab attributeKindTab = new Tab(attributeKindSpan);
@@ -81,7 +81,7 @@ public class CoreRealmView extends Div {
         Span attributesViewKindSpan =new Span();
         Icon attributesViewKindLogo = new Icon(VaadinIcon.TASKS);
         attributesViewKindLogo.setSize("20px");
-        Label attributesViewKindLabel = new Label(" AttributesViewKind-属性视图类型");
+        NativeLabel attributesViewKindLabel = new NativeLabel(" AttributesViewKind-属性视图类型");
         attributesViewKindLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         attributesViewKindSpan.add(attributesViewKindLogo,attributesViewKindLabel);
         Tab attributesViewKindTab = new Tab(attributesViewKindSpan);
@@ -90,7 +90,7 @@ public class CoreRealmView extends Div {
         Span classificationSpan =new Span();
         Icon classificationLogo = new Icon(VaadinIcon.TAGS);
         classificationLogo.setSize("20px");
-        Label classificationLabel = new Label(" Classification-分类");
+        NativeLabel classificationLabel = new NativeLabel(" Classification-分类");
         classificationLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         classificationSpan.add(classificationLogo,classificationLabel);
         Tab classificationTab = new Tab(classificationSpan);
@@ -99,7 +99,7 @@ public class CoreRealmView extends Div {
         Span geospatialRegionSpan =new Span();
         Icon geospatialRegionLogo = new Icon(VaadinIcon.GLOBE_WIRE);
         geospatialRegionLogo.setSize("20px");
-        Label geospatialRegionLabel = new Label(" GeospatialRegion-地理空间区域");
+        NativeLabel geospatialRegionLabel = new NativeLabel(" GeospatialRegion-地理空间区域");
         geospatialRegionLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         geospatialRegionSpan.add(geospatialRegionLogo,geospatialRegionLabel);
         Tab geospatialRegionTab = new Tab(geospatialRegionSpan);
@@ -108,7 +108,7 @@ public class CoreRealmView extends Div {
         Span timeFlowSpan =new Span();
         Icon timeFlowLogo = new Icon(VaadinIcon.TIMER);
         timeFlowLogo.setSize("20px");
-        Label timeFlowLabel = new Label(" TimeFlow-时间流");
+        NativeLabel timeFlowLabel = new NativeLabel(" TimeFlow-时间流");
         timeFlowLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
         timeFlowSpan.add(timeFlowLogo,timeFlowLabel);
         Tab timeFlowTab = new Tab(timeFlowSpan);

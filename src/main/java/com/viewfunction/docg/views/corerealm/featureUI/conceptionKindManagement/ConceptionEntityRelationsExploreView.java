@@ -1,6 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement;
 
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
@@ -15,7 +15,7 @@ public class ConceptionEntityRelationsExploreView extends VerticalLayout impleme
         this.setPadding(false);
         this.setSizeFull();
 
-        add(new Label("hello world"));
+        add(new NativeLabel("hello world"));
     }
 
     @Override

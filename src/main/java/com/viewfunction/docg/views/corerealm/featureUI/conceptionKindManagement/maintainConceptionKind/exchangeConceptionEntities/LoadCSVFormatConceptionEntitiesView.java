@@ -11,7 +11,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -67,7 +67,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
     private Scroller scroller;
     private String currentSavedCSVFile;
     private HorizontalLayout uploadedFileInfoLayout;
-    private Label fileNameLabel;
+    private NativeLabel fileNameLabel;
     private Dialog containerDialog;
     private String uploadedFileName;
     private boolean processFileSuccess = true;
@@ -96,7 +96,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         controlOptionsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         operationAreaLayout.add(controlOptionsLayout);
 
-        Label dataSplitChar = new Label("分隔符:");
+        NativeLabel dataSplitChar = new NativeLabel("分隔符:");
         dataSplitChar.addClassNames("text-xs","text-secondary");
         controlOptionsLayout.add(dataSplitChar);
 
@@ -104,7 +104,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         splitCharGroup.setItems("逗号[ , ]", "制表符[Tab]", "空格[ _ ]");
         splitCharGroup.setValue("逗号[ , ]");
         splitCharGroup.setRenderer(new ComponentRenderer<>(option -> {
-            Label optionLabel = new Label(option);
+            NativeLabel optionLabel = new NativeLabel(option);
             optionLabel.addClassNames("text-xs","text-secondary");
             return optionLabel;
         }));
@@ -212,7 +212,7 @@ public class LoadCSVFormatConceptionEntitiesView extends VerticalLayout {
         operationAreaLayout.add(uploadedFileInfoLayout);
         Icon fileIcon = VaadinIcon.FILE.create();
         fileIcon.setSize("8px");
-        fileNameLabel = new Label("");
+        fileNameLabel = new NativeLabel("");
         fileNameLabel.addClassNames("text-xs","text-secondary");
         uploadedFileInfoLayout.add(fileIcon,fileNameLabel);
 
