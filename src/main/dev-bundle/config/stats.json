@@ -314,7 +314,7 @@
   "visualization/feature/conceptionEntityTemporalTimelineChart-connector.js": "219ed0c7d0886080c3e6a3b792e7f24b5735206a15ed71d9f0f3b0497b51df92",
   "visualization/feature/conceptionEntityRelationsChart-connector.js": "ef3cf63a9558a6b25462f5db96a3cb029fd8f00d1a471faa095be031b758294b",
   "visualization/feature/relatedConceptionEntitiesDandelionGraphChart-connector.js": "3a27e01a9178bc7a480a067e07f2b96e2d5bf73a77f3fea2e079491b4d0d11f4",
-  "visualization/feature/dataRelationDistributionChart-connector.js": "e47fcf5a84271349fbc4f2488431d80bcb9633371030027ed3c0168b51089b0c",
+  "visualization/feature/dataRelationDistributionChart-connector.js": "48b0aa656b56bc8a1e114e36684baf7cb860b6b905e3701c50c4d19494ce4932",
   "visualization/feature/relationKindCorrelationInfoChart-connector.js": "d15d4f28c994d1cfbae257a366979f9b46aa287cf4fde215e05176d7b52924ec",
   "visualization/feature/relationConceptionEntitiesPairChart-connector.js": "6d483bf7bfbaa2b0bd4052a55e397731c319f5cc68b51fc7e95f53299a0cc8cf",
   "buttonFunctions.js": "c852123f9b2c44eb75e555119d3e05a7dbe78b91d0ab616feb9df1654474707d",
@@ -349,7 +349,7 @@
   "docg-pac": "{\n  \"lumoImports\" : [ \"typography\", \"color\", \"spacing\", \"badge\", \"utility\" ]\n}"
  },
  "entryScripts": [
-  "VAADIN/build/indexhtml-f75bae81.js"
+  "VAADIN/build/indexhtml-287e48b0.js"
  ],
  "webComponents": [],
  "cvdlModules": {
@@ -384,6 +384,6 @@
  },
  "packageJsonHash": "d89229f7a530d03429e289e5fcc3574da2773f7341a3ae0680ec8892b043646d",
  "indexHtmlGenerated": [
-  "  <script type=\"module\" crossorigin src=\"./VAADIN/build/indexhtml-f75bae81.js\"></script>"
+  "  <script type=\"module\" crossorigin src=\"./VAADIN/build/indexhtml-287e48b0.js\"></script>"
  ]
 }
