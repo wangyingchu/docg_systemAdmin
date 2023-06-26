@@ -126,6 +126,7 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                 .css({
                     'font-size': 1.1,
                     'font-weight': 'bold',
+                    'font-family': 'Montserrat',
                     'background-color': 'data(background_color)',
                     'content': 'data(desc)',
                     'text-valign': 'center',
@@ -150,7 +151,7 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                     'curve-style': 'straight',
                     'text-rotation': 'autorotate',
                     'font-size': 0.8,
-                    'font-family': 'Georgia',
+                    'font-family': 'Montserrat',
                     //'font-weight': 'bold',
                     'color': '#666666',
                     'target-arrow-shape': 'vee',
