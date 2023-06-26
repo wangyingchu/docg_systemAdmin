@@ -121,6 +121,7 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                 .selector('node')
                 .css({
                     'font-size': 1.1,
+                    'font-family': 'Montserrat',
                     'font-weight': 'bold',
                     'background-color': 'data(background_color)',
                     'content': 'data(desc)',
@@ -143,17 +144,9 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     'arrow-scale': 0.1,
                     'line-style': 'data(lineStyle)',
                     'curve-style': 'data(curveStyle)',
-                    //'curve-style': 'unbundled-bezier',
-                    //'curve-style': 'segments',
-                    //'curve-style': 'unbundled-bezier(multiple)',
-                    //'curve-style': 'taxi',
-                    //'curve-style': 'straight',
-                    //'curve-style': 'haystack',
-                    //'curve-style': 'loop',
                     'text-rotation': 'autorotate',
                     'font-size': 0.8,
-                    'font-family': 'Georgia',
-                    //'font-weight': 'bold',
+                    'font-family': 'Montserrat',
                     'color': '#666666',
                     'target-arrow-shape': 'vee',
                     'source-arrow-shape': 'tee',
@@ -163,14 +156,16 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                 .style({
                     'border-color': '#1E90CC',
                     'border-width': "1px",
-                    'width':6,'height':6})
+                    'width':6,'height':6
+                })
                 .selector('edge:selected')
                 .style({
                     'line-color': '#1E90CC',
                     'width': 0.4,
                     'source-arrow-color':'#1E90CC',
                     'target-arrow-color':'#1E90CC',
-                    'color': '#333333'})
+                    'color': '#333333'
+                })
             ,
             elements: {
                 nodes: [],
@@ -180,5 +175,66 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                 name: 'cose'
             }
         });
+
+        cy.on('select', 'node', function(evt){
+            let node = evt.target;
+            node.connectedEdges();
+            cy.style()
+                .selector(node.connectedEdges())
+                .style({
+                    'line-color': '#1E90CC',
+                    'width': 0.4,
+                    'source-arrow-color':'#1E90CC',
+                    'target-arrow-color':'#1E90CC',
+                    'color': '#333333'
+                })
+                .update();
+        });
+
+        cy.on('unselect', 'node', function(evt){
+            let node = evt.target;
+            cy.style()
+                .selector(node.connectedEdges())
+                .style({
+                    'content': 'data(type)',
+                    'width': 'data(lineWidth)',
+                    'line-color': 'data(lineColor)',
+                    'source-arrow-color':'data(sourceArrowColor)',
+                    'target-arrow-color':'data(targetArrowColor)',
+                    'arrow-scale': 0.1,
+                    'line-style': 'data(lineStyle)',
+                    'curve-style': 'data(curveStyle)',
+                    'text-rotation': 'autorotate',
+                    'font-size': 0.8,
+                    'color': '#666666',
+                    'target-arrow-shape': 'vee',
+                    'source-arrow-shape': 'tee',
+                    'line-opacity': 'data(lineOpacity)'
+                })
+                .update();
+        });
+
+        cy.on('select', 'edge', function(evt){
+            let edge = evt.target;
+            cy.style()
+                .selector(edge.connectedNodes())
+                .style({
+                    'border-color': '#1E90CC',
+                    'border-width': "1px",
+                    'width':6,'height':6
+                })
+                .update();
+        });
+
+        cy.on('unselect', 'edge', function(evt){
+            let edge = evt.target;
+            cy.style()
+                .selector(edge.connectedNodes())
+                .style({
+                    'border-width': "0px",
+                })
+                .update();
+        });
+
     }
 }
