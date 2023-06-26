@@ -29,6 +29,7 @@ window.Vaadin.Flow.feature_ConceptionKindCorrelationInfoChart = {
                 .css({
                     'font-size': 10,
                     'font-weight': 'bold',
+                    'font-family': 'Montserrat',
                     'background-color': 'data(background_color)',
                     'content': 'data(id)',
                     'text-valign': 'center',
@@ -49,7 +50,7 @@ window.Vaadin.Flow.feature_ConceptionKindCorrelationInfoChart = {
                     'curve-style': 'unbundled-bezier',
                     'text-rotation': 'autorotate',
                     'font-size': 8,
-                    'font-family': 'Georgia',
+                    'font-family': 'Montserrat',
                     'font-weight': 'bold',
                     'color': '#555555',
                     'target-arrow-shape': 'vee',
