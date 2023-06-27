@@ -6,17 +6,21 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -25,6 +29,8 @@ import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.RelationKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.queryRelationKind.RelationKindQueryUI;
 
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -32,9 +38,11 @@ import dev.mett.vaadin.tooltip.Tooltips;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.RelationKind;
 
+@Route("relationKindDetailInfo/:relationKind")
 public class RelationKindDetailUI extends VerticalLayout implements
         BeforeEnterObserver {
 
@@ -47,6 +55,16 @@ public class RelationKindDetailUI extends VerticalLayout implements
     private VerticalLayout rightSideContainerLayout;
     private Grid<KindEntityAttributeRuntimeStatistics> relationKindAttributesInfoGrid;
     private TabSheet kindConfigurationTabSheet;
+    private TabSheet kindCorrelationInfoTabSheet;
+    private Tab conceptionRealTimeInfoTab;
+    private Tab conceptionRealTimeChartTab;
+    private VerticalLayout conceptionKindCorrelationInfoGridContainer;
+    private VerticalLayout conceptionKindCorrelationInfoChartContainer;
+    private RelationKindCorrelationInfoChart relationKindCorrelationInfoChart;
+
+
+    private boolean conceptionRealTimeInfoGridFirstLoaded = false;
+    private boolean conceptionRealTimeChartFirstLoaded = false;
 
     public RelationKindDetailUI(){}
 
@@ -216,19 +234,54 @@ public class RelationKindDetailUI extends VerticalLayout implements
         relationKindAttributesInfoGrid.setHeight(218,Unit.PIXELS);
         leftSideContainerLayout.add(relationKindAttributesInfoGrid);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.RANDOM),"关系类型实体关联流向");
         infoTitle2.getStyle().set("padding-top","20px");
 
+        leftSideContainerLayout.add(infoTitle2);
+
+        conceptionKindCorrelationInfoGridContainer = new VerticalLayout();
+        conceptionKindCorrelationInfoGridContainer.setPadding(false);
+        conceptionKindCorrelationInfoGridContainer.setSpacing(false);
+        conceptionKindCorrelationInfoGridContainer.setMargin(false);
+
+        conceptionKindCorrelationInfoChartContainer = new VerticalLayout();
+        conceptionKindCorrelationInfoChartContainer.setPadding(false);
+        conceptionKindCorrelationInfoChartContainer.setSpacing(false);
+        conceptionKindCorrelationInfoChartContainer.setMargin(false);
+
+        kindCorrelationInfoTabSheet = new TabSheet();
+        kindCorrelationInfoTabSheet.setWidthFull();
 
 
 
 
 
+        conceptionRealTimeInfoTab = kindCorrelationInfoTabSheet.add("",conceptionKindCorrelationInfoGridContainer);
+        Span relationInfoSpan =new Span();
+        Icon relationInfoIcon = new Icon(VaadinIcon.BULLETS);
+        relationInfoIcon.setSize("12px");
+        NativeLabel relationInfoLabel = new NativeLabel(" 关联流向实时分布");
+        relationInfoSpan.add(relationInfoIcon,relationInfoLabel);
+        conceptionRealTimeInfoTab.add(relationInfoSpan);
+
+        conceptionRealTimeChartTab = kindCorrelationInfoTabSheet.add("",conceptionKindCorrelationInfoChartContainer);
+        Span chartInfoSpan =new Span();
+        Icon chartInfoIcon = new Icon(VaadinIcon.ROAD_BRANCHES);
+        chartInfoIcon.setSize("12px");
+        NativeLabel chartInfoLabel = new NativeLabel(" 关联流向实时分布桑基图");
+        chartInfoSpan.add(chartInfoIcon,chartInfoLabel);
+        conceptionRealTimeChartTab.add(chartInfoSpan);
+
+        kindCorrelationInfoTabSheet.addSelectedChangeListener(new ComponentEventListener<TabSheet.SelectedChangeEvent>() {
+            @Override
+            public void onComponentEvent(TabSheet.SelectedChangeEvent selectedChangeEvent) {
+                //renderKindCorrelationInfoTabContent();
+            }
+        });
+        leftSideContainerLayout.add(kindCorrelationInfoTabSheet);
 
 
-
-
-
+        relationKindCorrelationInfoChart = new RelationKindCorrelationInfoChart(500);
 
 
         rightSideContainerLayout = new VerticalLayout();
@@ -260,6 +313,43 @@ public class RelationKindDetailUI extends VerticalLayout implements
 
     private String getAttributeName(KindEntityAttributeRuntimeStatistics kindEntityAttributeRuntimeStatistics){
         return kindEntityAttributeRuntimeStatistics.getAttributeName();
+    }
+
+    private void renderKindCorrelationInfoTabContent() {
+        if (conceptionRealTimeInfoTab.isSelected()) {
+            /*
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
+            Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
+            if(!this.conceptionRealTimeInfoGridFirstLoaded){
+                int chartHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset - 340;
+                initConceptionRelationRealtimeInfoGrid(conceptionKindCorrelationInfoSet);
+                this.conceptionRelationRealtimeInfoGrid.setHeight(chartHeight,Unit.PIXELS);
+                this.conceptionKindCorrelationInfoGridContainer.add(this.conceptionRelationRealtimeInfoGrid);
+                this.conceptionRealTimeInfoGridFirstLoaded = true;
+            }else{
+                refreshConceptionRelationRealtimeInfoGrid(conceptionKindCorrelationInfoSet);
+            }
+            */
+        } else if (conceptionRealTimeChartTab.isSelected()) {
+            /*
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
+            Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
+            if(!this.conceptionRealTimeChartFirstLoaded){
+                int chartHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset - 340;
+                conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(chartHeight);
+                conceptionKindCorrelationInfoChartContainer.add(conceptionKindCorrelationInfoChart);
+                conceptionKindCorrelationInfoChart.clearData();
+                conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,conceptionKind);
+                this.conceptionRealTimeChartFirstLoaded = true;
+            }else{
+                conceptionKindCorrelationInfoChart.clearData();
+                conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,conceptionKind);
+            }
+        }else{}
+        */
+        }
     }
 
     private HorizontalLayout generateKindConfigurationTabTitle(VaadinIcon tabIcon,String tabTitleTxt){
