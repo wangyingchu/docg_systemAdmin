@@ -289,7 +289,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
         rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
 
         RelationKindEntitiesConfigurationView relationKindEntitiesConfigurationView = new RelationKindEntitiesConfigurationView(this.relationKind);
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"概念类型运行时配置"),relationKindEntitiesConfigurationView);
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"关系类型运行时配置"),relationKindEntitiesConfigurationView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),new HorizontalLayout());
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
     }
@@ -351,6 +351,8 @@ public class RelationKindDetailUI extends VerticalLayout implements
         GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.CUBE,"目标概念类型");
         relationKindRelationRealtimeInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true)
                 .setTooltipGenerator(ConceptionKindCorrelationInfo::getTargetConceptionKindName);
+        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.STOCK,"关系实体数量");
+        relationKindRelationRealtimeInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
         this.relationKindRelationRealtimeInfoGrid.setItems(conceptionKindCorrelationInfoSet);
     }
 
