@@ -20,23 +20,17 @@ import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
-import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefreshEvent;
-import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCreatedEvent;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
-import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndexMaintain.KindIndexConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.AddConceptionEntityView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.exchangeConceptionEntities.*;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CleanRelationKindEntitiesView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
 
-import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView.KindType.ConceptionKind;
+import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView.KindType.RelationKind;
 
 public class RelationKindEntitiesConfigurationView extends VerticalLayout {
     private String relationKindName;
@@ -52,8 +46,6 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
 
     public RelationKindEntitiesConfigurationView(String relationKindName){
         this.conceptionKindName = relationKindName;
-
-
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(LineAwesomeIconsSvg.BATTLE_NET.create(),"关系类型实体配置");
         add(filterTitle1);
 
@@ -88,7 +80,7 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
         addConceptionKindScopeAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderAddConceptionKindGlobalAttributeView();
+                renderAddRelationKindGlobalAttributeView();
             }
         });
         if(conceptionEntitiesCount == 0){
@@ -190,27 +182,7 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
         classificationConfigView = new ClassificationConfigView(ClassificationConfigView.ClassificationRelatedObjectType.RelationKind,this.conceptionKindName);
         classificationConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(classificationConfigView);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
-
-
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
         return createIconItem(menu, iconName, label, ariaLabel, false);
@@ -234,10 +206,10 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
         return item;
     }
 
-    private void renderAddConceptionKindGlobalAttributeView(){
-        AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.conceptionKindName,null,ConceptionKind);
+    private void renderAddRelationKindGlobalAttributeView(){
+        AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.conceptionKindName,null,RelationKind);
         addEntityAttributeView.setKindScopeAttribute(true);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TEXT_INPUT),"添加概念类型全局属性",null,true,480,200,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TEXT_INPUT),"添加关系类型全局属性",null,true,480,200,false);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
@@ -245,11 +217,11 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
     }
 
     private void renderCleanConceptionKindEntitiesUI(){
-        CleanConceptionKindEntitiesView cleanConceptionKindEntitiesView = new CleanConceptionKindEntitiesView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"清除概念类型所有实例",null,true,600,210,false);
-        fixSizeWindow.setWindowContent(cleanConceptionKindEntitiesView);
+        CleanRelationKindEntitiesView cleanRelationKindEntitiesView = new CleanRelationKindEntitiesView(this.conceptionKindName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"清除关系类型所有实例",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(cleanRelationKindEntitiesView);
         fixSizeWindow.setModel(true);
-        cleanConceptionKindEntitiesView.setContainerDialog(fixSizeWindow);
+        cleanRelationKindEntitiesView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 

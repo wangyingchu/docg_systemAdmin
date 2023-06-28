@@ -183,14 +183,20 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
 
         }else{
             if(metaConfigItemType != null && metaConfigItemName != null){
+                Map<String,Object> metaConfigItemsMap = null;
                 switch(metaConfigItemType){
                     case ConceptionKind :
                         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(metaConfigItemName);
                         this.metaConfigItemFeatureSupportable = targetConceptionKind;
-                        Map<String,Object> metaConfigItemsMap = targetConceptionKind.getMetaConfigItems();
+                        metaConfigItemsMap = targetConceptionKind.getMetaConfigItems();
+                        renderMetaConfigItemsData(metaConfigItemsMap);
+                        break;
+                    case RelationKind:
+                        RelationKind targetRelationKind = coreRealm.getRelationKind(metaConfigItemName);
+                        this.metaConfigItemFeatureSupportable = targetRelationKind;
+                        metaConfigItemsMap = targetRelationKind.getMetaConfigItems();
                         renderMetaConfigItemsData(metaConfigItemsMap);
                 }
-
             }
         }
     }
@@ -342,7 +348,6 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             case RelationKind:
                 RelationKind targetRelationKind = coreRealm.getRelationKind(metaConfigItemName);
                 metaConfigItemsMap = targetRelationKind.getMetaConfigItems();
-
         }
         List<MetaConfigItemValueObject> metaConfigItemValueObjectList = new ArrayList<>();
         Set<String> itemNameSet = metaConfigItemsMap.keySet();
