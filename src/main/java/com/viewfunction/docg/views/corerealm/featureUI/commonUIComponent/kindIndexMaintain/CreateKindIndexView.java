@@ -163,6 +163,8 @@ public class CreateKindIndexView extends VerticalLayout {
                         case RelationKind -> createIndexResult = systemMaintenanceOperator.createRelationKindSearchIndex(kindIndexName,kindName,indexPropertiesSet);
                     }
                 } catch (CoreRealmServiceRuntimeException e) {
+                    String detailErrorMessage = e.getMessage() != null ? e.getMessage() : e.getCause().getMessage();
+                    CommonUIOperationUtil.showPopupNotification("类型索引创建创建错误: "+detailErrorMessage,NotificationVariant.LUMO_ERROR);
                     throw new RuntimeException(e);
                 }
                 if(createIndexResult){
