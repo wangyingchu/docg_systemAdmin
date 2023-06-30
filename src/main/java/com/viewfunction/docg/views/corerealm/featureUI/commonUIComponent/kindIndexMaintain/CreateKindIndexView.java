@@ -6,7 +6,6 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H6;
@@ -31,15 +30,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator.SearchIndexType.*;
-
 public class CreateKindIndexView extends VerticalLayout {
 
     private KindIndexConfigView.KindIndexType kindIndexType;
     private String kindName;
     private H6 errorMessage;
     private TextField kindIndexNameField;
-    private ComboBox<SystemMaintenanceOperator.SearchIndexType> searchIndexTypeSelect;
     private MultiSelectComboBox<AttributeSystemInfo> indexPropertiesComboBox;
     private Dialog containerDialog;
     private KindIndexConfigView containerKindIndexConfigView;
@@ -89,18 +85,6 @@ public class CreateKindIndexView extends VerticalLayout {
         this.kindIndexNameField.setTitle("请输入类型索引名称");
         add(this.kindIndexNameField);
 
-        this.searchIndexTypeSelect = new ComboBox("索引类型 - SearchIndex Type");
-        this.searchIndexTypeSelect.setWidthFull();
-        this.searchIndexTypeSelect.setRequired(true);
-        this.searchIndexTypeSelect.setRequiredIndicatorVisible(true);
-        this.searchIndexTypeSelect.setPageSize(10);
-        SystemMaintenanceOperator.SearchIndexType[] searchIndexTypeSelectOption = new SystemMaintenanceOperator.SearchIndexType[]{
-                BTREE, FULLTEXT, LOOKUP
-        };
-        this.searchIndexTypeSelect.setItems(searchIndexTypeSelectOption);
-        this.searchIndexTypeSelect.setValue(BTREE);
-        add(this.searchIndexTypeSelect);
-
         ItemLabelGenerator<AttributeSystemInfo> itemLabelGenerator = new ItemLabelGenerator<AttributeSystemInfo>() {
             @Override
             public String apply(AttributeSystemInfo attributeSystemInfo) {
@@ -138,17 +122,13 @@ public class CreateKindIndexView extends VerticalLayout {
 
     private void doCreateKindIndex(){
         String kindIndexName = this.kindIndexNameField.getValue();
-        SystemMaintenanceOperator.SearchIndexType searchIndexType = this.searchIndexTypeSelect.getValue();
         Set<AttributeSystemInfo> indexProperties = this.indexPropertiesComboBox.getValue();
         boolean inputValidateResult = true;
         if(kindIndexName.equals("")){
             inputValidateResult = false;
             this.kindIndexNameField.setInvalid(true);
         }
-        if(searchIndexType == null){
-            inputValidateResult = false;
-            this.searchIndexTypeSelect.setInvalid(true);
-        }
+
         if(indexProperties.size() ==0){
             inputValidateResult = false;
             this.indexPropertiesComboBox.setInvalid(true);
@@ -179,8 +159,8 @@ public class CreateKindIndexView extends VerticalLayout {
                 boolean createIndexResult = false;
                 try {
                     switch(this.kindIndexType){
-                        case ConceptionKind -> createIndexResult = systemMaintenanceOperator.createConceptionKindSearchIndex(kindIndexName,searchIndexType,kindName,indexPropertiesSet);
-                        case RelationKind -> createIndexResult = systemMaintenanceOperator.createRelationKindSearchIndex(kindIndexName,searchIndexType,kindName,indexPropertiesSet);
+                        case ConceptionKind -> createIndexResult = systemMaintenanceOperator.createConceptionKindSearchIndex(kindIndexName,kindName,indexPropertiesSet);
+                        case RelationKind -> createIndexResult = systemMaintenanceOperator.createRelationKindSearchIndex(kindIndexName,kindName,indexPropertiesSet);
                     }
                 } catch (CoreRealmServiceRuntimeException e) {
                     throw new RuntimeException(e);

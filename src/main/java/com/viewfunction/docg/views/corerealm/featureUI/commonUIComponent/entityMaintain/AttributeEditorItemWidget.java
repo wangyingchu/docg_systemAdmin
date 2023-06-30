@@ -753,7 +753,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
             switch(this.entityKindType){
                 case ConceptionKind :
                     DeleteConceptionEntityAttributeView deleteConceptionEntityAttributeView = new DeleteConceptionEntityAttributeView(this.kindName,this.entityUID,this.attributeName);
-                    FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除概念实体属性",null,true,550,210,false);
+                    FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除概念实体属性",null,true,550,170,false);
                     fixSizeWindow.setWindowContent(deleteConceptionEntityAttributeView);
                     fixSizeWindow.setModel(true);
                     deleteConceptionEntityAttributeView.setContainerDialog(fixSizeWindow);
@@ -761,7 +761,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                     break;
                 case RelationKind:
                     DeleteRelationEntityAttributeView deleteRelationEntityAttributeView = new DeleteRelationEntityAttributeView(this.kindName,this.entityUID,this.attributeName);
-                    FixSizeWindow fixSizeWindow2 = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除关系实体属性",null,true,550,210,false);
+                    FixSizeWindow fixSizeWindow2 = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除关系实体属性",null,true,550,170,false);
                     fixSizeWindow2.setWindowContent(deleteRelationEntityAttributeView);
                     fixSizeWindow2.setModel(true);
                     deleteRelationEntityAttributeView.setContainerDialog(fixSizeWindow2);

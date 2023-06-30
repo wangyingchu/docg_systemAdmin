@@ -112,14 +112,11 @@ public class KindIndexConfigView extends VerticalLayout {
         searchIndexValueGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         searchIndexValueGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         searchIndexValueGrid.addColumn(SearchIndexInfo::getIndexName).setHeader("索引名称").setKey("idx_0").setFlexGrow(0).setWidth("250px").setResizable(true);
-        searchIndexValueGrid.addColumn(SearchIndexInfo::getSearchIndexType).setHeader("索引类型").setKey("idx_1").setFlexGrow(0).setWidth("180px").setResizable(false);
         searchIndexValueGrid.addColumn(SearchIndexInfo::getPopulationPercent).setHeader("总体百分比").setKey("idx_2").setFlexGrow(0).setWidth("120px").setResizable(false);
         searchIndexValueGrid.addColumn(SearchIndexInfo::getIndexedAttributeNames).setHeader("索引包含属性值").setKey("idx_3").setFlexGrow(1).setResizable(true);
         searchIndexValueGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("100px").setResizable(false);
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"索引名称");
         searchIndexValueGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
-        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.OPTIONS,"索引类型");
-        searchIndexValueGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.CALC,"总体百分比");
         searchIndexValueGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(VaadinIcon.BULLETS,"索引包含属性值");
@@ -170,7 +167,7 @@ public class KindIndexConfigView extends VerticalLayout {
     private void renderAddNewKindIndexUI(){
         CreateKindIndexView createKindIndexView = new CreateKindIndexView(this.kindIndexType,this.kindName);
         createKindIndexView.setContainerKindIndexConfigView(this);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建类型索引",null,true,550,390,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建类型索引",null,true,550,320,false);
         fixSizeWindow.setWindowContent(createKindIndexView);
         fixSizeWindow.setModel(true);
         createKindIndexView.setContainerDialog(fixSizeWindow);
