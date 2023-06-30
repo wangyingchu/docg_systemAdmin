@@ -197,7 +197,11 @@ public class CreateKindIndexView extends VerticalLayout {
         super.onAttach(attachEvent);
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
-        List<AttributeSystemInfo> attributeSystemInfoList = systemMaintenanceOperator.getConceptionKindAttributesSystemInfo(this.kindName);
+        List<AttributeSystemInfo> attributeSystemInfoList = null;
+        switch(this.kindIndexType){
+            case ConceptionKind -> attributeSystemInfoList = systemMaintenanceOperator.getConceptionKindAttributesSystemInfo(this.kindName);
+            case RelationKind -> attributeSystemInfoList = systemMaintenanceOperator.getRelationKindAttributesSystemInfo(this.kindName);
+        }
         this.indexPropertiesComboBox.setItems(attributeSystemInfoList);
     }
 
