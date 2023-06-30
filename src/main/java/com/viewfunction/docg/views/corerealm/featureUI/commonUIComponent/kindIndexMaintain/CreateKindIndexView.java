@@ -142,16 +142,31 @@ public class CreateKindIndexView extends VerticalLayout {
                 case ConceptionKind -> searchIndexInfoSet = systemMaintenanceOperator.listConceptionKindSearchIndex();
                 case RelationKind -> searchIndexInfoSet = systemMaintenanceOperator.listRelationKindSearchIndex();
             }
-            boolean indexNameValidate = true;
+            boolean indexContentValidate = true;
             for(SearchIndexInfo currentSearchIndexInfo:searchIndexInfoSet){
                 String indexName = currentSearchIndexInfo.getIndexName();
                 String kindName = currentSearchIndexInfo.getSearchKindName();
                 if(kindIndexName.equals(indexName)){
                     showErrorMessage("索引名称 "+kindIndexName+" 已被其他类型索引定义使用");
-                    indexNameValidate = false;
+                    indexContentValidate = false;
+                }
+
+                Set<String> indexAttributeNames = currentSearchIndexInfo.getIndexedAttributeNames();
+                if(indexProperties.size() == indexAttributeNames.size()){
+                    int matchedAttributeCount = 0;
+                    for(AttributeSystemInfo currentAttributeSystemInfo:indexProperties){
+                        String currentAttributeName = currentAttributeSystemInfo.getAttributeName();
+                        if(indexAttributeNames.contains(currentAttributeName)){
+                            matchedAttributeCount ++;
+                        }
+                    }
+                    if(matchedAttributeCount ==indexProperties.size()){
+                        showErrorMessage("目标索引 "+kindIndexName+" 中包含的属性列表与已有索引重复");
+                        indexContentValidate = false;
+                    }
                 }
             }
-            if(indexNameValidate){
+            if(indexContentValidate){
                 Set<String> indexPropertiesSet = new HashSet<>();
                 for(AttributeSystemInfo currentAttributeSystemInfo:indexProperties){
                     indexPropertiesSet.add(currentAttributeSystemInfo.getAttributeName());
