@@ -13,6 +13,7 @@ import com.viewfunction.docg.element.visualizationComponent.payload.common.Cytos
 import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeNodePayload;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.util.*;
 
 @JavaScript("./visualization/feature/dataRelationDistributionChart-connector.js")
@@ -20,6 +21,7 @@ public class DataRelationDistributionChart extends VerticalLayout {
 
     private Map<String,String> conceptionKindColorMap;
     private int colorIndex = 0;
+    private NumberFormat numberFormat;
 
     public DataRelationDistributionChart(){
         UI.getCurrent().getPage().addJavaScript("js/cytoscape/3.23.0/dist/cytoscape.min.js");
@@ -29,6 +31,7 @@ public class DataRelationDistributionChart extends VerticalLayout {
         this.setPadding(false);
         this.conceptionKindColorMap = new HashMap<>();
         this.setHeight(100, Unit.PERCENTAGE);
+        this.numberFormat = NumberFormat.getInstance();
         initConnector();
     }
 
@@ -111,7 +114,7 @@ public class DataRelationDistributionChart extends VerticalLayout {
                     }
                     cytoscapeNodePayload.getData().put("id",currentConceptionKindName);
                     cytoscapeNodePayload.getData().put("kind",currentConceptionKindName);
-                    cytoscapeNodePayload.getData().put("desc",currentConceptionKindName);
+                    cytoscapeNodePayload.getData().put("desc",currentConceptionKindName+"\n ( "+this.numberFormat.format(conceptionKindsDataCount.get(currentConceptionKindName))+" )");
                     runBeforeClientResponse(ui -> {
                         try {
                             getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});

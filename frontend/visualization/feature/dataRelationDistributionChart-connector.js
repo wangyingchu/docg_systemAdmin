@@ -125,6 +125,7 @@ window.Vaadin.Flow.feature_DataRelationDistributionChart = {
                     'font-weight': 'bold',
                     'background-color': 'data(background_color)',
                     'content': 'data(desc)',
+                    "text-wrap": "wrap",
                     'text-valign': 'center',
                     'color': '#333333',
                     'shape': 'data(shape)',
