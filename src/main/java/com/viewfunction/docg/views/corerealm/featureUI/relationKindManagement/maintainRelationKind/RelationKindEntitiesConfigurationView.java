@@ -113,13 +113,6 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
                 renderLoadARROWFormatConceptionEntitiesView();
             }
         });
-        MenuItem shpImportItem = importSubItems.addItem("SHP 格式数据");
-        shpImportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                renderLoadSHPFormatConceptionEntitiesView();
-            }
-        });
 
         infoContainer.add(importMenuBar);
 
