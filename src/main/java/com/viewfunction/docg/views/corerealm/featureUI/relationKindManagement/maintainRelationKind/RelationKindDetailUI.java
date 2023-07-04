@@ -28,6 +28,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttrib
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.eventHandling.RelationEntitiesCountRefreshEvent;
+import com.viewfunction.docg.element.eventHandling.RelationKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
@@ -45,7 +47,10 @@ import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.
 
 @Route("relationKindDetailInfo/:relationKind")
 public class RelationKindDetailUI extends VerticalLayout implements
-        BeforeEnterObserver {
+        BeforeEnterObserver,
+        RelationKindConfigurationInfoRefreshEvent.RelationKindConfigurationInfoRefreshListener,
+        RelationKindCleanedEvent.RelationKindCleanedListener,
+        RelationEntitiesCountRefreshEvent.RelationEntitiesCountRefreshListener{
 
     private String relationKind;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
@@ -96,7 +101,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
             kindCorrelationInfoTabSheet.setHeight(currentBrowserHeight-relationKindDetailViewHeightOffset-290,Unit.PIXELS);
         }));
         renderKindCorrelationInfoTabContent();
-        //ResourceHolder.getApplicationBlackboard().addListener(this);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
     }
 
     @Override
@@ -104,7 +109,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     private void renderRelationKindData(){
@@ -361,6 +366,21 @@ public class RelationKindDetailUI extends VerticalLayout implements
         dtaProvider.getItems().clear();
         dtaProvider.getItems().addAll(conceptionKindCorrelationInfoSet);
         dtaProvider.refreshAll();
+    }
+
+    @Override
+    public void receivedRelationKindConfigurationInfoRefreshEvent(RelationKindConfigurationInfoRefreshEvent event) {
+
+    }
+
+    @Override
+    public void receivedRelationKindCleanedEvent(RelationKindCleanedEvent event) {
+
+    }
+
+    @Override
+    public void receivedRelationEntitiesCountRefreshEvent(RelationEntitiesCountRefreshEvent event) {
+
     }
 
     private class RelationDirectionIconValueProvider implements ValueProvider<ConceptionKindCorrelationInfo,Icon> {
