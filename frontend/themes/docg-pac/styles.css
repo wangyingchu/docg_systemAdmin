@@ -30,6 +30,8 @@
     src: url("./font/Montserrat-Regular.ttf") format("TrueType");
 }
     html {
+        /*hard code to set global font size to avoid vaadin framework change default font size during version update*/
+        font-size:14px;
       --lumo-body-text-color: hsla(214, 42%, 9%, 0.94);
       --lumo-font-size: 1rem;
       --lumo-font-size-xxxl: 1.75rem;
