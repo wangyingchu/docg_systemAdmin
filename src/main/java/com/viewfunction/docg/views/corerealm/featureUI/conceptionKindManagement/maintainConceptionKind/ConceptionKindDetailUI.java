@@ -198,6 +198,27 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             MenuItem dropdownIconMenu = actionsMenuBar.addItem(icon, e -> {});
             SubMenu actionOptionsSubItems = dropdownIconMenu.getSubMenu();
 
+            HorizontalLayout action0Layout = new HorizontalLayout();
+            action0Layout.setPadding(false);
+            action0Layout.setSpacing(false);
+            action0Layout.setMargin(false);
+            action0Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action0Icon = LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create();
+            action0Icon.setSize("10px");
+            Span action0Space = new Span();
+            action0Space.setWidth(6,Unit.PIXELS);
+            Label action0Label = new Label("属性随机采样(500)");
+            action0Label.addClassNames("text-xs","font-semibold","text-secondary");
+            action0Layout.add(action0Icon,action0Space,action0Label);
+            MenuItem action0Item = actionOptionsSubItems.addItem(action0Layout);
+            action0Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    //renderLoadCSVFormatConceptionEntitiesView();
+                    System.out.println(attributeInfo.getAttributeName());
+                }
+            });
+
             HorizontalLayout action1Layout = new HorizontalLayout();
             action1Layout.setPadding(false);
             action1Layout.setSpacing(false);
@@ -317,27 +338,6 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             action6Layout.add(action6Icon,action6Space,action6Label);
             MenuItem action6Item = actionOptionsSubItems.addItem(action6Layout);
             action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
-                @Override
-                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                    //renderLoadCSVFormatConceptionEntitiesView();
-                    System.out.println(attributeInfo.getAttributeName());
-                }
-            });
-
-            HorizontalLayout action7Layout = new HorizontalLayout();
-            action7Layout.setPadding(false);
-            action7Layout.setSpacing(false);
-            action7Layout.setMargin(false);
-            action7Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-            Icon action7Icon = LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create();
-            action7Icon.setSize("10px");
-            Span action7Space = new Span();
-            action7Space.setWidth(6,Unit.PIXELS);
-            Label action7Label = new Label("属性随机采样(500)");
-            action7Label.addClassNames("text-xs","font-semibold","text-secondary");
-            action7Layout.add(action7Icon,action7Space,action7Label);
-            MenuItem action7Item = actionOptionsSubItems.addItem(action7Layout);
-            action7Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
                     //renderLoadCSVFormatConceptionEntitiesView();
