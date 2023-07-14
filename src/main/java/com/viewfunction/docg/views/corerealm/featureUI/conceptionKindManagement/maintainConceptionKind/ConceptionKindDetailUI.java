@@ -3,11 +3,11 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.contextmenu.HasMenuItems;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -29,7 +29,6 @@ import com.vaadin.flow.router.Route;
 
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -43,8 +42,6 @@ import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
-
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -192,48 +189,36 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         leftSideContainerLayout.add(infoTitle1);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
-            /*
-            Icon queryIcon = new Icon(VaadinIcon.INPUT);
-            queryIcon.setSize("20px");
-            Button addAsAttributeKind = new Button(queryIcon, event -> {
-                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                    //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
+            KindEntityAttributeRuntimeStatistics attributeInfo = (KindEntityAttributeRuntimeStatistics)entityStatisticsInfo;
+            MenuBar actionsMenuBar = new MenuBar();
+            actionsMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+            Icon icon = new Icon(VaadinIcon.CHEVRON_DOWN);
+            icon.setSize("14px");
+            MenuItem dropdownIconMenu = actionsMenuBar.addItem(icon, e -> {});
+            SubMenu actionOptionsSubItems = dropdownIconMenu.getSubMenu();
+
+            HorizontalLayout action1Layout = new HorizontalLayout();
+            action1Layout.setPadding(false);
+            action1Layout.setSpacing(false);
+            action1Layout.setMargin(false);
+            action1Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action1Icon = new Icon((VaadinIcon.INPUT));
+            action1Icon.setSize("10px");
+            Span action1Space = new Span();
+            action1Space.setWidth(6,Unit.PIXELS);
+            Label action1Label = new Label("设定为属性类型");
+            action1Label.addClassNames("text-xs","font-semibold","text-secondary");
+            action1Layout.add(action1Icon,action1Space,action1Label);
+            MenuItem action1Item = actionOptionsSubItems.addItem(action1Layout);
+            action1Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    //renderLoadCSVFormatConceptionEntitiesView();
+                    System.out.println(attributeInfo.getAttributeName());
                 }
             });
-            addAsAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            addAsAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(addAsAttributeKind, "添加为属性类型");
-
-            HorizontalLayout buttons = new HorizontalLayout(addAsAttributeKind);
-            buttons.setPadding(false);
-            buttons.setSpacing(false);
-            buttons.setMargin(false);
-            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-            buttons.setHeight(10,Unit.PIXELS);
-            buttons.setWidth(80,Unit.PIXELS);
-            return new VerticalLayout(buttons);
-*/
-
-
-            MenuBar exportMenuBar = new MenuBar();
-            exportMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
-            MenuItem exportDataMenu = createIconItem(exportMenuBar, VaadinIcon.DOWNLOAD, "", null);
-            Icon downArrowIcon2 = new Icon(VaadinIcon.CHEVRON_DOWN);
-            downArrowIcon2.setSize("12px");
-            //exportDataMenu.add(downArrowIcon2);
-
-            SubMenu importSubItems = exportDataMenu.getSubMenu();
-            MenuItem csvImportItem = importSubItems.addItem("添加为属性类型");
-
-
-            return new VerticalLayout(exportMenuBar);
-
+            return actionsMenuBar;
         });
-
-
-
-
-
 
         conceptionKindAttributesInfoGrid = new Grid<>();
         conceptionKindAttributesInfoGrid.setWidth(100,Unit.PERCENTAGE);
@@ -529,30 +514,5 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         fixSizeWindow.setWindowContent(conceptionKindMetaInfoView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
-    }
-
-
-
-    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
-        return createIconItem(menu, iconName, label, ariaLabel, false);
-    }
-
-    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName,String label, String ariaLabel, boolean isChild) {
-        Icon icon = new Icon(VaadinIcon.CHEVRON_DOWN);
-        icon.setSize("14px");
-        if (isChild) {
-            icon.getStyle().set("width", "var(--lumo-icon-size-s)");
-            icon.getStyle().set("height", "var(--lumo-icon-size-s)");
-            icon.getStyle().set("marginRight", "var(--lumo-space-s)");
-        }
-        MenuItem item = menu.addItem(icon, e -> {
-        });
-        if (ariaLabel != null) {
-            item.getElement().setAttribute("aria-label", ariaLabel);
-        }
-        if (label != null) {
-            item.add(new Text(label));
-        }
-        return item;
     }
 }
