@@ -3,12 +3,16 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.contextmenu.HasMenuItems;
+import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -187,6 +191,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         leftSideContainerLayout.add(infoTitle1);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+            /*
             Icon queryIcon = new Icon(VaadinIcon.INPUT);
             queryIcon.setSize("20px");
             Button addAsAttributeKind = new Button(queryIcon, event -> {
@@ -206,7 +211,24 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             buttons.setHeight(10,Unit.PIXELS);
             buttons.setWidth(80,Unit.PIXELS);
             return new VerticalLayout(buttons);
+*/
+
+
+            MenuBar exportMenuBar = new MenuBar();
+            exportMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+            MenuItem exportDataMenu = createIconItem(exportMenuBar, VaadinIcon.DOWNLOAD, "", null);
+            Icon downArrowIcon2 = new Icon(VaadinIcon.CHEVRON_DOWN);
+            downArrowIcon2.setSize("14px");
+            exportDataMenu.add(downArrowIcon2);
+
+            return new VerticalLayout(exportMenuBar);
+
         });
+
+
+
+
+
 
         conceptionKindAttributesInfoGrid = new Grid<>();
         conceptionKindAttributesInfoGrid.setWidth(100,Unit.PERCENTAGE);
@@ -502,5 +524,29 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         fixSizeWindow.setWindowContent(conceptionKindMetaInfoView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+
+
+    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
+        return createIconItem(menu, iconName, label, ariaLabel, false);
+    }
+
+    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName,String label, String ariaLabel, boolean isChild) {
+        Icon icon = new Icon(iconName);
+        if (isChild) {
+            icon.getStyle().set("width", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("height", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("marginRight", "var(--lumo-space-s)");
+        }
+        MenuItem item = menu.addItem(icon, e -> {
+        });
+        if (ariaLabel != null) {
+            item.getElement().setAttribute("aria-label", ariaLabel);
+        }
+        if (label != null) {
+            item.add(new Text(label));
+        }
+        return item;
     }
 }
