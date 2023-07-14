@@ -35,6 +35,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 
 import com.viewfunction.docg.element.commonComponent.*;
 
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefreshEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
@@ -217,6 +218,112 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                     System.out.println(attributeInfo.getAttributeName());
                 }
             });
+
+            HorizontalLayout action2Layout = new HorizontalLayout();
+            action2Layout.setPadding(false);
+            action2Layout.setSpacing(false);
+            action2Layout.setMargin(false);
+            action2Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action2Icon = new Icon((VaadinIcon.ERASER));
+            action2Icon.setSize("10px");
+            Span action2Space = new Span();
+            action2Space.setWidth(6,Unit.PIXELS);
+            Label action2Label = new Label("删除属性");
+            action2Label.addClassNames("text-xs","font-semibold","text-secondary");
+            action2Layout.add(action2Icon,action2Space,action2Label);
+            MenuItem action2Item = actionOptionsSubItems.addItem(action2Layout);
+            action2Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    //renderLoadCSVFormatConceptionEntitiesView();
+                    System.out.println(attributeInfo.getAttributeName());
+                }
+            });
+
+            HorizontalLayout action3Layout = new HorizontalLayout();
+            action3Layout.setPadding(false);
+            action3Layout.setSpacing(false);
+            action3Layout.setMargin(false);
+            action3Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action3Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+            action3Icon.setSize("10px");
+            Span action3Space = new Span();
+            action3Space.setWidth(6,Unit.PIXELS);
+            Label action3Label = new Label("转为 INT 类型");
+            action3Label.addClassNames("text-xs","font-semibold","text-secondary");
+            action3Layout.add(action3Icon,action3Space,action3Label);
+            MenuItem action3Item = actionOptionsSubItems.addItem(action3Layout);
+            action3Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    //renderLoadCSVFormatConceptionEntitiesView();
+                    System.out.println(attributeInfo.getAttributeName());
+                }
+            });
+
+            HorizontalLayout action4Layout = new HorizontalLayout();
+            action4Layout.setPadding(false);
+            action4Layout.setSpacing(false);
+            action4Layout.setMargin(false);
+            action4Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action4Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+            action4Icon.setSize("10px");
+            Span action4Space = new Span();
+            action4Space.setWidth(6,Unit.PIXELS);
+            Label action4Label = new Label("转为 FLOAT 类型");
+            action4Label.addClassNames("text-xs","font-semibold","text-secondary");
+            action4Layout.add(action4Icon,action4Space,action4Label);
+            MenuItem action4Item = actionOptionsSubItems.addItem(action4Layout);
+            action4Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    //renderLoadCSVFormatConceptionEntitiesView();
+                    System.out.println(attributeInfo.getAttributeName());
+                }
+            });
+
+            HorizontalLayout action5Layout = new HorizontalLayout();
+            action5Layout.setPadding(false);
+            action5Layout.setSpacing(false);
+            action5Layout.setMargin(false);
+            action5Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action5Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+            action5Icon.setSize("10px");
+            Span action5Space = new Span();
+            action5Space.setWidth(6,Unit.PIXELS);
+            Label action5Label = new Label("转为 BOOLEAN 类型");
+            action5Label.addClassNames("text-xs","font-semibold","text-secondary");
+            action5Layout.add(action5Icon,action5Space,action5Label);
+            MenuItem action5Item = actionOptionsSubItems.addItem(action5Layout);
+            action5Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    //renderLoadCSVFormatConceptionEntitiesView();
+                    System.out.println(attributeInfo.getAttributeName());
+                }
+            });
+
+            HorizontalLayout action6Layout = new HorizontalLayout();
+            action6Layout.setPadding(false);
+            action6Layout.setSpacing(false);
+            action6Layout.setMargin(false);
+            action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+            action6Icon.setSize("10px");
+            Span action6Space = new Span();
+            action6Space.setWidth(6,Unit.PIXELS);
+            Label action6Label = new Label("转为 STRING 类型");
+            action6Label.addClassNames("text-xs","font-semibold","text-secondary");
+            action6Layout.add(action6Icon,action6Space,action6Label);
+            MenuItem action6Item = actionOptionsSubItems.addItem(action6Layout);
+            action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    //renderLoadCSVFormatConceptionEntitiesView();
+                    System.out.println(attributeInfo.getAttributeName());
+                }
+            });
+
             return actionsMenuBar;
         });
 
