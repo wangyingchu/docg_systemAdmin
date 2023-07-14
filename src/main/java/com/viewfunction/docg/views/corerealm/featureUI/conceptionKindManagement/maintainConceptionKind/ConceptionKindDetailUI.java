@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
 import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
@@ -218,8 +219,12 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             exportMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
             MenuItem exportDataMenu = createIconItem(exportMenuBar, VaadinIcon.DOWNLOAD, "", null);
             Icon downArrowIcon2 = new Icon(VaadinIcon.CHEVRON_DOWN);
-            downArrowIcon2.setSize("14px");
-            exportDataMenu.add(downArrowIcon2);
+            downArrowIcon2.setSize("12px");
+            //exportDataMenu.add(downArrowIcon2);
+
+            SubMenu importSubItems = exportDataMenu.getSubMenu();
+            MenuItem csvImportItem = importSubItems.addItem("添加为属性类型");
+
 
             return new VerticalLayout(exportMenuBar);
 
@@ -533,7 +538,8 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
     }
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName,String label, String ariaLabel, boolean isChild) {
-        Icon icon = new Icon(iconName);
+        Icon icon = new Icon(VaadinIcon.CHEVRON_DOWN);
+        icon.setSize("14px");
         if (isChild) {
             icon.getStyle().set("width", "var(--lumo-icon-size-s)");
             icon.getStyle().set("height", "var(--lumo-icon-size-s)");
