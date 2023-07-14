@@ -324,6 +324,27 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 }
             });
 
+            HorizontalLayout action7Layout = new HorizontalLayout();
+            action7Layout.setPadding(false);
+            action7Layout.setSpacing(false);
+            action7Layout.setMargin(false);
+            action7Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action7Icon = LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create();
+            action7Icon.setSize("10px");
+            Span action7Space = new Span();
+            action7Space.setWidth(6,Unit.PIXELS);
+            Label action7Label = new Label("属性随机采样(500)");
+            action7Label.addClassNames("text-xs","font-semibold","text-secondary");
+            action7Layout.add(action7Icon,action7Space,action7Label);
+            MenuItem action7Item = actionOptionsSubItems.addItem(action7Layout);
+            action7Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    //renderLoadCSVFormatConceptionEntitiesView();
+                    System.out.println(attributeInfo.getAttributeName());
+                }
+            });
+
             return actionsMenuBar;
         });
 
