@@ -40,6 +40,7 @@ import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefres
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
@@ -207,15 +208,14 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             action0Icon.setSize("10px");
             Span action0Space = new Span();
             action0Space.setWidth(6,Unit.PIXELS);
-            Label action0Label = new Label("属性随机采样(500)");
+            Label action0Label = new Label("属性随机采样(100)");
             action0Label.addClassNames("text-xs","font-semibold","text-secondary");
             action0Layout.add(action0Icon,action0Space,action0Label);
             MenuItem action0Item = actionOptionsSubItems.addItem(action0Layout);
             action0Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                    //renderLoadCSVFormatConceptionEntitiesView();
-                    System.out.println(attributeInfo.getAttributeName());
+                    renderSampleRandomAttributesView(attributeInfo.getAttributeName());
                 }
             });
 
@@ -640,6 +640,14 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         ConceptionKindMetaInfoView conceptionKindMetaInfoView = new ConceptionKindMetaInfoView(this.conceptionKind);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"概念类型元数据信息",null,true,500,340,false);
         fixSizeWindow.setWindowContent(conceptionKindMetaInfoView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderSampleRandomAttributesView(String attributeName){
+        AttributesValueListView attributesValueListView = new AttributesValueListView(AttributesValueListView.AttributeKindType.ConceptionKind,this.conceptionKind,attributeName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create(),"属性值随机采样 (100项)",null,true,500,530,false);
+        fixSizeWindow.setWindowContent(attributesValueListView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
