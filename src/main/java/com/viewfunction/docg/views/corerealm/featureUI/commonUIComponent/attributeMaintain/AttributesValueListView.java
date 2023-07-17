@@ -31,6 +31,7 @@ public class AttributesValueListView extends VerticalLayout {
     private Grid<AttributeValueVO> attributeValueGrid;
 
     public AttributesValueListView(AttributeKindType attributeKindType,String kindName,String attributeName){
+        this.setPadding(false);
         this.attributeKindType = attributeKindType;
         this.kindName = kindName;
         this.attributeName = attributeName;
