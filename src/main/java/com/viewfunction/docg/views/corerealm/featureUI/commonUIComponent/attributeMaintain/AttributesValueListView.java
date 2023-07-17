@@ -63,7 +63,7 @@ public class AttributesValueListView extends VerticalLayout {
         attributeValueGrid = new Grid<>();
         attributeValueGrid.setWidth(100, Unit.PERCENTAGE);
         attributeValueGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        attributeValueGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
+        attributeValueGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         attributeValueGrid.addColumn(AttributeValueVO::getEntityUID).setHeader(uidColumnName).setKey("idx_0").setFlexGrow(0).setWidth("120px").setResizable(true);
         attributeValueGrid.addColumn(AttributeValueVO::getAttributeValue).setHeader("属性值").setKey("idx_1").setFlexGrow(1).setResizable(true);
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.KEY_O,uidColumnName);
