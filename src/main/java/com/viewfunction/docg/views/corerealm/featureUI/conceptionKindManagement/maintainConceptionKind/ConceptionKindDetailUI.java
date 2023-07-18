@@ -41,6 +41,7 @@ import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefres
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
@@ -237,7 +238,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 @Override
                 public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
                     //renderLoadCSVFormatConceptionEntitiesView();
-                    System.out.println(attributeInfo.getAttributeName());
+                    renderAddAttributeKindView(attributeInfo);
                 }
             });
 
@@ -669,6 +670,18 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         AttributesValueListView attributesValueListView = new AttributesValueListView(AttributesValueListView.AttributeKindType.ConceptionKind,this.conceptionKind,attributeName);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create(),"属性值随机采样 (100项)",null,true,500,510,false);
         fixSizeWindow.setWindowContent(attributesValueListView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderAddAttributeKindView(KindEntityAttributeRuntimeStatistics attributeInfo){
+        CreateAttributeKindView createAttributeKindView = new CreateAttributeKindView();
+        createAttributeKindView.setAndLockAttributeKindName(attributeInfo.getAttributeName());
+        createAttributeKindView.setAndLockAttributeKindDataType(attributeInfo.getAttributeDataType());
+
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建属性类型",null,true,500,350,false);
+        fixSizeWindow.setWindowContent(createAttributeKindView);
+        createAttributeKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
