@@ -9,22 +9,25 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H6;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateAttributeKindView extends VerticalLayout {
-    private String attributeKindName;
-    private String attributeKindDesc;
-    private AttributeDataType attributeDataType;
     private TextField attributeKindNameField;
     private TextField attributeKindDescField;
-    private TextField conceptionKindNameField;
-    private TextField conceptionKindDescField;
     private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
     private H6 errorMessage;
     private Dialog containerDialog;
@@ -40,7 +43,7 @@ public class CreateAttributeKindView extends VerticalLayout {
         HorizontalLayout messageContainerLayout = new HorizontalLayout();
         add(messageContainerLayout);
 
-        H6 viewTitle = new H6("概念类型信息");
+        H6 viewTitle = new H6("属性类型信息");
         messageContainerLayout.add(viewTitle);
 
         errorMessage = new H6("-");
@@ -48,14 +51,15 @@ public class CreateAttributeKindView extends VerticalLayout {
         messageContainerLayout.add(errorMessage);
         errorMessage.setVisible(false);
 
-        this.conceptionKindNameField = new TextField("属性类型名称 - AttributeKind Name");
-        this.conceptionKindNameField.setWidthFull();
-        this.conceptionKindNameField.setRequired(true);
-        this.conceptionKindNameField.setRequiredIndicatorVisible(true);
-        this.conceptionKindNameField.setTitle("请输入属性类型名称");
-        add(conceptionKindNameField);
+        this.attributeKindNameField = new TextField("属性类型名称 - AttributeKind Name");
+        this.attributeKindNameField.setWidthFull();
+        this.attributeKindNameField.setRequired(true);
+        this.attributeKindNameField.setRequiredIndicatorVisible(true);
+        this.attributeKindNameField.setTitle("请输入属性类型名称");
+        add(this.attributeKindNameField);
 
         this.attributeDataTypeFilterSelect = new ComboBox("属性类型数据类型 - AttributeKind Data Type");
+        this.attributeDataTypeFilterSelect.setRequired(true);
         this.attributeDataTypeFilterSelect.setWidthFull();
         this.attributeDataTypeFilterSelect.setPageSize(30);
         this.attributeDataTypeFilterSelect.setPlaceholder("属性类型的数据类型");
@@ -123,12 +127,12 @@ public class CreateAttributeKindView extends VerticalLayout {
         this.attributeDataTypeFilterSelect.setItems(attributeDataTypesArray);
         add(this.attributeDataTypeFilterSelect);
 
-        this.conceptionKindDescField = new TextField("属性类型描述 - AttributeKind Description");
-        this.conceptionKindDescField.setWidthFull();
-        this.conceptionKindDescField.setRequired(true);
-        this.conceptionKindDescField.setRequiredIndicatorVisible(true);
-        this.conceptionKindDescField.setTitle("请输入属性类型描述");
-        add(conceptionKindDescField);
+        this.attributeKindDescField = new TextField("属性类型描述 - AttributeKind Description");
+        this.attributeKindDescField.setWidthFull();
+        this.attributeKindDescField.setRequired(true);
+        this.attributeKindDescField.setRequiredIndicatorVisible(true);
+        this.attributeKindDescField.setTitle("请输入属性类型描述");
+        add(attributeKindDescField);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setWidthFull();
@@ -144,7 +148,7 @@ public class CreateAttributeKindView extends VerticalLayout {
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //doCreateNewConceptionKind();
+                doCreateNewAttributeKind();
             }
         });
     }
@@ -154,12 +158,72 @@ public class CreateAttributeKindView extends VerticalLayout {
     }
 
     public void setAndLockAttributeKindName(String attributeKindName){
-        this.conceptionKindNameField.setValue(attributeKindName);
-        this.conceptionKindNameField.setReadOnly(true);
+        this.attributeKindNameField.setValue(attributeKindName);
+        this.attributeKindNameField.setReadOnly(true);
     }
 
     public void setAndLockAttributeKindDataType(AttributeDataType attributeDataType){
         this.attributeDataTypeFilterSelect.setValue(attributeDataType);
         this.attributeDataTypeFilterSelect.setReadOnly(true);
+    }
+
+    private void showErrorMessage(String errorMessageTxt){
+        this.errorMessage.setText(errorMessageTxt);
+        this.errorMessage.setVisible(true);
+    }
+
+    private void doCreateNewAttributeKind(){
+        String attributeKindName = this.attributeKindNameField.getValue();
+        String attributeKindDesc = this.attributeKindDescField.getValue();
+        AttributeDataType attributeDataType = this.attributeDataTypeFilterSelect.getValue();
+        System.out.println(attributeKindDesc);
+        if(attributeKindName.equals("")||attributeKindDesc.equals("")||attributeDataType== null){
+            showErrorMessage("请输入全部属性类型定义信息");
+        }else{
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            List<AttributeKind> attributeKindList = coreRealm.getAttributeKinds(attributeKindName,attributeKindDesc,attributeDataType);
+            if(attributeKindList != null && attributeKindList.size() > 0){
+                List<Button> actionButtonList = new ArrayList<>();
+                Button confirmButton = new Button("确认创建属性类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+                confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+                Button cancelButton = new Button("取消操作");
+                cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+                actionButtonList.add(confirmButton);
+                actionButtonList.add(cancelButton);
+
+                ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","相同定义内容的属性类型已经存在，请确认是否继续执行创建操作",actionButtonList,650,190);
+                confirmWindow.open();
+                confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                        doCreateAttributeKind(attributeKindName,attributeKindDesc,attributeDataType,confirmWindow);
+                    }
+                });
+                cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                        confirmWindow.closeConfirmWindow();
+                    }
+                });
+            }else{
+                doCreateAttributeKind(attributeKindName,attributeKindDesc,attributeDataType,null);
+            }
+        }
+    }
+
+    private void doCreateAttributeKind(String attributeKindName,String attributeKindDesc,AttributeDataType attributeDataType,ConfirmWindow confirmWindow){
+        if(confirmWindow != null){
+            confirmWindow.closeConfirmWindow();
+        }
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        AttributeKind targetAttributeKind = coreRealm.createAttributeKind(attributeKindName,attributeKindDesc,attributeDataType);
+        if(targetAttributeKind != null){
+            CommonUIOperationUtil.showPopupNotification("属性类型 "+attributeKindName+"["+attributeDataType+"]"+"("+attributeKindDesc+") 创建成功,属性类型 UID 为:"+targetAttributeKind.getAttributeKindUID(), NotificationVariant.LUMO_SUCCESS);
+            if(this.containerDialog != null){
+                this.containerDialog.close();
+            }
+        }else{
+            CommonUIOperationUtil.showPopupNotification("属性类型 "+attributeKindName+"["+attributeDataType+"]"+"("+attributeKindDesc+") 创建失败", NotificationVariant.LUMO_ERROR);
+        }
     }
 }
