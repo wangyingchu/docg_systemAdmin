@@ -20,7 +20,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
+import com.viewfunction.docg.element.eventHandling.AttributeKindCreatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -218,6 +220,14 @@ public class CreateAttributeKindView extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         AttributeKind targetAttributeKind = coreRealm.createAttributeKind(attributeKindName,attributeKindDesc,attributeDataType);
         if(targetAttributeKind != null){
+
+            AttributeKindCreatedEvent attributeKindCreatedEvent = new AttributeKindCreatedEvent();
+            attributeKindCreatedEvent.setAttributeKindName(targetAttributeKind.getAttributeKindName());
+            attributeKindCreatedEvent.setAttributeKindDesc(targetAttributeKind.getAttributeKindDesc());
+            attributeKindCreatedEvent.setAttributeKindDataType(targetAttributeKind.getAttributeDataType());
+            attributeKindCreatedEvent.setAttributeKindUID(targetAttributeKind.getAttributeKindUID());
+            ResourceHolder.getApplicationBlackboard().fire(attributeKindCreatedEvent);
+
             CommonUIOperationUtil.showPopupNotification("属性类型 "+attributeKindName+"["+attributeDataType+"]"+"("+attributeKindDesc+") 创建成功,属性类型 UID 为:"+targetAttributeKind.getAttributeKindUID(), NotificationVariant.LUMO_SUCCESS);
             if(this.containerDialog != null){
                 this.containerDialog.close();
