@@ -12,6 +12,7 @@ import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -30,6 +31,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.AttributeKindCreatedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
@@ -45,16 +47,9 @@ import java.util.Comparator;
 import java.util.List;
 
 public class AttributeKindManagementUI extends VerticalLayout implements AttributeKindCreatedEvent.AttributeKindCreatedListener {
-
-
-
-
     private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
-
-
     private Grid<AttributeKindMetaInfo> attributeKindMetaInfoGrid;
     private GridListDataView<AttributeKindMetaInfo> conceptionKindsMetaInfoView;
-
     private Registration listener;
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private int entityAttributesDistributionStatisticSampleRatio = 10000;
@@ -66,15 +61,6 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
     private TextField conceptionKindNameFilterField;
     private TextField conceptionKindDescFilterField;
     private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
-
-
-
-
-
-
-
-
-
     public AttributeKindManagementUI(){
 
         Button refreshDataButton = new Button("刷新属性类型数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -261,9 +247,9 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
         attributeKindMetaInfoGrid.addColumn(AttributeKindMetaInfo::getKindName).setHeader("属性类型名称").setKey("idx_0").setFlexGrow(1);
         attributeKindMetaInfoGrid.addColumn(AttributeKindMetaInfo::getKindDesc).setHeader("属性类型描述").setKey("idx_1").setFlexGrow(1);
         attributeKindMetaInfoGrid.addColumn(AttributeKindMetaInfo::getAttributeDataType).setHeader("属性数据类型").setKey("idx_2")
-                .setFlexGrow(0).setWidth("140px").setResizable(false);
+                .setFlexGrow(0).setWidth("130px").setResizable(false);
         attributeKindMetaInfoGrid.addColumn(AttributeKindMetaInfo::getKindUID).setHeader("属性类型 UID").setKey("idx_3")
-                .setFlexGrow(0).setWidth("140px").setResizable(false);
+                .setFlexGrow(0).setWidth("150px").setResizable(false);
         attributeKindMetaInfoGrid.addColumn(_createDateComponentRenderer).setHeader("类型创建时间").setKey("idx_4")
                 .setComparator(createDateComparator)
                 .setFlexGrow(0).setWidth("210px").setResizable(false);
@@ -271,7 +257,6 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
                 .setComparator(lastUpdateDateComparator)
                 .setFlexGrow(0).setWidth("210px").setResizable(false);
         attributeKindMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_6").setFlexGrow(0).setWidth("120px").setResizable(false);
-
 
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"属性类型名称");
         attributeKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
@@ -382,7 +367,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
         searchConceptionKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //filterConceptionKinds();
+                filterConceptionKinds();
             }
         });
 
@@ -400,7 +385,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //cancelFilterConceptionKinds();
+                cancelFilterConceptionKinds();
             }
         });
 
@@ -535,19 +520,13 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
             gridAttributeKindMetaInfoList.addAll(runtimeAttributeKindMetaInfoList);
             this.conceptionKindNameFilterField.setValue("");
             this.conceptionKindDescFilterField.setValue("");
+            this.attributeDataTypeFilterSelect.setValue(null);
             this.conceptionKindsMetaInfoView = attributeKindMetaInfoGrid.setItems(gridAttributeKindMetaInfoList);
-
-
-
-
-
-
-
             //logic to filter ConceptionKinds already loaded from server
             this.conceptionKindsMetaInfoView.addFilter(item->{
                 String entityKindName = item.getKindName();
                 String entityKindDesc = item.getKindDesc();
-
+                String entityDataType = item.getAttributeDataType();
                 boolean conceptionKindNameFilterResult = true;
                 if(!conceptionKindNameFilterField.getValue().trim().equals("")){
                     if(entityKindName.contains(conceptionKindNameFilterField.getValue().trim())){
@@ -565,7 +544,16 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
                         conceptionKindDescFilterResult = false;
                     }
                 }
-                return conceptionKindNameFilterResult & conceptionKindDescFilterResult;
+
+                boolean attributeDataTypeFilterResult = true;
+                if(attributeDataTypeFilterSelect.getValue() != null){
+                    if(entityDataType.equals(attributeDataTypeFilterSelect.getValue().toString())){
+                        attributeDataTypeFilterResult = true;
+                    }else{
+                        attributeDataTypeFilterResult = false;
+                    }
+                }
+                return conceptionKindNameFilterResult & conceptionKindDescFilterResult & attributeDataTypeFilterResult;
             });
 
 
@@ -577,6 +565,24 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void filterConceptionKinds(){
+        String conceptionKindFilterValue = conceptionKindNameFilterField.getValue().trim();
+        String conceptionKindDescFilterValue = conceptionKindDescFilterField.getValue().trim();
+        AttributeDataType dataType= attributeDataTypeFilterSelect.getValue();
+        if(conceptionKindFilterValue.equals("")&conceptionKindDescFilterValue.equals("")&dataType == null){
+            CommonUIOperationUtil.showPopupNotification("请输入属性类型名称 和/或 属性类型描述 和/或 属性数据类型", NotificationVariant.LUMO_ERROR);
+        }else{
+            this.conceptionKindsMetaInfoView.refreshAll();
+        }
+    }
+
+    private void cancelFilterConceptionKinds(){
+        conceptionKindNameFilterField.setValue("");
+        conceptionKindDescFilterField.setValue("");
+        attributeDataTypeFilterSelect.setValue(null);
+        this.conceptionKindsMetaInfoView.refreshAll();
     }
 
     @Override
