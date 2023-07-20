@@ -20,6 +20,7 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeKindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
@@ -35,6 +36,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -49,7 +51,7 @@ import java.util.List;
 public class AttributeKindManagementUI extends VerticalLayout implements AttributeKindCreatedEvent.AttributeKindCreatedListener {
     private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
     private Grid<AttributeKindMetaInfo> attributeKindMetaInfoGrid;
-    private GridListDataView<AttributeKindMetaInfo> conceptionKindsMetaInfoView;
+    private GridListDataView<AttributeKindMetaInfo> attributeKindsMetaInfoView;
     private Registration listener;
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private int entityAttributesDistributionStatisticSampleRatio = 10000;
@@ -58,8 +60,8 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
     private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
     private EntityStatisticsInfo lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo;
     final ZoneId id = ZoneId.systemDefault();
-    private TextField conceptionKindNameFilterField;
-    private TextField conceptionKindDescFilterField;
+    private TextField attributeKindNameFilterField;
+    private TextField attributeKindDescFilterField;
     private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
     public AttributeKindManagementUI(){
 
@@ -69,7 +71,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
-            //loadConceptionKindsInfo();
+            loadAttributeKindsInfo();
             //resetSingleConceptionKindSummaryInfoArea();
         });
 
@@ -118,51 +120,25 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
         add(sectionActionBar);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
-            Icon queryIcon = new Icon(VaadinIcon.RECORDS);
-            queryIcon.setSize("20px");
-            Button queryConceptionKind = new Button(queryIcon, event -> {
-                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                    //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
-                }
-            });
-            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(queryConceptionKind, "查询概念类型实体");
-
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
-            Button configConceptionKind = new Button(configIcon, event -> {
+            Button configAttributeKind = new Button(configIcon, event -> {
                 if(entityStatisticsInfo instanceof EntityStatisticsInfo){
                     //renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
                 }
             });
-            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(configConceptionKind, "配置概念类型定义");
-
-            Icon cleanKindIcon = new Icon(VaadinIcon.RECYCLE);
-            cleanKindIcon.setSize("21px");
-            Button cleanConceptionKind = new Button(cleanKindIcon, event -> {});
-            cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(cleanConceptionKind, "清除概念类型所有实例");
-            cleanConceptionKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-                @Override
-                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                        //renderCleanConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
-                    }
-                }
-            });
+            configAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            configAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(configAttributeKind, "配置属性类型定义");
 
             Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
             deleteKindIcon.setSize("21px");
-            Button removeConceptionKind = new Button(deleteKindIcon, event -> {});
-            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeConceptionKind, "删除概念类型");
-            removeConceptionKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            Button removeAttributeKind = new Button(deleteKindIcon, event -> {});
+            removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            Tooltips.getCurrent().setTooltip(removeAttributeKind, "删除属性类型定义");
+            removeAttributeKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(entityStatisticsInfo instanceof EntityStatisticsInfo){
@@ -171,7 +147,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
                 }
             });
 
-            HorizontalLayout buttons = new HorizontalLayout(queryConceptionKind,configConceptionKind, cleanConceptionKind,removeConceptionKind);
+            HorizontalLayout buttons = new HorizontalLayout(configAttributeKind,removeAttributeKind);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -256,7 +232,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
         attributeKindMetaInfoGrid.addColumn(_lastUpdateDateComponentRenderer).setHeader("类型最后更新时间").setKey("idx_5")
                 .setComparator(lastUpdateDateComparator)
                 .setFlexGrow(0).setWidth("210px").setResizable(false);
-        attributeKindMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_6").setFlexGrow(0).setWidth("120px").setResizable(false);
+        attributeKindMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_6").setFlexGrow(0).setWidth("90px").setResizable(false);
 
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"属性类型名称");
         attributeKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
@@ -295,24 +271,24 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
         conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
         filterTitle.setWidth(80,Unit.PIXELS);
 
-        conceptionKindNameFilterField = new TextField();
-        conceptionKindNameFilterField.setPlaceholder("属性类型名称");
-        conceptionKindNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        conceptionKindNameFilterField.setWidth(170,Unit.PIXELS);
-        conceptionKindsSearchElementsContainerLayout.add(conceptionKindNameFilterField);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindNameFilterField);
+        attributeKindNameFilterField = new TextField();
+        attributeKindNameFilterField.setPlaceholder("属性类型名称");
+        attributeKindNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        attributeKindNameFilterField.setWidth(170,Unit.PIXELS);
+        conceptionKindsSearchElementsContainerLayout.add(attributeKindNameFilterField);
+        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, attributeKindNameFilterField);
 
         Icon plusIcon = new Icon(VaadinIcon.PLUS);
         plusIcon.setSize("12px");
         conceptionKindsSearchElementsContainerLayout.add(plusIcon);
         conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
 
-        conceptionKindDescFilterField = new TextField();
-        conceptionKindDescFilterField.setPlaceholder("属性类型描述");
-        conceptionKindDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        conceptionKindDescFilterField.setWidth(170,Unit.PIXELS);
-        conceptionKindsSearchElementsContainerLayout.add(conceptionKindDescFilterField);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindDescFilterField);
+        attributeKindDescFilterField = new TextField();
+        attributeKindDescFilterField.setPlaceholder("属性类型描述");
+        attributeKindDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        attributeKindDescFilterField.setWidth(170,Unit.PIXELS);
+        conceptionKindsSearchElementsContainerLayout.add(attributeKindDescFilterField);
+        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, attributeKindDescFilterField);
 
         Icon plusIcon2 = new Icon(VaadinIcon.PLUS);
         plusIcon2.setSize("12px");
@@ -322,7 +298,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
         attributeDataTypeFilterSelect = new ComboBox();
         attributeDataTypeFilterSelect.setPlaceholder("属性类型数据类型");
         attributeDataTypeFilterSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
-        conceptionKindDescFilterField.setWidth(170,Unit.PIXELS);
+        attributeKindDescFilterField.setWidth(170,Unit.PIXELS);
         attributeDataTypeFilterSelect.setPageSize(30);
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -494,15 +470,6 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
         ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
-
-
-
-
-
-
-
-
-
     private void renderAddAttributeKindView(){
         CreateAttributeKindView createAttributeKindView = new CreateAttributeKindView();
         FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建属性类型",null,true,500,350,false);
@@ -518,18 +485,18 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
         try {
             List<AttributeKindMetaInfo> runtimeAttributeKindMetaInfoList = coreRealm.getAttributeKindsMetaInfo();
             gridAttributeKindMetaInfoList.addAll(runtimeAttributeKindMetaInfoList);
-            this.conceptionKindNameFilterField.setValue("");
-            this.conceptionKindDescFilterField.setValue("");
+            this.attributeKindNameFilterField.setValue("");
+            this.attributeKindDescFilterField.setValue("");
             this.attributeDataTypeFilterSelect.setValue(null);
-            this.conceptionKindsMetaInfoView = attributeKindMetaInfoGrid.setItems(gridAttributeKindMetaInfoList);
+            this.attributeKindsMetaInfoView = attributeKindMetaInfoGrid.setItems(gridAttributeKindMetaInfoList);
             //logic to filter ConceptionKinds already loaded from server
-            this.conceptionKindsMetaInfoView.addFilter(item->{
+            this.attributeKindsMetaInfoView.addFilter(item->{
                 String entityKindName = item.getKindName();
                 String entityKindDesc = item.getKindDesc();
                 String entityDataType = item.getAttributeDataType();
                 boolean conceptionKindNameFilterResult = true;
-                if(!conceptionKindNameFilterField.getValue().trim().equals("")){
-                    if(entityKindName.contains(conceptionKindNameFilterField.getValue().trim())){
+                if(!attributeKindNameFilterField.getValue().trim().equals("")){
+                    if(entityKindName.contains(attributeKindNameFilterField.getValue().trim())){
                         conceptionKindNameFilterResult = true;
                     }else{
                         conceptionKindNameFilterResult = false;
@@ -537,8 +504,8 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
                 }
 
                 boolean conceptionKindDescFilterResult = true;
-                if(!conceptionKindDescFilterField.getValue().trim().equals("")){
-                    if(entityKindDesc.contains(conceptionKindDescFilterField.getValue().trim())){
+                if(!attributeKindDescFilterField.getValue().trim().equals("")){
+                    if(entityKindDesc.contains(attributeKindDescFilterField.getValue().trim())){
                         conceptionKindDescFilterResult = true;
                     }else{
                         conceptionKindDescFilterResult = false;
@@ -555,34 +522,27 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
                 }
                 return conceptionKindNameFilterResult & conceptionKindDescFilterResult & attributeDataTypeFilterResult;
             });
-
-
-
-
-
-
-
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
     }
 
     private void filterConceptionKinds(){
-        String conceptionKindFilterValue = conceptionKindNameFilterField.getValue().trim();
-        String conceptionKindDescFilterValue = conceptionKindDescFilterField.getValue().trim();
+        String conceptionKindFilterValue = attributeKindNameFilterField.getValue().trim();
+        String conceptionKindDescFilterValue = attributeKindDescFilterField.getValue().trim();
         AttributeDataType dataType= attributeDataTypeFilterSelect.getValue();
         if(conceptionKindFilterValue.equals("")&conceptionKindDescFilterValue.equals("")&dataType == null){
             CommonUIOperationUtil.showPopupNotification("请输入属性类型名称 和/或 属性类型描述 和/或 属性数据类型", NotificationVariant.LUMO_ERROR);
         }else{
-            this.conceptionKindsMetaInfoView.refreshAll();
+            this.attributeKindsMetaInfoView.refreshAll();
         }
     }
 
     private void cancelFilterConceptionKinds(){
-        conceptionKindNameFilterField.setValue("");
-        conceptionKindDescFilterField.setValue("");
+        attributeKindNameFilterField.setValue("");
+        attributeKindDescFilterField.setValue("");
         attributeDataTypeFilterSelect.setValue(null);
-        this.conceptionKindsMetaInfoView.refreshAll();
+        this.attributeKindsMetaInfoView.refreshAll();
     }
 
     @Override
