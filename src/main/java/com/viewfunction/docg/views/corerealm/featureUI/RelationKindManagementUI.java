@@ -285,8 +285,8 @@ public class RelationKindManagementUI extends VerticalLayout implements
             @Override
             public int compare(Object o1, Object o2) {
                 if(((EntityStatisticsInfo)o1).getCreateDateTime()!= null && ((EntityStatisticsInfo)o2).getCreateDateTime()!= null &&
-                        ((EntityStatisticsInfo)o1).getLastModifyDateTime() instanceof ZonedDateTime &&
-                        ((EntityStatisticsInfo)o2).getLastModifyDateTime() instanceof ZonedDateTime){
+                        ((EntityStatisticsInfo)o1).getCreateDateTime() instanceof ZonedDateTime &&
+                        ((EntityStatisticsInfo)o2).getCreateDateTime() instanceof ZonedDateTime){
                     if(((EntityStatisticsInfo)o1).getCreateDateTime().isBefore(((EntityStatisticsInfo)o2).getCreateDateTime())){
                         return -1;
                     }if(((EntityStatisticsInfo)o1).getCreateDateTime().isAfter(((EntityStatisticsInfo)o2).getCreateDateTime())){

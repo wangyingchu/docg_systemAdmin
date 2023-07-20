@@ -24,4 +24,13 @@ public class GridColumnHeader extends HorizontalLayout {
         headerTitleLabel.addClassNames("text-xs","font-semibold");
         this.add(headerTitleLabel);
     }
+
+    public GridColumnHeader(com.vaadin.flow.component.icon.Icon titleIcon, String titleContent){
+        this.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleIcon.setSize("12px");
+        this.add(titleIcon);
+        NativeLabel headerTitleLabel = new NativeLabel(titleContent);
+        headerTitleLabel.addClassNames("text-xs","font-semibold");
+        this.add(headerTitleLabel);
+    }
 }
