@@ -79,12 +79,22 @@ public class CreateAttributesViewKindView extends VerticalLayout {
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //doCreateNewAttributeKind();
+                doCreateNewAttributesViewKind();
             }
         });
     }
 
+    private void showErrorMessage(String errorMessageTxt){
+        this.errorMessage.setText(errorMessageTxt);
+        this.errorMessage.setVisible(true);
+    }
+
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
+    }
+
+    public void doCreateNewAttributesViewKind(){
+
+
     }
 }
