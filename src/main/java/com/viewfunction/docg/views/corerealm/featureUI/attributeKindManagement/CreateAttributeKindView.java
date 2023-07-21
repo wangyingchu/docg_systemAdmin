@@ -220,12 +220,15 @@ public class CreateAttributeKindView extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         AttributeKind targetAttributeKind = coreRealm.createAttributeKind(attributeKindName,attributeKindDesc,attributeDataType);
         if(targetAttributeKind != null){
-
             AttributeKindCreatedEvent attributeKindCreatedEvent = new AttributeKindCreatedEvent();
             attributeKindCreatedEvent.setAttributeKindName(targetAttributeKind.getAttributeKindName());
             attributeKindCreatedEvent.setAttributeKindDesc(targetAttributeKind.getAttributeKindDesc());
             attributeKindCreatedEvent.setAttributeKindDataType(targetAttributeKind.getAttributeDataType());
             attributeKindCreatedEvent.setAttributeKindUID(targetAttributeKind.getAttributeKindUID());
+            attributeKindCreatedEvent.setCreateDateTime(targetAttributeKind.getCreateDateTime());
+            attributeKindCreatedEvent.setLastModifyDateTime(targetAttributeKind.getLastModifyDateTime());
+            attributeKindCreatedEvent.setCreatorId(targetAttributeKind.getCreatorId());
+            attributeKindCreatedEvent.setDataOrigin(targetAttributeKind.getDataOrigin());
             ResourceHolder.getApplicationBlackboard().fire(attributeKindCreatedEvent);
 
             CommonUIOperationUtil.showPopupNotification("属性类型 "+attributeKindName+"["+attributeDataType+"]"+"("+attributeKindDesc+") 创建成功,属性类型 UID 为:"+targetAttributeKind.getAttributeKindUID(), NotificationVariant.LUMO_SUCCESS);

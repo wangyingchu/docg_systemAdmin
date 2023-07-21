@@ -4,11 +4,17 @@ import com.github.wolfie.blackboard.Event;
 import com.github.wolfie.blackboard.Listener;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 
+import java.util.Date;
+
 public class AttributeKindCreatedEvent implements Event {
     private String attributeKindName;
     private String attributeKindDesc;
     private AttributeDataType attributeKindDataType;
     private String attributeKindUID;
+    private Date createDateTime;
+    private Date lastModifyDateTime;
+    private String creatorId;
+    private String dataOrigin;
 
     public String getAttributeKindName() {
         return attributeKindName;
@@ -40,6 +46,38 @@ public class AttributeKindCreatedEvent implements Event {
 
     public void setAttributeKindUID(String attributeKindUID) {
         this.attributeKindUID = attributeKindUID;
+    }
+
+    public Date getCreateDateTime() {
+        return createDateTime;
+    }
+
+    public void setCreateDateTime(Date createDateTime) {
+        this.createDateTime = createDateTime;
+    }
+
+    public Date getLastModifyDateTime() {
+        return lastModifyDateTime;
+    }
+
+    public void setLastModifyDateTime(Date lastModifyDateTime) {
+        this.lastModifyDateTime = lastModifyDateTime;
+    }
+
+    public String getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    public String getDataOrigin() {
+        return dataOrigin;
+    }
+
+    public void setDataOrigin(String dataOrigin) {
+        this.dataOrigin = dataOrigin;
     }
 
     public interface AttributeKindCreatedListener extends Listener {

@@ -17,6 +17,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.shared.Registration;
@@ -46,6 +47,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class AttributeKindManagementUI extends VerticalLayout implements AttributeKindCreatedEvent.AttributeKindCreatedListener {
@@ -547,6 +549,22 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
 
     @Override
     public void receivedAttributeKindCreatedEvent(AttributeKindCreatedEvent event) {
+        String kindName = event.getAttributeKindName();
+        String kindDesc = event.getAttributeKindDesc();
+        String kindUID = event.getAttributeKindUID();
+        String attributeKindDataType = event.getAttributeKindDataType().toString();
+        Date createDateTime = event.getCreateDateTime();
+        Date lastModifyDateTime = event.getLastModifyDateTime();
+        String creatorId = event.getCreatorId();
+        String dataOrigin = event.getDataOrigin();
 
+        ListDataProvider dtaProvider = (ListDataProvider)attributeKindMetaInfoGrid.getDataProvider();
+
+        AttributeKindMetaInfo attributeKindMetaInfo= new AttributeKindMetaInfo(kindName,kindDesc,kindUID,
+                attributeKindDataType,ZonedDateTime.ofInstant(createDateTime.toInstant(), id),
+                ZonedDateTime.ofInstant(lastModifyDateTime.toInstant(), id),
+                creatorId,dataOrigin);
+        dtaProvider.getItems().add(attributeKindMetaInfo);
+        dtaProvider.refreshAll();
     }
 }
