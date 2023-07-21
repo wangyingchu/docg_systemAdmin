@@ -387,31 +387,6 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         conceptionKindMetaInfoGridContainerLayout.add(attributeKindMetaInfoGrid);
         conceptionKindsInfoContainerLayout.add(conceptionKindMetaInfoGridContainerLayout);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         singleConceptionKindSummaryInfoContainerLayout = new VerticalLayout();
         singleConceptionKindSummaryInfoContainerLayout.setSpacing(true);
         singleConceptionKindSummaryInfoContainerLayout.setMargin(true);
@@ -446,19 +421,18 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         conceptionKindAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         conceptionKindAttributesInfoGrid.addColumn(AttributesViewKind::getAttributesViewKindName).setHeader("属性视图名称").setKey("idx_0");
         conceptionKindAttributesInfoGrid.addColumn(AttributesViewKind::getAttributesViewKindUID).setHeader("属性视图 UID").setKey("idx_1").setFlexGrow(0).setWidth("150px").setResizable(false);
-        conceptionKindAttributesInfoGrid.addColumn(AttributesViewKind::getAttributesViewKindDesc).setHeader("属性数据类型").setKey("idx_2").setFlexGrow(0).setWidth("150px").setResizable(false);
+        conceptionKindAttributesInfoGrid.addColumn(AttributesViewKind::getAttributesViewKindDesc).setHeader("数据存储结构").setKey("idx_2").setFlexGrow(0).setWidth("150px").setResizable(false);
 
-
-        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
+        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"属性视图类型名称");
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
-        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.PASSWORD,"属性数据类型");
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.KEY_O,"属性视图类型 UID");
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
-        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.CROSSHAIRS,"属性命中数");
+        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.COMBOBOX,"视图数据存储结构");
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         conceptionKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
         singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindAttributesInfoGrid);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.SCATTER_CHART),"属性类型实体数据分布");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
         add(conceptionKindsInfoContainerLayout);
     }
@@ -633,17 +607,14 @@ public class AttributeKindManagementUI extends VerticalLayout implements
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
-
-        AttributeKind attributeKind = coreRealm.getAttributeKind(attributeKindMetaInfo.getKindUID());
+        List<AttributesViewKind> containerAttributesViewKindsList = new ArrayList<>();
+                AttributeKind attributeKind = coreRealm.getAttributeKind(attributeKindMetaInfo.getKindUID());
         if(attributeKind != null){
-            List<AttributesViewKind> containerAttributesViewKindsList = attributeKind.getContainerAttributesViewKinds();
-
-
+            containerAttributesViewKindsList.addAll(attributeKind.getContainerAttributesViewKinds());
         }
-
-
         coreRealm.closeGlobalSession();
 
+        conceptionKindAttributesInfoGrid.setItems(containerAttributesViewKindsList);
         //conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
         //conceptionKindCorrelationInfoChart.clearData();
         //conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,conceptionKindName);
