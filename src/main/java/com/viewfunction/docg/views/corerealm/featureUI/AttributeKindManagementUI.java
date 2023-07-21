@@ -53,16 +53,15 @@ import java.util.*;
 public class AttributeKindManagementUI extends VerticalLayout implements
         AttributeKindCreatedEvent.AttributeKindCreatedListener,
         AttributeKindRemovedEvent.AttributeKindRemovedListener {
-    private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
     private Grid<AttributeKindMetaInfo> attributeKindMetaInfoGrid;
     private GridListDataView<AttributeKindMetaInfo> attributeKindsMetaInfoView;
     private Registration listener;
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private SecondaryTitleActionBar secondaryTitleActionBar2;
-    private Grid<AttributesViewKind> conceptionKindAttributesInfoGrid;
+    private Grid<AttributesViewKind> attributeKindAttributesInfoGrid;
     private ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
-    private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
-    private AttributeKindMetaInfo lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo;
+    private VerticalLayout singleAttributeKindSummaryInfoContainerLayout;
+    private AttributeKindMetaInfo lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo;
     final ZoneId id = ZoneId.systemDefault();
     private TextField attributeKindNameFilterField;
     private TextField attributeKindDescFilterField;
@@ -261,58 +260,58 @@ public class AttributeKindManagementUI extends VerticalLayout implements
                 Set<AttributeKindMetaInfo> selectedItemSet = selectionEvent.getAllSelectedItems();
                 if(selectedItemSet.size() == 0){
                     // don't allow to unselect item, just reselect last selected item
-                    attributeKindMetaInfoGrid.select(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo);
+                    attributeKindMetaInfoGrid.select(lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo);
                 }else{
                     AttributeKindMetaInfo selectedEntityStatisticsInfo = selectedItemSet.iterator().next();
                     renderAttributeKindOverview(selectedEntityStatisticsInfo);
-                    lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo = selectedEntityStatisticsInfo;
+                    lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo = selectedEntityStatisticsInfo;
                 }
             }
         });
 
-        HorizontalLayout conceptionKindsInfoContainerLayout = new HorizontalLayout();
-        conceptionKindsInfoContainerLayout.setSpacing(false);
-        conceptionKindsInfoContainerLayout.setMargin(false);
-        conceptionKindsInfoContainerLayout.setWidth(100, Unit.PERCENTAGE);
+        HorizontalLayout attributeKindsInfoContainerLayout = new HorizontalLayout();
+        attributeKindsInfoContainerLayout.setSpacing(false);
+        attributeKindsInfoContainerLayout.setMargin(false);
+        attributeKindsInfoContainerLayout.setWidth(100, Unit.PERCENTAGE);
 
-        VerticalLayout conceptionKindMetaInfoGridContainerLayout = new VerticalLayout();
-        conceptionKindMetaInfoGridContainerLayout.setSpacing(true);
-        conceptionKindMetaInfoGridContainerLayout.setMargin(false);
-        conceptionKindMetaInfoGridContainerLayout.setPadding(false);
+        VerticalLayout attributeKindMetaInfoGridContainerLayout = new VerticalLayout();
+        attributeKindMetaInfoGridContainerLayout.setSpacing(true);
+        attributeKindMetaInfoGridContainerLayout.setMargin(false);
+        attributeKindMetaInfoGridContainerLayout.setPadding(false);
 
-        HorizontalLayout conceptionKindsSearchElementsContainerLayout = new HorizontalLayout();
-        conceptionKindsSearchElementsContainerLayout.setSpacing(false);
-        conceptionKindsSearchElementsContainerLayout.setMargin(false);
-        conceptionKindMetaInfoGridContainerLayout.add(conceptionKindsSearchElementsContainerLayout);
+        HorizontalLayout attributeKindsSearchElementsContainerLayout = new HorizontalLayout();
+        attributeKindsSearchElementsContainerLayout.setSpacing(false);
+        attributeKindsSearchElementsContainerLayout.setMargin(false);
+        attributeKindMetaInfoGridContainerLayout.add(attributeKindsSearchElementsContainerLayout);
 
         SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
-        conceptionKindsSearchElementsContainerLayout.add(filterTitle);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
+        attributeKindsSearchElementsContainerLayout.add(filterTitle);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
         filterTitle.setWidth(80,Unit.PIXELS);
 
         attributeKindNameFilterField = new TextField();
         attributeKindNameFilterField.setPlaceholder("属性类型名称");
         attributeKindNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         attributeKindNameFilterField.setWidth(170,Unit.PIXELS);
-        conceptionKindsSearchElementsContainerLayout.add(attributeKindNameFilterField);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, attributeKindNameFilterField);
+        attributeKindsSearchElementsContainerLayout.add(attributeKindNameFilterField);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, attributeKindNameFilterField);
 
         Icon plusIcon = new Icon(VaadinIcon.PLUS);
         plusIcon.setSize("12px");
-        conceptionKindsSearchElementsContainerLayout.add(plusIcon);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
+        attributeKindsSearchElementsContainerLayout.add(plusIcon);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
 
         attributeKindDescFilterField = new TextField();
         attributeKindDescFilterField.setPlaceholder("属性类型描述");
         attributeKindDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         attributeKindDescFilterField.setWidth(170,Unit.PIXELS);
-        conceptionKindsSearchElementsContainerLayout.add(attributeKindDescFilterField);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, attributeKindDescFilterField);
+        attributeKindsSearchElementsContainerLayout.add(attributeKindDescFilterField);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, attributeKindDescFilterField);
 
         Icon plusIcon2 = new Icon(VaadinIcon.PLUS);
         plusIcon2.setSize("12px");
-        conceptionKindsSearchElementsContainerLayout.add(plusIcon2);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon2);
+        attributeKindsSearchElementsContainerLayout.add(plusIcon2);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon2);
 
         attributeDataTypeFilterSelect = new ComboBox();
         attributeDataTypeFilterSelect.setPlaceholder("属性类型数据类型");
@@ -350,91 +349,91 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         };
         this.attributeDataTypeFilterSelect.setItems(attributeDataTypesArray);
 
-        conceptionKindsSearchElementsContainerLayout.add(attributeDataTypeFilterSelect);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,attributeDataTypeFilterSelect);
+        attributeKindsSearchElementsContainerLayout.add(attributeDataTypeFilterSelect);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,attributeDataTypeFilterSelect);
 
-        Button searchConceptionKindsButton = new Button("查找属性类型",new Icon(VaadinIcon.SEARCH));
-        searchConceptionKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        searchConceptionKindsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        conceptionKindsSearchElementsContainerLayout.add(searchConceptionKindsButton);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchConceptionKindsButton);
-        searchConceptionKindsButton.setWidth(115,Unit.PIXELS);
-        searchConceptionKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button searchAttributeKindsButton = new Button("查找属性类型",new Icon(VaadinIcon.SEARCH));
+        searchAttributeKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        searchAttributeKindsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        attributeKindsSearchElementsContainerLayout.add(searchAttributeKindsButton);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchAttributeKindsButton);
+        searchAttributeKindsButton.setWidth(115,Unit.PIXELS);
+        searchAttributeKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                filterConceptionKinds();
+                filterAttributeKinds();
             }
         });
 
         Icon divIcon = new Icon(VaadinIcon.LINE_V);
         divIcon.setSize("8px");
-        conceptionKindsSearchElementsContainerLayout.add(divIcon);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+        attributeKindsSearchElementsContainerLayout.add(divIcon);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
 
         Button clearSearchCriteriaButton = new Button("清除查询条件",new Icon(VaadinIcon.ERASER));
         clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        conceptionKindsSearchElementsContainerLayout.add(clearSearchCriteriaButton);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
+        attributeKindsSearchElementsContainerLayout.add(clearSearchCriteriaButton);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
         clearSearchCriteriaButton.setWidth(120,Unit.PIXELS);
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                cancelFilterConceptionKinds();
+                cancelFilterAttributeKinds();
             }
         });
 
-        conceptionKindMetaInfoGridContainerLayout.add(attributeKindMetaInfoGrid);
-        conceptionKindsInfoContainerLayout.add(conceptionKindMetaInfoGridContainerLayout);
+        attributeKindMetaInfoGridContainerLayout.add(attributeKindMetaInfoGrid);
+        attributeKindsInfoContainerLayout.add(attributeKindMetaInfoGridContainerLayout);
 
-        singleConceptionKindSummaryInfoContainerLayout = new VerticalLayout();
-        singleConceptionKindSummaryInfoContainerLayout.setSpacing(true);
-        singleConceptionKindSummaryInfoContainerLayout.setMargin(true);
-        singleConceptionKindSummaryInfoContainerLayout.setPadding(false);
-        conceptionKindsInfoContainerLayout.add(singleConceptionKindSummaryInfoContainerLayout);
-        conceptionKindsInfoContainerLayout.setFlexGrow(1,singleConceptionKindSummaryInfoContainerLayout);
+        singleAttributeKindSummaryInfoContainerLayout = new VerticalLayout();
+        singleAttributeKindSummaryInfoContainerLayout.setSpacing(true);
+        singleAttributeKindSummaryInfoContainerLayout.setMargin(true);
+        singleAttributeKindSummaryInfoContainerLayout.setPadding(false);
+        attributeKindsInfoContainerLayout.add(singleAttributeKindSummaryInfoContainerLayout);
+        attributeKindsInfoContainerLayout.setFlexGrow(1, singleAttributeKindSummaryInfoContainerLayout);
 
-        HorizontalLayout singleConceptionKindInfoElementsContainerLayout = new HorizontalLayout();
-        singleConceptionKindInfoElementsContainerLayout.setSpacing(false);
-        singleConceptionKindInfoElementsContainerLayout.setMargin(false);
-        singleConceptionKindInfoElementsContainerLayout.setHeight("30px");
-        singleConceptionKindSummaryInfoContainerLayout.add(singleConceptionKindInfoElementsContainerLayout);
+        HorizontalLayout singleAttributeKindInfoElementsContainerLayout = new HorizontalLayout();
+        singleAttributeKindInfoElementsContainerLayout.setSpacing(false);
+        singleAttributeKindInfoElementsContainerLayout.setMargin(false);
+        singleAttributeKindInfoElementsContainerLayout.setHeight("30px");
+        singleAttributeKindSummaryInfoContainerLayout.add(singleAttributeKindInfoElementsContainerLayout);
 
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"属性类型概览");
-        singleConceptionKindInfoElementsContainerLayout.add(filterTitle2);
-        singleConceptionKindInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
+        singleAttributeKindInfoElementsContainerLayout.add(filterTitle2);
+        singleAttributeKindInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
 
         secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.INPUT),"-",null,null,false);
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
-        singleConceptionKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
+        singleAttributeKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
 
         secondaryTitleActionBar2 = new SecondaryTitleActionBar(new Icon(VaadinIcon.KEY_O),"-",null,null);
         secondaryTitleActionBar2.setWidth(100,Unit.PERCENTAGE);
-        singleConceptionKindSummaryInfoContainerLayout.add(secondaryTitleActionBar2);
+        singleAttributeKindSummaryInfoContainerLayout.add(secondaryTitleActionBar2);
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"所属属性视图类型");
-        singleConceptionKindSummaryInfoContainerLayout.add(infoTitle1);
+        singleAttributeKindSummaryInfoContainerLayout.add(infoTitle1);
 
-        conceptionKindAttributesInfoGrid = new Grid<>();
-        conceptionKindAttributesInfoGrid.setWidth(100,Unit.PERCENTAGE);
-        conceptionKindAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
-        conceptionKindAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
-        conceptionKindAttributesInfoGrid.addColumn(AttributesViewKind::getAttributesViewKindName).setHeader("属性视图名称").setKey("idx_0");
-        conceptionKindAttributesInfoGrid.addColumn(AttributesViewKind::getAttributesViewKindUID).setHeader("属性视图 UID").setKey("idx_1").setFlexGrow(0).setWidth("150px").setResizable(false);
-        conceptionKindAttributesInfoGrid.addColumn(AttributesViewKind::getAttributesViewKindDesc).setHeader("数据存储结构").setKey("idx_2").setFlexGrow(0).setWidth("150px").setResizable(false);
+        attributeKindAttributesInfoGrid = new Grid<>();
+        attributeKindAttributesInfoGrid.setWidth(100,Unit.PERCENTAGE);
+        attributeKindAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        attributeKindAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
+        attributeKindAttributesInfoGrid.addColumn(AttributesViewKind::getAttributesViewKindName).setHeader("属性视图名称").setKey("idx_0");
+        attributeKindAttributesInfoGrid.addColumn(AttributesViewKind::getAttributesViewKindUID).setHeader("属性视图 UID").setKey("idx_1").setFlexGrow(0).setWidth("150px").setResizable(false);
+        attributeKindAttributesInfoGrid.addColumn(AttributesViewKind::getAttributesViewKindDesc).setHeader("数据存储结构").setKey("idx_2").setFlexGrow(0).setWidth("150px").setResizable(false);
 
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"属性视图类型名称");
-        conceptionKindAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
+        attributeKindAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.KEY_O,"属性视图类型 UID");
-        conceptionKindAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+        attributeKindAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.COMBOBOX,"视图数据存储结构");
-        conceptionKindAttributesInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
-        conceptionKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
-        singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindAttributesInfoGrid);
+        attributeKindAttributesInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
+        attributeKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
+        singleAttributeKindSummaryInfoContainerLayout.add(attributeKindAttributesInfoGrid);
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.SCATTER_CHART),"属性类型实体数据分布");
-        singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
-        add(conceptionKindsInfoContainerLayout);
+        singleAttributeKindSummaryInfoContainerLayout.add(infoTitle2);
+        add(attributeKindsInfoContainerLayout);
     }
 
     @Override
@@ -482,26 +481,26 @@ public class AttributeKindManagementUI extends VerticalLayout implements
             this.attributeKindDescFilterField.setValue("");
             this.attributeDataTypeFilterSelect.setValue(null);
             this.attributeKindsMetaInfoView = attributeKindMetaInfoGrid.setItems(gridAttributeKindMetaInfoList);
-            //logic to filter ConceptionKinds already loaded from server
+            //logic to filter AttributeKinds already loaded from server
             this.attributeKindsMetaInfoView.addFilter(item->{
                 String entityKindName = item.getKindName();
                 String entityKindDesc = item.getKindDesc();
                 String entityDataType = item.getAttributeDataType();
-                boolean conceptionKindNameFilterResult = true;
+                boolean attributeKindNameFilterResult = true;
                 if(!attributeKindNameFilterField.getValue().trim().equals("")){
                     if(entityKindName.contains(attributeKindNameFilterField.getValue().trim())){
-                        conceptionKindNameFilterResult = true;
+                        attributeKindNameFilterResult = true;
                     }else{
-                        conceptionKindNameFilterResult = false;
+                        attributeKindNameFilterResult = false;
                     }
                 }
 
-                boolean conceptionKindDescFilterResult = true;
+                boolean attributeKindDescFilterResult = true;
                 if(!attributeKindDescFilterField.getValue().trim().equals("")){
                     if(entityKindDesc.contains(attributeKindDescFilterField.getValue().trim())){
-                        conceptionKindDescFilterResult = true;
+                        attributeKindDescFilterResult = true;
                     }else{
-                        conceptionKindDescFilterResult = false;
+                        attributeKindDescFilterResult = false;
                     }
                 }
 
@@ -513,25 +512,25 @@ public class AttributeKindManagementUI extends VerticalLayout implements
                         attributeDataTypeFilterResult = false;
                     }
                 }
-                return conceptionKindNameFilterResult & conceptionKindDescFilterResult & attributeDataTypeFilterResult;
+                return attributeKindNameFilterResult & attributeKindDescFilterResult & attributeDataTypeFilterResult;
             });
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void filterConceptionKinds(){
-        String conceptionKindFilterValue = attributeKindNameFilterField.getValue().trim();
-        String conceptionKindDescFilterValue = attributeKindDescFilterField.getValue().trim();
+    private void filterAttributeKinds(){
+        String attributeKindFilterValue = attributeKindNameFilterField.getValue().trim();
+        String attributeKindDescFilterValue = attributeKindDescFilterField.getValue().trim();
         AttributeDataType dataType= attributeDataTypeFilterSelect.getValue();
-        if(conceptionKindFilterValue.equals("")&conceptionKindDescFilterValue.equals("")&dataType == null){
+        if(attributeKindFilterValue.equals("")&attributeKindDescFilterValue.equals("")&dataType == null){
             CommonUIOperationUtil.showPopupNotification("请输入属性类型名称 和/或 属性类型描述 和/或 属性数据类型", NotificationVariant.LUMO_ERROR);
         }else{
             this.attributeKindsMetaInfoView.refreshAll();
         }
     }
 
-    private void cancelFilterConceptionKinds(){
+    private void cancelFilterAttributeKinds(){
         attributeKindNameFilterField.setValue("");
         attributeKindDescFilterField.setValue("");
         attributeDataTypeFilterSelect.setValue(null);
@@ -575,8 +574,8 @@ public class AttributeKindManagementUI extends VerticalLayout implements
             }
             dtaProvider.refreshAll();
 
-            if(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo != null &&
-                    lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo.getKindUID().equals(event.getAttributeKindUID())){
+            if(lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo != null &&
+                    lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo.getKindUID().equals(event.getAttributeKindUID())){
                 resetSingleAttributeKindSummaryInfoArea();
             }
         }
@@ -592,16 +591,16 @@ public class AttributeKindManagementUI extends VerticalLayout implements
     }
 
     private void resetSingleAttributeKindSummaryInfoArea(){
-        this.conceptionKindAttributesInfoGrid.setItems(new ArrayList<>());
+        this.attributeKindAttributesInfoGrid.setItems(new ArrayList<>());
         this.secondaryTitleActionBar.updateTitleContent(" - ");
         this.secondaryTitleActionBar2.updateTitleContent(" - ");
         //this.conceptionKindCorrelationInfoChart.clearData();
     }
 
     private void renderAttributeKindOverview(AttributeKindMetaInfo attributeKindMetaInfo){
-        String conceptionKindName = attributeKindMetaInfo.getKindName();
+        String attributeKindName = attributeKindMetaInfo.getKindName();
         String attributeDataType = attributeKindMetaInfo.getAttributeDataType();
-        String conceptionKindDesc = attributeKindMetaInfo.getKindDesc() != null ?
+        String attributeKindDesc = attributeKindMetaInfo.getKindDesc() != null ?
                 attributeKindMetaInfo.getKindDesc():"未设置描述信息";
         String attributeKindUID = attributeKindMetaInfo.getKindUID();
 
@@ -614,13 +613,13 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         }
         coreRealm.closeGlobalSession();
 
-        conceptionKindAttributesInfoGrid.setItems(containerAttributesViewKindsList);
+        attributeKindAttributesInfoGrid.setItems(containerAttributesViewKindsList);
         //conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
         //conceptionKindCorrelationInfoChart.clearData();
-        //conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,conceptionKindName);
+        //conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,attributeKindName);
 
-        String conceptionNameText = conceptionKindName +" ( "+conceptionKindDesc+" )";
-        this.secondaryTitleActionBar.updateTitleContent(conceptionNameText);
+        String attributeNameText = attributeKindName +" ( "+attributeKindDesc+" )";
+        this.secondaryTitleActionBar.updateTitleContent(attributeNameText);
         String attributeKindIdText = attributeKindUID+ " - "+attributeDataType;
         this.secondaryTitleActionBar2.updateTitleContent(attributeKindIdText);
     }
