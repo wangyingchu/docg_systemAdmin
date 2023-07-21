@@ -64,7 +64,7 @@ public class CreateAttributeKindView extends VerticalLayout {
         this.attributeDataTypeFilterSelect.setRequired(true);
         this.attributeDataTypeFilterSelect.setWidthFull();
         this.attributeDataTypeFilterSelect.setPageSize(30);
-        this.attributeDataTypeFilterSelect.setPlaceholder("属性类型的数据类型");
+        this.attributeDataTypeFilterSelect.setPlaceholder("请选择属性类型的数据类型");
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         AttributeDataType[] attributeDataTypesArray = coreRealm.getStorageImplTech().equals(CoreRealmStorageImplTech.NEO4J) ?
