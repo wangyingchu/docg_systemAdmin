@@ -267,6 +267,8 @@ public class MainLayout extends AppLayout {
                 RelationEntitiesCountRefreshEvent.class);
         _BLACKBOARD.register(AttributeKindCreatedEvent.AttributeKindCreatedListener.class,
                 AttributeKindCreatedEvent.class);
+        _BLACKBOARD.register(AttributeKindRemovedEvent.AttributeKindRemovedListener.class,
+                AttributeKindRemovedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

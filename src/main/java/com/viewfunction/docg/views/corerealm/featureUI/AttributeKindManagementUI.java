@@ -33,9 +33,11 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.AttributeKindCreatedEvent;
+import com.viewfunction.docg.element.eventHandling.AttributeKindRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
+import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.RemoveAttributeKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -45,12 +47,11 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-public class AttributeKindManagementUI extends VerticalLayout implements AttributeKindCreatedEvent.AttributeKindCreatedListener {
+public class AttributeKindManagementUI extends VerticalLayout implements
+        AttributeKindCreatedEvent.AttributeKindCreatedListener,
+        AttributeKindRemovedEvent.AttributeKindRemovedListener {
     private Grid<EntityStatisticsInfo> conceptionKindMetaInfoGrid;
     private Grid<AttributeKindMetaInfo> attributeKindMetaInfoGrid;
     private GridListDataView<AttributeKindMetaInfo> attributeKindsMetaInfoView;
@@ -143,8 +144,8 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
             removeAttributeKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                        //renderRemoveConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
+                    if(entityStatisticsInfo instanceof AttributeKindMetaInfo){
+                        renderRemoveAttributeKindEntitiesUI((AttributeKindMetaInfo)entityStatisticsInfo);
                     }
                 }
             });
@@ -566,5 +567,38 @@ public class AttributeKindManagementUI extends VerticalLayout implements Attribu
                 creatorId,dataOrigin);
         dtaProvider.getItems().add(attributeKindMetaInfo);
         dtaProvider.refreshAll();
+    }
+
+    @Override
+    public void receivedAttributeKindRemovedEvent(AttributeKindRemovedEvent event) {
+        if(event.getAttributeKindUID() != null){
+            ListDataProvider dtaProvider=(ListDataProvider)attributeKindMetaInfoGrid.getDataProvider();
+            Collection<AttributeKindMetaInfo> attributeKindMetaInfoList = dtaProvider.getItems();
+            AttributeKindMetaInfo removeTargetElement = null;
+            for(AttributeKindMetaInfo currentAttributeKindMetaInfo:attributeKindMetaInfoList){
+                if(currentAttributeKindMetaInfo.getKindUID().equals(event.getAttributeKindUID())){
+                    removeTargetElement = currentAttributeKindMetaInfo;
+                }
+            }
+            if(removeTargetElement != null){
+                dtaProvider.getItems().remove(removeTargetElement);
+            }
+            dtaProvider.refreshAll();
+            /*
+            if(lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo != null &&
+                    lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo.getEntityKindName().equals(event.getConceptionKindName())){
+                resetSingleConceptionKindSummaryInfoArea();
+            }
+            */
+        }
+    }
+
+    private void renderRemoveAttributeKindEntitiesUI(AttributeKindMetaInfo attributeKindMetaInfo){
+        RemoveAttributeKindView removeAttributeKindView = new RemoveAttributeKindView(attributeKindMetaInfo);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除属性类型",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(removeAttributeKindView);
+        fixSizeWindow.setModel(true);
+        removeAttributeKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }
