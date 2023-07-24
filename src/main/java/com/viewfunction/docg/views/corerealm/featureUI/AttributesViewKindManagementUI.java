@@ -12,6 +12,7 @@ import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -29,6 +30,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindCreatedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.CreateAttributesViewKindView;
 
@@ -65,7 +67,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
-            //loadConceptionKindsInfo();
+            loadAttributesViewKindsInfo();
             //resetSingleConceptionKindSummaryInfoArea();
         });
 
@@ -112,18 +114,6 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         Icon icon = new Icon(VaadinIcon.LIST);
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"属性视图类型定义:",attributeKindManagementOperationButtonList);
         add(sectionActionBar);
-
-
-
-
-
-
-
-
-
-
-
-
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKindMetaInfo -> {
             Icon configIcon = new Icon(VaadinIcon.COG);
@@ -264,7 +254,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
                 Set<AttributesViewKindMetaInfo> selectedItemSet = selectionEvent.getAllSelectedItems();
                 if(selectedItemSet.size() == 0){
                     // don't allow to unselect item, just reselect last selected item
-                    //attributeKindMetaInfoGrid.select(lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo);
+                    attributeKindMetaInfoGrid.select(lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo);
                 }else{
                     AttributesViewKindMetaInfo selectedEntityStatisticsInfo = selectedItemSet.iterator().next();
                     //renderAttributeKindOverview(selectedEntityStatisticsInfo);
@@ -272,39 +262,6 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
                 }
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         HorizontalLayout attributeKindsInfoContainerLayout = new HorizontalLayout();
         attributeKindsInfoContainerLayout.setSpacing(false);
@@ -376,7 +333,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         searchAttributeKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //filterAttributeKinds();
+                filterAttributesViewKinds();
             }
         });
 
@@ -394,7 +351,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //cancelFilterAttributeKinds();
+                cancelFiltersAttributesViewKinds();
             }
         });
 
@@ -449,17 +406,6 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.SCATTER_CHART),"属性类型实体数据分布");
         singleAttributeKindSummaryInfoContainerLayout.add(infoTitle2);
         add(attributeKindsInfoContainerLayout);
-
-
-
-
-
-
-
-
-
-
-
     }
 
     @Override
@@ -492,7 +438,6 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         List<AttributesViewKindMetaInfo> gridAttributeKindMetaInfoList = new ArrayList<>();
         try {
-
             List<AttributesViewKindMetaInfo> kindMetaInfoList = coreRealm.getAttributesViewKindsMetaInfo();
             gridAttributeKindMetaInfoList.addAll(kindMetaInfoList);
             this.attributeKindNameFilterField.setValue("");
@@ -535,6 +480,24 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void filterAttributesViewKinds(){
+        String attributesViewKindFilterValue = attributeKindNameFilterField.getValue().trim();
+        String attributesViewKindDescFilterValue = attributeKindDescFilterField.getValue().trim();
+        AttributesViewKind.AttributesViewKindDataForm dataTForm= attributeDataTypeFilterSelect.getValue();
+        if(attributesViewKindFilterValue.equals("")&attributesViewKindDescFilterValue.equals("")&dataTForm == null){
+            CommonUIOperationUtil.showPopupNotification("请输入属性视图类型名称 和/或 属性视图类型描述 和/或 视图类型数据存储结构", NotificationVariant.LUMO_ERROR);
+        }else{
+            this.attributeKindsMetaInfoView.refreshAll();
+        }
+    }
+
+    private void cancelFiltersAttributesViewKinds(){
+        attributeKindNameFilterField.setValue("");
+        attributeKindDescFilterField.setValue("");
+        attributeDataTypeFilterSelect.setValue(null);
+        this.attributeKindsMetaInfoView.refreshAll();
     }
 
     private void renderAddAttributesViewKindView(){
