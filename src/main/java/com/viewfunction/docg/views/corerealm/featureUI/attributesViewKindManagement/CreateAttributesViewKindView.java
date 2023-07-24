@@ -9,6 +9,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H6;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -17,6 +18,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
+import com.viewfunction.docg.element.eventHandling.AttributesViewKindCreatedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +123,7 @@ public class CreateAttributesViewKindView extends VerticalLayout {
                 actionButtonList.add(confirmButton);
                 actionButtonList.add(cancelButton);
 
-                ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","相同定义内容的属性视图类型已经存在，请确认是否继续执行创建操作",actionButtonList,650,190);
+                ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","相同定义内容的属性视图类型已经存在，请确认是否继续执行创建操作",actionButtonList,550,180);
                 confirmWindow.open();
                 confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                     @Override
@@ -147,7 +151,23 @@ public class CreateAttributesViewKindView extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         AttributesViewKind attributesViewKind = coreRealm.createAttributesViewKind(attributeViewKindName,attributeViewKindDesc,attributesViewKindDataForm);
         if(attributesViewKind != null){
+            AttributesViewKindCreatedEvent attributesViewKindCreatedEvent = new AttributesViewKindCreatedEvent();
+            attributesViewKindCreatedEvent.setAttributesViewKindName(attributesViewKind.getAttributesViewKindName());
+            attributesViewKindCreatedEvent.setAttributesViewKindDesc(attributesViewKind.getAttributesViewKindDesc());
+            attributesViewKindCreatedEvent.setAttributesViewKindUID(attributesViewKind.getAttributesViewKindUID());
+            attributesViewKindCreatedEvent.setAttributesViewKindDataForm(attributesViewKind.getAttributesViewKindDataForm());
+            attributesViewKindCreatedEvent.setCreateDateTime(attributesViewKind.getCreateDateTime());
+            attributesViewKindCreatedEvent.setLastModifyDateTime(attributesViewKind.getLastModifyDateTime());
+            attributesViewKindCreatedEvent.setCreatorId(attributesViewKind.getCreatorId());
+            attributesViewKindCreatedEvent.setDataOrigin(attributesViewKind.getDataOrigin());
+            ResourceHolder.getApplicationBlackboard().fire(attributesViewKindCreatedEvent);
 
+            CommonUIOperationUtil.showPopupNotification("属性视图类型 "+attributeViewKindName+"["+attributesViewKindDataForm+"]"+"("+attributeViewKindDesc+") 创建成功,属性视图类型 UID 为:"+attributesViewKind.getAttributesViewKindUID(), NotificationVariant.LUMO_SUCCESS);
+            if(this.containerDialog != null){
+                this.containerDialog.close();
+            }
+        }else{
+            CommonUIOperationUtil.showPopupNotification("属性视图类型 "+attributeViewKindName+"["+attributesViewKindDataForm+"]"+"("+attributeViewKindDesc+") 创建失败", NotificationVariant.LUMO_ERROR);
         }
     }
 }
