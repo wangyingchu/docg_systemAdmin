@@ -178,7 +178,7 @@ public class CreateAttributeKindView extends VerticalLayout {
         String attributeKindName = this.attributeKindNameField.getValue();
         String attributeKindDesc = this.attributeKindDescField.getValue();
         AttributeDataType attributeDataType = this.attributeDataTypeFilterSelect.getValue();
-        System.out.println(attributeKindDesc);
+
         if(attributeKindName.equals("")||attributeKindDesc.equals("")||attributeDataType== null){
             showErrorMessage("请输入全部属性类型定义信息");
         }else{

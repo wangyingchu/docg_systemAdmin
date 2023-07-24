@@ -14,13 +14,19 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateAttributesViewKindView extends VerticalLayout {
     private Dialog containerDialog;
     private H6 errorMessage;
-    private TextField attributeKindNameField;
-    private TextField attributeKindDescField;
-    private ComboBox<AttributesViewKind.AttributesViewKindDataForm> attributeDataTypeFilterSelect;
+    private TextField attributeViewKindNameField;
+    private TextField attributeViewKindDescField;
+    private ComboBox<AttributesViewKind.AttributesViewKindDataForm> attributeViewKindDataformSelect;
     public CreateAttributesViewKindView(){
         this.setWidthFull();
 
@@ -35,25 +41,25 @@ public class CreateAttributesViewKindView extends VerticalLayout {
         messageContainerLayout.add(errorMessage);
         errorMessage.setVisible(false);
 
-        this.attributeKindNameField = new TextField("属性视图类型名称 - AttributesViewKind Name");
-        this.attributeKindNameField.setWidthFull();
-        this.attributeKindNameField.setRequired(true);
-        this.attributeKindNameField.setRequiredIndicatorVisible(true);
-        this.attributeKindNameField.setTitle("请输入属性视图类型名称");
-        add(this.attributeKindNameField);
+        this.attributeViewKindNameField = new TextField("属性视图类型名称 - AttributesViewKind Name");
+        this.attributeViewKindNameField.setWidthFull();
+        this.attributeViewKindNameField.setRequired(true);
+        this.attributeViewKindNameField.setRequiredIndicatorVisible(true);
+        this.attributeViewKindNameField.setTitle("请输入属性视图类型名称");
+        add(this.attributeViewKindNameField);
 
-        this.attributeKindDescField = new TextField("属性视图类型描述 - AttributesViewKind Description");
-        this.attributeKindDescField.setWidthFull();
-        this.attributeKindDescField.setRequired(true);
-        this.attributeKindDescField.setRequiredIndicatorVisible(true);
-        this.attributeKindDescField.setTitle("请输入属性视图类型描述");
-        add(attributeKindDescField);
+        this.attributeViewKindDescField = new TextField("属性视图类型描述 - AttributesViewKind Description");
+        this.attributeViewKindDescField.setWidthFull();
+        this.attributeViewKindDescField.setRequired(true);
+        this.attributeViewKindDescField.setRequiredIndicatorVisible(true);
+        this.attributeViewKindDescField.setTitle("请输入属性视图类型描述");
+        add(attributeViewKindDescField);
 
-        this.attributeDataTypeFilterSelect = new ComboBox("属性视图类型数据存储结构 - AttributesViewKind Data Form");
-        this.attributeDataTypeFilterSelect.setRequired(true);
-        this.attributeDataTypeFilterSelect.setWidthFull();
-        this.attributeDataTypeFilterSelect.setPageSize(30);
-        this.attributeDataTypeFilterSelect.setPlaceholder("请选择属性视图类型数据存储结构");
+        this.attributeViewKindDataformSelect = new ComboBox("属性视图类型数据存储结构 - AttributesViewKind Data Form");
+        this.attributeViewKindDataformSelect.setRequired(true);
+        this.attributeViewKindDataformSelect.setWidthFull();
+        this.attributeViewKindDataformSelect.setPageSize(30);
+        this.attributeViewKindDataformSelect.setPlaceholder("请选择属性视图类型数据存储结构");
 
         AttributesViewKind.AttributesViewKindDataForm[] attributeDataTypesArray =
                 new AttributesViewKind.AttributesViewKindDataForm[]{
@@ -62,8 +68,9 @@ public class CreateAttributesViewKindView extends VerticalLayout {
                         AttributesViewKind.AttributesViewKindDataForm.RELATED_VALUE,
                         AttributesViewKind.AttributesViewKindDataForm.EXTERNAL_VALUE
                 };
-        this.attributeDataTypeFilterSelect.setItems(attributeDataTypesArray);
-        add(this.attributeDataTypeFilterSelect);
+        this.attributeViewKindDataformSelect.setItems(attributeDataTypesArray);
+        this.attributeViewKindDataformSelect.setValue(AttributesViewKind.AttributesViewKindDataForm.SINGLE_VALUE);
+        add(this.attributeViewKindDataformSelect);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setWidthFull();
@@ -94,7 +101,53 @@ public class CreateAttributesViewKindView extends VerticalLayout {
     }
 
     public void doCreateNewAttributesViewKind(){
+        String attributeViewKindName = this.attributeViewKindNameField.getValue();
+        String attributeViewKindDesc = this.attributeViewKindDescField.getValue();
+        AttributesViewKind.AttributesViewKindDataForm attributesViewKindDataForm = this.attributeViewKindDataformSelect.getValue();
 
+        if(attributeViewKindName.equals("")||attributeViewKindDesc.equals("")||attributesViewKindDataForm== null){
+            showErrorMessage("请输入全部属性视图类型定义信息");
+        }else{
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            List<AttributesViewKind> attributesViewKindList = coreRealm.getAttributesViewKinds(attributeViewKindName,attributeViewKindDesc,attributesViewKindDataForm);
+            if(attributesViewKindList != null && attributesViewKindList.size() > 0){
+                List<Button> actionButtonList = new ArrayList<>();
+                Button confirmButton = new Button("确认创建属性视图类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+                confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+                Button cancelButton = new Button("取消操作");
+                cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+                actionButtonList.add(confirmButton);
+                actionButtonList.add(cancelButton);
 
+                ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","相同定义内容的属性视图类型已经存在，请确认是否继续执行创建操作",actionButtonList,650,190);
+                confirmWindow.open();
+                confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                        doCreateAttributeKind(attributeViewKindName,attributeViewKindDesc,attributesViewKindDataForm,confirmWindow);
+                    }
+                });
+                cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                        confirmWindow.closeConfirmWindow();
+                    }
+                });
+            }else{
+                doCreateAttributeKind(attributeViewKindName,attributeViewKindDesc,attributesViewKindDataForm,null);
+            }
+        }
+    }
+
+    private void doCreateAttributeKind(String attributeViewKindName,String attributeViewKindDesc,
+                                       AttributesViewKind.AttributesViewKindDataForm attributesViewKindDataForm,ConfirmWindow confirmWindow){
+        if(confirmWindow != null){
+            confirmWindow.closeConfirmWindow();
+        }
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        AttributesViewKind attributesViewKind = coreRealm.createAttributesViewKind(attributeViewKindName,attributeViewKindDesc,attributesViewKindDataForm);
+        if(attributesViewKind != null){
+
+        }
     }
 }
