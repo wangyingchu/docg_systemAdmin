@@ -23,19 +23,15 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeKindMetaInfo;
-
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.AttributesViewKindMetaInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
-import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindCreatedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.CreateAttributesViewKindView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.time.ZoneId;
@@ -54,11 +50,10 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
     final ZoneId id = ZoneId.systemDefault();
     private TextField attributeKindNameFilterField;
     private TextField attributeKindDescFilterField;
-    private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
+    private ComboBox<AttributesViewKind.AttributesViewKindDataForm> attributeDataTypeFilterSelect;
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private SecondaryTitleActionBar secondaryTitleActionBar2;
     private Grid<AttributesViewKind> attributeKindAttributesInfoGrid;
-    private ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
     private VerticalLayout singleAttributeKindSummaryInfoContainerLayout;
     private Registration listener;
     private AttributesViewKindMetaInfo lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo;
@@ -227,8 +222,6 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
             }
         };
 
-
-
         attributeKindMetaInfoGrid = new Grid<>();
         attributeKindMetaInfoGrid.setWidth(1300,Unit.PIXELS);
         attributeKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
@@ -252,7 +245,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         attributeKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"属性视图类型描述");
         attributeKindMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"属性视图存储结构");
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.ELLIPSIS_H,"属性视图存储结构");
         attributeKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
         GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.KEY_O,"属性视图类型 UID");
         attributeKindMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
@@ -358,40 +351,18 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon2);
 
         attributeDataTypeFilterSelect = new ComboBox();
-        attributeDataTypeFilterSelect.setPlaceholder("数据存储结构");
+        attributeDataTypeFilterSelect.setPlaceholder("视图类型数据存储结构");
         attributeDataTypeFilterSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
-        attributeKindDescFilterField.setWidth(170,Unit.PIXELS);
+        attributeDataTypeFilterSelect.setWidth(150,Unit.PIXELS);
         attributeDataTypeFilterSelect.setPageSize(30);
 
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        AttributeDataType[] attributeDataTypesArray = coreRealm.getStorageImplTech().equals(CoreRealmStorageImplTech.NEO4J) ?
-                new AttributeDataType[]{
-                        AttributeDataType.BOOLEAN,
-                        AttributeDataType.LONG,
-                        AttributeDataType.DOUBLE,
-                        AttributeDataType.TIMESTAMP,
-                        AttributeDataType.DATE,
-                        AttributeDataType.DATETIME,
-                        AttributeDataType.TIME,
-                        AttributeDataType.STRING
-                }
-                :
-                new AttributeDataType[]{
-                        AttributeDataType.BOOLEAN,
-                        AttributeDataType.INT,
-                        AttributeDataType.SHORT,
-                        AttributeDataType.LONG,
-                        AttributeDataType.FLOAT,
-                        AttributeDataType.DOUBLE,
-                        AttributeDataType.TIMESTAMP,
-                        AttributeDataType.DATE,
-                        AttributeDataType.DATETIME,
-                        AttributeDataType.TIME,
-                        AttributeDataType.STRING,
-                        AttributeDataType.BYTE,
-                        AttributeDataType.DECIMAL
-                };
-        this.attributeDataTypeFilterSelect.setItems(attributeDataTypesArray);
+        AttributesViewKind.AttributesViewKindDataForm[] attributesViewDataDataFormArray = new AttributesViewKind.AttributesViewKindDataForm[]{
+                AttributesViewKind.AttributesViewKindDataForm.SINGLE_VALUE,
+                AttributesViewKind.AttributesViewKindDataForm.LIST_VALUE,
+                AttributesViewKind.AttributesViewKindDataForm.RELATED_VALUE,
+                AttributesViewKind.AttributesViewKindDataForm.EXTERNAL_VALUE
+        };
+        this.attributeDataTypeFilterSelect.setItems(attributesViewDataDataFormArray);
 
         attributeKindsSearchElementsContainerLayout.add(attributeDataTypeFilterSelect);
         attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,attributeDataTypeFilterSelect);
@@ -401,7 +372,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         searchAttributeKindsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         attributeKindsSearchElementsContainerLayout.add(searchAttributeKindsButton);
         attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchAttributeKindsButton);
-        searchAttributeKindsButton.setWidth(115,Unit.PIXELS);
+        searchAttributeKindsButton.setWidth(130,Unit.PIXELS);
         searchAttributeKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
