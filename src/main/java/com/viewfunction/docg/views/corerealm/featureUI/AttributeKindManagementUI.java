@@ -40,6 +40,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.RemoveAttributeKindView;
+import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.maintainAttributeKind.AttributeKindDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -122,12 +123,12 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"属性类型定义:",attributeKindManagementOperationButtonList);
         add(sectionActionBar);
 
-        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKindMetaInfo -> {
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
             Button configAttributeKind = new Button(configIcon, event -> {
-                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                    //renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
+                if(attributeKindMetaInfo instanceof AttributeKindMetaInfo){
+                    renderAttributeKindConfigurationUI((AttributeKindMetaInfo)attributeKindMetaInfo);
                 }
             });
             configAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -144,8 +145,8 @@ public class AttributeKindManagementUI extends VerticalLayout implements
             removeAttributeKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(entityStatisticsInfo instanceof AttributeKindMetaInfo){
-                        renderRemoveAttributeKindEntitiesUI((AttributeKindMetaInfo)entityStatisticsInfo);
+                    if(attributeKindMetaInfo instanceof AttributeKindMetaInfo){
+                        renderRemoveAttributeKindEntitiesUI((AttributeKindMetaInfo)attributeKindMetaInfo);
                     }
                 }
             });
@@ -224,7 +225,8 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         attributeKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         attributeKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         attributeKindMetaInfoGrid.addColumn(AttributeKindMetaInfo::getKindName).setHeader("属性类型名称").setKey("idx_0").setFlexGrow(1);
-        attributeKindMetaInfoGrid.addColumn(AttributeKindMetaInfo::getKindDesc).setHeader("属性类型描述").setKey("idx_1").setFlexGrow(1);
+        attributeKindMetaInfoGrid.addColumn(AttributeKindMetaInfo::getKindDesc).setHeader("属性类型描述").setKey("idx_1").setFlexGrow(1)
+                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getKindDesc());
         attributeKindMetaInfoGrid.addColumn(AttributeKindMetaInfo::getAttributeDataType).setHeader("属性数据类型").setKey("idx_2")
                 .setFlexGrow(0).setWidth("130px").setResizable(false);
         attributeKindMetaInfoGrid.addColumn(AttributeKindMetaInfo::getKindUID).setHeader("属性类型 UID").setKey("idx_3")
@@ -622,5 +624,42 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         this.secondaryTitleActionBar.updateTitleContent(attributeNameText);
         String attributeKindIdText = attributeKindUID+ " - "+attributeDataType;
         this.secondaryTitleActionBar2.updateTitleContent(attributeKindIdText);
+    }
+
+    private void renderAttributeKindConfigurationUI(AttributeKindMetaInfo attributeKindMetaInfo){
+        AttributeKindDetailUI attributeKindDetailUI = new AttributeKindDetailUI(attributeKindMetaInfo.getKindUID());
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon attributeKindIcon = VaadinIcon.INPUT.create();
+        attributeKindIcon.setSize("10px");
+        titleDetailLayout.add(attributeKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel attributeKindName = new NativeLabel(attributeKindMetaInfo.getKindName()+" ( ");
+        titleDetailLayout.add(attributeKindName);
+
+        Icon _UIDIcon = VaadinIcon.KEY_O.create();
+        _UIDIcon.setSize("10px");
+        titleDetailLayout.add(_UIDIcon);
+        NativeLabel attributeKindUID = new NativeLabel(" "+attributeKindMetaInfo.getKindUID()+")");
+        titleDetailLayout.add(attributeKindUID);
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"属性类型配置",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(attributeKindDetailUI);
+        fullScreenWindow.show();
     }
 }
