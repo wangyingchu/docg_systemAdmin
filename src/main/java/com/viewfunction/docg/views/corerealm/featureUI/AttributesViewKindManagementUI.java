@@ -30,6 +30,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindCreatedEvent;
+import com.viewfunction.docg.element.eventHandling.AttributesViewKindDescriptionUpdatedEvent;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
@@ -47,7 +48,8 @@ import java.util.*;
 
 public class AttributesViewKindManagementUI extends VerticalLayout implements
         AttributesViewKindCreatedEvent.AttributesViewKindCreatedListener,
-        AttributesViewKindRemovedEvent.AttributesViewKindRemovedListener {
+        AttributesViewKindRemovedEvent.AttributesViewKindRemovedListener,
+        AttributesViewKindDescriptionUpdatedEvent.AttributesViewKindDescriptionUpdatedListener{
     private Grid<AttributesViewKindMetaInfo> attributesViewKindMetaInfoGrid;
     private GridListDataView<AttributesViewKindMetaInfo> attributesViewKindsMetaInfoView;
     final ZoneId id = ZoneId.systemDefault();
@@ -632,5 +634,19 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"属性视图类型配置",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(attributesViewKindDetailUI);
         fullScreenWindow.show();
+    }
+
+    @Override
+    public void receivedAttributesViewKindDescriptionUpdatedEvent(AttributesViewKindDescriptionUpdatedEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getAttributesViewKindDesc() != null){
+            ListDataProvider dtaProvider=(ListDataProvider)attributesViewKindMetaInfoGrid.getDataProvider();
+            Collection<AttributesViewKindMetaInfo> entityStatisticsInfoList = dtaProvider.getItems();
+            for(AttributesViewKindMetaInfo currentAttributesViewKindMetaInfo:entityStatisticsInfoList){
+                if(currentAttributesViewKindMetaInfo.getKindUID().equals(event.getAttributesViewKindUID())){
+                    currentAttributesViewKindMetaInfo.setKindDesc(event.getAttributesViewKindDesc());
+                }
+            }
+            dtaProvider.refreshAll();
+        }
     }
 }

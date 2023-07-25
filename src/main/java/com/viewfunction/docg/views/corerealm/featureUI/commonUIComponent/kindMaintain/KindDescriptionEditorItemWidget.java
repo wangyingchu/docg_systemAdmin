@@ -15,6 +15,8 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.eventHandling.AttributeKindDescriptionUpdatedEvent;
+import com.viewfunction.docg.element.eventHandling.AttributesViewKindDescriptionUpdatedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindDescriptionUpdatedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindDescriptionUpdatedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
@@ -193,6 +195,18 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
                     relationKindDescriptionUpdatedEvent.setRelationKindName(this.currentKindNameOrUID);
                     relationKindDescriptionUpdatedEvent.setRelationKindDesc(this.currentKindDescription);
                     ResourceHolder.getApplicationBlackboard().fire(relationKindDescriptionUpdatedEvent);
+                    break;
+                case AttributeKind:
+                    AttributeKindDescriptionUpdatedEvent attributeKindDescriptionUpdatedEvent = new AttributeKindDescriptionUpdatedEvent();
+                    attributeKindDescriptionUpdatedEvent.setAttributeKindUID(this.currentKindNameOrUID);
+                    attributeKindDescriptionUpdatedEvent.setAttributeKindDesc(this.currentKindDescription);
+                    ResourceHolder.getApplicationBlackboard().fire(attributeKindDescriptionUpdatedEvent);
+                    break;
+                case AttributesViewKind:
+                    AttributesViewKindDescriptionUpdatedEvent attributesViewKindDescriptionUpdatedEvent = new AttributesViewKindDescriptionUpdatedEvent();
+                    attributesViewKindDescriptionUpdatedEvent.setAttributesViewKindUID(this.currentKindNameOrUID);
+                    attributesViewKindDescriptionUpdatedEvent.setAttributesViewKindDesc(this.currentKindDescription);
+                    ResourceHolder.getApplicationBlackboard().fire(attributesViewKindDescriptionUpdatedEvent);
             }
         }
     }
