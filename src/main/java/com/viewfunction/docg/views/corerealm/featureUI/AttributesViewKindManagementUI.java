@@ -30,6 +30,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindCreatedEvent;
+import com.viewfunction.docg.element.eventHandling.AttributesViewKindRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.CreateAttributesViewKindView;
@@ -44,7 +45,8 @@ import java.time.format.FormatStyle;
 import java.util.*;
 
 public class AttributesViewKindManagementUI extends VerticalLayout implements
-        AttributesViewKindCreatedEvent.AttributesViewKindCreatedListener{
+        AttributesViewKindCreatedEvent.AttributesViewKindCreatedListener,
+        AttributesViewKindRemovedEvent.AttributesViewKindRemovedListener {
     private Grid<AttributesViewKindMetaInfo> attributeKindMetaInfoGrid;
     private GridListDataView<AttributesViewKindMetaInfo> attributeKindsMetaInfoView;
     final ZoneId id = ZoneId.systemDefault();
@@ -569,5 +571,28 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         this.secondaryTitleActionBar.updateTitleContent(attributeNameText);
         String attributeKindIdText = attributeKindUID+ " - "+attributeDataType;
         this.secondaryTitleActionBar2.updateTitleContent(attributeKindIdText);
+    }
+
+    @Override
+    public void receivedAttributesViewKindRemovedEvent(AttributesViewKindRemovedEvent event) {
+        if(event.getAttributesViewKindUID() != null){
+            ListDataProvider dtaProvider=(ListDataProvider)attributeKindMetaInfoGrid.getDataProvider();
+            Collection<AttributesViewKindMetaInfo> attributeKindMetaInfoList = dtaProvider.getItems();
+            AttributesViewKindMetaInfo removeTargetElement = null;
+            for(AttributesViewKindMetaInfo currentAttributeKindMetaInfo:attributeKindMetaInfoList){
+                if(currentAttributeKindMetaInfo.getKindUID().equals(event.getAttributesViewKindUID())){
+                    removeTargetElement = currentAttributeKindMetaInfo;
+                }
+            }
+            if(removeTargetElement != null){
+                dtaProvider.getItems().remove(removeTargetElement);
+            }
+            dtaProvider.refreshAll();
+
+            if(lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo != null &&
+                    lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo.getKindUID().equals(event.getAttributesViewKindUID())){
+                resetSingleAttributeKindSummaryInfoArea();
+            }
+        }
     }
 }
