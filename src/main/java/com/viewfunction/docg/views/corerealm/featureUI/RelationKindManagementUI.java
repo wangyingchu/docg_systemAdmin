@@ -29,10 +29,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
-import com.viewfunction.docg.element.eventHandling.RelationEntityDeletedEvent;
-import com.viewfunction.docg.element.eventHandling.RelationKindCleanedEvent;
-import com.viewfunction.docg.element.eventHandling.RelationKindCreatedEvent;
-import com.viewfunction.docg.element.eventHandling.RelationKindRemovedEvent;
+import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingDataListView;
@@ -53,7 +50,8 @@ public class RelationKindManagementUI extends VerticalLayout implements
         RelationKindCreatedEvent.RelationKindCreatedListener,
         RelationKindCleanedEvent.RelationKindCleanedListener,
         RelationKindRemovedEvent.RelationKindRemovedListener,
-        RelationEntityDeletedEvent.RelationEntityDeletedListener{
+        RelationEntityDeletedEvent.RelationEntityDeletedListener,
+        RelationKindDescriptionUpdatedEvent.RelationKindDescriptionUpdatedListener {
 
     private Grid<EntityStatisticsInfo> relationKindMetaInfoGrid;
     private GridListDataView<EntityStatisticsInfo> relationKindsMetaInfoView;
@@ -731,5 +729,19 @@ public class RelationKindManagementUI extends VerticalLayout implements
                 relationKindRelationGuideButton.setEnabled(true);
             }
         });
+    }
+
+    @Override
+    public void receivedRelationKindDescriptionUpdatedEvent(RelationKindDescriptionUpdatedEvent event) {
+        if(event.getRelationKindName() != null && event.getRelationKindDesc() != null){
+            ListDataProvider dtaProvider=(ListDataProvider)relationKindMetaInfoGrid.getDataProvider();
+            Collection<EntityStatisticsInfo> entityStatisticsInfoList = dtaProvider.getItems();
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:entityStatisticsInfoList){
+                if(currentEntityStatisticsInfo.getEntityKindName().equals(event.getRelationKindName())){
+                    currentEntityStatisticsInfo.setEntityKindDesc(event.getRelationKindDesc());
+                }
+            }
+            dtaProvider.refreshAll();
+        }
     }
 }

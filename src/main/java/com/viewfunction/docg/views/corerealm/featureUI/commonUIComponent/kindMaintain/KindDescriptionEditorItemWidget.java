@@ -160,6 +160,18 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
                 if(targetRelationKind != null){
                     updateResult = targetRelationKind.updateRelationKindDesc(this.kindDescriptionEditor.getValue());
                 }
+                break;
+            case AttributesViewKind:
+                AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.currentKindNameOrUID);
+                if(targetAttributesViewKind != null){
+                    updateResult = targetAttributesViewKind.updateAttributesViewKindDesc(this.kindDescriptionEditor.getValue());
+                }
+                break;
+            case AttributeKind:
+                AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.currentKindNameOrUID);
+                if(targetAttributeKind != null){
+                    updateResult = targetAttributeKind.updateAttributeKindDesc(this.kindDescriptionEditor.getValue());
+                }
         }
         if(updateResult){
             this.currentKindDescription = this.kindDescriptionEditor.getValue();
