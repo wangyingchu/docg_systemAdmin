@@ -47,8 +47,8 @@ import java.util.*;
 public class AttributesViewKindManagementUI extends VerticalLayout implements
         AttributesViewKindCreatedEvent.AttributesViewKindCreatedListener,
         AttributesViewKindRemovedEvent.AttributesViewKindRemovedListener {
-    private Grid<AttributesViewKindMetaInfo> attributeKindMetaInfoGrid;
-    private GridListDataView<AttributesViewKindMetaInfo> attributeKindsMetaInfoView;
+    private Grid<AttributesViewKindMetaInfo> attributesViewKindMetaInfoGrid;
+    private GridListDataView<AttributesViewKindMetaInfo> attributesViewKindsMetaInfoView;
     final ZoneId id = ZoneId.systemDefault();
     private TextField attributesViewKindNameFilterField;
     private TextField attributesViewKindDescFilterField;
@@ -56,9 +56,9 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private SecondaryTitleActionBar secondaryTitleActionBar2;
     private Grid<AttributesViewKind> attributeKindAttributesInfoGrid;
-    private VerticalLayout singleAttributeKindSummaryInfoContainerLayout;
+    private VerticalLayout singleAttributesViewKindSummaryInfoContainerLayout;
     private Registration listener;
-    private AttributesViewKindMetaInfo lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo;
+    private AttributesViewKindMetaInfo lastSelectedAttributesViewKindMetaInfoGridAttributeKindMetaInfo;
 
     public AttributesViewKindManagementUI(){
         Button refreshDataButton = new Button("刷新属性视图类型数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -212,53 +212,53 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
             }
         };
 
-        attributeKindMetaInfoGrid = new Grid<>();
-        attributeKindMetaInfoGrid.setWidth(1300,Unit.PIXELS);
-        attributeKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-        attributeKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        attributeKindMetaInfoGrid.addColumn(AttributesViewKindMetaInfo::getKindName).setHeader("属性视图类型名称").setKey("idx_0").setFlexGrow(1);
-        attributeKindMetaInfoGrid.addColumn(AttributesViewKindMetaInfo::getKindDesc).setHeader("属性视图类型描述").setKey("idx_1").setFlexGrow(1)
+        attributesViewKindMetaInfoGrid = new Grid<>();
+        attributesViewKindMetaInfoGrid.setWidth(1300,Unit.PIXELS);
+        attributesViewKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        attributesViewKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        attributesViewKindMetaInfoGrid.addColumn(AttributesViewKindMetaInfo::getKindName).setHeader("属性视图类型名称").setKey("idx_0").setFlexGrow(1);
+        attributesViewKindMetaInfoGrid.addColumn(AttributesViewKindMetaInfo::getKindDesc).setHeader("属性视图类型描述").setKey("idx_1").setFlexGrow(1)
                 .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getKindDesc());
-        attributeKindMetaInfoGrid.addColumn(AttributesViewKindMetaInfo::getViewKindDataForm).setHeader("属性视图存储结构").setKey("idx_2")
-                .setFlexGrow(0).setWidth("130px").setResizable(false);
-        attributeKindMetaInfoGrid.addColumn(AttributesViewKindMetaInfo::getKindUID).setHeader("属性视图类型 UID").setKey("idx_3")
+        attributesViewKindMetaInfoGrid.addColumn(AttributesViewKindMetaInfo::getViewKindDataForm).setHeader("属性视图存储结构").setKey("idx_2")
+                .setFlexGrow(0).setWidth("140px").setResizable(false);
+        attributesViewKindMetaInfoGrid.addColumn(AttributesViewKindMetaInfo::getKindUID).setHeader("属性视图类型 UID").setKey("idx_3")
                 .setFlexGrow(0).setWidth("150px").setResizable(false);
-        attributeKindMetaInfoGrid.addColumn(_createDateComponentRenderer).setHeader("类型创建时间").setKey("idx_4")
+        attributesViewKindMetaInfoGrid.addColumn(_createDateComponentRenderer).setHeader("类型创建时间").setKey("idx_4")
                 .setComparator(createDateComparator)
                 .setFlexGrow(0).setWidth("210px").setResizable(false);
-        attributeKindMetaInfoGrid.addColumn(_lastUpdateDateComponentRenderer).setHeader("类型最后更新时间").setKey("idx_5")
+        attributesViewKindMetaInfoGrid.addColumn(_lastUpdateDateComponentRenderer).setHeader("类型最后更新时间").setKey("idx_5")
                 .setComparator(lastUpdateDateComparator)
                 .setFlexGrow(0).setWidth("210px").setResizable(false);
-        attributeKindMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_6").setFlexGrow(0).setWidth("90px").setResizable(false);
+        attributesViewKindMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_6").setFlexGrow(0).setWidth("90px").setResizable(false);
 
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"属性视图类型名称");
-        attributeKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
+        attributesViewKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"属性视图类型描述");
-        attributeKindMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+        attributesViewKindMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
         GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.ELLIPSIS_H,"属性视图存储结构");
-        attributeKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
+        attributesViewKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
         GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.KEY_O,"属性视图类型 UID");
-        attributeKindMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
+        attributesViewKindMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
         GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"类型创建时间");
-        attributeKindMetaInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
+        attributesViewKindMetaInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
         GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"类型最后更新时间");
-        attributeKindMetaInfoGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5).setSortable(true);
+        attributesViewKindMetaInfoGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5).setSortable(true);
         GridColumnHeader gridColumnHeader_idx6 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
-        attributeKindMetaInfoGrid.getColumnByKey("idx_6").setHeader(gridColumnHeader_idx6);
+        attributesViewKindMetaInfoGrid.getColumnByKey("idx_6").setHeader(gridColumnHeader_idx6);
 
-        attributeKindMetaInfoGrid.appendFooterRow();
+        attributesViewKindMetaInfoGrid.appendFooterRow();
 
-        attributeKindMetaInfoGrid.addSelectionListener(new SelectionListener<Grid<AttributesViewKindMetaInfo>, AttributesViewKindMetaInfo>() {
+        attributesViewKindMetaInfoGrid.addSelectionListener(new SelectionListener<Grid<AttributesViewKindMetaInfo>, AttributesViewKindMetaInfo>() {
             @Override
             public void selectionChange(SelectionEvent<Grid<AttributesViewKindMetaInfo>, AttributesViewKindMetaInfo> selectionEvent) {
                 Set<AttributesViewKindMetaInfo> selectedItemSet = selectionEvent.getAllSelectedItems();
                 if(selectedItemSet.size() == 0){
                     // don't allow to unselect item, just reselect last selected item
-                    attributeKindMetaInfoGrid.select(lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo);
+                    attributesViewKindMetaInfoGrid.select(lastSelectedAttributesViewKindMetaInfoGridAttributeKindMetaInfo);
                 }else{
                     AttributesViewKindMetaInfo selectedEntityStatisticsInfo = selectedItemSet.iterator().next();
                     renderAttributeKindOverview(selectedEntityStatisticsInfo);
-                    lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo = selectedEntityStatisticsInfo;
+                    lastSelectedAttributesViewKindMetaInfoGridAttributeKindMetaInfo = selectedEntityStatisticsInfo;
                 }
             }
         });
@@ -355,21 +355,21 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
             }
         });
 
-        attributeKindMetaInfoGridContainerLayout.add(attributeKindMetaInfoGrid);
+        attributeKindMetaInfoGridContainerLayout.add(attributesViewKindMetaInfoGrid);
         attributeKindsInfoContainerLayout.add(attributeKindMetaInfoGridContainerLayout);
 
-        singleAttributeKindSummaryInfoContainerLayout = new VerticalLayout();
-        singleAttributeKindSummaryInfoContainerLayout.setSpacing(true);
-        singleAttributeKindSummaryInfoContainerLayout.setMargin(true);
-        singleAttributeKindSummaryInfoContainerLayout.setPadding(false);
-        attributeKindsInfoContainerLayout.add(singleAttributeKindSummaryInfoContainerLayout);
-        attributeKindsInfoContainerLayout.setFlexGrow(1, singleAttributeKindSummaryInfoContainerLayout);
+        singleAttributesViewKindSummaryInfoContainerLayout = new VerticalLayout();
+        singleAttributesViewKindSummaryInfoContainerLayout.setSpacing(true);
+        singleAttributesViewKindSummaryInfoContainerLayout.setMargin(true);
+        singleAttributesViewKindSummaryInfoContainerLayout.setPadding(false);
+        attributeKindsInfoContainerLayout.add(singleAttributesViewKindSummaryInfoContainerLayout);
+        attributeKindsInfoContainerLayout.setFlexGrow(1, singleAttributesViewKindSummaryInfoContainerLayout);
 
         HorizontalLayout singleAttributeKindInfoElementsContainerLayout = new HorizontalLayout();
         singleAttributeKindInfoElementsContainerLayout.setSpacing(false);
         singleAttributeKindInfoElementsContainerLayout.setMargin(false);
         singleAttributeKindInfoElementsContainerLayout.setHeight("30px");
-        singleAttributeKindSummaryInfoContainerLayout.add(singleAttributeKindInfoElementsContainerLayout);
+        singleAttributesViewKindSummaryInfoContainerLayout.add(singleAttributeKindInfoElementsContainerLayout);
 
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"属性视图类型概览");
         singleAttributeKindInfoElementsContainerLayout.add(filterTitle2);
@@ -377,14 +377,14 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
 
         secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TASKS),"-",null,null,false);
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
-        singleAttributeKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
+        singleAttributesViewKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
 
         secondaryTitleActionBar2 = new SecondaryTitleActionBar(new Icon(VaadinIcon.KEY_O),"-",null,null);
         secondaryTitleActionBar2.setWidth(100,Unit.PERCENTAGE);
-        singleAttributeKindSummaryInfoContainerLayout.add(secondaryTitleActionBar2);
+        singleAttributesViewKindSummaryInfoContainerLayout.add(secondaryTitleActionBar2);
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"包含属性类型");
-        singleAttributeKindSummaryInfoContainerLayout.add(infoTitle1);
+        singleAttributesViewKindSummaryInfoContainerLayout.add(infoTitle1);
 
         attributeKindAttributesInfoGrid = new Grid<>();
         attributeKindAttributesInfoGrid.setWidth(100,Unit.PERCENTAGE);
@@ -401,10 +401,10 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.COMBOBOX,"视图数据存储结构");
         attributeKindAttributesInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         attributeKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
-        singleAttributeKindSummaryInfoContainerLayout.add(attributeKindAttributesInfoGrid);
+        singleAttributesViewKindSummaryInfoContainerLayout.add(attributeKindAttributesInfoGrid);
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.SCATTER_CHART),"属性类型实体数据分布");
-        singleAttributeKindSummaryInfoContainerLayout.add(infoTitle2);
+        singleAttributesViewKindSummaryInfoContainerLayout.add(infoTitle2);
         add(attributeKindsInfoContainerLayout);
     }
 
@@ -415,12 +415,12 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         loadAttributesViewKindsInfo();
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            attributeKindMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
+            attributesViewKindMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            attributeKindMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
+            attributesViewKindMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
             //conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-600);
             //singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
         }));
@@ -443,9 +443,9 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
             this.attributesViewKindNameFilterField.setValue("");
             this.attributesViewKindDescFilterField.setValue("");
             this.viewKindDataFormFilterSelect.setValue(null);
-            this.attributeKindsMetaInfoView = attributeKindMetaInfoGrid.setItems(gridAttributeKindMetaInfoList);
+            this.attributesViewKindsMetaInfoView = attributesViewKindMetaInfoGrid.setItems(gridAttributeKindMetaInfoList);
             //logic to filter AttributeKinds already loaded from server
-            this.attributeKindsMetaInfoView.addFilter(item->{
+            this.attributesViewKindsMetaInfoView.addFilter(item->{
                 String entityKindName = item.getKindName();
                 String entityKindDesc = item.getKindDesc();
                 String entityDataType = item.getViewKindDataForm();
@@ -489,7 +489,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         if(attributesViewKindFilterValue.equals("")&attributesViewKindDescFilterValue.equals("")&dataTForm == null){
             CommonUIOperationUtil.showPopupNotification("请输入属性视图类型名称 和/或 属性视图类型描述 和/或 视图类型数据存储结构", NotificationVariant.LUMO_ERROR);
         }else{
-            this.attributeKindsMetaInfoView.refreshAll();
+            this.attributesViewKindsMetaInfoView.refreshAll();
         }
     }
 
@@ -497,7 +497,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         attributesViewKindNameFilterField.setValue("");
         attributesViewKindDescFilterField.setValue("");
         viewKindDataFormFilterSelect.setValue(null);
-        this.attributeKindsMetaInfoView.refreshAll();
+        this.attributesViewKindsMetaInfoView.refreshAll();
     }
 
     private void renderAddAttributesViewKindView(){
@@ -520,7 +520,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         String creatorId = event.getCreatorId();
         String dataOrigin = event.getDataOrigin();
 
-        ListDataProvider dtaProvider = (ListDataProvider)attributeKindMetaInfoGrid.getDataProvider();
+        ListDataProvider dtaProvider = (ListDataProvider) attributesViewKindMetaInfoGrid.getDataProvider();
 
         AttributesViewKindMetaInfo attributesViewKindMetaInfo= new AttributesViewKindMetaInfo(kindName,kindDesc,kindUID,
                 viewKindDataForm.toString(),ZonedDateTime.ofInstant(createDateTime.toInstant(), id),
@@ -576,7 +576,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
     @Override
     public void receivedAttributesViewKindRemovedEvent(AttributesViewKindRemovedEvent event) {
         if(event.getAttributesViewKindUID() != null){
-            ListDataProvider dtaProvider=(ListDataProvider)attributeKindMetaInfoGrid.getDataProvider();
+            ListDataProvider dtaProvider=(ListDataProvider) attributesViewKindMetaInfoGrid.getDataProvider();
             Collection<AttributesViewKindMetaInfo> attributeKindMetaInfoList = dtaProvider.getItems();
             AttributesViewKindMetaInfo removeTargetElement = null;
             for(AttributesViewKindMetaInfo currentAttributeKindMetaInfo:attributeKindMetaInfoList){
@@ -589,8 +589,8 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
             }
             dtaProvider.refreshAll();
 
-            if(lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo != null &&
-                    lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo.getKindUID().equals(event.getAttributesViewKindUID())){
+            if(lastSelectedAttributesViewKindMetaInfoGridAttributeKindMetaInfo != null &&
+                    lastSelectedAttributesViewKindMetaInfoGridAttributeKindMetaInfo.getKindUID().equals(event.getAttributesViewKindUID())){
                 resetSingleAttributeKindSummaryInfoArea();
             }
         }
