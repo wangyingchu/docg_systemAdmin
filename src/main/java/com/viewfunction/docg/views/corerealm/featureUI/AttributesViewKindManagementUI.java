@@ -613,20 +613,20 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         spaceDivLayout1.setWidth(8,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout1);
 
-        Icon attributeKindIcon = VaadinIcon.TASKS.create();
-        attributeKindIcon.setSize("10px");
-        titleDetailLayout.add(attributeKindIcon);
+        Icon attributesViewKindIcon = VaadinIcon.TASKS.create();
+        attributesViewKindIcon.setSize("10px");
+        titleDetailLayout.add(attributesViewKindIcon);
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout2);
-        NativeLabel attributeKindName = new NativeLabel(attributesViewKindMetaInfo.getKindName()+" ( ");
-        titleDetailLayout.add(attributeKindName);
+        NativeLabel attributesViewKindName = new NativeLabel(attributesViewKindMetaInfo.getKindName()+" ( ");
+        titleDetailLayout.add(attributesViewKindName);
 
         Icon _UIDIcon = VaadinIcon.KEY_O.create();
         _UIDIcon.setSize("10px");
         titleDetailLayout.add(_UIDIcon);
-        NativeLabel attributeKindUID = new NativeLabel(" "+attributesViewKindMetaInfo.getKindUID()+")");
-        titleDetailLayout.add(attributeKindUID);
+        NativeLabel attributesViewKindUID = new NativeLabel(" "+attributesViewKindMetaInfo.getKindUID()+")");
+        titleDetailLayout.add(attributesViewKindUID);
         actionComponentList.add(titleDetailLayout);
 
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"属性视图类型配置",actionComponentList,null,true);
