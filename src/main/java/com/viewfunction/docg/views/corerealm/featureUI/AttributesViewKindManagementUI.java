@@ -17,15 +17,14 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeKindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.AttributesViewKindMetaInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -34,6 +33,7 @@ import com.viewfunction.docg.element.eventHandling.AttributesViewKindCreatedEven
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.CreateAttributesViewKindView;
+import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.RemoveAttributesViewKindView;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -41,10 +41,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class AttributesViewKindManagementUI extends VerticalLayout implements
         AttributesViewKindCreatedEvent.AttributesViewKindCreatedListener{
@@ -120,7 +117,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
             Button configAttributeKind = new Button(configIcon, event -> {
-                if(attributeKindMetaInfo instanceof AttributeKindMetaInfo){
+                if(attributeKindMetaInfo instanceof AttributesViewKindMetaInfo){
                     //renderAttributeKindConfigurationUI((AttributeKindMetaInfo)attributeKindMetaInfo);
                 }
             });
@@ -138,8 +135,8 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
             removeAttributeKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(attributeKindMetaInfo instanceof AttributeKindMetaInfo){
-                        //renderRemoveAttributeKindEntitiesUI((AttributeKindMetaInfo)attributeKindMetaInfo);
+                    if(attributeKindMetaInfo instanceof AttributesViewKindMetaInfo){
+                        renderRemoveAttributesViewKindUI((AttributesViewKindMetaInfo)attributeKindMetaInfo);
                     }
                 }
             });
@@ -512,13 +509,38 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
 
     @Override
     public void receivedAttributesViewKindCreatedEvent(AttributesViewKindCreatedEvent event) {
+        String kindName = event.getAttributesViewKindName();
+        String kindDesc = event.getAttributesViewKindDesc();
+        String kindUID = event.getAttributesViewKindUID();
+        AttributesViewKind.AttributesViewKindDataForm viewKindDataForm = event.getAttributesViewKindDataForm();
+        Date createDateTime = event.getCreateDateTime();
+        Date lastModifyDateTime = event.getLastModifyDateTime();
+        String creatorId = event.getCreatorId();
+        String dataOrigin = event.getDataOrigin();
 
+        ListDataProvider dtaProvider = (ListDataProvider)attributeKindMetaInfoGrid.getDataProvider();
+
+        AttributesViewKindMetaInfo attributesViewKindMetaInfo= new AttributesViewKindMetaInfo(kindName,kindDesc,kindUID,
+                viewKindDataForm.toString(),ZonedDateTime.ofInstant(createDateTime.toInstant(), id),
+                ZonedDateTime.ofInstant(lastModifyDateTime.toInstant(), id),
+                creatorId,dataOrigin);
+        dtaProvider.getItems().add(attributesViewKindMetaInfo);
+        dtaProvider.refreshAll();
     }
 
     private void resetSingleAttributeKindSummaryInfoArea(){
         this.attributeKindAttributesInfoGrid.setItems(new ArrayList<>());
         this.secondaryTitleActionBar.updateTitleContent(" - ");
         this.secondaryTitleActionBar2.updateTitleContent(" - ");
+    }
+
+    private void renderRemoveAttributesViewKindUI(AttributesViewKindMetaInfo attributesViewKindMetaInfo){
+        RemoveAttributesViewKindView removeAttributesViewKindView = new RemoveAttributesViewKindView(attributesViewKindMetaInfo);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除属性视图类型",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(removeAttributesViewKindView);
+        fixSizeWindow.setModel(true);
+        removeAttributesViewKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 
     private void renderAttributeKindOverview(AttributesViewKindMetaInfo attributesViewKindMetaInfo){
@@ -528,6 +550,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
                 attributesViewKindMetaInfo.getKindDesc():"未设置描述信息";
         String attributeKindUID = attributesViewKindMetaInfo.getKindUID();
 
+        /*
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         List<AttributesViewKind> containerAttributesViewKindsList = new ArrayList<>();
@@ -541,7 +564,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         //conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
         //conceptionKindCorrelationInfoChart.clearData();
         //conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,attributeKindName);
-
+        */
         String attributeNameText = attributeKindName +" ( "+attributeKindDesc+" )";
         this.secondaryTitleActionBar.updateTitleContent(attributeNameText);
         String attributeKindIdText = attributeKindUID+ " - "+attributeDataType;
