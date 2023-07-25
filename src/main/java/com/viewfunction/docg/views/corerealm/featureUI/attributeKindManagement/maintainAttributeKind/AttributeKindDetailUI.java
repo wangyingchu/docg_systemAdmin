@@ -12,6 +12,8 @@ public class AttributeKindDetailUI extends VerticalLayout implements
     private String attributeKindUID;
     private int conceptionKindDetailViewHeightOffset = 110;
 
+    public AttributeKindDetailUI(){}
+
     public AttributeKindDetailUI(String attributeKindUID){
         this.attributeKindUID = attributeKindUID;
     }
