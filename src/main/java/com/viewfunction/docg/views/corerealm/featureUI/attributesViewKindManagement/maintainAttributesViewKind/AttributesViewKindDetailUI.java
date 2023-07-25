@@ -20,6 +20,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMai
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.AttributesViewKind;
 import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.ConceptionKind;
 
 @Route("attributesViewKindDetailInfo/:attributesViewKindUID")
@@ -86,12 +87,12 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
                 .set("fount-weight","bold");
         secTitleElementsList.add(conceptionKindNameLabel);
 
-        this.kindDescriptionEditorItemWidget = new KindDescriptionEditorItemWidget(this.attributesViewKindUID,ConceptionKind);
+        this.kindDescriptionEditorItemWidget = new KindDescriptionEditorItemWidget(this.attributesViewKindUID,AttributesViewKind);
         secTitleElementsList.add(this.kindDescriptionEditorItemWidget);
 
         List<Component> buttonList = new ArrayList<>();
 
-        Button refreshConceptionKindConfigInfoButton= new Button("刷新概念类型配置信息");
+        Button refreshConceptionKindConfigInfoButton= new Button("刷新属性视图类型配置信息");
         refreshConceptionKindConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
         refreshConceptionKindConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         refreshConceptionKindConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -115,7 +116,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         });
         buttonList.add(queryConceptionKindButton);
 
-        Button conceptionKindMetaInfoButton= new Button("概念类型元数据");
+        Button conceptionKindMetaInfoButton= new Button("属性视图类型元数据");
         conceptionKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
         conceptionKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         conceptionKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -126,7 +127,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         });
         buttonList.add(conceptionKindMetaInfoButton);
 
-        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"Conception Kind 概念类型  ",secTitleElementsList,buttonList);
+        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TASKS),"Attributes View Kind 属性视图类型  ",secTitleElementsList,buttonList);
         add(secondaryTitleActionBar);
 
         HorizontalLayout mainContainerLayout = new HorizontalLayout();

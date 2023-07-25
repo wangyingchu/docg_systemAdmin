@@ -13,9 +13,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindDescriptionUpdatedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindDescriptionUpdatedEvent;
@@ -24,9 +22,9 @@ import dev.mett.vaadin.tooltip.Tooltips;
 
 public class KindDescriptionEditorItemWidget extends HorizontalLayout {
 
-    public enum KindType {ConceptionKind,RelationKind}
+    public enum KindType {ConceptionKind,RelationKind,AttributesViewKind,AttributeKind}
     private KindType currentKindType;
-    private String currentKindName;
+    private String currentKindNameOrUID;
     private String currentKindDescription;
     private NativeLabel kindDescriptionLabel;
     private TextField kindDescriptionEditor;
@@ -34,7 +32,7 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
     private Button confirmUpdateAttributeValueButton;
     private Button cancelUpdateValueButton;
     public KindDescriptionEditorItemWidget(String kindName,KindType kindType){
-        this.currentKindName = kindName;
+        this.currentKindNameOrUID = kindName;
         this.currentKindType = kindType;
         this.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         this.kindDescriptionLabel = new NativeLabel("");
@@ -100,15 +98,27 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         switch (this.currentKindType){
             case ConceptionKind :
-                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.currentKindName);
+                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.currentKindNameOrUID);
                 if(targetConceptionKind != null){
                     this.currentKindDescription = targetConceptionKind.getConceptionKindDesc();
                 }
                 break;
             case RelationKind:
-                RelationKind targetRelationKind = coreRealm.getRelationKind(this.currentKindName);
+                RelationKind targetRelationKind = coreRealm.getRelationKind(this.currentKindNameOrUID);
                 if(targetRelationKind != null){
                     this.currentKindDescription = targetRelationKind.getRelationKindDesc();
+                }
+                break;
+            case AttributesViewKind:
+                AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.currentKindNameOrUID);
+                if(targetAttributesViewKind != null){
+                    this.currentKindDescription = targetAttributesViewKind.getAttributesViewKindDesc();
+                }
+                break;
+            case AttributeKind:
+                AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.currentKindNameOrUID);
+                if(targetAttributeKind != null){
+                    this.currentKindDescription = targetAttributeKind.getAttributeKindDesc();
                 }
         }
         if(this.currentKindDescription != null){
@@ -140,13 +150,13 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         switch (this.currentKindType){
             case ConceptionKind :
-                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.currentKindName);
+                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.currentKindNameOrUID);
                 if(targetConceptionKind != null){
                     updateResult = targetConceptionKind.updateConceptionKindDesc(this.kindDescriptionEditor.getValue());
                 }
                 break;
             case RelationKind:
-                RelationKind targetRelationKind = coreRealm.getRelationKind(this.currentKindName);
+                RelationKind targetRelationKind = coreRealm.getRelationKind(this.currentKindNameOrUID);
                 if(targetRelationKind != null){
                     updateResult = targetRelationKind.updateRelationKindDesc(this.kindDescriptionEditor.getValue());
                 }
@@ -163,12 +173,12 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
                 case ConceptionKind :
                         ConceptionKindDescriptionUpdatedEvent conceptionKindDescriptionUpdatedEvent = new ConceptionKindDescriptionUpdatedEvent();
                     conceptionKindDescriptionUpdatedEvent.setConceptionKindDesc(this.currentKindDescription);
-                    conceptionKindDescriptionUpdatedEvent.setConceptionKindName(this.currentKindName);
+                    conceptionKindDescriptionUpdatedEvent.setConceptionKindName(this.currentKindNameOrUID);
                     ResourceHolder.getApplicationBlackboard().fire(conceptionKindDescriptionUpdatedEvent);
                     break;
                 case RelationKind:
                     RelationKindDescriptionUpdatedEvent relationKindDescriptionUpdatedEvent = new RelationKindDescriptionUpdatedEvent();
-                    relationKindDescriptionUpdatedEvent.setRelationKindName(this.currentKindName);
+                    relationKindDescriptionUpdatedEvent.setRelationKindName(this.currentKindNameOrUID);
                     relationKindDescriptionUpdatedEvent.setRelationKindDesc(this.currentKindDescription);
                     ResourceHolder.getApplicationBlackboard().fire(relationKindDescriptionUpdatedEvent);
             }
