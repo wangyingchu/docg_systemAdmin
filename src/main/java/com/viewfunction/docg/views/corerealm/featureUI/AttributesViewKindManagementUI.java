@@ -35,6 +35,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.CreateAttributesViewKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.RemoveAttributesViewKindView;
+import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.AttributesViewKindDetailUI;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -120,7 +121,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
             configIcon.setSize("21px");
             Button configAttributeKind = new Button(configIcon, event -> {
                 if(attributeKindMetaInfo instanceof AttributesViewKindMetaInfo){
-                    //renderAttributeKindConfigurationUI((AttributeKindMetaInfo)attributeKindMetaInfo);
+                    renderAttributesViewKindConfigurationUI((AttributesViewKindMetaInfo)attributeKindMetaInfo);
                 }
             });
             configAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -594,5 +595,42 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
                 resetSingleAttributeKindSummaryInfoArea();
             }
         }
+    }
+
+    private void renderAttributesViewKindConfigurationUI(AttributesViewKindMetaInfo attributesViewKindMetaInfo){
+        AttributesViewKindDetailUI attributesViewKindDetailUI = new AttributesViewKindDetailUI(attributesViewKindMetaInfo.getKindUID());
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon attributeKindIcon = VaadinIcon.TASKS.create();
+        attributeKindIcon.setSize("10px");
+        titleDetailLayout.add(attributeKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel attributeKindName = new NativeLabel(attributesViewKindMetaInfo.getKindName()+" ( ");
+        titleDetailLayout.add(attributeKindName);
+
+        Icon _UIDIcon = VaadinIcon.KEY_O.create();
+        _UIDIcon.setSize("10px");
+        titleDetailLayout.add(_UIDIcon);
+        NativeLabel attributeKindUID = new NativeLabel(" "+attributesViewKindMetaInfo.getKindUID()+")");
+        titleDetailLayout.add(attributeKindUID);
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"属性视图类型配置",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(attributesViewKindDetailUI);
+        fullScreenWindow.show();
     }
 }
