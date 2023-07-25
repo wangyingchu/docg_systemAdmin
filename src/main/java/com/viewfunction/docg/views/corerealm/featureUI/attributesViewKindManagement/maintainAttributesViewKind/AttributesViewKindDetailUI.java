@@ -12,8 +12,11 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 
@@ -21,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.AttributesViewKind;
-import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.ConceptionKind;
 
 @Route("attributesViewKindDetailInfo/:attributesViewKindUID")
 public class AttributesViewKindDetailUI extends VerticalLayout implements
@@ -79,13 +81,18 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
 
     private void renderAttributesViewKindData(){
         List<Component> secTitleElementsList = new ArrayList<>();
-
-        NativeLabel conceptionKindNameLabel = new NativeLabel(this.attributesViewKindUID);
-        conceptionKindNameLabel.getStyle()
+        String attributesViewKindDisplayInfo = this.attributesViewKindUID;
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
+        if(targetAttributesViewKind != null){
+            attributesViewKindDisplayInfo = targetAttributesViewKind.getAttributesViewKindName() +" ( "+this.attributesViewKindUID+" )";
+        }
+        NativeLabel attributesViewKindNameLabel = new NativeLabel(attributesViewKindDisplayInfo);
+        attributesViewKindNameLabel.getStyle()
                 .set("font-size","var(--lumo-font-size-xl)")
                 .set("color","var(--lumo-primary-text-color)")
                 .set("fount-weight","bold");
-        secTitleElementsList.add(conceptionKindNameLabel);
+        secTitleElementsList.add(attributesViewKindNameLabel);
 
         this.kindDescriptionEditorItemWidget = new KindDescriptionEditorItemWidget(this.attributesViewKindUID,AttributesViewKind);
         secTitleElementsList.add(this.kindDescriptionEditorItemWidget);
@@ -133,6 +140,5 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         HorizontalLayout mainContainerLayout = new HorizontalLayout();
         mainContainerLayout.setWidthFull();
         add(mainContainerLayout);
-
     }
 }
