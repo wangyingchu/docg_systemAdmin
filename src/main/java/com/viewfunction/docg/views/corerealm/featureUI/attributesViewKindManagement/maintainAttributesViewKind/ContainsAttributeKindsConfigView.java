@@ -15,6 +15,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
@@ -39,7 +40,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout {
         createMetaConfigItemButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAddNewConfigItemUI();
+                renderAttachNewAttributeKindUI();
             }
         });
         buttonList.add(createMetaConfigItemButton);
@@ -118,5 +119,33 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout {
         List<AttributeKind> attributeKindsList = targetAttributesViewKind.getContainsAttributeKinds();
         coreRealm.closeGlobalSession();
         attributeKindGrid.setItems(attributeKindsList);
+    }
+
+    private void renderAttachNewAttributeKindUI(){
+        AttachNewAttributeKindView attachNewAttributeKindView = new AttachNewAttributeKindView(this.attributesViewKindUID);
+
+        /*
+        addEntityAttributeView.setAttributeValueOperateHandler(new AttributeValueOperateHandler() {
+            @Override
+            public void handleAttributeValue(AttributeValue attributeValue) {
+                if(attributeValue != null){
+                    String configItemName = attributeValue.getAttributeName();
+                    Object configItemValue = attributeValue.getAttributeValue();
+                    AttributeDataType attributeDataType = checkAttributeDataType(configItemValue);
+                    MetaConfigItemsConfigView.MetaConfigItemValueObject newMetaConfigItemValueObject =
+                            new MetaConfigItemsConfigView.MetaConfigItemValueObject(configItemName,attributeDataType,configItemValue);
+                    ListDataProvider dtaProvider=(ListDataProvider)metaConfigItemValueGrid.getDataProvider();
+                    dtaProvider.getItems().add(newMetaConfigItemValueObject);
+                    dtaProvider.refreshAll();
+                }
+            }
+        });
+        */
+
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"加入属性类型",null,true,480,190,false);
+        fixSizeWindow.setWindowContent(attachNewAttributeKindView);
+        fixSizeWindow.setModel(true);
+        attachNewAttributeKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }
