@@ -34,8 +34,8 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout rightSideContainerLayout;
-    private ContainerConceptionKindsEditorView containerConceptionKindsEditorView;
-    private ContainsAttributeKindsEditorView containsAttributeKindsEditorView;
+    private ContainerConceptionKindsConfigView containerConceptionKindsConfigView;
+    private ContainsAttributeKindsConfigView containsAttributeKindsConfigView;
 
     public AttributesViewKindDetailUI(){}
 
@@ -139,8 +139,8 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         icon.setSize("8px");
         SectionActionBar sectionActionBar1 = new SectionActionBar(icon,"相关概念类型配置管理",null);
         leftSideContainerLayout.add(sectionActionBar1);
-        containerConceptionKindsEditorView = new ContainerConceptionKindsEditorView(this.attributesViewKindUID);
-        leftSideContainerLayout.add(containerConceptionKindsEditorView);
+        containerConceptionKindsConfigView = new ContainerConceptionKindsConfigView(this.attributesViewKindUID);
+        leftSideContainerLayout.add(containerConceptionKindsConfigView);
 
 
         rightSideContainerLayout = new VerticalLayout();
@@ -149,8 +149,8 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         Icon icon2 = new Icon(VaadinIcon.INPUT);
         SectionActionBar sectionActionBar2 = new SectionActionBar(icon2,"包含属性类型配置管理",null);
         rightSideContainerLayout.add(sectionActionBar2);
-        containsAttributeKindsEditorView = new ContainsAttributeKindsEditorView(this.attributesViewKindUID);
-
+        containsAttributeKindsConfigView = new ContainsAttributeKindsConfigView(this.attributesViewKindUID);
+        rightSideContainerLayout.add(containsAttributeKindsConfigView);
 
         mainContainerLayout.setFlexGrow(0.5,leftSideContainerLayout);
         mainContainerLayout.setFlexGrow(0.5,rightSideContainerLayout);
