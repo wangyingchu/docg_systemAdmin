@@ -24,7 +24,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.List;
 
@@ -121,29 +123,32 @@ public class AttachNewAttributeKindView extends VerticalLayout {
         coreRealm.openGlobalSession();
         try {
             AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
-            boolean alreadyAttached = false;
             List<AttributeKind> containsAttributeKindsList = targetAttributesViewKind.getContainsAttributeKinds();
             if(containsAttributeKindsList != null){
                 for(AttributeKind currentAttributeKind : containsAttributeKindsList){
                     if(currentAttributeKind.getAttributeKindUID().equals(attributeKindMetaInfo.getKindUID())){
-                        alreadyAttached = true;
+                        errorMessage.setText("当前属性视图类型中已经包含 UID 为 "+attributeKindMetaInfo.getKindUID()+" 的属性类型");
+                        errorMessage.setVisible(true);
                         return;
                     }
                 }
             }
-            if(alreadyAttached){
-                errorMessage.setText("当前属性视图类型中已经包含 UID 为 "+attributeKindMetaInfo.getKindUID()+"的属性类型");
-                errorMessage.setVisible(true);
-            }else{
-                boolean attachResult = targetAttributesViewKind.attachAttributeKind(attributeKindMetaInfo.getKindUID());
-                if(attachResult){
-                    CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 添加属性类型 "+ attributeKindMetaInfo.getKindName() +" : "+attributeKindMetaInfo.getKindUID() +" 成功", NotificationVariant.LUMO_SUCCESS);
-                    if(containerDialog != null){
-                        containerDialog.close();
-                    }
-                }else{
-                    CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 添加属性类型 "+ attributeKindMetaInfo.getKindName() +" : "+attributeKindMetaInfo.getAttributeDataType() +" 失败", NotificationVariant.LUMO_ERROR);
+
+            boolean attachResult = targetAttributesViewKind.attachAttributeKind(attributeKindMetaInfo.getKindUID());
+            if(attachResult){
+                CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 添加属性类型 "+ attributeKindMetaInfo.getKindName() +" : "+attributeKindMetaInfo.getKindUID() +" 成功", NotificationVariant.LUMO_SUCCESS);
+                if(containerDialog != null){
+                    containerDialog.close();
                 }
+                AttributeKind targetAttributeKind = coreRealm.getAttributeKind(attributeKindMetaInfo.getKindUID());
+                AttributeKindAttachedToAttributesViewKindEvent attributeKindAttachedToAttributesViewKindEvent = new AttributeKindAttachedToAttributesViewKindEvent();
+                attributeKindAttachedToAttributesViewKindEvent.setAttributeKindMetaInfo(attributeKindMetaInfo);
+                attributeKindAttachedToAttributesViewKindEvent.setAttributeKindUID(attributeKindMetaInfo.getKindUID());
+                attributeKindAttachedToAttributesViewKindEvent.setAttributesViewKindUID(this.attributesViewKindUID);
+                attributeKindAttachedToAttributesViewKindEvent.setAttributeKind(targetAttributeKind);
+                ResourceHolder.getApplicationBlackboard().fire(attributeKindAttachedToAttributesViewKindEvent);
+            }else{
+                CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 添加属性类型 "+ attributeKindMetaInfo.getKindName() +" : "+attributeKindMetaInfo.getAttributeDataType() +" 失败", NotificationVariant.LUMO_ERROR);
             }
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);

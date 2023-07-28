@@ -29,6 +29,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindCreatedEvent;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindDescriptionUpdatedEvent;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindRemovedEvent;
@@ -49,7 +50,8 @@ import java.util.*;
 public class AttributesViewKindManagementUI extends VerticalLayout implements
         AttributesViewKindCreatedEvent.AttributesViewKindCreatedListener,
         AttributesViewKindRemovedEvent.AttributesViewKindRemovedListener,
-        AttributesViewKindDescriptionUpdatedEvent.AttributesViewKindDescriptionUpdatedListener{
+        AttributesViewKindDescriptionUpdatedEvent.AttributesViewKindDescriptionUpdatedListener,
+        AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener{
     private Grid<AttributesViewKindMetaInfo> attributesViewKindMetaInfoGrid;
     private GridListDataView<AttributesViewKindMetaInfo> attributesViewKindsMetaInfoView;
     final ZoneId id = ZoneId.systemDefault();
@@ -648,5 +650,10 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
             }
             dtaProvider.refreshAll();
         }
+    }
+
+    @Override
+    public void receivedAttributeKindAttachedToAttributesViewKindEvent(AttributeKindAttachedToAttributesViewKindEvent event) {
+
     }
 }

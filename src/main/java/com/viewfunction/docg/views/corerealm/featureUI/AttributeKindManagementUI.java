@@ -33,6 +33,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImp
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
 import com.viewfunction.docg.element.eventHandling.AttributeKindCreatedEvent;
 import com.viewfunction.docg.element.eventHandling.AttributeKindRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -52,7 +53,8 @@ import java.util.*;
 
 public class AttributeKindManagementUI extends VerticalLayout implements
         AttributeKindCreatedEvent.AttributeKindCreatedListener,
-        AttributeKindRemovedEvent.AttributeKindRemovedListener {
+        AttributeKindRemovedEvent.AttributeKindRemovedListener,
+        AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener{
     private Grid<AttributeKindMetaInfo> attributeKindMetaInfoGrid;
     private GridListDataView<AttributeKindMetaInfo> attributeKindsMetaInfoView;
     private Registration listener;
@@ -660,5 +662,10 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"属性类型配置",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(attributeKindDetailUI);
         fullScreenWindow.show();
+    }
+
+    @Override
+    public void receivedAttributeKindAttachedToAttributesViewKindEvent(AttributeKindAttachedToAttributesViewKindEvent event) {
+
     }
 }

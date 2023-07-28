@@ -9,6 +9,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeKindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
@@ -19,12 +20,15 @@ import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContainsAttributeKindsConfigView extends VerticalLayout {
+public class ContainsAttributeKindsConfigView extends VerticalLayout implements
+        AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener{
     private String attributesViewKindUID;
     private Grid<AttributeKind> attributeKindGrid;
 
@@ -113,6 +117,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
@@ -121,31 +126,31 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout {
         attributeKindGrid.setItems(attributeKindsList);
     }
 
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
+
     private void renderAttachNewAttributeKindUI(){
         AttachNewAttributeKindView attachNewAttributeKindView = new AttachNewAttributeKindView(this.attributesViewKindUID);
-
-        /*
-        addEntityAttributeView.setAttributeValueOperateHandler(new AttributeValueOperateHandler() {
-            @Override
-            public void handleAttributeValue(AttributeValue attributeValue) {
-                if(attributeValue != null){
-                    String configItemName = attributeValue.getAttributeName();
-                    Object configItemValue = attributeValue.getAttributeValue();
-                    AttributeDataType attributeDataType = checkAttributeDataType(configItemValue);
-                    MetaConfigItemsConfigView.MetaConfigItemValueObject newMetaConfigItemValueObject =
-                            new MetaConfigItemsConfigView.MetaConfigItemValueObject(configItemName,attributeDataType,configItemValue);
-                    ListDataProvider dtaProvider=(ListDataProvider)metaConfigItemValueGrid.getDataProvider();
-                    dtaProvider.getItems().add(newMetaConfigItemValueObject);
-                    dtaProvider.refreshAll();
-                }
-            }
-        });
-        */
-
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"加入属性类型",null,true,480,190,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"加入属性类型",null,true,490,190,false);
         fixSizeWindow.setWindowContent(attachNewAttributeKindView);
         fixSizeWindow.setModel(true);
         attachNewAttributeKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    @Override
+    public void receivedAttributeKindAttachedToAttributesViewKindEvent(AttributeKindAttachedToAttributesViewKindEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
+            if(this.attributesViewKindUID.equals(event.getAttributesViewKindUID())){
+                if(event.getAttributeKind() != null){
+                    ListDataProvider dtaProvider=(ListDataProvider)attributeKindGrid.getDataProvider();
+                    dtaProvider.getItems().add(event.getAttributeKind());
+                    dtaProvider.refreshAll();
+                }
+            }
+        }
     }
 }
