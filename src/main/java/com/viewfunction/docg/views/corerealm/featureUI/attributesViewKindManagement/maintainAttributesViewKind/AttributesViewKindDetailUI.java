@@ -16,9 +16,7 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
-import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
-import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 
 import java.util.ArrayList;
@@ -34,6 +32,10 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
     private int currentBrowserHeight = 0;
     private Registration listener;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
+    private VerticalLayout leftSideContainerLayout;
+    private VerticalLayout rightSideContainerLayout;
+    private ContainerConceptionKindsEditorView containerConceptionKindsEditorView;
+    private ContainsAttributeKindsEditorView containsAttributeKindsEditorView;
 
     public AttributesViewKindDetailUI(){}
 
@@ -113,17 +115,6 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         });
         buttonList.add(refreshConceptionKindConfigInfoButton);
 
-        Button queryConceptionKindButton= new Button("概念类型实体数据查询");
-        queryConceptionKindButton.setIcon(VaadinIcon.RECORDS.create());
-        queryConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        queryConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderConceptionKindQueryUI();
-            }
-        });
-        buttonList.add(queryConceptionKindButton);
-
         Button conceptionKindMetaInfoButton= new Button("属性视图类型元数据");
         conceptionKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
         conceptionKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
@@ -141,6 +132,28 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         HorizontalLayout mainContainerLayout = new HorizontalLayout();
         mainContainerLayout.setWidthFull();
         add(mainContainerLayout);
+
+        leftSideContainerLayout = new VerticalLayout();
+        mainContainerLayout.add(leftSideContainerLayout);
+        Icon icon = new Icon(VaadinIcon.CUBE);
+        icon.setSize("8px");
+        SectionActionBar sectionActionBar1 = new SectionActionBar(icon,"相关概念类型配置管理",null);
+        leftSideContainerLayout.add(sectionActionBar1);
+        containerConceptionKindsEditorView = new ContainerConceptionKindsEditorView(this.attributesViewKindUID);
+        leftSideContainerLayout.add(containerConceptionKindsEditorView);
+
+
+        rightSideContainerLayout = new VerticalLayout();
+        rightSideContainerLayout.setWidth(100,Unit.PERCENTAGE);
+        mainContainerLayout.add(rightSideContainerLayout);
+        Icon icon2 = new Icon(VaadinIcon.INPUT);
+        SectionActionBar sectionActionBar2 = new SectionActionBar(icon2,"包含属性类型配置管理",null);
+        rightSideContainerLayout.add(sectionActionBar2);
+        containsAttributeKindsEditorView = new ContainsAttributeKindsEditorView(this.attributesViewKindUID);
+
+
+        mainContainerLayout.setFlexGrow(0.5,leftSideContainerLayout);
+        mainContainerLayout.setFlexGrow(0.5,rightSideContainerLayout);
     }
 
     private void renderShowMetaInfoUI(){
