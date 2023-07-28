@@ -45,7 +45,7 @@ public class AttachNewAttributeKindView extends VerticalLayout {
         errorMessageContainer.setMargin(false);
         errorMessageContainer.getStyle().set("padding-top","3px").set("padding-bottom","3px");
 
-        NativeLabel viewTitle = new NativeLabel("新加入属性类型信息:");
+        NativeLabel viewTitle = new NativeLabel("新附加属性类型信息:");
         viewTitle.getStyle().set("color","var(--lumo-contrast-50pct)").set("font-size","0.8rem");
         errorMessageContainer.add(viewTitle);
         errorMessage = new NativeLabel("-");
@@ -56,7 +56,7 @@ public class AttachNewAttributeKindView extends VerticalLayout {
 
         attributeKindFilterSelect = new ComboBox();
         attributeKindFilterSelect.setPageSize(30);
-        attributeKindFilterSelect.setPlaceholder("选择要加入的属性类型");
+        attributeKindFilterSelect.setPlaceholder("选择要附加的属性类型");
         attributeKindFilterSelect.setWidth(100,Unit.PERCENTAGE);
         attributeKindFilterSelect.setItemLabelGenerator(new ItemLabelGenerator<AttributeKindMetaInfo>() {
             @Override
@@ -70,7 +70,15 @@ public class AttachNewAttributeKindView extends VerticalLayout {
         attributeKindFilterSelect.setRenderer(createRenderer());
         add(attributeKindFilterSelect);
 
-        Button confirmButton = new Button("确定加入",new Icon(VaadinIcon.CHECK));
+
+        HorizontalLayout spaceDivLayout = new HorizontalLayout();
+        spaceDivLayout.setWidthFull();
+        spaceDivLayout.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-m)");
+        add(spaceDivLayout);
+
+        Button confirmButton = new Button("确定附加属性类型",new Icon(VaadinIcon.CHECK));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -86,6 +94,7 @@ public class AttachNewAttributeKindView extends VerticalLayout {
             }
         });
         add(confirmButton);
+        setHorizontalComponentAlignment(Alignment.END,confirmButton);
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
@@ -136,7 +145,7 @@ public class AttachNewAttributeKindView extends VerticalLayout {
 
             boolean attachResult = targetAttributesViewKind.attachAttributeKind(attributeKindMetaInfo.getKindUID());
             if(attachResult){
-                CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 添加属性类型 "+ attributeKindMetaInfo.getKindName() +" : "+attributeKindMetaInfo.getKindUID() +" 成功", NotificationVariant.LUMO_SUCCESS);
+                CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 附加属性类型 "+ attributeKindMetaInfo.getKindName() +" : "+attributeKindMetaInfo.getKindUID() +" 成功", NotificationVariant.LUMO_SUCCESS);
                 if(containerDialog != null){
                     containerDialog.close();
                 }
@@ -148,7 +157,7 @@ public class AttachNewAttributeKindView extends VerticalLayout {
                 attributeKindAttachedToAttributesViewKindEvent.setAttributeKind(targetAttributeKind);
                 ResourceHolder.getApplicationBlackboard().fire(attributeKindAttachedToAttributesViewKindEvent);
             }else{
-                CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 添加属性类型 "+ attributeKindMetaInfo.getKindName() +" : "+attributeKindMetaInfo.getAttributeDataType() +" 失败", NotificationVariant.LUMO_ERROR);
+                CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 附加属性类型 "+ attributeKindMetaInfo.getKindName() +" : "+attributeKindMetaInfo.getAttributeDataType() +" 失败", NotificationVariant.LUMO_ERROR);
             }
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);

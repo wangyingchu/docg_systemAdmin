@@ -38,7 +38,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         List<Component> secTitleElementsList = new ArrayList<>();
         List<Component> buttonList = new ArrayList<>();
 
-        Button createMetaConfigItemButton= new Button("加入新的属性类型");
+        Button createMetaConfigItemButton= new Button("附加新的属性类型");
         createMetaConfigItemButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
         createMetaConfigItemButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         createMetaConfigItemButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -59,19 +59,19 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.BOOKMARK),"属性类型配置管理 ",secTitleElementsList,buttonList);
         add(metaConfigItemConfigActionBar);
 
-        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKindMetaInfo -> {
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKind -> {
             Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
             deleteKindIcon.setSize("21px");
             Button removeAttributeKind = new Button(deleteKindIcon, event -> {});
             removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeAttributeKind, "分离属性类型定义");
+            Tooltips.getCurrent().setTooltip(removeAttributeKind, "移除属性类型");
             removeAttributeKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(attributeKindMetaInfo instanceof AttributeKindMetaInfo){
-                        //renderRemoveAttributeKindEntitiesUI((AttributeKindMetaInfo)attributeKindMetaInfo);
+                    if(attributeKind instanceof AttributeKind){
+                        renderDetachAttributeKindUI((AttributeKind)attributeKind);
                     }
                 }
             });
@@ -134,12 +134,14 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
 
     private void renderAttachNewAttributeKindUI(){
         AttachNewAttributeKindView attachNewAttributeKindView = new AttachNewAttributeKindView(this.attributesViewKindUID);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"加入属性类型",null,true,490,190,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加属性类型",null,true,490,200,false);
         fixSizeWindow.setWindowContent(attachNewAttributeKindView);
         fixSizeWindow.setModel(true);
         attachNewAttributeKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
+
+    private void renderDetachAttributeKindUI(AttributeKind attributeKind){}
 
     @Override
     public void receivedAttributeKindAttachedToAttributesViewKindEvent(AttributeKindAttachedToAttributesViewKindEvent event) {
