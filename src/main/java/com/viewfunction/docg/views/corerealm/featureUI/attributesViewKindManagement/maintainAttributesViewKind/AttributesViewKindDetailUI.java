@@ -16,6 +16,7 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
@@ -129,7 +130,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         conceptionKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderShowMetaInfoUI();
+                renderShowMetaInfoUI();
             }
         });
         buttonList.add(conceptionKindMetaInfoButton);
@@ -140,5 +141,13 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         HorizontalLayout mainContainerLayout = new HorizontalLayout();
         mainContainerLayout.setWidthFull();
         add(mainContainerLayout);
+    }
+
+    private void renderShowMetaInfoUI(){
+        AttributesViewKindMetaInfoView attributesViewKindMetaInfoView = new AttributesViewKindMetaInfoView(this.attributesViewKindUID);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"属性视图类型元数据信息",null,true,500,340,false);
+        fixSizeWindow.setWindowContent(attributesViewKindMetaInfoView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }
