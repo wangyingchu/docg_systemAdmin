@@ -35,6 +35,7 @@ import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
 import com.viewfunction.docg.element.eventHandling.AttributeKindCreatedEvent;
+import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttributesViewKindEvent;
 import com.viewfunction.docg.element.eventHandling.AttributeKindRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
@@ -54,7 +55,8 @@ import java.util.*;
 public class AttributeKindManagementUI extends VerticalLayout implements
         AttributeKindCreatedEvent.AttributeKindCreatedListener,
         AttributeKindRemovedEvent.AttributeKindRemovedListener,
-        AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener{
+        AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener,
+        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener{
     private Grid<AttributeKindMetaInfo> attributeKindMetaInfoGrid;
     private GridListDataView<AttributeKindMetaInfo> attributeKindsMetaInfoView;
     private Registration listener;
@@ -666,6 +668,33 @@ public class AttributeKindManagementUI extends VerticalLayout implements
 
     @Override
     public void receivedAttributeKindAttachedToAttributesViewKindEvent(AttributeKindAttachedToAttributesViewKindEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
+            if(lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo != null &&
+                    lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo.getKindUID().equals(event.getAttributeKindUID())){
+                ListDataProvider dtaProvider=(ListDataProvider)attributeKindAttributesInfoGrid.getDataProvider();
+                dtaProvider.getItems().add(event.getAttributesViewKind());
+                dtaProvider.refreshAll();
+            }
+        }
+    }
 
+    @Override
+    public void receivedAttributeKindDetachedFromAttributesViewKindEvent(AttributeKindDetachedFromAttributesViewKindEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
+            if(lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo != null &&
+                    lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo.getKindUID().equals(event.getAttributeKindUID())){
+                ListDataProvider dataProvider=(ListDataProvider)attributeKindAttributesInfoGrid.getDataProvider();
+                Collection<AttributesViewKind> itemsCollection = dataProvider.getItems();
+                if(itemsCollection != null){
+                    for(AttributesViewKind currentAttributesViewKind:itemsCollection){
+                        if(event.getAttributesViewKindUID().equals(currentAttributesViewKind.getAttributesViewKindUID())){
+                            itemsCollection.remove(currentAttributesViewKind);
+                            break;
+                        }
+                    }
+                    dataProvider.refreshAll();
+                }
+            }
+        }
     }
 }

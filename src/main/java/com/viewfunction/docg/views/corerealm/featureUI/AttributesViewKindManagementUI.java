@@ -29,10 +29,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
-import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
-import com.viewfunction.docg.element.eventHandling.AttributesViewKindCreatedEvent;
-import com.viewfunction.docg.element.eventHandling.AttributesViewKindDescriptionUpdatedEvent;
-import com.viewfunction.docg.element.eventHandling.AttributesViewKindRemovedEvent;
+import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.CreateAttributesViewKindView;
@@ -51,7 +48,8 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         AttributesViewKindCreatedEvent.AttributesViewKindCreatedListener,
         AttributesViewKindRemovedEvent.AttributesViewKindRemovedListener,
         AttributesViewKindDescriptionUpdatedEvent.AttributesViewKindDescriptionUpdatedListener,
-        AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener{
+        AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener,
+        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener{
     private Grid<AttributesViewKindMetaInfo> attributesViewKindMetaInfoGrid;
     private GridListDataView<AttributesViewKindMetaInfo> attributesViewKindsMetaInfoView;
     final ZoneId id = ZoneId.systemDefault();
@@ -654,6 +652,20 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
 
     @Override
     public void receivedAttributeKindAttachedToAttributesViewKindEvent(AttributeKindAttachedToAttributesViewKindEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
+            if(lastSelectedAttributesViewKindMetaInfoGridAttributeKindMetaInfo != null &&
+                    lastSelectedAttributesViewKindMetaInfoGridAttributeKindMetaInfo.getKindUID().equals(event.getAttributesViewKindUID())){
+                ListDataProvider dtaProvider=(ListDataProvider)attributeKindAttributesInfoGrid.getDataProvider();
+                dtaProvider.getItems().add(event.getAttributesViewKind());
+                dtaProvider.refreshAll();
+            }
+        }
+    }
 
+    @Override
+    public void receivedAttributeKindDetachedFromAttributesViewKindEvent(AttributeKindDetachedFromAttributesViewKindEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
+
+        }
     }
 }

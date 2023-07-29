@@ -154,6 +154,7 @@ public class AttachNewAttributeKindView extends VerticalLayout {
                 attributeKindAttachedToAttributesViewKindEvent.setAttributeKindMetaInfo(attributeKindMetaInfo);
                 attributeKindAttachedToAttributesViewKindEvent.setAttributeKindUID(attributeKindMetaInfo.getKindUID());
                 attributeKindAttachedToAttributesViewKindEvent.setAttributesViewKindUID(this.attributesViewKindUID);
+                attributeKindAttachedToAttributesViewKindEvent.setAttributesViewKind(targetAttributesViewKind);
                 attributeKindAttachedToAttributesViewKindEvent.setAttributeKind(targetAttributeKind);
                 ResourceHolder.getApplicationBlackboard().fire(attributeKindAttachedToAttributesViewKindEvent);
             }else{
