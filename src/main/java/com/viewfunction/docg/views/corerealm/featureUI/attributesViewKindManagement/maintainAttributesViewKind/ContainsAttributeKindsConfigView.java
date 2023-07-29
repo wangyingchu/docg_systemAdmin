@@ -21,14 +21,18 @@ import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
+import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttributesViewKindEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ContainsAttributeKindsConfigView extends VerticalLayout implements
-        AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener{
+        AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener,
+        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener{
     private String attributesViewKindUID;
     private Grid<AttributeKind> attributeKindGrid;
 
@@ -141,7 +145,14 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         fixSizeWindow.show();
     }
 
-    private void renderDetachAttributeKindUI(AttributeKind attributeKind){}
+    private void renderDetachAttributeKindUI(AttributeKind attributeKind){
+        DetachAttributesViewKindView detachAttributesViewKindView = new DetachAttributesViewKindView(this.attributesViewKindUID,attributeKind);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"移除属性类型",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(detachAttributesViewKindView);
+        fixSizeWindow.setModel(true);
+        detachAttributesViewKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
 
     @Override
     public void receivedAttributeKindAttachedToAttributesViewKindEvent(AttributeKindAttachedToAttributesViewKindEvent event) {
@@ -151,6 +162,25 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
                     ListDataProvider dtaProvider=(ListDataProvider)attributeKindGrid.getDataProvider();
                     dtaProvider.getItems().add(event.getAttributeKind());
                     dtaProvider.refreshAll();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void receivedAttributeKindDetachedFromAttributesViewKindEvent(AttributeKindDetachedFromAttributesViewKindEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
+            if(this.attributesViewKindUID.equals(event.getAttributesViewKindUID())){
+                ListDataProvider dataProvider=(ListDataProvider)attributeKindGrid.getDataProvider();
+                Collection<AttributeKind> itemsCollection = dataProvider.getItems();
+                if(itemsCollection != null){
+                    for(AttributeKind currentAttributeKind:itemsCollection){
+                        if(event.getAttributeKindUID().equals(currentAttributeKind.getAttributeKindUID())){
+                            itemsCollection.remove(currentAttributeKind);
+                            break;
+                        }
+                    }
+                    dataProvider.refreshAll();
                 }
             }
         }

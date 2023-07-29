@@ -8,11 +8,17 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttributesViewKindEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 
 public class DetachAttributesViewKindView extends VerticalLayout {
     private String attributesViewKindUID;
@@ -72,6 +78,27 @@ public class DetachAttributesViewKindView extends VerticalLayout {
 
     private void doDetachAttributeKind(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-
+        coreRealm.openGlobalSession();
+        AttributesViewKind selfAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
+        if(selfAttributesViewKind != null){
+            try {
+                boolean detachResult = selfAttributesViewKind.detachAttributeKind(this.attributeKind.getAttributeKindUID());
+                if(detachResult){
+                    CommonUIOperationUtil.showPopupNotification("从属性视图类型 "+this.attributesViewKindUID+ " 中移除属性类型 "+ attributeKind.getAttributeKindName() +" : "+ attributeKind.getAttributeKindUID() +" 成功", NotificationVariant.LUMO_SUCCESS);
+                    if(containerDialog != null){
+                        containerDialog.close();
+                    }
+                    AttributeKindDetachedFromAttributesViewKindEvent attributeKindDetachedFromAttributesViewKindEvent = new AttributeKindDetachedFromAttributesViewKindEvent();
+                    attributeKindDetachedFromAttributesViewKindEvent.setAttributesViewKindUID(this.attributesViewKindUID);
+                    attributeKindDetachedFromAttributesViewKindEvent.setAttributeKindUID(attributeKind.getAttributeKindUID());
+                    ResourceHolder.getApplicationBlackboard().fire(attributeKindDetachedFromAttributesViewKindEvent);
+                }else{
+                    CommonUIOperationUtil.showPopupNotification("从属性视图类型 "+this.attributesViewKindUID+ " 中移除属性类型 "+ attributeKind.getAttributeKindName() +" : "+ attributeKind.getAttributeKindUID() +" 失败", NotificationVariant.LUMO_ERROR);
+                }
+            } catch (CoreRealmServiceRuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        coreRealm.closeGlobalSession();
     }
 }
