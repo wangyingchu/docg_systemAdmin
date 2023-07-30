@@ -16,4 +16,26 @@ public class LightGridColumnHeader extends HorizontalLayout {
         headerTitleLabel.addClassNames("text-xs","text-tertiary");
         this.add(headerTitleLabel);
     }
+
+    public LightGridColumnHeader(com.flowingcode.vaadin.addons.fontawesome.FontAwesome.Solid.Icon titleIcon, String titleContent){
+        this.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon headerTitleIcon = titleIcon;
+        headerTitleIcon.setSize("12px");
+        headerTitleIcon.addClassNames("text-tertiary");
+        this.add(headerTitleIcon);
+        NativeLabel headerTitleLabel = new NativeLabel(titleContent);
+        headerTitleLabel.addClassNames("text-xs","text-tertiary");
+        this.add(headerTitleLabel);
+    }
+
+    public LightGridColumnHeader(com.vaadin.flow.component.icon.Icon titleIcon, String titleContent){
+        this.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon headerTitleIcon = titleIcon;
+        headerTitleIcon.setSize("12px");
+        headerTitleIcon.addClassNames("text-tertiary");
+        this.add(headerTitleIcon);
+        NativeLabel headerTitleLabel = new NativeLabel(titleContent);
+        headerTitleLabel.addClassNames("text-xs","text-tertiary");
+        this.add(headerTitleLabel);
+    }
 }
