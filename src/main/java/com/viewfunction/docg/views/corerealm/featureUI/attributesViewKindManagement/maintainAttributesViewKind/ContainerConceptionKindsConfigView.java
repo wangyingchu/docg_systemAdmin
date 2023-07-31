@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
@@ -14,10 +11,15 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
+import com.viewfunction.docg.util.ResourceHolder;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout {
         createMetaConfigItemButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAttachNewAttributeKindUI();
+                renderAttachNewConceptionKindUI();
             }
         });
         buttonList.add(createMetaConfigItemButton);
@@ -100,6 +102,36 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout {
 
         conceptionKindGrid.appendFooterRow();
         add(conceptionKindGrid);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        //ResourceHolder.getApplicationBlackboard().addListener(this);
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
+        List<ConceptionKind> conceptionKindsList = targetAttributesViewKind.getContainerConceptionKinds();
+        conceptionKindGrid.setItems(conceptionKindsList);
+        coreRealm.closeGlobalSession();
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
+
+
+
+
+    private void renderAttachNewConceptionKindUI(){
+        AttachNewConceptionKindView attachNewConceptionKindView = new AttachNewConceptionKindView(this.attributesViewKindUID);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加概念类型",null,true,490,200,false);
+        fixSizeWindow.setWindowContent(attachNewConceptionKindView);
+        fixSizeWindow.setModel(true);
+        attachNewConceptionKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 
     public void setHeight(int heightValue){

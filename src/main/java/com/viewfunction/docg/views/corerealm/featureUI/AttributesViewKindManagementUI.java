@@ -399,7 +399,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         conceptionKindAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         conceptionKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
         conceptionKindAttributesInfoGrid.addColumn(ConceptionKind::getConceptionKindName).setHeader("概念类型名称").setKey("idx_0");
-        conceptionKindAttributesInfoGrid.addColumn(ConceptionKind::getConceptionKindName).setHeader("概念类型显示名称").setKey("idx_1");
+        conceptionKindAttributesInfoGrid.addColumn(ConceptionKind::getConceptionKindDesc).setHeader("概念类型显示名称").setKey("idx_1");
         LightGridColumnHeader gridColumnHeader0_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"概念类型名称");
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader0_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader1_idx1 = new LightGridColumnHeader(VaadinIcon.DESKTOP,"概念类型显示名称");
@@ -438,15 +438,13 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             attributesViewKindMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
-            //attributeKindAttributesInfoGrid.setHeight(150,Unit.PIXELS);
+            attributeKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             attributesViewKindMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
-            //attributeKindAttributesInfoGrid.setHeight(150,Unit.PIXELS);
-            //conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-600);
-            //singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
+            attributeKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
         }));
     }
 
@@ -543,9 +541,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         Date lastModifyDateTime = event.getLastModifyDateTime();
         String creatorId = event.getCreatorId();
         String dataOrigin = event.getDataOrigin();
-
         ListDataProvider dtaProvider = (ListDataProvider) attributesViewKindMetaInfoGrid.getDataProvider();
-
         AttributesViewKindMetaInfo attributesViewKindMetaInfo= new AttributesViewKindMetaInfo(kindName,kindDesc,kindUID,
                 viewKindDataForm.toString(),ZonedDateTime.ofInstant(createDateTime.toInstant(), id),
                 ZonedDateTime.ofInstant(lastModifyDateTime.toInstant(), id),
