@@ -12,7 +12,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -59,7 +58,7 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout implement
         SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.BOOKMARK),"概念类型配置管理 ",secTitleElementsList,buttonList);
         add(metaConfigItemConfigActionBar);
 
-        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKind -> {
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(conceptionKind -> {
             Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
             deleteKindIcon.setSize("21px");
             Button removeAttributeKind = new Button(deleteKindIcon, event -> {});
@@ -70,8 +69,8 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout implement
             removeAttributeKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(attributeKind instanceof AttributeKind){
-                        //renderDetachAttributeKindUI((AttributeKind)attributeKind);
+                    if(conceptionKind instanceof ConceptionKind){
+                        renderDetachConceptionKindUI((ConceptionKind)conceptionKind);
                     }
                 }
             });
@@ -131,6 +130,15 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout implement
         fixSizeWindow.setWindowContent(attachNewConceptionKindView);
         fixSizeWindow.setModel(true);
         attachNewConceptionKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderDetachConceptionKindUI(ConceptionKind attributeKind){
+        DetachConceptionKindView detachConceptionKindView = new DetachConceptionKindView(this.attributesViewKindUID,attributeKind);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"移除属性类型",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(detachConceptionKindView);
+        fixSizeWindow.setModel(true);
+        //detachConceptionKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 

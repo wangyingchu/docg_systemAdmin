@@ -147,11 +147,11 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
     }
 
     private void renderDetachAttributeKindUI(AttributeKind attributeKind){
-        DetachAttributesViewKindView detachAttributesViewKindView = new DetachAttributesViewKindView(this.attributesViewKindUID,attributeKind);
+        DetachAttributeKindView detachAttributeKindView = new DetachAttributeKindView(this.attributesViewKindUID,attributeKind);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"移除属性类型",null,true,600,210,false);
-        fixSizeWindow.setWindowContent(detachAttributesViewKindView);
+        fixSizeWindow.setWindowContent(detachAttributeKindView);
         fixSizeWindow.setModel(true);
-        detachAttributesViewKindView.setContainerDialog(fixSizeWindow);
+        detachAttributeKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 

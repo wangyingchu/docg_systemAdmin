@@ -20,12 +20,12 @@ import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttr
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 
-public class DetachAttributesViewKindView extends VerticalLayout {
+public class DetachAttributeKindView extends VerticalLayout {
     private String attributesViewKindUID;
     private AttributeKind attributeKind;
     private Dialog containerDialog;
 
-    public DetachAttributesViewKindView(String attributesViewKindUID,AttributeKind attributeKind){
+    public DetachAttributeKindView(String attributesViewKindUID, AttributeKind attributeKind){
         this.attributesViewKindUID = attributesViewKindUID;
         this.attributeKind = attributeKind;
 
