@@ -388,7 +388,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         secondaryTitleActionBar2.setWidth(100,Unit.PERCENTAGE);
         singleAttributesViewKindSummaryInfoContainerLayout.add(secondaryTitleActionBar2);
 
-        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"包含属性类型");
+        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.INPUT),"包含属性类型");
         singleAttributesViewKindSummaryInfoContainerLayout.add(infoTitle1);
 
         attributeKindAttributesInfoGrid = new Grid<>();
@@ -405,11 +405,20 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         attributeKindAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"数据数据类型");
         attributeKindAttributesInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
-        attributeKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
+
+
+
+
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CUBE),"包含本属性视图类型的概念类型");
+        singleAttributesViewKindSummaryInfoContainerLayout.add(infoTitle2);
+
+
+
         singleAttributesViewKindSummaryInfoContainerLayout.add(attributeKindAttributesInfoGrid);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.SCATTER_CHART),"属性类型实体数据分布");
-        singleAttributesViewKindSummaryInfoContainerLayout.add(infoTitle2);
+
+
+
         add(attributeKindsInfoContainerLayout);
     }
 
@@ -421,11 +430,13 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             attributesViewKindMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
+            attributeKindAttributesInfoGrid.setHeight(150,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             attributesViewKindMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
+            attributeKindAttributesInfoGrid.setHeight(150,Unit.PIXELS);
             //conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-600);
             //singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
         }));

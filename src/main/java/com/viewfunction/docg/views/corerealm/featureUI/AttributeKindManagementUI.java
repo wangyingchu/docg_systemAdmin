@@ -416,7 +416,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         secondaryTitleActionBar2.setWidth(100,Unit.PERCENTAGE);
         singleAttributeKindSummaryInfoContainerLayout.add(secondaryTitleActionBar2);
 
-        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"所属属性视图类型");
+        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.TASKS),"所属属性视图类型");
         singleAttributeKindSummaryInfoContainerLayout.add(infoTitle1);
 
         attributeKindAttributesInfoGrid = new Grid<>();
