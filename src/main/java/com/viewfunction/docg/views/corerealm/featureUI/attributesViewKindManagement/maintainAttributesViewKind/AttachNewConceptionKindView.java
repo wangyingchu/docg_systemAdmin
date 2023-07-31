@@ -132,14 +132,14 @@ public class AttachNewConceptionKindView extends VerticalLayout {
                 if(containsViewKindList != null){
                     for(AttributesViewKind currentAttributesViewKind : containsViewKindList){
                         if(currentAttributesViewKind.getAttributesViewKindUID().equals(this.attributesViewKindUID)){
-                            CommonUIOperationUtil.showPopupNotification("属性视图类型 "+this.attributesViewKindUID+ " 已经被附加到概念类型 "+ conceptionKindMetaInfo.getKindName() +" : "+conceptionKindMetaInfo.getKindDesc() +" 中。", NotificationVariant.LUMO_WARNING);
+                            CommonUIOperationUtil.showPopupNotification("属性视图类型 "+this.attributesViewKindUID+ " 已经被附加到概念类型 "+ conceptionKindMetaInfo.getKindName() +" : "+conceptionKindMetaInfo.getKindDesc() +" 中", NotificationVariant.LUMO_WARNING);
                             return;
                         }
                     }
                 }
                 boolean attachResult = targetConceptionKind.attachAttributesViewKind(this.attributesViewKindUID);
                 if(attachResult){
-                    CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 附加到概念类型 "+ conceptionKindMetaInfo.getKindName() +" : "+conceptionKindMetaInfo.getKindDesc() +" 成功。", NotificationVariant.LUMO_SUCCESS);
+                    CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 附加到概念类型 "+ conceptionKindMetaInfo.getKindName() +" : "+conceptionKindMetaInfo.getKindDesc() +" 成功", NotificationVariant.LUMO_SUCCESS);
                     if(containerDialog != null){
                         containerDialog.close();
                     }
@@ -151,7 +151,7 @@ public class AttachNewConceptionKindView extends VerticalLayout {
                     attributesViewKindAttachedToConceptionKindEvent.setAttributesViewKind(targetAttributesViewKind);
                     ResourceHolder.getApplicationBlackboard().fire(attributesViewKindAttachedToConceptionKindEvent);
                 }else{
-                    CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 附加到概念类型 "+ conceptionKindMetaInfo.getKindName() +" : "+conceptionKindMetaInfo.getKindDesc() +" 失败。", NotificationVariant.LUMO_ERROR);
+                    CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 附加到概念类型 "+ conceptionKindMetaInfo.getKindName() +" : "+conceptionKindMetaInfo.getKindDesc() +" 失败", NotificationVariant.LUMO_ERROR);
                 }
             }
         } catch (CoreRealmServiceRuntimeException e) {
