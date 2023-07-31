@@ -27,6 +27,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServi
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.AttributesViewKindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
@@ -61,6 +62,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private SecondaryTitleActionBar secondaryTitleActionBar2;
     private Grid<AttributeKind> attributeKindAttributesInfoGrid;
+    private Grid<ConceptionKind> conceptionKindAttributesInfoGrid;
     private VerticalLayout singleAttributesViewKindSummaryInfoContainerLayout;
     private Registration listener;
     private AttributesViewKindMetaInfo lastSelectedAttributesViewKindMetaInfoGridAttributeKindMetaInfo;
@@ -388,6 +390,23 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         secondaryTitleActionBar2.setWidth(100,Unit.PERCENTAGE);
         singleAttributesViewKindSummaryInfoContainerLayout.add(secondaryTitleActionBar2);
 
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CUBE),"包含本属性视图类型的概念类型");
+        singleAttributesViewKindSummaryInfoContainerLayout.add(infoTitle2);
+
+        conceptionKindAttributesInfoGrid = new Grid<>();
+        conceptionKindAttributesInfoGrid.setWidth(100,Unit.PERCENTAGE);
+        conceptionKindAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        conceptionKindAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
+        conceptionKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
+        conceptionKindAttributesInfoGrid.addColumn(ConceptionKind::getConceptionKindName).setHeader("概念类型名称").setKey("idx_0");
+        conceptionKindAttributesInfoGrid.addColumn(ConceptionKind::getConceptionKindName).setHeader("概念类型显示名称").setKey("idx_1");
+        LightGridColumnHeader gridColumnHeader0_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"概念类型名称");
+        conceptionKindAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader0_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader1_idx1 = new LightGridColumnHeader(VaadinIcon.DESKTOP,"概念类型显示名称");
+        conceptionKindAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader1_idx1).setSortable(true);
+
+        singleAttributesViewKindSummaryInfoContainerLayout.add(conceptionKindAttributesInfoGrid);
+
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.INPUT),"包含属性类型");
         singleAttributesViewKindSummaryInfoContainerLayout.add(infoTitle1);
 
@@ -406,18 +425,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"数据数据类型");
         attributeKindAttributesInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
 
-
-
-
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CUBE),"包含本属性视图类型的概念类型");
-        singleAttributesViewKindSummaryInfoContainerLayout.add(infoTitle2);
-
-
-
         singleAttributesViewKindSummaryInfoContainerLayout.add(attributeKindAttributesInfoGrid);
-
-
-
 
         add(attributeKindsInfoContainerLayout);
     }
@@ -430,13 +438,13 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             attributesViewKindMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
-            attributeKindAttributesInfoGrid.setHeight(150,Unit.PIXELS);
+            //attributeKindAttributesInfoGrid.setHeight(150,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             attributesViewKindMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
-            attributeKindAttributesInfoGrid.setHeight(150,Unit.PIXELS);
+            //attributeKindAttributesInfoGrid.setHeight(150,Unit.PIXELS);
             //conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-600);
             //singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
         }));
@@ -548,6 +556,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
 
     private void resetSingleAttributeKindSummaryInfoArea(){
         this.attributeKindAttributesInfoGrid.setItems(new ArrayList<>());
+        this.conceptionKindAttributesInfoGrid.setItems(new ArrayList<>());
         this.secondaryTitleActionBar.updateTitleContent(" - ");
         this.secondaryTitleActionBar2.updateTitleContent(" - ");
     }
@@ -571,6 +580,10 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         AttributesViewKind selectedAttributesViewKind = coreRealm.getAttributesViewKind(attributesViewKindUID);
+        List<ConceptionKind> conceptionKindList = selectedAttributesViewKind.getContainerConceptionKinds();
+        if(conceptionKindList != null){
+            conceptionKindAttributesInfoGrid.setItems(conceptionKindList);
+        }
         List<AttributeKind> containsAttributeKindList = selectedAttributesViewKind.getContainsAttributeKinds();
         if(containsAttributeKindList != null){
             attributeKindAttributesInfoGrid.setItems(containsAttributeKindList);
