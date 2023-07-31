@@ -9,7 +9,9 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
@@ -19,13 +21,14 @@ import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
+import com.viewfunction.docg.element.eventHandling.AttributesViewKindAttachedToConceptionKindEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContainerConceptionKindsConfigView extends VerticalLayout {
+public class ContainerConceptionKindsConfigView extends VerticalLayout implements AttributesViewKindAttachedToConceptionKindEvent.AttributesViewKindAttachedToConceptionKindListener {
     private String attributesViewKindUID;
     private Grid<ConceptionKind> conceptionKindGrid;
     private int containerHeight;
@@ -107,7 +110,7 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        //ResourceHolder.getApplicationBlackboard().addListener(this);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
@@ -119,11 +122,8 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout {
     @Override
     protected void onDetach(DetachEvent detachEvent) {
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
-
-
-
 
     private void renderAttachNewConceptionKindUI(){
         AttachNewConceptionKindView attachNewConceptionKindView = new AttachNewConceptionKindView(this.attributesViewKindUID);
@@ -137,5 +137,16 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout {
     public void setHeight(int heightValue){
         containerHeight = heightValue;
         this.conceptionKindGrid.setHeight(containerHeight-190,Unit.PIXELS);
+    }
+
+    @Override
+    public void receivedAttributesViewKindAttachedToConceptionKindEvent(AttributesViewKindAttachedToConceptionKindEvent event) {
+        if(event.getAttributesViewKindUID() != null &&event.getConceptionKind() != null){
+            if(this.attributesViewKindUID.equals(event.getAttributesViewKindUID())){
+                ListDataProvider dtaProvider=(ListDataProvider)conceptionKindGrid.getDataProvider();
+                dtaProvider.getItems().add(event.getConceptionKind());
+                dtaProvider.refreshAll();
+            }
+        }
     }
 }

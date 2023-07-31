@@ -281,6 +281,8 @@ public class MainLayout extends AppLayout {
                 AttributeKindAttachedToAttributesViewKindEvent.class);
         _BLACKBOARD.register(AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener.class,
                 AttributeKindDetachedFromAttributesViewKindEvent.class);
+        _BLACKBOARD.register(AttributesViewKindAttachedToConceptionKindEvent.AttributesViewKindAttachedToConceptionKindListener.class,
+                AttributesViewKindAttachedToConceptionKindEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

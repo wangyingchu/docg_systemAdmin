@@ -20,10 +20,13 @@ import com.vaadin.flow.data.renderer.Renderer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.eventHandling.AttributesViewKindAttachedToConceptionKindEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.List;
 
@@ -122,7 +125,6 @@ public class AttachNewConceptionKindView extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         try {
-
             String conceptionKindName = conceptionKindMetaInfo.getKindName();
             ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKindName);
             if(targetConceptionKind != null){
@@ -132,16 +134,13 @@ public class AttachNewConceptionKindView extends VerticalLayout {
                     if(containerDialog != null){
                         containerDialog.close();
                     }
-                    /*
-                    AttributeKind targetAttributeKind = coreRealm.getAttributeKind(conceptionKindMetaInfo.getKindUID());
-                    AttributeKindAttachedToAttributesViewKindEvent attributeKindAttachedToAttributesViewKindEvent = new AttributeKindAttachedToAttributesViewKindEvent();
-                    attributeKindAttachedToAttributesViewKindEvent.setAttributeKindMetaInfo(conceptionKindMetaInfo);
-                    attributeKindAttachedToAttributesViewKindEvent.setAttributeKindUID(conceptionKindMetaInfo.getKindUID());
-                    attributeKindAttachedToAttributesViewKindEvent.setAttributesViewKindUID(this.attributesViewKindUID);
-                    attributeKindAttachedToAttributesViewKindEvent.setAttributesViewKind(targetAttributesViewKind);
-                    attributeKindAttachedToAttributesViewKindEvent.setAttributeKind(targetAttributeKind);
-                    ResourceHolder.getApplicationBlackboard().fire(attributeKindAttachedToAttributesViewKindEvent);
-                    */
+                    AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
+                    AttributesViewKindAttachedToConceptionKindEvent attributesViewKindAttachedToConceptionKindEvent = new AttributesViewKindAttachedToConceptionKindEvent();
+                    attributesViewKindAttachedToConceptionKindEvent.setConceptionKindName(conceptionKindName);
+                    attributesViewKindAttachedToConceptionKindEvent.setAttributesViewKindUID(this.attributesViewKindUID);
+                    attributesViewKindAttachedToConceptionKindEvent.setConceptionKind(targetConceptionKind);
+                    attributesViewKindAttachedToConceptionKindEvent.setAttributesViewKind(targetAttributesViewKind);
+                    ResourceHolder.getApplicationBlackboard().fire(attributesViewKindAttachedToConceptionKindEvent);
                 }else{
                     CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 附加到概念类型 "+ conceptionKindMetaInfo.getKindName() +" : "+conceptionKindMetaInfo.getKindDesc() +" 失败", NotificationVariant.LUMO_ERROR);
                 }
