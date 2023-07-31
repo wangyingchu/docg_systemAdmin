@@ -21,13 +21,17 @@ import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindAttachedToConceptionKindEvent;
+import com.viewfunction.docg.element.eventHandling.AttributesViewKindDetachedFromConceptionKindEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class ContainerConceptionKindsConfigView extends VerticalLayout implements AttributesViewKindAttachedToConceptionKindEvent.AttributesViewKindAttachedToConceptionKindListener {
+public class ContainerConceptionKindsConfigView extends VerticalLayout implements
+        AttributesViewKindAttachedToConceptionKindEvent.AttributesViewKindAttachedToConceptionKindListener,
+        AttributesViewKindDetachedFromConceptionKindEvent.AttributesViewKindDetachedFromConceptionKindListener{
     private String attributesViewKindUID;
     private Grid<ConceptionKind> conceptionKindGrid;
     private int containerHeight;
@@ -135,10 +139,10 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout implement
 
     private void renderDetachConceptionKindUI(ConceptionKind attributeKind){
         DetachConceptionKindView detachConceptionKindView = new DetachConceptionKindView(this.attributesViewKindUID,attributeKind);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"移除属性类型",null,true,600,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"移除概念类型",null,true,600,210,false);
         fixSizeWindow.setWindowContent(detachConceptionKindView);
         fixSizeWindow.setModel(true);
-        //detachConceptionKindView.setContainerDialog(fixSizeWindow);
+        detachConceptionKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 
@@ -154,6 +158,25 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout implement
                 ListDataProvider dtaProvider=(ListDataProvider)conceptionKindGrid.getDataProvider();
                 dtaProvider.getItems().add(event.getConceptionKind());
                 dtaProvider.refreshAll();
+            }
+        }
+    }
+
+    @Override
+    public void receivedAttributesViewKindDetachedFromConceptionKindEvent(AttributesViewKindDetachedFromConceptionKindEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getConceptionKindName() != null){
+            if(this.attributesViewKindUID.equals(event.getAttributesViewKindUID())){
+                ListDataProvider dataProvider=(ListDataProvider)conceptionKindGrid.getDataProvider();
+                Collection<ConceptionKind> itemsCollection = dataProvider.getItems();
+                if(itemsCollection != null){
+                    for(ConceptionKind currentConceptionKind:itemsCollection){
+                        if(event.getConceptionKindName().equals(currentConceptionKind.getConceptionKindName())){
+                            itemsCollection.remove(currentConceptionKind);
+                            break;
+                        }
+                    }
+                    dataProvider.refreshAll();
+                }
             }
         }
     }
