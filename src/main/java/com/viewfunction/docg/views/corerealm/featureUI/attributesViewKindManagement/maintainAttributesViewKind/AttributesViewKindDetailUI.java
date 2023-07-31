@@ -54,23 +54,20 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         renderAttributesViewKindData();
-
-
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             currentBrowserHeight = event.getHeight();
-            int chartHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset - 340;
-            //conceptionKindCorrelationInfoChart.setHeight(chartHeight, Unit.PIXELS);
-            //this.conceptionRelationRealtimeInfoGrid.setHeight(chartHeight,Unit.PIXELS);
+            int containerHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset;
+            this.containerConceptionKindsConfigView.setHeight(containerHeight);
+            this.containsAttributeKindsConfigView.setHeight(containerHeight);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             currentBrowserHeight = receiver.getBodyClientHeight();
-            //kindCorrelationInfoTabSheet.setHeight(currentBrowserHeight-conceptionKindDetailViewHeightOffset-290,Unit.PIXELS);
+            int containerHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset;
+            this.containerConceptionKindsConfigView.setHeight(containerHeight);
+            this.containsAttributeKindsConfigView.setHeight(containerHeight);
         }));
-
-
-
         //ResourceHolder.getApplicationBlackboard().addListener(this);
     }
 

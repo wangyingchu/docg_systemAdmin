@@ -11,7 +11,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeKindMetaInfo;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -35,6 +35,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener{
     private String attributesViewKindUID;
     private Grid<AttributeKind> attributeKindGrid;
+    private int containerHeight;
 
     public ContainsAttributeKindsConfigView(String attributesViewKindUID){
         this.attributesViewKindUID = attributesViewKindUID;
@@ -184,5 +185,10 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
                 }
             }
         }
+    }
+
+    public void setHeight(int heightValue){
+        containerHeight = heightValue;
+        this.attributeKindGrid.setHeight(containerHeight-190,Unit.PIXELS);
     }
 }
