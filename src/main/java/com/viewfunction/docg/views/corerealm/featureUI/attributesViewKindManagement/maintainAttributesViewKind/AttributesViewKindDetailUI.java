@@ -18,6 +18,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,11 +103,23 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         Button metaConfigItemConfigInfoButton= new Button("元属性配置管理");
         metaConfigItemConfigInfoButton.setIcon(VaadinIcon.BOOKMARK.create());
         metaConfigItemConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        metaConfigItemConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderMetaConfigItemConfigInfoUI();
+            }
+        });
         buttonList.add(metaConfigItemConfigInfoButton);
 
         Button classificationConfigInfoButton= new Button("分类配置管理");
         classificationConfigInfoButton.setIcon(VaadinIcon.TAGS.create());
         classificationConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        classificationConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderClassificationConfigInfoUI();
+            }
+        });
         buttonList.add(classificationConfigInfoButton);
 
         Button refreshConceptionKindConfigInfoButton= new Button("刷新属性视图类型配置信息");
@@ -169,4 +182,15 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
+
+    private void renderMetaConfigItemConfigInfoUI(){
+        MetaConfigItemsConfigView metaConfigItemsConfigView = new MetaConfigItemsConfigView(MetaConfigItemsConfigView.MetaConfigItemType.AttributesViewKind,this.attributesViewKindUID);
+        metaConfigItemsConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.BOOKMARK),"属性视图类型元属性配置管理",null,true,750,280,false);
+        fixSizeWindow.setWindowContent(metaConfigItemsConfigView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderClassificationConfigInfoUI(){}
 }

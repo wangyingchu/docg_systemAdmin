@@ -16,10 +16,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.MetaConfigItemFeatureSupportable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
@@ -196,6 +193,18 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
                         this.metaConfigItemFeatureSupportable = targetRelationKind;
                         metaConfigItemsMap = targetRelationKind.getMetaConfigItems();
                         renderMetaConfigItemsData(metaConfigItemsMap);
+                        break;
+                    case AttributeKind :
+                        AttributeKind targetAttributeKind = coreRealm.getAttributeKind(metaConfigItemName);
+                        this.metaConfigItemFeatureSupportable = targetAttributeKind;
+                        metaConfigItemsMap = targetAttributeKind.getMetaConfigItems();
+                        renderMetaConfigItemsData(metaConfigItemsMap);
+                        break;
+                    case AttributesViewKind:
+                        AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(metaConfigItemName);
+                        this.metaConfigItemFeatureSupportable = targetAttributesViewKind;
+                        metaConfigItemsMap = targetAttributesViewKind.getMetaConfigItems();
+                        renderMetaConfigItemsData(metaConfigItemsMap);
                 }
             }
         }
@@ -291,7 +300,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
                 }
             }
         });
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加元属性",null,true,480,180,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加元属性",null,true,480,190,false);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
@@ -348,6 +357,14 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             case RelationKind:
                 RelationKind targetRelationKind = coreRealm.getRelationKind(metaConfigItemName);
                 metaConfigItemsMap = targetRelationKind.getMetaConfigItems();
+                break;
+            case AttributeKind:
+                AttributeKind targetAttributeKind = coreRealm.getAttributeKind(metaConfigItemName);
+                metaConfigItemsMap = targetAttributeKind.getMetaConfigItems();
+                break;
+            case AttributesViewKind:
+                AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(metaConfigItemName);
+                metaConfigItemsMap = targetAttributesViewKind.getMetaConfigItems();
         }
         List<MetaConfigItemValueObject> metaConfigItemValueObjectList = new ArrayList<>();
         Set<String> itemNameSet = metaConfigItemsMap.keySet();
