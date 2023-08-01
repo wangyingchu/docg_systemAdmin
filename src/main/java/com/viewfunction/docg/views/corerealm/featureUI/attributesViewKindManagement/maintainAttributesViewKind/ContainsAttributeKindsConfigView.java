@@ -155,7 +155,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         fixSizeWindow.show();
     }
 
-    private void refreshAttributeTypesInfo(){
+    public void refreshAttributeTypesInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);

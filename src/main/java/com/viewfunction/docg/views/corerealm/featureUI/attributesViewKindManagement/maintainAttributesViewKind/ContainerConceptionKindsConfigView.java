@@ -151,7 +151,7 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout implement
         this.conceptionKindGrid.setHeight(containerHeight-190,Unit.PIXELS);
     }
 
-    private void refreshConceptionKindsInfo(){
+    public void refreshConceptionKindsInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
