@@ -99,6 +99,17 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
 
         List<Component> buttonList = new ArrayList<>();
 
+        Button metaConfigItemConfigInfoButton= new Button("元属性配置管理信息");
+        metaConfigItemConfigInfoButton.setIcon(VaadinIcon.BOOKMARK.create());
+        metaConfigItemConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        buttonList.add(metaConfigItemConfigInfoButton);
+
+        Button classificationConfigInfoButton= new Button("分类配置管理信息");
+        classificationConfigInfoButton.setIcon(VaadinIcon.TAGS.create());
+        classificationConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        buttonList.add(classificationConfigInfoButton);
+
+
         Button refreshConceptionKindConfigInfoButton= new Button("刷新属性视图类型配置信息");
         refreshConceptionKindConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
         refreshConceptionKindConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);

@@ -61,7 +61,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         });
         buttonList.add(refreshMetaConfigItemsInfoButton);
 
-        SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.BOOKMARK),"属性类型配置管理 ",secTitleElementsList,buttonList);
+        SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TASKS),"属性类型配置管理 ",secTitleElementsList,buttonList);
         add(metaConfigItemConfigActionBar);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKind -> {

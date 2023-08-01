@@ -59,7 +59,7 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout implement
         });
         buttonList.add(refreshMetaConfigItemsInfoButton);
 
-        SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.BOOKMARK),"概念类型配置管理 ",secTitleElementsList,buttonList);
+        SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"概念类型配置管理 ",secTitleElementsList,buttonList);
         add(metaConfigItemConfigActionBar);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(conceptionKind -> {
