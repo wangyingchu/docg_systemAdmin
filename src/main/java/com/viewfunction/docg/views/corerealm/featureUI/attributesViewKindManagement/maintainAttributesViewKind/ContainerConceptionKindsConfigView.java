@@ -55,7 +55,7 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout implement
         Button refreshMetaConfigItemsInfoButton = new Button("刷新应用的概念类型信息",new Icon(VaadinIcon.REFRESH));
         refreshMetaConfigItemsInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         refreshMetaConfigItemsInfoButton.addClickListener((ClickEvent<Button> click) ->{
-            //refreshMetaConfigItemsInfo();
+            refreshConceptionKindsInfo();
         });
         buttonList.add(refreshMetaConfigItemsInfoButton);
 
@@ -149,6 +149,14 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout implement
     public void setHeight(int heightValue){
         containerHeight = heightValue;
         this.conceptionKindGrid.setHeight(containerHeight-190,Unit.PIXELS);
+    }
+
+    private void refreshConceptionKindsInfo(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
+        List<ConceptionKind> conceptionKindsList = targetAttributesViewKind.getContainerConceptionKinds();
+        conceptionKindGrid.setItems(conceptionKindsList);
     }
 
     @Override

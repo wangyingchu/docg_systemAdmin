@@ -57,7 +57,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         Button refreshMetaConfigItemsInfoButton = new Button("刷新包含的属性类型信息",new Icon(VaadinIcon.REFRESH));
         refreshMetaConfigItemsInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         refreshMetaConfigItemsInfoButton.addClickListener((ClickEvent<Button> click) ->{
-            //refreshMetaConfigItemsInfo();
+            refreshAttributeTypesInfo();
         });
         buttonList.add(refreshMetaConfigItemsInfoButton);
 
@@ -153,6 +153,15 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         fixSizeWindow.setModel(true);
         detachAttributeKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    private void refreshAttributeTypesInfo(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
+        List<AttributeKind> attributeKindsList = targetAttributesViewKind.getContainsAttributeKinds();
+        coreRealm.closeGlobalSession();
+        attributeKindGrid.setItems(attributeKindsList);
     }
 
     @Override
