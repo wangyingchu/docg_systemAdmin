@@ -12,12 +12,14 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +99,7 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         metaConfigItemConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderMetaConfigItemConfigInfoUI();
+                renderMetaConfigItemConfigInfoUI();
             }
         });
         buttonList.add(metaConfigItemConfigInfoButton);
@@ -113,7 +115,22 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         });
         buttonList.add(classificationConfigInfoButton);
 
-        Button refreshConceptionKindConfigInfoButton= new Button("刷新属性视图类型配置信息");
+        Button conceptionKindMetaInfoButton= new Button("属性类型元数据");
+        conceptionKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
+        conceptionKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        conceptionKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderShowMetaInfoUI();
+            }
+        });
+        buttonList.add(conceptionKindMetaInfoButton);
+
+        Icon divIcon = VaadinIcon.LINE_V.create();
+        divIcon.setSize("8px");
+        buttonList.add(divIcon);
+
+        Button refreshConceptionKindConfigInfoButton= new Button("刷新属性类型配置信息");
         refreshConceptionKindConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
         refreshConceptionKindConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         refreshConceptionKindConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -124,17 +141,6 @@ public class AttributeKindDetailUI extends VerticalLayout implements
             }
         });
         buttonList.add(refreshConceptionKindConfigInfoButton);
-
-        Button conceptionKindMetaInfoButton= new Button("属性视图类型元数据");
-        conceptionKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
-        conceptionKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        conceptionKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderShowMetaInfoUI();
-            }
-        });
-        buttonList.add(conceptionKindMetaInfoButton);
 
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TASKS),"Attributes View Kind 属性视图类型  ",secTitleElementsList,buttonList);
         add(secondaryTitleActionBar);
@@ -149,5 +155,22 @@ public class AttributeKindDetailUI extends VerticalLayout implements
 
 
 
+    }
+
+    private void renderShowMetaInfoUI(){
+        AttributeKindMetaInfoView attributeKindMetaInfoView = new AttributeKindMetaInfoView(this.attributeKindUID);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"属性类型元数据信息",null,true,500,340,false);
+        fixSizeWindow.setWindowContent(attributeKindMetaInfoView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderMetaConfigItemConfigInfoUI(){
+        MetaConfigItemsConfigView metaConfigItemsConfigView = new MetaConfigItemsConfigView(MetaConfigItemsConfigView.MetaConfigItemType.AttributeKind,this.attributeKindUID);
+        metaConfigItemsConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.BOOKMARK),"属性类型元属性配置管理",null,true,750,280,false);
+        fixSizeWindow.setWindowContent(metaConfigItemsConfigView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }

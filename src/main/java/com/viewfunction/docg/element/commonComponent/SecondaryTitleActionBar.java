@@ -56,7 +56,7 @@ public class SecondaryTitleActionBar extends HorizontalLayout {
         if(actionComponentsList != null){
             for(Component currentComponent:actionComponentsList){
                 this.add(currentComponent);
-                this.setVerticalComponentAlignment(Alignment.START,currentComponent);
+                this.setVerticalComponentAlignment(Alignment.CENTER,currentComponent);
                 Span spacingSpan = new Span();
                 spacingSpan.setWidth(10,Unit.PIXELS);
                 this.add(spacingSpan);
@@ -109,7 +109,7 @@ public class SecondaryTitleActionBar extends HorizontalLayout {
         if(actionComponentsList != null){
             for(Component currentComponent:actionComponentsList){
                 this.add(currentComponent);
-                this.setVerticalComponentAlignment(Alignment.START,currentComponent);
+                this.setVerticalComponentAlignment(Alignment.CENTER,currentComponent);
                 Span spacingSpan = new Span();
                 spacingSpan.setWidth(10,Unit.PIXELS);
                 this.add(spacingSpan);

@@ -120,6 +120,21 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         });
         buttonList.add(classificationConfigInfoButton);
 
+        Button conceptionKindMetaInfoButton= new Button("属性视图类型元数据");
+        conceptionKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
+        conceptionKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        conceptionKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderShowMetaInfoUI();
+            }
+        });
+        buttonList.add(conceptionKindMetaInfoButton);
+
+        Icon divIcon = VaadinIcon.LINE_V.create();
+        divIcon.setSize("8px");
+        buttonList.add(divIcon);
+
         Button refreshConceptionKindConfigInfoButton= new Button("刷新属性视图类型配置信息");
         refreshConceptionKindConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
         refreshConceptionKindConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
@@ -131,17 +146,6 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
             }
         });
         buttonList.add(refreshConceptionKindConfigInfoButton);
-
-        Button conceptionKindMetaInfoButton= new Button("属性视图类型元数据");
-        conceptionKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
-        conceptionKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        conceptionKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderShowMetaInfoUI();
-            }
-        });
-        buttonList.add(conceptionKindMetaInfoButton);
 
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TASKS),"Attributes View Kind 属性视图类型  ",secTitleElementsList,buttonList);
         add(secondaryTitleActionBar);

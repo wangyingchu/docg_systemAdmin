@@ -135,19 +135,6 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
         List<Component> buttonList = new ArrayList<>();
 
-        Button refreshConceptionKindConfigInfoButton= new Button("刷新概念类型配置信息");
-        refreshConceptionKindConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
-        refreshConceptionKindConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        refreshConceptionKindConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                ConceptionKindConfigurationInfoRefreshEvent conceptionKindConfigurationInfoRefreshEvent = new ConceptionKindConfigurationInfoRefreshEvent();
-                conceptionKindConfigurationInfoRefreshEvent.setConceptionKindName(conceptionKind);
-                ResourceHolder.getApplicationBlackboard().fire(conceptionKindConfigurationInfoRefreshEvent);
-            }
-        });
-        buttonList.add(refreshConceptionKindConfigInfoButton);
-
         Button queryConceptionKindButton= new Button("概念类型实体数据查询");
         queryConceptionKindButton.setIcon(VaadinIcon.RECORDS.create());
         queryConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
@@ -169,6 +156,23 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             }
         });
         buttonList.add(conceptionKindMetaInfoButton);
+
+        Icon divIcon = VaadinIcon.LINE_V.create();
+        divIcon.setSize("8px");
+        buttonList.add(divIcon);
+
+        Button refreshConceptionKindConfigInfoButton= new Button("刷新概念类型配置信息");
+        refreshConceptionKindConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
+        refreshConceptionKindConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        refreshConceptionKindConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                ConceptionKindConfigurationInfoRefreshEvent conceptionKindConfigurationInfoRefreshEvent = new ConceptionKindConfigurationInfoRefreshEvent();
+                conceptionKindConfigurationInfoRefreshEvent.setConceptionKindName(conceptionKind);
+                ResourceHolder.getApplicationBlackboard().fire(conceptionKindConfigurationInfoRefreshEvent);
+            }
+        });
+        buttonList.add(refreshConceptionKindConfigInfoButton);
 
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"Conception Kind 概念类型  ",secTitleElementsList,buttonList);
         add(secondaryTitleActionBar);

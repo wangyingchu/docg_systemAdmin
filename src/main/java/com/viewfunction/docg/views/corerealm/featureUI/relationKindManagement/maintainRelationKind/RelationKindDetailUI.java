@@ -127,19 +127,6 @@ public class RelationKindDetailUI extends VerticalLayout implements
 
         List<Component> buttonList = new ArrayList<>();
 
-        Button refreshRelationKindConfigInfoButton= new Button("刷新关系类型配置信息");
-        refreshRelationKindConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
-        refreshRelationKindConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        refreshRelationKindConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                RelationKindConfigurationInfoRefreshEvent relationKindConfigurationInfoRefreshEvent = new RelationKindConfigurationInfoRefreshEvent();
-                relationKindConfigurationInfoRefreshEvent.setRelationKindName(relationKind);
-                ResourceHolder.getApplicationBlackboard().fire(relationKindConfigurationInfoRefreshEvent);
-            }
-        });
-        buttonList.add(refreshRelationKindConfigInfoButton);
-
         Button queryRelationKindButton= new Button("关系类型实体数据查询");
         queryRelationKindButton.setIcon(VaadinIcon.RECORDS.create());
         queryRelationKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
@@ -161,6 +148,23 @@ public class RelationKindDetailUI extends VerticalLayout implements
             }
         });
         buttonList.add(relationKindMetaInfoButton);
+
+        Icon divIcon = VaadinIcon.LINE_V.create();
+        divIcon.setSize("8px");
+        buttonList.add(divIcon);
+
+        Button refreshRelationKindConfigInfoButton= new Button("刷新关系类型配置信息");
+        refreshRelationKindConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
+        refreshRelationKindConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        refreshRelationKindConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                RelationKindConfigurationInfoRefreshEvent relationKindConfigurationInfoRefreshEvent = new RelationKindConfigurationInfoRefreshEvent();
+                relationKindConfigurationInfoRefreshEvent.setRelationKindName(relationKind);
+                ResourceHolder.getApplicationBlackboard().fire(relationKindConfigurationInfoRefreshEvent);
+            }
+        });
+        buttonList.add(refreshRelationKindConfigInfoButton);
 
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONNECT_O),"Relation Kind 关系类型  ",secTitleElementsList,buttonList);
         add(secondaryTitleActionBar);
