@@ -88,13 +88,13 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
         Icon divIcon = new Icon(VaadinIcon.LINE_V);
         divIcon.setSize("12px");
-        divIcon.getStyle().set("top","-8px").set("position","relative");
+        divIcon.getStyle().set("top","-5px").set("position","relative");
         actionButtonLayout.add(divIcon);
         actionButtonLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
 
         queryResultOperationMenuBar = new MenuBar();
         queryResultOperationMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
-        queryResultOperationMenuBar.getStyle().set("top","-8px").set("position","relative");
+        queryResultOperationMenuBar.getStyle().set("top","-5px").set("position","relative");
         queryResultOperationMenuBar.setEnabled(false);
 
         actionButtonLayout.add(queryResultOperationMenuBar);
