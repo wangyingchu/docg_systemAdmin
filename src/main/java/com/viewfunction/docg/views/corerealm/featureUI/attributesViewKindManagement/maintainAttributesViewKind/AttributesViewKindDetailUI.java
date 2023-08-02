@@ -29,7 +29,7 @@ import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.
 public class AttributesViewKindDetailUI extends VerticalLayout implements
         BeforeEnterObserver {
     private String attributesViewKindUID;
-    private int conceptionKindDetailViewHeightOffset = 110;
+    private int attributesViewKindDetailViewHeightOffset = 110;
     private int currentBrowserHeight = 0;
     private Registration listener;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
@@ -42,13 +42,13 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
 
     public AttributesViewKindDetailUI(String attributesViewKindUID){
         this.attributesViewKindUID = attributesViewKindUID;
-        this.conceptionKindDetailViewHeightOffset = 45;
+        this.attributesViewKindDetailViewHeightOffset = 45;
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.attributesViewKindUID = beforeEnterEvent.getRouteParameters().get("attributesViewKindUID").get();
-        this.conceptionKindDetailViewHeightOffset = 45;
+        this.attributesViewKindDetailViewHeightOffset = 45;
     }
 
     @Override
@@ -58,18 +58,17 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             currentBrowserHeight = event.getHeight();
-            int containerHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset;
+            int containerHeight = currentBrowserHeight - attributesViewKindDetailViewHeightOffset;
             this.containerConceptionKindsConfigView.setHeight(containerHeight);
             this.containsAttributeKindsConfigView.setHeight(containerHeight);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             currentBrowserHeight = receiver.getBodyClientHeight();
-            int containerHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset;
+            int containerHeight = currentBrowserHeight - attributesViewKindDetailViewHeightOffset;
             this.containerConceptionKindsConfigView.setHeight(containerHeight);
             this.containsAttributeKindsConfigView.setHeight(containerHeight);
         }));
-        //ResourceHolder.getApplicationBlackboard().addListener(this);
     }
 
     @Override
@@ -77,7 +76,6 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     private void renderAttributesViewKindData(){
