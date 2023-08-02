@@ -33,10 +33,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImp
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
-import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
-import com.viewfunction.docg.element.eventHandling.AttributeKindCreatedEvent;
-import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttributesViewKindEvent;
-import com.viewfunction.docg.element.eventHandling.AttributeKindRemovedEvent;
+import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
@@ -56,7 +53,8 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         AttributeKindCreatedEvent.AttributeKindCreatedListener,
         AttributeKindRemovedEvent.AttributeKindRemovedListener,
         AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener,
-        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener{
+        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener,
+        AttributeKindDescriptionUpdatedEvent.AttributeKindDescriptionUpdatedListener{
     private Grid<AttributeKindMetaInfo> attributeKindMetaInfoGrid;
     private GridListDataView<AttributeKindMetaInfo> attributeKindsMetaInfoView;
     private Registration listener;
@@ -695,6 +693,20 @@ public class AttributeKindManagementUI extends VerticalLayout implements
                     dataProvider.refreshAll();
                 }
             }
+        }
+    }
+
+    @Override
+    public void receivedAttributeKindDescriptionUpdatedEvent(AttributeKindDescriptionUpdatedEvent event) {
+        if(event.getAttributeKindUID() != null && event.getAttributeKindDesc() != null){
+            ListDataProvider dataProvider=(ListDataProvider)attributeKindMetaInfoGrid.getDataProvider();
+            Collection<AttributeKindMetaInfo> attributeKindMetaInfoList = dataProvider.getItems();
+            for(AttributeKindMetaInfo currentAttributeKindMetaInfo:attributeKindMetaInfoList){
+                if(currentAttributeKindMetaInfo.getKindUID().equals(event.getAttributeKindUID())){
+                    currentAttributeKindMetaInfo.setKindDesc(event.getAttributeKindDesc());
+                }
+            }
+            dataProvider.refreshAll();
         }
     }
 }

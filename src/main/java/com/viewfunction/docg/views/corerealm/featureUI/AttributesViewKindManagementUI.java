@@ -24,7 +24,7 @@ import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.AttributesViewKindMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributesViewKindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
