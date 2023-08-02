@@ -97,7 +97,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
 
         List<Component> attributeKindManagementOperationButtonList = new ArrayList<>();
 
-        Button attributeKindRuntimeStatusGuideButton = new Button("实体属性分布概览",new Icon(VaadinIcon.DASHBOARD));
+        Button attributeKindRuntimeStatusGuideButton = new Button("属性视图类型关联分布概览",new Icon(VaadinIcon.DASHBOARD));
         attributeKindRuntimeStatusGuideButton.setDisableOnClick(true);
         attributeKindRuntimeStatusGuideButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         attributeKindRuntimeStatusGuideButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -440,13 +440,13 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             attributesViewKindMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
-            attributeKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
+            attributeKindAttributesInfoGrid.setHeight(300,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             attributesViewKindMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
-            attributeKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
+            attributeKindAttributesInfoGrid.setHeight(300,Unit.PIXELS);
         }));
     }
 
