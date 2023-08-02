@@ -52,7 +52,9 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         AttributesViewKindRemovedEvent.AttributesViewKindRemovedListener,
         AttributesViewKindDescriptionUpdatedEvent.AttributesViewKindDescriptionUpdatedListener,
         AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener,
-        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener{
+        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener,
+        AttributesViewKindAttachedToConceptionKindEvent.AttributesViewKindAttachedToConceptionKindListener,
+        AttributesViewKindDetachedFromConceptionKindEvent.AttributesViewKindDetachedFromConceptionKindListener{
     private Grid<AttributesViewKindMetaInfo> attributesViewKindMetaInfoGrid;
     private GridListDataView<AttributesViewKindMetaInfo> attributesViewKindsMetaInfoView;
     final ZoneId id = ZoneId.systemDefault();
@@ -689,6 +691,38 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
                     for(AttributeKind currentAttributeKind:itemsCollection){
                         if(event.getAttributeKindUID().equals(currentAttributeKind.getAttributeKindUID())){
                             itemsCollection.remove(currentAttributeKind);
+                            break;
+                        }
+                    }
+                    dataProvider.refreshAll();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void receivedAttributesViewKindAttachedToConceptionKindEvent(AttributesViewKindAttachedToConceptionKindEvent event) {
+        if(event.getConceptionKind() != null && event.getAttributesViewKindUID() != null){
+            if(lastSelectedAttributesViewKindMetaInfoGridAttributeKindMetaInfo != null &&
+                    lastSelectedAttributesViewKindMetaInfoGridAttributeKindMetaInfo.getKindUID().equals(event.getAttributesViewKindUID())){
+                ListDataProvider dtaProvider=(ListDataProvider)conceptionKindAttributesInfoGrid.getDataProvider();
+                dtaProvider.getItems().add(event.getConceptionKind());
+                dtaProvider.refreshAll();
+            }
+        }
+    }
+
+    @Override
+    public void receivedAttributesViewKindDetachedFromConceptionKindEvent(AttributesViewKindDetachedFromConceptionKindEvent event) {
+        if(event.getConceptionKindName() != null && event.getAttributesViewKindUID() != null){
+            if(lastSelectedAttributesViewKindMetaInfoGridAttributeKindMetaInfo != null &&
+                    lastSelectedAttributesViewKindMetaInfoGridAttributeKindMetaInfo.getKindUID().equals(event.getAttributesViewKindUID())){
+                ListDataProvider dataProvider=(ListDataProvider)conceptionKindAttributesInfoGrid.getDataProvider();
+                Collection<ConceptionKind> itemsCollection = dataProvider.getItems();
+                if(itemsCollection != null){
+                    for(ConceptionKind currentConceptionKind:itemsCollection){
+                        if(event.getConceptionKindName().equals(currentConceptionKind.getConceptionKindName())){
+                            itemsCollection.remove(currentConceptionKind);
                             break;
                         }
                     }
