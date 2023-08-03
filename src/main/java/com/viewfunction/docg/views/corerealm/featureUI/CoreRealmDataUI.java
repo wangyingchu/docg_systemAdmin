@@ -19,6 +19,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.CheckSystemRuntimeInfoEvent;
 import com.viewfunction.docg.util.ResourceHolder;
@@ -71,14 +73,18 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
 
         List<Component> secTitleElementsList = new ArrayList<>();
 
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        String implTech = coreRealm.getStorageImplTech().name();
+        String coreRealmName = coreRealm.getCoreRealmName();
+
         Icon realmIcon = VaadinIcon.ARCHIVE.create();
         realmIcon.getStyle().set("padding", "var(--lumo-space-xs");
-        Span realmNameSpan = new Span( realmIcon,new Span("Default CoreRealm"));
+        Span realmNameSpan = new Span( realmIcon,new Span(coreRealmName));
         realmNameSpan.getStyle().set("font-size","var(--lumo-font-size-xs)");
         realmNameSpan.getElement().getThemeList().add("badge contrast");
         secTitleElementsList.add(realmNameSpan);
 
-        NativeLabel coreRealmTechLabel = new NativeLabel(" NEO4J 实现");
+        NativeLabel coreRealmTechLabel = new NativeLabel(" "+implTech+" 实现");
         coreRealmTechLabel.getStyle().set("font-size","var(--lumo-font-size-xxs)");
         secTitleElementsList.add(coreRealmTechLabel);
         coreRealmTechLabel.getElement().getThemeList().add("badge success");

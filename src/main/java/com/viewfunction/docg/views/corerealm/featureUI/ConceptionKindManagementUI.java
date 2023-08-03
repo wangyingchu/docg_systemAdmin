@@ -86,9 +86,12 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
         List<Component> secTitleElementsList = new ArrayList<>();
 
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        String coreRealmName = coreRealm.getCoreRealmName();
+
         Icon realmIcon = VaadinIcon.ARCHIVE.create();
         realmIcon.getStyle().set("padding", "var(--lumo-space-xs");
-        Span realmNameSpan = new Span( realmIcon,new Span("Default CoreRealm"));
+        Span realmNameSpan = new Span( realmIcon,new Span(coreRealmName));
         realmNameSpan.addClassName("text-2xs");
         realmNameSpan.getElement().getThemeList().add("badge contrast");
         secTitleElementsList.add(realmNameSpan);

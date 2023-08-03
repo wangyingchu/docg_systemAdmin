@@ -8,6 +8,8 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 
 import java.util.ArrayList;
@@ -32,9 +34,12 @@ public class TimeFlowManagementUI extends VerticalLayout {
 
         List<Component> secTitleElementsList = new ArrayList<>();
 
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        String coreRealmName = coreRealm.getCoreRealmName();
+
         Icon realmIcon = VaadinIcon.ARCHIVE.create();
         realmIcon.getStyle().set("padding", "var(--lumo-space-xs");
-        Span realmNameSpan = new Span( realmIcon,new Span("Default CoreRealm"));
+        Span realmNameSpan = new Span( realmIcon,new Span(coreRealmName));
         realmNameSpan.addClassName("text-2xs");
         realmNameSpan.getElement().getThemeList().add("badge contrast");
         secTitleElementsList.add(realmNameSpan);

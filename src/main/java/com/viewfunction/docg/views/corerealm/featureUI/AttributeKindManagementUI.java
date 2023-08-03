@@ -85,9 +85,12 @@ public class AttributeKindManagementUI extends VerticalLayout implements
 
         List<Component> secTitleElementsList = new ArrayList<>();
 
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        String coreRealmName = coreRealm.getCoreRealmName();
+
         Icon realmIcon = VaadinIcon.ARCHIVE.create();
         realmIcon.getStyle().set("padding", "var(--lumo-space-xs");
-        Span realmNameSpan = new Span( realmIcon,new Span("Default CoreRealm"));
+        Span realmNameSpan = new Span( realmIcon,new Span(coreRealmName));
         realmNameSpan.addClassName("text-2xs");
         realmNameSpan.getElement().getThemeList().add("badge contrast");
         secTitleElementsList.add(realmNameSpan);
@@ -322,7 +325,6 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         attributeKindDescFilterField.setWidth(170,Unit.PIXELS);
         attributeDataTypeFilterSelect.setPageSize(30);
 
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         AttributeDataType[] attributeDataTypesArray = coreRealm.getStorageImplTech().equals(CoreRealmStorageImplTech.NEO4J) ?
                 new AttributeDataType[]{
                         AttributeDataType.BOOLEAN,
