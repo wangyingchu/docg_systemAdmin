@@ -65,14 +65,30 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         add(metaConfigItemConfigActionBar);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKind -> {
+            Icon configAttachmentInfoIcon = new Icon(VaadinIcon.BULLETS);
+            configAttachmentInfoIcon.setSize("18px");
+            Button configAttachmentInfoButton = new Button(configAttachmentInfoIcon, event -> {});
+            configAttachmentInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            configAttachmentInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
+            Tooltips.getCurrent().setTooltip(configAttachmentInfoButton, "属性类型附加元数据配置管理");
+            configAttachmentInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(attributeKind instanceof AttributeKind){
+                        renderConfigAttributeKindAttachmentMetaDataUI((AttributeKind)attributeKind);
+                    }
+                }
+            });
+
             Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
             deleteKindIcon.setSize("21px");
-            Button removeAttributeKind = new Button(deleteKindIcon, event -> {});
-            removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeAttributeKind, "移除属性类型");
-            removeAttributeKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            Button removeAttributeKindButton = new Button(deleteKindIcon, event -> {});
+            removeAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            removeAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            removeAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            Tooltips.getCurrent().setTooltip(removeAttributeKindButton, "移除属性类型");
+            removeAttributeKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(attributeKind instanceof AttributeKind){
@@ -81,7 +97,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
                 }
             });
 
-            HorizontalLayout buttons = new HorizontalLayout(removeAttributeKind);
+            HorizontalLayout buttons = new HorizontalLayout(configAttachmentInfoButton,removeAttributeKindButton);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -152,6 +168,14 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         fixSizeWindow.setWindowContent(detachAttributeKindView);
         fixSizeWindow.setModel(true);
         detachAttributeKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderConfigAttributeKindAttachmentMetaDataUI(AttributeKind attributeKind){
+        AttributeKindAttachmentMetaInfoView attributeKindAttachmentMetaInfoView = new AttributeKindAttachmentMetaInfoView(this.attributesViewKindUID,attributeKind);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"属性类型附加元属性信息",null,true,700,450,false);
+        fixSizeWindow.setWindowContent(attributeKindAttachmentMetaInfoView);
+        fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
 
