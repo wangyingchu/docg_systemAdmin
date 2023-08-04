@@ -205,6 +205,7 @@ public class AddEntityAttributeView extends VerticalLayout {
         attributeValueFieldContainerLayout.add(attributeValueInputContainer);
 
         Button confirmButton = new Button("确定",new Icon(VaadinIcon.CHECK));
+        confirmButton.setWidth(80,Unit.PIXELS);
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
