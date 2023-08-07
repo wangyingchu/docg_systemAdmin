@@ -36,10 +36,10 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.AttributeInConceptionKindDistributionInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.RemoveAttributeKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.maintainAttributeKind.AttributeKindDetailUI;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -61,13 +61,13 @@ public class AttributeKindManagementUI extends VerticalLayout implements
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private SecondaryTitleActionBar secondaryTitleActionBar2;
     private Grid<AttributesViewKind> attributeKindAttributesInfoGrid;
-    private ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
     private VerticalLayout singleAttributeKindSummaryInfoContainerLayout;
     private AttributeKindMetaInfo lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo;
     final ZoneId id = ZoneId.systemDefault();
     private TextField attributeKindNameFilterField;
     private TextField attributeKindDescFilterField;
     private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
+    private AttributeInConceptionKindDistributionInfoChart attributeInConceptionKindDistributionInfoChart;
     public AttributeKindManagementUI(){
 
         Button refreshDataButton = new Button("刷新属性类型数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -436,8 +436,12 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         attributeKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
         singleAttributeKindSummaryInfoContainerLayout.add(attributeKindAttributesInfoGrid);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.SCATTER_CHART),"属性类型实体数据分布");
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.BAR_CHART_H),"属性类型在概念实体中的数据分布");
         singleAttributeKindSummaryInfoContainerLayout.add(infoTitle2);
+
+        attributeInConceptionKindDistributionInfoChart = new AttributeInConceptionKindDistributionInfoChart();
+        attributeInConceptionKindDistributionInfoChart.setHeight(300,Unit.PIXELS);
+        singleAttributeKindSummaryInfoContainerLayout.add(attributeInConceptionKindDistributionInfoChart);
         add(attributeKindsInfoContainerLayout);
     }
 
@@ -448,14 +452,21 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         loadAttributeKindsInfo();
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            int browserHeight = event.getHeight();
+            int browserWidth = event.getWidth();
+            int chartWidth = browserWidth-1300-80;
+            int chartHeight = browserHeight-590;
             attributeKindMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
+            attributeInConceptionKindDistributionInfoChart.setChartSize(chartWidth,chartHeight);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
+            int browserWidth = receiver.getBodyClientWidth();
+            int chartWidth = browserWidth-1300-80;
+            int chartHeight = browserHeight-590;
             attributeKindMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
-            //conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-600);
-            //singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
+            attributeInConceptionKindDistributionInfoChart.setChartSize(chartWidth,chartHeight);
         }));
     }
 
@@ -599,7 +610,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         this.attributeKindAttributesInfoGrid.setItems(new ArrayList<>());
         this.secondaryTitleActionBar.updateTitleContent(" - ");
         this.secondaryTitleActionBar2.updateTitleContent(" - ");
-        //this.conceptionKindCorrelationInfoChart.clearData();
+        this.attributeInConceptionKindDistributionInfoChart.clearData();
     }
 
     private void renderAttributeKindOverview(AttributeKindMetaInfo attributeKindMetaInfo){
@@ -615,13 +626,10 @@ public class AttributeKindManagementUI extends VerticalLayout implements
                 AttributeKind attributeKind = coreRealm.getAttributeKind(attributeKindMetaInfo.getKindUID());
         if(attributeKind != null){
             containerAttributesViewKindsList.addAll(attributeKind.getContainerAttributesViewKinds());
+            attributeKindAttributesInfoGrid.setItems(containerAttributesViewKindsList);
+            attributeInConceptionKindDistributionInfoChart.refreshDistributionInfo(attributeKindMetaInfo.getKindUID());
         }
         coreRealm.closeGlobalSession();
-
-        attributeKindAttributesInfoGrid.setItems(containerAttributesViewKindsList);
-        //conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
-        //conceptionKindCorrelationInfoChart.clearData();
-        //conceptionKindCorrelationInfoChart.setData(conceptionKindCorrelationInfoSet,attributeKindName);
 
         String attributeNameText = attributeKindName +" ( "+attributeKindDesc+" )";
         this.secondaryTitleActionBar.updateTitleContent(attributeNameText);
