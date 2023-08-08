@@ -717,6 +717,11 @@ public class AttributeKindManagementUI extends VerticalLayout implements
                 }
             }
             dataProvider.refreshAll();
+            if(lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo != null &&
+                    lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo.getKindUID().equals(event.getAttributeKindUID())){
+                String attributeNameText = lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo.getKindName() +" ( "+event.getAttributeKindDesc()+" )";
+                this.secondaryTitleActionBar.updateTitleContent(attributeNameText);
+            }
         }
     }
 }
