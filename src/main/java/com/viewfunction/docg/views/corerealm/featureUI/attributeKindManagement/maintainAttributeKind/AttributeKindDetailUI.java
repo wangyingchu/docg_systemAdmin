@@ -142,7 +142,7 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         });
         buttonList.add(refreshConceptionKindConfigInfoButton);
 
-        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TASKS),"Attributes View Kind 属性视图类型  ",secTitleElementsList,buttonList);
+        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.INPUT),"Attribute Kind 属性类型  ",secTitleElementsList,buttonList);
         add(secondaryTitleActionBar);
 
         HorizontalLayout mainContainerLayout = new HorizontalLayout();

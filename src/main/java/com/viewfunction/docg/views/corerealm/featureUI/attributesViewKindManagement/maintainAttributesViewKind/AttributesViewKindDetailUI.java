@@ -119,32 +119,32 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         });
         buttonList.add(classificationConfigInfoButton);
 
-        Button conceptionKindMetaInfoButton= new Button("属性视图类型元数据");
-        conceptionKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
-        conceptionKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        conceptionKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button attributesViewKindMetaInfoButton= new Button("属性视图类型元数据");
+        attributesViewKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
+        attributesViewKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        attributesViewKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 renderShowMetaInfoUI();
             }
         });
-        buttonList.add(conceptionKindMetaInfoButton);
+        buttonList.add(attributesViewKindMetaInfoButton);
 
         Icon divIcon = VaadinIcon.LINE_V.create();
         divIcon.setSize("8px");
         buttonList.add(divIcon);
 
-        Button refreshConceptionKindConfigInfoButton= new Button("刷新属性视图类型配置信息");
-        refreshConceptionKindConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
-        refreshConceptionKindConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        refreshConceptionKindConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button refreshAttributesViewKindConfigInfoButton= new Button("刷新属性视图类型配置信息");
+        refreshAttributesViewKindConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
+        refreshAttributesViewKindConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        refreshAttributesViewKindConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 containerConceptionKindsConfigView.refreshConceptionKindsInfo();
                 containsAttributeKindsConfigView.refreshAttributeTypesInfo();
             }
         });
-        buttonList.add(refreshConceptionKindConfigInfoButton);
+        buttonList.add(refreshAttributesViewKindConfigInfoButton);
 
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TASKS),"Attributes View Kind 属性视图类型  ",secTitleElementsList,buttonList);
         add(secondaryTitleActionBar);
