@@ -18,6 +18,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
@@ -33,6 +34,8 @@ public class AttributeKindDetailUI extends VerticalLayout implements
     private int currentBrowserHeight = 0;
     private Registration listener;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
+    private VerticalLayout leftSideContainerLayout;
+    private VerticalLayout rightSideContainerLayout;
 
     public AttributeKindDetailUI(){}
 
@@ -149,12 +152,40 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         mainContainerLayout.setWidthFull();
         add(mainContainerLayout);
 
+        leftSideContainerLayout = new VerticalLayout();
+        leftSideContainerLayout.setSpacing(false);
+        leftSideContainerLayout.setPadding(false);
+        leftSideContainerLayout.setMargin(false);
+
+        mainContainerLayout.add(leftSideContainerLayout);
+        leftSideContainerLayout.setWidth(800, Unit.PIXELS);
+        leftSideContainerLayout.getStyle()
+                .set("border-right", "1px solid var(--lumo-contrast-20pct)");
+
+        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CUBE),"包含本属性类型的概念类型实体属性分布");
+        infoTitle1.getStyle().set("padding-bottom","5px");
+        leftSideContainerLayout.add(infoTitle1);
 
 
 
 
 
 
+
+
+
+
+
+        rightSideContainerLayout = new VerticalLayout();
+        rightSideContainerLayout.setWidth(100,Unit.PERCENTAGE);
+        rightSideContainerLayout.setSpacing(false);
+        rightSideContainerLayout.setPadding(false);
+        rightSideContainerLayout.setMargin(false);
+        mainContainerLayout.add(rightSideContainerLayout);
+
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体概略采样数 "+10000+")");
+        infoTitle2.getStyle().set("padding-bottom","5px");
+        rightSideContainerLayout.add(infoTitle2);
     }
 
     private void renderShowMetaInfoUI(){
