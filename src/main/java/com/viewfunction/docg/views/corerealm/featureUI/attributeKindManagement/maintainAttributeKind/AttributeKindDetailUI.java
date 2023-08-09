@@ -13,6 +13,9 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -24,6 +27,8 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaCon
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Route("attributeKindDetailInfo/:attributeKindUID")
 public class AttributeKindDetailUI extends VerticalLayout implements
@@ -186,6 +191,50 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体概略采样数 "+10000+")");
         infoTitle2.getStyle().set("padding-bottom","5px");
         rightSideContainerLayout.add(infoTitle2);
+    }
+
+    private void loadAttributeKindInfoData() {
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+
+        AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.attributeKindUID);
+
+        Map<String,Long> distributionMap = targetAttributeKind.getAttributeInConceptionKindDistributionStatistics();
+        Set<String> conceptionNameSet = distributionMap.keySet();
+
+
+
+        List<EntityStatisticsInfo> entityStatisticsInfoList = null;
+        try {
+            List<EntityStatisticsInfo> conceptionKindInfolist = entityStatisticsInfoList = coreRealm.getConceptionEntitiesStatistics();
+
+
+            for(EntityStatisticsInfo currentEntityStatisticsInfo:conceptionKindInfolist){
+                String conceptionKindName = currentEntityStatisticsInfo.getEntityKindName();
+                if(conceptionNameSet.contains(conceptionKindName)){
+
+
+
+
+
+                }
+
+
+            }
+
+
+
+
+
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        //com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        //List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(10000);
+        coreRealm.closeGlobalSession();
+        //conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
     }
 
     private void renderShowMetaInfoUI(){

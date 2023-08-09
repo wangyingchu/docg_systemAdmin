@@ -7,7 +7,6 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -214,7 +213,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             action0Icon.setSize("10px");
             Span action0Space = new Span();
             action0Space.setWidth(6,Unit.PIXELS);
-            Label action0Label = new Label("属性随机采样(100)");
+            NativeLabel action0Label = new NativeLabel("属性随机采样(100)");
             action0Label.addClassNames("text-xs","font-semibold","text-secondary");
             action0Layout.add(action0Icon,action0Space,action0Label);
             MenuItem action0Item = actionOptionsSubItems.addItem(action0Layout);
@@ -234,7 +233,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             action1Icon.setSize("10px");
             Span action1Space = new Span();
             action1Space.setWidth(6,Unit.PIXELS);
-            Label action1Label = new Label("设定为属性类型");
+            NativeLabel action1Label = new NativeLabel("设定为属性类型");
             action1Label.addClassNames("text-xs","font-semibold","text-secondary");
             action1Layout.add(action1Icon,action1Space,action1Label);
             MenuItem action1Item = actionOptionsSubItems.addItem(action1Layout);
@@ -255,7 +254,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             action2Icon.setSize("10px");
             Span action2Space = new Span();
             action2Space.setWidth(6,Unit.PIXELS);
-            Label action2Label = new Label("删除属性");
+            NativeLabel action2Label = new NativeLabel("删除属性");
             action2Label.addClassNames("text-xs","font-semibold","text-secondary");
             action2Layout.add(action2Icon,action2Space,action2Label);
             MenuItem action2Item = actionOptionsSubItems.addItem(action2Layout);
@@ -276,7 +275,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             containerAction3Icon.setSize("10px");
             Span containerAction3Space = new Span();
             containerAction3Space.setWidth(6,Unit.PIXELS);
-            Label containerAction3Label = new Label("属性数据类型转换");
+            NativeLabel containerAction3Label = new NativeLabel("属性数据类型转换");
             containerAction3Label.addClassNames("text-xs","font-semibold","text-secondary");
             containerAction3Layout.add(containerAction3Icon,containerAction3Space,containerAction3Label);
             MenuItem containerAction3Item = actionOptionsSubItems.addItem(containerAction3Layout);
@@ -293,7 +292,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 action3Icon.setSize("10px");
                 Span action3Space = new Span();
                 action3Space.setWidth(6,Unit.PIXELS);
-                Label action3Label = new Label("转为 INT 类型");
+                NativeLabel action3Label = new NativeLabel("转为 INT 类型");
                 action3Label.addClassNames("text-xs","font-semibold","text-secondary");
                 action3Layout.add(action3Icon,action3Space,action3Label);
                 MenuItem action3Item = containerAction3Item.getSubMenu().addItem(action3Layout);
@@ -315,7 +314,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 action4Icon.setSize("10px");
                 Span action4Space = new Span();
                 action4Space.setWidth(6,Unit.PIXELS);
-                Label action4Label = new Label("转为 FLOAT 类型");
+                NativeLabel action4Label = new NativeLabel("转为 FLOAT 类型");
                 action4Label.addClassNames("text-xs","font-semibold","text-secondary");
                 action4Layout.add(action4Icon,action4Space,action4Label);
                 MenuItem action4Item = containerAction3Item.getSubMenu().addItem(action4Layout);
@@ -337,7 +336,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 action5Icon.setSize("10px");
                 Span action5Space = new Span();
                 action5Space.setWidth(6,Unit.PIXELS);
-                Label action5Label = new Label("转为 BOOLEAN 类型");
+                NativeLabel action5Label = new NativeLabel("转为 BOOLEAN 类型");
                 action5Label.addClassNames("text-xs","font-semibold","text-secondary");
                 action5Layout.add(action5Icon,action5Space,action5Label);
                 MenuItem action5Item = containerAction3Item.getSubMenu().addItem(action5Layout);
@@ -359,7 +358,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 action6Icon.setSize("10px");
                 Span action6Space = new Span();
                 action6Space.setWidth(6,Unit.PIXELS);
-                Label action6Label = new Label("转为 STRING 类型");
+                NativeLabel action6Label = new NativeLabel("转为 STRING 类型");
                 action6Label.addClassNames("text-xs","font-semibold","text-secondary");
                 action6Layout.add(action6Icon,action6Space,action6Label);
                 MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
