@@ -28,7 +28,7 @@ public class AttributeInConceptionKindDistributionInfoChart extends VerticalLayo
 
     public void refreshDistributionInfo(String attributeKindUID){
         this.attributeKindUID = attributeKindUID;
-        this.chartContainerLayout.removeAll();
+        clearData();
         BarChart barChart = new BarChart(chartWidth,chartHeight);
         String[] barColorArray = new String[]{"#FF4500"};
         barChart.setColor(barColorArray);
@@ -36,9 +36,9 @@ public class AttributeInConceptionKindDistributionInfoChart extends VerticalLayo
         barChart.setRightMargin(15);
         barChart.setLeftMargin(15);
         this.chartContainerLayout.add(barChart);
+
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
-
         AttributeKind attributeKind = coreRealm.getAttributeKind(this.attributeKindUID);
         if(attributeKind != null){
             Map<String,Long> entityDistributionMap = attributeKind.getAttributeInConceptionKindDistributionStatistics();
@@ -52,6 +52,29 @@ public class AttributeInConceptionKindDistributionInfoChart extends VerticalLayo
                 }
                 barChart.setDate(nameArray,valueArray);
             }
+        }
+        coreRealm.closeGlobalSession();
+    }
+
+    public void refreshDistributionInfo(Map<String,Long> entityDistributionMap){
+        clearData();
+        BarChart barChart = new BarChart(chartWidth,chartHeight);
+        String[] barColorArray = new String[]{"#FF4500"};
+        barChart.setColor(barColorArray);
+        barChart.setTopMargin(5);
+        barChart.setRightMargin(15);
+        barChart.setLeftMargin(15);
+        this.chartContainerLayout.add(barChart);
+
+        if(entityDistributionMap != null && entityDistributionMap.size() >0){
+            Object[] conceptionKindNameObjectArray = entityDistributionMap.keySet().toArray();
+            String[] nameArray = new String[conceptionKindNameObjectArray.length];
+            Double[] valueArray = new Double[conceptionKindNameObjectArray.length];
+            for(int i=0;i<conceptionKindNameObjectArray.length;i++){
+                nameArray[i] = conceptionKindNameObjectArray[i].toString();
+                valueArray[i] = entityDistributionMap.get(conceptionKindNameObjectArray[i]).doubleValue();
+            }
+            barChart.setDate(nameArray,valueArray);
         }
     }
 
