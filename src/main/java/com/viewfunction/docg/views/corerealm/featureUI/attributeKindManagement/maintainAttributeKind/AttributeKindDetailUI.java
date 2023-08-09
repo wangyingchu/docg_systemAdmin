@@ -15,6 +15,7 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -59,6 +60,7 @@ public class AttributeKindDetailUI extends VerticalLayout implements
     private VerticalLayout rightSideContainerLayout;
     private Grid<AttributeInConceptionKindDistributionInfo> conceptionKindContainsAttributeInfoGrid;
     private AttributeInConceptionKindDistributionInfoChart attributeInConceptionKindDistributionInfoChart;
+    private TabSheet kindConfigurationTabSheet;
 
     private class AttributeInConceptionKindDistributionInfo{
         private String conceptionKindName;
@@ -372,6 +374,15 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         rightSideContainerLayout.setMargin(false);
         mainContainerLayout.add(rightSideContainerLayout);
 
+        kindConfigurationTabSheet = new TabSheet();
+        kindConfigurationTabSheet.setWidthFull();
+        rightSideContainerLayout.add(kindConfigurationTabSheet);
+        rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
+
+        AttributeKindRuntimeConfigurationView attributeKindRuntimeConfigurationView = new AttributeKindRuntimeConfigurationView(this.attributeKindUID);
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"属性类型运行时配置"),attributeKindRuntimeConfigurationView);
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
+
         ThirdLevelIconTitle infoTitle3 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体概略采样数 "+10000+")");
         infoTitle3.getStyle().set("padding-bottom","5px");
         rightSideContainerLayout.add(infoTitle3);
@@ -428,5 +439,19 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         fixSizeWindow.setWindowContent(attributesValueListView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+    private HorizontalLayout generateKindConfigurationTabTitle(VaadinIcon tabIcon,String tabTitleTxt){
+        HorizontalLayout  kindConfigTabLayout = new HorizontalLayout();
+        kindConfigTabLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        kindConfigTabLayout.setHeight(26,Unit.PIXELS);
+        Icon configTabIcon = new Icon(tabIcon);
+        configTabIcon.setSize("12px");
+        NativeLabel configTabLabel = new NativeLabel(" "+tabTitleTxt);
+        configTabLabel.getStyle()
+                . set("font-size","var(--lumo-font-size-s)")
+                .set("font-weight", "bold");
+        kindConfigTabLayout.add(configTabIcon,configTabLabel);
+        return kindConfigTabLayout;
     }
 }
