@@ -24,6 +24,7 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -33,6 +34,7 @@ import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.AttributeInConceptionKindDistributionInfoChart;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
@@ -47,6 +49,8 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         BeforeEnterObserver {
 
     private String attributeKindUID;
+    private String attributeKindName;
+    private AttributeDataType attributeDataType;
     private int attributeKindDetailViewHeightOffset = 110;
     private int currentBrowserHeight = 0;
     private Registration listener;
@@ -143,7 +147,9 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.attributeKindUID);
         if(targetAttributeKind != null){
-            attributesViewKindDisplayInfo = targetAttributeKind.getAttributeKindName() +" ( "+this.attributeKindUID+" )";
+            this.attributeKindName = targetAttributeKind.getAttributeKindName();
+            this.attributeDataType = targetAttributeKind.getAttributeDataType();
+            attributesViewKindDisplayInfo = this.attributeKindName +" ( "+this.attributeKindUID+" )"+ " - " + this.attributeDataType;
         }
         NativeLabel attributesViewKindNameLabel = new NativeLabel(attributesViewKindDisplayInfo);
         attributesViewKindNameLabel.getStyle()
@@ -252,10 +258,11 @@ public class AttributeKindDetailUI extends VerticalLayout implements
             action0Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                    //renderSampleRandomAttributesView(attributeInfo.getAttributeName());
+                    renderSampleRandomAttributesView(attributeInfo.conceptionKindName);
                 }
             });
 
+            /*
             HorizontalLayout action1Layout = new HorizontalLayout();
             action1Layout.setPadding(false);
             action1Layout.setSpacing(false);
@@ -311,7 +318,7 @@ public class AttributeKindDetailUI extends VerticalLayout implements
             containerAction3Label.addClassNames("text-xs","font-semibold","text-secondary");
             containerAction3Layout.add(containerAction3Icon,containerAction3Space,containerAction3Label);
             MenuItem containerAction3Item = actionOptionsSubItems.addItem(containerAction3Layout);
-
+            */
             return actionsMenuBar;
         });
 
@@ -411,6 +418,14 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         metaConfigItemsConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.BOOKMARK),"属性类型元属性配置管理",null,true,750,280,false);
         fixSizeWindow.setWindowContent(metaConfigItemsConfigView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderSampleRandomAttributesView(String conceptionKindName){
+        AttributesValueListView attributesValueListView = new AttributesValueListView(AttributesValueListView.AttributeKindType.ConceptionKind,conceptionKindName,this.attributeKindName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create(),"属性值随机采样 (100项)",null,true,500,510,false);
+        fixSizeWindow.setWindowContent(attributesValueListView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
