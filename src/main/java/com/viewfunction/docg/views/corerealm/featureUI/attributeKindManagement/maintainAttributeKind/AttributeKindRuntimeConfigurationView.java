@@ -1,6 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.maintainAttributeKind;
 
-import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -14,7 +14,6 @@ import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndexMaintain.KindIndexConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
 public class AttributeKindRuntimeConfigurationView extends VerticalLayout {
@@ -67,5 +66,11 @@ public class AttributeKindRuntimeConfigurationView extends VerticalLayout {
         classificationConfigView = new ClassificationConfigView(ClassificationConfigView.ClassificationRelatedObjectType.AttributeKind,this.attributeKindUID);
         classificationConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(classificationConfigView);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        metaConfigItemsConfigView.setMetaConfigItemGridHeight(230);
     }
 }

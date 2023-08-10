@@ -380,4 +380,8 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         dtaProvider.getItems().addAll(metaConfigItemValueObjectList);
         dtaProvider.refreshAll();
     }
+
+    public void setMetaConfigItemGridHeight(int heightValue){
+        metaConfigItemValueGrid.setHeight(heightValue,Unit.PIXELS);
+    }
 }

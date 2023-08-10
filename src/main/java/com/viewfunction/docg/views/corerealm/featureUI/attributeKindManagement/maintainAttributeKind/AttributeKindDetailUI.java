@@ -367,27 +367,29 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         coreRealm.openGlobalSession();
         AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.attributeKindUID);
         Map<String,Long> distributionMap = targetAttributeKind.getAttributeInConceptionKindDistributionStatistics();
-        Set<String> conceptionNameSet = distributionMap.keySet();
-        List<AttributeInConceptionKindDistributionInfo> attributeInConceptionKindDistributionInfoList = new ArrayList<>();
-        try {
-            List<EntityStatisticsInfo> conceptionKindInfolist = coreRealm.getConceptionEntitiesStatistics();
-            for(EntityStatisticsInfo currentEntityStatisticsInfo:conceptionKindInfolist){
-                String conceptionKindName = currentEntityStatisticsInfo.getEntityKindName();
-                if(conceptionNameSet.contains(conceptionKindName)){
-                    AttributeInConceptionKindDistributionInfo currentAttributeInConceptionKindDistributionInfo = new AttributeInConceptionKindDistributionInfo();
-                    currentAttributeInConceptionKindDistributionInfo.setConceptionKindName(currentEntityStatisticsInfo.getEntityKindName());
-                    currentAttributeInConceptionKindDistributionInfo.setConceptionKindDesc(currentEntityStatisticsInfo.getEntityKindDesc());
-                    currentAttributeInConceptionKindDistributionInfo.setConceptionEntityCount(currentEntityStatisticsInfo.getEntitiesCount());
-                    currentAttributeInConceptionKindDistributionInfo.setPropertyExistInEntityCount(distributionMap.get(conceptionKindName));
-                    attributeInConceptionKindDistributionInfoList.add(currentAttributeInConceptionKindDistributionInfo);
+        if(distributionMap != null){
+            Set<String> conceptionNameSet = distributionMap.keySet();
+            List<AttributeInConceptionKindDistributionInfo> attributeInConceptionKindDistributionInfoList = new ArrayList<>();
+            try {
+                List<EntityStatisticsInfo> conceptionKindInfolist = coreRealm.getConceptionEntitiesStatistics();
+                for(EntityStatisticsInfo currentEntityStatisticsInfo:conceptionKindInfolist){
+                    String conceptionKindName = currentEntityStatisticsInfo.getEntityKindName();
+                    if(conceptionNameSet.contains(conceptionKindName)){
+                        AttributeInConceptionKindDistributionInfo currentAttributeInConceptionKindDistributionInfo = new AttributeInConceptionKindDistributionInfo();
+                        currentAttributeInConceptionKindDistributionInfo.setConceptionKindName(currentEntityStatisticsInfo.getEntityKindName());
+                        currentAttributeInConceptionKindDistributionInfo.setConceptionKindDesc(currentEntityStatisticsInfo.getEntityKindDesc());
+                        currentAttributeInConceptionKindDistributionInfo.setConceptionEntityCount(currentEntityStatisticsInfo.getEntitiesCount());
+                        currentAttributeInConceptionKindDistributionInfo.setPropertyExistInEntityCount(distributionMap.get(conceptionKindName));
+                        attributeInConceptionKindDistributionInfoList.add(currentAttributeInConceptionKindDistributionInfo);
+                    }
                 }
+            } catch (CoreRealmServiceEntityExploreException e) {
+                throw new RuntimeException(e);
             }
-        } catch (CoreRealmServiceEntityExploreException e) {
-            throw new RuntimeException(e);
+            conceptionKindContainsAttributeInfoGrid.setItems(attributeInConceptionKindDistributionInfoList);
+            attributeInConceptionKindDistributionInfoChart.refreshDistributionInfo(distributionMap);
         }
         coreRealm.closeGlobalSession();
-        conceptionKindContainsAttributeInfoGrid.setItems(attributeInConceptionKindDistributionInfoList);
-        attributeInConceptionKindDistributionInfoChart.refreshDistributionInfo(distributionMap);
     }
 
     private void renderShowMetaInfoUI(){
