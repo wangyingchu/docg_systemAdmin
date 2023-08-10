@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.maintainAttributeKind;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
@@ -14,9 +11,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.util.ResourceHolder;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class ContainerAttributesViewKindsConfigView extends VerticalLayout {
     private String attributeKindUID;
-    private Grid<AttributeKind> attributeKindGrid;
+    private Grid<AttributesViewKind> attributeKindGrid;
     public ContainerAttributesViewKindsConfigView(String attributeKindUID){
         this.attributeKindUID = attributeKindUID;
 
@@ -110,12 +111,12 @@ public class ContainerAttributesViewKindsConfigView extends VerticalLayout {
         attributeKindGrid.setWidth(100,Unit.PERCENTAGE);
         attributeKindGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         attributeKindGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        attributeKindGrid.addColumn(AttributeKind::getAttributeKindName).setHeader("属性类型名称").setKey("idx_0").setFlexGrow(1);
-        attributeKindGrid.addColumn(AttributeKind::getAttributeKindDesc).setHeader("属性类型描述").setKey("idx_1").setFlexGrow(1)
-                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getAttributeKindDesc());
-        attributeKindGrid.addColumn(AttributeKind::getAttributeDataType).setHeader("属性数据类型").setKey("idx_2")
+        attributeKindGrid.addColumn(AttributesViewKind::getAttributesViewKindName).setHeader("属性类型名称").setKey("idx_0").setFlexGrow(1);
+        attributeKindGrid.addColumn(AttributesViewKind::getAttributesViewKindDesc).setHeader("属性类型描述").setKey("idx_1").setFlexGrow(1)
+                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getAttributesViewKindDesc());
+        attributeKindGrid.addColumn(AttributesViewKind::getAttributesViewKindDataForm).setHeader("属性数据类型").setKey("idx_2")
                 .setFlexGrow(0).setWidth("130px").setResizable(false);
-        attributeKindGrid.addColumn(AttributeKind::getAttributeKindUID).setHeader("属性类型 UID").setKey("idx_3")
+        attributeKindGrid.addColumn(AttributesViewKind::getAttributesViewKindUID).setHeader("属性类型 UID").setKey("idx_3")
                 .setFlexGrow(0).setWidth("150px").setResizable(false);
         attributeKindGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("90px").setResizable(false);
 
@@ -132,5 +133,27 @@ public class ContainerAttributesViewKindsConfigView extends VerticalLayout {
 
         attributeKindGrid.appendFooterRow();
         add(attributeKindGrid);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        //ResourceHolder.getApplicationBlackboard().addListener(this);
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.attributeKindUID);
+        List<AttributesViewKind> containerAttributesViewKindList = targetAttributeKind.getContainerAttributesViewKinds();
+        coreRealm.closeGlobalSession();
+        attributeKindGrid.setItems(containerAttributesViewKindList);
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
+
+    public void setViewHeight(int viewHeight){
+        this.attributeKindGrid.setHeight(viewHeight - 50,Unit.PIXELS);
     }
 }

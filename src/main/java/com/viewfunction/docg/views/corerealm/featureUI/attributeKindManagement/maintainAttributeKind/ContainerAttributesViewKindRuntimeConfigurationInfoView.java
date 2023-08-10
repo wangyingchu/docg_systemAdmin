@@ -38,4 +38,8 @@ public class ContainerAttributesViewKindRuntimeConfigurationInfoView extends Hor
         SectionActionBar sectionActionBar2 = new SectionActionBar(icon2,"包含属性类型配置管理",null);
         rightSideContainerLayout.add(sectionActionBar2);
     }
+
+    public void setViewHeight(int viewHeight){
+        containerAttributesViewKindsConfigView.setViewHeight(viewHeight);
+    }
 }
