@@ -75,7 +75,7 @@ public class AttributeKindRuntimeConfigurationView extends VerticalLayout implem
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         ResourceHolder.getApplicationBlackboard().addListener(this);
-        metaConfigItemsConfigView.setMetaConfigItemGridHeight(230);
+        metaConfigItemsConfigView.setViewHeight(280);
     }
 
     @Override
@@ -89,5 +89,9 @@ public class AttributeKindRuntimeConfigurationView extends VerticalLayout implem
         if(event.getAttributeKindUID() != null && event.getAttributeKindDesc() != null){
             attributeKindDescTxt.updateDisplayValue(event.getAttributeKindDesc());
         }
+    }
+
+    public void setViewHeight(int viewHeight){
+        this.classificationConfigView.setHeight(viewHeight - 425,Unit.PIXELS);
     }
 }

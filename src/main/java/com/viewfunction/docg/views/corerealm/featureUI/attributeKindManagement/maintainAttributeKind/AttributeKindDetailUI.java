@@ -122,6 +122,7 @@ public class AttributeKindDetailUI extends VerticalLayout implements
             int containerHeight = currentBrowserHeight - attributeKindDetailViewHeightOffset;
             this.conceptionKindContainsAttributeInfoGrid.setHeight(containerHeight-480,Unit.PIXELS);
             this.containerAttributesViewKindRuntimeConfigurationInfoView.setViewHeight(containerHeight-80);
+            this.attributeKindRuntimeConfigurationView.setViewHeight(containerHeight-80);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -129,6 +130,7 @@ public class AttributeKindDetailUI extends VerticalLayout implements
             int containerHeight = currentBrowserHeight - attributeKindDetailViewHeightOffset;
             this.conceptionKindContainsAttributeInfoGrid.setHeight(containerHeight-480,Unit.PIXELS);
             this.containerAttributesViewKindRuntimeConfigurationInfoView.setViewHeight(containerHeight-80);
+            this.attributeKindRuntimeConfigurationView.setViewHeight(containerHeight-80);
         }));
     }
 

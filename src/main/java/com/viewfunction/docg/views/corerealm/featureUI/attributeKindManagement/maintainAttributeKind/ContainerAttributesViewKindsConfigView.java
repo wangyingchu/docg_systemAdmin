@@ -154,6 +154,6 @@ public class ContainerAttributesViewKindsConfigView extends VerticalLayout {
     }
 
     public void setViewHeight(int viewHeight){
-        this.attributeKindGrid.setHeight(viewHeight - 50,Unit.PIXELS);
+        this.attributeKindGrid.setHeight(viewHeight - 60,Unit.PIXELS);
     }
 }

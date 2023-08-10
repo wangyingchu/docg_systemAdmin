@@ -78,4 +78,8 @@ public class ClassificationConfigView extends VerticalLayout {
         relateClassificationView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
+
+    public void setViewHeight(int viewHeight){
+        this.setHeight(viewHeight,Unit.PIXELS);
+    }
 }
