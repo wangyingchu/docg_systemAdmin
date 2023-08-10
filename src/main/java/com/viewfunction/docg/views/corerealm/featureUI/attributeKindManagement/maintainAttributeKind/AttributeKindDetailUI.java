@@ -37,17 +37,13 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.AttributeInConceptionKindDistributionInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Route("attributeKindDetailInfo/:attributeKindUID")
 public class AttributeKindDetailUI extends VerticalLayout implements
-        BeforeEnterObserver {
+        BeforeEnterObserver{
 
     private String attributeKindUID;
     private String attributeKindName;
@@ -358,8 +354,9 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
 
         AttributeKindRuntimeConfigurationView attributeKindRuntimeConfigurationView = new AttributeKindRuntimeConfigurationView(this.attributeKindUID);
+        ContainerAttributesViewKindRuntimeConfigurationInfoView containerAttributesViewKindRuntimeConfigurationInfoView = new ContainerAttributesViewKindRuntimeConfigurationInfoView(this.attributeKindUID);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"属性类型运行时配置"),attributeKindRuntimeConfigurationView);
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"), containerAttributesViewKindRuntimeConfigurationInfoView);
     }
 
     private void loadAttributeKindInfoData() {

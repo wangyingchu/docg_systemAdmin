@@ -1,6 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.maintainAttributeKind;
 
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -13,15 +14,17 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.eventHandling.AttributeKindDescriptionUpdatedEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
-public class AttributeKindRuntimeConfigurationView extends VerticalLayout {
+public class AttributeKindRuntimeConfigurationView extends VerticalLayout implements
+        AttributeKindDescriptionUpdatedEvent.AttributeKindDescriptionUpdatedListener{
     private String attributeKindUID;
-
     private MetaConfigItemsConfigView metaConfigItemsConfigView;
-
     private ClassificationConfigView classificationConfigView;
+    private PrimaryKeyValueDisplayItem attributeKindDescTxt;
 
     public AttributeKindRuntimeConfigurationView(String attributeKindUID){
         this.attributeKindUID = attributeKindUID;
@@ -40,7 +43,7 @@ public class AttributeKindRuntimeConfigurationView extends VerticalLayout {
         HorizontalLayout horSpaceDiv0 = new HorizontalLayout();
         horSpaceDiv0.setWidth(20,Unit.PIXELS);
         infoContainer0.add(horSpaceDiv0);
-        new PrimaryKeyValueDisplayItem(infoContainer0, VaadinIcon.DESKTOP.create(),"属性类型描述:",targetAttributeKind.getAttributeKindDesc());
+        attributeKindDescTxt = new PrimaryKeyValueDisplayItem(infoContainer0, VaadinIcon.DESKTOP.create(),"属性类型描述:",targetAttributeKind.getAttributeKindDesc());
 
         HorizontalLayout infoContainer1 = new HorizontalLayout();
         infoContainer1.setDefaultVerticalComponentAlignment(Alignment.END);
@@ -71,6 +74,20 @@ public class AttributeKindRuntimeConfigurationView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         metaConfigItemsConfigView.setMetaConfigItemGridHeight(230);
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
+
+    @Override
+    public void receivedAttributeKindDescriptionUpdatedEvent(AttributeKindDescriptionUpdatedEvent event) {
+        if(event.getAttributeKindUID() != null && event.getAttributeKindDesc() != null){
+            attributeKindDescTxt.updateDisplayValue(event.getAttributeKindDesc());
+        }
     }
 }
