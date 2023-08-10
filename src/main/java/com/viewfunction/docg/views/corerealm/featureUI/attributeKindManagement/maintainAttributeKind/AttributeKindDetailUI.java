@@ -165,28 +165,6 @@ public class AttributeKindDetailUI extends VerticalLayout implements
 
         List<Component> buttonList = new ArrayList<>();
 
-        Button metaConfigItemConfigInfoButton= new Button("元属性配置管理");
-        metaConfigItemConfigInfoButton.setIcon(VaadinIcon.BOOKMARK.create());
-        metaConfigItemConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        metaConfigItemConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderMetaConfigItemConfigInfoUI();
-            }
-        });
-        buttonList.add(metaConfigItemConfigInfoButton);
-
-        Button classificationConfigInfoButton= new Button("分类配置管理");
-        classificationConfigInfoButton.setIcon(VaadinIcon.TAGS.create());
-        classificationConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        classificationConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderClassificationConfigInfoUI();
-            }
-        });
-        buttonList.add(classificationConfigInfoButton);
-
         Button conceptionKindMetaInfoButton= new Button("属性类型元数据");
         conceptionKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
         conceptionKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
@@ -382,10 +360,6 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         AttributeKindRuntimeConfigurationView attributeKindRuntimeConfigurationView = new AttributeKindRuntimeConfigurationView(this.attributeKindUID);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"属性类型运行时配置"),attributeKindRuntimeConfigurationView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
-
-        ThirdLevelIconTitle infoTitle3 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体概略采样数 "+10000+")");
-        infoTitle3.getStyle().set("padding-bottom","5px");
-        rightSideContainerLayout.add(infoTitle3);
     }
 
     private void loadAttributeKindInfoData() {
@@ -420,15 +394,6 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         AttributeKindMetaInfoView attributeKindMetaInfoView = new AttributeKindMetaInfoView(this.attributeKindUID);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"属性类型元数据信息",null,true,500,340,false);
         fixSizeWindow.setWindowContent(attributeKindMetaInfoView);
-        fixSizeWindow.setModel(true);
-        fixSizeWindow.show();
-    }
-
-    private void renderMetaConfigItemConfigInfoUI(){
-        MetaConfigItemsConfigView metaConfigItemsConfigView = new MetaConfigItemsConfigView(MetaConfigItemsConfigView.MetaConfigItemType.AttributeKind,this.attributeKindUID);
-        metaConfigItemsConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.BOOKMARK),"属性类型元属性配置管理",null,true,750,280,false);
-        fixSizeWindow.setWindowContent(metaConfigItemsConfigView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
