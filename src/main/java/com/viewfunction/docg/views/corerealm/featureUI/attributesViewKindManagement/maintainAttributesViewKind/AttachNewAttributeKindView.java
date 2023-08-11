@@ -158,7 +158,7 @@ public class AttachNewAttributeKindView extends VerticalLayout {
                 attributeKindAttachedToAttributesViewKindEvent.setAttributeKind(targetAttributeKind);
                 ResourceHolder.getApplicationBlackboard().fire(attributeKindAttachedToAttributesViewKindEvent);
             }else{
-                CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 附加属性类型 "+ attributeKindMetaInfo.getKindName() +" : "+attributeKindMetaInfo.getAttributeDataType() +" 失败", NotificationVariant.LUMO_ERROR);
+                CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 附加属性类型 "+ attributeKindMetaInfo.getKindName() +" : "+attributeKindMetaInfo.getKindUID() +" 失败", NotificationVariant.LUMO_ERROR);
             }
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);

@@ -21,9 +21,10 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
-
+import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
 import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttributesViewKindEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -32,7 +33,8 @@ import java.util.List;
 import java.util.Set;
 
 public class RelatedAttributesViewKindsConfigView extends VerticalLayout implements
-        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener{
+        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener,
+        AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener {
     private String attributeKindUID;
     private Grid<AttributesViewKind> attributesViewKindGrid;
     private AttributesViewKind lastSelectedAttributesViewKind;
@@ -60,7 +62,7 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
         attachAttributesViewKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAttachNewAttributeKindUI();
+                renderAttachNewAttributesViewKindUI();
             }
         });
         buttonList.add(attachAttributesViewKindButton);
@@ -211,6 +213,16 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
         fixSizeWindow.show();
     }
 
+    private void renderAttachNewAttributesViewKindUI(){
+        AttachNewAttributesViewKindView attachNewAttributesViewKindView = new AttachNewAttributesViewKindView(AttachNewAttributesViewKindView.RelatedKindType.AttributeKind);
+        attachNewAttributesViewKindView.setAttributeKindUID(this.attributeKindUID);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加属性视图类型",null,true,490,200,false);
+        fixSizeWindow.setWindowContent(attachNewAttributesViewKindView);
+        fixSizeWindow.setModel(true);
+        attachNewAttributesViewKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
     @Override
     public void receivedAttributeKindDetachedFromAttributesViewKindEvent(AttributeKindDetachedFromAttributesViewKindEvent event) {
         if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
@@ -225,6 +237,19 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
                         }
                     }
                     dataProvider.refreshAll();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void receivedAttributeKindAttachedToAttributesViewKindEvent(AttributeKindAttachedToAttributesViewKindEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
+            if(this.attributeKindUID.equals(event.getAttributeKindUID())){
+                if(event.getAttributesViewKind() != null){
+                    ListDataProvider dtaProvider=(ListDataProvider)attributesViewKindGrid.getDataProvider();
+                    dtaProvider.getItems().add(event.getAttributesViewKind());
+                    dtaProvider.refreshAll();
                 }
             }
         }
