@@ -133,7 +133,7 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
         LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"数据数据类型");
         attributeKindAttributesInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         rightSideContainerLayout.add(attributeKindAttributesInfoGrid);
-        // need use this layout to keep attributeKindAttributesInfoGrid not extends too long
+        //need use this layout to keep attributeKindAttributesInfoGrid not extends too long
         HorizontalLayout spaceDiv01Layout3 = new HorizontalLayout();
         spaceDiv01Layout3.setHeight(5,Unit.PIXELS);
         rightSideContainerLayout.add(spaceDiv01Layout3);
