@@ -19,20 +19,21 @@ import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ContainerAttributesViewKindRuntimeConfigurationInfoView extends VerticalLayout {
+public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends VerticalLayout {
 
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout rightSideContainerLayout;
-    private ContainerAttributesViewKindsConfigView containerAttributesViewKindsConfigView;
+    private RelatedAttributesViewKindsConfigView relatedAttributesViewKindsConfigView;
     private SecondaryTitleActionBar selectedAttributesViewKindTitleActionBar;
     private SecondaryTitleActionBar selectedAttributesViewKindUIDActionBar;
     private String attributeKindUID;
     private Grid<AttributeKind> attributeKindAttributesInfoGrid;
     private Grid<ConceptionKind> conceptionKindAttributesInfoGrid;
 
-    public ContainerAttributesViewKindRuntimeConfigurationInfoView(String attributeKindUID){
+    public RelatedAttributesViewKindRuntimeConfigurationInfoView(String attributeKindUID){
         this.attributeKindUID = attributeKindUID;
 
         setSpacing(false);
@@ -54,17 +55,25 @@ public class ContainerAttributesViewKindRuntimeConfigurationInfoView extends Ver
         leftSideContainerLayout.setPadding(false);
         mainContainerLayout.add(leftSideContainerLayout);
 
-        ContainerAttributesViewKindsConfigView.ContainerAttributesViewKindSelectedListener
-                containerAttributesViewKindSelectedListener = new ContainerAttributesViewKindsConfigView.ContainerAttributesViewKindSelectedListener() {
+        RelatedAttributesViewKindsConfigView.AttributesViewKindSelectedListener
+                attributesViewKindSelectedListener = new RelatedAttributesViewKindsConfigView.AttributesViewKindSelectedListener() {
             @Override
             public void attributesViewKindSelectedAction(AttributesViewKind selectedAttributesViewKind) {
                 renderAttributesViewKindOverview(selectedAttributesViewKind);
             }
         };
-        containerAttributesViewKindsConfigView = new ContainerAttributesViewKindsConfigView(this.attributeKindUID);
-        containerAttributesViewKindsConfigView.setContainerAttributesViewKindSelectedListener(containerAttributesViewKindSelectedListener);
+        RelatedAttributesViewKindsConfigView.AttributesViewKindsRefreshedListener attributesViewKindsRefreshedListener = new RelatedAttributesViewKindsConfigView.AttributesViewKindsRefreshedListener() {
+            @Override
+            public void attributesViewKindsRefreshedAction() {
+                resetAttributesViewKindsInfo();
+            }
+        };
 
-        leftSideContainerLayout.add(containerAttributesViewKindsConfigView);
+        relatedAttributesViewKindsConfigView = new RelatedAttributesViewKindsConfigView(this.attributeKindUID);
+        relatedAttributesViewKindsConfigView.setAttributesViewKindSelectedListener(attributesViewKindSelectedListener);
+        relatedAttributesViewKindsConfigView.setAttributesViewKindsRefreshedListener(attributesViewKindsRefreshedListener);
+
+        leftSideContainerLayout.add(relatedAttributesViewKindsConfigView);
 
         rightSideContainerLayout = new VerticalLayout();
         rightSideContainerLayout.setWidth(400, Unit.PIXELS);
@@ -131,7 +140,7 @@ public class ContainerAttributesViewKindRuntimeConfigurationInfoView extends Ver
     }
 
     public void setViewHeight(int viewHeight){
-        containerAttributesViewKindsConfigView.setViewHeight(viewHeight);
+        relatedAttributesViewKindsConfigView.setViewHeight(viewHeight);
         attributeKindAttributesInfoGrid.setHeight(viewHeight-500,Unit.PIXELS);
     }
 
@@ -159,5 +168,12 @@ public class ContainerAttributesViewKindRuntimeConfigurationInfoView extends Ver
             attributeKindAttributesInfoGrid.setItems(containsAttributeKindList);
         }
         coreRealm.closeGlobalSession();
+    }
+
+    private void resetAttributesViewKindsInfo(){
+        this.conceptionKindAttributesInfoGrid.setItems(new ArrayList<>());
+        this.attributeKindAttributesInfoGrid.setItems(new ArrayList<>());
+        this.selectedAttributesViewKindTitleActionBar.updateTitleContent("-");
+        this.selectedAttributesViewKindUIDActionBar.updateTitleContent("-");
     }
 }

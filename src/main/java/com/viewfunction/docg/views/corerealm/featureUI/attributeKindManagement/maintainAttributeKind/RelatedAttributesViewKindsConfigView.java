@@ -12,54 +12,58 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
-import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
-import com.viewfunction.docg.util.ResourceHolder;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ContainerAttributesViewKindsConfigView extends VerticalLayout {
+public class RelatedAttributesViewKindsConfigView extends VerticalLayout {
     private String attributeKindUID;
     private Grid<AttributesViewKind> attributeKindGrid;
     private AttributesViewKind lastSelectedAttributesViewKind;
 
-    public interface ContainerAttributesViewKindSelectedListener {
+    public interface AttributesViewKindSelectedListener {
         public void attributesViewKindSelectedAction(AttributesViewKind selectedAttributesViewKind);
     }
-    private ContainerAttributesViewKindSelectedListener containerAttributesViewKindSelectedListener;
+    private AttributesViewKindSelectedListener attributesViewKindSelectedListener;
 
-    public ContainerAttributesViewKindsConfigView(String attributeKindUID){
+    public interface AttributesViewKindsRefreshedListener {
+        public void attributesViewKindsRefreshedAction();
+    }
+    private AttributesViewKindsRefreshedListener attributesViewKindsRefreshedListener;
+
+    public RelatedAttributesViewKindsConfigView(String attributeKindUID){
         this.attributeKindUID = attributeKindUID;
 
         this.setWidth(100, Unit.PERCENTAGE);
         List<Component> secTitleElementsList = new ArrayList<>();
         List<Component> buttonList = new ArrayList<>();
 
-        Button createMetaConfigItemButton= new Button("附加新的属性视图类型");
-        createMetaConfigItemButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
-        createMetaConfigItemButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        createMetaConfigItemButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button attachAttributesViewKindButton= new Button("附加新的属性视图类型");
+        attachAttributesViewKindButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
+        attachAttributesViewKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        attachAttributesViewKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 //renderAttachNewAttributeKindUI();
             }
         });
-        buttonList.add(createMetaConfigItemButton);
+        buttonList.add(attachAttributesViewKindButton);
 
-        Button refreshMetaConfigItemsInfoButton = new Button("刷新关联的属性视图类型信息",new Icon(VaadinIcon.REFRESH));
-        refreshMetaConfigItemsInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        refreshMetaConfigItemsInfoButton.addClickListener((ClickEvent<Button> click) ->{
-            //refreshAttributeTypesInfo();
+        Button refreshAttributesViewKindsButton = new Button("刷新关联的属性视图类型信息",new Icon(VaadinIcon.REFRESH));
+        refreshAttributesViewKindsButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        refreshAttributesViewKindsButton.addClickListener((ClickEvent<Button> click) ->{
+            refreshAttributesViewKindsInfo();
         });
-        buttonList.add(refreshMetaConfigItemsInfoButton);
+        buttonList.add(refreshAttributesViewKindsButton);
 
         SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TASKS),"属性视图类型配置管理 ",secTitleElementsList,buttonList);
         add(metaConfigItemConfigActionBar);
@@ -129,8 +133,8 @@ public class ContainerAttributesViewKindsConfigView extends VerticalLayout {
                 }else{
                     AttributesViewKind selectedAttributesViewKind = selectedItemSet.iterator().next();
                     lastSelectedAttributesViewKind = selectedAttributesViewKind;
-                    if(getContainerAttributesViewKindSelectedListener() != null){
-                        getContainerAttributesViewKindSelectedListener().attributesViewKindSelectedAction(selectedAttributesViewKind);
+                    if(getAttributesViewKindSelectedListener() != null){
+                        getAttributesViewKindSelectedListener().attributesViewKindSelectedAction(selectedAttributesViewKind);
                     }
                 }
             }
@@ -162,11 +166,31 @@ public class ContainerAttributesViewKindsConfigView extends VerticalLayout {
         this.attributeKindGrid.setHeight(viewHeight - 60,Unit.PIXELS);
     }
 
-    public ContainerAttributesViewKindSelectedListener getContainerAttributesViewKindSelectedListener() {
-        return containerAttributesViewKindSelectedListener;
+    public AttributesViewKindSelectedListener getAttributesViewKindSelectedListener() {
+        return attributesViewKindSelectedListener;
     }
 
-    public void setContainerAttributesViewKindSelectedListener(ContainerAttributesViewKindSelectedListener containerAttributesViewKindSelectedListener) {
-        this.containerAttributesViewKindSelectedListener = containerAttributesViewKindSelectedListener;
+    public void setAttributesViewKindSelectedListener(AttributesViewKindSelectedListener attributesViewKindSelectedListener) {
+        this.attributesViewKindSelectedListener = attributesViewKindSelectedListener;
+    }
+
+    public AttributesViewKindsRefreshedListener getAttributesViewKindsRefreshedListener() {
+        return attributesViewKindsRefreshedListener;
+    }
+
+    public void setAttributesViewKindsRefreshedListener(AttributesViewKindsRefreshedListener attributesViewKindsRefreshedListener) {
+        this.attributesViewKindsRefreshedListener = attributesViewKindsRefreshedListener;
+    }
+
+    private void refreshAttributesViewKindsInfo(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.attributeKindUID);
+        List<AttributesViewKind> containerAttributesViewKindList = targetAttributeKind.getContainerAttributesViewKinds();
+        coreRealm.closeGlobalSession();
+        attributeKindGrid.setItems(containerAttributesViewKindList);
+        if(getAttributesViewKindsRefreshedListener() != null){
+            getAttributesViewKindsRefreshedListener().attributesViewKindsRefreshedAction();
+        }
     }
 }

@@ -58,7 +58,7 @@ public class AttributeKindDetailUI extends VerticalLayout implements
     private AttributeInConceptionKindDistributionInfoChart attributeInConceptionKindDistributionInfoChart;
     private TabSheet kindConfigurationTabSheet;
     private AttributeKindRuntimeConfigurationView attributeKindRuntimeConfigurationView;
-    private ContainerAttributesViewKindRuntimeConfigurationInfoView containerAttributesViewKindRuntimeConfigurationInfoView;
+    private RelatedAttributesViewKindRuntimeConfigurationInfoView relatedAttributesViewKindRuntimeConfigurationInfoView;
 
     private class AttributeInConceptionKindDistributionInfo{
         private String conceptionKindName;
@@ -121,8 +121,8 @@ public class AttributeKindDetailUI extends VerticalLayout implements
             currentBrowserHeight = event.getHeight();
             int containerHeight = currentBrowserHeight - attributeKindDetailViewHeightOffset;
             this.conceptionKindContainsAttributeInfoGrid.setHeight(containerHeight-480,Unit.PIXELS);
-            this.containerAttributesViewKindRuntimeConfigurationInfoView.setViewHeight(containerHeight-80);
-            this.containerAttributesViewKindRuntimeConfigurationInfoView.setViewWidth(event.getWidth()-860);
+            this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewHeight(containerHeight-80);
+            this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewWidth(event.getWidth()-860);
             this.attributeKindRuntimeConfigurationView.setViewHeight(containerHeight-80);
         }));
         // Adjust size according to initial width of the screen
@@ -130,8 +130,8 @@ public class AttributeKindDetailUI extends VerticalLayout implements
             currentBrowserHeight = receiver.getBodyClientHeight();
             int containerHeight = currentBrowserHeight - attributeKindDetailViewHeightOffset;
             this.conceptionKindContainsAttributeInfoGrid.setHeight(containerHeight-480,Unit.PIXELS);
-            this.containerAttributesViewKindRuntimeConfigurationInfoView.setViewHeight(containerHeight-80);
-            this.containerAttributesViewKindRuntimeConfigurationInfoView.setViewWidth(receiver.getBodyClientWidth()-860);
+            this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewHeight(containerHeight-80);
+            this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewWidth(receiver.getBodyClientWidth()-860);
             this.attributeKindRuntimeConfigurationView.setViewHeight(containerHeight-80);
         }));
     }
@@ -358,9 +358,9 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
 
         attributeKindRuntimeConfigurationView = new AttributeKindRuntimeConfigurationView(this.attributeKindUID);
-        containerAttributesViewKindRuntimeConfigurationInfoView = new ContainerAttributesViewKindRuntimeConfigurationInfoView(this.attributeKindUID);
+        relatedAttributesViewKindRuntimeConfigurationInfoView = new RelatedAttributesViewKindRuntimeConfigurationInfoView(this.attributeKindUID);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"属性类型运行时配置"),attributeKindRuntimeConfigurationView);
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"), containerAttributesViewKindRuntimeConfigurationInfoView);
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"), relatedAttributesViewKindRuntimeConfigurationInfoView);
     }
 
     private void loadAttributeKindInfoData() {
