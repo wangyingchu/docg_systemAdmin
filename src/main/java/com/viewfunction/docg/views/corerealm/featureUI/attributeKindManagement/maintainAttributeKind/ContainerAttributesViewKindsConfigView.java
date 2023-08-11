@@ -10,6 +10,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -22,10 +24,18 @@ import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ContainerAttributesViewKindsConfigView extends VerticalLayout {
     private String attributeKindUID;
     private Grid<AttributesViewKind> attributeKindGrid;
+    private AttributesViewKind lastSelectedAttributesViewKind;
+
+    public interface ContainerAttributesViewKindSelectedListener {
+        public void attributesViewKindSelectedAction(AttributesViewKind selectedAttributesViewKind);
+    }
+    private ContainerAttributesViewKindSelectedListener containerAttributesViewKindSelectedListener;
+
     public ContainerAttributesViewKindsConfigView(String attributeKindUID){
         this.attributeKindUID = attributeKindUID;
 
@@ -109,6 +119,23 @@ public class ContainerAttributesViewKindsConfigView extends VerticalLayout {
         GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
         attributeKindGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5);
 
+        attributeKindGrid.addSelectionListener(new SelectionListener<Grid<AttributesViewKind>, AttributesViewKind>() {
+            @Override
+            public void selectionChange(SelectionEvent<Grid<AttributesViewKind>, AttributesViewKind> selectionEvent) {
+                Set<AttributesViewKind> selectedItemSet = selectionEvent.getAllSelectedItems();
+                if(selectedItemSet.size() == 0){
+                    // don't allow to unselect item, just reselect last selected item
+                    attributeKindGrid.select(lastSelectedAttributesViewKind);
+                }else{
+                    AttributesViewKind selectedAttributesViewKind = selectedItemSet.iterator().next();
+                    lastSelectedAttributesViewKind = selectedAttributesViewKind;
+                    if(getContainerAttributesViewKindSelectedListener() != null){
+                        getContainerAttributesViewKindSelectedListener().attributesViewKindSelectedAction(selectedAttributesViewKind);
+                    }
+                }
+            }
+        });
+
         attributeKindGrid.appendFooterRow();
         add(attributeKindGrid);
     }
@@ -133,5 +160,13 @@ public class ContainerAttributesViewKindsConfigView extends VerticalLayout {
 
     public void setViewHeight(int viewHeight){
         this.attributeKindGrid.setHeight(viewHeight - 60,Unit.PIXELS);
+    }
+
+    public ContainerAttributesViewKindSelectedListener getContainerAttributesViewKindSelectedListener() {
+        return containerAttributesViewKindSelectedListener;
+    }
+
+    public void setContainerAttributesViewKindSelectedListener(ContainerAttributesViewKindSelectedListener containerAttributesViewKindSelectedListener) {
+        this.containerAttributesViewKindSelectedListener = containerAttributesViewKindSelectedListener;
     }
 }
