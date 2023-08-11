@@ -1,5 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.maintainAttributeKind;
 
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -18,12 +20,14 @@ import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttributesViewKindEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends VerticalLayout {
-
+public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends VerticalLayout implements
+        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener{
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout rightSideContainerLayout;
     private RelatedAttributesViewKindsConfigView relatedAttributesViewKindsConfigView;
@@ -32,6 +36,7 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
     private String attributeKindUID;
     private Grid<AttributeKind> attributeKindAttributesInfoGrid;
     private Grid<ConceptionKind> conceptionKindAttributesInfoGrid;
+    private AttributesViewKind selectedAttributesViewKind;
 
     public RelatedAttributesViewKindRuntimeConfigurationInfoView(String attributeKindUID){
         this.attributeKindUID = attributeKindUID;
@@ -139,6 +144,18 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
         rightSideContainerLayout.add(spaceDiv01Layout3);
     }
 
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
+
     public void setViewHeight(int viewHeight){
         relatedAttributesViewKindsConfigView.setViewHeight(viewHeight);
         attributeKindAttributesInfoGrid.setHeight(viewHeight-500,Unit.PIXELS);
@@ -149,6 +166,7 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
     }
 
     private void renderAttributesViewKindOverview(AttributesViewKind attributesViewKind){
+        this.selectedAttributesViewKind = attributesViewKind;
         String attributesViewKindName = attributesViewKind.getAttributesViewKindName();
         String attributesViewKindDesc = attributesViewKind.getAttributesViewKindDesc() != null ?
                 attributesViewKind.getAttributesViewKindDesc():"未设置描述信息";
@@ -175,5 +193,17 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
         this.attributeKindAttributesInfoGrid.setItems(new ArrayList<>());
         this.selectedAttributesViewKindTitleActionBar.updateTitleContent("-");
         this.selectedAttributesViewKindUIDActionBar.updateTitleContent("-");
+        this.selectedAttributesViewKind = null;
+    }
+
+    @Override
+    public void receivedAttributeKindDetachedFromAttributesViewKindEvent(AttributeKindDetachedFromAttributesViewKindEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
+            if(this.selectedAttributesViewKind != null &&
+                    this.selectedAttributesViewKind.getAttributesViewKindUID().equals(event.getAttributesViewKindUID()) &&
+                    this.attributeKindUID.equals(event.getAttributeKindUID())){
+                resetAttributesViewKindsInfo();
+            }
+        }
     }
 }
