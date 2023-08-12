@@ -8,6 +8,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
@@ -37,6 +38,8 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
     private VerticalLayout rightSideContainerLayout;
     private ContainerConceptionKindsConfigView containerConceptionKindsConfigView;
     private ContainsAttributeKindsConfigView containsAttributeKindsConfigView;
+    private TabSheet kindConfigurationTabSheet;
+
 
     public AttributesViewKindDetailUI(){}
 
@@ -154,7 +157,19 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         add(mainContainerLayout);
 
         leftSideContainerLayout = new VerticalLayout();
+        leftSideContainerLayout.setSpacing(false);
+        leftSideContainerLayout.setPadding(false);
+        leftSideContainerLayout.setMargin(false);
+
         mainContainerLayout.add(leftSideContainerLayout);
+        leftSideContainerLayout.setWidth(850, Unit.PIXELS);
+        leftSideContainerLayout.getStyle()
+                .set("border-right", "1px solid var(--lumo-contrast-20pct)");
+
+
+
+
+
         Icon icon = new Icon(VaadinIcon.CUBE);
         icon.setSize("8px");
         SectionActionBar sectionActionBar1 = new SectionActionBar(icon,"相关概念类型配置管理",null);
@@ -163,9 +178,27 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         leftSideContainerLayout.add(containerConceptionKindsConfigView);
 
 
+
         rightSideContainerLayout = new VerticalLayout();
         rightSideContainerLayout.setWidth(100,Unit.PERCENTAGE);
+        rightSideContainerLayout.setSpacing(false);
+        rightSideContainerLayout.setPadding(false);
+        rightSideContainerLayout.setMargin(false);
         mainContainerLayout.add(rightSideContainerLayout);
+
+
+
+
+        kindConfigurationTabSheet = new TabSheet();
+        kindConfigurationTabSheet.setWidthFull();
+        rightSideContainerLayout.add(kindConfigurationTabSheet);
+        rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
+
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"属性视图类型运行时配置"),new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"), new HorizontalLayout());
+
+
+
         Icon icon2 = new Icon(VaadinIcon.INPUT);
         SectionActionBar sectionActionBar2 = new SectionActionBar(icon2,"包含属性类型配置管理",null);
         rightSideContainerLayout.add(sectionActionBar2);
@@ -194,4 +227,18 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
     }
 
     private void renderClassificationConfigInfoUI(){}
+
+    private HorizontalLayout generateKindConfigurationTabTitle(VaadinIcon tabIcon,String tabTitleTxt){
+        HorizontalLayout  kindConfigTabLayout = new HorizontalLayout();
+        kindConfigTabLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        kindConfigTabLayout.setHeight(26,Unit.PIXELS);
+        Icon configTabIcon = new Icon(tabIcon);
+        configTabIcon.setSize("12px");
+        NativeLabel configTabLabel = new NativeLabel(" "+tabTitleTxt);
+        configTabLabel.getStyle()
+                . set("font-size","var(--lumo-font-size-s)")
+                .set("font-weight", "bold");
+        kindConfigTabLayout.add(configTabIcon,configTabLabel);
+        return kindConfigTabLayout;
+    }
 }
