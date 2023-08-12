@@ -206,4 +206,9 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
             }
         }
     }
+
+    public void refreshRelatedAttributesViewKindRuntimeConfigurationInfo(){
+        resetAttributesViewKindsInfo();
+        relatedAttributesViewKindsConfigView.refreshAttributesViewKindsInfo();
+    }
 }

@@ -82,4 +82,6 @@ public class ClassificationConfigView extends VerticalLayout {
     public void setViewHeight(int viewHeight){
         this.setHeight(viewHeight,Unit.PIXELS);
     }
+
+    public void refreshClassificationConfigInfo(){}
 }

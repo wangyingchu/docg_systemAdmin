@@ -94,4 +94,9 @@ public class AttributeKindRuntimeConfigurationView extends VerticalLayout implem
     public void setViewHeight(int viewHeight){
         this.classificationConfigView.setHeight(viewHeight - 425,Unit.PIXELS);
     }
+
+    public void refreshAttributeKindRuntimeConfigurationInfo(){
+        metaConfigItemsConfigView.refreshMetaConfigItemsInfo();
+        classificationConfigView.refreshClassificationConfigInfo();
+    }
 }

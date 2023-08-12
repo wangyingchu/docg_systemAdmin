@@ -186,8 +186,9 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         refreshConceptionKindConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //containerConceptionKindsConfigView.refreshConceptionKindsInfo();
-                //containsAttributeKindsConfigView.refreshAttributeTypesInfo();
+                attributeKindRuntimeConfigurationView.refreshAttributeKindRuntimeConfigurationInfo();
+                relatedAttributesViewKindRuntimeConfigurationInfoView.refreshRelatedAttributesViewKindRuntimeConfigurationInfo();
+                loadAttributeKindInfoData();
             }
         });
         buttonList.add(refreshConceptionKindConfigInfoButton);
@@ -364,13 +365,13 @@ public class AttributeKindDetailUI extends VerticalLayout implements
     }
 
     private void loadAttributeKindInfoData() {
+        List<AttributeInConceptionKindDistributionInfo> attributeInConceptionKindDistributionInfoList = new ArrayList<>();
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.attributeKindUID);
         Map<String,Long> distributionMap = targetAttributeKind.getAttributeInConceptionKindDistributionStatistics();
         if(distributionMap != null){
             Set<String> conceptionNameSet = distributionMap.keySet();
-            List<AttributeInConceptionKindDistributionInfo> attributeInConceptionKindDistributionInfoList = new ArrayList<>();
             try {
                 List<EntityStatisticsInfo> conceptionKindInfolist = coreRealm.getConceptionEntitiesStatistics();
                 for(EntityStatisticsInfo currentEntityStatisticsInfo:conceptionKindInfolist){

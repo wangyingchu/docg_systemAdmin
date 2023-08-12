@@ -191,7 +191,7 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
         this.attributesViewKindsRefreshedListener = attributesViewKindsRefreshedListener;
     }
 
-    private void refreshAttributesViewKindsInfo(){
+    public void refreshAttributesViewKindsInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.attributeKindUID);
