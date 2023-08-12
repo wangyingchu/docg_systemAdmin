@@ -54,7 +54,7 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
         add(mainContainerLayout);
 
         leftSideContainerLayout = new VerticalLayout();
-        leftSideContainerLayout.setWidth(750,Unit.PIXELS);
+        leftSideContainerLayout.setWidth(800,Unit.PIXELS);
         leftSideContainerLayout.setSpacing(false);
         leftSideContainerLayout.setMargin(false);
         leftSideContainerLayout.setPadding(false);
@@ -162,7 +162,7 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
     }
 
     public void setViewWidth(int viewWidth){
-        rightSideContainerLayout.setWidth(viewWidth-550,Unit.PIXELS);
+        rightSideContainerLayout.setWidth(viewWidth-600,Unit.PIXELS);
     }
 
     private void renderAttributesViewKindOverview(AttributesViewKind attributesViewKind){
