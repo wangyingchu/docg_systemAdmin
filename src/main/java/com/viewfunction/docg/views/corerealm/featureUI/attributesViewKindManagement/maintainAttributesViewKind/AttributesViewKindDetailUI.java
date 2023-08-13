@@ -194,7 +194,8 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         rightSideContainerLayout.add(kindConfigurationTabSheet);
         rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
 
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"属性视图类型运行时配置"),new HorizontalLayout());
+        AttributesViewKindRuntimeConfigurationView attributesViewKindRuntimeConfigurationView = new AttributesViewKindRuntimeConfigurationView(this.attributesViewKindUID);
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"属性视图类型运行时配置"),attributesViewKindRuntimeConfigurationView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"), new HorizontalLayout());
 
 
