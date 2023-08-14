@@ -375,4 +375,8 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
             }
         }
     }
+
+    public void setViewHeight(int viewHeight){
+        classificationConfigView.setHeight(viewHeight-500,Unit.PIXELS);
+    }
 }

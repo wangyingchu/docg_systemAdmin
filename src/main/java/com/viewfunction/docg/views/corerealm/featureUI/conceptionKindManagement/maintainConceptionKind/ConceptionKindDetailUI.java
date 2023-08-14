@@ -79,6 +79,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
     private VerticalLayout conceptionKindCorrelationInfoGridContainer;
     private TabSheet kindConfigurationTabSheet;
     private RelatedAttributesViewKindRuntimeConfigurationInfoView relatedAttributesViewKindRuntimeConfigurationInfoView;
+    private ConceptionKindEntitiesConfigurationView conceptionKindEntitiesConfigurationView;
 
     public ConceptionKindDetailUI(){}
 
@@ -103,6 +104,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             int chartHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset - 340;
             conceptionKindCorrelationInfoChart.setHeight(chartHeight,Unit.PIXELS);
             this.conceptionRelationRealtimeInfoGrid.setHeight(chartHeight,Unit.PIXELS);
+            this.conceptionKindEntitiesConfigurationView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -100);
             this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -75);
             this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewWidth(event.getWidth()-820);
         }));
@@ -110,6 +112,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             currentBrowserHeight = receiver.getBodyClientHeight();
             kindCorrelationInfoTabSheet.setHeight(currentBrowserHeight-conceptionKindDetailViewHeightOffset-290,Unit.PIXELS);
+            this.conceptionKindEntitiesConfigurationView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -100);
             this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -75);
             this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewWidth(receiver.getBodyClientWidth()-820);
         }));
@@ -467,7 +470,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         rightSideContainerLayout.add(kindConfigurationTabSheet);
         rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
 
-        ConceptionKindEntitiesConfigurationView conceptionKindEntitiesConfigurationView = new ConceptionKindEntitiesConfigurationView(this.conceptionKind);
+        conceptionKindEntitiesConfigurationView = new ConceptionKindEntitiesConfigurationView(this.conceptionKind);
         relatedAttributesViewKindRuntimeConfigurationInfoView = new RelatedAttributesViewKindRuntimeConfigurationInfoView(
                 RelatedAttributesViewKindRuntimeConfigurationInfoView.KindTypeOfRelatedPair.ConceptionKind,this.conceptionKind);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"概念类型运行时配置"),conceptionKindEntitiesConfigurationView);
