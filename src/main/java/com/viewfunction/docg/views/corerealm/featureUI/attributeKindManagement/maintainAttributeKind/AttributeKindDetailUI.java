@@ -36,6 +36,7 @@ import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.AttributeInConceptionKindDistributionInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributesViewKindMaintain.RelatedAttributesViewKindRuntimeConfigurationInfoView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 
 import java.text.NumberFormat;

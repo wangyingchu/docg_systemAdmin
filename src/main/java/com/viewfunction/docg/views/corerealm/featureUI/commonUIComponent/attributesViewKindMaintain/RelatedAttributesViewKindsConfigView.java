@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.maintainAttributeKind;
+package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributesViewKindMaintain;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;

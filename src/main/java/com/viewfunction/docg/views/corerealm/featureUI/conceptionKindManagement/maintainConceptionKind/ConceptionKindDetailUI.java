@@ -41,7 +41,7 @@ import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
-import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.maintainAttributeKind.RelatedAttributesViewKindRuntimeConfigurationInfoView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributesViewKindMaintain.RelatedAttributesViewKindRuntimeConfigurationInfoView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
