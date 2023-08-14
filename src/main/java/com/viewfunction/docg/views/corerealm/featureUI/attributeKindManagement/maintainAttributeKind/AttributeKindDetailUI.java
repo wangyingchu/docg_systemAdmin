@@ -359,7 +359,8 @@ public class AttributeKindDetailUI extends VerticalLayout implements
         rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
 
         attributeKindRuntimeConfigurationView = new AttributeKindRuntimeConfigurationView(this.attributeKindUID);
-        relatedAttributesViewKindRuntimeConfigurationInfoView = new RelatedAttributesViewKindRuntimeConfigurationInfoView(this.attributeKindUID);
+        relatedAttributesViewKindRuntimeConfigurationInfoView = new RelatedAttributesViewKindRuntimeConfigurationInfoView(
+                RelatedAttributesViewKindRuntimeConfigurationInfoView.KindTypeOfRelatedPair.AttributeKind,this.attributeKindUID);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"属性类型运行时配置"),attributeKindRuntimeConfigurationView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"), relatedAttributesViewKindRuntimeConfigurationInfoView);
     }

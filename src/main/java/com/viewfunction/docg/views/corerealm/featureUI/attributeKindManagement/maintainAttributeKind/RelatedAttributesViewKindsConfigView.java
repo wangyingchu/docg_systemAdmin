@@ -16,6 +16,7 @@ import com.vaadin.flow.data.selection.SelectionListener;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
@@ -35,7 +36,7 @@ import java.util.Set;
 public class RelatedAttributesViewKindsConfigView extends VerticalLayout implements
         AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener,
         AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener {
-    private String attributeKindUID;
+    private String pairKindIdentify;
     private Grid<AttributesViewKind> attributesViewKindGrid;
     private AttributesViewKind lastSelectedAttributesViewKind;
 
@@ -48,9 +49,11 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
         public void attributesViewKindsRefreshedAction();
     }
     private AttributesViewKindsRefreshedListener attributesViewKindsRefreshedListener;
-
-    public RelatedAttributesViewKindsConfigView(String attributeKindUID){
-        this.attributeKindUID = attributeKindUID;
+    public enum KindTypeOfRelatedPair {ConceptionKind,AttributeKind}
+    private KindTypeOfRelatedPair kindTypeOfRelatedPair;
+    public RelatedAttributesViewKindsConfigView(KindTypeOfRelatedPair kindTypeOfRelatedPair,String pairKindIdentify){
+        this.kindTypeOfRelatedPair = kindTypeOfRelatedPair;
+        this.pairKindIdentify = pairKindIdentify;
 
         this.setWidth(100, Unit.PERCENTAGE);
         List<Component> secTitleElementsList = new ArrayList<>();
@@ -158,11 +161,21 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
         super.onAttach(attachEvent);
         ResourceHolder.getApplicationBlackboard().addListener(this);
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        List<AttributesViewKind> containerAttributesViewKindList = null;
         coreRealm.openGlobalSession();
-        AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.attributeKindUID);
-        List<AttributesViewKind> containerAttributesViewKindList = targetAttributeKind.getContainerAttributesViewKinds();
+        switch(this.kindTypeOfRelatedPair){
+            case AttributeKind :
+                AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.pairKindIdentify);
+                containerAttributesViewKindList = targetAttributeKind.getContainerAttributesViewKinds();
+                break;
+            case ConceptionKind:
+                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.pairKindIdentify);
+                containerAttributesViewKindList = targetConceptionKind.getContainsAttributesViewKinds();
+        }
         coreRealm.closeGlobalSession();
-        attributesViewKindGrid.setItems(containerAttributesViewKindList);
+        if(containerAttributesViewKindList != null){
+            attributesViewKindGrid.setItems(containerAttributesViewKindList);
+        }
     }
 
     @Override
@@ -194,7 +207,7 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
     public void refreshAttributesViewKindsInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
-        AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.attributeKindUID);
+        AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.pairKindIdentify);
         List<AttributesViewKind> containerAttributesViewKindList = targetAttributeKind.getContainerAttributesViewKinds();
         coreRealm.closeGlobalSession();
         attributesViewKindGrid.setItems(containerAttributesViewKindList);
@@ -205,7 +218,7 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
 
     private void renderDetachAttributesViewKindUI(AttributesViewKind attributesViewKind){
         DetachAttributesViewKindView detachAttributesViewKindView = new DetachAttributesViewKindView(attributesViewKind.getAttributesViewKindUID(), DetachAttributesViewKindView.RelatedKindType.AttributeKind);
-        detachAttributesViewKindView.setAttributeKindUID(this.attributeKindUID);
+        detachAttributesViewKindView.setAttributeKindUID(this.pairKindIdentify);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"移除属性视图类型",null,true,600,210,false);
         fixSizeWindow.setWindowContent(detachAttributesViewKindView);
         fixSizeWindow.setModel(true);
@@ -215,7 +228,7 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
 
     private void renderAttachNewAttributesViewKindUI(){
         AttachNewAttributesViewKindView attachNewAttributesViewKindView = new AttachNewAttributesViewKindView(AttachNewAttributesViewKindView.RelatedKindType.AttributeKind);
-        attachNewAttributesViewKindView.setAttributeKindUID(this.attributeKindUID);
+        attachNewAttributesViewKindView.setAttributeKindUID(this.pairKindIdentify);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加属性视图类型",null,true,490,200,false);
         fixSizeWindow.setWindowContent(attachNewAttributesViewKindView);
         fixSizeWindow.setModel(true);
@@ -226,7 +239,7 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
     @Override
     public void receivedAttributeKindDetachedFromAttributesViewKindEvent(AttributeKindDetachedFromAttributesViewKindEvent event) {
         if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
-            if(this.attributeKindUID.equals(event.getAttributeKindUID())){
+            if(this.pairKindIdentify.equals(event.getAttributeKindUID())){
                 ListDataProvider dataProvider=(ListDataProvider) attributesViewKindGrid.getDataProvider();
                 Collection<AttributesViewKind> itemsCollection = dataProvider.getItems();
                 if(itemsCollection != null){
@@ -245,7 +258,7 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
     @Override
     public void receivedAttributeKindAttachedToAttributesViewKindEvent(AttributeKindAttachedToAttributesViewKindEvent event) {
         if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
-            if(this.attributeKindUID.equals(event.getAttributeKindUID())){
+            if(this.pairKindIdentify.equals(event.getAttributeKindUID())){
                 if(event.getAttributesViewKind() != null){
                     ListDataProvider dtaProvider=(ListDataProvider)attributesViewKindGrid.getDataProvider();
                     dtaProvider.getItems().add(event.getAttributesViewKind());

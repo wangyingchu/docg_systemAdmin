@@ -33,13 +33,17 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
     private RelatedAttributesViewKindsConfigView relatedAttributesViewKindsConfigView;
     private SecondaryTitleActionBar selectedAttributesViewKindTitleActionBar;
     private SecondaryTitleActionBar selectedAttributesViewKindUIDActionBar;
-    private String attributeKindUID;
+    private String pairKindIdentify;
     private Grid<AttributeKind> attributeKindAttributesInfoGrid;
     private Grid<ConceptionKind> conceptionKindAttributesInfoGrid;
     private AttributesViewKind selectedAttributesViewKind;
 
-    public RelatedAttributesViewKindRuntimeConfigurationInfoView(String attributeKindUID){
-        this.attributeKindUID = attributeKindUID;
+    public enum KindTypeOfRelatedPair {ConceptionKind,AttributeKind}
+    private KindTypeOfRelatedPair kindTypeOfRelatedPair;
+
+    public RelatedAttributesViewKindRuntimeConfigurationInfoView(KindTypeOfRelatedPair kindTypeOfRelatedPair,String pairKindIdentify){
+        this.kindTypeOfRelatedPair = kindTypeOfRelatedPair;
+        this.pairKindIdentify = pairKindIdentify;
 
         setSpacing(false);
         setMargin(false);
@@ -74,10 +78,14 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
             }
         };
 
-        relatedAttributesViewKindsConfigView = new RelatedAttributesViewKindsConfigView(this.attributeKindUID);
+        RelatedAttributesViewKindsConfigView.KindTypeOfRelatedPair configViewKindTypeOfRelatedPair = null;
+        switch (this.kindTypeOfRelatedPair){
+            case ConceptionKind -> configViewKindTypeOfRelatedPair = RelatedAttributesViewKindsConfigView.KindTypeOfRelatedPair.ConceptionKind;
+            case AttributeKind -> configViewKindTypeOfRelatedPair = RelatedAttributesViewKindsConfigView.KindTypeOfRelatedPair.AttributeKind;
+        }
+        relatedAttributesViewKindsConfigView = new RelatedAttributesViewKindsConfigView(configViewKindTypeOfRelatedPair,this.pairKindIdentify);
         relatedAttributesViewKindsConfigView.setAttributesViewKindSelectedListener(attributesViewKindSelectedListener);
         relatedAttributesViewKindsConfigView.setAttributesViewKindsRefreshedListener(attributesViewKindsRefreshedListener);
-
         leftSideContainerLayout.add(relatedAttributesViewKindsConfigView);
 
         rightSideContainerLayout = new VerticalLayout();
@@ -201,7 +209,7 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
         if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
             if(this.selectedAttributesViewKind != null &&
                     this.selectedAttributesViewKind.getAttributesViewKindUID().equals(event.getAttributesViewKindUID()) &&
-                    this.attributeKindUID.equals(event.getAttributeKindUID())){
+                    this.pairKindIdentify.equals(event.getAttributeKindUID())){
                 resetAttributesViewKindsInfo();
             }
         }

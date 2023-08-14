@@ -41,6 +41,7 @@ import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
+import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.maintainAttributeKind.RelatedAttributesViewKindRuntimeConfigurationInfoView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
@@ -77,6 +78,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
     private boolean conceptionRealTimeInfoGridFirstLoaded = false;
     private VerticalLayout conceptionKindCorrelationInfoGridContainer;
     private TabSheet kindConfigurationTabSheet;
+    private RelatedAttributesViewKindRuntimeConfigurationInfoView relatedAttributesViewKindRuntimeConfigurationInfoView;
 
     public ConceptionKindDetailUI(){}
 
@@ -461,9 +463,11 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
 
         ConceptionKindEntitiesConfigurationView conceptionKindEntitiesConfigurationView = new ConceptionKindEntitiesConfigurationView(this.conceptionKind);
+        relatedAttributesViewKindRuntimeConfigurationInfoView = new RelatedAttributesViewKindRuntimeConfigurationInfoView(
+                RelatedAttributesViewKindRuntimeConfigurationInfoView.KindTypeOfRelatedPair.ConceptionKind,this.conceptionKind);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"概念类型运行时配置"),conceptionKindEntitiesConfigurationView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),new HorizontalLayout());
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),relatedAttributesViewKindRuntimeConfigurationInfoView);
         //kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.CALC,"统计与评估计算"),new HorizontalLayout());
     }
 
