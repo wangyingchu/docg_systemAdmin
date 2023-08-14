@@ -14,12 +14,13 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,10 +88,16 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         List<Component> secTitleElementsList = new ArrayList<>();
         String attributesViewKindDisplayInfo = this.attributesViewKindUID;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
         AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
+        List<AttributeKind> containsAttributeKindsList = null;
+        List<ConceptionKind> containerConceptionKindsList = null;
         if(targetAttributesViewKind != null){
             attributesViewKindDisplayInfo = targetAttributesViewKind.getAttributesViewKindName() +" ( "+this.attributesViewKindUID+" )";
+            containsAttributeKindsList = targetAttributesViewKind.getContainsAttributeKinds();
+            containerConceptionKindsList = targetAttributesViewKind.getContainerConceptionKinds();
         }
+        coreRealm.closeGlobalSession();
         NativeLabel attributesViewKindNameLabel = new NativeLabel(attributesViewKindDisplayInfo);
         attributesViewKindNameLabel.getStyle()
                 .set("font-size","var(--lumo-font-size-xl)")
@@ -153,6 +160,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         leftSideContainerLayout.add(sectionActionBar1);
         attributesViewKindCorrelationInfoChart = new AttributesViewKindCorrelationInfoChart(500);
         leftSideContainerLayout.add(attributesViewKindCorrelationInfoChart);
+        attributesViewKindCorrelationInfoChart.setData(targetAttributesViewKind,containerConceptionKindsList,containsAttributeKindsList);
 
         rightSideContainerLayout = new VerticalLayout();
         rightSideContainerLayout.setWidth(100,Unit.PERCENTAGE);

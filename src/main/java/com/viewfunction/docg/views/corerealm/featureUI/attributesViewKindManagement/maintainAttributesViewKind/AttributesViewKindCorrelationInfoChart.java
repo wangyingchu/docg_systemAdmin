@@ -5,6 +5,11 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
+
+import java.util.List;
 
 @JavaScript("./visualization/feature/attributesViewKindCorrelationInfoChart-connector.js")
 public class AttributesViewKindCorrelationInfoChart extends VerticalLayout {
@@ -27,5 +32,12 @@ public class AttributesViewKindCorrelationInfoChart extends VerticalLayout {
     private void runBeforeClientResponse(SerializableConsumer<UI> command) {
         getElement().getNode().runWhenAttached(ui -> ui
                 .beforeClientResponse(this, context -> command.accept(ui)));
+    }
+
+    public void setData(AttributesViewKind targetAttributesViewKind, List<ConceptionKind> containerConceptionKindsList,
+                        List<AttributeKind> containsAttributeKindsList){
+        System.out.println(targetAttributesViewKind);
+        System.out.println(containerConceptionKindsList);
+        System.out.println(containsAttributeKindsList);
     }
 }
