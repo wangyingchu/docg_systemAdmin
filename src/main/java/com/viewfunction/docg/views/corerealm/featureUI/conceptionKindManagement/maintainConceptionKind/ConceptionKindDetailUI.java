@@ -103,11 +103,15 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             int chartHeight = currentBrowserHeight - conceptionKindDetailViewHeightOffset - 340;
             conceptionKindCorrelationInfoChart.setHeight(chartHeight,Unit.PIXELS);
             this.conceptionRelationRealtimeInfoGrid.setHeight(chartHeight,Unit.PIXELS);
+            this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -75);
+            this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewWidth(event.getWidth()-820);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             currentBrowserHeight = receiver.getBodyClientHeight();
             kindCorrelationInfoTabSheet.setHeight(currentBrowserHeight-conceptionKindDetailViewHeightOffset-290,Unit.PIXELS);
+            this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -75);
+            this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewWidth(receiver.getBodyClientWidth()-820);
         }));
         renderKindCorrelationInfoTabContent();
         ResourceHolder.getApplicationBlackboard().addListener(this);
@@ -171,6 +175,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 ConceptionKindConfigurationInfoRefreshEvent conceptionKindConfigurationInfoRefreshEvent = new ConceptionKindConfigurationInfoRefreshEvent();
                 conceptionKindConfigurationInfoRefreshEvent.setConceptionKindName(conceptionKind);
                 ResourceHolder.getApplicationBlackboard().fire(conceptionKindConfigurationInfoRefreshEvent);
+                relatedAttributesViewKindRuntimeConfigurationInfoView.refreshRelatedAttributesViewKindRuntimeConfigurationInfo();
             }
         });
         buttonList.add(refreshConceptionKindConfigInfoButton);
