@@ -45,11 +45,11 @@ public class DetachAttributesViewKindView extends VerticalLayout {
         switch (this.relatedKindType){
             case AttributeKind :
                 AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.attributeKindUID);
-                detachMessage = "本操作将从UID 为 "+this.attributesViewKindUID+" 的属性视图类型中移除属性类型 "+targetAttributeKind.getAttributeKindName()+"("+targetAttributeKind.getAttributeDataType().toString()+")"+" - "+targetAttributeKind.getAttributeKindUID()+" ,请确认执行操作。";
+                detachMessage = "本操作将从 UID 为 "+this.attributesViewKindUID+" 的属性视图类型中移除属性类型 "+targetAttributeKind.getAttributeKindName()+"("+targetAttributeKind.getAttributeDataType().toString()+")"+" - "+targetAttributeKind.getAttributeKindUID()+" ,请确认执行操作。";
                 break;
             case ConceptionKind :
                 ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
-                detachMessage = "本操作将从UID 为 "+this.attributesViewKindUID+" 的属性视图类型从概念类型 "+targetConceptionKind.getConceptionKindName()+"("+targetConceptionKind.getConceptionKindDesc()+")"+"中移除 ,请确认执行操作。";
+                detachMessage = "本操作将 UID 为 "+this.attributesViewKindUID+" 的属性视图类型从概念类型 "+targetConceptionKind.getConceptionKindName()+"("+targetConceptionKind.getConceptionKindDesc()+")"+"中移除 ,请确认执行操作。";
         }
 
         H4 viewTitle = new H4(detachMessage);

@@ -25,6 +25,7 @@ import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
 import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttributesViewKindEvent;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindAttachedToConceptionKindEvent;
+import com.viewfunction.docg.element.eventHandling.AttributesViewKindDetachedFromConceptionKindEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -37,7 +38,8 @@ import java.util.Set;
 public class RelatedAttributesViewKindsConfigView extends VerticalLayout implements
         AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener,
         AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener,
-        AttributesViewKindAttachedToConceptionKindEvent.AttributesViewKindAttachedToConceptionKindListener{
+        AttributesViewKindAttachedToConceptionKindEvent.AttributesViewKindAttachedToConceptionKindListener,
+        AttributesViewKindDetachedFromConceptionKindEvent.AttributesViewKindDetachedFromConceptionKindListener {
     private String pairKindIdentify;
     private Grid<AttributesViewKind> attributesViewKindGrid;
     private AttributesViewKind lastSelectedAttributesViewKind;
@@ -304,6 +306,25 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
                     ListDataProvider dtaProvider=(ListDataProvider)attributesViewKindGrid.getDataProvider();
                     dtaProvider.getItems().add(event.getAttributesViewKind());
                     dtaProvider.refreshAll();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void receivedAttributesViewKindDetachedFromConceptionKindEvent(AttributesViewKindDetachedFromConceptionKindEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getConceptionKindName() != null){
+            if(this.pairKindIdentify.equals(event.getConceptionKindName())){
+                ListDataProvider dataProvider=(ListDataProvider) attributesViewKindGrid.getDataProvider();
+                Collection<AttributesViewKind> itemsCollection = dataProvider.getItems();
+                if(itemsCollection != null){
+                    for(AttributesViewKind currentAttributesViewKind:itemsCollection){
+                        if(event.getAttributesViewKindUID().equals(currentAttributesViewKind.getAttributesViewKindUID())){
+                            itemsCollection.remove(currentAttributesViewKind);
+                            break;
+                        }
+                    }
+                    dataProvider.refreshAll();
                 }
             }
         }

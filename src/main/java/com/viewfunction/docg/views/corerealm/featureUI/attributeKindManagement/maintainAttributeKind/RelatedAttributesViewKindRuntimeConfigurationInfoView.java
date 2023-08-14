@@ -21,13 +21,15 @@ import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttributesViewKindEvent;
+import com.viewfunction.docg.element.eventHandling.AttributesViewKindDetachedFromConceptionKindEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends VerticalLayout implements
-        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener{
+        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener,
+        AttributesViewKindDetachedFromConceptionKindEvent.AttributesViewKindDetachedFromConceptionKindListener{
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout rightSideContainerLayout;
     private RelatedAttributesViewKindsConfigView relatedAttributesViewKindsConfigView;
@@ -211,6 +213,19 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
                 if(this.selectedAttributesViewKind != null &&
                         this.selectedAttributesViewKind.getAttributesViewKindUID().equals(event.getAttributesViewKindUID()) &&
                         this.pairKindIdentify.equals(event.getAttributeKindUID())){
+                    resetAttributesViewKindsInfo();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void receivedAttributesViewKindDetachedFromConceptionKindEvent(AttributesViewKindDetachedFromConceptionKindEvent event) {
+        if(this.kindTypeOfRelatedPair.equals(KindTypeOfRelatedPair.ConceptionKind)){
+            if(event.getAttributesViewKindUID() != null && event.getConceptionKindName() != null){
+                if(this.selectedAttributesViewKind != null &&
+                        this.selectedAttributesViewKind.getAttributesViewKindUID().equals(event.getAttributesViewKindUID()) &&
+                        this.pairKindIdentify.equals(event.getConceptionKindName())){
                     resetAttributesViewKindsInfo();
                 }
             }
