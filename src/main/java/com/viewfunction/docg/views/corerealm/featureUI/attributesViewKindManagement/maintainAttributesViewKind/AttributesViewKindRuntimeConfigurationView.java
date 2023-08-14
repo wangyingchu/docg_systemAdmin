@@ -1,5 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind;
 
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -10,10 +12,13 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.element.eventHandling.AttributesViewKindDescriptionUpdatedEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
-public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout {
+public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout implements
+        AttributesViewKindDescriptionUpdatedEvent.AttributesViewKindDescriptionUpdatedListener{
     private String attributesViewKindUID;
     private MetaConfigItemsConfigView metaConfigItemsConfigView;
     private ClassificationConfigView classificationConfigView;
@@ -63,5 +68,31 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout {
         classificationConfigView = new ClassificationConfigView(ClassificationConfigView.ClassificationRelatedObjectType.AttributesViewKind,this.attributesViewKindUID);
         classificationConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(classificationConfigView);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
+        metaConfigItemsConfigView.setViewHeight(280);
+    }
+
+    @Override
+    public void receivedAttributesViewKindDescriptionUpdatedEvent(AttributesViewKindDescriptionUpdatedEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getAttributesViewKindDesc() != null){
+            if(this.attributesViewKindUID.equals(event.getAttributesViewKindUID())){
+                attributesViewKindDescTxt.updateDisplayValue(event.getAttributesViewKindDesc());
+            }
+        }
+    }
+
+    public void setViewHeight(int viewHeight){
+        this.classificationConfigView.setHeight(viewHeight - 425,Unit.PIXELS);
     }
 }

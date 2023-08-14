@@ -87,7 +87,9 @@ public class AttributeKindRuntimeConfigurationView extends VerticalLayout implem
     @Override
     public void receivedAttributeKindDescriptionUpdatedEvent(AttributeKindDescriptionUpdatedEvent event) {
         if(event.getAttributeKindUID() != null && event.getAttributeKindDesc() != null){
-            attributeKindDescTxt.updateDisplayValue(event.getAttributeKindDesc());
+            if(this.attributeKindUID.equals(event.getAttributeKindUID())){
+                attributeKindDescTxt.updateDisplayValue(event.getAttributeKindDesc());
+            }
         }
     }
 
