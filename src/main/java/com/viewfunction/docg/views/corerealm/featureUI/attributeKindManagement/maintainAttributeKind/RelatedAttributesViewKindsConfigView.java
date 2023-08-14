@@ -24,6 +24,7 @@ import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
 import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttributesViewKindEvent;
+import com.viewfunction.docg.element.eventHandling.AttributesViewKindAttachedToConceptionKindEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -35,7 +36,8 @@ import java.util.Set;
 
 public class RelatedAttributesViewKindsConfigView extends VerticalLayout implements
         AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener,
-        AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener {
+        AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener,
+        AttributesViewKindAttachedToConceptionKindEvent.AttributesViewKindAttachedToConceptionKindListener{
     private String pairKindIdentify;
     private Grid<AttributesViewKind> attributesViewKindGrid;
     private AttributesViewKind lastSelectedAttributesViewKind;
@@ -207,18 +209,36 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
     public void refreshAttributesViewKindsInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
-        AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.pairKindIdentify);
-        List<AttributesViewKind> containerAttributesViewKindList = targetAttributeKind.getContainerAttributesViewKinds();
+        List<AttributesViewKind> containerAttributesViewKindList = null;
+        switch(this.kindTypeOfRelatedPair){
+            case AttributeKind :
+                AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.pairKindIdentify);
+                containerAttributesViewKindList = targetAttributeKind.getContainerAttributesViewKinds();
+                break;
+            case ConceptionKind:
+                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.pairKindIdentify);
+                containerAttributesViewKindList = targetConceptionKind.getContainsAttributesViewKinds();
+        }
         coreRealm.closeGlobalSession();
-        attributesViewKindGrid.setItems(containerAttributesViewKindList);
-        if(getAttributesViewKindsRefreshedListener() != null){
-            getAttributesViewKindsRefreshedListener().attributesViewKindsRefreshedAction();
+        if(containerAttributesViewKindList != null){
+            attributesViewKindGrid.setItems(containerAttributesViewKindList);
+            if(getAttributesViewKindsRefreshedListener() != null){
+                getAttributesViewKindsRefreshedListener().attributesViewKindsRefreshedAction();
+            }
         }
     }
 
     private void renderDetachAttributesViewKindUI(AttributesViewKind attributesViewKind){
-        DetachAttributesViewKindView detachAttributesViewKindView = new DetachAttributesViewKindView(attributesViewKind.getAttributesViewKindUID(), DetachAttributesViewKindView.RelatedKindType.AttributeKind);
-        detachAttributesViewKindView.setAttributeKindUID(this.pairKindIdentify);
+        DetachAttributesViewKindView detachAttributesViewKindView = null;
+        switch(this.kindTypeOfRelatedPair){
+            case AttributeKind :
+                detachAttributesViewKindView = new DetachAttributesViewKindView(attributesViewKind.getAttributesViewKindUID(), DetachAttributesViewKindView.RelatedKindType.AttributeKind);
+                detachAttributesViewKindView.setAttributeKindUID(this.pairKindIdentify);
+                break;
+            case ConceptionKind:
+                detachAttributesViewKindView = new DetachAttributesViewKindView(attributesViewKind.getAttributesViewKindUID(), DetachAttributesViewKindView.RelatedKindType.ConceptionKind);
+                detachAttributesViewKindView.setConceptionKindName(this.pairKindIdentify);
+        }
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"移除属性视图类型",null,true,600,210,false);
         fixSizeWindow.setWindowContent(detachAttributesViewKindView);
         fixSizeWindow.setModel(true);
@@ -227,8 +247,16 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
     }
 
     private void renderAttachNewAttributesViewKindUI(){
-        AttachNewAttributesViewKindView attachNewAttributesViewKindView = new AttachNewAttributesViewKindView(AttachNewAttributesViewKindView.RelatedKindType.AttributeKind);
-        attachNewAttributesViewKindView.setAttributeKindUID(this.pairKindIdentify);
+        AttachNewAttributesViewKindView attachNewAttributesViewKindView = null;
+        switch(this.kindTypeOfRelatedPair){
+            case AttributeKind :
+                attachNewAttributesViewKindView = new AttachNewAttributesViewKindView(AttachNewAttributesViewKindView.RelatedKindType.AttributeKind);
+                attachNewAttributesViewKindView.setAttributeKindUID(this.pairKindIdentify);
+                break;
+            case ConceptionKind:
+                attachNewAttributesViewKindView = new AttachNewAttributesViewKindView(AttachNewAttributesViewKindView.RelatedKindType.ConceptionKind);
+                attachNewAttributesViewKindView.setConceptionKindName(this.pairKindIdentify);
+        }
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加属性视图类型",null,true,490,200,false);
         fixSizeWindow.setWindowContent(attachNewAttributesViewKindView);
         fixSizeWindow.setModel(true);
@@ -259,6 +287,19 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
     public void receivedAttributeKindAttachedToAttributesViewKindEvent(AttributeKindAttachedToAttributesViewKindEvent event) {
         if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
             if(this.pairKindIdentify.equals(event.getAttributeKindUID())){
+                if(event.getAttributesViewKind() != null){
+                    ListDataProvider dtaProvider=(ListDataProvider)attributesViewKindGrid.getDataProvider();
+                    dtaProvider.getItems().add(event.getAttributesViewKind());
+                    dtaProvider.refreshAll();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void receivedAttributesViewKindAttachedToConceptionKindEvent(AttributesViewKindAttachedToConceptionKindEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getConceptionKindName() != null){
+            if(this.pairKindIdentify.equals(event.getConceptionKindName())){
                 if(event.getAttributesViewKind() != null){
                     ListDataProvider dtaProvider=(ListDataProvider)attributesViewKindGrid.getDataProvider();
                     dtaProvider.getItems().add(event.getAttributesViewKind());

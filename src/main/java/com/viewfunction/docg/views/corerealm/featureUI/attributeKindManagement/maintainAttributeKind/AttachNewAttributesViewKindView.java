@@ -26,6 +26,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
+import com.viewfunction.docg.element.eventHandling.AttributesViewKindAttachedToConceptionKindEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 
@@ -149,10 +150,10 @@ public class AttachNewAttributesViewKindView extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         try {
+            AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(attributesViewKindMetaInfo.getKindUID());
             switch (this.relatedKindType){
                 case AttributeKind :
                     AttributeKind targetAttributeKind = coreRealm.getAttributeKind(this.attributeKindUID);
-                    AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(attributesViewKindMetaInfo.getKindUID());
                     List<AttributeKind> containsAttributeKindsList = targetAttributesViewKind.getContainsAttributeKinds();
                     if(containsAttributeKindsList != null){
                         for(AttributeKind currentAttributeKind : containsAttributeKindsList){
@@ -163,7 +164,6 @@ public class AttachNewAttributesViewKindView extends VerticalLayout {
                             }
                         }
                     }
-
                     boolean attachResult = targetAttributesViewKind.attachAttributeKind(this.attributeKindUID);
                     if(attachResult){
                         CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+attributesViewKindMetaInfo.getKindUID()+ " 附加属性类型 "+ targetAttributeKind.getAttributeKindName() +" : "+targetAttributeKind.getAttributeKindUID() +" 成功", NotificationVariant.LUMO_SUCCESS);
@@ -182,7 +182,32 @@ public class AttachNewAttributesViewKindView extends VerticalLayout {
                     break;
                 case ConceptionKind :
                     ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
-           }
+                    List<AttributesViewKind> containsAttributesViewKindsList = targetConceptionKind.getContainsAttributesViewKinds();
+                    if(containsAttributesViewKindsList != null){
+                        for(AttributesViewKind currentAttributesViewKind:containsAttributesViewKindsList){
+                            if(currentAttributesViewKind.getAttributesViewKindUID().equals(attributesViewKindMetaInfo.getKindUID())){
+                                errorMessage.setText("当前选择的属性视图类型已经包含在概念类型 "+this.conceptionKindName+" 中");
+                                errorMessage.setVisible(true);
+                                return;
+                            }
+                        }
+                    }
+                    boolean attachResult2 = targetConceptionKind.attachAttributesViewKind(targetAttributesViewKind.getAttributesViewKindUID());
+                    if(attachResult2){
+                        CommonUIOperationUtil.showPopupNotification("将属性视图类型 "+attributesViewKindMetaInfo.getKindUID()+ " 附加到概念类型 "+ targetConceptionKind.getConceptionKindName() +" : "+targetConceptionKind.getConceptionKindDesc() +" 成功", NotificationVariant.LUMO_SUCCESS);
+                        if(containerDialog != null){
+                            containerDialog.close();
+                        }
+                        AttributesViewKindAttachedToConceptionKindEvent attributesViewKindAttachedToConceptionKindEvent = new AttributesViewKindAttachedToConceptionKindEvent();
+                        attributesViewKindAttachedToConceptionKindEvent.setConceptionKindName(conceptionKindName);
+                        attributesViewKindAttachedToConceptionKindEvent.setAttributesViewKindUID(targetAttributesViewKind.getAttributesViewKindUID());
+                        attributesViewKindAttachedToConceptionKindEvent.setConceptionKind(targetConceptionKind);
+                        attributesViewKindAttachedToConceptionKindEvent.setAttributesViewKind(targetAttributesViewKind);
+                        ResourceHolder.getApplicationBlackboard().fire(attributesViewKindAttachedToConceptionKindEvent);
+                    }else{
+                        CommonUIOperationUtil.showPopupNotification("将属性视图类型 "+targetAttributesViewKind.getAttributesViewKindUID()+ " 附加到概念类型 "+ targetConceptionKind.getConceptionKindName() +" : "+targetConceptionKind.getConceptionKindDesc() +" 失败", NotificationVariant.LUMO_ERROR);
+                    }
+            }
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
         }

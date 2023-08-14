@@ -206,11 +206,13 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
 
     @Override
     public void receivedAttributeKindDetachedFromAttributesViewKindEvent(AttributeKindDetachedFromAttributesViewKindEvent event) {
-        if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
-            if(this.selectedAttributesViewKind != null &&
-                    this.selectedAttributesViewKind.getAttributesViewKindUID().equals(event.getAttributesViewKindUID()) &&
-                    this.pairKindIdentify.equals(event.getAttributeKindUID())){
-                resetAttributesViewKindsInfo();
+        if(this.kindTypeOfRelatedPair.equals(KindTypeOfRelatedPair.AttributeKind)){
+            if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
+                if(this.selectedAttributesViewKind != null &&
+                        this.selectedAttributesViewKind.getAttributesViewKindUID().equals(event.getAttributesViewKindUID()) &&
+                        this.pairKindIdentify.equals(event.getAttributeKindUID())){
+                    resetAttributesViewKindsInfo();
+                }
             }
         }
     }
