@@ -61,15 +61,17 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             currentBrowserHeight = event.getHeight();
             int containerHeight = currentBrowserHeight - attributesViewKindDetailViewHeightOffset;
-            this.containerConceptionKindsConfigView.setHeight(containerHeight);
-            this.containsAttributeKindsConfigView.setHeight(containerHeight);
+            this.containerConceptionKindsConfigView.setHeight(containerHeight-10);
+            this.containsAttributeKindsConfigView.setHeight(containerHeight-10);
+            this.attributesViewKindRuntimeConfigurationView.setViewHeight(containerHeight-60);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             currentBrowserHeight = receiver.getBodyClientHeight();
             int containerHeight = currentBrowserHeight - attributesViewKindDetailViewHeightOffset;
-            this.containerConceptionKindsConfigView.setHeight(containerHeight);
-            this.containsAttributeKindsConfigView.setHeight(containerHeight);
+            this.containerConceptionKindsConfigView.setHeight(containerHeight-10);
+            this.containsAttributeKindsConfigView.setHeight(containerHeight-10);
+            this.attributesViewKindRuntimeConfigurationView.setViewHeight(containerHeight-60);
         }));
     }
 
