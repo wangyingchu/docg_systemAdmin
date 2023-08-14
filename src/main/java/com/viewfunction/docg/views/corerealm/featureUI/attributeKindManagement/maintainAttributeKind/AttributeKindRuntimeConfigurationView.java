@@ -19,15 +19,22 @@ import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
+import java.text.NumberFormat;
+import java.util.Collection;
+import java.util.Map;
+
 public class AttributeKindRuntimeConfigurationView extends VerticalLayout implements
         AttributeKindDescriptionUpdatedEvent.AttributeKindDescriptionUpdatedListener{
     private String attributeKindUID;
     private MetaConfigItemsConfigView metaConfigItemsConfigView;
     private ClassificationConfigView classificationConfigView;
     private PrimaryKeyValueDisplayItem attributeKindDescTxt;
+    private PrimaryKeyValueDisplayItem realAttributesCountTxt;
+    private NumberFormat numberFormat;
 
     public AttributeKindRuntimeConfigurationView(String attributeKindUID){
         this.attributeKindUID = attributeKindUID;
+        this.numberFormat = NumberFormat.getInstance();
 
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.COG_O),"属性类型定义配置");
         add(filterTitle1);
@@ -57,6 +64,10 @@ public class AttributeKindRuntimeConfigurationView extends VerticalLayout implem
         horSpaceDiv1.setWidth(20,Unit.PIXELS);
         infoContainer1.add(horSpaceDiv1);
         new PrimaryKeyValueDisplayItem(infoContainer1, VaadinIcon.KEY_O.create(),"属性类型 UID:",targetAttributeKind.getAttributeKindUID());
+        HorizontalLayout horSpaceDiv2 = new HorizontalLayout();
+        horSpaceDiv2.setWidth(20,Unit.PIXELS);
+        infoContainer1.add(horSpaceDiv2);
+        realAttributesCountTxt = new PrimaryKeyValueDisplayItem(infoContainer1, VaadinIcon.CUBES.create(),"类型定义的属性真实数量 :","0");
 
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.CONTROLLER),"属性类型组件运行时配置");
         filterTitle2.getStyle().set("padding-top", "var(--lumo-space-s)");
@@ -100,5 +111,16 @@ public class AttributeKindRuntimeConfigurationView extends VerticalLayout implem
     public void refreshAttributeKindRuntimeConfigurationInfo(){
         metaConfigItemsConfigView.refreshMetaConfigItemsInfo();
         classificationConfigView.refreshClassificationConfigInfo();
+    }
+
+    public void setAttributeInConceptionKindDistributionInfo(Map<String,Long> distributionMap){
+        if(distributionMap != null){
+            Collection<Long> propertyCounts = distributionMap.values();
+            long propertyExistingNum = 0;
+            for(Long currentCount : propertyCounts){
+                propertyExistingNum = propertyExistingNum+currentCount;
+            }
+            realAttributesCountTxt.updateDisplayValue(""+numberFormat.format(propertyExistingNum));
+        }
     }
 }

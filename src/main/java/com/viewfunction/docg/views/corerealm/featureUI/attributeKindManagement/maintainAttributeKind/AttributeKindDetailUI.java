@@ -390,6 +390,7 @@ public class AttributeKindDetailUI extends VerticalLayout implements
             }
             conceptionKindContainsAttributeInfoGrid.setItems(attributeInConceptionKindDistributionInfoList);
             attributeInConceptionKindDistributionInfoChart.refreshDistributionInfo(distributionMap);
+            attributeKindRuntimeConfigurationView.setAttributeInConceptionKindDistributionInfo(distributionMap);
         }
         coreRealm.closeGlobalSession();
     }
