@@ -38,8 +38,8 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
     private VerticalLayout rightSideContainerLayout;
     private ContainerConceptionKindsConfigView containerConceptionKindsConfigView;
     private ContainsAttributeKindsConfigView containsAttributeKindsConfigView;
+    private AttributesViewKindRuntimeConfigurationView attributesViewKindRuntimeConfigurationView;
     private TabSheet kindConfigurationTabSheet;
-
 
     public AttributesViewKindDetailUI(){}
 
@@ -100,28 +100,6 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
 
         List<Component> buttonList = new ArrayList<>();
 
-        Button metaConfigItemConfigInfoButton= new Button("元属性配置管理");
-        metaConfigItemConfigInfoButton.setIcon(VaadinIcon.BOOKMARK.create());
-        metaConfigItemConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        metaConfigItemConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderMetaConfigItemConfigInfoUI();
-            }
-        });
-        buttonList.add(metaConfigItemConfigInfoButton);
-
-        Button classificationConfigInfoButton= new Button("分类配置管理");
-        classificationConfigInfoButton.setIcon(VaadinIcon.TAGS.create());
-        classificationConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        classificationConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderClassificationConfigInfoUI();
-            }
-        });
-        buttonList.add(classificationConfigInfoButton);
-
         Button attributesViewKindMetaInfoButton= new Button("属性视图类型元数据");
         attributesViewKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
         attributesViewKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
@@ -166,18 +144,10 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         leftSideContainerLayout.getStyle()
                 .set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
-
-
-
-
         Icon icon = new Icon(VaadinIcon.CUBE);
         icon.setSize("8px");
         SectionActionBar sectionActionBar1 = new SectionActionBar(icon,"相关概念类型配置管理",null);
         leftSideContainerLayout.add(sectionActionBar1);
-        containerConceptionKindsConfigView = new ContainerConceptionKindsConfigView(this.attributesViewKindUID);
-        leftSideContainerLayout.add(containerConceptionKindsConfigView);
-
-
 
         rightSideContainerLayout = new VerticalLayout();
         rightSideContainerLayout.setWidth(100,Unit.PERCENTAGE);
@@ -186,28 +156,17 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         rightSideContainerLayout.setMargin(false);
         mainContainerLayout.add(rightSideContainerLayout);
 
-
-
-
         kindConfigurationTabSheet = new TabSheet();
         kindConfigurationTabSheet.setWidthFull();
         rightSideContainerLayout.add(kindConfigurationTabSheet);
         rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
 
-        AttributesViewKindRuntimeConfigurationView attributesViewKindRuntimeConfigurationView = new AttributesViewKindRuntimeConfigurationView(this.attributesViewKindUID);
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"属性视图类型运行时配置"),attributesViewKindRuntimeConfigurationView);
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"), new HorizontalLayout());
-
-
-
-        Icon icon2 = new Icon(VaadinIcon.INPUT);
-        SectionActionBar sectionActionBar2 = new SectionActionBar(icon2,"包含属性类型配置管理",null);
-        rightSideContainerLayout.add(sectionActionBar2);
+        attributesViewKindRuntimeConfigurationView = new AttributesViewKindRuntimeConfigurationView(this.attributesViewKindUID);
         containsAttributeKindsConfigView = new ContainsAttributeKindsConfigView(this.attributesViewKindUID);
-        rightSideContainerLayout.add(containsAttributeKindsConfigView);
-
-        mainContainerLayout.setFlexGrow(0.5,leftSideContainerLayout);
-        mainContainerLayout.setFlexGrow(0.5,rightSideContainerLayout);
+        containerConceptionKindsConfigView = new ContainerConceptionKindsConfigView(this.attributesViewKindUID);
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"属性视图类型运行时配置"),attributesViewKindRuntimeConfigurationView);
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.INPUT,"属性类型定义配置"), containsAttributeKindsConfigView);
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.CUBE,"概念类型定义配置"), containerConceptionKindsConfigView);
     }
 
     private void renderShowMetaInfoUI(){
@@ -217,17 +176,6 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
-
-    private void renderMetaConfigItemConfigInfoUI(){
-        MetaConfigItemsConfigView metaConfigItemsConfigView = new MetaConfigItemsConfigView(MetaConfigItemsConfigView.MetaConfigItemType.AttributesViewKind,this.attributesViewKindUID);
-        metaConfigItemsConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.BOOKMARK),"属性视图类型元属性配置管理",null,true,750,280,false);
-        fixSizeWindow.setWindowContent(metaConfigItemsConfigView);
-        fixSizeWindow.setModel(true);
-        fixSizeWindow.show();
-    }
-
-    private void renderClassificationConfigInfoUI(){}
 
     private HorizontalLayout generateKindConfigurationTabTitle(VaadinIcon tabIcon,String tabTitleTxt){
         HorizontalLayout  kindConfigTabLayout = new HorizontalLayout();

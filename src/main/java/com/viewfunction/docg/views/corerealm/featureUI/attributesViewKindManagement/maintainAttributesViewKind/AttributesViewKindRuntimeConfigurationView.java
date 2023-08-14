@@ -1,13 +1,23 @@
 package com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind;
 
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
 public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout {
     private String attributesViewKindUID;
+    private MetaConfigItemsConfigView metaConfigItemsConfigView;
+    private ClassificationConfigView classificationConfigView;
+    private PrimaryKeyValueDisplayItem attributesViewKindDescTxt;
 
     public AttributesViewKindRuntimeConfigurationView(String attributesViewKindUID){
         this.attributesViewKindUID = attributesViewKindUID;
@@ -18,5 +28,40 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout {
         infoContainer0.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         infoContainer0.setWidthFull();
         add(infoContainer0);
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
+
+        new PrimaryKeyValueDisplayItem(infoContainer0, VaadinIcon.INFO_CIRCLE_O.create(),"属性视图类型名称:",targetAttributesViewKind.getAttributesViewKindName());
+        HorizontalLayout horSpaceDiv0 = new HorizontalLayout();
+        horSpaceDiv0.setWidth(20, Unit.PIXELS);
+        infoContainer0.add(horSpaceDiv0);
+        attributesViewKindDescTxt = new PrimaryKeyValueDisplayItem(infoContainer0, VaadinIcon.DESKTOP.create(),"属性视图类型描述:",targetAttributesViewKind.getAttributesViewKindDesc());
+
+        HorizontalLayout infoContainer1 = new HorizontalLayout();
+        infoContainer1.setDefaultVerticalComponentAlignment(Alignment.END);
+        infoContainer1.setWidthFull();
+        infoContainer1.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-l)");
+        add(infoContainer1);
+        new PrimaryKeyValueDisplayItem(infoContainer1, VaadinIcon.ELLIPSIS_H.create(),"属性视图存储结构:",targetAttributesViewKind.getAttributesViewKindDataForm().toString());
+        HorizontalLayout horSpaceDiv1 = new HorizontalLayout();
+        horSpaceDiv1.setWidth(20,Unit.PIXELS);
+        infoContainer1.add(horSpaceDiv1);
+
+        new PrimaryKeyValueDisplayItem(infoContainer1, VaadinIcon.KEY_O.create(),"属性视图类型 UID:",targetAttributesViewKind.getAttributesViewKindUID());
+
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.CONTROLLER),"属性视图类型组件运行时配置");
+        filterTitle2.getStyle().set("padding-top", "var(--lumo-space-s)");
+        add(filterTitle2);
+
+        metaConfigItemsConfigView = new MetaConfigItemsConfigView(MetaConfigItemsConfigView.MetaConfigItemType.AttributesViewKind,this.attributesViewKindUID);
+        metaConfigItemsConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        add(metaConfigItemsConfigView);
+
+        classificationConfigView = new ClassificationConfigView(ClassificationConfigView.ClassificationRelatedObjectType.AttributesViewKind,this.attributesViewKindUID);
+        classificationConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        add(classificationConfigView);
     }
 }
