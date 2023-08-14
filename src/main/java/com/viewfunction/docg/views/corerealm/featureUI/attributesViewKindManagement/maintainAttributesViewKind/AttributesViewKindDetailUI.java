@@ -40,6 +40,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
     private ContainsAttributeKindsConfigView containsAttributeKindsConfigView;
     private AttributesViewKindRuntimeConfigurationView attributesViewKindRuntimeConfigurationView;
     private TabSheet kindConfigurationTabSheet;
+    private AttributesViewKindCorrelationInfoChart attributesViewKindCorrelationInfoChart;
 
     public AttributesViewKindDetailUI(){}
 
@@ -150,6 +151,8 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         icon.setSize("8px");
         SectionActionBar sectionActionBar1 = new SectionActionBar(icon,"相关概念类型配置管理",null);
         leftSideContainerLayout.add(sectionActionBar1);
+        attributesViewKindCorrelationInfoChart = new AttributesViewKindCorrelationInfoChart(500);
+        leftSideContainerLayout.add(attributesViewKindCorrelationInfoChart);
 
         rightSideContainerLayout = new VerticalLayout();
         rightSideContainerLayout.setWidth(100,Unit.PERCENTAGE);
