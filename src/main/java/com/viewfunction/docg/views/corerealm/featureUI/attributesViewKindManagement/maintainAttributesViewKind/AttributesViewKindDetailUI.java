@@ -4,6 +4,7 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -43,6 +44,10 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
     private TabSheet kindConfigurationTabSheet;
     private AttributesViewKindCorrelationInfoChart attributesViewKindCorrelationInfoChart;
 
+
+
+    private FeederThread thread;
+
     public AttributesViewKindDetailUI(){}
 
     public AttributesViewKindDetailUI(String attributesViewKindUID){
@@ -75,6 +80,9 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
             this.containsAttributeKindsConfigView.setHeight(containerHeight-10);
             this.attributesViewKindRuntimeConfigurationView.setViewHeight(containerHeight-60);
         }));
+
+        thread = new FeederThread(attachEvent.getUI(), leftSideContainerLayout);
+        thread.start();
     }
 
     @Override
@@ -82,6 +90,11 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
+
+
+
+        thread.interrupt();
+        thread = null;
     }
 
     private void renderAttributesViewKindData(){
@@ -158,9 +171,30 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         icon.setSize("8px");
         SectionActionBar sectionActionBar1 = new SectionActionBar(icon,"相关概念类型配置管理",null);
         leftSideContainerLayout.add(sectionActionBar1);
-        attributesViewKindCorrelationInfoChart = new AttributesViewKindCorrelationInfoChart(500);
-        leftSideContainerLayout.add(attributesViewKindCorrelationInfoChart);
-        attributesViewKindCorrelationInfoChart.setData(targetAttributesViewKind,containerConceptionKindsList,containsAttributeKindsList);
+
+
+        Button testButton = new Button("TestButton");
+
+        testButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                attributesViewKindCorrelationInfoChart = new AttributesViewKindCorrelationInfoChart(500);
+                leftSideContainerLayout.add(attributesViewKindCorrelationInfoChart);
+
+                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                coreRealm.openGlobalSession();
+                AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(attributesViewKindUID);
+                List<AttributeKind> containsAttributeKindsList = null;
+                List<ConceptionKind> containerConceptionKindsList = null;
+                if(targetAttributesViewKind != null){
+                    containsAttributeKindsList = targetAttributesViewKind.getContainsAttributeKinds();
+                    containerConceptionKindsList = targetAttributesViewKind.getContainerConceptionKinds();
+                }
+                coreRealm.closeGlobalSession();
+                attributesViewKindCorrelationInfoChart.setData(targetAttributesViewKind,containerConceptionKindsList,containsAttributeKindsList);
+            }
+        });
+        leftSideContainerLayout.add(testButton);
 
         rightSideContainerLayout = new VerticalLayout();
         rightSideContainerLayout.setWidth(100,Unit.PERCENTAGE);
@@ -202,5 +236,50 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
                 .set("font-weight", "bold");
         kindConfigTabLayout.add(configTabIcon,configTabLabel);
         return kindConfigTabLayout;
+    }
+
+
+
+
+
+    private static class FeederThread extends Thread {
+        private final UI ui;
+        private VerticalLayout leftSideContainerLayout;
+
+        private int count = 0;
+
+        public FeederThread(UI ui, VerticalLayout leftSideContainerLayout) {
+            this.ui = ui;
+            this.leftSideContainerLayout = leftSideContainerLayout;
+        }
+
+        @Override
+        public void run() {
+            System.out.println("++++++++++++++++++++++++++++++++++");
+
+            System.out.println("++++++++++++++++++++++++++++++++++");
+            try {
+                // Update the data for a while
+                while (count < 10) {
+                    // Sleep to emulate background work
+                    Thread.sleep(5000);
+                    String message = "This is update " + count++;
+                    //leftSideContainerLayout.add(new Span(message));
+                    ui.access(() -> leftSideContainerLayout.add(new Span(message)));
+                    System.out.println(message);
+
+                    ui.push();
+                }
+
+                // Inform that we're done
+                /*
+                ui.access(() -> {
+                    leftSideContainerLayout.add(new Span("Done updating"));
+                });
+                */
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

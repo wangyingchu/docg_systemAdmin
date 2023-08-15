@@ -306,7 +306,7 @@
   "visualization/common/barChart_echarts-connector.js": "486904a12fc451027fbfe1b9670fc07f4a23e1a4263aaccae4499374da152113",
   "visualization/common/cartesianHeatmapChart_echarts-connector.js": "16e806d637b8ac69a52dffb7f738c3f25a46b95611a77ffdf100f022e5a83b9c",
   "visualization/common/pieChart_echarts-connector.js": "1043213cc8993cb0aa570b6c1a9716ff50a7dfed8f84e3ce946d46a4122873ef",
-  "visualization/feature/attributesViewKindCorrelationInfoChart-connector.js": "be0680bfaddd59ac97b87f6313dbfa6ac111bf4643e5346a3f891b8f35e731a8",
+  "visualization/feature/attributesViewKindCorrelationInfoChart-connector.js": "f5ca11473420877ab1975bf076fb481b81c170867b9ff1ce5362fc434a3f7e3e",
   "visualization/feature/conceptionKindCorrelationInfoChart-connector.js": "7c1482c153bb42f27be3b522816d4f9fb907ecda9912f4ce2cb45b2f06bbb180",
   "visualization/feature/conceptionKindsCorrelationInfoSummaryChart-connector.js": "3fd20d1368cb4da26e3a2b19001a5209b063b967f4d2c3a8369ed10d8d584060",
   "visualization/feature/conceptionEntitySpatialChart-connector.js": "01498a2b8af61e49409ad667f8d3f0dac16966e76468bae218b8101983d7672a",
@@ -350,7 +350,7 @@
   "docg-pac": "{\n  \"lumoImports\" : [ \"typography\", \"color\", \"spacing\", \"badge\", \"utility\" ]\n}"
  },
  "entryScripts": [
-  "VAADIN/build/indexhtml-dd32773d.js"
+  "VAADIN/build/indexhtml-960bc6d3.js"
  ],
  "webComponents": [],
  "cvdlModules": {
@@ -385,6 +385,6 @@
  },
  "packageJsonHash": "27209db04e119aaf3e4cf634a3702f23aad7bccc8f8b5eb0746096ff62a3f37a",
  "indexHtmlGenerated": [
-  "  <script type=\"module\" crossorigin src=\"./VAADIN/build/indexhtml-dd32773d.js\"></script>"
+  "  <script type=\"module\" crossorigin src=\"./VAADIN/build/indexhtml-960bc6d3.js\"></script>"
  ]
 }
