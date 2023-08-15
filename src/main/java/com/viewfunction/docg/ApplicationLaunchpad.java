@@ -2,6 +2,7 @@ package com.viewfunction.docg;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.LoadingIndicatorConfiguration;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
@@ -17,6 +18,7 @@ import org.vaadin.artur.helpers.LaunchUtil;
 @SpringBootApplication
 @Theme(value="docg-pac")
 @PWA(name = "DOCG Platform System Administrator Console", shortName = "DOCG-SAC", offlineResources = {})
+@Push
 public class ApplicationLaunchpad extends SpringBootServletInitializer implements AppShellConfigurator, VaadinServiceInitListener {
 
     public static void main(String[] args) {

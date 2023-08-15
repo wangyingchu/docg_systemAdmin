@@ -268,7 +268,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
                     ui.access(() -> leftSideContainerLayout.add(new Span(message)));
                     System.out.println(message);
 
-                    ui.push();
+                    //ui.push();
                 }
 
                 // Inform that we're done
