@@ -131,7 +131,13 @@ public class DataRelationDistributionChart extends VerticalLayout {
                 String targetConceptionKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
                 String relationKindName = currentConceptionKindCorrelationInfo.getRelationKindName();
                 long relationEntityCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
-                if(!relationKindName.equals(RealmConstant.Kind_MetaConfigItemsStorageRelationClass)){
+                if(!relationKindName.equals(RealmConstant.Kind_MetaConfigItemsStorageRelationClass)
+                        && !relationKindName.equals(RealmConstant.ConceptionKind_AttributesViewKindRelationClass)
+                        && !relationKindName.equals(RealmConstant.AttributesViewKind_AttributeKindRelationClass)
+                        && !relationKindName.equals(RealmConstant.Classification_ClassificationRelationClass)
+                        && !relationKindName.equals(RealmConstant.RelationAttachKindClass)
+                        && !relationKindName.equals(RealmConstant.RelationAttachLinkLogicClass)
+                        && !relationKindName.equals(RealmConstant.RelationAttachKind_RelationAttachLinkLogicRelationClass)){
                     boolean linkToTG = false;
                     if(sourceConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
                             ||sourceConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
