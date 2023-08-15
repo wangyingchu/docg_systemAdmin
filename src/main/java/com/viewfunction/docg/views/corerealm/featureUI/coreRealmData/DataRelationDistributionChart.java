@@ -135,8 +135,6 @@ public class DataRelationDistributionChart extends VerticalLayout {
                         && !relationKindName.equals(RealmConstant.ConceptionKind_AttributesViewKindRelationClass)
                         && !relationKindName.equals(RealmConstant.AttributesViewKind_AttributeKindRelationClass)
                         && !relationKindName.equals(RealmConstant.Classification_ClassificationRelationClass)
-                        && !relationKindName.equals(RealmConstant.RelationAttachKindClass)
-                        && !relationKindName.equals(RealmConstant.RelationAttachLinkLogicClass)
                         && !relationKindName.equals(RealmConstant.RelationAttachKind_RelationAttachLinkLogicRelationClass)){
                     boolean linkToTG = false;
                     if(sourceConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
