@@ -11,11 +11,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-
-import com.vaadin.flow.data.renderer.NumberRenderer;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
@@ -24,13 +26,12 @@ import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttrib
 import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttributesViewKindEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
-import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.maintainAttributeKind.AttributeKindDetailUI;
 import dev.mett.vaadin.tooltip.Tooltips;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener,
@@ -44,7 +45,9 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
     private SecondaryTitleActionBar selectedAttributesViewKindUIDActionBar;
     private Grid<AttributesViewKind> attributeKindAttributesInfoGrid;
     private Registration listener;
-    //private Grid<> conceptionKindContainsAttributeInfoGrid;
+    private Grid<ConceptionKind> conceptionKindAttributesInfoGrid;
+    private AttributeKind laseSelectedAttributeKind;
+
     public ContainsAttributeKindsConfigView(String attributesViewKindUID){
         this.attributesViewKindUID = attributesViewKindUID;
         this.setWidth(100, Unit.PERCENTAGE);
@@ -61,7 +64,6 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
 
         leftSideContainerLayout = new VerticalLayout();
         leftSideContainerLayout.setWidth(850,Unit.PIXELS);
-        //leftSideContainerLayout.setSpacing(false);
         leftSideContainerLayout.setMargin(false);
         leftSideContainerLayout.setPadding(false);
         mainContainerLayout.add(leftSideContainerLayout);
@@ -71,7 +73,6 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         rightSideContainerLayout.setMargin(false);
         rightSideContainerLayout.setPadding(false);
         mainContainerLayout.add(rightSideContainerLayout);
-
 
         HorizontalLayout spaceDiv01Layout0 = new HorizontalLayout();
         spaceDiv01Layout0.setHeight(1,Unit.PIXELS);
@@ -169,9 +170,22 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         attributeKindGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4);
 
         attributeKindGrid.appendFooterRow();
+        attributeKindGrid.addSelectionListener(new SelectionListener<Grid<AttributeKind>, AttributeKind>() {
+
+            @Override
+            public void selectionChange(SelectionEvent<Grid<AttributeKind>, AttributeKind> selectionEvent) {
+                Set<AttributeKind> selectedItemSet = selectionEvent.getAllSelectedItems();
+                if(selectedItemSet.size() == 0){
+                    // don't allow to unselect item, just reselect last selected item
+                    attributeKindGrid.select(laseSelectedAttributeKind);
+                }else{
+                    AttributeKind selectedAttributeKind = selectedItemSet.iterator().next();
+                    renderAttributeKindOverview(selectedAttributeKind);
+                    laseSelectedAttributeKind = selectedAttributeKind;
+                }
+            }
+        });
         leftSideContainerLayout.add(attributeKindGrid);
-
-
 
         HorizontalLayout spaceDiv01Layout1 = new HorizontalLayout();
         spaceDiv01Layout1.setHeight(10,Unit.PIXELS);
@@ -191,10 +205,6 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         selectedAttributesViewKindUIDActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.KEY_O),"-",null,null);
         selectedAttributesViewKindUIDActionBar.setWidth(100,Unit.PERCENTAGE);
         rightSideContainerLayout.add(selectedAttributesViewKindUIDActionBar);
-
-
-
-
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.TASKS),"所属属性视图类型");
         rightSideContainerLayout.add(infoTitle1);
@@ -219,40 +229,18 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CUBE),"所属概念类型");
         rightSideContainerLayout.add(infoTitle2);
 
-/*
-        conceptionKindContainsAttributeInfoGrid = new Grid<>();
-        conceptionKindContainsAttributeInfoGrid.setWidth(100,Unit.PERCENTAGE);
-        conceptionKindContainsAttributeInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        conceptionKindContainsAttributeInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
-        conceptionKindContainsAttributeInfoGrid.addColumn(AttributeKindDetailUI.AttributeInConceptionKindDistributionInfo::getConceptionKindName).setHeader("概念类型名称").setKey("idx_0");
-        conceptionKindContainsAttributeInfoGrid.addColumn(AttributeKindDetailUI.AttributeInConceptionKindDistributionInfo::getConceptionKindDesc).setHeader("概念类型显示名称").setKey("idx_1").setFlexGrow(0).setWidth("150px").setResizable(false);
-        conceptionKindContainsAttributeInfoGrid.addColumn(new NumberRenderer<>(AttributeKindDetailUI.AttributeInConceptionKindDistributionInfo::getConceptionEntityCount, NumberFormat.getIntegerInstance()))
-                .setComparator((entityStatisticsInfo1, entityStatisticsInfo2) ->
-                        (int)(entityStatisticsInfo1.getConceptionEntityCount() - entityStatisticsInfo2.getConceptionEntityCount()))
-                .setHeader("类型包含实体数量").setKey("idx_2")
-                .setFlexGrow(0).setWidth("120px").setResizable(false);
-        conceptionKindContainsAttributeInfoGrid.addColumn(new NumberRenderer<>(AttributeKindDetailUI.AttributeInConceptionKindDistributionInfo::getPropertyExistInEntityCount, NumberFormat.getIntegerInstance()))
-                .setComparator((entityStatisticsInfo1, entityStatisticsInfo2) ->
-                        (int)(entityStatisticsInfo1.getPropertyExistInEntityCount() - entityStatisticsInfo2.getPropertyExistInEntityCount()))
-                .setHeader("包含当前属性实体数量").setKey("idx_3")
-                .setFlexGrow(0).setWidth("120px").setResizable(false);
-        conceptionKindContainsAttributeInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("60px").setResizable(false);
-        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"概念类型名称");
-        conceptionKindContainsAttributeInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true)
-                .setTooltipGenerator(kindEntityAttributeRuntimeStatistics -> kindEntityAttributeRuntimeStatistics.conceptionKindName);
-        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.PASSWORD,"概念类型显示名称");
-        conceptionKindContainsAttributeInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true)
-                .setTooltipGenerator(kindEntityAttributeRuntimeStatistics -> kindEntityAttributeRuntimeStatistics.conceptionKindDesc);
-        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.STOCK,"类型实体数量");
-        conceptionKindContainsAttributeInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
-        LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(VaadinIcon.CROSSHAIRS,"属性类型命中数量");
-        conceptionKindContainsAttributeInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
-        LightGridColumnHeader gridColumnHeader_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
-        conceptionKindContainsAttributeInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4);
-        conceptionKindContainsAttributeInfoGrid.setHeight(350,Unit.PIXELS);
-        rightSideContainerLayout.add(conceptionKindContainsAttributeInfoGrid);
-*/
-
+        conceptionKindAttributesInfoGrid = new Grid<>();
+        conceptionKindAttributesInfoGrid.setWidth(100,Unit.PERCENTAGE);
+        conceptionKindAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        conceptionKindAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
+        conceptionKindAttributesInfoGrid.setHeight(200,Unit.PIXELS);
+        conceptionKindAttributesInfoGrid.addColumn(ConceptionKind::getConceptionKindName).setHeader("概念类型名称").setKey("idx_0");
+        conceptionKindAttributesInfoGrid.addColumn(ConceptionKind::getConceptionKindDesc).setHeader("概念类型显示名称").setKey("idx_1");
+        LightGridColumnHeader gridColumnHeader0_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"概念类型名称");
+        conceptionKindAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader0_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader1_idx1 = new LightGridColumnHeader(VaadinIcon.DESKTOP,"概念类型显示名称");
+        conceptionKindAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader1_idx1).setSortable(true);
+        rightSideContainerLayout.add(conceptionKindAttributesInfoGrid);
     }
 
     @Override
@@ -266,11 +254,11 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         coreRealm.closeGlobalSession();
         attributeKindGrid.setItems(attributeKindsList);
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            this.rightSideContainerLayout.setWidth(event.getWidth()-1430,Unit.PIXELS);
+            this.rightSideContainerLayout.setWidth(event.getWidth()-1450,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            this.rightSideContainerLayout.setWidth(receiver.getBodyClientWidth()-1430,Unit.PIXELS);
+            this.rightSideContainerLayout.setWidth(receiver.getBodyClientWidth()-1450,Unit.PIXELS);
         }));
     }
 
@@ -352,5 +340,27 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
     public void setHeight(int heightValue){
         containerHeight = heightValue;
         this.attributeKindGrid.setHeight(containerHeight-190,Unit.PIXELS);
+    }
+
+    private void renderAttributeKindOverview(AttributeKind selectedAttributeKind){
+        String attributesViewKindName = selectedAttributeKind.getAttributeKindName();
+        String attributesViewKindDesc = selectedAttributeKind.getAttributeKindDesc() != null ?
+                selectedAttributeKind.getAttributeKindDesc():"未设置描述信息";
+        String attributesViewKindUID = selectedAttributeKind.getAttributeKindUID();
+        String attributeNameText = attributesViewKindName +" ( "+attributesViewKindDesc+" )";
+        selectedAttributesViewKindTitleActionBar.updateTitleContent(attributeNameText);
+        selectedAttributesViewKindUIDActionBar.updateTitleContent(attributesViewKindUID);
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        AttributeKind targetAttributeKind = coreRealm.getAttributeKind(selectedAttributeKind.getAttributeKindUID());
+        List<AttributesViewKind> containerAttributesViewKindList = targetAttributeKind.getContainerAttributesViewKinds();
+        if(containerAttributesViewKindList != null) {
+            attributeKindAttributesInfoGrid.setItems(containerAttributesViewKindList);
+        }
+        List<ConceptionKind> containerConceptionKindList = targetAttributeKind.getContainerConceptionKinds();
+        if(containerConceptionKindList != null){
+            conceptionKindAttributesInfoGrid.setItems(containerConceptionKindList);
+        }
+        coreRealm.closeGlobalSession();
     }
 }
