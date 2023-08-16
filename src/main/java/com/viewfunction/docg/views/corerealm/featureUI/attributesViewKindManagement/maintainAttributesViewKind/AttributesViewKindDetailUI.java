@@ -68,7 +68,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
             this.containerConceptionKindsConfigView.setHeight(containerHeight-10);
             this.containsAttributeKindsConfigView.setHeight(containerHeight-10);
             this.attributesViewKindRuntimeConfigurationView.setViewHeight(containerHeight-60);
-            this.attributesViewKindCorrelationInfoChartHeight = containerHeight -120;
+            this.attributesViewKindCorrelationInfoChartHeight = containerHeight -110;
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -77,11 +77,11 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
             this.containerConceptionKindsConfigView.setHeight(containerHeight-10);
             this.containsAttributeKindsConfigView.setHeight(containerHeight-10);
             this.attributesViewKindRuntimeConfigurationView.setViewHeight(containerHeight-60);
-            this.attributesViewKindCorrelationInfoChartHeight = containerHeight -120;
-        }));
+            this.attributesViewKindCorrelationInfoChartHeight = containerHeight -110;
 
-        attributesViewKindCorrelationInfoChartInitThread = new AttributesViewKindCorrelationInfoChartInitThread(attachEvent.getUI(), this);
-        attributesViewKindCorrelationInfoChartInitThread.start();
+            this.attributesViewKindCorrelationInfoChartInitThread = new AttributesViewKindCorrelationInfoChartInitThread(attachEvent.getUI(), this);
+            this.attributesViewKindCorrelationInfoChartInitThread.start();
+        }));
     }
 
     @Override
