@@ -43,6 +43,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
     private TabSheet kindConfigurationTabSheet;
     private AttributesViewKindCorrelationInfoChart attributesViewKindCorrelationInfoChart;
     private AttributesViewKindCorrelationInfoChartInitThread attributesViewKindCorrelationInfoChartInitThread;
+    private int attributesViewKindCorrelationInfoChartHeight = 500;
 
     public AttributesViewKindDetailUI(){}
 
@@ -67,6 +68,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
             this.containerConceptionKindsConfigView.setHeight(containerHeight-10);
             this.containsAttributeKindsConfigView.setHeight(containerHeight-10);
             this.attributesViewKindRuntimeConfigurationView.setViewHeight(containerHeight-60);
+            this.attributesViewKindCorrelationInfoChartHeight = containerHeight -120;
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -75,6 +77,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
             this.containerConceptionKindsConfigView.setHeight(containerHeight-10);
             this.containsAttributeKindsConfigView.setHeight(containerHeight-10);
             this.attributesViewKindRuntimeConfigurationView.setViewHeight(containerHeight-60);
+            this.attributesViewKindCorrelationInfoChartHeight = containerHeight -120;
         }));
 
         attributesViewKindCorrelationInfoChartInitThread = new AttributesViewKindCorrelationInfoChartInitThread(attachEvent.getUI(), this);
@@ -156,10 +159,8 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         leftSideContainerLayout.getStyle()
                 .set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
-        Icon icon = new Icon(VaadinIcon.CUBE);
-        icon.setSize("8px");
-        SectionActionBar sectionActionBar1 = new SectionActionBar(icon,"相关概念类型配置管理",null);
-        leftSideContainerLayout.add(sectionActionBar1);
+        ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(new Icon(VaadinIcon.COGS),"属性视图类型配置概览");
+        leftSideContainerLayout.add(infoTitle);
 
         rightSideContainerLayout = new VerticalLayout();
         rightSideContainerLayout.setWidth(100,Unit.PERCENTAGE);
@@ -204,7 +205,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
     }
 
     private void initAttributesViewKindCorrelationInfoChart(){
-        attributesViewKindCorrelationInfoChart = new AttributesViewKindCorrelationInfoChart(500);
+        attributesViewKindCorrelationInfoChart = new AttributesViewKindCorrelationInfoChart(attributesViewKindCorrelationInfoChartHeight);
         leftSideContainerLayout.add(attributesViewKindCorrelationInfoChart);
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
