@@ -35,6 +35,7 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.AttributesViewKindsCorrelationInfoSummaryChart;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.CreateAttributesViewKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.RemoveAttributesViewKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.AttributesViewKindDetailUI;
@@ -108,7 +109,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         attributeKindRuntimeStatusGuideButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderConceptionKindsCorrelationInfoSummaryUI(attributeKindRuntimeStatusGuideButton);
+                renderAttributesViewKindsCorrelationInfoSummaryUI(attributeKindRuntimeStatusGuideButton);
             }
         });
 
@@ -738,5 +739,18 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
                 }
             }
         }
+    }
+
+    private void renderAttributesViewKindsCorrelationInfoSummaryUI(Button launchButton){
+        AttributesViewKindsCorrelationInfoSummaryChart attributesViewKindsCorrelationInfoSummaryChart = new AttributesViewKindsCorrelationInfoSummaryChart(1180,800);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"属性视图类型关联分布概览",null,true,1200,900,false);
+        fixSizeWindow.setWindowContent(attributesViewKindsCorrelationInfoSummaryChart);
+        fixSizeWindow.show();
+        fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
+            @Override
+            public void onComponentEvent(DetachEvent detachEvent) {
+                launchButton.setEnabled(true);
+            }
+        });
     }
 }
