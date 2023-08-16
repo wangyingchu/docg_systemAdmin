@@ -20,6 +20,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
+import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttributesViewKindEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 
 import java.util.ArrayList;
@@ -29,7 +32,9 @@ import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.
 
 @Route("attributesViewKindDetailInfo/:attributesViewKindUID")
 public class AttributesViewKindDetailUI extends VerticalLayout implements
-        BeforeEnterObserver {
+        BeforeEnterObserver,
+        AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener,
+        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener{
     private String attributesViewKindUID;
     private int attributesViewKindDetailViewHeightOffset = 40;
     private int currentBrowserHeight = 0;
@@ -60,6 +65,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         renderAttributesViewKindData();
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
@@ -89,6 +95,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
         attributesViewKindCorrelationInfoChartInitThread.interrupt();
         attributesViewKindCorrelationInfoChartInitThread = null;
     }
@@ -138,6 +145,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 containerConceptionKindsConfigView.refreshConceptionKindsInfo();
                 containsAttributeKindsConfigView.refreshAttributeTypesInfo();
+                refreshAttributesViewKindCorrelationInfoChart();
             }
         });
         buttonList.add(refreshAttributesViewKindConfigInfoButton);
@@ -220,6 +228,21 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         attributesViewKindCorrelationInfoChart.setData(targetAttributesViewKind,containerConceptionKindsList,containsAttributeKindsList);
     }
 
+    private void refreshAttributesViewKindCorrelationInfoChart(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(attributesViewKindUID);
+        List<AttributeKind> containsAttributeKindsList = null;
+        List<ConceptionKind> containerConceptionKindsList = null;
+        if(targetAttributesViewKind != null){
+            containsAttributeKindsList = targetAttributesViewKind.getContainsAttributeKinds();
+            containerConceptionKindsList = targetAttributesViewKind.getContainerConceptionKinds();
+        }
+        coreRealm.closeGlobalSession();
+        attributesViewKindCorrelationInfoChart.clearData();
+        attributesViewKindCorrelationInfoChart.setData(targetAttributesViewKind,containerConceptionKindsList,containsAttributeKindsList);
+    }
+
     private static class AttributesViewKindCorrelationInfoChartInitThread extends Thread {
         private final UI ui;
         private AttributesViewKindDetailUI attributesViewKindDetailUI;
@@ -237,6 +260,24 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
                 this.interrupt();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void receivedAttributeKindAttachedToAttributesViewKindEvent(AttributeKindAttachedToAttributesViewKindEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
+            if(this.attributesViewKindUID.equals(event.getAttributesViewKindUID())){
+                refreshAttributesViewKindCorrelationInfoChart();
+            }
+        }
+    }
+
+    @Override
+    public void receivedAttributeKindDetachedFromAttributesViewKindEvent(AttributeKindDetachedFromAttributesViewKindEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
+            if(this.attributesViewKindUID.equals(event.getAttributesViewKindUID())){
+                refreshAttributesViewKindCorrelationInfoChart();
             }
         }
     }

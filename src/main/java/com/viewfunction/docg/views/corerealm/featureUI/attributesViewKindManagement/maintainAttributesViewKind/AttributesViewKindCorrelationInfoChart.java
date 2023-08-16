@@ -136,4 +136,14 @@ public class AttributesViewKindCorrelationInfoChart extends VerticalLayout {
             });
         }
     }
+
+    public void clearData(){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.clearData", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 }

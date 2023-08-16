@@ -41,12 +41,12 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
     private int containerHeight;
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout rightSideContainerLayout;
-    private SecondaryTitleActionBar selectedAttributesViewKindTitleActionBar;
-    private SecondaryTitleActionBar selectedAttributesViewKindUIDActionBar;
+    private SecondaryTitleActionBar selectedAttributeKindTitleActionBar;
+    private SecondaryTitleActionBar selectedAttributeKindUIDActionBar;
     private Grid<AttributesViewKind> attributeKindAttributesInfoGrid;
     private Registration listener;
     private Grid<ConceptionKind> conceptionKindAttributesInfoGrid;
-    private AttributeKind laseSelectedAttributeKind;
+    private AttributeKind lastSelectedAttributeKind;
 
     public ContainsAttributeKindsConfigView(String attributesViewKindUID){
         this.attributesViewKindUID = attributesViewKindUID;
@@ -103,22 +103,6 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         leftSideContainerLayout.add(metaConfigItemConfigActionBar);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKind -> {
-            Icon configAttachmentInfoIcon = new Icon(VaadinIcon.BULLETS);
-            configAttachmentInfoIcon.setSize("18px");
-            Button configAttachmentInfoButton = new Button(configAttachmentInfoIcon, event -> {});
-            configAttachmentInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            configAttachmentInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-
-            Tooltips.getCurrent().setTooltip(configAttachmentInfoButton, "属性类型附加元数据配置管理");
-            configAttachmentInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-                @Override
-                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(attributeKind instanceof AttributeKind){
-                        renderConfigAttributeKindAttachmentMetaDataUI((AttributeKind)attributeKind);
-                    }
-                }
-            });
-
             Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
             deleteKindIcon.setSize("21px");
             Button removeAttributeKindButton = new Button(deleteKindIcon, event -> {});
@@ -135,7 +119,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
                 }
             });
 
-            HorizontalLayout buttons = new HorizontalLayout(configAttachmentInfoButton,removeAttributeKindButton);
+            HorizontalLayout buttons = new HorizontalLayout(removeAttributeKindButton);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -156,7 +140,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
                 .setFlexGrow(0).setWidth("130px").setResizable(false);
         attributeKindGrid.addColumn(AttributeKind::getAttributeKindUID).setHeader("属性类型 UID").setKey("idx_3")
                 .setFlexGrow(0).setWidth("150px").setResizable(false);
-        attributeKindGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("90px").setResizable(false);
+        attributeKindGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("70px").setResizable(false);
 
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"属性类型名称");
         attributeKindGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
@@ -177,11 +161,11 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
                 Set<AttributeKind> selectedItemSet = selectionEvent.getAllSelectedItems();
                 if(selectedItemSet.size() == 0){
                     // don't allow to unselect item, just reselect last selected item
-                    attributeKindGrid.select(laseSelectedAttributeKind);
+                    attributeKindGrid.select(lastSelectedAttributeKind);
                 }else{
                     AttributeKind selectedAttributeKind = selectedItemSet.iterator().next();
                     renderAttributeKindOverview(selectedAttributeKind);
-                    laseSelectedAttributeKind = selectedAttributeKind;
+                    lastSelectedAttributeKind = selectedAttributeKind;
                 }
             }
         });
@@ -198,13 +182,13 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         spaceDiv01Layout2.setHeight(2,Unit.PIXELS);
         rightSideContainerLayout.add(spaceDiv01Layout2);
 
-        selectedAttributesViewKindTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.INPUT),"-",null,null,false);
-        selectedAttributesViewKindTitleActionBar.setWidth(100,Unit.PERCENTAGE);
-        rightSideContainerLayout.add(selectedAttributesViewKindTitleActionBar);
+        selectedAttributeKindTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.INPUT),"-",null,null,false);
+        selectedAttributeKindTitleActionBar.setWidth(100,Unit.PERCENTAGE);
+        rightSideContainerLayout.add(selectedAttributeKindTitleActionBar);
 
-        selectedAttributesViewKindUIDActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.KEY_O),"-",null,null);
-        selectedAttributesViewKindUIDActionBar.setWidth(100,Unit.PERCENTAGE);
-        rightSideContainerLayout.add(selectedAttributesViewKindUIDActionBar);
+        selectedAttributeKindUIDActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.KEY_O),"-",null,null);
+        selectedAttributeKindUIDActionBar.setWidth(100,Unit.PERCENTAGE);
+        rightSideContainerLayout.add(selectedAttributeKindUIDActionBar);
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.TASKS),"所属属性视图类型");
         rightSideContainerLayout.add(infoTitle1);
@@ -288,14 +272,6 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         fixSizeWindow.show();
     }
 
-    private void renderConfigAttributeKindAttachmentMetaDataUI(AttributeKind attributeKind){
-        AttributeKindAttachmentMetaInfoView attributeKindAttachmentMetaInfoView = new AttributeKindAttachmentMetaInfoView(this.attributesViewKindUID,attributeKind);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"属性类型附加元属性信息",null,true,700,450,false);
-        fixSizeWindow.setWindowContent(attributeKindAttachmentMetaInfoView);
-        fixSizeWindow.setModel(true);
-        fixSizeWindow.show();
-    }
-
     public void refreshAttributeTypesInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
@@ -303,6 +279,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         List<AttributeKind> attributeKindsList = targetAttributesViewKind.getContainsAttributeKinds();
         coreRealm.closeGlobalSession();
         attributeKindGrid.setItems(attributeKindsList);
+        resetAttributesViewKindsInfo();
     }
 
     @Override
@@ -334,6 +311,9 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
                     dataProvider.refreshAll();
                 }
             }
+            if(this.lastSelectedAttributeKind != null && this.lastSelectedAttributeKind.getAttributeKindUID().equals(event.getAttributeKindUID())){
+                resetAttributesViewKindsInfo();
+            }
         }
     }
 
@@ -348,8 +328,8 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
                 selectedAttributeKind.getAttributeKindDesc():"未设置描述信息";
         String attributesViewKindUID = selectedAttributeKind.getAttributeKindUID();
         String attributeNameText = attributesViewKindName +" ( "+attributesViewKindDesc+" )";
-        selectedAttributesViewKindTitleActionBar.updateTitleContent(attributeNameText);
-        selectedAttributesViewKindUIDActionBar.updateTitleContent(attributesViewKindUID);
+        selectedAttributeKindTitleActionBar.updateTitleContent(attributeNameText);
+        selectedAttributeKindUIDActionBar.updateTitleContent(attributesViewKindUID);
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         AttributeKind targetAttributeKind = coreRealm.getAttributeKind(selectedAttributeKind.getAttributeKindUID());
@@ -362,5 +342,13 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
             conceptionKindAttributesInfoGrid.setItems(containerConceptionKindList);
         }
         coreRealm.closeGlobalSession();
+    }
+
+    private void resetAttributesViewKindsInfo(){
+        this.conceptionKindAttributesInfoGrid.setItems(new ArrayList<>());
+        this.attributeKindAttributesInfoGrid.setItems(new ArrayList<>());
+        this.selectedAttributeKindTitleActionBar.updateTitleContent("-");
+        this.selectedAttributeKindUIDActionBar.updateTitleContent("-");
+        this.lastSelectedAttributeKind = null;
     }
 }
