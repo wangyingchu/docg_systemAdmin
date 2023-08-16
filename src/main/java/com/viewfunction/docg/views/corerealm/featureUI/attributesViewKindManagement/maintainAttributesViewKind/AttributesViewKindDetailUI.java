@@ -232,7 +232,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         @Override
         public void run() {
             try {
-                Thread.sleep(100);
+                Thread.sleep(50);
                 ui.access(() -> attributesViewKindDetailUI.initAttributesViewKindCorrelationInfoChart());
                 this.interrupt();
             } catch (InterruptedException e) {
