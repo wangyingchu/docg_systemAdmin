@@ -155,7 +155,7 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
         leftSideContainerLayout.setMargin(false);
 
         mainContainerLayout.add(leftSideContainerLayout);
-        leftSideContainerLayout.setWidth(850, Unit.PIXELS);
+        leftSideContainerLayout.setWidth(750, Unit.PIXELS);
         leftSideContainerLayout.getStyle()
                 .set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
