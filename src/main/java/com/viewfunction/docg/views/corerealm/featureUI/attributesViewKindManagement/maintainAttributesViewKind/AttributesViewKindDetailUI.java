@@ -22,6 +22,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
 import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttributesViewKindEvent;
+import com.viewfunction.docg.element.eventHandling.AttributesViewKindAttachedToConceptionKindEvent;
+import com.viewfunction.docg.element.eventHandling.AttributesViewKindDetachedFromConceptionKindEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 
@@ -34,7 +36,9 @@ import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.
 public class AttributesViewKindDetailUI extends VerticalLayout implements
         BeforeEnterObserver,
         AttributeKindAttachedToAttributesViewKindEvent.AttributeKindAttachedToAttributesViewKindListener,
-        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener{
+        AttributeKindDetachedFromAttributesViewKindEvent.AttributeKindDetachedFromAttributesViewKindListener,
+        AttributesViewKindAttachedToConceptionKindEvent.AttributesViewKindAttachedToConceptionKindListener,
+        AttributesViewKindDetachedFromConceptionKindEvent.AttributesViewKindDetachedFromConceptionKindListener{
     private String attributesViewKindUID;
     private int attributesViewKindDetailViewHeightOffset = 40;
     private int currentBrowserHeight = 0;
@@ -276,6 +280,24 @@ public class AttributesViewKindDetailUI extends VerticalLayout implements
     @Override
     public void receivedAttributeKindDetachedFromAttributesViewKindEvent(AttributeKindDetachedFromAttributesViewKindEvent event) {
         if(event.getAttributesViewKindUID() != null && event.getAttributeKindUID() != null){
+            if(this.attributesViewKindUID.equals(event.getAttributesViewKindUID())){
+                refreshAttributesViewKindCorrelationInfoChart();
+            }
+        }
+    }
+
+    @Override
+    public void receivedAttributesViewKindAttachedToConceptionKindEvent(AttributesViewKindAttachedToConceptionKindEvent event) {
+        if(event.getAttributesViewKindUID() != null &&event.getConceptionKind() != null){
+            if(this.attributesViewKindUID.equals(event.getAttributesViewKindUID())){
+                refreshAttributesViewKindCorrelationInfoChart();
+            }
+        }
+    }
+
+    @Override
+    public void receivedAttributesViewKindDetachedFromConceptionKindEvent(AttributesViewKindDetachedFromConceptionKindEvent event) {
+        if(event.getAttributesViewKindUID() != null && event.getConceptionKindName() != null){
             if(this.attributesViewKindUID.equals(event.getAttributesViewKindUID())){
                 refreshAttributesViewKindCorrelationInfoChart();
             }
