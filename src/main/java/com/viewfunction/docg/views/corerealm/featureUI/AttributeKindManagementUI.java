@@ -38,6 +38,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.AttributeInConceptionKindDistributionInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
+import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.RealtimeAttributesCorrelationInfoSummaryChart;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.RemoveAttributeKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.maintainAttributeKind.AttributeKindDetailUI;
 
@@ -108,7 +109,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         attributeKindRuntimeStatusGuideButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderRealAttributesCorrelationInfoSummaryUI(attributeKindRuntimeStatusGuideButton);
+                renderRealtimeAttributesCorrelationInfoSummaryUI(attributeKindRuntimeStatusGuideButton);
             }
         });
 
@@ -725,9 +726,10 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         }
     }
 
-    private void renderRealAttributesCorrelationInfoSummaryUI(Button launchButton){
+    private void renderRealtimeAttributesCorrelationInfoSummaryUI(Button launchButton){
+        RealtimeAttributesCorrelationInfoSummaryChart realtimeAttributesCorrelationInfoSummaryChart = new RealtimeAttributesCorrelationInfoSummaryChart();
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"实时属性分布概览",null,true,1200,900,false);
-        //fixSizeWindow.setWindowContent(attributesViewKindsCorrelationInfoSummaryView);
+        fixSizeWindow.setWindowContent(realtimeAttributesCorrelationInfoSummaryChart);
         fixSizeWindow.show();
         fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
             @Override
