@@ -108,7 +108,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         attributeKindRuntimeStatusGuideButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderConceptionKindsCorrelationInfoSummaryUI(attributeKindRuntimeStatusGuideButton);
+                renderRealAttributesCorrelationInfoSummaryUI(attributeKindRuntimeStatusGuideButton);
             }
         });
 
@@ -723,5 +723,17 @@ public class AttributeKindManagementUI extends VerticalLayout implements
                 this.secondaryTitleActionBar.updateTitleContent(attributeNameText);
             }
         }
+    }
+
+    private void renderRealAttributesCorrelationInfoSummaryUI(Button launchButton){
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"实时属性分布概览",null,true,1200,900,false);
+        //fixSizeWindow.setWindowContent(attributesViewKindsCorrelationInfoSummaryView);
+        fixSizeWindow.show();
+        fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
+            @Override
+            public void onComponentEvent(DetachEvent detachEvent) {
+                launchButton.setEnabled(true);
+            }
+        });
     }
 }
