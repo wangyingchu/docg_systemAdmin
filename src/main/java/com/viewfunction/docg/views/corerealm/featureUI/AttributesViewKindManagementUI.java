@@ -36,6 +36,7 @@ import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.AttributesViewKindsCorrelationInfoSummaryChart;
+import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.AttributesViewKindsCorrelationInfoSummaryView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.CreateAttributesViewKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.RemoveAttributesViewKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.AttributesViewKindDetailUI;
@@ -742,9 +743,9 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
     }
 
     private void renderAttributesViewKindsCorrelationInfoSummaryUI(Button launchButton){
-        AttributesViewKindsCorrelationInfoSummaryChart attributesViewKindsCorrelationInfoSummaryChart = new AttributesViewKindsCorrelationInfoSummaryChart(1180,800);
+        AttributesViewKindsCorrelationInfoSummaryView attributesViewKindsCorrelationInfoSummaryView = new AttributesViewKindsCorrelationInfoSummaryView(1180,800);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"属性视图类型关联分布概览",null,true,1200,900,false);
-        fixSizeWindow.setWindowContent(attributesViewKindsCorrelationInfoSummaryChart);
+        fixSizeWindow.setWindowContent(attributesViewKindsCorrelationInfoSummaryView);
         fixSizeWindow.show();
         fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
             @Override
