@@ -116,18 +116,18 @@ public class AttributesViewKindsCorrelationInfoSummaryChart extends Div {
                             }
                         });
                         conceptionKindIdList.add(currentConceptionKind.getConceptionKindName());
-                        CytoscapeEdgePayload cytoscapeEdgePayload =new CytoscapeEdgePayload();
-                        cytoscapeEdgePayload.getData().put("type", "包含属性视图类型");
-                        cytoscapeEdgePayload.getData().put("source", currentConceptionKind.getConceptionKindName());
-                        cytoscapeEdgePayload.getData().put("target", targetAttributesViewKind.getAttributesViewKindUID());
-                        runBeforeClientResponse(ui -> {
-                            try {
-                                getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
-                            } catch (JsonProcessingException e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
                     }
+                    CytoscapeEdgePayload cytoscapeEdgePayload =new CytoscapeEdgePayload();
+                    cytoscapeEdgePayload.getData().put("type", "包含属性视图类型");
+                    cytoscapeEdgePayload.getData().put("source", currentConceptionKind.getConceptionKindName());
+                    cytoscapeEdgePayload.getData().put("target", targetAttributesViewKind.getAttributesViewKindUID());
+                    runBeforeClientResponse(ui -> {
+                        try {
+                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                 }
             }
             List<AttributeKind> containsAttributeKindList = containsAttributeKindListMap.get(targetAttributesViewKind.getAttributesViewKindUID());
@@ -147,18 +147,18 @@ public class AttributesViewKindsCorrelationInfoSummaryChart extends Div {
                             }
                         });
                         attributeKindUIdList.add(currentAttributeKind.getAttributeKindUID());
-                        CytoscapeEdgePayload cytoscapeEdgePayload =new CytoscapeEdgePayload();
-                        cytoscapeEdgePayload.getData().put("type", "包含属性类型");
-                        cytoscapeEdgePayload.getData().put("source", targetAttributesViewKind.getAttributesViewKindUID());
-                        cytoscapeEdgePayload.getData().put("target", currentAttributeKind.getAttributeKindUID());
-                        runBeforeClientResponse(ui -> {
-                            try {
-                                getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
-                            } catch (JsonProcessingException e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
                     }
+                    CytoscapeEdgePayload cytoscapeEdgePayload =new CytoscapeEdgePayload();
+                    cytoscapeEdgePayload.getData().put("type", "包含属性类型");
+                    cytoscapeEdgePayload.getData().put("source", targetAttributesViewKind.getAttributesViewKindUID());
+                    cytoscapeEdgePayload.getData().put("target", currentAttributeKind.getAttributeKindUID());
+                    runBeforeClientResponse(ui -> {
+                        try {
+                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                 }
             }
         }
