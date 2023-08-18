@@ -38,7 +38,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.AttributeInConceptionKindDistributionInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
-import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.RealtimeAttributesCorrelationInfoSummaryChart;
+import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.RealtimeAttributesCorrelationInfoSummaryView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.RemoveAttributeKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.maintainAttributeKind.AttributeKindDetailUI;
 
@@ -727,9 +727,9 @@ public class AttributeKindManagementUI extends VerticalLayout implements
     }
 
     private void renderRealtimeAttributesCorrelationInfoSummaryUI(Button launchButton){
-        RealtimeAttributesCorrelationInfoSummaryChart realtimeAttributesCorrelationInfoSummaryChart = new RealtimeAttributesCorrelationInfoSummaryChart();
+        RealtimeAttributesCorrelationInfoSummaryView realtimeAttributesCorrelationInfoSummaryView = new RealtimeAttributesCorrelationInfoSummaryView(800);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"实时属性分布概览",null,true,1200,900,false);
-        fixSizeWindow.setWindowContent(realtimeAttributesCorrelationInfoSummaryChart);
+        fixSizeWindow.setWindowContent(realtimeAttributesCorrelationInfoSummaryView);
         fixSizeWindow.show();
         fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
             @Override
