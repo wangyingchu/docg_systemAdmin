@@ -15,9 +15,9 @@ public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
     public AttributesCorrelationInfoSummaryChart(){
         //https://www.amcharts.com/demos/rectangular-voronoi-tree-map/
         this.setWidth(400, Unit.PIXELS);
-        UI.getCurrent().getPage().addJavaScript("js/amcharts/5.3.3/index.js");
-        UI.getCurrent().getPage().addJavaScript("js/amcharts/5.3.3/hierarchy.js");
-        UI.getCurrent().getPage().addJavaScript("js/amcharts/5.3.3/themes/Animated.js");
+        UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/index.js");
+        UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/hierarchy.js");
+        UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/themes/Animated.js");
         SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.PIE_CHART.create(), "关联时间序列统计信息");
         add(secondaryIconTitle);
         initConnector();
