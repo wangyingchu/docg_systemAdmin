@@ -126,7 +126,7 @@ public class RealtimeAttributesCorrelationInfoSummaryView extends HorizontalLayo
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx00).setSortable(true);
         GridColumnHeader gridColumnHeader_idx01 = new GridColumnHeader(VaadinIcon.STOCK,"属性值数量");
         conceptionKindAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx01).setSortable(true);
-        conceptionKindAttributesInfoGrid.setHeight(350,Unit.PIXELS);
+        conceptionKindAttributesInfoGrid.setHeight(300,Unit.PIXELS);
 
         relationKindAttributesInfoGrid = new Grid<>();
         relationKindAttributesInfoGrid.setWidth(410,Unit.PERCENTAGE);
@@ -139,7 +139,7 @@ public class RealtimeAttributesCorrelationInfoSummaryView extends HorizontalLayo
         relationKindAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx10).setSortable(true);
         GridColumnHeader gridColumnHeader_idx11 = new GridColumnHeader(VaadinIcon.STOCK,"属性值数量");
         relationKindAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx11).setSortable(true);
-        relationKindAttributesInfoGrid.setHeight(350,Unit.PIXELS);
+        relationKindAttributesInfoGrid.setHeight(300,Unit.PIXELS);
 
         entityAttributesCountInfoGridLayout.add(conceptionKindAttributesInfoGrid,relationKindAttributesInfoGrid);
 
