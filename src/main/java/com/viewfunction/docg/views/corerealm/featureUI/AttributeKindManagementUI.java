@@ -728,7 +728,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements
 
     private void renderRealtimeAttributesCorrelationInfoSummaryUI(Button launchButton){
         RealtimeAttributesCorrelationInfoSummaryView realtimeAttributesCorrelationInfoSummaryView = new RealtimeAttributesCorrelationInfoSummaryView(800);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"实时属性分布概览",null,true,1200,900,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"实时属性分布概览",null,true,1400,900,false);
         fixSizeWindow.setWindowContent(realtimeAttributesCorrelationInfoSummaryView);
         fixSizeWindow.show();
         fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
