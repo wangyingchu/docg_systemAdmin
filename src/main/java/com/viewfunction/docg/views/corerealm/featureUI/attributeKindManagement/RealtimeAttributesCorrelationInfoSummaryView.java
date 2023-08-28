@@ -60,6 +60,8 @@ public class RealtimeAttributesCorrelationInfoSummaryView extends HorizontalLayo
             pendingSpan.setWidth("10px");
             attributesContainerDiv.add(pendingSpan);
         }
+
+        //https://www.amcharts.com/demos/rectangular-voronoi-tree-map/
     }
 
     private void renderAttributeRealtimeInfo(String attributeName){
