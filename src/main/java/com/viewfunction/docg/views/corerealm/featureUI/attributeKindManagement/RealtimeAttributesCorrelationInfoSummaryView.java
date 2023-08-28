@@ -21,10 +21,7 @@ import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class RealtimeAttributesCorrelationInfoSummaryView extends HorizontalLayout {
 
@@ -87,7 +84,9 @@ public class RealtimeAttributesCorrelationInfoSummaryView extends HorizontalLayo
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         Set<String> realtimeAttributesSet = coreRealm.getSystemMaintenanceOperator().getRealtimeAttributesStatistics();
-        for(String currentAttribute:realtimeAttributesSet){
+        List<String> lisForSort = new ArrayList<>(realtimeAttributesSet);
+        Collections.sort(lisForSort);
+        for(String currentAttribute:lisForSort){
             Button showDetailButton = new Button(currentAttribute);
             showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
