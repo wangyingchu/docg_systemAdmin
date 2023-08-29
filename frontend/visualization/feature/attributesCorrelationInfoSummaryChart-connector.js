@@ -21,8 +21,8 @@ window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart = {
 
             // ... thick stroke and full opacity on first level
             myTheme.rule("Polygon", ["hierarchy", "node", "shape", "depth1"]).setAll({
-                strokeWidth: 5,
-                fillOpacity: 1,
+                strokeWidth: 2,
+                fillOpacity: 0.8,
                 stroke: am5.color(0x000000)
             });
 
@@ -1233,10 +1233,10 @@ window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart = {
             // Create series
             // https://www.amcharts.com/docs/v5/charts/hierarchy/#Adding
             var series = c.$connector.root.container.children.push(am5hierarchy.VoronoiTreemap.new(c.$connector.root, {
-                paddingLeft: 5,
-                paddingRight: 5,
-                paddingTop: 5,
-                paddingBottom: 5,
+                paddingLeft: 1,
+                paddingRight: 1,
+                paddingTop: 1,
+                paddingBottom: 1,
                 singleBranchOnly: true,
                 downDepth: 2,
                 upDepth: 0,
@@ -1245,12 +1245,10 @@ window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart = {
                 categoryField: "name",
                 childDataField: "children",
                 idField: "name",
-                //type: "polygon",
-                //cornerCount: 120
                 type: "rectangle"
             }));
 
-            // Show full name if polygon is big and only the id if its small
+            // Show full name if polygon is big and only the id if it's small
             series.labels.template.adapters.add("x", function (x, target) {
                 var dataItem = target.dataItem ;
                 if (dataItem) {

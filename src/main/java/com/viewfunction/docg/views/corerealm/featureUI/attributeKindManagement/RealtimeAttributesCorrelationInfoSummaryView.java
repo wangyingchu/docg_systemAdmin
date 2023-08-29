@@ -139,11 +139,13 @@ public class RealtimeAttributesCorrelationInfoSummaryView extends HorizontalLayo
         GridColumnHeader gridColumnHeader_idx11 = new GridColumnHeader(VaadinIcon.STOCK,"属性值数量");
         relationKindAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx11).setSortable(true);
         relationKindAttributesInfoGrid.setHeight(300,Unit.PIXELS);
-
         entityAttributesCountInfoGridLayout.add(conceptionKindAttributesInfoGrid,relationKindAttributesInfoGrid);
 
+        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.PIE_CHART.create(), "属性实时分布概览");
+        rightSideContainer.add(secondaryIconTitle);
         attributesCorrelationInfoSummaryChart = new AttributesCorrelationInfoSummaryChart();
         rightSideContainer.add(attributesCorrelationInfoSummaryChart);
+        attributesCorrelationInfoSummaryChart.setWidth(840,Unit.PIXELS);
     }
 
     private void renderAttributeRealtimeInfo(String attributeName){
