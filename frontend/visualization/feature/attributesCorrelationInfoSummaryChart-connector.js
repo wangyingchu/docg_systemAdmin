@@ -1,292 +1,68 @@
 window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart = {
     initLazy: function (c) {
-
-        console.log("HHHHHHHHHHHHHHHHHHHH");
-        console.log("HHHHHHHHHHHHHHHHHHHH");
-        console.log("HHHHHHHHHHHHHHHHHHHH");
-        console.log("HHHHHHHHHHHHHHHHHHHH");
-        console.log("HHHHHHHHHHHHHHHHHHHH");
-        console.log("HHHHHHHHHHHHHHHHHHHH");
-
         // Check whether the connector was already initialized
         if (c.$connector) {
             return;
         }
-        c.$connector = {
-            renderSunburstEntities: function(sunburstEntities) {
-                /*
-                let data =[{
-                    name: "root",
-                    children: [{
-                        name: "2021",
-                        children: [
-                            { name: "2021-1", value: 1 },
-                            { name: "2021-3", value: 1 }
-                        ]
-                    },
-                        { name: "2022",
-                            children: [
-                                { name: "2022-3", value: 1 },
-                                { name: "2022-7", value: 1 }
-                            ]
-                        },
-                        { name: "2023",
-                            children: [
-                                { name: "2023-1",
-                                    children: [
-                                        { name: "2023-1-1", value: 1 },
-                                        { name: "2023-1-17", value: 1 },
-                                        { name: "2023-1-22", value: 1 }
-                                    ]
-                                },
-                                { name: "2023-5", value: 1 },
-                                { name: "2023-7", children: [
-                                        { name: "2023-7-1", value: 1 },
-                                        { name: "2023-7-23", value: 1 }
-                                    ]
-                                },
-                                { name: "2023-9", value: 1 }
-                            ]
-                        },
-                        { name: "2024",
-                            children: [
-                                { name: "2024-3", value: 1 },
-                                { name: "2024-5", value: 1 },
-                                { name: "2024-9", value: 1 }
-                            ]
-                        },
-                        { name: "2025",
-                            children: [
-                                { name: "2025-7",
-                                    children: [
-                                        { name: "2025-7-1", value: 1 },
-                                        { name: "2025-7-19", value: 1 },
-                                        { name: "2025-7-26", value: 1 }
-                                    ]
-                                },
-                                { name: "2025-9",value: 1 }
-                            ]
-                        }]
-                }];
-
-                let data2 = [
-                    {
-                        "name": "root",
-                        "desc": "",
-
-                        "children": [
-                            {
-                                "name": "2015",
-
-                                "children": [
-                                    {
-                                        "name": "2015-9",
-
-                                       // "value": 1,
-                                        "children": [
-                                            {
-                                                "name": "2015-9-7",
-
-                                                //"value": 1,
-                                                "children": [
-                                                    {
-                                                        "name": "2015-9-7 14",
-
-                                                        //"value": 1,
-                                                        "children": [
-
-                                                            {
-                                                                "name": "2015-9-7 14:29",
-                                                                "desc": "Rescue arrived at",
-                                                                "value": 1
-                                                            },
-                                                            {
-                                                                "name": "2015-9-7 14:25",
-                                                                "desc": "Incident alarmed at",
-                                                                "value": 1
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                            ,
-
-                            {
-                                "name": "2016",
-
-                                "children": [
-                                    {
-                                        "name": "2015-9",
-
-                                        // "value": 1,
-                                        "children": [
-                                            {
-                                                "name": "2015-9-7",
-
-                                                //"value": 1,
-                                                "children": [
-                                                    {
-                                                        "name": "2015-9-7 14",
-
-                                                        //"value": 1,
-                                                        "children": [
-                                                            {
-                                                                "name": "2015-9-7 14:50",
-                                                                "desc": "Incident closed at",
-                                                                "value": 1
-                                                            },
-                                                            {
-                                                                "name": "2015-9-7 14:29",
-                                                                "desc": "Rescue arrived at",
-                                                                "value": 1
-                                                            },
-                                                            {
-                                                                "name": "2015-9-7 14:25",
-                                                                "desc": "Incident alarmed at",
-                                                                "value": 1
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ];
-                */
-                c.$connector.sunburstChart.data.setAll(sunburstEntities);
-                let legend = c.$connector.container.children.push(am5.Legend.new(c.$connector.root, {
-                    centerX: am5.percent(50),
-                    x: am5.percent(50),
-                    layout: c.$connector.root.gridLayout
-                }));
-                legend.data.setAll(c.$connector.sunburstChart.dataItems[0].get("children"));
-            }
-        };
+        c.$connector = {};
         am5.ready(function() {
+
+            // Create root element
             c.$connector.root = am5.Root.new(c);
-            // Set themes
-            // https://www.amcharts.com/docs/v5/concepts/themes/
-            c.$connector.root.setThemes([
-                am5themes_Animated.new(c.$connector.root)
-            ]);
-            // Create wrapper container
-            c.$connector.container = c.$connector.root.container.children.push(am5.Container.new(c.$connector.root, {
-                width: am5.percent(100),
-                height: am5.percent(100),
-                layout: c.$connector.root.verticalLayout
-            }));
-            // Create series
-            // https://www.amcharts.com/docs/v5/charts/hierarchy/#Adding
+            // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+            // Create custom theme...
+            var myTheme = am5.Theme.new(c.$connector.root);
 
-            /*
-            c.$connector.sunburstChart = c.$connector.container.children.push(am5hierarchy.Sunburst.new(c.$connector.root, {
-                singleBranchOnly: true,
-                downDepth: 10,
-                initialDepth: 10,
-                topDepth: 1,
-                innerRadius:am5.percent(30),
-                valueField: "value",
-                categoryField: "name",
-                childDataField: "children"
-            }));
-            c.$connector.sunburstChart.appear(1000, 100);
-            */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-           ///////          import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
-
-            /* Chart code */
-// Create root element
-// https://www.amcharts.com/docs/v5/getting-started/#Root_element
-            ///////          let root = am5.Root.new("chartdiv");
-
-
-// Create custom theme...
-            let myTheme = am5.Theme.new(c.$connector.root);
-
-// ... no stroke and fill on zero level
+            // ... no stroke and fill on zero level
             myTheme.rule("Polygon", ["hierarchy", "node", "shape", "depth0"]).setAll({
                 strokeOpacity: 0,
                 fillOpacity: 0
             });
 
-// ... thick stroke and full opacity on first level
+            // ... thick stroke and full opacity on first level
             myTheme.rule("Polygon", ["hierarchy", "node", "shape", "depth1"]).setAll({
                 strokeWidth: 5,
                 fillOpacity: 1,
                 stroke: am5.color(0x000000)
             });
 
-// ... no fill and thin stroke on second level
+            // ... no fill and thin stroke on second level
             myTheme.rule("Polygon", ["hierarchy", "node", "shape", "depth2"]).setAll({
                 fillOpacity: 0,
                 strokeWidth: 1,
                 stroke: am5.color(0x000000)
             });
 
-//  ... by default last lever is not clickable, but we change it here, so, add pointer on the last level
+            //  ... by default last lever is not clickable, but we change it here, so, add pointer on the last level
             myTheme.rule("HierarchyNode", ["last"]).setAll({
                 cursorOverStyle: "pointer"
             });
 
-// ... set global settings for all labels
+            // ... set global settings for all labels
             myTheme.rule("Label", ["node"]).setAll({
                 fontSize: 11,
                 minScale: 0.7
             });
 
-// ... hide label of zero level
+            // ... hide label of zero level
             myTheme.rule("Label", ["node", "depth0"]).setAll({
                 forceHidden: true
             });
 
-// ... hide label of first level
+            // ... hide label of first level
             myTheme.rule("Label", ["node", "depth1"]).setAll({
                 forceHidden: true
             });
 
-
-// Set themes
-// https://www.amcharts.com/docs/v5/concepts/themes/
+            // Set themes
+            // https://www.amcharts.com/docs/v5/concepts/themes/
             c.$connector.root.setThemes([
                 am5themes_Animated.new(c.$connector.root),
                 myTheme
             ]);
 
-
-// Prepare data
-            let data = {
+            // Prepare data
+            var data = {
                 "children": [
                     {
                         "name": "Africa",
@@ -1438,14 +1214,14 @@ window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart = {
 
             // Group small countries into Others
             am5.array.each(data.children, function (continent) {
-                let others = {
+                var others = {
                     name: "Others",
                     id: "Others",
                     population: 0
                 };
 
                 for (var i = continent.children.length - 1; i >= 0; i--) {
-                    let country = continent.children[i];
+                    var country = continent.children[i];
                     if (country.population < 5000000) {
                         others.population += country.population
                         am5.array.remove(continent.children, country);
@@ -1454,10 +1230,13 @@ window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart = {
                 continent.children.push(others);
             });
 
-
             // Create series
             // https://www.amcharts.com/docs/v5/charts/hierarchy/#Adding
-            let series = c.$connector.root.container.children.push(am5hierarchy.VoronoiTreemap.new(c.$connector.root, {
+            var series = c.$connector.root.container.children.push(am5hierarchy.VoronoiTreemap.new(c.$connector.root, {
+                paddingLeft: 5,
+                paddingRight: 5,
+                paddingTop: 5,
+                paddingBottom: 5,
                 singleBranchOnly: true,
                 downDepth: 2,
                 upDepth: 0,
@@ -1466,18 +1245,20 @@ window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart = {
                 categoryField: "name",
                 childDataField: "children",
                 idField: "name",
+                //type: "polygon",
+                //cornerCount: 120
                 type: "rectangle"
             }));
 
             // Show full name if polygon is big and only the id if its small
             series.labels.template.adapters.add("x", function (x, target) {
-                let dataItem = target.dataItem ;
+                var dataItem = target.dataItem ;
                 if (dataItem) {
-                    let polygon = dataItem.get("polygon");
+                    var polygon = dataItem.get("polygon");
                     if (polygon) {
-                        let minX = polygon.getPrivate("minX", 0);
-                        let maxX = polygon.getPrivate("maxX", 0);
-                        let dataContext = dataItem.dataContext ;
+                        var minX = polygon.getPrivate("minX", 0);
+                        var maxX = polygon.getPrivate("maxX", 0);
+                        var dataContext = dataItem.dataContext ;
 
                         if (dataContext) {
                             if (maxX - minX < 50) {
@@ -1494,7 +1275,7 @@ window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart = {
 
             // When last level node is clicked, zoom to parent
             series.nodes.template.events.on("click", function (e) {
-                let dataItem = e.target.dataItem ;
+                var dataItem = e.target.dataItem ;
                 if (dataItem) {
                     if (!dataItem.get("children")) {
                         series.selectDataItem(dataItem.get("parent"));
@@ -1502,43 +1283,14 @@ window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart = {
                 }
             });
 
-
             // Set data
             // https://www.amcharts.com/docs/v5/charts/hierarchy/#Setting_data
             series.data.setAll([data]);
-
-
             // Select root node
             // https://www.amcharts.com/docs/v5/charts/hierarchy/#Pre_selected_branch
-            series.set("selectedDataItem", series.dataItems[0]);
-
-
+            //series.set("selectedDataItem", series.dataItems[0]);
             // Make stuff animate on load
-            series.appear(1000, 100);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            // series.appear(1000, 100);
         });
-
-
-
-
-
-
-
-            }
+    }
 }

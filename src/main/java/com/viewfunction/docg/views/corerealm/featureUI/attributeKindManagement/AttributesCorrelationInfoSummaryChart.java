@@ -14,7 +14,8 @@ public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
 
     public AttributesCorrelationInfoSummaryChart(){
         //https://www.amcharts.com/demos/rectangular-voronoi-tree-map/
-        this.setWidth(400, Unit.PIXELS);
+        this.setWidth(100, Unit.PERCENTAGE);
+        this.setHeight(600,Unit.PIXELS);
         UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/index.js");
         UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/hierarchy.js");
         UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/themes/Animated.js");
