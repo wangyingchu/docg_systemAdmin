@@ -22,7 +22,7 @@ window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart = {
             // ... thick stroke and full opacity on first level
             myTheme.rule("Polygon", ["hierarchy", "node", "shape", "depth1"]).setAll({
                 strokeWidth: 2,
-                fillOpacity: 0.8,
+                fillOpacity: 0.7,
                 stroke: am5.color(0x000000)
             });
 

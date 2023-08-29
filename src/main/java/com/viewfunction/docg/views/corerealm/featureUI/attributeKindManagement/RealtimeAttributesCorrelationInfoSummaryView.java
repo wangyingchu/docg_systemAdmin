@@ -20,6 +20,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
 import java.util.*;
 
@@ -141,11 +142,20 @@ public class RealtimeAttributesCorrelationInfoSummaryView extends HorizontalLayo
         relationKindAttributesInfoGrid.setHeight(300,Unit.PIXELS);
         entityAttributesCountInfoGridLayout.add(conceptionKindAttributesInfoGrid,relationKindAttributesInfoGrid);
 
-        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.PIE_CHART.create(), "属性实时分布概览");
+        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(LineAwesomeIconsSvg.COOKIE_SOLID.create(), "属性实时分布概览");
         rightSideContainer.add(secondaryIconTitle);
+
+        HorizontalLayout chartAlignLayout = new HorizontalLayout();
+        chartAlignLayout.setWidthFull();
+        rightSideContainer.add(chartAlignLayout);
+
+        HorizontalLayout spaceDivLayout = new HorizontalLayout();
+        spaceDivLayout.setWidth(20,Unit.PIXELS);
+        chartAlignLayout.add(spaceDivLayout);
+
         attributesCorrelationInfoSummaryChart = new AttributesCorrelationInfoSummaryChart();
-        rightSideContainer.add(attributesCorrelationInfoSummaryChart);
-        attributesCorrelationInfoSummaryChart.setWidth(840,Unit.PIXELS);
+        chartAlignLayout.add(attributesCorrelationInfoSummaryChart);
+        attributesCorrelationInfoSummaryChart.setWidth(815,Unit.PIXELS);
     }
 
     private void renderAttributeRealtimeInfo(String attributeName){
