@@ -1241,9 +1241,8 @@ var series = root.container.children.push(am5hierarchy.VoronoiTreemap.new(root, 
   categoryField: "name",
   childDataField: "children",
   idField: "name",
-  //type: "polygon",
-  //cornerCount: 120
-  type: "rectangle"
+  type: "polygon",
+  cornerCount: 120
 }));
 
 // Show full name if polygon is big and only the id if its small

@@ -1245,7 +1245,9 @@ window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart = {
                 categoryField: "name",
                 childDataField: "children",
                 idField: "name",
-                type: "rectangle"
+                //type: "rectangle"
+                type: "polygon",
+                cornerCount: 120
             }));
 
             // Show full name if polygon is big and only the id if it's small

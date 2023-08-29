@@ -145,17 +145,8 @@ public class RealtimeAttributesCorrelationInfoSummaryView extends HorizontalLayo
         SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(LineAwesomeIconsSvg.COOKIE_SOLID.create(), "属性实时分布概览");
         rightSideContainer.add(secondaryIconTitle);
 
-        HorizontalLayout chartAlignLayout = new HorizontalLayout();
-        chartAlignLayout.setWidthFull();
-        rightSideContainer.add(chartAlignLayout);
-
-        HorizontalLayout spaceDivLayout = new HorizontalLayout();
-        spaceDivLayout.setWidth(20,Unit.PIXELS);
-        chartAlignLayout.add(spaceDivLayout);
-
         attributesCorrelationInfoSummaryChart = new AttributesCorrelationInfoSummaryChart();
-        chartAlignLayout.add(attributesCorrelationInfoSummaryChart);
-        attributesCorrelationInfoSummaryChart.setWidth(815,Unit.PIXELS);
+        rightSideContainer.add(attributesCorrelationInfoSummaryChart);
     }
 
     private void renderAttributeRealtimeInfo(String attributeName){

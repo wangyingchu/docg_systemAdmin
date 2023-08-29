@@ -11,12 +11,12 @@ import java.util.List;
 public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
 
     public AttributesCorrelationInfoSummaryChart(){
+        //https://www.amcharts.com/demos/rectangular-voronoi-tree-map/
         this.setPadding(false);
         this.setSpacing(false);
         this.setMargin(false);
-        //https://www.amcharts.com/demos/rectangular-voronoi-tree-map/
-        //this.setWidthFull();
-        this.setHeight(400,Unit.PIXELS);
+        this.setWidthFull();
+        this.setHeight(470,Unit.PIXELS);
         UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/index.js");
         UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/hierarchy.js");
         UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/themes/Animated.js");
