@@ -1,11 +1,14 @@
 package com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
+import java.io.Serializable;
 import java.util.List;
 @JavaScript("./visualization/feature/attributesCorrelationInfoSummaryChart-connector.js")
 public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
@@ -35,7 +38,15 @@ public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
 
     public void setSummaryData(List<RealtimeAttributesCorrelationInfoSummaryView.AttributesDistributionInfo> conceptionAttributesDistributionInfoList,
                                List<RealtimeAttributesCorrelationInfoSummaryView.AttributesDistributionInfo> relationAttributesDistributionInfoList){
-
-        //initConnector();
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.renderVoronoiTreemapEntities", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
+
+
+
 }
