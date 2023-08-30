@@ -142,7 +142,7 @@ public class RealtimeAttributesCorrelationInfoSummaryView extends HorizontalLayo
         relationKindAttributesInfoGrid.setHeight(300,Unit.PIXELS);
         entityAttributesCountInfoGridLayout.add(conceptionKindAttributesInfoGrid,relationKindAttributesInfoGrid);
 
-        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(LineAwesomeIconsSvg.COOKIE_SOLID.create(), "属性实时分布概览");
+        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(LineAwesomeIconsSvg.COOKIE_SOLID.create(), "属性实时分布类型概览");
         rightSideContainer.add(secondaryIconTitle);
 
         attributesCorrelationInfoSummaryChart = new AttributesCorrelationInfoSummaryChart();

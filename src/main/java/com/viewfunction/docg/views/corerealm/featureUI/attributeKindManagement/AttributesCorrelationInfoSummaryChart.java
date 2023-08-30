@@ -137,8 +137,13 @@ public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
                 VoronoiTreemapEntity currentEntity = new VoronoiTreemapEntity();
                 currentEntity.setName(kindName);
                 currentEntity.setPopulation(attributeCount);
-                currentEntity.setId(kindName);
-                if(kindName.equals("DOCG_")){
+                String[] splitArray = kindName.split(",");
+                String idWord = "";
+                for(String currentWord:splitArray){
+                    idWord = idWord+currentWord.substring(0,1).toUpperCase();
+                }
+                currentEntity.setId(idWord);
+                if(kindName.startsWith("DOCG_")){
                     innerConceptionRootEntity.getChildren().add(currentEntity);
                 }else{
                     commonConceptionRootEntity.getChildren().add(currentEntity);
@@ -153,8 +158,8 @@ public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
                 VoronoiTreemapEntity currentEntity = new VoronoiTreemapEntity();
                 currentEntity.setName(kindName);
                 currentEntity.setPopulation(attributeCount);
-                currentEntity.setId(kindName);
-                if(kindName.equals("DOCG_")){
+                currentEntity.setId(kindName.substring(0,3).toUpperCase());
+                if(kindName.startsWith("DOCG_")){
                     innerRelationRootEntity.getChildren().add(currentEntity);
                 }else{
                     commonRelationRootEntity.getChildren().add(currentEntity);
