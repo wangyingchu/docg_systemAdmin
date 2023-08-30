@@ -6,6 +6,7 @@ window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart = {
         }
         c.$connector = {
             renderVoronoiTreemapEntities: function(voronoiTreemapEntities){
+                c.$connector.series.data.setAll([]);
                 // Prepare data
                 let data = {
                     "children": [

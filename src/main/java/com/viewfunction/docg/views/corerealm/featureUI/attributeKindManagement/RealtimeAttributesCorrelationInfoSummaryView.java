@@ -174,6 +174,6 @@ public class RealtimeAttributesCorrelationInfoSummaryView extends HorizontalLayo
             relationAttributesDistributionInfoList.add(new AttributesDistributionInfo(currentKindName,attributeCount));
         }
         relationKindAttributesInfoGrid.setItems(relationAttributesDistributionInfoList);
-        attributesCorrelationInfoSummaryChart.setSummaryData(conceptionAttributesDistributionInfoList,relationAttributesDistributionInfoList);
+        attributesCorrelationInfoSummaryChart.renderSummaryData(conceptionAttributesDistributionInfoList,relationAttributesDistributionInfoList);
     }
 }

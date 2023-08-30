@@ -2,11 +2,13 @@ package com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vaadin.flow.component.JsonSerializable;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
+import elemental.json.JsonObject;
 
 import java.io.Serializable;
 import java.util.List;
@@ -36,8 +38,70 @@ public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
                 .beforeClientResponse(this, context -> command.accept(ui)));
     }
 
-    public void setSummaryData(List<RealtimeAttributesCorrelationInfoSummaryView.AttributesDistributionInfo> conceptionAttributesDistributionInfoList,
-                               List<RealtimeAttributesCorrelationInfoSummaryView.AttributesDistributionInfo> relationAttributesDistributionInfoList){
+
+    private class VoronoiTreemapEntity implements JsonSerializable {
+
+
+        private String id;
+        private String name ="";
+        private long population = 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        @Override
+        public JsonObject toJson() {
+            return null;
+        }
+
+        @Override
+        public JsonSerializable readJson(JsonObject jsonObject) {
+            return null;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public long getPopulation() {
+            return population;
+        }
+
+        public void setPopulation(long population) {
+            this.population = population;
+        }
+    }
+
+    public void renderSummaryData(List<RealtimeAttributesCorrelationInfoSummaryView.AttributesDistributionInfo> conceptionAttributesDistributionInfoList,
+                                  List<RealtimeAttributesCorrelationInfoSummaryView.AttributesDistributionInfo> relationAttributesDistributionInfoList){
+
+
+        System.out.println(conceptionAttributesDistributionInfoList);
+        System.out.println(conceptionAttributesDistributionInfoList);
+
         runBeforeClientResponse(ui -> {
             try {
                 getElement().callJsFunction("$connector.renderVoronoiTreemapEntities", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
