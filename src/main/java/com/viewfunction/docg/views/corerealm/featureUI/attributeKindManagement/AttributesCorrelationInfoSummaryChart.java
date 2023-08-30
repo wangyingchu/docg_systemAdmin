@@ -1,19 +1,16 @@
 package com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.JsonSerializable;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.temporal.ConceptionEntityTemporalSunburstChart;
+
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 @JavaScript("./visualization/feature/attributesCorrelationInfoSummaryChart-connector.js")
@@ -41,7 +38,6 @@ public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
         getElement().getNode().runWhenAttached(ui -> ui
                 .beforeClientResponse(this, context -> command.accept(ui)));
     }
-
 
     private class VoronoiTreemapEntity implements JsonSerializable {
         private String id;
@@ -136,14 +132,12 @@ public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
 
         if(conceptionAttributesDistributionInfoList != null){
             for(RealtimeAttributesCorrelationInfoSummaryView.AttributesDistributionInfo currentAttributesDistributionInfo:conceptionAttributesDistributionInfoList){
-                String kindName = currentAttributesDistributionInfo.getKindsName();
+                String kindName = currentAttributesDistributionInfo.getKindsName().substring(1,currentAttributesDistributionInfo.getKindsName().length()-1);
                 long attributeCount = currentAttributesDistributionInfo.getAttributeCount();
                 VoronoiTreemapEntity currentEntity = new VoronoiTreemapEntity();
                 currentEntity.setName(kindName);
                 currentEntity.setPopulation(attributeCount);
                 currentEntity.setId(kindName);
-
-
                 if(kindName.equals("DOCG_")){
                     innerConceptionRootEntity.getChildren().add(currentEntity);
                 }else{
@@ -156,13 +150,6 @@ public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
             for(RealtimeAttributesCorrelationInfoSummaryView.AttributesDistributionInfo currentAttributesDistributionInfo:relationAttributesDistributionInfoList){
                 String kindName = currentAttributesDistributionInfo.getKindsName();
                 long attributeCount = currentAttributesDistributionInfo.getAttributeCount();
-
-                System.out.println("============================");
-                System.out.println(kindName);
-                System.out.println(kindName);
-                System.out.println(kindName);
-                System.out.println("============================");
-
                 VoronoiTreemapEntity currentEntity = new VoronoiTreemapEntity();
                 currentEntity.setName(kindName);
                 currentEntity.setPopulation(attributeCount);
@@ -175,18 +162,18 @@ public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
             }
         }
 
-        if(commonConceptionRootEntity.getChildren().size()>0){
+       // if(commonConceptionRootEntity.getChildren().size()>0){
             childVoronoiTreemapEntityList.add(commonConceptionRootEntity);
-        }
-        if(commonRelationRootEntity.getChildren().size()>0){
+       // }
+      //  if(commonRelationRootEntity.getChildren().size()>0){
             childVoronoiTreemapEntityList.add(commonRelationRootEntity);
-        }
-        if(innerConceptionRootEntity.getChildren().size()>0){
+      //  }
+      //  if(innerConceptionRootEntity.getChildren().size()>0){
             childVoronoiTreemapEntityList.add(innerConceptionRootEntity);
-        }
-        if(innerRelationRootEntity.getChildren().size()>0){
+      //  }
+      //  if(innerRelationRootEntity.getChildren().size()>0){
             childVoronoiTreemapEntityList.add(innerRelationRootEntity);
-        }
+      //  }
 
         runBeforeClientResponse(ui -> {
             try {
