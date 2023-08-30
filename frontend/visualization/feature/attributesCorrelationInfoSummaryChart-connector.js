@@ -7,6 +7,7 @@ window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart = {
         c.$connector = {
             renderVoronoiTreemapEntities: function(voronoiTreemapEntities){
                 c.$connector.series.data.setAll([]);
+                /*
                 // Prepare data
                 let data = {
                     "children": [
@@ -1175,8 +1176,9 @@ window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart = {
                     }
                     continent.children.push(others);
                 });
-
                 c.$connector.series.data.setAll([data]);
+                */
+                c.$connector.series.data.setAll([voronoiTreemapEntities]);
             }
         };
         am5.ready(function() {
