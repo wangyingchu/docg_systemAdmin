@@ -6,8 +6,14 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeKindMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.chart.BarChart;
+
+import java.util.List;
 
 public class AttributeKindInfoWidget extends HorizontalLayout {
 
@@ -22,7 +28,15 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
         leftComponentContainer.setMargin(false);
         add(leftComponentContainer);
 
-        new PrimaryKeyValueDisplayItem(leftComponentContainer, FontAwesome.Regular.CIRCLE.create(),"属性类型数量:","500");
+        int attributeKindCount = 0;
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        try {
+            List<AttributeKindMetaInfo> attributeKindMetaInfoList = coreRealm.getAttributeKindsMetaInfo();
+            attributeKindCount = attributeKindMetaInfoList.size();
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+        new PrimaryKeyValueDisplayItem(leftComponentContainer, FontAwesome.Regular.CIRCLE.create(),"属性类型数量:",""+attributeKindCount);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setHeight(15,Unit.PIXELS);
