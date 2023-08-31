@@ -13,6 +13,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.chart.BarChart;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class AttributeKindInfoWidget extends HorizontalLayout {
@@ -28,11 +30,33 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
         leftComponentContainer.setMargin(false);
         add(leftComponentContainer);
 
+        String[] relationKindNameArray = new String[0];
+        Double[] kindEntitiesCountArray = new Double[0];
+
         int attributeKindCount = 0;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
             List<AttributeKindMetaInfo> attributeKindMetaInfoList = coreRealm.getAttributeKindsMetaInfo();
             attributeKindCount = attributeKindMetaInfoList.size();
+            Collections.sort(attributeKindMetaInfoList, new Comparator<AttributeKindMetaInfo>() {
+                public int compare(AttributeKindMetaInfo o1, AttributeKindMetaInfo o2) {
+                    if(o2.getContainerAttributesViewKindCount() > o1.getContainerAttributesViewKindCount()){
+                        return 1;
+                    }else{
+                        return -1;
+                    }
+                }
+            });
+
+            int topRelationKindNameArraySize = attributeKindCount >= 10 ? 10 : attributeKindCount;
+            relationKindNameArray = new String[topRelationKindNameArraySize];
+            kindEntitiesCountArray = new Double[topRelationKindNameArraySize];
+
+            for(int i=0;i <topRelationKindNameArraySize;i++){
+                AttributeKindMetaInfo currentAttributeKindMetaInfo = attributeKindMetaInfoList.get(i);
+                relationKindNameArray[i] = currentAttributeKindMetaInfo.getKindName()+"("+currentAttributeKindMetaInfo.getKindUID()+")";
+                kindEntitiesCountArray[i] = Double.valueOf(currentAttributeKindMetaInfo.getContainerAttributesViewKindCount());
+            }
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
@@ -54,5 +78,12 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
 
         BarChart barChart = new BarChart(330,250);
         rightComponentContainer.add(barChart);
+
+        String[] barColorArray = new String[]{"#CE0000"};
+        barChart.setColor(barColorArray);
+        barChart.setTopMargin(2);
+        barChart.setRightMargin(20);
+
+        barChart.setDate(relationKindNameArray,kindEntitiesCountArray);
     }
 }
