@@ -30,8 +30,8 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
         leftComponentContainer.setMargin(false);
         add(leftComponentContainer);
 
-        String[] relationKindNameArray = new String[0];
-        Double[] kindEntitiesCountArray = new Double[0];
+        String[] attributeKindNameArray = new String[0];
+        Double[] containerAttributesViewKindCountArray = new Double[0];
 
         int attributeKindCount = 0;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -49,13 +49,13 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
             });
 
             int topRelationKindNameArraySize = attributeKindCount >= 10 ? 10 : attributeKindCount;
-            relationKindNameArray = new String[topRelationKindNameArraySize];
-            kindEntitiesCountArray = new Double[topRelationKindNameArraySize];
+            attributeKindNameArray = new String[topRelationKindNameArraySize];
+            containerAttributesViewKindCountArray = new Double[topRelationKindNameArraySize];
 
             for(int i=0;i <topRelationKindNameArraySize;i++){
                 AttributeKindMetaInfo currentAttributeKindMetaInfo = attributeKindMetaInfoList.get(i);
-                relationKindNameArray[i] = currentAttributeKindMetaInfo.getKindName()+"("+currentAttributeKindMetaInfo.getKindUID()+")";
-                kindEntitiesCountArray[i] = Double.valueOf(currentAttributeKindMetaInfo.getContainerAttributesViewKindCount());
+                attributeKindNameArray[i] = currentAttributeKindMetaInfo.getKindName()+"("+currentAttributeKindMetaInfo.getKindUID()+")";
+                containerAttributesViewKindCountArray[i] = Double.valueOf(currentAttributeKindMetaInfo.getContainerAttributesViewKindCount());
             }
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
@@ -66,7 +66,7 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
         spaceDivLayout.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout);
 
-        NativeLabel messageText = new NativeLabel("Top 10 Used AttributeKinds ->");
+        NativeLabel messageText = new NativeLabel("Top 10 AttributeKinds used by more container AttributesViewKinds->");
         leftComponentContainer.add(messageText);
         messageText.addClassNames("text-xs","text-tertiary");
 
@@ -85,6 +85,6 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
         barChart.setRightMargin(20);
         barChart.setYAxisMaxOffset(0);
 
-        barChart.setDate(relationKindNameArray,kindEntitiesCountArray);
+        barChart.setDate(attributeKindNameArray,containerAttributesViewKindCountArray);
     }
 }

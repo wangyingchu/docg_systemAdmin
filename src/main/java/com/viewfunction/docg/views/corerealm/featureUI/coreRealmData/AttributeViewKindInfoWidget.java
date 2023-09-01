@@ -13,6 +13,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.chart.BarChart;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class AttributeViewKindInfoWidget  extends HorizontalLayout {
@@ -33,6 +35,21 @@ public class AttributeViewKindInfoWidget  extends HorizontalLayout {
         try {
             List<AttributesViewKindMetaInfo> attributeKindMetaInfoList = coreRealm.getAttributesViewKindsMetaInfo();
             attributesViewKindCount = attributeKindMetaInfoList.size();
+            Collections.sort(attributeKindMetaInfoList, new Comparator<AttributesViewKindMetaInfo>() {
+                public int compare(AttributesViewKindMetaInfo o1, AttributesViewKindMetaInfo o2) {
+                    if(o2.getContainerConceptionKindCount()+o2.getContainsAttributeKindCount() > o1.getContainerConceptionKindCount()+o1.getContainsAttributeKindCount()){
+                        return 1;
+                    }else{
+                        return -1;
+                    }
+                }
+            });
+
+
+
+
+
+
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
