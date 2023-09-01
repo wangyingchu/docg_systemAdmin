@@ -6,12 +6,13 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributesViewKindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
-import com.viewfunction.docg.element.commonComponent.chart.BarChart;
+import com.viewfunction.docg.element.commonComponent.chart.StackedBarChart;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,6 +31,10 @@ public class AttributeViewKindInfoWidget  extends HorizontalLayout {
         leftComponentContainer.setMargin(false);
         add(leftComponentContainer);
 
+        String[] attributeKindNameArray = new String[0];
+        Double[] containsAttributeKindCountArray = new Double[0];
+        Double[] containerConceptionKindCountArray = new Double[0];
+
         int attributesViewKindCount = 0;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
@@ -45,10 +50,17 @@ public class AttributeViewKindInfoWidget  extends HorizontalLayout {
                 }
             });
 
+            int topAttributesViewKindNameArraySize = attributesViewKindCount >= 10 ? 10 : attributesViewKindCount;
+            attributeKindNameArray = new String[topAttributesViewKindNameArraySize];
+            containsAttributeKindCountArray = new Double[topAttributesViewKindNameArraySize];
+            containerConceptionKindCountArray = new Double[topAttributesViewKindNameArraySize];
 
-
-
-
+            for(int i=0;i <topAttributesViewKindNameArraySize;i++){
+                AttributesViewKindMetaInfo currentAttributeKindMetaInfo = attributeKindMetaInfoList.get(i);
+                attributeKindNameArray[i] = currentAttributeKindMetaInfo.getKindName();
+                containsAttributeKindCountArray[i] = Double.valueOf(currentAttributeKindMetaInfo.getContainsAttributeKindCount());
+                containerConceptionKindCountArray[i] = Double.valueOf(currentAttributeKindMetaInfo.getContainerConceptionKindCount());
+            }
 
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
@@ -59,7 +71,7 @@ public class AttributeViewKindInfoWidget  extends HorizontalLayout {
         spaceDivLayout.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout);
 
-        NativeLabel messageText = new NativeLabel("Top 10 Used AttributeViewKinds ->");
+        NativeLabel messageText = new NativeLabel("Top 10 AttributeViewKinds used by more container ConceptionKinds and contains AttributeKinds ->");
         leftComponentContainer.add(messageText);
         messageText.addClassNames("text-xs","text-tertiary");
 
@@ -69,7 +81,19 @@ public class AttributeViewKindInfoWidget  extends HorizontalLayout {
         add(rightComponentContainer);
         this.setFlexGrow(1,rightComponentContainer);
 
-        BarChart barChart = new BarChart(330,250);
-        rightComponentContainer.add(barChart);
+        StackedBarChart stackedBarChart = new StackedBarChart(330,250);
+        stackedBarChart.setBottomMargin(1);
+        stackedBarChart.setLeftMargin(1);
+        stackedBarChart.setRightMargin(2);
+        rightComponentContainer.add(stackedBarChart);
+
+        stackedBarChart.setYAxisCategory(attributeKindNameArray);
+        String[] dataCategoryArray = new String[]{"By AttributeKind","By ConceptionKind"};
+        stackedBarChart.setDataCategory(dataCategoryArray);
+
+        stackedBarChart.setDate(containsAttributeKindCountArray);
+        stackedBarChart.setDate(containerConceptionKindCountArray);
+
+        stackedBarChart.renderChart();
     }
 }

@@ -82,7 +82,7 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
         String[] barColorArray = new String[]{"#FF4136"};
         barChart.setColor(barColorArray);
         barChart.setTopMargin(2);
-        barChart.setRightMargin(20);
+        barChart.setRightMargin(15);
         barChart.setYAxisMaxOffset(0);
 
         barChart.setDate(attributeKindNameArray,containerAttributesViewKindCountArray);
