@@ -82,10 +82,13 @@ public class AttributeViewKindInfoWidget  extends HorizontalLayout {
         this.setFlexGrow(1,rightComponentContainer);
 
         StackedBarChart stackedBarChart = new StackedBarChart(330,250);
+        rightComponentContainer.add(stackedBarChart);
+
         stackedBarChart.setBottomMargin(1);
         stackedBarChart.setLeftMargin(1);
         stackedBarChart.setRightMargin(2);
-        rightComponentContainer.add(stackedBarChart);
+        String[] barColorArray = new String[]{"#39CCCC","#F012BE"};
+        stackedBarChart.setColor(barColorArray);
 
         stackedBarChart.setYAxisCategory(attributeKindNameArray);
         String[] dataCategoryArray = new String[]{"By AttributeKind","By ConceptionKind"};

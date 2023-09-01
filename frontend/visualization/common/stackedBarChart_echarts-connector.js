@@ -5,6 +5,9 @@ window.Vaadin.Flow.common_StackedBarChart_echarts = {
             return;
         }
         c.$connector = {
+            setColor:function(colorArray){
+                c.$connector.option.color = colorArray;
+            },
             setTopMargin:function(marginValue){
                 c.$connector.option.grid.top = marginValue;
             },

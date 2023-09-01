@@ -7,6 +7,8 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsBarChartPayload;
+import elemental.json.Json;
+import elemental.json.JsonArray;
 
 @JavaScript("./visualization/common/stackedBarChart_echarts-connector.js")
 public class StackedBarChart extends Div {
@@ -28,6 +30,15 @@ public class StackedBarChart extends Div {
     private void runBeforeClientResponse(SerializableConsumer<UI> command) {
         getElement().getNode().runWhenAttached(ui -> ui
                 .beforeClientResponse(this, context -> command.accept(ui)));
+    }
+
+    public void setColor(String[] colorArray){
+        JsonArray dataArray = Json.createArray();
+        for(int i = 0; i < colorArray.length; i++){
+            String currentColor = colorArray[i];
+            dataArray.set(i,currentColor);
+        }
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setColor", dataArray));
     }
 
     public void setYAxisCategory(String[] nameArray){
