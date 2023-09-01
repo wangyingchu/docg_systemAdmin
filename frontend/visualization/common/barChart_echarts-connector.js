@@ -21,6 +21,11 @@ window.Vaadin.Flow.common_BarChart_echarts = {
             setBottomMargin:function(marginValue){
                 c.$connector.option.grid.bottom = marginValue;
             },
+            setYAxisMaxOffset:function(maxOffsetValue){
+                c.$connector.option.yAxis.max=function (value) {
+                    return value.max + maxOffsetValue;
+                }
+            },
             setData: function (data) {
                 c.$connector.option.xAxis.data = data.category;
                 c.$connector.option.series[0].data = data.value;
@@ -59,7 +64,7 @@ window.Vaadin.Flow.common_BarChart_echarts = {
                 type: 'value',
                 position:'right',
                 max: function (value) {
-                    return value.max+10;
+                    return value.max + 10;
                 },
                 axisLabel:{
                     show:true,

@@ -65,6 +65,10 @@ public class BarChart extends Div {
         }
     }
 
+    public void setYAxisMaxOffset(int marginValue){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setYAxisMaxOffset", marginValue));
+    }
+
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
