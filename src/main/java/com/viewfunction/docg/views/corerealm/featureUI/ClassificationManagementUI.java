@@ -6,6 +6,8 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -13,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -30,6 +33,7 @@ public class ClassificationManagementUI extends VerticalLayout {
 
     private TextField attributesViewKindNameFilterField;
     private TextField attributesViewKindDescFilterField;
+    private VerticalLayout singleAttributeKindSummaryInfoContainerLayout;
 
     public ClassificationManagementUI(){
 
@@ -174,13 +178,29 @@ public class ClassificationManagementUI extends VerticalLayout {
             }
         });
 
-        //attributeKindMetaInfoGridContainerLayout.add(attributesViewKindMetaInfoGrid);
+
+
+
+        TreeGrid<Classification> classificationTreeGrid = new TreeGrid<>();
+        classificationTreeGrid.setWidth(1300,Unit.PIXELS);
+        classificationTreeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        classificationTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+
+        attributeKindMetaInfoGridContainerLayout.add(classificationTreeGrid);
         attributeKindsInfoContainerLayout.add(attributeKindMetaInfoGridContainerLayout);
 
+        singleAttributeKindSummaryInfoContainerLayout = new VerticalLayout();
+        singleAttributeKindSummaryInfoContainerLayout.setSpacing(true);
+        singleAttributeKindSummaryInfoContainerLayout.setMargin(true);
+        singleAttributeKindSummaryInfoContainerLayout.setPadding(false);
+        attributeKindsInfoContainerLayout.add(singleAttributeKindSummaryInfoContainerLayout);
+        attributeKindsInfoContainerLayout.setFlexGrow(1, singleAttributeKindSummaryInfoContainerLayout);
 
-
-
-
+        HorizontalLayout singleAttributeKindInfoElementsContainerLayout = new HorizontalLayout();
+        singleAttributeKindInfoElementsContainerLayout.setSpacing(false);
+        singleAttributeKindInfoElementsContainerLayout.setMargin(false);
+        singleAttributeKindInfoElementsContainerLayout.setHeight("30px");
+        singleAttributeKindSummaryInfoContainerLayout.add(singleAttributeKindInfoElementsContainerLayout);
 
 
 
