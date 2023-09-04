@@ -125,7 +125,7 @@ public class ClassificationManagementUI extends VerticalLayout {
         filterTitle.setWidth(80,Unit.PIXELS);
 
         attributesViewKindNameFilterField = new TextField();
-        attributesViewKindNameFilterField.setPlaceholder("属性视图类型名称");
+        attributesViewKindNameFilterField.setPlaceholder("分类名称");
         attributesViewKindNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         attributesViewKindNameFilterField.setWidth(170,Unit.PIXELS);
         attributeKindsSearchElementsContainerLayout.add(attributesViewKindNameFilterField);
@@ -137,18 +137,13 @@ public class ClassificationManagementUI extends VerticalLayout {
         attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
 
         attributesViewKindDescFilterField = new TextField();
-        attributesViewKindDescFilterField.setPlaceholder("属性视图类型描述");
+        attributesViewKindDescFilterField.setPlaceholder("分类描述");
         attributesViewKindDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         attributesViewKindDescFilterField.setWidth(170,Unit.PIXELS);
         attributeKindsSearchElementsContainerLayout.add(attributesViewKindDescFilterField);
         attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, attributesViewKindDescFilterField);
 
-        Icon plusIcon2 = new Icon(VaadinIcon.PLUS);
-        plusIcon2.setSize("12px");
-        attributeKindsSearchElementsContainerLayout.add(plusIcon2);
-        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon2);
-
-        Button searchAttributeKindsButton = new Button("查找属性视图类型",new Icon(VaadinIcon.SEARCH));
+        Button searchAttributeKindsButton = new Button("查找分类",new Icon(VaadinIcon.SEARCH));
         searchAttributeKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         searchAttributeKindsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         attributeKindsSearchElementsContainerLayout.add(searchAttributeKindsButton);
