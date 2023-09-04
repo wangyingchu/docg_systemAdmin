@@ -35,7 +35,6 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.AttributesViewKindsCorrelationInfoSummaryChart;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.AttributesViewKindsCorrelationInfoSummaryView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.CreateAttributesViewKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.RemoveAttributesViewKindView;

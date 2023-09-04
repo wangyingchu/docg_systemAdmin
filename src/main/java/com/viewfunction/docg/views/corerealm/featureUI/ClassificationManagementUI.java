@@ -9,10 +9,14 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.CreateAttributesViewKindView;
+import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,19 +53,17 @@ public class ClassificationManagementUI extends VerticalLayout {
         TitleActionBar titleActionBar = new TitleActionBar(new Icon(VaadinIcon.COG_O),"Classification 分类数据管理",secTitleElementsList,buttonList);
         add(titleActionBar);
 
+        List<Component> classificationManagementOperationButtonList = new ArrayList<>();
 
-
-        List<Component> conceptionKindManagementOperationButtonList = new ArrayList<>();
-
-        Button conceptionKindRelationGuideButton = new Button("概念实体关联分布概览",new Icon(VaadinIcon.DASHBOARD));
-        conceptionKindRelationGuideButton.setDisableOnClick(true);
-        conceptionKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        conceptionKindRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        //conceptionKindManagementOperationButtonList.add(conceptionKindRelationGuideButton);
-        conceptionKindRelationGuideButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button classificationRelationGuideButton = new Button("概念实体关联分布概览",new Icon(VaadinIcon.DASHBOARD));
+        classificationRelationGuideButton.setDisableOnClick(true);
+        classificationRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        classificationRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        //classificationManagementOperationButtonList.add(classificationRelationGuideButton);
+        classificationRelationGuideButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderConceptionKindsCorrelationInfoSummaryUI(conceptionKindRelationGuideButton);
+                //renderConceptionKindsCorrelationInfoSummaryUI(classificationRelationGuideButton);
             }
         });
 
@@ -69,7 +71,7 @@ public class ClassificationManagementUI extends VerticalLayout {
         processingDataListButton.setDisableOnClick(true);
         processingDataListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         processingDataListButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        //conceptionKindManagementOperationButtonList.add(processingDataListButton);
+        //classificationManagementOperationButtonList.add(processingDataListButton);
         processingDataListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -77,26 +79,28 @@ public class ClassificationManagementUI extends VerticalLayout {
             }
         });
 
-        Button createConceptionKindButton = new Button("创建根分类",new Icon(VaadinIcon.PLUS_SQUARE_O));
-        createConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        createConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        conceptionKindManagementOperationButtonList.add(createConceptionKindButton);
-        createConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button createClassificationButton = new Button("创建顶层分类",new Icon(VaadinIcon.PLUS_SQUARE_O));
+        createClassificationButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        createClassificationButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        classificationManagementOperationButtonList.add(createClassificationButton);
+        createClassificationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderCreateConceptionKindUI();
+                renderCreateClassificationUI();
             }
         });
 
         Icon icon = new Icon(VaadinIcon.LIST);
-        SectionActionBar sectionActionBar = new SectionActionBar(icon,"分类数据:",conceptionKindManagementOperationButtonList);
+        SectionActionBar sectionActionBar = new SectionActionBar(icon,"分类数据:",classificationManagementOperationButtonList);
         add(sectionActionBar);
+    }
 
-
-
-
-
-
-
+    private void renderCreateClassificationUI(){
+        CreateClassificationView createClassificationView = new CreateClassificationView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建顶层分类",null,true,500,285,false);
+        fixSizeWindow.setWindowContent(createClassificationView);
+        createClassificationView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }
