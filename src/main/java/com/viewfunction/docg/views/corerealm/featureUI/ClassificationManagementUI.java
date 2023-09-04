@@ -3,16 +3,21 @@ package com.viewfunction.docg.views.corerealm.featureUI;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
+import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.CreateAttributesViewKindView;
@@ -22,6 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClassificationManagementUI extends VerticalLayout {
+
+    private TextField attributesViewKindNameFilterField;
+    private TextField attributesViewKindDescFilterField;
 
     public ClassificationManagementUI(){
 
@@ -93,6 +101,95 @@ public class ClassificationManagementUI extends VerticalLayout {
         Icon icon = new Icon(VaadinIcon.LIST);
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"分类数据:",classificationManagementOperationButtonList);
         add(sectionActionBar);
+
+        HorizontalLayout attributeKindsInfoContainerLayout = new HorizontalLayout();
+        attributeKindsInfoContainerLayout.setSpacing(false);
+        attributeKindsInfoContainerLayout.setMargin(false);
+        attributeKindsInfoContainerLayout.setWidth(100, Unit.PERCENTAGE);
+        add(attributeKindsInfoContainerLayout);
+
+
+        VerticalLayout attributeKindMetaInfoGridContainerLayout = new VerticalLayout();
+        attributeKindMetaInfoGridContainerLayout.setSpacing(true);
+        attributeKindMetaInfoGridContainerLayout.setMargin(false);
+        attributeKindMetaInfoGridContainerLayout.setPadding(false);
+
+        HorizontalLayout attributeKindsSearchElementsContainerLayout = new HorizontalLayout();
+        attributeKindsSearchElementsContainerLayout.setSpacing(false);
+        attributeKindsSearchElementsContainerLayout.setMargin(false);
+        attributeKindMetaInfoGridContainerLayout.add(attributeKindsSearchElementsContainerLayout);
+
+        SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
+        attributeKindsSearchElementsContainerLayout.add(filterTitle);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
+        filterTitle.setWidth(80,Unit.PIXELS);
+
+        attributesViewKindNameFilterField = new TextField();
+        attributesViewKindNameFilterField.setPlaceholder("属性视图类型名称");
+        attributesViewKindNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        attributesViewKindNameFilterField.setWidth(170,Unit.PIXELS);
+        attributeKindsSearchElementsContainerLayout.add(attributesViewKindNameFilterField);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, attributesViewKindNameFilterField);
+
+        Icon plusIcon = new Icon(VaadinIcon.PLUS);
+        plusIcon.setSize("12px");
+        attributeKindsSearchElementsContainerLayout.add(plusIcon);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
+
+        attributesViewKindDescFilterField = new TextField();
+        attributesViewKindDescFilterField.setPlaceholder("属性视图类型描述");
+        attributesViewKindDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        attributesViewKindDescFilterField.setWidth(170,Unit.PIXELS);
+        attributeKindsSearchElementsContainerLayout.add(attributesViewKindDescFilterField);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, attributesViewKindDescFilterField);
+
+        Icon plusIcon2 = new Icon(VaadinIcon.PLUS);
+        plusIcon2.setSize("12px");
+        attributeKindsSearchElementsContainerLayout.add(plusIcon2);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon2);
+
+        Button searchAttributeKindsButton = new Button("查找属性视图类型",new Icon(VaadinIcon.SEARCH));
+        searchAttributeKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        searchAttributeKindsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        attributeKindsSearchElementsContainerLayout.add(searchAttributeKindsButton);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchAttributeKindsButton);
+        searchAttributeKindsButton.setWidth(130,Unit.PIXELS);
+        searchAttributeKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //filterAttributesViewKinds();
+            }
+        });
+
+        Icon divIcon = new Icon(VaadinIcon.LINE_V);
+        divIcon.setSize("8px");
+        attributeKindsSearchElementsContainerLayout.add(divIcon);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+
+        Button clearSearchCriteriaButton = new Button("清除查询条件",new Icon(VaadinIcon.ERASER));
+        clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        attributeKindsSearchElementsContainerLayout.add(clearSearchCriteriaButton);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
+        clearSearchCriteriaButton.setWidth(120,Unit.PIXELS);
+        clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //cancelFiltersAttributesViewKinds();
+            }
+        });
+
+        //attributeKindMetaInfoGridContainerLayout.add(attributesViewKindMetaInfoGrid);
+        attributeKindsInfoContainerLayout.add(attributeKindMetaInfoGridContainerLayout);
+
+
+
+
+
+
+
+
+
     }
 
     private void renderCreateClassificationUI(){

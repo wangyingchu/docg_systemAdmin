@@ -16,11 +16,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CreateClassificationView extends VerticalLayout {
     private Dialog containerDialog;
