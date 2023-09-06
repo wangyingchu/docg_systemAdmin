@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
@@ -16,24 +13,33 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.component.treegrid.TreeGrid;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
+import com.vaadin.flow.data.provider.hierarchy.TreeData;
+import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
-import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.CreateAttributesViewKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 
+import dev.mett.vaadin.tooltip.Tooltips;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ClassificationManagementUI extends VerticalLayout {
 
     private TextField attributesViewKindNameFilterField;
     private TextField attributesViewKindDescFilterField;
     private VerticalLayout singleAttributeKindSummaryInfoContainerLayout;
+    private TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid;
 
     public ClassificationManagementUI(){
 
@@ -181,12 +187,66 @@ public class ClassificationManagementUI extends VerticalLayout {
 
 
 
-        TreeGrid<Classification> classificationTreeGrid = new TreeGrid<>();
-        classificationTreeGrid.setWidth(1300,Unit.PIXELS);
-        classificationTreeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-        classificationTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
-        attributeKindMetaInfoGridContainerLayout.add(classificationTreeGrid);
+
+
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKindMetaInfo -> {
+            Icon configIcon = new Icon(VaadinIcon.COG);
+            configIcon.setSize("21px");
+            Button configAttributeKind = new Button(configIcon, event -> {
+                if(attributeKindMetaInfo instanceof ClassificationMetaInfo){
+                    //renderAttributesViewKindConfigurationUI((AttributesViewKindMetaInfo)attributeKindMetaInfo);
+                }
+            });
+            configAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            configAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(configAttributeKind, "配置分类定义");
+
+            Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
+            deleteKindIcon.setSize("21px");
+            Button removeAttributeKind = new Button(deleteKindIcon, event -> {});
+            removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            Tooltips.getCurrent().setTooltip(removeAttributeKind, "删除分类");
+            removeAttributeKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(attributeKindMetaInfo instanceof ClassificationMetaInfo){
+                        //renderRemoveAttributesViewKindUI((AttributesViewKindMetaInfo)attributeKindMetaInfo);
+                    }
+                }
+            });
+
+            HorizontalLayout buttons = new HorizontalLayout(configAttributeKind,removeAttributeKind);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(15, Unit.PIXELS);
+            buttons.setWidth(80,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
+
+
+
+
+
+
+        classificationsMetaInfoTreeGrid = new TreeGrid<>();
+        classificationsMetaInfoTreeGrid.setWidth(1300,Unit.PIXELS);
+        classificationsMetaInfoTreeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_ROW_BORDERS);
+        classificationsMetaInfoTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+
+
+        classificationsMetaInfoTreeGrid.addHierarchyColumn(ClassificationMetaInfo::getClassificationName).setHeader("分类名称");
+
+        classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getClassificationDesc).setHeader("Last name");
+        classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getChildClassificationCount).setHeader("Email");
+        classificationsMetaInfoTreeGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_6").setFlexGrow(0).setWidth("90px").setResizable(false);
+
+
+        attributeKindMetaInfoGridContainerLayout.add(classificationsMetaInfoTreeGrid);
         attributeKindsInfoContainerLayout.add(attributeKindMetaInfoGridContainerLayout);
 
         singleAttributeKindSummaryInfoContainerLayout = new VerticalLayout();
@@ -207,6 +267,40 @@ public class ClassificationManagementUI extends VerticalLayout {
 
     }
 
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        loadClassificationsData();
+    }
+
+    private void loadClassificationsData(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        try {
+            List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
+            TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
+            TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getTreeData();
+
+            Map<String,ClassificationMetaInfo> classificationMetaInfoMap = new HashMap<>();
+            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
+                classificationMetaInfoMap.put(currentClassificationMetaInfo.getClassificationName(),currentClassificationMetaInfo);
+            }
+
+            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
+                if(currentClassificationMetaInfo.isRootClassification()){
+                    gridTreeData.addItem(null,currentClassificationMetaInfo);
+                }else{
+                    String parentClassificationName = currentClassificationMetaInfo.getParentClassificationName();
+                    gridTreeData.addItem(classificationMetaInfoMap.get(parentClassificationName),currentClassificationMetaInfo);
+                }
+            }
+            dataProvider.refreshAll();
+            classificationsMetaInfoTreeGrid.expandRecursively(classificationsMetaInfoList,1);
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void renderCreateClassificationUI(){
         CreateClassificationView createClassificationView = new CreateClassificationView();
         FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建顶层分类",null,true,500,285,false);
@@ -215,4 +309,5 @@ public class ClassificationManagementUI extends VerticalLayout {
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
+
 }
