@@ -5,9 +5,11 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -16,14 +18,14 @@ import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
-import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -34,10 +36,12 @@ import java.util.List;
 import java.util.Map;
 
 public class ClassificationManagementUI extends VerticalLayout {
-    private TextField attributesViewKindNameFilterField;
-    private TextField attributesViewKindDescFilterField;
+    private TextField classificationNameFilterField;
+    private TextField classificationDescFilterField;
     private VerticalLayout singleAttributeKindSummaryInfoContainerLayout;
     private TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid;
+    private Grid<ClassificationMetaInfo> classificationsMetaInfoFilterGrid;
+    private GridListDataView<ClassificationMetaInfo> classificationMetaInfosMetaInfoFilterView;
     private Registration listener;
     public ClassificationManagementUI(){
 
@@ -131,24 +135,24 @@ public class ClassificationManagementUI extends VerticalLayout {
         attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
         filterTitle.setWidth(80,Unit.PIXELS);
 
-        attributesViewKindNameFilterField = new TextField();
-        attributesViewKindNameFilterField.setPlaceholder("分类名称");
-        attributesViewKindNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        attributesViewKindNameFilterField.setWidth(170,Unit.PIXELS);
-        attributeKindsSearchElementsContainerLayout.add(attributesViewKindNameFilterField);
-        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, attributesViewKindNameFilterField);
+        classificationNameFilterField = new TextField();
+        classificationNameFilterField.setPlaceholder("分类名称");
+        classificationNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        classificationNameFilterField.setWidth(170,Unit.PIXELS);
+        attributeKindsSearchElementsContainerLayout.add(classificationNameFilterField);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, classificationNameFilterField);
 
         Icon plusIcon = new Icon(VaadinIcon.PLUS);
         plusIcon.setSize("12px");
         attributeKindsSearchElementsContainerLayout.add(plusIcon);
         attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
 
-        attributesViewKindDescFilterField = new TextField();
-        attributesViewKindDescFilterField.setPlaceholder("分类描述");
-        attributesViewKindDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        attributesViewKindDescFilterField.setWidth(170,Unit.PIXELS);
-        attributeKindsSearchElementsContainerLayout.add(attributesViewKindDescFilterField);
-        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, attributesViewKindDescFilterField);
+        classificationDescFilterField = new TextField();
+        classificationDescFilterField.setPlaceholder("分类描述");
+        classificationDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        classificationDescFilterField.setWidth(170,Unit.PIXELS);
+        attributeKindsSearchElementsContainerLayout.add(classificationDescFilterField);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, classificationDescFilterField);
 
         Button searchAttributeKindsButton = new Button("查找分类",new Icon(VaadinIcon.SEARCH));
         searchAttributeKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -159,7 +163,7 @@ public class ClassificationManagementUI extends VerticalLayout {
         searchAttributeKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //filterAttributesViewKinds();
+                filterClassifications();
             }
         });
 
@@ -177,7 +181,7 @@ public class ClassificationManagementUI extends VerticalLayout {
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //cancelFiltersAttributesViewKinds();
+                cancelFilterClassifications();
             }
         });
 
@@ -227,7 +231,6 @@ public class ClassificationManagementUI extends VerticalLayout {
         classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getClassificationDesc).setKey("idx_1").setHeader("分类描述");
         classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getChildClassificationCount).setKey("idx_2").setHeader("子分类数量").setFlexGrow(0).setWidth("110px").setResizable(false);
         classificationsMetaInfoTreeGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("110px").setResizable(false);
-
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"分类名称");
         classificationsMetaInfoTreeGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"分类描述");
@@ -236,9 +239,30 @@ public class ClassificationManagementUI extends VerticalLayout {
         classificationsMetaInfoTreeGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
         GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
         classificationsMetaInfoTreeGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
-
         classificationsMetaInfoTreeGrid.appendFooterRow();
         attributeKindMetaInfoGridContainerLayout.add(classificationsMetaInfoTreeGrid);
+
+        classificationsMetaInfoFilterGrid = new Grid<>();
+        classificationsMetaInfoFilterGrid.setWidth(1300,Unit.PIXELS);
+        classificationsMetaInfoFilterGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_ROW_BORDERS);
+        classificationsMetaInfoFilterGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        classificationsMetaInfoFilterGrid.addColumn(ClassificationMetaInfo::getClassificationName).setKey("idx_0").setHeader("分类名称");
+        classificationsMetaInfoFilterGrid.addColumn(ClassificationMetaInfo::getClassificationDesc).setKey("idx_1").setHeader("分类描述");
+        classificationsMetaInfoFilterGrid.addColumn(ClassificationMetaInfo::getChildClassificationCount).setKey("idx_2").setHeader("子分类数量").setFlexGrow(0).setWidth("110px").setResizable(false);
+        classificationsMetaInfoFilterGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("110px").setResizable(false);
+        GridColumnHeader gridColumnHeader_idx0A = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"分类名称");
+        classificationsMetaInfoFilterGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0A).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx1A = new GridColumnHeader(VaadinIcon.DESKTOP,"分类描述");
+        classificationsMetaInfoFilterGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1A).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx2A = new GridColumnHeader(VaadinIcon.ROAD_BRANCHES,"子分类数量");
+        classificationsMetaInfoFilterGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2A).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx3A = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
+        classificationsMetaInfoFilterGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3A);
+        classificationsMetaInfoFilterGrid.appendFooterRow();
+        attributeKindMetaInfoGridContainerLayout.add(classificationsMetaInfoFilterGrid);
+
+        this.classificationsMetaInfoTreeGrid.setVisible(true);
+        this.classificationsMetaInfoFilterGrid.setVisible(false);
         attributeKindsInfoContainerLayout.add(attributeKindMetaInfoGridContainerLayout);
 
         singleAttributeKindSummaryInfoContainerLayout = new VerticalLayout();
@@ -262,12 +286,14 @@ public class ClassificationManagementUI extends VerticalLayout {
         loadClassificationsData();
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             classificationsMetaInfoTreeGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
+            classificationsMetaInfoFilterGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
             //attributeKindAttributesInfoGrid.setHeight(300,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             classificationsMetaInfoTreeGrid.setHeight(browserHeight-250,Unit.PIXELS);
+            classificationsMetaInfoFilterGrid.setHeight(browserHeight-250,Unit.PIXELS);
             //attributeKindAttributesInfoGrid.setHeight(300,Unit.PIXELS);
         }));
     }
@@ -301,10 +327,54 @@ public class ClassificationManagementUI extends VerticalLayout {
                 }
             }
             dataProvider.refreshAll();
-            classificationsMetaInfoTreeGrid.expandRecursively(classificationsMetaInfoList,1);
+            this.classificationsMetaInfoTreeGrid.expandRecursively(classificationsMetaInfoList,1);
+            this.classificationMetaInfosMetaInfoFilterView = classificationsMetaInfoFilterGrid.setItems(classificationsMetaInfoList);
+            //logic to filter AttributeKinds already loaded from server
+            this.classificationMetaInfosMetaInfoFilterView.addFilter(item->{
+                String entityKindName = item.getClassificationName();
+                String entityKindDesc = item.getClassificationDesc();
+                boolean attributeKindNameFilterResult = true;
+                if(!classificationNameFilterField.getValue().trim().equals("")){
+                    if(entityKindName.contains(classificationNameFilterField.getValue().trim())){
+                        attributeKindNameFilterResult = true;
+                    }else{
+                        attributeKindNameFilterResult = false;
+                    }
+                }
+                boolean attributeKindDescFilterResult = true;
+                if(!classificationDescFilterField.getValue().trim().equals("")){
+                    if(entityKindDesc.contains(classificationDescFilterField.getValue().trim())){
+                        attributeKindDescFilterResult = true;
+                    }else{
+                        attributeKindDescFilterResult = false;
+                    }
+                }
+                return attributeKindNameFilterResult & attributeKindDescFilterResult;
+            });
+
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void filterClassifications(){
+        String classificationFilterValue = classificationNameFilterField.getValue().trim();
+        String classificationDescFilterValue = classificationDescFilterField.getValue().trim();
+        if(classificationFilterValue.equals("")&classificationDescFilterValue.equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入分类名称 和/或 分类描述", NotificationVariant.LUMO_ERROR);
+        }else{
+            this.classificationsMetaInfoTreeGrid.setVisible(false);
+            this.classificationsMetaInfoFilterGrid.setVisible(true);
+            this.classificationMetaInfosMetaInfoFilterView.refreshAll();
+        }
+    }
+
+    private void cancelFilterClassifications(){
+        this.classificationsMetaInfoTreeGrid.setVisible(true);
+        this.classificationsMetaInfoFilterGrid.setVisible(false);
+        classificationNameFilterField.setValue("");
+        classificationDescFilterField.setValue("");
+        this.classificationMetaInfosMetaInfoFilterView.refreshAll();
     }
 
     private void renderCreateClassificationUI(){
