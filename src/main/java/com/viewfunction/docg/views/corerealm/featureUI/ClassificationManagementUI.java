@@ -25,10 +25,7 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributesViewKindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -449,6 +446,16 @@ public class ClassificationManagementUI extends VerticalLayout {
                 classificationMetaInfo.getClassificationDesc():"未设置描述信息";
         String attributeNameText = classificationName +" ( "+classificationDesc+" )";
         this.secondaryTitleActionBar.updateTitleContent(attributeNameText);
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        Classification selectedClassification = coreRealm.getClassification(classificationName);
+        if(selectedClassification != null){
+            selectedClassification.getOffspringClassifications();
+
+
+        }
+
+        coreRealm.closeGlobalSession();
     }
 
     private void renderAttributesViewKindOverview(AttributesViewKindMetaInfo attributesViewKindMetaInfo){
