@@ -18,10 +18,16 @@ import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributesViewKindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
@@ -30,19 +36,18 @@ import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ClassificationManagementUI extends VerticalLayout {
     private TextField classificationNameFilterField;
     private TextField classificationDescFilterField;
-    private VerticalLayout singleAttributeKindSummaryInfoContainerLayout;
     private TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid;
     private Grid<ClassificationMetaInfo> classificationsMetaInfoFilterGrid;
     private GridListDataView<ClassificationMetaInfo> classificationMetaInfosMetaInfoFilterView;
     private Registration listener;
+    private SecondaryTitleActionBar secondaryTitleActionBar;
+    private VerticalLayout singleAttributesViewKindSummaryInfoContainerLayout;
+    private ClassificationMetaInfo laseSelectedClassificationMetaInfo;
     public ClassificationManagementUI(){
 
         Button refreshDataButton = new Button("刷新分类数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -241,6 +246,20 @@ public class ClassificationManagementUI extends VerticalLayout {
         classificationsMetaInfoTreeGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
         classificationsMetaInfoTreeGrid.appendFooterRow();
         attributeKindMetaInfoGridContainerLayout.add(classificationsMetaInfoTreeGrid);
+        classificationsMetaInfoTreeGrid.addSelectionListener(new SelectionListener<Grid<ClassificationMetaInfo>, ClassificationMetaInfo>() {
+            @Override
+            public void selectionChange(SelectionEvent<Grid<ClassificationMetaInfo>, ClassificationMetaInfo> selectionEvent) {
+                Set<ClassificationMetaInfo> selectedItemSet = selectionEvent.getAllSelectedItems();
+                if(selectedItemSet.size() == 0){
+                    // don't allow to unselect item, just reselect last selected item
+                    classificationsMetaInfoTreeGrid.select(laseSelectedClassificationMetaInfo);
+                }else{
+                    ClassificationMetaInfo selectedClassificationMetaInfo = selectedItemSet.iterator().next();
+                    renderClassificationOverview(selectedClassificationMetaInfo);
+                    laseSelectedClassificationMetaInfo = selectedClassificationMetaInfo;
+                }
+            }
+        });
 
         classificationsMetaInfoFilterGrid = new Grid<>();
         classificationsMetaInfoFilterGrid.setWidth(1300,Unit.PIXELS);
@@ -260,23 +279,61 @@ public class ClassificationManagementUI extends VerticalLayout {
         classificationsMetaInfoFilterGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3A);
         classificationsMetaInfoFilterGrid.appendFooterRow();
         attributeKindMetaInfoGridContainerLayout.add(classificationsMetaInfoFilterGrid);
+        classificationsMetaInfoFilterGrid.addSelectionListener(new SelectionListener<Grid<ClassificationMetaInfo>, ClassificationMetaInfo>() {
+            @Override
+            public void selectionChange(SelectionEvent<Grid<ClassificationMetaInfo>, ClassificationMetaInfo> selectionEvent) {
+                Set<ClassificationMetaInfo> selectedItemSet = selectionEvent.getAllSelectedItems();
+                if(selectedItemSet.size() == 0){
+                    // don't allow to unselect item, just reselect last selected item
+                    classificationsMetaInfoFilterGrid.select(laseSelectedClassificationMetaInfo);
+                }else{
+                    ClassificationMetaInfo selectedClassificationMetaInfo = selectedItemSet.iterator().next();
+                    renderClassificationOverview(selectedClassificationMetaInfo);
+                    laseSelectedClassificationMetaInfo = selectedClassificationMetaInfo;
+                }
+            }
+        });
 
         this.classificationsMetaInfoTreeGrid.setVisible(true);
         this.classificationsMetaInfoFilterGrid.setVisible(false);
         attributeKindsInfoContainerLayout.add(attributeKindMetaInfoGridContainerLayout);
 
-        singleAttributeKindSummaryInfoContainerLayout = new VerticalLayout();
-        singleAttributeKindSummaryInfoContainerLayout.setSpacing(true);
-        singleAttributeKindSummaryInfoContainerLayout.setMargin(true);
-        singleAttributeKindSummaryInfoContainerLayout.setPadding(false);
-        attributeKindsInfoContainerLayout.add(singleAttributeKindSummaryInfoContainerLayout);
-        attributeKindsInfoContainerLayout.setFlexGrow(1, singleAttributeKindSummaryInfoContainerLayout);
+        singleAttributesViewKindSummaryInfoContainerLayout = new VerticalLayout();
+        singleAttributesViewKindSummaryInfoContainerLayout.setSpacing(true);
+        singleAttributesViewKindSummaryInfoContainerLayout.setMargin(true);
+        singleAttributesViewKindSummaryInfoContainerLayout.setPadding(false);
+        attributeKindsInfoContainerLayout.add(singleAttributesViewKindSummaryInfoContainerLayout);
+        attributeKindsInfoContainerLayout.setFlexGrow(1, singleAttributesViewKindSummaryInfoContainerLayout);
 
         HorizontalLayout singleAttributeKindInfoElementsContainerLayout = new HorizontalLayout();
         singleAttributeKindInfoElementsContainerLayout.setSpacing(false);
         singleAttributeKindInfoElementsContainerLayout.setMargin(false);
         singleAttributeKindInfoElementsContainerLayout.setHeight("30px");
-        singleAttributeKindSummaryInfoContainerLayout.add(singleAttributeKindInfoElementsContainerLayout);
+        singleAttributesViewKindSummaryInfoContainerLayout.add(singleAttributeKindInfoElementsContainerLayout);
+
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"分类概览");
+        singleAttributeKindInfoElementsContainerLayout.add(filterTitle2);
+        singleAttributeKindInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
+
+        secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAGS),"-",null,null);
+        secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
+        singleAttributesViewKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
+
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CUBE),"包含本属性视图类型的概念类型");
+        singleAttributesViewKindSummaryInfoContainerLayout.add(infoTitle2);
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
 
@@ -384,5 +441,37 @@ public class ClassificationManagementUI extends VerticalLayout {
         createClassificationView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+    private void renderClassificationOverview(ClassificationMetaInfo classificationMetaInfo){
+        String classificationName = classificationMetaInfo.getClassificationName();
+        String classificationDesc = classificationMetaInfo.getClassificationDesc() != null ?
+                classificationMetaInfo.getClassificationDesc():"未设置描述信息";
+        String attributeNameText = classificationName +" ( "+classificationDesc+" )";
+        this.secondaryTitleActionBar.updateTitleContent(attributeNameText);
+    }
+
+    private void renderAttributesViewKindOverview(AttributesViewKindMetaInfo attributesViewKindMetaInfo){
+        String attributesViewKindName = attributesViewKindMetaInfo.getKindName();
+        String attributesViewKindDataType = attributesViewKindMetaInfo.getViewKindDataForm();
+        String attributesViewKindDesc = attributesViewKindMetaInfo.getKindDesc() != null ?
+                attributesViewKindMetaInfo.getKindDesc():"未设置描述信息";
+        String attributesViewKindUID = attributesViewKindMetaInfo.getKindUID();
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        AttributesViewKind selectedAttributesViewKind = coreRealm.getAttributesViewKind(attributesViewKindUID);
+        List<ConceptionKind> conceptionKindList = selectedAttributesViewKind.getContainerConceptionKinds();
+        if(conceptionKindList != null){
+            //conceptionKindAttributesInfoGrid.setItems(conceptionKindList);
+        }
+        List<AttributeKind> containsAttributeKindList = selectedAttributesViewKind.getContainsAttributeKinds();
+        if(containsAttributeKindList != null){
+            //attributeKindAttributesInfoGrid.setItems(containsAttributeKindList);
+        }
+        coreRealm.closeGlobalSession();
+
+        String attributeNameText = attributesViewKindName +" ( "+attributesViewKindDesc+" )";
+        this.secondaryTitleActionBar.updateTitleContent(attributeNameText);
     }
 }
