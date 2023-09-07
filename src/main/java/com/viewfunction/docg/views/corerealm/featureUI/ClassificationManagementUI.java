@@ -16,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.component.treegrid.TreeGrid;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -30,7 +31,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.eventHandling.ClassificationCreatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 
 import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.ClassificationsTreeChart;
@@ -38,7 +41,8 @@ import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.*;
 
-public class ClassificationManagementUI extends VerticalLayout {
+public class ClassificationManagementUI extends VerticalLayout implements
+        ClassificationCreatedEvent.ClassificationCreatedListener {
     private TextField classificationNameFilterField;
     private TextField classificationDescFilterField;
     private TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid;
@@ -55,6 +59,7 @@ public class ClassificationManagementUI extends VerticalLayout {
     private SecondaryKeyValueDisplayItem conceptionEntityCount;
     private VerticalLayout singleAttributesViewKindSummaryInfoContainerLayout;
     private ClassificationMetaInfo laseSelectedClassificationMetaInfo;
+    private Map<String,ClassificationMetaInfo> classificationMetaInfoMap;
     public ClassificationManagementUI(){
 
         Button refreshDataButton = new Button("刷新分类数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -379,6 +384,7 @@ public class ClassificationManagementUI extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         loadClassificationsData();
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             classificationsMetaInfoTreeGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
@@ -399,7 +405,7 @@ public class ClassificationManagementUI extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     private void loadClassificationsData(){
@@ -409,7 +415,7 @@ public class ClassificationManagementUI extends VerticalLayout {
             TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
             TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getTreeData();
 
-            Map<String,ClassificationMetaInfo> classificationMetaInfoMap = new HashMap<>();
+            classificationMetaInfoMap = new HashMap<>();
             for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
                 classificationMetaInfoMap.put(currentClassificationMetaInfo.getClassificationName(),currentClassificationMetaInfo);
             }
@@ -502,5 +508,25 @@ public class ClassificationManagementUI extends VerticalLayout {
             conceptionEntityCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedConceptionEntityCount());
         }
         coreRealm.closeGlobalSession();
+    }
+
+    @Override
+    public void receivedClassificationCreatedEvent(ClassificationCreatedEvent event) {
+        ClassificationMetaInfo classificationMetaInfo = new ClassificationMetaInfo(event.getClassificationName(),
+                event.getClassificationDesc(),event.getCreateDate(),event.getLastModifyDate(),event.getCreatorId(),
+                event.getDataOrigin(),event.getParentClassificationName(),event.getChildClassificationCount(),
+                event.isRootClassification());
+        classificationMetaInfoMap.put(event.getClassificationName(),classificationMetaInfo);
+
+        ListDataProvider dtaProvider = (ListDataProvider)classificationsMetaInfoFilterGrid.getDataProvider();
+        dtaProvider.getItems().add(classificationMetaInfo);
+        dtaProvider.refreshAll();
+
+        TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
+        TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getTreeData();
+        ClassificationMetaInfo parentClassificationMetaInfo = event.getParentClassificationName() != null ?
+                classificationMetaInfoMap.get(event.getParentClassificationName()) : null;
+        gridTreeData.addItem(parentClassificationMetaInfo,classificationMetaInfo);
+        dataProvider.refreshAll();
     }
 }

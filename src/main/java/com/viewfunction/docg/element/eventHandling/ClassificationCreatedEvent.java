@@ -14,7 +14,8 @@ public class ClassificationCreatedEvent implements Event {
     private String creatorId;
     private String dataOrigin;
     private String parentClassificationName;
-
+    private int childClassificationCount;
+    private boolean isRootClassification;
 
     public String getClassificationName() {
         return classificationName;
@@ -70,6 +71,22 @@ public class ClassificationCreatedEvent implements Event {
 
     public void setParentClassificationName(String parentClassificationName) {
         this.parentClassificationName = parentClassificationName;
+    }
+
+    public int getChildClassificationCount() {
+        return childClassificationCount;
+    }
+
+    public void setChildClassificationCount(int childClassificationCount) {
+        this.childClassificationCount = childClassificationCount;
+    }
+
+    public boolean isRootClassification() {
+        return isRootClassification;
+    }
+
+    public void setRootClassification(boolean rootClassification) {
+        isRootClassification = rootClassification;
     }
 
     public interface ClassificationCreatedListener extends Listener {

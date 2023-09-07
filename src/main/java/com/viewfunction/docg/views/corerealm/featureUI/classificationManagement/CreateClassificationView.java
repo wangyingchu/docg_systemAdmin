@@ -16,7 +16,13 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.eventHandling.ClassificationCreatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public class CreateClassificationView extends VerticalLayout {
     private Dialog containerDialog;
@@ -101,6 +107,28 @@ public class CreateClassificationView extends VerticalLayout {
         Classification classification = coreRealm.createClassification(classificationName,classificationDesc);
         if(classification != null){
             CommonUIOperationUtil.showPopupNotification("分类 "+classification.getClassificationName()+"["+classification.getClassificationDesc()+"]"+" 创建成功", NotificationVariant.LUMO_SUCCESS);
+
+            ClassificationCreatedEvent ClassificationCreatedEvent= new ClassificationCreatedEvent();
+
+            ClassificationCreatedEvent.setClassificationName(classification.getClassificationName());
+            ClassificationCreatedEvent.setClassificationDesc(classification.getClassificationDesc());
+            String parentClassificationName = classification.getParentClassification() != null ?classification.getParentClassification().getClassificationName() : null;
+            ClassificationCreatedEvent.setParentClassificationName(parentClassificationName);
+
+            LocalDateTime localCreateDateTime = LocalDateTime.ofInstant(classification.getCreateDateTime().toInstant(), ZoneId.systemDefault());
+            ZonedDateTime zonedCreateDateTime = ZonedDateTime.of(localCreateDateTime, ZoneId.systemDefault());
+            ClassificationCreatedEvent.setCreateDate(zonedCreateDateTime);
+
+            LocalDateTime localLastModifyDateTime = LocalDateTime.ofInstant(classification.getLastModifyDateTime().toInstant(), ZoneId.systemDefault());
+            ZonedDateTime zonedLastModifyDateTime = ZonedDateTime.of(localLastModifyDateTime, ZoneId.systemDefault());
+            ClassificationCreatedEvent.setLastModifyDate(zonedLastModifyDateTime);
+
+            ClassificationCreatedEvent.setCreatorId(classification.getCreatorId());
+            ClassificationCreatedEvent.setDataOrigin(classification.getDataOrigin());
+            ClassificationCreatedEvent.setRootClassification(true);
+            ClassificationCreatedEvent.setChildClassificationCount(0);
+            ResourceHolder.getApplicationBlackboard().fire(ClassificationCreatedEvent);
+
             if(this.containerDialog != null){
                 this.containerDialog.close();
             }
