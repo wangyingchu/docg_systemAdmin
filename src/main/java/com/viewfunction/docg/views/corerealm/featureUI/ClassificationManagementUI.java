@@ -264,6 +264,7 @@ public class ClassificationManagementUI extends VerticalLayout {
                     ClassificationMetaInfo selectedClassificationMetaInfo = selectedItemSet.iterator().next();
                     renderClassificationOverview(selectedClassificationMetaInfo);
                     laseSelectedClassificationMetaInfo = selectedClassificationMetaInfo;
+                    classificationsMetaInfoFilterGrid.select(laseSelectedClassificationMetaInfo);
                 }
             }
         });
@@ -297,6 +298,7 @@ public class ClassificationManagementUI extends VerticalLayout {
                     ClassificationMetaInfo selectedClassificationMetaInfo = selectedItemSet.iterator().next();
                     renderClassificationOverview(selectedClassificationMetaInfo);
                     laseSelectedClassificationMetaInfo = selectedClassificationMetaInfo;
+                    classificationsMetaInfoTreeGrid.select(laseSelectedClassificationMetaInfo);
                 }
             }
         });
@@ -370,8 +372,8 @@ public class ClassificationManagementUI extends VerticalLayout {
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及后代分类分布");
         singleAttributesViewKindSummaryInfoContainerLayout.add(infoTitle2);
-        ClassificationsTreeChart classificationsTreeChart = new ClassificationsTreeChart();
-        singleAttributesViewKindSummaryInfoContainerLayout.add(classificationsTreeChart);
+        //ClassificationsTreeChart classificationsTreeChart = new ClassificationsTreeChart();
+        //singleAttributesViewKindSummaryInfoContainerLayout.add(classificationsTreeChart);
     }
 
     @Override
