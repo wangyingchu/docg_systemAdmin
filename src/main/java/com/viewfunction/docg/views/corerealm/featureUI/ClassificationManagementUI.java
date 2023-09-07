@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -23,14 +24,16 @@ import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributesViewKindMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ClassificationRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 
+import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.ClassificationsTreeChart;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.*;
@@ -43,6 +46,13 @@ public class ClassificationManagementUI extends VerticalLayout {
     private GridListDataView<ClassificationMetaInfo> classificationMetaInfosMetaInfoFilterView;
     private Registration listener;
     private SecondaryTitleActionBar secondaryTitleActionBar;
+    private SecondaryKeyValueDisplayItem childClassificationCount;
+    private SecondaryKeyValueDisplayItem offendClassificationCount;
+    private SecondaryKeyValueDisplayItem conceptionKindCount;
+    private SecondaryKeyValueDisplayItem relationKindCount;
+    private SecondaryKeyValueDisplayItem attributeKindCount;
+    private SecondaryKeyValueDisplayItem attributesViewKindCount;
+    private SecondaryKeyValueDisplayItem conceptionEntityCount;
     private VerticalLayout singleAttributesViewKindSummaryInfoContainerLayout;
     private ClassificationMetaInfo laseSelectedClassificationMetaInfo;
     public ClassificationManagementUI(){
@@ -312,27 +322,57 @@ public class ClassificationManagementUI extends VerticalLayout {
         singleAttributeKindInfoElementsContainerLayout.add(filterTitle2);
         singleAttributeKindInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
 
-        secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAGS),"-",null,null);
+        secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAGS),"-",null,null,false);
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
         singleAttributesViewKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CUBE),"包含本属性视图类型的概念类型");
+        HorizontalLayout displayItemContainer5 = new HorizontalLayout();
+        displayItemContainer5.getStyle().set("padding-left","10px");
+        singleAttributesViewKindSummaryInfoContainerLayout.add(displayItemContainer5);
+        childClassificationCount = new SecondaryKeyValueDisplayItem(displayItemContainer5, VaadinIcon.TAG.create(),"Child Classification-子分类数量:","-");
+
+        HorizontalLayout displayItemContainer6 = new HorizontalLayout();
+        displayItemContainer6.getStyle().set("padding-left","10px");
+        singleAttributesViewKindSummaryInfoContainerLayout.add(displayItemContainer6);
+        offendClassificationCount = new SecondaryKeyValueDisplayItem(displayItemContainer6, FontAwesome.Solid.TAGS.create(),"Offspring Classification-后代分类数量:","-");
+
+        HorizontalLayout displayItemContainer1 = new HorizontalLayout();
+        displayItemContainer1.getStyle().set("padding-left","10px");
+        singleAttributesViewKindSummaryInfoContainerLayout.add(displayItemContainer1);
+        conceptionKindCount = new SecondaryKeyValueDisplayItem(displayItemContainer1, VaadinIcon.CUBE.create(),"相关 ConceptionKind-概念类型()数量:","-");
+
+        HorizontalLayout displayItemContainer2 = new HorizontalLayout();
+        displayItemContainer2.getStyle().set("padding-left","10px");
+        singleAttributesViewKindSummaryInfoContainerLayout.add(displayItemContainer2);
+        relationKindCount = new SecondaryKeyValueDisplayItem(displayItemContainer2, VaadinIcon.CONNECT_O.create(),"相关 RelationKind-关系类型数量:","-");
+
+        HorizontalLayout displayItemContainer3 = new HorizontalLayout();
+        displayItemContainer3.getStyle().set("padding-left","10px");
+        singleAttributesViewKindSummaryInfoContainerLayout.add(displayItemContainer3);
+        attributeKindCount = new SecondaryKeyValueDisplayItem(displayItemContainer3, VaadinIcon.INPUT.create(),"相关 AttributeKind-属性类型数量:","-");
+
+        HorizontalLayout displayItemContainer4 = new HorizontalLayout();
+        displayItemContainer4.getStyle().set("padding-left","10px");
+        singleAttributesViewKindSummaryInfoContainerLayout.add(displayItemContainer4);
+        attributesViewKindCount = new SecondaryKeyValueDisplayItem(displayItemContainer4, VaadinIcon.TASKS.create(),"相关 AttributesViewKind-属性视图类型数量:","-");
+
+        HorizontalLayout displayItemContainer7 = new HorizontalLayout();
+        displayItemContainer7.getStyle().set("padding-left","10px");
+        singleAttributesViewKindSummaryInfoContainerLayout.add(displayItemContainer7);
+        conceptionEntityCount= new SecondaryKeyValueDisplayItem(displayItemContainer7, VaadinIcon.STOCK.create(),"相关 ConceptionEntity-概念实体数量:","-");
+
+        HorizontalLayout divLayout = new HorizontalLayout();
+        divLayout.setWidthFull();
+        divLayout.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-s)");
+        singleAttributesViewKindSummaryInfoContainerLayout.add(divLayout);
+
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及后代分类分布");
         singleAttributesViewKindSummaryInfoContainerLayout.add(infoTitle2);
-
-
-
-
-
-
-
-
-
-
-
-
-
+        ClassificationsTreeChart classificationsTreeChart = new ClassificationsTreeChart();
+        singleAttributesViewKindSummaryInfoContainerLayout.add(classificationsTreeChart);
     }
-
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
@@ -450,35 +490,15 @@ public class ClassificationManagementUI extends VerticalLayout {
         coreRealm.openGlobalSession();
         Classification selectedClassification = coreRealm.getClassification(classificationName);
         if(selectedClassification != null){
-            selectedClassification.getOffspringClassifications();
-
-
-        }
-
-        coreRealm.closeGlobalSession();
-    }
-
-    private void renderAttributesViewKindOverview(AttributesViewKindMetaInfo attributesViewKindMetaInfo){
-        String attributesViewKindName = attributesViewKindMetaInfo.getKindName();
-        String attributesViewKindDataType = attributesViewKindMetaInfo.getViewKindDataForm();
-        String attributesViewKindDesc = attributesViewKindMetaInfo.getKindDesc() != null ?
-                attributesViewKindMetaInfo.getKindDesc():"未设置描述信息";
-        String attributesViewKindUID = attributesViewKindMetaInfo.getKindUID();
-
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        coreRealm.openGlobalSession();
-        AttributesViewKind selectedAttributesViewKind = coreRealm.getAttributesViewKind(attributesViewKindUID);
-        List<ConceptionKind> conceptionKindList = selectedAttributesViewKind.getContainerConceptionKinds();
-        if(conceptionKindList != null){
-            //conceptionKindAttributesInfoGrid.setItems(conceptionKindList);
-        }
-        List<AttributeKind> containsAttributeKindList = selectedAttributesViewKind.getContainsAttributeKinds();
-        if(containsAttributeKindList != null){
-            //attributeKindAttributesInfoGrid.setItems(containsAttributeKindList);
+            ClassificationRuntimeStatistics classificationRuntimeStatistics = selectedClassification.getClassificationRuntimeStatistics();
+            childClassificationCount.updateDisplayValue(""+classificationRuntimeStatistics.getChildClassificationsCount());
+            offendClassificationCount.updateDisplayValue(""+classificationRuntimeStatistics.getOffspringClassificationsCount());
+            conceptionKindCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedConceptionKindCount());
+            relationKindCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedRelationKindCount());
+            attributeKindCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedAttributeKindCount());
+            attributesViewKindCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedAttributesViewKindCount());
+            conceptionEntityCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedConceptionEntityCount());
         }
         coreRealm.closeGlobalSession();
-
-        String attributeNameText = attributesViewKindName +" ( "+attributesViewKindDesc+" )";
-        this.secondaryTitleActionBar.updateTitleContent(attributeNameText);
     }
 }
