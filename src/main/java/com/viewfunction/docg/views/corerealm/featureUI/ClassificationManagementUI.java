@@ -115,7 +115,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
             }
         });
 
-        Button createClassificationButton = new Button("创建顶层分类",new Icon(VaadinIcon.PLUS_SQUARE_O));
+        Button createClassificationButton = new Button("创建分类",new Icon(VaadinIcon.PLUS_SQUARE_O));
         createClassificationButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         createClassificationButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         classificationManagementOperationButtonList.add(createClassificationButton);
@@ -480,7 +480,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
     private void renderCreateClassificationUI(){
         CreateClassificationView createClassificationView = new CreateClassificationView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建顶层分类",null,true,500,350,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建分类",null,true,500,350,false);
         fixSizeWindow.setWindowContent(createClassificationView);
         createClassificationView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
