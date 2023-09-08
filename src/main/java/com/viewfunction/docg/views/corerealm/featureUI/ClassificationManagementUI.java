@@ -67,7 +67,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
-            //loadConceptionKindsInfo();
+            refreshClassificationsData();
             //resetSingleConceptionKindSummaryInfoArea();
         });
 
@@ -428,7 +428,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
                 }
             }
             dataProvider.refreshAll();
-            this.classificationsMetaInfoTreeGrid.expandRecursively(classificationsMetaInfoList,1);
+            //this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
             this.classificationMetaInfosMetaInfoFilterView = classificationsMetaInfoFilterGrid.setItems(classificationsMetaInfoList);
             //logic to filter AttributeKinds already loaded from server
             this.classificationMetaInfosMetaInfoFilterView.addFilter(item->{
@@ -453,6 +453,38 @@ public class ClassificationManagementUI extends VerticalLayout implements
                 return attributeKindNameFilterResult & attributeKindDescFilterResult;
             });
 
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void refreshClassificationsData(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        try {
+            List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
+            TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
+            TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getTreeData();
+            gridTreeData.clear();
+
+            classificationMetaInfoMap.clear();
+            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
+                classificationMetaInfoMap.put(currentClassificationMetaInfo.getClassificationName(),currentClassificationMetaInfo);
+            }
+            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
+                if(currentClassificationMetaInfo.isRootClassification()){
+                    gridTreeData.addItem(null,currentClassificationMetaInfo);
+                }else{
+                    String parentClassificationName = currentClassificationMetaInfo.getParentClassificationName();
+                    gridTreeData.addItem(classificationMetaInfoMap.get(parentClassificationName),currentClassificationMetaInfo);
+                }
+            }
+            dataProvider.refreshAll();
+            //this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
+
+            ListDataProvider listDataProvider = (ListDataProvider)classificationsMetaInfoFilterGrid.getDataProvider();
+            listDataProvider.getItems().clear();
+            listDataProvider.getItems().addAll(classificationsMetaInfoList);
+            listDataProvider.refreshAll();
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
@@ -519,6 +551,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
         ClassificationMetaInfo parentClassificationMetaInfo = event.getParentClassificationName() != null ?
                 classificationMetaInfoMap.get(event.getParentClassificationName()) : null;
+
         if(parentClassificationMetaInfo != null){
             parentClassificationMetaInfo.setChildClassificationCount(1+parentClassificationMetaInfo.getChildClassificationCount());
             if(lastSelectedClassificationMetaInfo != null){
@@ -533,6 +566,10 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
         TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
         TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getTreeData();
+        if(parentClassificationMetaInfo != null){
+            //classificationsMetaInfoTreeGrid.expandRecursively();
+        }
+
 
         gridTreeData.addItem(parentClassificationMetaInfo,classificationMetaInfo);
         dataProvider.refreshAll();
