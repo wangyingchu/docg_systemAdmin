@@ -36,7 +36,6 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 
-import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.ClassificationsTreeChart;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.*;
@@ -58,7 +57,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
     private SecondaryKeyValueDisplayItem attributesViewKindCount;
     private SecondaryKeyValueDisplayItem conceptionEntityCount;
     private VerticalLayout singleAttributesViewKindSummaryInfoContainerLayout;
-    private ClassificationMetaInfo laseSelectedClassificationMetaInfo;
+    private ClassificationMetaInfo lastSelectedClassificationMetaInfo;
     private Map<String,ClassificationMetaInfo> classificationMetaInfoMap;
     public ClassificationManagementUI(){
 
@@ -264,12 +263,12 @@ public class ClassificationManagementUI extends VerticalLayout implements
                 Set<ClassificationMetaInfo> selectedItemSet = selectionEvent.getAllSelectedItems();
                 if(selectedItemSet.size() == 0){
                     // don't allow to unselect item, just reselect last selected item
-                    classificationsMetaInfoTreeGrid.select(laseSelectedClassificationMetaInfo);
+                    classificationsMetaInfoTreeGrid.select(lastSelectedClassificationMetaInfo);
                 }else{
                     ClassificationMetaInfo selectedClassificationMetaInfo = selectedItemSet.iterator().next();
                     renderClassificationOverview(selectedClassificationMetaInfo);
-                    laseSelectedClassificationMetaInfo = selectedClassificationMetaInfo;
-                    classificationsMetaInfoFilterGrid.select(laseSelectedClassificationMetaInfo);
+                    lastSelectedClassificationMetaInfo = selectedClassificationMetaInfo;
+                    classificationsMetaInfoFilterGrid.select(lastSelectedClassificationMetaInfo);
                 }
             }
         });
@@ -298,12 +297,12 @@ public class ClassificationManagementUI extends VerticalLayout implements
                 Set<ClassificationMetaInfo> selectedItemSet = selectionEvent.getAllSelectedItems();
                 if(selectedItemSet.size() == 0){
                     // don't allow to unselect item, just reselect last selected item
-                    classificationsMetaInfoFilterGrid.select(laseSelectedClassificationMetaInfo);
+                    classificationsMetaInfoFilterGrid.select(lastSelectedClassificationMetaInfo);
                 }else{
                     ClassificationMetaInfo selectedClassificationMetaInfo = selectedItemSet.iterator().next();
                     renderClassificationOverview(selectedClassificationMetaInfo);
-                    laseSelectedClassificationMetaInfo = selectedClassificationMetaInfo;
-                    classificationsMetaInfoTreeGrid.select(laseSelectedClassificationMetaInfo);
+                    lastSelectedClassificationMetaInfo = selectedClassificationMetaInfo;
+                    classificationsMetaInfoTreeGrid.select(lastSelectedClassificationMetaInfo);
                 }
             }
         });
@@ -481,7 +480,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
     private void renderCreateClassificationUI(){
         CreateClassificationView createClassificationView = new CreateClassificationView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建顶层分类",null,true,500,285,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建顶层分类",null,true,500,350,false);
         fixSizeWindow.setWindowContent(createClassificationView);
         createClassificationView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
@@ -518,14 +517,23 @@ public class ClassificationManagementUI extends VerticalLayout implements
                 event.isRootClassification());
         classificationMetaInfoMap.put(event.getClassificationName(),classificationMetaInfo);
 
+        ClassificationMetaInfo parentClassificationMetaInfo = event.getParentClassificationName() != null ?
+                classificationMetaInfoMap.get(event.getParentClassificationName()) : null;
+        if(parentClassificationMetaInfo != null){
+            parentClassificationMetaInfo.setChildClassificationCount(1+parentClassificationMetaInfo.getChildClassificationCount());
+            if(lastSelectedClassificationMetaInfo != null){
+                //In case is selected classification is new created classification's ancestor
+                renderClassificationOverview(lastSelectedClassificationMetaInfo);
+            }
+        }
+
         ListDataProvider dtaProvider = (ListDataProvider)classificationsMetaInfoFilterGrid.getDataProvider();
         dtaProvider.getItems().add(classificationMetaInfo);
         dtaProvider.refreshAll();
 
         TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
         TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getTreeData();
-        ClassificationMetaInfo parentClassificationMetaInfo = event.getParentClassificationName() != null ?
-                classificationMetaInfoMap.get(event.getParentClassificationName()) : null;
+
         gridTreeData.addItem(parentClassificationMetaInfo,classificationMetaInfo);
         dataProvider.refreshAll();
     }
