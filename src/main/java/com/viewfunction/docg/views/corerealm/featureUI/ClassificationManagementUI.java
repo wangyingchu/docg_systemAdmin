@@ -428,7 +428,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
                 }
             }
             dataProvider.refreshAll();
-            //this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
+            this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
             this.classificationMetaInfosMetaInfoFilterView = classificationsMetaInfoFilterGrid.setItems(classificationsMetaInfoList);
             //logic to filter AttributeKinds already loaded from server
             this.classificationMetaInfosMetaInfoFilterView.addFilter(item->{
@@ -479,7 +479,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
                 }
             }
             dataProvider.refreshAll();
-            //this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
+            this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
 
             ListDataProvider listDataProvider = (ListDataProvider)classificationsMetaInfoFilterGrid.getDataProvider();
             listDataProvider.getItems().clear();
