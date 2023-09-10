@@ -543,6 +543,8 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
     @Override
     public void receivedClassificationCreatedEvent(ClassificationCreatedEvent event) {
+        //refreshClassificationsData();
+
         ClassificationMetaInfo classificationMetaInfo = new ClassificationMetaInfo(event.getClassificationName(),
                 event.getClassificationDesc(),event.getCreateDate(),event.getLastModifyDate(),event.getCreatorId(),
                 event.getDataOrigin(),event.getParentClassificationName(),event.getChildClassificationCount(),
