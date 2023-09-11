@@ -4,9 +4,9 @@ import com.storedobject.chart.*;
 
 import java.util.Random;
 
-public class ClassificationsTreeChart extends SOChart{
+public class ClassificationsTreeChart_1 extends SOChart{
 
-    public ClassificationsTreeChart(){
+    public ClassificationsTreeChart_1(int windowWidth, int windowHeight){
 
         this.setSize("350px", "400px");
         // Tree chart

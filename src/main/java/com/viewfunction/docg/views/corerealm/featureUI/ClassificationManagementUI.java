@@ -36,6 +36,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 
+import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.ClassificationsTreeChart_1;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.*;
@@ -60,6 +61,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
     private ClassificationMetaInfo lastSelectedClassificationMetaInfo;
     private Map<String,ClassificationMetaInfo> classificationMetaInfoMap;
     private String lastSelectedClassificationName;
+    private ClassificationsTreeChart_1 classificationsTreeChart1;
     public ClassificationManagementUI(){
 
         Button refreshDataButton = new Button("刷新分类数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -365,8 +367,8 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及后代分类分布");
         singleClassificationSummaryInfoContainerLayout.add(infoTitle2);
-        //ClassificationsTreeChart classificationsTreeChart = new ClassificationsTreeChart();
-        //singleAttributesViewKindSummaryInfoContainerLayout.add(classificationsTreeChart);
+        classificationsTreeChart1 = new ClassificationsTreeChart_1(500,400);
+        singleClassificationSummaryInfoContainerLayout.add(classificationsTreeChart1);
     }
 
     @Override

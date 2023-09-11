@@ -66,8 +66,8 @@ public class ClassificationInfoWidget extends HorizontalLayout {
         add(rightComponentContainer);
         this.setFlexGrow(1,rightComponentContainer);
 
-        ClassificationsTreeChart classificationsTreeChart = new ClassificationsTreeChart();
-        rightComponentContainer.add(classificationsTreeChart);
-        rightComponentContainer.setHorizontalComponentAlignment(Alignment.START,classificationsTreeChart);
+        ClassificationsTreeChart_1 classificationsTreeChart1 = new ClassificationsTreeChart_1(500,400);
+        rightComponentContainer.add(classificationsTreeChart1);
+        rightComponentContainer.setHorizontalComponentAlignment(Alignment.START, classificationsTreeChart1);
     }
 }
