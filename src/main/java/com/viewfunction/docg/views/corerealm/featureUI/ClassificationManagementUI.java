@@ -59,6 +59,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
     private VerticalLayout singleAttributesViewKindSummaryInfoContainerLayout;
     private ClassificationMetaInfo lastSelectedClassificationMetaInfo;
     private Map<String,ClassificationMetaInfo> classificationMetaInfoMap;
+    private String lastSelectedClassificationName;
     public ClassificationManagementUI(){
 
         Button refreshDataButton = new Button("刷新分类数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -68,7 +69,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
             refreshClassificationsData();
-            //resetSingleConceptionKindSummaryInfoArea();
+            resetSingleClassificationSummaryInfoArea();
         });
 
         List<Component> buttonList = new ArrayList<>();
@@ -418,13 +419,13 @@ public class ClassificationManagementUI extends VerticalLayout implements
             for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
                 classificationMetaInfoMap.put(currentClassificationMetaInfo.getClassificationName(),currentClassificationMetaInfo);
             }
-
             for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
-                if(currentClassificationMetaInfo.isRootClassification()){
-                    gridTreeData.addItem(null,currentClassificationMetaInfo);
-                }else{
+                gridTreeData.addItem(null,currentClassificationMetaInfo);
+            }
+            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
+                if(!currentClassificationMetaInfo.isRootClassification()){
                     String parentClassificationName = currentClassificationMetaInfo.getParentClassificationName();
-                    gridTreeData.addItem(classificationMetaInfoMap.get(parentClassificationName),currentClassificationMetaInfo);
+                    gridTreeData.setParent(currentClassificationMetaInfo,classificationMetaInfoMap.get(parentClassificationName));
                 }
             }
             dataProvider.refreshAll();
@@ -459,6 +460,10 @@ public class ClassificationManagementUI extends VerticalLayout implements
     }
 
     private void refreshClassificationsData(){
+        if(this.lastSelectedClassificationMetaInfo != null){
+            this.lastSelectedClassificationName = this.lastSelectedClassificationMetaInfo.getClassificationName();
+        }
+
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
             List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
@@ -471,13 +476,15 @@ public class ClassificationManagementUI extends VerticalLayout implements
                 classificationMetaInfoMap.put(currentClassificationMetaInfo.getClassificationName(),currentClassificationMetaInfo);
             }
             for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
-                if(currentClassificationMetaInfo.isRootClassification()){
-                    gridTreeData.addItem(null,currentClassificationMetaInfo);
-                }else{
+                gridTreeData.addItem(null,currentClassificationMetaInfo);
+            }
+            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
+                if(!currentClassificationMetaInfo.isRootClassification()){
                     String parentClassificationName = currentClassificationMetaInfo.getParentClassificationName();
-                    gridTreeData.addItem(classificationMetaInfoMap.get(parentClassificationName),currentClassificationMetaInfo);
+                    gridTreeData.setParent(currentClassificationMetaInfo,classificationMetaInfoMap.get(parentClassificationName));
                 }
             }
+
             dataProvider.refreshAll();
             this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
 
@@ -543,37 +550,23 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
     @Override
     public void receivedClassificationCreatedEvent(ClassificationCreatedEvent event) {
-        //refreshClassificationsData();
-
-        ClassificationMetaInfo classificationMetaInfo = new ClassificationMetaInfo(event.getClassificationName(),
-                event.getClassificationDesc(),event.getCreateDate(),event.getLastModifyDate(),event.getCreatorId(),
-                event.getDataOrigin(),event.getParentClassificationName(),event.getChildClassificationCount(),
-                event.isRootClassification());
-        classificationMetaInfoMap.put(event.getClassificationName(),classificationMetaInfo);
-
-        ClassificationMetaInfo parentClassificationMetaInfo = event.getParentClassificationName() != null ?
-                classificationMetaInfoMap.get(event.getParentClassificationName()) : null;
-
-        if(parentClassificationMetaInfo != null){
-            parentClassificationMetaInfo.setChildClassificationCount(1+parentClassificationMetaInfo.getChildClassificationCount());
-            if(lastSelectedClassificationMetaInfo != null){
-                //In case is selected classification is new created classification's ancestor
-                renderClassificationOverview(lastSelectedClassificationMetaInfo);
-            }
+        refreshClassificationsData();
+        if(this.lastSelectedClassificationName != null){
+            this.lastSelectedClassificationMetaInfo = classificationMetaInfoMap.get(this.lastSelectedClassificationName);
         }
+        this.classificationsMetaInfoFilterGrid.select(this.lastSelectedClassificationMetaInfo);
+        this.classificationsMetaInfoTreeGrid.select(this.lastSelectedClassificationMetaInfo);
+    }
 
-        ListDataProvider dtaProvider = (ListDataProvider)classificationsMetaInfoFilterGrid.getDataProvider();
-        dtaProvider.getItems().add(classificationMetaInfo);
-        dtaProvider.refreshAll();
-
-        TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
-        TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getTreeData();
-        if(parentClassificationMetaInfo != null){
-            //classificationsMetaInfoTreeGrid.expandRecursively();
-        }
-
-
-        gridTreeData.addItem(parentClassificationMetaInfo,classificationMetaInfo);
-        dataProvider.refreshAll();
+    private void resetSingleClassificationSummaryInfoArea(){
+        this.lastSelectedClassificationMetaInfo = null;
+        this.secondaryTitleActionBar.updateTitleContent("-");
+        this.childClassificationCount.updateDisplayValue("-");
+        this.offendClassificationCount.updateDisplayValue("-");
+        this.conceptionKindCount.updateDisplayValue("-");
+        this.relationKindCount.updateDisplayValue("-");
+        this.attributeKindCount.updateDisplayValue("-");
+        this.attributesViewKindCount.updateDisplayValue("-");
+        this.conceptionEntityCount.updateDisplayValue("-");
     }
 }
