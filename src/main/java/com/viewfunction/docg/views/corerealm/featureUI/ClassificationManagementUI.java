@@ -56,7 +56,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
     private SecondaryKeyValueDisplayItem attributeKindCount;
     private SecondaryKeyValueDisplayItem attributesViewKindCount;
     private SecondaryKeyValueDisplayItem conceptionEntityCount;
-    private VerticalLayout singleAttributesViewKindSummaryInfoContainerLayout;
+    private VerticalLayout singleClassificationSummaryInfoContainerLayout;
     private ClassificationMetaInfo lastSelectedClassificationMetaInfo;
     private Map<String,ClassificationMetaInfo> classificationMetaInfoMap;
     private String lastSelectedClassificationName;
@@ -92,27 +92,15 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
         List<Component> classificationManagementOperationButtonList = new ArrayList<>();
 
-        Button classificationRelationGuideButton = new Button("概念实体关联分布概览",new Icon(VaadinIcon.DASHBOARD));
+        Button classificationRelationGuideButton = new Button("分类分布概览",new Icon(VaadinIcon.DASHBOARD));
         classificationRelationGuideButton.setDisableOnClick(true);
         classificationRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         classificationRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        //classificationManagementOperationButtonList.add(classificationRelationGuideButton);
+        classificationManagementOperationButtonList.add(classificationRelationGuideButton);
         classificationRelationGuideButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 //renderConceptionKindsCorrelationInfoSummaryUI(classificationRelationGuideButton);
-            }
-        });
-
-        Button processingDataListButton = new Button("待处理数据",new Icon(VaadinIcon.MAILBOX));
-        processingDataListButton.setDisableOnClick(true);
-        processingDataListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        processingDataListButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        //classificationManagementOperationButtonList.add(processingDataListButton);
-        processingDataListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderProcessingDataListUI(processingDataListButton);
             }
         });
 
@@ -131,53 +119,53 @@ public class ClassificationManagementUI extends VerticalLayout implements
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"分类数据:",classificationManagementOperationButtonList);
         add(sectionActionBar);
 
-        HorizontalLayout attributeKindsInfoContainerLayout = new HorizontalLayout();
-        attributeKindsInfoContainerLayout.setSpacing(false);
-        attributeKindsInfoContainerLayout.setMargin(false);
-        attributeKindsInfoContainerLayout.setWidth(100, Unit.PERCENTAGE);
-        add(attributeKindsInfoContainerLayout);
+        HorizontalLayout classificationsInfoContainerLayout = new HorizontalLayout();
+        classificationsInfoContainerLayout.setSpacing(false);
+        classificationsInfoContainerLayout.setMargin(false);
+        classificationsInfoContainerLayout.setWidth(100, Unit.PERCENTAGE);
+        add(classificationsInfoContainerLayout);
 
-        VerticalLayout attributeKindMetaInfoGridContainerLayout = new VerticalLayout();
-        attributeKindMetaInfoGridContainerLayout.setSpacing(true);
-        attributeKindMetaInfoGridContainerLayout.setMargin(false);
-        attributeKindMetaInfoGridContainerLayout.setPadding(false);
+        VerticalLayout classificationMetaInfoGridContainerLayout = new VerticalLayout();
+        classificationMetaInfoGridContainerLayout.setSpacing(true);
+        classificationMetaInfoGridContainerLayout.setMargin(false);
+        classificationMetaInfoGridContainerLayout.setPadding(false);
 
-        HorizontalLayout attributeKindsSearchElementsContainerLayout = new HorizontalLayout();
-        attributeKindsSearchElementsContainerLayout.setSpacing(false);
-        attributeKindsSearchElementsContainerLayout.setMargin(false);
-        attributeKindMetaInfoGridContainerLayout.add(attributeKindsSearchElementsContainerLayout);
+        HorizontalLayout classificationsSearchElementsContainerLayout = new HorizontalLayout();
+        classificationsSearchElementsContainerLayout.setSpacing(false);
+        classificationsSearchElementsContainerLayout.setMargin(false);
+        classificationMetaInfoGridContainerLayout.add(classificationsSearchElementsContainerLayout);
 
         SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
-        attributeKindsSearchElementsContainerLayout.add(filterTitle);
-        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
+        classificationsSearchElementsContainerLayout.add(filterTitle);
+        classificationsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
         filterTitle.setWidth(80,Unit.PIXELS);
 
         classificationNameFilterField = new TextField();
         classificationNameFilterField.setPlaceholder("分类名称");
         classificationNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         classificationNameFilterField.setWidth(170,Unit.PIXELS);
-        attributeKindsSearchElementsContainerLayout.add(classificationNameFilterField);
-        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, classificationNameFilterField);
+        classificationsSearchElementsContainerLayout.add(classificationNameFilterField);
+        classificationsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, classificationNameFilterField);
 
         Icon plusIcon = new Icon(VaadinIcon.PLUS);
         plusIcon.setSize("12px");
-        attributeKindsSearchElementsContainerLayout.add(plusIcon);
-        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
+        classificationsSearchElementsContainerLayout.add(plusIcon);
+        classificationsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
 
         classificationDescFilterField = new TextField();
         classificationDescFilterField.setPlaceholder("分类描述");
         classificationDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         classificationDescFilterField.setWidth(170,Unit.PIXELS);
-        attributeKindsSearchElementsContainerLayout.add(classificationDescFilterField);
-        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, classificationDescFilterField);
+        classificationsSearchElementsContainerLayout.add(classificationDescFilterField);
+        classificationsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, classificationDescFilterField);
 
-        Button searchAttributeKindsButton = new Button("查找分类",new Icon(VaadinIcon.SEARCH));
-        searchAttributeKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        searchAttributeKindsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        attributeKindsSearchElementsContainerLayout.add(searchAttributeKindsButton);
-        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchAttributeKindsButton);
-        searchAttributeKindsButton.setWidth(90,Unit.PIXELS);
-        searchAttributeKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button searchClassificationsButton = new Button("查找分类",new Icon(VaadinIcon.SEARCH));
+        searchClassificationsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        searchClassificationsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        classificationsSearchElementsContainerLayout.add(searchClassificationsButton);
+        classificationsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchClassificationsButton);
+        searchClassificationsButton.setWidth(90,Unit.PIXELS);
+        searchClassificationsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 filterClassifications();
@@ -186,14 +174,14 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
         Icon divIcon = new Icon(VaadinIcon.LINE_V);
         divIcon.setSize("8px");
-        attributeKindsSearchElementsContainerLayout.add(divIcon);
-        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+        classificationsSearchElementsContainerLayout.add(divIcon);
+        classificationsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
 
         Button clearSearchCriteriaButton = new Button("清除查询条件",new Icon(VaadinIcon.ERASER));
         clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        attributeKindsSearchElementsContainerLayout.add(clearSearchCriteriaButton);
-        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
+        classificationsSearchElementsContainerLayout.add(clearSearchCriteriaButton);
+        classificationsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
         clearSearchCriteriaButton.setWidth(120,Unit.PIXELS);
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -205,23 +193,23 @@ public class ClassificationManagementUI extends VerticalLayout implements
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKindMetaInfo -> {
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
-            Button configAttributeKind = new Button(configIcon, event -> {
+            Button configClassification = new Button(configIcon, event -> {
                 if(attributeKindMetaInfo instanceof ClassificationMetaInfo){
                     //renderAttributesViewKindConfigurationUI((AttributesViewKindMetaInfo)attributeKindMetaInfo);
                 }
             });
-            configAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            configAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(configAttributeKind, "配置分类定义");
+            configClassification.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            configClassification.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(configClassification, "配置分类定义");
 
-            Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
-            deleteKindIcon.setSize("21px");
-            Button removeAttributeKind = new Button(deleteKindIcon, event -> {});
-            removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeAttributeKind, "删除分类");
-            removeAttributeKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            Icon deleteClassificationIcon = new Icon(VaadinIcon.TRASH);
+            deleteClassificationIcon.setSize("21px");
+            Button removeClassification = new Button(deleteClassificationIcon, event -> {});
+            removeClassification.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            removeClassification.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            removeClassification.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            Tooltips.getCurrent().setTooltip(removeClassification, "删除分类");
+            removeClassification.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(attributeKindMetaInfo instanceof ClassificationMetaInfo){
@@ -230,7 +218,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
                 }
             });
 
-            HorizontalLayout buttons = new HorizontalLayout(configAttributeKind,removeAttributeKind);
+            HorizontalLayout buttons = new HorizontalLayout(configClassification,removeClassification);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -257,7 +245,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
         GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
         classificationsMetaInfoTreeGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
         classificationsMetaInfoTreeGrid.appendFooterRow();
-        attributeKindMetaInfoGridContainerLayout.add(classificationsMetaInfoTreeGrid);
+        classificationMetaInfoGridContainerLayout.add(classificationsMetaInfoTreeGrid);
         classificationsMetaInfoTreeGrid.addSelectionListener(new SelectionListener<Grid<ClassificationMetaInfo>, ClassificationMetaInfo>() {
             @Override
             public void selectionChange(SelectionEvent<Grid<ClassificationMetaInfo>, ClassificationMetaInfo> selectionEvent) {
@@ -291,7 +279,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
         GridColumnHeader gridColumnHeader_idx3A = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
         classificationsMetaInfoFilterGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3A);
         classificationsMetaInfoFilterGrid.appendFooterRow();
-        attributeKindMetaInfoGridContainerLayout.add(classificationsMetaInfoFilterGrid);
+        classificationMetaInfoGridContainerLayout.add(classificationsMetaInfoFilterGrid);
         classificationsMetaInfoFilterGrid.addSelectionListener(new SelectionListener<Grid<ClassificationMetaInfo>, ClassificationMetaInfo>() {
             @Override
             public void selectionChange(SelectionEvent<Grid<ClassificationMetaInfo>, ClassificationMetaInfo> selectionEvent) {
@@ -310,62 +298,62 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
         this.classificationsMetaInfoTreeGrid.setVisible(true);
         this.classificationsMetaInfoFilterGrid.setVisible(false);
-        attributeKindsInfoContainerLayout.add(attributeKindMetaInfoGridContainerLayout);
+        classificationsInfoContainerLayout.add(classificationMetaInfoGridContainerLayout);
 
-        singleAttributesViewKindSummaryInfoContainerLayout = new VerticalLayout();
-        singleAttributesViewKindSummaryInfoContainerLayout.setSpacing(true);
-        singleAttributesViewKindSummaryInfoContainerLayout.setMargin(true);
-        singleAttributesViewKindSummaryInfoContainerLayout.setPadding(false);
-        attributeKindsInfoContainerLayout.add(singleAttributesViewKindSummaryInfoContainerLayout);
-        attributeKindsInfoContainerLayout.setFlexGrow(1, singleAttributesViewKindSummaryInfoContainerLayout);
+        singleClassificationSummaryInfoContainerLayout = new VerticalLayout();
+        singleClassificationSummaryInfoContainerLayout.setSpacing(true);
+        singleClassificationSummaryInfoContainerLayout.setMargin(true);
+        singleClassificationSummaryInfoContainerLayout.setPadding(false);
+        classificationsInfoContainerLayout.add(singleClassificationSummaryInfoContainerLayout);
+        classificationsInfoContainerLayout.setFlexGrow(1, singleClassificationSummaryInfoContainerLayout);
 
-        HorizontalLayout singleAttributeKindInfoElementsContainerLayout = new HorizontalLayout();
-        singleAttributeKindInfoElementsContainerLayout.setSpacing(false);
-        singleAttributeKindInfoElementsContainerLayout.setMargin(false);
-        singleAttributeKindInfoElementsContainerLayout.setHeight("30px");
-        singleAttributesViewKindSummaryInfoContainerLayout.add(singleAttributeKindInfoElementsContainerLayout);
+        HorizontalLayout singleClassificationInfoElementsContainerLayout = new HorizontalLayout();
+        singleClassificationInfoElementsContainerLayout.setSpacing(false);
+        singleClassificationInfoElementsContainerLayout.setMargin(false);
+        singleClassificationInfoElementsContainerLayout.setHeight("30px");
+        singleClassificationSummaryInfoContainerLayout.add(singleClassificationInfoElementsContainerLayout);
 
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"分类概览");
-        singleAttributeKindInfoElementsContainerLayout.add(filterTitle2);
-        singleAttributeKindInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
+        singleClassificationInfoElementsContainerLayout.add(filterTitle2);
+        singleClassificationInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
 
         secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAGS),"-",null,null,false);
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
-        singleAttributesViewKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
+        singleClassificationSummaryInfoContainerLayout.add(secondaryTitleActionBar);
 
         HorizontalLayout displayItemContainer5 = new HorizontalLayout();
         displayItemContainer5.getStyle().set("padding-left","10px");
-        singleAttributesViewKindSummaryInfoContainerLayout.add(displayItemContainer5);
+        singleClassificationSummaryInfoContainerLayout.add(displayItemContainer5);
         childClassificationCount = new SecondaryKeyValueDisplayItem(displayItemContainer5, VaadinIcon.TAG.create(),"Child Classification-子分类数量:","-");
 
         HorizontalLayout displayItemContainer6 = new HorizontalLayout();
         displayItemContainer6.getStyle().set("padding-left","10px");
-        singleAttributesViewKindSummaryInfoContainerLayout.add(displayItemContainer6);
+        singleClassificationSummaryInfoContainerLayout.add(displayItemContainer6);
         offendClassificationCount = new SecondaryKeyValueDisplayItem(displayItemContainer6, FontAwesome.Solid.TAGS.create(),"Offspring Classification-后代分类数量:","-");
 
         HorizontalLayout displayItemContainer1 = new HorizontalLayout();
         displayItemContainer1.getStyle().set("padding-left","10px");
-        singleAttributesViewKindSummaryInfoContainerLayout.add(displayItemContainer1);
+        singleClassificationSummaryInfoContainerLayout.add(displayItemContainer1);
         conceptionKindCount = new SecondaryKeyValueDisplayItem(displayItemContainer1, VaadinIcon.CUBE.create(),"相关 ConceptionKind-概念类型()数量:","-");
 
         HorizontalLayout displayItemContainer2 = new HorizontalLayout();
         displayItemContainer2.getStyle().set("padding-left","10px");
-        singleAttributesViewKindSummaryInfoContainerLayout.add(displayItemContainer2);
+        singleClassificationSummaryInfoContainerLayout.add(displayItemContainer2);
         relationKindCount = new SecondaryKeyValueDisplayItem(displayItemContainer2, VaadinIcon.CONNECT_O.create(),"相关 RelationKind-关系类型数量:","-");
 
         HorizontalLayout displayItemContainer3 = new HorizontalLayout();
         displayItemContainer3.getStyle().set("padding-left","10px");
-        singleAttributesViewKindSummaryInfoContainerLayout.add(displayItemContainer3);
+        singleClassificationSummaryInfoContainerLayout.add(displayItemContainer3);
         attributeKindCount = new SecondaryKeyValueDisplayItem(displayItemContainer3, VaadinIcon.INPUT.create(),"相关 AttributeKind-属性类型数量:","-");
 
         HorizontalLayout displayItemContainer4 = new HorizontalLayout();
         displayItemContainer4.getStyle().set("padding-left","10px");
-        singleAttributesViewKindSummaryInfoContainerLayout.add(displayItemContainer4);
+        singleClassificationSummaryInfoContainerLayout.add(displayItemContainer4);
         attributesViewKindCount = new SecondaryKeyValueDisplayItem(displayItemContainer4, VaadinIcon.TASKS.create(),"相关 AttributesViewKind-属性视图类型数量:","-");
 
         HorizontalLayout displayItemContainer7 = new HorizontalLayout();
         displayItemContainer7.getStyle().set("padding-left","10px");
-        singleAttributesViewKindSummaryInfoContainerLayout.add(displayItemContainer7);
+        singleClassificationSummaryInfoContainerLayout.add(displayItemContainer7);
         conceptionEntityCount= new SecondaryKeyValueDisplayItem(displayItemContainer7, VaadinIcon.STOCK.create(),"相关 ConceptionEntity-概念实体数量:","-");
 
         HorizontalLayout divLayout = new HorizontalLayout();
@@ -373,10 +361,10 @@ public class ClassificationManagementUI extends VerticalLayout implements
         divLayout.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
                 .set("padding-bottom", "var(--lumo-space-s)");
-        singleAttributesViewKindSummaryInfoContainerLayout.add(divLayout);
+        singleClassificationSummaryInfoContainerLayout.add(divLayout);
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及后代分类分布");
-        singleAttributesViewKindSummaryInfoContainerLayout.add(infoTitle2);
+        singleClassificationSummaryInfoContainerLayout.add(infoTitle2);
         //ClassificationsTreeChart classificationsTreeChart = new ClassificationsTreeChart();
         //singleAttributesViewKindSummaryInfoContainerLayout.add(classificationsTreeChart);
     }
