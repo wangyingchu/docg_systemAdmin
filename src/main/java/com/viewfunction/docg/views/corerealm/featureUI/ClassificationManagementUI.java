@@ -34,9 +34,9 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.element.eventHandling.ClassificationCreatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.ClassificationCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 
-import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.ClassificationsTreeChart_1;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.*;
@@ -61,7 +61,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
     private ClassificationMetaInfo lastSelectedClassificationMetaInfo;
     private Map<String,ClassificationMetaInfo> classificationMetaInfoMap;
     private String lastSelectedClassificationName;
-    private ClassificationsTreeChart_1 classificationsTreeChart1;
+    private ClassificationCorrelationInfoChart classificationCorrelationInfoChart;
     public ClassificationManagementUI(){
 
         Button refreshDataButton = new Button("刷新分类数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -367,8 +367,8 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及后代分类分布");
         singleClassificationSummaryInfoContainerLayout.add(infoTitle2);
-        classificationsTreeChart1 = new ClassificationsTreeChart_1(500,400);
-        singleClassificationSummaryInfoContainerLayout.add(classificationsTreeChart1);
+        classificationCorrelationInfoChart = new ClassificationCorrelationInfoChart();
+        singleClassificationSummaryInfoContainerLayout.add(classificationCorrelationInfoChart);
     }
 
     @Override
@@ -527,15 +527,16 @@ public class ClassificationManagementUI extends VerticalLayout implements
         Classification selectedClassification = coreRealm.getClassification(classificationName);
         if(selectedClassification != null){
             ClassificationRuntimeStatistics classificationRuntimeStatistics = selectedClassification.getClassificationRuntimeStatistics();
-            childClassificationCount.updateDisplayValue(""+classificationRuntimeStatistics.getChildClassificationsCount());
-            offendClassificationCount.updateDisplayValue(""+classificationRuntimeStatistics.getOffspringClassificationsCount());
-            conceptionKindCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedConceptionKindCount());
-            relationKindCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedRelationKindCount());
-            attributeKindCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedAttributeKindCount());
-            attributesViewKindCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedAttributesViewKindCount());
-            conceptionEntityCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedConceptionEntityCount());
+            this.childClassificationCount.updateDisplayValue(""+classificationRuntimeStatistics.getChildClassificationsCount());
+            this.offendClassificationCount.updateDisplayValue(""+classificationRuntimeStatistics.getOffspringClassificationsCount());
+            this.conceptionKindCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedConceptionKindCount());
+            this.relationKindCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedRelationKindCount());
+            this.attributeKindCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedAttributeKindCount());
+            this.attributesViewKindCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedAttributesViewKindCount());
+            this.conceptionEntityCount.updateDisplayValue(""+classificationRuntimeStatistics.getRelatedConceptionEntityCount());
         }
         coreRealm.closeGlobalSession();
+        this.classificationCorrelationInfoChart.refreshCorrelationInfo(classificationMetaInfo.getClassificationName());
     }
 
     @Override
@@ -558,5 +559,6 @@ public class ClassificationManagementUI extends VerticalLayout implements
         this.attributeKindCount.updateDisplayValue("-");
         this.attributesViewKindCount.updateDisplayValue("-");
         this.conceptionEntityCount.updateDisplayValue("-");
+        this.classificationCorrelationInfoChart.clearData();
     }
 }
