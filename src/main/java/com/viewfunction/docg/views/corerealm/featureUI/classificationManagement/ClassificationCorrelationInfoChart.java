@@ -1,10 +1,12 @@
 package com.viewfunction.docg.views.corerealm.featureUI.classificationManagement;
 
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.structure.InheritanceTree;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.chart.RadialTreeChart;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +26,11 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
         this.chartContainerLayout.setMargin(false);
         this.chartContainerLayout.setSpacing(false);
         this.chartContainerLayout.setPadding(false);
-        this.add(chartContainerLayout);
+        //this.add(chartContainerLayout);
+
+        this.setHeight(350, Unit.PIXELS);
+        RadialTreeChart radialTreeChart = new RadialTreeChart(350,350);
+        this.add(radialTreeChart);
     }
 
     public void refreshCorrelationInfo(String classificationName){
@@ -57,6 +63,8 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
 
         }
         coreRealm.closeGlobalSession();
+
+
     }
 
     public void setChartSize(int chartWidth,int chartHeight){

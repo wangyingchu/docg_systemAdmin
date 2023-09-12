@@ -369,6 +369,8 @@ public class ClassificationManagementUI extends VerticalLayout implements
         singleClassificationSummaryInfoContainerLayout.add(infoTitle2);
         classificationCorrelationInfoChart = new ClassificationCorrelationInfoChart();
         singleClassificationSummaryInfoContainerLayout.add(classificationCorrelationInfoChart);
+        HorizontalLayout footerLayout = new HorizontalLayout();
+        singleClassificationSummaryInfoContainerLayout.add(footerLayout);
     }
 
     @Override
