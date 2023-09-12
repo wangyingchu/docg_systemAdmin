@@ -37,7 +37,6 @@ import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.ClassificationCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 
-import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.*;
@@ -368,11 +367,6 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及后代分类分布");
         singleClassificationSummaryInfoContainerLayout.add(infoTitle2);
-
-        //singleClassificationSummaryInfoContainerLayout.setHorizontalComponentAlignment(Alignment.CENTER,classificationCorrelationInfoChart);
-
-        //HorizontalLayout footerLayout = new HorizontalLayout();
-        //singleClassificationSummaryInfoContainerLayout.add(footerLayout);
     }
 
     @Override
@@ -390,7 +384,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
             int browserHeight = receiver.getBodyClientHeight();
             classificationsMetaInfoTreeGrid.setHeight(browserHeight-250,Unit.PIXELS);
             classificationsMetaInfoFilterGrid.setHeight(browserHeight-250,Unit.PIXELS);
-            classificationCorrelationInfoChart = new ClassificationCorrelationInfoChart(browserHeight-540);
+            classificationCorrelationInfoChart = new ClassificationCorrelationInfoChart(browserHeight-520);
             singleClassificationSummaryInfoContainerLayout.add(classificationCorrelationInfoChart);
         }));
     }

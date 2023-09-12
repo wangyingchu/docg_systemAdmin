@@ -15,8 +15,7 @@ import java.util.Map;
 
 public class ClassificationCorrelationInfoChart extends VerticalLayout {
     private VerticalLayout chartContainerLayout;
-    private int chartWidth = 400;
-    private int chartHeight = 300;
+    private int chartHeight;
     private String classificationName;
     public ClassificationCorrelationInfoChart(int chartHeight){
         this.setMargin(false);
@@ -26,12 +25,13 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
         this.chartContainerLayout.setMargin(false);
         this.chartContainerLayout.setSpacing(false);
         this.chartContainerLayout.setPadding(false);
+        this.add(chartContainerLayout);
         this.setHeight(chartHeight, Unit.PIXELS);
-        RadialTreeChart radialTreeChart = new RadialTreeChart(0,chartHeight);
-        this.add(radialTreeChart);
+        this.chartHeight = chartHeight;
     }
 
     public void refreshCorrelationInfo(String classificationName){
+        clearData();
         this.classificationName = classificationName;
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -61,6 +61,11 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
 
         }
         coreRealm.closeGlobalSession();
+
+        RadialTreeChart radialTreeChart = new RadialTreeChart(0,chartHeight);
+        this.chartContainerLayout.add(radialTreeChart);
+
+
     }
 
     public void setChartHeight(int chartHeight){
