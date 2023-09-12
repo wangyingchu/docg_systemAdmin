@@ -367,10 +367,12 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及后代分类分布");
         singleClassificationSummaryInfoContainerLayout.add(infoTitle2);
-        classificationCorrelationInfoChart = new ClassificationCorrelationInfoChart();
+        classificationCorrelationInfoChart = new ClassificationCorrelationInfoChart(350);
         singleClassificationSummaryInfoContainerLayout.add(classificationCorrelationInfoChart);
-        HorizontalLayout footerLayout = new HorizontalLayout();
-        singleClassificationSummaryInfoContainerLayout.add(footerLayout);
+        singleClassificationSummaryInfoContainerLayout.setHorizontalComponentAlignment(Alignment.CENTER,classificationCorrelationInfoChart);
+
+        //HorizontalLayout footerLayout = new HorizontalLayout();
+        //singleClassificationSummaryInfoContainerLayout.add(footerLayout);
     }
 
     @Override

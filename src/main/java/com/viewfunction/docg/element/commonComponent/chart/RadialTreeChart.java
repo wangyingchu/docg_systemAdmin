@@ -13,7 +13,11 @@ public class RadialTreeChart extends Div {
         UI.getCurrent().getPage().addJavaScript("js/echarts/5.4.1/dist/echarts.min.js");
         UI.getCurrent().getPage().addJavaScript("js/echarts/5.4.1/dist/extension/dataTool.min.js");
         UI.getCurrent().getPage().addJavaScript("js/echarts/5.4.1/dist/extension/bmap.min.js");
-        setWidth(windowWidth, Unit.PIXELS);
+        if(windowWidth ==0){
+            setWidth(100, Unit.PERCENTAGE);
+        }else{
+            setWidth(windowWidth, Unit.PIXELS);
+        }
         setHeight(windowHeight,Unit.PIXELS);
         initConnector(getElement());
     }

@@ -18,7 +18,7 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
     private int chartWidth = 400;
     private int chartHeight = 300;
     private String classificationName;
-    public ClassificationCorrelationInfoChart(){
+    public ClassificationCorrelationInfoChart(int chartHeight){
         this.setMargin(false);
         this.setSpacing(false);
         this.setPadding(false);
@@ -28,8 +28,8 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
         this.chartContainerLayout.setPadding(false);
         //this.add(chartContainerLayout);
 
-        this.setHeight(350, Unit.PIXELS);
-        RadialTreeChart radialTreeChart = new RadialTreeChart(350,350);
+        this.setHeight(chartHeight, Unit.PIXELS);
+        RadialTreeChart radialTreeChart = new RadialTreeChart(0,chartHeight);
         this.add(radialTreeChart);
     }
 

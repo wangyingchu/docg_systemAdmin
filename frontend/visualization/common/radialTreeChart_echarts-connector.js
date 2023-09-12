@@ -411,8 +411,10 @@ let data = {
 
                             data: [data],
 
-                            top: '18%',
-                            bottom: '14%',
+                            //top: '18%',
+                            //bottom: '14%',
+                            top: '10%',
+                            bottom: '10%',
 
                             layout: 'radial',
 
