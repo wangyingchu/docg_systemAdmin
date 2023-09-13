@@ -2,11 +2,12 @@ package com.viewfunction.docg.views.corerealm.featureUI.classificationManagement
 
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.viewfunction.docg.coreRealm.realmServiceCore.structure.InheritanceTree;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.chart.RadialTreeChart;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsRadialTreeChartPayload;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,29 +35,30 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
         clearData();
         this.classificationName = classificationName;
 
+
+
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         Classification targetClassification = coreRealm.getClassification(classificationName);
 
         if(targetClassification != null){
+
+
             List<Classification> chartAllClassificationList = new ArrayList<>();
             Map<String,Classification> chartAllClassificationListMap = new HashMap<>();
 
             chartAllClassificationList.add(targetClassification);
             chartAllClassificationListMap.put(targetClassification.getClassificationName(),targetClassification);
-            prepareChildrenClassificationData(targetClassification,chartAllClassificationList,chartAllClassificationListMap);
+            prepareChildrenClassificationData(null,targetClassification,chartAllClassificationList,chartAllClassificationListMap);
             List<Classification> childrenClassificationList = targetClassification.getChildClassifications();
+
+            EchartsRadialTreeChartPayload currentClassificationPayload = new EchartsRadialTreeChartPayload(this.classificationName);
+            currentClassificationPayload.setValue(childrenClassificationList.size());
+
+
             for(Classification firstLevelChildClassification:childrenClassificationList){
-                prepareChildrenClassificationData(firstLevelChildClassification,chartAllClassificationList,chartAllClassificationListMap);
+                prepareChildrenClassificationData(currentClassificationPayload,firstLevelChildClassification,chartAllClassificationList,chartAllClassificationListMap);
             }
-
-            /*
-            InheritanceTree<Classification> offspringClassificationsTree = targetClassification.getOffspringClassifications();
-            System.out.println(offspringClassificationsTree.size());
-            System.out.println(offspringClassificationsTree.size());
-            System.out.println(offspringClassificationsTree.size());
-            */
-
 
 
         }
@@ -76,7 +78,10 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
         this.chartContainerLayout.removeAll();
     }
 
-    private void prepareChildrenClassificationData(Classification currentClassification,List<Classification> chartAllClassificationList,Map<String,Classification> chartAllClassificationListMap){
+    private void prepareChildrenClassificationData(EchartsRadialTreeChartPayload parentEchartsRadialTreeChartPayload,
+                                                   Classification currentClassification,
+                                                   List<Classification> chartAllClassificationList,
+                                                   Map<String,Classification> chartAllClassificationListMap){
         List<Classification> childrenClassificationList = currentClassification.getChildClassifications();
         for(Classification currentChildClassification:childrenClassificationList){
             chartAllClassificationList.add(currentChildClassification);
