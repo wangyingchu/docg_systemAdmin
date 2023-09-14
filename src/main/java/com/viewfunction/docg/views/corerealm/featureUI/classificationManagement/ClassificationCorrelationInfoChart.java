@@ -35,15 +35,11 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
         clearData();
         this.classificationName = classificationName;
 
-
-
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         Classification targetClassification = coreRealm.getClassification(classificationName);
-
+        EchartsRadialTreeChartPayload currentClassificationPayload = null;
         if(targetClassification != null){
-
-
             List<Classification> chartAllClassificationList = new ArrayList<>();
             Map<String,Classification> chartAllClassificationListMap = new HashMap<>();
 
@@ -52,22 +48,22 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
             prepareChildrenClassificationData(null,targetClassification,chartAllClassificationList,chartAllClassificationListMap);
             List<Classification> childrenClassificationList = targetClassification.getChildClassifications();
 
-            EchartsRadialTreeChartPayload currentClassificationPayload = new EchartsRadialTreeChartPayload(this.classificationName);
+            currentClassificationPayload = new EchartsRadialTreeChartPayload(this.classificationName);
+            List<EchartsRadialTreeChartPayload> childEchartsRadialTreeChartPayloadList = new ArrayList<>();
             currentClassificationPayload.setValue(childrenClassificationList.size());
-
-
+            currentClassificationPayload.setChildren(childEchartsRadialTreeChartPayloadList);
             for(Classification firstLevelChildClassification:childrenClassificationList){
                 prepareChildrenClassificationData(currentClassificationPayload,firstLevelChildClassification,chartAllClassificationList,chartAllClassificationListMap);
             }
-
-
         }
         coreRealm.closeGlobalSession();
 
         RadialTreeChart radialTreeChart = new RadialTreeChart(0,chartHeight);
         this.chartContainerLayout.add(radialTreeChart);
 
-
+        if(currentClassificationPayload != null){
+            radialTreeChart.setDate(currentClassificationPayload);
+        }
     }
 
     public void setChartHeight(int chartHeight){
@@ -82,10 +78,19 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
                                                    Classification currentClassification,
                                                    List<Classification> chartAllClassificationList,
                                                    Map<String,Classification> chartAllClassificationListMap){
+        EchartsRadialTreeChartPayload currentClassificationPayload = new EchartsRadialTreeChartPayload(currentClassification.getClassificationName());
+        List<EchartsRadialTreeChartPayload> childEchartsRadialTreeChartPayloadList = new ArrayList<>();
+        currentClassificationPayload.setChildren(childEchartsRadialTreeChartPayloadList);
+        if(parentEchartsRadialTreeChartPayload != null){
+            parentEchartsRadialTreeChartPayload.getChildren().add(currentClassificationPayload);
+        }
         List<Classification> childrenClassificationList = currentClassification.getChildClassifications();
+        currentClassificationPayload.setValue(childrenClassificationList.size());
+
         for(Classification currentChildClassification:childrenClassificationList){
             chartAllClassificationList.add(currentChildClassification);
             chartAllClassificationListMap.put(currentChildClassification.getClassificationName(),currentChildClassification);
+            prepareChildrenClassificationData(currentClassificationPayload,currentChildClassification,chartAllClassificationList,chartAllClassificationListMap);
         }
     }
 }

@@ -6,6 +6,7 @@ import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.function.SerializableConsumer;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsRadialTreeChartPayload;
 
 @JavaScript("./visualization/common/radialTreeChart_echarts-connector.js")
 public class RadialTreeChart extends Div {
@@ -30,5 +31,9 @@ public class RadialTreeChart extends Div {
     private void runBeforeClientResponse(SerializableConsumer<UI> command) {
         getElement().getNode().runWhenAttached(ui -> ui
                 .beforeClientResponse(this, context -> command.accept(ui)));
+    }
+
+    public void setDate(EchartsRadialTreeChartPayload echartsRadialTreeChartPayload){
+        System.out.println(echartsRadialTreeChartPayload.toJson());
     }
 }
