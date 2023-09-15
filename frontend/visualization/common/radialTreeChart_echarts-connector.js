@@ -400,6 +400,7 @@ window.Vaadin.Flow.common_RadialTreeChart_echarts = {
                         trigger: 'item',
                         triggerOn: 'mousemove'
                     },
+            /*
             series: [
                 {
                     type: 'tree',
@@ -418,6 +419,46 @@ window.Vaadin.Flow.common_RadialTreeChart_echarts = {
                     }
                 }
             ]
+*/
+
+
+
+
+
+            series: [
+                {
+                    type: 'tree',
+                  //  data: [data],
+                    top: '1%',
+                   // left: '7%',
+                    left: '15%',
+                    bottom: '1%',
+                    right: '25%',
+                    symbolSize: 7,
+                    label: {
+                        position: 'top',
+                        verticalAlign: 'middle',
+                        align: 'right',
+                        fontSize: 9
+                    },
+                    leaves: {
+                        label: {
+                            position: 'right',
+                            verticalAlign: 'middle',
+                            align: 'left'
+                        }
+                    },
+                    emphasis: {
+                        focus: 'descendant'
+                    },
+                    expandAndCollapse: true,
+                    animationDuration: 550,
+                    animationDurationUpdate: 750
+                }
+            ]
+
+
+
         };
     }
 }
