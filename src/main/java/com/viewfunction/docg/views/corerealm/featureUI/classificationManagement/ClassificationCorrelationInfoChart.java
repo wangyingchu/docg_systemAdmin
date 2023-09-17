@@ -6,7 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.commonComponent.chart.RadialTreeChart;
+import com.viewfunction.docg.element.commonComponent.chart.TreeChart;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsRadialTreeChartPayload;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
         }
         coreRealm.closeGlobalSession();
 
-        RadialTreeChart radialTreeChart = new RadialTreeChart(0,chartHeight);
+        TreeChart radialTreeChart = new TreeChart(0,chartHeight);
         this.chartContainerLayout.add(radialTreeChart);
 
         if(currentClassificationPayload != null){

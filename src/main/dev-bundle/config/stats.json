@@ -288,6 +288,7 @@
   "Frontend/visualization/common/pieChart_echarts-connector.js",
   "Frontend/visualization/common/radialTreeChart_echarts-connector.js",
   "Frontend/visualization/common/stackedBarChart_echarts-connector.js",
+  "Frontend/visualization/common/treeChart_echarts-connector.js",
   "Frontend/visualization/feature/attributesCorrelationInfoSummaryChart-connector.js",
   "Frontend/visualization/feature/attributesViewKindCorrelationInfoChart-connector.js",
   "Frontend/visualization/feature/conceptionEntityRelationsChart-connector.js",
@@ -311,6 +312,7 @@
   "visualization/common/pieChart_echarts-connector.js": "1043213cc8993cb0aa570b6c1a9716ff50a7dfed8f84e3ce946d46a4122873ef",
   "visualization/common/radialTreeChart_echarts-connector.js": "37ea2f343af4f1ab09fd6fcd5cabcd3862d2134f92b2c78238c36a3f94a718fa",
   "visualization/common/stackedBarChart_echarts-connector.js": "a1bd76311e75811c537bb0b7de51f7050de57f029037526bd4946620fe087d1c",
+  "visualization/common/treeChart_echarts-connector.js": "5f708f708cdb40158bfa1648575d41a7c20758a90957b611b1756eeb9e6af5d0",
   "visualization/feature/attributesCorrelationInfoSummaryChart-connector.js": "dca4f529fd61b58349105f01f678e0dcc2d06443c39062c6faac07b38c5a7818",
   "visualization/feature/attributesViewKindCorrelationInfoChart-connector.js": "c2cff4f70fa0fb07652f45c899114877138c6c6ea759c473c4032dc840018b04",
   "visualization/feature/conceptionKindCorrelationInfoChart-connector.js": "7c1482c153bb42f27be3b522816d4f9fb907ecda9912f4ce2cb45b2f06bbb180",
@@ -356,7 +358,7 @@
   "docg-pac": "{\n  \"lumoImports\" : [ \"typography\", \"color\", \"spacing\", \"badge\", \"utility\" ]\n}"
  },
  "entryScripts": [
-  "VAADIN/build/indexhtml-86db32eb.js"
+  "VAADIN/build/indexhtml-b2362f8f.js"
  ],
  "webComponents": [],
  "cvdlModules": {
@@ -391,6 +393,6 @@
  },
  "packageJsonHash": "67eb864bd65d94618822772f735bf237ac14a624572dbcb17942903749474bee",
  "indexHtmlGenerated": [
-  "  <script type=\"module\" crossorigin src=\"./VAADIN/build/indexhtml-86db32eb.js\"></script>"
+  "  <script type=\"module\" crossorigin src=\"./VAADIN/build/indexhtml-b2362f8f.js\"></script>"
  ]
 }
