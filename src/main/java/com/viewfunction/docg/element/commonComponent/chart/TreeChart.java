@@ -75,4 +75,7 @@ public class TreeChart extends Div {
     public void setColor(String colorArray){
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setColor", colorArray));
     }
+    public void setInitTreeDepth(int depth){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setInitDepth", depth));
+    }
 }

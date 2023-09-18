@@ -23,6 +23,9 @@ window.Vaadin.Flow.common_TreeChart_echarts = {
             setBottomMargin:function(marginValue){
                 c.$connector.option.series[0].bottom = marginValue;
             },
+            setInitDepth:function(depth){
+                c.$connector.option.series[0].initialTreeDepth = depth;
+            },
             setData: function (data) {
                 /*
                 let sampleData = {
@@ -445,6 +448,7 @@ window.Vaadin.Flow.common_TreeChart_echarts = {
                     //left: '15%',
                     //bottom: '1%',
                     //right: '25%',
+                    //initialTreeDepth: 3,
                     symbolSize: 7,
                     label: {
                         position: 'top',

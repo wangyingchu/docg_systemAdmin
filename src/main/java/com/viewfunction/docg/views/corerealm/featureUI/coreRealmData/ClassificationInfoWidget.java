@@ -80,7 +80,7 @@ public class ClassificationInfoWidget extends HorizontalLayout {
         spaceDivLayout6.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout6);
 
-        NativeLabel messageText = new NativeLabel("Top 3 Levels Classifications ->");
+        NativeLabel messageText = new NativeLabel("Top 2 Levels Classifications ->");
         leftComponentContainer.add(messageText);
         messageText.addClassNames("text-xs","text-tertiary");
 
@@ -90,10 +90,10 @@ public class ClassificationInfoWidget extends HorizontalLayout {
         add(rightComponentContainer);
         this.setFlexGrow(1,rightComponentContainer);
 
-        TreeChart treeChart = new TreeChart(340,400);
+        TreeChart treeChart = new TreeChart(330,400);
         treeChart.setLayout(TreeChart.TreeLayout.radial);
-        treeChart.setLeftMargin(5);
-        treeChart.setRightMargin(20);
+        treeChart.setLeftMargin(1);
+        treeChart.setRightMargin(25);
         treeChart.setTopMargin(1);
         treeChart.setBottomMargin(1);
         treeChart.setColor("#CE0000");

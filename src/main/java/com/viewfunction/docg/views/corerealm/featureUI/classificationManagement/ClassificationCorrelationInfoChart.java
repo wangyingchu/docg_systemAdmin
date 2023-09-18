@@ -64,6 +64,7 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
         treeChart.setLeftMargin(15);
         treeChart.setRightMargin(25);
         treeChart.setColor("#7FDBFF");
+        treeChart.setInitTreeDepth(3);
         this.chartContainerLayout.add(treeChart);
 
         if(currentClassificationPayload != null){
