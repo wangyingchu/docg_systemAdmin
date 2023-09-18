@@ -6,6 +6,7 @@ import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.GlobalClassificationsRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -36,6 +37,10 @@ public class ClassificationInfoWidget extends HorizontalLayout {
 
         try {
             classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
+
+            GlobalClassificationsRuntimeStatistics globalClassificationsRuntimeStatistics =
+                    coreRealm.getSystemMaintenanceOperator().getGlobalClassificationsRuntimeStatistics();
+
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
