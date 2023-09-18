@@ -58,12 +58,11 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
         }
         coreRealm.closeGlobalSession();
 
-        TreeChart radialTreeChart = new TreeChart(0,chartHeight);
-        //radialTreeChart.setLayout(TreeChart.TreeLayout.radial);
-        this.chartContainerLayout.add(radialTreeChart);
+        TreeChart treeChart = new TreeChart(0,chartHeight);
+        this.chartContainerLayout.add(treeChart);
 
         if(currentClassificationPayload != null){
-            radialTreeChart.setDate(currentClassificationPayload);
+            treeChart.setDate(currentClassificationPayload);
         }
     }
 

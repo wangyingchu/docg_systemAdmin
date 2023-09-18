@@ -365,7 +365,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
                 .set("padding-bottom", "var(--lumo-space-s)");
         singleClassificationSummaryInfoContainerLayout.add(divLayout);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及后代分类分布");
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及三代后代分类分布");
         singleClassificationSummaryInfoContainerLayout.add(infoTitle2);
     }
 
