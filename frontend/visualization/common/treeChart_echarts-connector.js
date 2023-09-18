@@ -5,6 +5,9 @@ window.Vaadin.Flow.common_TreeChart_echarts = {
             return;
         }
         c.$connector = {
+            setLayout:function(layout){
+                c.$connector.option.series[0].layout = layout;
+            },
             setData: function (data) {
                 /*
                 let sampleData = {
@@ -419,12 +422,7 @@ window.Vaadin.Flow.common_TreeChart_echarts = {
                     }
                 }
             ]
-*/
-
-
-
-
-
+            */
             series: [
                 {
                     type: 'tree',
@@ -456,9 +454,6 @@ window.Vaadin.Flow.common_TreeChart_echarts = {
                     animationDurationUpdate: 750
                 }
             ]
-
-
-
         };
     }
 }

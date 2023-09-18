@@ -59,6 +59,7 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
         coreRealm.closeGlobalSession();
 
         TreeChart radialTreeChart = new TreeChart(0,chartHeight);
+        //radialTreeChart.setLayout(TreeChart.TreeLayout.radial);
         this.chartContainerLayout.add(radialTreeChart);
 
         if(currentClassificationPayload != null){
