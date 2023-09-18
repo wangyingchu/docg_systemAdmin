@@ -365,7 +365,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
                 .set("padding-bottom", "var(--lumo-space-s)");
         singleClassificationSummaryInfoContainerLayout.add(divLayout);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及三代后代分类分布");
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及三代内后代分类分布");
         singleClassificationSummaryInfoContainerLayout.add(infoTitle2);
     }
 
@@ -377,7 +377,6 @@ public class ClassificationManagementUI extends VerticalLayout implements
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             classificationsMetaInfoTreeGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
             classificationsMetaInfoFilterGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
-            //attributeKindAttributesInfoGrid.setHeight(300,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {

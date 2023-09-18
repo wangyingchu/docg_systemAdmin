@@ -59,15 +59,16 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
         coreRealm.closeGlobalSession();
 
         TreeChart treeChart = new TreeChart(0,chartHeight);
+        treeChart.setTopMargin(1);
+        treeChart.setBottomMargin(1);
+        treeChart.setLeftMargin(15);
+        treeChart.setRightMargin(25);
+        treeChart.setColor("#7FDBFF");
         this.chartContainerLayout.add(treeChart);
 
         if(currentClassificationPayload != null){
             treeChart.setDate(currentClassificationPayload);
         }
-    }
-
-    public void setChartHeight(int chartHeight){
-        this.chartHeight = chartHeight;
     }
 
     public void clearData(){

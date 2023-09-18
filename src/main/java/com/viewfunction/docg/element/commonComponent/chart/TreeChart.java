@@ -43,4 +43,36 @@ public class TreeChart extends Div {
     public void setLayout(TreeLayout treeLayout){
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setLayout", treeLayout.toString()));
     }
+
+    public void setTopMargin(int marginValue){
+        if(marginValue>0 && marginValue<=100){
+            String marginValueString = ""+marginValue+"%";
+            runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setTopMargin", marginValueString));
+        }
+    }
+
+    public void setRightMargin(int marginValue){
+        if(marginValue>0 && marginValue<=100){
+            String marginValueString = ""+marginValue+"%";
+            runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setRightMargin", marginValueString));
+        }
+    }
+
+    public void setLeftMargin(int marginValue){
+        if(marginValue>0 && marginValue<=100){
+            String marginValueString = ""+marginValue+"%";
+            runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setLeftMargin", marginValueString));
+        }
+    }
+
+    public void setBottomMargin(int marginValue){
+        if(marginValue>0 && marginValue<=100){
+            String marginValueString = ""+marginValue+"%";
+            runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setBottomMargin", marginValueString));
+        }
+    }
+
+    public void setColor(String colorArray){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setColor", colorArray));
+    }
 }

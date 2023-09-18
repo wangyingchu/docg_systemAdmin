@@ -8,6 +8,21 @@ window.Vaadin.Flow.common_TreeChart_echarts = {
             setLayout:function(layout){
                 c.$connector.option.series[0].layout = layout;
             },
+            setColor:function(color){
+               c.$connector.option.series[0].itemStyle.color = color;
+            },
+            setTopMargin:function(marginValue){
+                c.$connector.option.series[0].top = marginValue;
+            },
+            setLeftMargin:function(marginValue){
+                c.$connector.option.series[0].left = marginValue;
+            },
+            setRightMargin:function(marginValue){
+                c.$connector.option.series[0].right = marginValue;
+            },
+            setBottomMargin:function(marginValue){
+                c.$connector.option.series[0].bottom = marginValue;
+            },
             setData: function (data) {
                 /*
                 let sampleData = {
@@ -426,12 +441,10 @@ window.Vaadin.Flow.common_TreeChart_echarts = {
             series: [
                 {
                     type: 'tree',
-                    //  data: [data],
-                    top: '1%',
-                    // left: '7%',
-                    left: '15%',
-                    bottom: '1%',
-                    right: '25%',
+                    //top: '1%',
+                    //left: '15%',
+                    //bottom: '1%',
+                    //right: '25%',
                     symbolSize: 7,
                     label: {
                         position: 'top',
@@ -451,7 +464,10 @@ window.Vaadin.Flow.common_TreeChart_echarts = {
                     },
                     expandAndCollapse: true,
                     animationDuration: 550,
-                    animationDurationUpdate: 750
+                    animationDurationUpdate: 750,
+                    itemStyle:{
+                        //color:'#CE0000'
+                    }
                 }
             ]
         };
