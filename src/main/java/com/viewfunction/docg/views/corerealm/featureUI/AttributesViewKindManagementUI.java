@@ -565,7 +565,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
 
     private void renderRemoveAttributesViewKindUI(AttributesViewKindMetaInfo attributesViewKindMetaInfo){
         RemoveAttributesViewKindView removeAttributesViewKindView = new RemoveAttributesViewKindView(attributesViewKindMetaInfo);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除属性视图类型",null,true,600,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除属性视图类型",null,true,600,220,false);
         fixSizeWindow.setWindowContent(removeAttributesViewKindView);
         fixSizeWindow.setModel(true);
         removeAttributesViewKindView.setContainerDialog(fixSizeWindow);
