@@ -7,7 +7,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.chart.TreeChart;
-import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsRadialTreeChartPayload;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsTreeChartPayload;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         Classification targetClassification = coreRealm.getClassification(classificationName);
-        EchartsRadialTreeChartPayload currentClassificationPayload = null;
+        EchartsTreeChartPayload currentClassificationPayload = null;
         if(targetClassification != null){
             List<Classification> chartAllClassificationList = new ArrayList<>();
             Map<String,Classification> chartAllClassificationListMap = new HashMap<>();
@@ -48,10 +48,10 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
             prepareChildrenClassificationData(null,targetClassification,chartAllClassificationList,chartAllClassificationListMap);
             List<Classification> childrenClassificationList = targetClassification.getChildClassifications();
 
-            currentClassificationPayload = new EchartsRadialTreeChartPayload(this.classificationName);
-            List<EchartsRadialTreeChartPayload> childEchartsRadialTreeChartPayloadList = new ArrayList<>();
+            currentClassificationPayload = new EchartsTreeChartPayload(this.classificationName);
+            List<EchartsTreeChartPayload> childEchartsTreeChartPayloadList = new ArrayList<>();
             currentClassificationPayload.setValue(childrenClassificationList.size());
-            currentClassificationPayload.setChildren(childEchartsRadialTreeChartPayloadList);
+            currentClassificationPayload.setChildren(childEchartsTreeChartPayloadList);
             for(Classification firstLevelChildClassification:childrenClassificationList){
                 prepareChildrenClassificationData(currentClassificationPayload,firstLevelChildClassification,chartAllClassificationList,chartAllClassificationListMap);
             }
@@ -75,15 +75,15 @@ public class ClassificationCorrelationInfoChart extends VerticalLayout {
         this.chartContainerLayout.removeAll();
     }
 
-    private void prepareChildrenClassificationData(EchartsRadialTreeChartPayload parentEchartsRadialTreeChartPayload,
+    private void prepareChildrenClassificationData(EchartsTreeChartPayload parentEchartsTreeChartPayload,
                                                    Classification currentClassification,
                                                    List<Classification> chartAllClassificationList,
                                                    Map<String,Classification> chartAllClassificationListMap){
-        EchartsRadialTreeChartPayload currentClassificationPayload = new EchartsRadialTreeChartPayload(currentClassification.getClassificationName());
-        List<EchartsRadialTreeChartPayload> childEchartsRadialTreeChartPayloadList = new ArrayList<>();
-        currentClassificationPayload.setChildren(childEchartsRadialTreeChartPayloadList);
-        if(parentEchartsRadialTreeChartPayload != null){
-            parentEchartsRadialTreeChartPayload.getChildren().add(currentClassificationPayload);
+        EchartsTreeChartPayload currentClassificationPayload = new EchartsTreeChartPayload(currentClassification.getClassificationName());
+        List<EchartsTreeChartPayload> childEchartsTreeChartPayloadList = new ArrayList<>();
+        currentClassificationPayload.setChildren(childEchartsTreeChartPayloadList);
+        if(parentEchartsTreeChartPayload != null){
+            parentEchartsTreeChartPayload.getChildren().add(currentClassificationPayload);
         }
         List<Classification> childrenClassificationList = currentClassification.getChildClassifications();
         currentClassificationPayload.setValue(childrenClassificationList.size());

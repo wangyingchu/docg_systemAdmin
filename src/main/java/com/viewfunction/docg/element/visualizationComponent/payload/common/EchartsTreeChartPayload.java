@@ -7,12 +7,12 @@ import elemental.json.JsonObject;
 
 import java.util.List;
 
-public class EchartsRadialTreeChartPayload implements JsonSerializable {
+public class EchartsTreeChartPayload implements JsonSerializable {
     private String name;
     private Integer value;
-    private List<EchartsRadialTreeChartPayload> children;
+    private List<EchartsTreeChartPayload> children;
 
-    public EchartsRadialTreeChartPayload(String name){
+    public EchartsTreeChartPayload(String name){
         this.name = name;
     }
 
@@ -56,11 +56,11 @@ public class EchartsRadialTreeChartPayload implements JsonSerializable {
         this.value = value;
     }
 
-    public List<EchartsRadialTreeChartPayload> getChildren() {
+    public List<EchartsTreeChartPayload> getChildren() {
         return children;
     }
 
-    public void setChildren(List<EchartsRadialTreeChartPayload> children) {
+    public void setChildren(List<EchartsTreeChartPayload> children) {
         this.children = children;
     }
 }

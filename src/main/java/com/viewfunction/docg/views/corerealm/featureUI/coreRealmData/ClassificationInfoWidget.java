@@ -5,8 +5,17 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
+import com.viewfunction.docg.element.commonComponent.chart.TreeChart;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsTreeChartPayload;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClassificationInfoWidget extends HorizontalLayout {
 
@@ -20,7 +29,22 @@ public class ClassificationInfoWidget extends HorizontalLayout {
         leftComponentContainer.setMargin(false);
         add(leftComponentContainer);
 
-        new PrimaryKeyValueDisplayItem(leftComponentContainer, FontAwesome.Solid.TAG.create(),"分类数量:","300");
+        List<ClassificationMetaInfo> classificationsMetaInfoList = null;
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+
+        try {
+            classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+
+        coreRealm.closeGlobalSession();
+
+        String classificationCount = classificationsMetaInfoList != null ? ""+classificationsMetaInfoList.size() :"-";
+
+        new PrimaryKeyValueDisplayItem(leftComponentContainer, FontAwesome.Solid.TAG.create(),"分类数量:",classificationCount);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setHeight(15,Unit.PIXELS);
@@ -66,8 +90,45 @@ public class ClassificationInfoWidget extends HorizontalLayout {
         add(rightComponentContainer);
         this.setFlexGrow(1,rightComponentContainer);
 
-        ClassificationsTreeChart_1 classificationsTreeChart1 = new ClassificationsTreeChart_1(500,400);
-        rightComponentContainer.add(classificationsTreeChart1);
-        rightComponentContainer.setHorizontalComponentAlignment(Alignment.START, classificationsTreeChart1);
+        TreeChart treeChart = new TreeChart(340,400);
+        treeChart.setLayout(TreeChart.TreeLayout.radial);
+        treeChart.setLeftMargin(5);
+        treeChart.setRightMargin(20);
+        treeChart.setTopMargin(1);
+        treeChart.setBottomMargin(1);
+        treeChart.setColor("#CE0000");
+        rightComponentContainer.add(treeChart);
+        rightComponentContainer.setHorizontalComponentAlignment(Alignment.START, treeChart);
+
+        EchartsTreeChartPayload vRootClassificationPayload = new EchartsTreeChartPayload("Root");
+
+        if(classificationsMetaInfoList != null && classificationsMetaInfoList.size()>0){
+            List<EchartsTreeChartPayload> rootEchartsTreeChartPayloadList = new ArrayList<>();
+            for(ClassificationMetaInfo rootLevelEchartsTreeChartPayload:classificationsMetaInfoList){
+                if(rootLevelEchartsTreeChartPayload.isRootClassification()){
+                    EchartsTreeChartPayload currentRootClassificationPayload = new EchartsTreeChartPayload(rootLevelEchartsTreeChartPayload.getClassificationName());
+                    rootEchartsTreeChartPayloadList.add(currentRootClassificationPayload);
+                }
+            }
+            vRootClassificationPayload.setChildren(rootEchartsTreeChartPayloadList);
+            vRootClassificationPayload.setValue(rootEchartsTreeChartPayloadList.size());
+
+            for(EchartsTreeChartPayload currentRootEchartsTreeChartPayload:rootEchartsTreeChartPayloadList){
+                String currentRootClassificationName = currentRootEchartsTreeChartPayload.getName();
+                List<EchartsTreeChartPayload> currentRootEchartsTreeChartPayloadList = new ArrayList<>();
+                currentRootEchartsTreeChartPayload.setChildren(currentRootEchartsTreeChartPayloadList);
+
+                for(ClassificationMetaInfo currentLevelEchartsTreeChartPayload:classificationsMetaInfoList){
+                    String parentClassificationName = currentLevelEchartsTreeChartPayload.getParentClassificationName();
+                    if(currentRootClassificationName.equals(parentClassificationName)){
+                        EchartsTreeChartPayload currentFirstLevelClassificationPayload = new EchartsTreeChartPayload(currentLevelEchartsTreeChartPayload.getClassificationName());
+                        currentRootEchartsTreeChartPayloadList.add(currentFirstLevelClassificationPayload);
+                    }
+                }
+                currentRootEchartsTreeChartPayload.setValue(currentRootEchartsTreeChartPayloadList.size());
+            }
+        }
+
+        treeChart.setDate(vRootClassificationPayload);
     }
 }

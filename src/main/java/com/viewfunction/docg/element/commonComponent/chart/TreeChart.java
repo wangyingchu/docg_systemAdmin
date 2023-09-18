@@ -7,7 +7,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.function.SerializableConsumer;
 
-import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsRadialTreeChartPayload;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsTreeChartPayload;
 
 @JavaScript("./visualization/common/treeChart_echarts-connector.js")
 public class TreeChart extends Div {
@@ -36,8 +36,8 @@ public class TreeChart extends Div {
                 .beforeClientResponse(this, context -> command.accept(ui)));
     }
 
-    public void setDate(EchartsRadialTreeChartPayload echartsRadialTreeChartPayload){
-        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", echartsRadialTreeChartPayload.toJson()));
+    public void setDate(EchartsTreeChartPayload echartsTreeChartPayload){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", echartsTreeChartPayload.toJson()));
     }
 
     public void setLayout(TreeLayout treeLayout){
