@@ -15,10 +15,13 @@ import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayIte
 import com.viewfunction.docg.element.commonComponent.chart.TreeChart;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsTreeChartPayload;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClassificationInfoWidget extends HorizontalLayout {
+
+    private NumberFormat numberFormat;
 
     public ClassificationInfoWidget(){
         this.setSpacing(false);
@@ -34,17 +37,13 @@ public class ClassificationInfoWidget extends HorizontalLayout {
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
-
+        GlobalClassificationsRuntimeStatistics globalClassificationsRuntimeStatistics =
+                coreRealm.getSystemMaintenanceOperator().getGlobalClassificationsRuntimeStatistics();
         try {
             classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
-
-            GlobalClassificationsRuntimeStatistics globalClassificationsRuntimeStatistics =
-                    coreRealm.getSystemMaintenanceOperator().getGlobalClassificationsRuntimeStatistics();
-
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
-
         coreRealm.closeGlobalSession();
 
         String classificationCount = classificationsMetaInfoList != null ? ""+classificationsMetaInfoList.size() :"-";
@@ -55,31 +54,38 @@ public class ClassificationInfoWidget extends HorizontalLayout {
         spaceDivLayout.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout);
 
-        new SecondaryKeyValueDisplayItem(leftComponentContainer,FontAwesome.Regular.CIRCLE.create(),"相关概念类型:","1,000,000,000");
+        this.numberFormat = NumberFormat.getInstance();
+
+        new SecondaryKeyValueDisplayItem(leftComponentContainer,FontAwesome.Regular.CIRCLE.create(),"相关概念类型:",
+                this.numberFormat.format(globalClassificationsRuntimeStatistics.getRelatedConceptionKindCount()));
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout2);
 
-        new SecondaryKeyValueDisplayItem(leftComponentContainer,FontAwesome.Regular.CIRCLE.create(),"相关关系类型:","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(leftComponentContainer,FontAwesome.Regular.CIRCLE.create(),"相关关系类型:",
+                this.numberFormat.format(globalClassificationsRuntimeStatistics.getRelatedRelationKindCount()));
 
         HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
         spaceDivLayout3.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout3);
 
-        new SecondaryKeyValueDisplayItem(leftComponentContainer,FontAwesome.Solid.CIRCLE.create(),"相关概念实体:","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(leftComponentContainer,FontAwesome.Solid.CIRCLE.create(),"相关概念实体:",
+                this.numberFormat.format(globalClassificationsRuntimeStatistics.getRelatedConceptionEntityCount()));
 
         HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
         spaceDivLayout4.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout4);
 
-        new SecondaryKeyValueDisplayItem(leftComponentContainer,FontAwesome.Regular.CIRCLE.create(),"相关属性视图类型:","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(leftComponentContainer,FontAwesome.Regular.CIRCLE.create(),"相关属性视图类型:",
+                this.numberFormat.format(globalClassificationsRuntimeStatistics.getRelatedAttributesViewKindCount()));
 
         HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
         spaceDivLayout5.setHeight(15,Unit.PIXELS);
         leftComponentContainer.add(spaceDivLayout5);
 
-        new SecondaryKeyValueDisplayItem(leftComponentContainer,FontAwesome.Regular.CIRCLE.create(),"相关属性类型:","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(leftComponentContainer,FontAwesome.Regular.CIRCLE.create(),"相关属性类型:",
+                this.numberFormat.format(globalClassificationsRuntimeStatistics.getRelatedAttributeKindCount()));
 
         HorizontalLayout spaceDivLayout6 = new HorizontalLayout();
         spaceDivLayout6.setHeight(15,Unit.PIXELS);
