@@ -72,7 +72,7 @@ public class ClassificationConfigView extends VerticalLayout {
     private void renderRelateClassificationViewUI(){
         RelateClassificationView relateClassificationView = new RelateClassificationView(this.classificationRelatedObjectType,this.relatedObjectID);
         relateClassificationView.setContainerClassificationConfigView(this);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.BOOKMARK),"关联分类",null,true,1140,710,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.BOOKMARK),"关联分类",null,true,1140,670,false);
         fixSizeWindow.setWindowContent(relateClassificationView);
         fixSizeWindow.setModel(true);
         relateClassificationView.setContainerDialog(fixSizeWindow);
