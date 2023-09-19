@@ -329,7 +329,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         String targetConceptionKind = this.conceptionKind;
         String targetConceptionEntityUID = this.conceptionEntityUID;
         RelatedConceptionEntitiesKindStaticInfoView relatedConceptionEntitiesKindStaticInfoView = new RelatedConceptionEntitiesKindStaticInfoView(targetConceptionKind,targetConceptionEntityUID);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PIE_CHART),"关联概念实体类型分布",null,true,1000,480,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PIE_CHART),"关联概念实体类型分布",null,true,1300,480,false);
         fixSizeWindow.setWindowContent(relatedConceptionEntitiesKindStaticInfoView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();

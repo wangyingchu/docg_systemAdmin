@@ -19,7 +19,7 @@ public class EntityAttachedConceptionKindsCountChart extends Span {
             idx++;
         }
 
-        PieChart pieChart = new PieChart(680,350);
+        PieChart pieChart = new PieChart(980,350);
         add(pieChart);
 
         String[] pieColorArray = new String[]{"#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"};
