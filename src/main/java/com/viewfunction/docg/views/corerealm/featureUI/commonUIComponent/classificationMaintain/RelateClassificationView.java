@@ -7,6 +7,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -16,9 +17,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.data.selection.SelectionEvent;
-import com.vaadin.flow.data.selection.SelectionListener;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
@@ -31,7 +29,6 @@ import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHand
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingConceptionEntityListView;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -45,11 +42,11 @@ public class RelateClassificationView extends VerticalLayout {
     private ClassificationConfigView containerClassificationConfigView;
     private ComboBox<KindMetaInfo> relationKindSelect;
     private RadioButtonGroup<String> relationDirectionRadioGroup;
-    private ProcessingConceptionEntityListView processingConceptionEntityListView;
     private VerticalLayout relationEntityAttributesContainer;
     private Map<String, AttributeEditorItemWidget> relationAttributeEditorsMap;
     private Button clearAttributeButton;
     private Grid<ClassificationMetaInfo> classificationsMetaInfoFilterGrid;
+    private GridListDataView<ClassificationMetaInfo> classificationMetaInfosMetaInfoFilterView;
     private TextField classificationDescFilterField;
     private TextField classificationNameFilterField;
 
@@ -251,7 +248,7 @@ public class RelateClassificationView extends VerticalLayout {
         searchClassificationsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //filterClassifications();
+                filterClassifications();
             }
         });
 
@@ -269,10 +266,9 @@ public class RelateClassificationView extends VerticalLayout {
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //cancelFilterClassifications();
+                cancelFilterClassifications();
             }
         });
-
         targetConceptionEntitiesInfoContainerLayout.add(classificationsSearchElementsContainerLayout);
 
         HorizontalLayout spaceLayout01 = new HorizontalLayout();
@@ -295,34 +291,40 @@ public class RelateClassificationView extends VerticalLayout {
         GridColumnHeader gridColumnHeader_idx2A = new GridColumnHeader(VaadinIcon.ROAD_BRANCHES,"子分类数量");
         classificationsMetaInfoFilterGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2A).setSortable(true);
 
-        classificationsMetaInfoFilterGrid.appendFooterRow();
         targetConceptionEntitiesInfoContainerLayout.add(classificationsMetaInfoFilterGrid);
-        classificationsMetaInfoFilterGrid.addSelectionListener(new SelectionListener<Grid<ClassificationMetaInfo>, ClassificationMetaInfo>() {
-            @Override
-            public void selectionChange(SelectionEvent<Grid<ClassificationMetaInfo>, ClassificationMetaInfo> selectionEvent) {
-                Set<ClassificationMetaInfo> selectedItemSet = selectionEvent.getAllSelectedItems();
-                if(selectedItemSet.size() == 0){
-                    // don't allow to unselect item, just reselect last selected item
-                    //classificationsMetaInfoFilterGrid.select(lastSelectedClassificationMetaInfo);
-                }else{
-                    ClassificationMetaInfo selectedClassificationMetaInfo = selectedItemSet.iterator().next();
-                    //renderClassificationOverview(selectedClassificationMetaInfo);
-                    //lastSelectedClassificationMetaInfo = selectedClassificationMetaInfo;
-                    //classificationsMetaInfoTreeGrid.select(lastSelectedClassificationMetaInfo);
-                }
-            }
-        });
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
             List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
-            ListDataProvider listDataProvider = (ListDataProvider)classificationsMetaInfoFilterGrid.getDataProvider();
-            listDataProvider.getItems().clear();
-            listDataProvider.getItems().addAll(classificationsMetaInfoList);
-            listDataProvider.refreshAll();
+            this.classificationMetaInfosMetaInfoFilterView = classificationsMetaInfoFilterGrid.setItems(classificationsMetaInfoList);
+            //logic to filter AttributeKinds already loaded from server
+            this.classificationMetaInfosMetaInfoFilterView.addFilter(item->{
+                String entityKindName = item.getClassificationName();
+                String entityKindDesc = item.getClassificationDesc();
+                boolean attributeKindNameFilterResult = true;
+                if(!classificationNameFilterField.getValue().trim().equals("")){
+                    if(entityKindName.contains(classificationNameFilterField.getValue().trim())){
+                        attributeKindNameFilterResult = true;
+                    }else{
+                        attributeKindNameFilterResult = false;
+                    }
+                }
+                boolean attributeKindDescFilterResult = true;
+                if(!classificationDescFilterField.getValue().trim().equals("")){
+                    if(entityKindDesc.contains(classificationDescFilterField.getValue().trim())){
+                        attributeKindDescFilterResult = true;
+                    }else{
+                        attributeKindDescFilterResult = false;
+                    }
+                }
+                return attributeKindNameFilterResult & attributeKindDescFilterResult;
+            });
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
+
+
+
 
         this.relationAttributeEditorsMap = new HashMap<>();
     }
@@ -393,5 +395,22 @@ public class RelateClassificationView extends VerticalLayout {
         relationEntityAttributesContainer.removeAll();
         relationAttributeEditorsMap.clear();
         clearAttributeButton.setEnabled(false);
+    }
+
+    private void filterClassifications(){
+        String classificationFilterValue = classificationNameFilterField.getValue().trim();
+        String classificationDescFilterValue = classificationDescFilterField.getValue().trim();
+        if(classificationFilterValue.equals("")&classificationDescFilterValue.equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入分类名称 和/或 分类描述", NotificationVariant.LUMO_ERROR);
+        }else{
+
+            this.classificationMetaInfosMetaInfoFilterView.refreshAll();
+        }
+    }
+
+    private void cancelFilterClassifications(){
+        classificationNameFilterField.setValue("");
+        classificationDescFilterField.setValue("");
+        this.classificationMetaInfosMetaInfoFilterView.refreshAll();
     }
 }
