@@ -336,7 +336,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
         HorizontalLayout displayItemContainer1 = new HorizontalLayout();
         displayItemContainer1.getStyle().set("padding-left","10px");
         singleClassificationSummaryInfoContainerLayout.add(displayItemContainer1);
-        conceptionKindCount = new SecondaryKeyValueDisplayItem(displayItemContainer1, VaadinIcon.CUBE.create(),"相关 ConceptionKind-概念类型()数量:","-");
+        conceptionKindCount = new SecondaryKeyValueDisplayItem(displayItemContainer1, VaadinIcon.CUBE.create(),"相关 ConceptionKind-概念类型数量:","-");
 
         HorizontalLayout displayItemContainer2 = new HorizontalLayout();
         displayItemContainer2.getStyle().set("padding-left","10px");

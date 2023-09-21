@@ -10,6 +10,7 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -19,10 +20,15 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.ClassificationAttachable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
@@ -193,7 +199,7 @@ public class RelateClassificationView extends VerticalLayout {
         executeCreateRelationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //creatConceptionEntityRelations();
+                attachClassifications();
             }
         });
         buttonsContainerLayout.add(executeCreateRelationButton);
@@ -323,9 +329,6 @@ public class RelateClassificationView extends VerticalLayout {
             throw new RuntimeException(e);
         }
 
-
-
-
         this.relationAttributeEditorsMap = new HashMap<>();
     }
 
@@ -412,5 +415,96 @@ public class RelateClassificationView extends VerticalLayout {
         classificationNameFilterField.setValue("");
         classificationDescFilterField.setValue("");
         this.classificationMetaInfosMetaInfoFilterView.refreshAll();
+    }
+
+    private void attachClassifications(){
+        KindMetaInfo selectedRelationKind = relationKindSelect.getValue();
+        if(selectedRelationKind == null){
+            CommonUIOperationUtil.showPopupNotification("请选择关系类型定义", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
+
+        Set<ClassificationMetaInfo> classificationMetaInfosSet = classificationsMetaInfoFilterGrid.getSelectedItems();
+        if(classificationMetaInfosSet == null || classificationMetaInfosSet.size() == 0){
+            CommonUIOperationUtil.showPopupNotification("请选择至少一个分类定义", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
+
+        List<Button> actionButtonList = new ArrayList<>();
+
+        Button confirmButton = new Button("确认关联分类",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行关联分类操作",actionButtonList,400,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doAttachClassifications();
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doAttachClassifications(){
+        String relationKind = relationKindSelect.getValue().getKindName();
+        String relationDirection = relationDirectionRadioGroup.getValue();
+
+        Map<String, Object> relationAttributesMap = null;
+        if(relationAttributeEditorsMap.size() > 0){
+            relationAttributesMap = new HashMap<>();
+            for(String currentAttributeName:relationAttributeEditorsMap.keySet()){
+                AttributeValue currentAttributeValue = relationAttributeEditorsMap.get(currentAttributeName).getAttributeValue();
+                relationAttributesMap.put(currentAttributeValue.getAttributeName(),currentAttributeValue.getAttributeValue());
+            }
+        }
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+
+        ClassificationAttachable targetClassificationAttachable = null;
+        switch (this.classificationRelatedObjectType){
+            case ConceptionKind :
+                targetClassificationAttachable = coreRealm.getConceptionKind(relatedObjectID);
+                break;
+            case RelationKind :
+                targetClassificationAttachable = coreRealm.getRelationKind(relatedObjectID);
+                break;
+            case AttributeKind:
+                targetClassificationAttachable = coreRealm.getAttributeKind(relatedObjectID);
+                break;
+            case AttributesViewKind:
+                targetClassificationAttachable = coreRealm.getAttributesViewKind(relatedObjectID);
+                break;
+            case ConceptionEntity:
+
+                break;
+        }
+
+        for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoFilterGrid.getSelectedItems()){
+            RelationAttachInfo relationAttachInfo = new RelationAttachInfo();
+            relationAttachInfo.setRelationKind(relationKind);
+            relationAttachInfo.setRelationData(relationAttributesMap);
+            if(relationDirection.equals("FROM")){
+                relationAttachInfo.setRelationDirection(RelationDirection.FROM);
+            }else if(relationDirection.equals("TO")){
+                relationAttachInfo.setRelationDirection(RelationDirection.TO);
+            }
+            try {
+                RelationEntity attachResult = targetClassificationAttachable.attachClassification(relationAttachInfo,currentClassificationMetaInfo.getClassificationName());
+            } catch (CoreRealmServiceRuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        coreRealm.closeGlobalSession();
     }
 }
