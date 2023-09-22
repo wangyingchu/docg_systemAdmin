@@ -136,14 +136,16 @@ public class DataRelationDistributionChart extends VerticalLayout {
                         && !relationKindName.equals(RealmConstant.AttributesViewKind_AttributeKindRelationClass)
                         && !relationKindName.equals(RealmConstant.Classification_ClassificationRelationClass)
                         && !relationKindName.equals(RealmConstant.RelationAttachKind_RelationAttachLinkLogicRelationClass)){
-                    boolean linkToTG = false;
+                    boolean linkToTGOrClassification = false;
                     if(sourceConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
                             ||sourceConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
+                            ||sourceConceptionKindName.equals(RealmConstant.ClassificationClass)
                             ||targetConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
-                            ||targetConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)){
-                        linkToTG = true;
+                            ||targetConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
+                            ||targetConceptionKindName.equals(RealmConstant.ClassificationClass)){
+                        linkToTGOrClassification = true;
                     }
-                    if(!linkToTG){
+                    if(!linkToTGOrClassification){
                         if(!relationKindName.startsWith("DOCG_TS_NextIs") &&
                                 !relationKindName.startsWith("DOCG_TS_FirstChildIs") &&
                                 !relationKindName.startsWith("DOCG_TS_LastChildIs")){
