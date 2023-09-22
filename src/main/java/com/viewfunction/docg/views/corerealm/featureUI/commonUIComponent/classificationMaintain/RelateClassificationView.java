@@ -489,7 +489,7 @@ public class RelateClassificationView extends VerticalLayout {
 
                 break;
         }
-
+        int totalAttachedClassificationCount = 0;
         for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoFilterGrid.getSelectedItems()){
             RelationAttachInfo relationAttachInfo = new RelationAttachInfo();
             relationAttachInfo.setRelationKind(relationKind);
@@ -501,9 +501,18 @@ public class RelateClassificationView extends VerticalLayout {
             }
             try {
                 RelationEntity attachResult = targetClassificationAttachable.attachClassification(relationAttachInfo,currentClassificationMetaInfo.getClassificationName());
+                if(attachResult != null){
+                    totalAttachedClassificationCount++;
+                }
             } catch (CoreRealmServiceRuntimeException e) {
                 throw new RuntimeException(e);
             }
+        }
+
+        if(totalAttachedClassificationCount >0){
+            CommonUIOperationUtil.showPopupNotification("与 "+totalAttachedClassificationCount+" 项分类关联成功", NotificationVariant.LUMO_SUCCESS,10000, Notification.Position.BOTTOM_START);
+            classificationsMetaInfoFilterGrid.deselectAll();
+            cleanRelationAttributes();
         }
         coreRealm.closeGlobalSession();
     }
