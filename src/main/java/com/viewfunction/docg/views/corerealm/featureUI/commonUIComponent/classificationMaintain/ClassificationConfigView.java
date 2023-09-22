@@ -6,6 +6,10 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.ClassificationAttachable;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
@@ -67,6 +71,12 @@ public class ClassificationConfigView extends VerticalLayout {
 
         SecondaryTitleActionBar relatedClassificationConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAGS),"分类配置管理 ",secTitleElementsList,buttonList);
         add(relatedClassificationConfigActionBar);
+        loadAttachedClassifications();
+
+
+
+
+
     }
 
     private void renderRelateClassificationViewUI(){
@@ -84,4 +94,30 @@ public class ClassificationConfigView extends VerticalLayout {
     }
 
     public void refreshClassificationConfigInfo(){}
+
+    private void loadAttachedClassifications(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+
+        ClassificationAttachable targetClassificationAttachable = null;
+        switch (this.classificationRelatedObjectType){
+            case ConceptionKind :
+                targetClassificationAttachable = coreRealm.getConceptionKind(relatedObjectID);
+                break;
+            case RelationKind :
+                targetClassificationAttachable = coreRealm.getRelationKind(relatedObjectID);
+                break;
+            case AttributeKind:
+                targetClassificationAttachable = coreRealm.getAttributeKind(relatedObjectID);
+                break;
+            case AttributesViewKind:
+                targetClassificationAttachable = coreRealm.getAttributesViewKind(relatedObjectID);
+                break;
+            case ConceptionEntity:
+                break;
+        }
+        if(targetClassificationAttachable != null){
+            //targetClassificationAttachable.getAttachedClassifications()
+        }
+    }
 }
