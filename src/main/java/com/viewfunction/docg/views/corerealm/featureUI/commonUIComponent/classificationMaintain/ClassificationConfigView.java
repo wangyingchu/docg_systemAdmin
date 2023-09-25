@@ -118,6 +118,7 @@ public class ClassificationConfigView extends VerticalLayout {
         }
         if(targetClassificationAttachable != null){
             //targetClassificationAttachable.getAttachedClassifications()
+            targetClassificationAttachable.getAllAttachedClassificationsInfo();
         }
     }
 }
