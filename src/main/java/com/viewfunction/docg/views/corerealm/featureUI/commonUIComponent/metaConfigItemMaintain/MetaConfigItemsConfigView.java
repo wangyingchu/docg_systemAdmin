@@ -119,7 +119,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.BOOKMARK),"元属性配置管理 ",secTitleElementsList,buttonList);
         add(metaConfigItemConfigActionBar);
 
-        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(metaConfigItemValueObjectInfo -> {
             /*
             Icon editIcon = new Icon(VaadinIcon.EDIT);
             editIcon.setSize("20px");
@@ -135,8 +135,8 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             Icon removeIcon = new Icon(VaadinIcon.ERASER);
             removeIcon.setSize("20px");
             Button removeItemButton = new Button(removeIcon, event -> {
-                if(entityStatisticsInfo instanceof MetaConfigItemValueObject){
-                    renderDeleteConfigItemUI((MetaConfigItemValueObject)entityStatisticsInfo);
+                if(metaConfigItemValueObjectInfo instanceof MetaConfigItemValueObject){
+                    renderDeleteConfigItemUI((MetaConfigItemValueObject)metaConfigItemValueObjectInfo);
                 }
             });
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);

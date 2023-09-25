@@ -7,11 +7,13 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.ClassificationAttachable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ClassificationAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachInfo;
@@ -20,9 +22,12 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -131,11 +136,13 @@ public class ClassificationConfigView extends VerticalLayout {
         SecondaryTitleActionBar relatedClassificationConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAGS),"分类配置管理 ",secTitleElementsList,buttonList);
         add(relatedClassificationConfigActionBar);
 
-        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(classificationConfigItemValueObjectInfo -> {
             Icon removeIcon = new Icon(VaadinIcon.UNLINK);
             removeIcon.setSize("20px");
             Button removeItemButton = new Button(removeIcon, event -> {
-
+                if(classificationConfigItemValueObjectInfo instanceof ClassificationConfigItemValueObject){
+                    renderDeleteConfigItemUI((ClassificationConfigItemValueObject)classificationConfigItemValueObjectInfo);
+                }
             });
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -274,5 +281,73 @@ public class ClassificationConfigView extends VerticalLayout {
             dtaProvider.getItems().add(currentClassificationConfigItemValueObject);
         }
         dtaProvider.refreshAll();
+    }
+
+    private void renderDeleteConfigItemUI(ClassificationConfigItemValueObject classificationConfigItemValueObject){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认删除分类关联",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行删除分类关联 "+ classificationConfigItemValueObject.classificationName+" - "+classificationConfigItemValueObject.attachRelationKindName+" 的操作",actionButtonList,400,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doDeleteConfigItem(classificationConfigItemValueObject,confirmWindow);
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doDeleteConfigItem(ClassificationConfigItemValueObject classificationConfigItemValueObject,ConfirmWindow confirmWindow){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+
+        ClassificationAttachable classificationAttachable= null;
+        switch (this.classificationRelatedObjectType){
+            case ConceptionKind :
+                classificationAttachable = coreRealm.getConceptionKind(relatedObjectID);
+                break;
+            case RelationKind :
+                classificationAttachable = coreRealm.getRelationKind(relatedObjectID);
+                break;
+            case AttributeKind:
+                classificationAttachable = coreRealm.getAttributeKind(relatedObjectID);
+                break;
+            case AttributesViewKind:
+                classificationAttachable = coreRealm.getAttributesViewKind(relatedObjectID);
+                break;
+            case ConceptionEntity:
+                break;
+        }
+
+        if(classificationAttachable != null){
+            try {
+                boolean detachResult = classificationAttachable.detachClassification(classificationConfigItemValueObject.getClassificationName(),
+                        classificationConfigItemValueObject.getAttachRelationKindName(),classificationConfigItemValueObject.getAttachRelationDirection());
+                if(detachResult){
+                    CommonUIOperationUtil.showPopupNotification("删除分类关联 "+ classificationConfigItemValueObject.classificationName+" - "+classificationConfigItemValueObject.attachRelationKindName +" 成功", NotificationVariant.LUMO_SUCCESS);
+                    confirmWindow.closeConfirmWindow();
+                    ListDataProvider dtaProvider=(ListDataProvider)classificationConfigItemValueObjectGrid.getDataProvider();
+                    dtaProvider.getItems().remove(classificationConfigItemValueObject);
+                    dtaProvider.refreshAll();
+                }else{
+                    CommonUIOperationUtil.showPopupNotification("删除分类关联 "+ classificationConfigItemValueObject.classificationName+" - "+classificationConfigItemValueObject.attachRelationKindName +" 失败", NotificationVariant.LUMO_ERROR);
+                }
+            } catch (CoreRealmServiceRuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        coreRealm.closeGlobalSession();
     }
 }
