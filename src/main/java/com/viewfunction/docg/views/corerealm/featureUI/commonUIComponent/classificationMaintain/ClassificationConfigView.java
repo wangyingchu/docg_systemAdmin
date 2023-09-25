@@ -17,7 +17,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServi
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.ClassificationAttachable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ClassificationAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
@@ -261,7 +260,7 @@ public class ClassificationConfigView extends VerticalLayout {
         loadAttachedClassifications();
     }
 
-    public void attachClassificationSuccessCallback(Set<ClassificationMetaInfo> classificationInfoSet, RelationAttachInfo relationAttachInfo){
+    public void attachClassificationSuccessCallback(Set<String> successAttachedClassifications, RelationAttachInfo relationAttachInfo){
         ListDataProvider dtaProvider=(ListDataProvider)classificationConfigItemValueObjectGrid.getDataProvider();
 
         Map<String,Object> relationData = new HashMap<>();
@@ -271,9 +270,9 @@ public class ClassificationConfigView extends VerticalLayout {
         relationData.remove(RealmConstant._creatorIdProperty);
         relationData.remove(RealmConstant._dataOriginProperty);
 
-        for(ClassificationMetaInfo currentClassificationMetaInfo:classificationInfoSet){
+        for(String currentClassification:successAttachedClassifications){
             ClassificationConfigItemValueObject currentClassificationConfigItemValueObject = new ClassificationConfigItemValueObject(
-                    currentClassificationMetaInfo.getClassificationName(),
+                    currentClassification,
                     relationAttachInfo.getRelationKind(),
                     relationAttachInfo.getRelationDirection(),
                     relationData

@@ -398,6 +398,8 @@ public class RelateClassificationView extends VerticalLayout {
         relationEntityAttributesContainer.removeAll();
         relationAttributeEditorsMap.clear();
         clearAttributeButton.setEnabled(false);
+        relationKindSelect.clear();
+        relationDirectionRadioGroup.setValue("FROM");
     }
 
     private void filterClassifications(){
@@ -499,10 +501,12 @@ public class RelateClassificationView extends VerticalLayout {
             relationAttachInfo.setRelationDirection(RelationDirection.TO);
         }
 
+        Set<String> successAttachedClassifications = new HashSet<>();
         for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoFilterGrid.getSelectedItems()){
             try {
                 RelationEntity attachResult = targetClassificationAttachable.attachClassification(relationAttachInfo,currentClassificationMetaInfo.getClassificationName());
                 if(attachResult != null){
+                    successAttachedClassifications.add(currentClassificationMetaInfo.getClassificationName());
                     totalAttachedClassificationCount++;
                 }
             } catch (CoreRealmServiceRuntimeException e) {
@@ -512,11 +516,11 @@ public class RelateClassificationView extends VerticalLayout {
 
         if(totalAttachedClassificationCount >0){
             CommonUIOperationUtil.showPopupNotification("与 "+totalAttachedClassificationCount+" 项分类关联成功", NotificationVariant.LUMO_SUCCESS,10000, Notification.Position.BOTTOM_START);
-            if(containerClassificationConfigView != null){
-                containerClassificationConfigView.attachClassificationSuccessCallback(classificationsMetaInfoFilterGrid.getSelectedItems(),relationAttachInfo);
-            }
             classificationsMetaInfoFilterGrid.deselectAll();
             cleanRelationAttributes();
+            if(containerClassificationConfigView != null){
+                containerClassificationConfigView.attachClassificationSuccessCallback(successAttachedClassifications,relationAttachInfo);
+            }
         }
         coreRealm.closeGlobalSession();
     }
