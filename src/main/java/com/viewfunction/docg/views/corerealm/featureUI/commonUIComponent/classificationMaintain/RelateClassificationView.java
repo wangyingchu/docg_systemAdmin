@@ -406,7 +406,6 @@ public class RelateClassificationView extends VerticalLayout {
         if(classificationFilterValue.equals("")&classificationDescFilterValue.equals("")){
             CommonUIOperationUtil.showPopupNotification("请输入分类名称 和/或 分类描述", NotificationVariant.LUMO_ERROR);
         }else{
-
             this.classificationMetaInfosMetaInfoFilterView.refreshAll();
         }
     }
@@ -490,15 +489,17 @@ public class RelateClassificationView extends VerticalLayout {
                 break;
         }
         int totalAttachedClassificationCount = 0;
+
+        RelationAttachInfo relationAttachInfo = new RelationAttachInfo();
+        relationAttachInfo.setRelationKind(relationKind);
+        relationAttachInfo.setRelationData(relationAttributesMap);
+        if(relationDirection.equals("FROM")){
+            relationAttachInfo.setRelationDirection(RelationDirection.FROM);
+        }else if(relationDirection.equals("TO")){
+            relationAttachInfo.setRelationDirection(RelationDirection.TO);
+        }
+
         for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoFilterGrid.getSelectedItems()){
-            RelationAttachInfo relationAttachInfo = new RelationAttachInfo();
-            relationAttachInfo.setRelationKind(relationKind);
-            relationAttachInfo.setRelationData(relationAttributesMap);
-            if(relationDirection.equals("FROM")){
-                relationAttachInfo.setRelationDirection(RelationDirection.FROM);
-            }else if(relationDirection.equals("TO")){
-                relationAttachInfo.setRelationDirection(RelationDirection.TO);
-            }
             try {
                 RelationEntity attachResult = targetClassificationAttachable.attachClassification(relationAttachInfo,currentClassificationMetaInfo.getClassificationName());
                 if(attachResult != null){
@@ -511,6 +512,9 @@ public class RelateClassificationView extends VerticalLayout {
 
         if(totalAttachedClassificationCount >0){
             CommonUIOperationUtil.showPopupNotification("与 "+totalAttachedClassificationCount+" 项分类关联成功", NotificationVariant.LUMO_SUCCESS,10000, Notification.Position.BOTTOM_START);
+            if(containerClassificationConfigView != null){
+                containerClassificationConfigView.attachClassificationSuccessCallback(classificationsMetaInfoFilterGrid.getSelectedItems(),relationAttachInfo);
+            }
             classificationsMetaInfoFilterGrid.deselectAll();
             cleanRelationAttributes();
         }

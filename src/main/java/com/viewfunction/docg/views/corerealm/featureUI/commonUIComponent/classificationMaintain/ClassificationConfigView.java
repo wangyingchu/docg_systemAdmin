@@ -9,12 +9,16 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.ClassificationAttachable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ClassificationAttachInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
@@ -22,8 +26,7 @@ import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
 import dev.mett.vaadin.tooltip.Tooltips;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ClassificationConfigView extends VerticalLayout {
 
@@ -103,7 +106,6 @@ public class ClassificationConfigView extends VerticalLayout {
     }
 
     private void renderClassificationConfigUI(){
-
         this.setWidth(100, Unit.PERCENTAGE);
         List<Component> secTitleElementsList = new ArrayList<>();
         List<Component> buttonList = new ArrayList<>();
@@ -122,7 +124,7 @@ public class ClassificationConfigView extends VerticalLayout {
         Button refreshRelatedClassificationsInfoButton = new Button("刷新分类信息",new Icon(VaadinIcon.REFRESH));
         refreshRelatedClassificationsInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         refreshRelatedClassificationsInfoButton.addClickListener((ClickEvent<Button> click) ->{
-            //refreshKindIndex();
+            refreshClassifications();
         });
         buttonList.add(refreshRelatedClassificationsInfoButton);
 
@@ -130,19 +132,16 @@ public class ClassificationConfigView extends VerticalLayout {
         add(relatedClassificationConfigActionBar);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
-            Icon removeIcon = new Icon(VaadinIcon.ERASER);
+            Icon removeIcon = new Icon(VaadinIcon.UNLINK);
             removeIcon.setSize("20px");
             Button removeItemButton = new Button(removeIcon, event -> {
-                //if(entityStatisticsInfo instanceof MetaConfigItemsConfigView.MetaConfigItemValueObject){
-               //     renderDeleteConfigItemUI((MetaConfigItemsConfigView.MetaConfigItemValueObject)entityStatisticsInfo);
-               // }
+
             });
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeItemButton, "删除元属性");
+            Tooltips.getCurrent().setTooltip(removeItemButton, "删除分类关联");
 
-            //HorizontalLayout buttons = new HorizontalLayout(addItemButton,removeItemButton);
             HorizontalLayout buttons = new HorizontalLayout(removeItemButton);
             buttons.setPadding(false);
             buttons.setSpacing(false);
@@ -203,27 +202,27 @@ public class ClassificationConfigView extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
 
-        ClassificationAttachable targetClassificationAttachable = null;
+        ClassificationAttachable classificationAttachable= null;
         switch (this.classificationRelatedObjectType){
             case ConceptionKind :
-                targetClassificationAttachable = coreRealm.getConceptionKind(relatedObjectID);
+                classificationAttachable = coreRealm.getConceptionKind(relatedObjectID);
                 break;
             case RelationKind :
-                targetClassificationAttachable = coreRealm.getRelationKind(relatedObjectID);
+                classificationAttachable = coreRealm.getRelationKind(relatedObjectID);
                 break;
             case AttributeKind:
-                targetClassificationAttachable = coreRealm.getAttributeKind(relatedObjectID);
+                classificationAttachable = coreRealm.getAttributeKind(relatedObjectID);
                 break;
             case AttributesViewKind:
-                targetClassificationAttachable = coreRealm.getAttributesViewKind(relatedObjectID);
+                classificationAttachable = coreRealm.getAttributesViewKind(relatedObjectID);
                 break;
             case ConceptionEntity:
                 break;
         }
         List<ClassificationConfigItemValueObject> classificationConfigItemValueObjectList = new ArrayList<>();
         List<ClassificationAttachInfo> classificationAttachInfoList = null;
-        if(targetClassificationAttachable != null){
-            classificationAttachInfoList = targetClassificationAttachable.getAllAttachedClassificationsInfo();
+        if(classificationAttachable != null){
+            classificationAttachInfoList = classificationAttachable.getAllAttachedClassificationsInfo();
         }
         coreRealm.closeGlobalSession();
 
@@ -246,5 +245,34 @@ public class ClassificationConfigView extends VerticalLayout {
             }
         }
         classificationConfigItemValueObjectGrid.setItems(classificationConfigItemValueObjectList);
+    }
+
+    private void refreshClassifications(){
+        ListDataProvider dtaProvider=(ListDataProvider)classificationConfigItemValueObjectGrid.getDataProvider();
+        dtaProvider.getItems().clear();
+        dtaProvider.refreshAll();
+        loadAttachedClassifications();
+    }
+
+    public void attachClassificationSuccessCallback(Set<ClassificationMetaInfo> classificationInfoSet, RelationAttachInfo relationAttachInfo){
+        ListDataProvider dtaProvider=(ListDataProvider)classificationConfigItemValueObjectGrid.getDataProvider();
+
+        Map<String,Object> relationData = new HashMap<>();
+        relationData.putAll(relationAttachInfo.getRelationData());
+        relationData.remove(RealmConstant._createDateProperty);
+        relationData.remove(RealmConstant._lastModifyDateProperty);
+        relationData.remove(RealmConstant._creatorIdProperty);
+        relationData.remove(RealmConstant._dataOriginProperty);
+
+        for(ClassificationMetaInfo currentClassificationMetaInfo:classificationInfoSet){
+            ClassificationConfigItemValueObject currentClassificationConfigItemValueObject = new ClassificationConfigItemValueObject(
+                    currentClassificationMetaInfo.getClassificationName(),
+                    relationAttachInfo.getRelationKind(),
+                    relationAttachInfo.getRelationDirection(),
+                    relationData
+            );
+            dtaProvider.getItems().add(currentClassificationConfigItemValueObject);
+        }
+        dtaProvider.refreshAll();
     }
 }
