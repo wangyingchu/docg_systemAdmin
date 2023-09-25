@@ -3,20 +3,76 @@ package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classi
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.ClassificationAttachable;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ClassificationAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
+import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+
+import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClassificationConfigView extends VerticalLayout {
+
+    private class ClassificationConfigItemValueObject {
+        private String classificationName;
+        private String attachRelationKindName;
+        private RelationDirection attachRelationDirection;
+        private Object attachRelationDataValue;
+
+        public ClassificationConfigItemValueObject(String classificationName,String attachRelationKindName,
+                                                   RelationDirection attachRelationDirection,Object attachRelationDataValue){
+            this.classificationName = classificationName;
+            this.attachRelationKindName = attachRelationKindName;
+            this.attachRelationDirection = attachRelationDirection;
+            this.attachRelationDataValue = attachRelationDataValue;
+        }
+
+        public String getClassificationName() {
+            return classificationName;
+        }
+
+        public void setClassificationName(String classificationName) {
+            this.classificationName = classificationName;
+        }
+
+        public String getAttachRelationKindName() {
+            return attachRelationKindName;
+        }
+
+        public void setAttachRelationKindName(String attachRelationKindName) {
+            this.attachRelationKindName = attachRelationKindName;
+        }
+
+        public RelationDirection getAttachRelationDirection() {
+            return attachRelationDirection;
+        }
+
+        public void setAttachRelationDirection(RelationDirection attachRelationDirection) {
+            this.attachRelationDirection = attachRelationDirection;
+        }
+
+        public Object getAttachRelationDataValue() {
+            return attachRelationDataValue;
+        }
+
+        public void setAttachRelationDataValue(Object attachRelationDataValue) {
+            this.attachRelationDataValue = attachRelationDataValue;
+        }
+    }
 
     public enum ClassificationRelatedObjectType {
         ConceptionKind,RelationKind,AttributeKind,AttributesViewKind,ConceptionEntity
@@ -24,6 +80,7 @@ public class ClassificationConfigView extends VerticalLayout {
 
     private ClassificationConfigView.ClassificationRelatedObjectType classificationRelatedObjectType;
     private String relatedObjectID;
+    private Grid<ClassificationConfigItemValueObject> classificationConfigItemValueObjectGrid;
 
     public ClassificationConfigView(ClassificationConfigView.ClassificationRelatedObjectType
                                             classificationRelatedObjectType,String relatedObjectID){
@@ -71,12 +128,59 @@ public class ClassificationConfigView extends VerticalLayout {
 
         SecondaryTitleActionBar relatedClassificationConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAGS),"分类配置管理 ",secTitleElementsList,buttonList);
         add(relatedClassificationConfigActionBar);
+
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+            Icon removeIcon = new Icon(VaadinIcon.ERASER);
+            removeIcon.setSize("20px");
+            Button removeItemButton = new Button(removeIcon, event -> {
+                //if(entityStatisticsInfo instanceof MetaConfigItemsConfigView.MetaConfigItemValueObject){
+               //     renderDeleteConfigItemUI((MetaConfigItemsConfigView.MetaConfigItemValueObject)entityStatisticsInfo);
+               // }
+            });
+            removeItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            removeItemButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            removeItemButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            Tooltips.getCurrent().setTooltip(removeItemButton, "删除元属性");
+
+            //HorizontalLayout buttons = new HorizontalLayout(addItemButton,removeItemButton);
+            HorizontalLayout buttons = new HorizontalLayout(removeItemButton);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(10,Unit.PIXELS);
+            buttons.setWidth(80,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
+
+        classificationConfigItemValueObjectGrid = new Grid<>();
+
+        classificationConfigItemValueObjectGrid.setWidth(100, Unit.PERCENTAGE);
+        classificationConfigItemValueObjectGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        classificationConfigItemValueObjectGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
+        classificationConfigItemValueObjectGrid.addColumn(ClassificationConfigItemValueObject::getClassificationName).setHeader("分类名称").setKey("idx_0").
+                setFlexGrow(0).setWidth("250px").setResizable(true).setTooltipGenerator(ClassificationConfigItemValueObject::getClassificationName);
+        classificationConfigItemValueObjectGrid.addColumn(ClassificationConfigItemValueObject::getAttachRelationKindName).setHeader("关系类型").setKey("idx_1").
+                setFlexGrow(0).setWidth("250px").setTooltipGenerator(ClassificationConfigItemValueObject::getAttachRelationKindName);
+        classificationConfigItemValueObjectGrid.addColumn(ClassificationConfigItemValueObject::getAttachRelationDirection).setHeader("关系方向").setKey("idx_2").
+                setFlexGrow(0).setWidth("80px").setResizable(false);
+        classificationConfigItemValueObjectGrid.addColumn(ClassificationConfigItemValueObject::getAttachRelationDataValue).setHeader("关系属性").setKey("idx_3").
+                setFlexGrow(1).setResizable(false).setTooltipGenerator( classificationConfigItemValueObject -> classificationConfigItemValueObject.getAttachRelationDataValue().toString());
+        classificationConfigItemValueObjectGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("100px").setResizable(false);
+
+        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.TAG,"分类名称");
+        classificationConfigItemValueObjectGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.CONNECT_O,"关系类型");
+        classificationConfigItemValueObjectGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.EXCHANGE,"关系方向");
+        classificationConfigItemValueObjectGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(VaadinIcon.INPUT,"关系属性");
+        classificationConfigItemValueObjectGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
+        classificationConfigItemValueObjectGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4);
+        classificationConfigItemValueObjectGrid.setHeight(150,Unit.PIXELS);
+        add(classificationConfigItemValueObjectGrid);
         loadAttachedClassifications();
-
-
-
-
-
     }
 
     private void renderRelateClassificationViewUI(){
@@ -116,9 +220,31 @@ public class ClassificationConfigView extends VerticalLayout {
             case ConceptionEntity:
                 break;
         }
+        List<ClassificationConfigItemValueObject> classificationConfigItemValueObjectList = new ArrayList<>();
+        List<ClassificationAttachInfo> classificationAttachInfoList = null;
         if(targetClassificationAttachable != null){
-            //targetClassificationAttachable.getAttachedClassifications()
-            targetClassificationAttachable.getAllAttachedClassificationsInfo();
+            classificationAttachInfoList = targetClassificationAttachable.getAllAttachedClassificationsInfo();
         }
+        coreRealm.closeGlobalSession();
+
+        if(classificationAttachInfoList != null){
+            for(ClassificationAttachInfo currentClassificationAttachInfo:classificationAttachInfoList){
+                if(currentClassificationAttachInfo.getAttachedClassification() != null &&
+                        currentClassificationAttachInfo.getRelationAttachInfo()!= null){
+                    currentClassificationAttachInfo.getAttachedClassification().getClassificationName();
+                    currentClassificationAttachInfo.getRelationAttachInfo().getRelationKind();
+                    currentClassificationAttachInfo.getRelationAttachInfo().getRelationDirection();
+                    currentClassificationAttachInfo.getRelationAttachInfo().getRelationData();
+                    ClassificationConfigItemValueObject currentClassificationConfigItemValueObject = new ClassificationConfigItemValueObject(
+                            currentClassificationAttachInfo.getAttachedClassification().getClassificationName(),
+                            currentClassificationAttachInfo.getRelationAttachInfo().getRelationKind(),
+                            currentClassificationAttachInfo.getRelationAttachInfo().getRelationDirection(),
+                            currentClassificationAttachInfo.getRelationAttachInfo().getRelationData()
+                    );
+                    classificationConfigItemValueObjectList.add(currentClassificationConfigItemValueObject);
+                }
+            }
+        }
+        classificationConfigItemValueObjectGrid.setItems(classificationConfigItemValueObjectList);
     }
 }
