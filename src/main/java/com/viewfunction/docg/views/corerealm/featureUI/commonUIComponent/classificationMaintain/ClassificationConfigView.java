@@ -262,14 +262,14 @@ public class ClassificationConfigView extends VerticalLayout {
 
     public void attachClassificationSuccessCallback(Set<String> successAttachedClassifications, RelationAttachInfo relationAttachInfo){
         ListDataProvider dtaProvider=(ListDataProvider)classificationConfigItemValueObjectGrid.getDataProvider();
-
         Map<String,Object> relationData = new HashMap<>();
-        relationData.putAll(relationAttachInfo.getRelationData());
-        relationData.remove(RealmConstant._createDateProperty);
-        relationData.remove(RealmConstant._lastModifyDateProperty);
-        relationData.remove(RealmConstant._creatorIdProperty);
-        relationData.remove(RealmConstant._dataOriginProperty);
-
+        if(relationAttachInfo.getRelationData() != null){
+            relationData.putAll(relationAttachInfo.getRelationData());
+            relationData.remove(RealmConstant._createDateProperty);
+            relationData.remove(RealmConstant._lastModifyDateProperty);
+            relationData.remove(RealmConstant._creatorIdProperty);
+            relationData.remove(RealmConstant._dataOriginProperty);
+        }
         for(String currentClassification:successAttachedClassifications){
             ClassificationConfigItemValueObject currentClassificationConfigItemValueObject = new ClassificationConfigItemValueObject(
                     currentClassification,
