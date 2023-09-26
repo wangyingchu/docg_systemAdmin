@@ -491,7 +491,7 @@ public class RelateClassificationView extends VerticalLayout {
                 break;
         }
         int totalAttachedClassificationCount = 0;
-
+        int alreadyAttachedClassificationCount = 0;
         RelationAttachInfo relationAttachInfo = new RelationAttachInfo();
         relationAttachInfo.setRelationKind(relationKind);
         relationAttachInfo.setRelationData(relationAttributesMap);
@@ -504,10 +504,15 @@ public class RelateClassificationView extends VerticalLayout {
         Set<String> successAttachedClassifications = new HashSet<>();
         for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoFilterGrid.getSelectedItems()){
             try {
-                RelationEntity attachResult = targetClassificationAttachable.attachClassification(relationAttachInfo,currentClassificationMetaInfo.getClassificationName());
-                if(attachResult != null){
-                    successAttachedClassifications.add(currentClassificationMetaInfo.getClassificationName());
-                    totalAttachedClassificationCount++;
+                boolean isAlreadyAttached = targetClassificationAttachable.isClassificationAttached(currentClassificationMetaInfo.getClassificationName(),relationAttachInfo.getRelationKind(),relationAttachInfo.getRelationDirection());
+                if(!isAlreadyAttached){
+                    RelationEntity attachResult = targetClassificationAttachable.attachClassification(relationAttachInfo,currentClassificationMetaInfo.getClassificationName());
+                    if(attachResult != null){
+                        successAttachedClassifications.add(currentClassificationMetaInfo.getClassificationName());
+                        totalAttachedClassificationCount++;
+                    }
+                }else{
+                    alreadyAttachedClassificationCount++;
                 }
             } catch (CoreRealmServiceRuntimeException e) {
                 throw new RuntimeException(e);
@@ -515,12 +520,26 @@ public class RelateClassificationView extends VerticalLayout {
         }
 
         if(totalAttachedClassificationCount >0){
-            CommonUIOperationUtil.showPopupNotification("与 "+totalAttachedClassificationCount+" 项分类关联成功", NotificationVariant.LUMO_SUCCESS,10000, Notification.Position.BOTTOM_START);
+            String successMessage = "";
+            if(alreadyAttachedClassificationCount == 0 ){
+                successMessage = "与 "+totalAttachedClassificationCount+" 项分类关联成功";
+            }else{
+                successMessage = "原有 "+alreadyAttachedClassificationCount+" 项分类已经关联,"+
+                "与 "+totalAttachedClassificationCount+" 项分类新建关联成功";
+            }
+            CommonUIOperationUtil.showPopupNotification(successMessage, NotificationVariant.LUMO_SUCCESS,10000, Notification.Position.BOTTOM_START);
             classificationsMetaInfoFilterGrid.deselectAll();
             cleanRelationAttributes();
             if(containerClassificationConfigView != null){
                 containerClassificationConfigView.attachClassificationSuccessCallback(successAttachedClassifications,relationAttachInfo);
             }
+        }else{
+            if(alreadyAttachedClassificationCount > 0 ){
+                String successMessage = "选择的 "+alreadyAttachedClassificationCount+" 项分类已经存在关联";
+                CommonUIOperationUtil.showPopupNotification(successMessage, NotificationVariant.LUMO_WARNING,10000, Notification.Position.BOTTOM_START);
+            }
+            classificationsMetaInfoFilterGrid.deselectAll();
+            cleanRelationAttributes();
         }
         coreRealm.closeGlobalSession();
     }
