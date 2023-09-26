@@ -218,7 +218,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
         relationKindAttributesInfoGrid.addColumn(KindEntityAttributeRuntimeStatistics::getAttributeDataType).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("130px").setResizable(false);
         relationKindAttributesInfoGrid.addColumn(new NumberRenderer<>(KindEntityAttributeRuntimeStatistics::getSampleCount, NumberFormat.getIntegerInstance()))
                 .setComparator((entityStatisticsInfo1, entityStatisticsInfo2) ->
-                        (int)(entityStatisticsInfo1.getAttributeHitCount() - entityStatisticsInfo2.getAttributeHitCount()))
+                        (int)(entityStatisticsInfo1.getSampleCount() - entityStatisticsInfo2.getSampleCount()))
                 .setHeader("属性采样数").setKey("idx_2")
                 .setFlexGrow(0).setWidth("100px").setResizable(false);
         relationKindAttributesInfoGrid.addColumn(new NumberRenderer<>(KindEntityAttributeRuntimeStatistics::getAttributeHitCount, NumberFormat.getIntegerInstance()))
