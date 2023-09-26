@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
@@ -19,6 +20,7 @@ import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeAddedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeDeletedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
 
@@ -54,14 +56,21 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
             }
         });
 
+        Button classificationsManageButton= new Button("分类关联");
+        classificationsManageButton.setIcon(VaadinIcon.TAGS.create());
+        classificationsManageButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        actionButtonBarContainer.add(classificationsManageButton);
+        classificationsManageButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderClassificationManageUI();
+            }
+        });
+
         Button addAttributeButton= new Button("添加实体属性");
         addAttributeButton.setIcon(VaadinIcon.PLUS.create());
         addAttributeButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         actionButtonBarContainer.add(addAttributeButton);
-        SecondaryIconTitle viewTitle = new SecondaryIconTitle(new Icon(VaadinIcon.COMBOBOX),"实体属性",actionButtonBarContainer);
-        //set height to 39 in order to make ConceptionEntityAttributesEditorView and ConceptionEntityIntegratedInfoView have the same tab bottom line align
-        viewTitle.setHeight(39,Unit.PIXELS);
-        add(viewTitle);
         addAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -69,6 +78,10 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
             }
         });
 
+        SecondaryIconTitle viewTitle = new SecondaryIconTitle(new Icon(VaadinIcon.COMBOBOX),"实体属性",actionButtonBarContainer);
+        //set height to 39 in order to make ConceptionEntityAttributesEditorView and ConceptionEntityIntegratedInfoView have the same tab bottom line align
+        viewTitle.setHeight(39,Unit.PIXELS);
+        add(viewTitle);
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setWidthFull();
         spaceDivLayout.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
@@ -116,6 +129,15 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
         ConceptionEntityMetaInfoView conceptionEntityMetaInfoView = new ConceptionEntityMetaInfoView(this.conceptionKind,this.conceptionEntityUID);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"概念实体元数据信息",null,true,500,400,false);
         fixSizeWindow.setWindowContent(conceptionEntityMetaInfoView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderClassificationManageUI(){
+        ClassificationConfigView classificationConfigView = new ClassificationConfigView(ClassificationConfigView.ClassificationRelatedObjectType.ConceptionEntity,this.conceptionEntityUID);
+        classificationConfigView.setClassificationGridHeight(300);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TAGS),"概念实体分类关联信息",null,true,1000,410,false);
+        fixSizeWindow.setWindowContent(classificationConfigView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }

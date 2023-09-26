@@ -88,7 +88,7 @@ public class ClassificationConfigView extends VerticalLayout {
     private ClassificationConfigView.ClassificationRelatedObjectType classificationRelatedObjectType;
     private String relatedObjectID;
     private Grid<ClassificationConfigItemValueObject> classificationConfigItemValueObjectGrid;
-
+    private int classificationConfigItemValueObjectGridHeight = 150;
     public ClassificationConfigView(ClassificationConfigView.ClassificationRelatedObjectType
                                             classificationRelatedObjectType,String relatedObjectID){
         this.classificationRelatedObjectType = classificationRelatedObjectType;
@@ -183,7 +183,7 @@ public class ClassificationConfigView extends VerticalLayout {
         classificationConfigItemValueObjectGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
         LightGridColumnHeader gridColumnHeader_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         classificationConfigItemValueObjectGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4);
-        classificationConfigItemValueObjectGrid.setHeight(150,Unit.PIXELS);
+        classificationConfigItemValueObjectGrid.setHeight(classificationConfigItemValueObjectGridHeight,Unit.PIXELS);
         add(classificationConfigItemValueObjectGrid);
         loadAttachedClassifications();
     }
@@ -348,5 +348,9 @@ public class ClassificationConfigView extends VerticalLayout {
             }
         }
         coreRealm.closeGlobalSession();
+    }
+
+    public void setClassificationGridHeight(int gridHeight){
+        this.classificationConfigItemValueObjectGridHeight = gridHeight;
     }
 }
