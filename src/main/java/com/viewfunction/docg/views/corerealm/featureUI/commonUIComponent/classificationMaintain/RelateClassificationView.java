@@ -22,6 +22,7 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.ClassificationAttachable;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachInfo;
@@ -93,6 +94,20 @@ public class RelateClassificationView extends VerticalLayout {
             case ConceptionEntity:
                 kindIcon = VaadinIcon.CUBES.create();
                 viewTitleText = relatedObjectID;
+                CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
+                List<String> entitiesUIDList = new ArrayList<>();
+                entitiesUIDList.add(relatedObjectID);
+                try {
+                    List<ConceptionEntity> conceptionEntityList = crossKindDataOperator.getConceptionEntitiesByUIDs(entitiesUIDList);
+                    if(conceptionEntityList != null && conceptionEntityList.size()>0){
+                        ConceptionEntity targetClassificationAttachable = conceptionEntityList.get(0);
+                        if(targetClassificationAttachable != null){
+                            viewTitleText = targetClassificationAttachable.getAllConceptionKindNames()+"("+relatedObjectID+")";
+                        }
+                    }
+                } catch (CoreRealmServiceEntityExploreException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
         }
         kindIcon.setSize("12px");
@@ -494,7 +509,17 @@ public class RelateClassificationView extends VerticalLayout {
                 targetClassificationAttachable = coreRealm.getAttributesViewKind(relatedObjectID);
                 break;
             case ConceptionEntity:
-
+                CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
+                List<String> entitiesUIDList = new ArrayList<>();
+                entitiesUIDList.add(relatedObjectID);
+                try {
+                    List<ConceptionEntity> conceptionEntityList = crossKindDataOperator.getConceptionEntitiesByUIDs(entitiesUIDList);
+                    if(conceptionEntityList != null && conceptionEntityList.size()>0){
+                        targetClassificationAttachable = conceptionEntityList.get(0);
+                    }
+                } catch (CoreRealmServiceEntityExploreException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
         }
         int totalAttachedClassificationCount = 0;

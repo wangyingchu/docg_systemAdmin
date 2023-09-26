@@ -13,10 +13,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.ClassificationAttachable;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ClassificationAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
@@ -223,6 +226,17 @@ public class ClassificationConfigView extends VerticalLayout {
                 classificationAttachable = coreRealm.getAttributesViewKind(relatedObjectID);
                 break;
             case ConceptionEntity:
+                CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
+                List<String> entitiesUIDList = new ArrayList<>();
+                entitiesUIDList.add(relatedObjectID);
+                try {
+                    List<ConceptionEntity> conceptionEntityList = crossKindDataOperator.getConceptionEntitiesByUIDs(entitiesUIDList);
+                    if(conceptionEntityList != null && conceptionEntityList.size()>0){
+                        classificationAttachable = conceptionEntityList.get(0);
+                    }
+                } catch (CoreRealmServiceEntityExploreException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
         }
         List<ClassificationConfigItemValueObject> classificationConfigItemValueObjectList = new ArrayList<>();
@@ -327,6 +341,17 @@ public class ClassificationConfigView extends VerticalLayout {
                 classificationAttachable = coreRealm.getAttributesViewKind(relatedObjectID);
                 break;
             case ConceptionEntity:
+                CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
+                List<String> entitiesUIDList = new ArrayList<>();
+                entitiesUIDList.add(relatedObjectID);
+                try {
+                    List<ConceptionEntity> conceptionEntityList = crossKindDataOperator.getConceptionEntitiesByUIDs(entitiesUIDList);
+                    if(conceptionEntityList != null && conceptionEntityList.size()>0){
+                        classificationAttachable = conceptionEntityList.get(0);
+                    }
+                } catch (CoreRealmServiceEntityExploreException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
         }
 
