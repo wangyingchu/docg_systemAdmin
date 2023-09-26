@@ -26,9 +26,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
@@ -62,29 +60,39 @@ public class RelateClassificationView extends VerticalLayout {
         this.relatedObjectID = relatedObjectID;
         this.setMargin(false);
         this.setWidthFull();
-
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         Icon kindIcon = VaadinIcon.CUBE.create();
-        String viewTitleText = "概念类型索引信息";
+        String viewTitleText = "";
         switch (this.classificationRelatedObjectType){
             case ConceptionKind :
                 kindIcon = VaadinIcon.CUBE.create();
-                viewTitleText = "概念类型索引信息";
+                viewTitleText = relatedObjectID;
                 break;
             case RelationKind :
                 kindIcon = VaadinIcon.CONNECT_O.create();
-                viewTitleText = "关系类型索引信息";
+                viewTitleText = relatedObjectID;
                 break;
             case AttributeKind:
                 kindIcon = VaadinIcon.INPUT.create();
-                viewTitleText = "关系类型索引信息";
+                AttributeKind targetAttributeKind = coreRealm.getAttributeKind(relatedObjectID);
+                if(targetAttributeKind != null){
+                    viewTitleText = targetAttributeKind.getAttributeKindName()+"("+relatedObjectID+")";
+                }else{
+                    viewTitleText = relatedObjectID;
+                }
                 break;
             case AttributesViewKind:
                 kindIcon = VaadinIcon.TASKS.create();
-                viewTitleText = "关系类型索引信息";
+                AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(relatedObjectID);
+                if(targetAttributesViewKind != null){
+                    viewTitleText = targetAttributesViewKind.getAttributesViewKindName()+"("+relatedObjectID+")";
+                }else{
+                    viewTitleText = relatedObjectID;
+                }
                 break;
             case ConceptionEntity:
                 kindIcon = VaadinIcon.CUBES.create();
-                viewTitleText = "关系类型索引信息";
+                viewTitleText = relatedObjectID;
                 break;
         }
         kindIcon.setSize("12px");
@@ -93,7 +101,7 @@ public class RelateClassificationView extends VerticalLayout {
         entityIcon.setSize("18px");
         entityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
         List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
-        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(kindIcon, relatedObjectID));
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(kindIcon, viewTitleText));
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
 
@@ -299,7 +307,6 @@ public class RelateClassificationView extends VerticalLayout {
 
         targetConceptionEntitiesInfoContainerLayout.add(classificationsMetaInfoFilterGrid);
 
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
             List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
             this.classificationMetaInfosMetaInfoFilterView = classificationsMetaInfoFilterGrid.setItems(classificationsMetaInfoList);
