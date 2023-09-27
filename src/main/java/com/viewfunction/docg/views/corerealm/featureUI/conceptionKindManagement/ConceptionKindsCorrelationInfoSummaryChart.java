@@ -13,6 +13,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCo
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsRelationshipEdgePayload;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsRelationshipNodePayload;
@@ -79,39 +80,69 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
             String sourceKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
             String targetKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
             String relationKindName = currentConceptionKindCorrelationInfo.getRelationKindName();
+            if(!sourceKindName.equals(RealmConstant.ConceptionKindClass)
+                    && !sourceKindName.equals(RealmConstant.AttributesViewKindClass)
+                    && !sourceKindName.equals(RealmConstant.AttributeKindClass)
+                    && !sourceKindName.equals(RealmConstant.RelationKindClass)
+                    && !sourceKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
+                    && !sourceKindName.equals(RealmConstant.ClassificationClass)
 
-            long relationCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
-            String relationKindDesc = relationKindDescMap.get(relationKindName) != null ? relationKindDescMap.get(relationKindName):"";
-            EchartsRelationshipEdgePayload currentEchartsRelationshipEdgePayload = new EchartsRelationshipEdgePayload(relationKindName,relationKindDesc,relationKindName+"_ID",sourceKindName+"_ID",targetKindName+"_ID",relationCount);
-            currentEchartsRelationshipEdgePayload.getData().put("sourceConceptionKind",sourceKindName);
-            currentEchartsRelationshipEdgePayload.getData().put("targetConceptionKind",targetKindName);
+                    && !targetKindName.equals(RealmConstant.ConceptionKindClass)
+                    && !targetKindName.equals(RealmConstant.AttributesViewKindClass)
+                    && !targetKindName.equals(RealmConstant.AttributeKindClass)
+                    && !targetKindName.equals(RealmConstant.RelationKindClass)
+                    && !targetKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
+                    && !targetKindName.equals(RealmConstant.ClassificationClass))
+            {
+                long relationCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
+                String relationKindDesc = relationKindDescMap.get(relationKindName) != null ? relationKindDescMap.get(relationKindName):"";
+                EchartsRelationshipEdgePayload currentEchartsRelationshipEdgePayload = new EchartsRelationshipEdgePayload(relationKindName,relationKindDesc,relationKindName+"_ID",sourceKindName+"_ID",targetKindName+"_ID",relationCount);
+                currentEchartsRelationshipEdgePayload.getData().put("sourceConceptionKind",sourceKindName);
+                currentEchartsRelationshipEdgePayload.getData().put("targetConceptionKind",targetKindName);
+                JsonObject childJsonObject = currentEchartsRelationshipEdgePayload.toJson();
+                linkDataArray.set(idx_relation, childJsonObject);
+                idx_relation++;
+            }
 
-            JsonObject childJsonObject = currentEchartsRelationshipEdgePayload.toJson();
-            linkDataArray.set(idx_relation, childJsonObject);
-            idx_relation++;
-            if(!conceptionKindList.contains(sourceKindName)){
-                if(conceptionKindDataCountMap.containsKey(sourceKindName) && conceptionKindDataCountMap.get(sourceKindName) > 0){
-                    String conceptionKindDesc = conceptionKindDescMap.get(sourceKindName) != null ? conceptionKindDescMap.get(sourceKindName):"";
-                    long nodeWeight = (long)(Math.log(conceptionKindDataCountMap.get(sourceKindName))*2.5);
-                    EchartsRelationshipNodePayload currentEchartsRelationshipNodePayload = new EchartsRelationshipNodePayload(sourceKindName,conceptionKindDesc,sourceKindName+"_ID","",nodeWeight);
-                    currentEchartsRelationshipNodePayload.getData().put("entityCount",conceptionKindDataCountMap.get(sourceKindName));
-                    JsonObject childJsonObject2 = currentEchartsRelationshipNodePayload.toJson();
-                    nodeDataArray.set(idx_node, childJsonObject2);
-                    idx_node++;
-                    conceptionKindList.add(sourceKindName);
+            if(!sourceKindName.equals(RealmConstant.ConceptionKindClass)
+                    && !sourceKindName.equals(RealmConstant.AttributesViewKindClass)
+                    && !sourceKindName.equals(RealmConstant.AttributeKindClass)
+                    && !sourceKindName.equals(RealmConstant.RelationKindClass)
+                    && !sourceKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
+                    && !sourceKindName.equals(RealmConstant.ClassificationClass))
+            {
+                if(!conceptionKindList.contains(sourceKindName)){
+                    if(conceptionKindDataCountMap.containsKey(sourceKindName) && conceptionKindDataCountMap.get(sourceKindName) > 0){
+                        String conceptionKindDesc = conceptionKindDescMap.get(sourceKindName) != null ? conceptionKindDescMap.get(sourceKindName):"";
+                        long nodeWeight = (long)(Math.log(conceptionKindDataCountMap.get(sourceKindName))*2.5);
+                        EchartsRelationshipNodePayload currentEchartsRelationshipNodePayload = new EchartsRelationshipNodePayload(sourceKindName,conceptionKindDesc,sourceKindName+"_ID","",nodeWeight);
+                        currentEchartsRelationshipNodePayload.getData().put("entityCount",conceptionKindDataCountMap.get(sourceKindName));
+                        JsonObject childJsonObject2 = currentEchartsRelationshipNodePayload.toJson();
+                        nodeDataArray.set(idx_node, childJsonObject2);
+                        idx_node++;
+                        conceptionKindList.add(sourceKindName);
+                    }
                 }
             }
 
-            if(!conceptionKindList.contains(targetKindName)){
-                if(conceptionKindDataCountMap.containsKey(targetKindName) && conceptionKindDataCountMap.get(targetKindName) > 0){
-                    String conceptionKindDesc = conceptionKindDescMap.get(targetKindName) != null ? conceptionKindDescMap.get(targetKindName):"";
-                    long nodeWeight = (long)(Math.log(conceptionKindDataCountMap.get(targetKindName))*2.5);
-                    EchartsRelationshipNodePayload currentEchartsRelationshipNodePayload = new EchartsRelationshipNodePayload(targetKindName,conceptionKindDesc,targetKindName+"_ID","",nodeWeight);
-                    currentEchartsRelationshipNodePayload.getData().put("entityCount",conceptionKindDataCountMap.get(targetKindName));
-                    JsonObject childJsonObject2 = currentEchartsRelationshipNodePayload.toJson();
-                    nodeDataArray.set(idx_node, childJsonObject2);
-                    idx_node++;
-                    conceptionKindList.add(targetKindName);
+            if(! targetKindName.equals(RealmConstant.ConceptionKindClass)
+                    && !targetKindName.equals(RealmConstant.AttributesViewKindClass)
+                    && !targetKindName.equals(RealmConstant.AttributeKindClass)
+                    && !targetKindName.equals(RealmConstant.RelationKindClass)
+                    && !targetKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
+                    && !targetKindName.equals(RealmConstant.ClassificationClass))
+            {
+                if(!conceptionKindList.contains(targetKindName)){
+                    if(conceptionKindDataCountMap.containsKey(targetKindName) && conceptionKindDataCountMap.get(targetKindName) > 0){
+                        String conceptionKindDesc = conceptionKindDescMap.get(targetKindName) != null ? conceptionKindDescMap.get(targetKindName):"";
+                        long nodeWeight = (long)(Math.log(conceptionKindDataCountMap.get(targetKindName))*2.5);
+                        EchartsRelationshipNodePayload currentEchartsRelationshipNodePayload = new EchartsRelationshipNodePayload(targetKindName,conceptionKindDesc,targetKindName+"_ID","",nodeWeight);
+                        currentEchartsRelationshipNodePayload.getData().put("entityCount",conceptionKindDataCountMap.get(targetKindName));
+                        JsonObject childJsonObject2 = currentEchartsRelationshipNodePayload.toJson();
+                        nodeDataArray.set(idx_node, childJsonObject2);
+                        idx_node++;
+                        conceptionKindList.add(targetKindName);
+                    }
                 }
             }
         }
