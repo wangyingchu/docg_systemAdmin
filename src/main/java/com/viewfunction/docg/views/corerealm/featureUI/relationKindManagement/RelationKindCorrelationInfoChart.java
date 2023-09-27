@@ -6,6 +6,7 @@ import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
@@ -55,42 +56,73 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
 
             for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
                 String sourceKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
-                if(!conceptionKindList.contains(sourceKindName)){
-                    JsonObject jsonObject = Json.createObject();
-                    jsonObject.put("name",sourceKindName);
-                    dataDataArray.set(idx_data, jsonObject);
-                    idx_data ++;
-                    conceptionKindList.add(sourceKindName);
-                    sourceConceptionKindList.add(sourceKindName);
+                if(!sourceKindName.equals(RealmConstant.ConceptionKindClass)
+                        && !sourceKindName.equals(RealmConstant.AttributesViewKindClass)
+                        && !sourceKindName.equals(RealmConstant.AttributeKindClass)
+                        && !sourceKindName.equals(RealmConstant.RelationKindClass)
+                        && !sourceKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
+                        && !sourceKindName.equals(RealmConstant.ClassificationClass))
+                {
+                    if(!conceptionKindList.contains(sourceKindName)){
+                        JsonObject jsonObject = Json.createObject();
+                        jsonObject.put("name",sourceKindName);
+                        dataDataArray.set(idx_data, jsonObject);
+                        idx_data ++;
+                        conceptionKindList.add(sourceKindName);
+                        sourceConceptionKindList.add(sourceKindName);
+                    }
                 }
             }
             for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
                 String targetKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
-                String targetConceptionKindRealName = sourceConceptionKindList.contains(targetKindName) ? targetKindName+"(1)":targetKindName;
-                if(!conceptionKindList.contains(targetConceptionKindRealName)){
-                    JsonObject jsonObject = Json.createObject();
-                    jsonObject.put("name",targetConceptionKindRealName);
-                    dataDataArray.set(idx_data, jsonObject);
-                    idx_data ++;
-                    conceptionKindList.add(targetConceptionKindRealName);
+                if(! targetKindName.equals(RealmConstant.ConceptionKindClass)
+                        && !targetKindName.equals(RealmConstant.AttributesViewKindClass)
+                        && !targetKindName.equals(RealmConstant.AttributeKindClass)
+                        && !targetKindName.equals(RealmConstant.RelationKindClass)
+                        && !targetKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
+                        && !targetKindName.equals(RealmConstant.ClassificationClass))
+                {
+                    String targetConceptionKindRealName = sourceConceptionKindList.contains(targetKindName) ? targetKindName+"(1)":targetKindName;
+                    if(!conceptionKindList.contains(targetConceptionKindRealName)){
+                        JsonObject jsonObject = Json.createObject();
+                        jsonObject.put("name",targetConceptionKindRealName);
+                        dataDataArray.set(idx_data, jsonObject);
+                        idx_data ++;
+                        conceptionKindList.add(targetConceptionKindRealName);
+                    }
                 }
             }
 
             for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
                 String sourceKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
                 String targetKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
-                long relationCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
-                String targetConceptionKindRealName = sourceConceptionKindList.contains(targetKindName) ? targetKindName+"(1)":targetKindName;
-                JsonObject linkJsonObject = Json.createObject();
-                linkJsonObject.put("source",sourceKindName);
-                if(sourceKindName.equals(targetKindName)){
-                    linkJsonObject.put("target",sourceKindName+"(1)");
-                }else{
-                    linkJsonObject.put("target",targetConceptionKindRealName);
+                if(!sourceKindName.equals(RealmConstant.ConceptionKindClass)
+                        && !sourceKindName.equals(RealmConstant.AttributesViewKindClass)
+                        && !sourceKindName.equals(RealmConstant.AttributeKindClass)
+                        && !sourceKindName.equals(RealmConstant.RelationKindClass)
+                        && !sourceKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
+                        && !sourceKindName.equals(RealmConstant.ClassificationClass)
+
+                        && !targetKindName.equals(RealmConstant.ConceptionKindClass)
+                        && !targetKindName.equals(RealmConstant.AttributesViewKindClass)
+                        && !targetKindName.equals(RealmConstant.AttributeKindClass)
+                        && !targetKindName.equals(RealmConstant.RelationKindClass)
+                        && !targetKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
+                        && !targetKindName.equals(RealmConstant.ClassificationClass))
+                {
+                    long relationCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
+                    String targetConceptionKindRealName = sourceConceptionKindList.contains(targetKindName) ? targetKindName+"(1)":targetKindName;
+                    JsonObject linkJsonObject = Json.createObject();
+                    linkJsonObject.put("source",sourceKindName);
+                    if(sourceKindName.equals(targetKindName)){
+                        linkJsonObject.put("target",sourceKindName+"(1)");
+                    }else{
+                        linkJsonObject.put("target",targetConceptionKindRealName);
+                    }
+                    linkJsonObject.put("value",relationCount);
+                    linkDataArray.set(idx_link, linkJsonObject);
+                    idx_link++;
                 }
-                linkJsonObject.put("value",relationCount);
-                linkDataArray.set(idx_link, linkJsonObject);
-                idx_link++;
             }
             obj.put("links", linkDataArray);
             obj.put("data", dataDataArray);
