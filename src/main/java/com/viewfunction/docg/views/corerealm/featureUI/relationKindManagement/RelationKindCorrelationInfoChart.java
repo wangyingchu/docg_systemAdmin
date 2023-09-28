@@ -11,9 +11,7 @@ import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @JavaScript("./visualization/feature/relationKindCorrelationInfoChart-connector.js")
 public class RelationKindCorrelationInfoChart extends VerticalLayout {
@@ -53,7 +51,7 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
             int idx_data = 0;
             List<String> conceptionKindList = new ArrayList<>();
             List<String> sourceConceptionKindList = new ArrayList<>();
-
+            List<String> target_SourceKindNameMappingList = new ArrayList<>();
             List<String> conceptionKindsInRelation = new ArrayList<>();
             for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
                 String sourceKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
@@ -63,17 +61,19 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
                         && !sourceKindName.equals(RealmConstant.AttributeKindClass)
                         && !sourceKindName.equals(RealmConstant.RelationKindClass)
                         && !sourceKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
-                        && !sourceKindName.equals(RealmConstant.ClassificationClass)
+                        //&& !sourceKindName.equals(RealmConstant.ClassificationClass)
 
                         && !targetKindName.equals(RealmConstant.ConceptionKindClass)
                         && !targetKindName.equals(RealmConstant.AttributesViewKindClass)
                         && !targetKindName.equals(RealmConstant.AttributeKindClass)
                         && !targetKindName.equals(RealmConstant.RelationKindClass)
                         && !targetKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
-                        && !targetKindName.equals(RealmConstant.ClassificationClass))
+                        //&& !targetKindName.equals(RealmConstant.ClassificationClass)
+                )
                 {
                     conceptionKindsInRelation.add(sourceKindName);
                     conceptionKindsInRelation.add(targetKindName);
+                    target_SourceKindNameMappingList.add(targetKindName+"<-"+sourceKindName);
                 }
             }
             for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
@@ -84,7 +84,8 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
                             && !sourceKindName.equals(RealmConstant.AttributeKindClass)
                             && !sourceKindName.equals(RealmConstant.RelationKindClass)
                             && !sourceKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
-                            && !sourceKindName.equals(RealmConstant.ClassificationClass))
+                            //&& !sourceKindName.equals(RealmConstant.ClassificationClass)
+                    )
                     {
                         if(!conceptionKindList.contains(sourceKindName)){
                             JsonObject jsonObject = Json.createObject();
@@ -99,21 +100,25 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
             }
             for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
                 String targetKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
+                String sourceKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
                 if(conceptionKindsInRelation.contains(targetKindName)){
                     if(! targetKindName.equals(RealmConstant.ConceptionKindClass)
                             && !targetKindName.equals(RealmConstant.AttributesViewKindClass)
                             && !targetKindName.equals(RealmConstant.AttributeKindClass)
                             && !targetKindName.equals(RealmConstant.RelationKindClass)
                             && !targetKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
-                            && !targetKindName.equals(RealmConstant.ClassificationClass))
+                            //&& !targetKindName.equals(RealmConstant.ClassificationClass)
+                    )
                     {
-                        String targetConceptionKindRealName = sourceConceptionKindList.contains(targetKindName) ? targetKindName+"(1)":targetKindName;
-                        if(!conceptionKindList.contains(targetConceptionKindRealName)){
-                            JsonObject jsonObject = Json.createObject();
-                            jsonObject.put("name",targetConceptionKindRealName);
-                            dataDataArray.set(idx_data, jsonObject);
-                            idx_data ++;
-                            conceptionKindList.add(targetConceptionKindRealName);
+                        if(target_SourceKindNameMappingList.contains(targetKindName+"<-"+sourceKindName)){
+                            String targetConceptionKindRealName = sourceConceptionKindList.contains(targetKindName) ? targetKindName+"(1)":targetKindName;
+                            if(!conceptionKindList.contains(targetConceptionKindRealName)){
+                                JsonObject jsonObject = Json.createObject();
+                                jsonObject.put("name",targetConceptionKindRealName);
+                                dataDataArray.set(idx_data, jsonObject);
+                                idx_data ++;
+                                conceptionKindList.add(targetConceptionKindRealName);
+                            }
                         }
                     }
                 }
@@ -127,14 +132,15 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
                         && !sourceKindName.equals(RealmConstant.AttributeKindClass)
                         && !sourceKindName.equals(RealmConstant.RelationKindClass)
                         && !sourceKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
-                        && !sourceKindName.equals(RealmConstant.ClassificationClass)
+                        //&& !sourceKindName.equals(RealmConstant.ClassificationClass)
 
                         && !targetKindName.equals(RealmConstant.ConceptionKindClass)
                         && !targetKindName.equals(RealmConstant.AttributesViewKindClass)
                         && !targetKindName.equals(RealmConstant.AttributeKindClass)
                         && !targetKindName.equals(RealmConstant.RelationKindClass)
                         && !targetKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
-                        && !targetKindName.equals(RealmConstant.ClassificationClass))
+                        //&& !targetKindName.equals(RealmConstant.ClassificationClass)
+                )
                 {
                     long relationCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
                     String targetConceptionKindRealName = sourceConceptionKindList.contains(targetKindName) ? targetKindName+"(1)":targetKindName;
