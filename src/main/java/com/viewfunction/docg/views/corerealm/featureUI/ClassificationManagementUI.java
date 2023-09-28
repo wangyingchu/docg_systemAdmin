@@ -32,6 +32,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.ClassificationCreatedEvent;
+import com.viewfunction.docg.element.eventHandling.ClassificationRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.ClassificationCorrelationInfoChart;
@@ -43,7 +44,8 @@ import dev.mett.vaadin.tooltip.Tooltips;
 import java.util.*;
 
 public class ClassificationManagementUI extends VerticalLayout implements
-        ClassificationCreatedEvent.ClassificationCreatedListener {
+        ClassificationCreatedEvent.ClassificationCreatedListener,
+        ClassificationRemovedEvent.ClassificationRemovedListener {
     private TextField classificationNameFilterField;
     private TextField classificationDescFilterField;
     private TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid;
@@ -541,6 +543,19 @@ public class ClassificationManagementUI extends VerticalLayout implements
     @Override
     public void receivedClassificationCreatedEvent(ClassificationCreatedEvent event) {
         refreshClassificationsData();
+        if(this.lastSelectedClassificationName != null){
+            this.lastSelectedClassificationMetaInfo = classificationMetaInfoMap.get(this.lastSelectedClassificationName);
+        }
+        this.classificationsMetaInfoFilterGrid.select(this.lastSelectedClassificationMetaInfo);
+        this.classificationsMetaInfoTreeGrid.select(this.lastSelectedClassificationMetaInfo);
+    }
+
+    @Override
+    public void receivedClassificationRemovedEvent(ClassificationRemovedEvent event) {
+        refreshClassificationsData();
+        if(event.getClassificationName() != null && event.getClassificationName().equals(this.lastSelectedClassificationName)){
+            resetSingleClassificationSummaryInfoArea();
+        }
         if(this.lastSelectedClassificationName != null){
             this.lastSelectedClassificationMetaInfo = classificationMetaInfoMap.get(this.lastSelectedClassificationName);
         }
