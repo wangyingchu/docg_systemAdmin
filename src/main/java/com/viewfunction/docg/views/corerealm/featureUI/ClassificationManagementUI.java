@@ -37,6 +37,7 @@ import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.ClassificationCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 
+import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.RemoveClassificationView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.*;
@@ -192,11 +193,11 @@ public class ClassificationManagementUI extends VerticalLayout implements
             }
         });
 
-        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKindMetaInfo -> {
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(classificationMetaInfo -> {
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
             Button configClassification = new Button(configIcon, event -> {
-                if(attributeKindMetaInfo instanceof ClassificationMetaInfo){
+                if(classificationMetaInfo instanceof ClassificationMetaInfo){
                     //renderAttributesViewKindConfigurationUI((AttributesViewKindMetaInfo)attributeKindMetaInfo);
                 }
             });
@@ -214,8 +215,8 @@ public class ClassificationManagementUI extends VerticalLayout implements
             removeClassification.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(attributeKindMetaInfo instanceof ClassificationMetaInfo){
-                        //renderRemoveAttributesViewKindUI((AttributesViewKindMetaInfo)attributeKindMetaInfo);
+                    if(classificationMetaInfo instanceof ClassificationMetaInfo){
+                        renderRemoveClassificationUI((ClassificationMetaInfo)classificationMetaInfo);
                     }
                 }
             });
@@ -558,5 +559,14 @@ public class ClassificationManagementUI extends VerticalLayout implements
         this.attributesViewKindCount.updateDisplayValue("-");
         this.conceptionEntityCount.updateDisplayValue("-");
         this.classificationCorrelationInfoChart.clearData();
+    }
+
+    private void renderRemoveClassificationUI(ClassificationMetaInfo classificationMetaInfo){
+        RemoveClassificationView removeClassificationView = new RemoveClassificationView(classificationMetaInfo);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除分类",null,true,600,240,false);
+        fixSizeWindow.setWindowContent(removeClassificationView);
+        fixSizeWindow.setModel(true);
+        removeClassificationView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }

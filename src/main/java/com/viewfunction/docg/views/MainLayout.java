@@ -287,6 +287,8 @@ public class MainLayout extends AppLayout {
                 AttributesViewKindDetachedFromConceptionKindEvent.class);
         _BLACKBOARD.register(ClassificationCreatedEvent.ClassificationCreatedListener.class,
                 ClassificationCreatedEvent.class);
+        _BLACKBOARD.register(ClassificationRemovedEvent.ClassificationRemovedListener.class,
+                ClassificationRemovedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }
