@@ -54,41 +54,67 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
             List<String> conceptionKindList = new ArrayList<>();
             List<String> sourceConceptionKindList = new ArrayList<>();
 
+            List<String> conceptionKindsInRelation = new ArrayList<>();
             for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
                 String sourceKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
+                String targetKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
                 if(!sourceKindName.equals(RealmConstant.ConceptionKindClass)
                         && !sourceKindName.equals(RealmConstant.AttributesViewKindClass)
                         && !sourceKindName.equals(RealmConstant.AttributeKindClass)
                         && !sourceKindName.equals(RealmConstant.RelationKindClass)
                         && !sourceKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
-                        && !sourceKindName.equals(RealmConstant.ClassificationClass))
-                {
-                    if(!conceptionKindList.contains(sourceKindName)){
-                        JsonObject jsonObject = Json.createObject();
-                        jsonObject.put("name",sourceKindName);
-                        dataDataArray.set(idx_data, jsonObject);
-                        idx_data ++;
-                        conceptionKindList.add(sourceKindName);
-                        sourceConceptionKindList.add(sourceKindName);
-                    }
-                }
-            }
-            for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
-                String targetKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
-                if(! targetKindName.equals(RealmConstant.ConceptionKindClass)
+                        && !sourceKindName.equals(RealmConstant.ClassificationClass)
+
+                        && !targetKindName.equals(RealmConstant.ConceptionKindClass)
                         && !targetKindName.equals(RealmConstant.AttributesViewKindClass)
                         && !targetKindName.equals(RealmConstant.AttributeKindClass)
                         && !targetKindName.equals(RealmConstant.RelationKindClass)
                         && !targetKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
                         && !targetKindName.equals(RealmConstant.ClassificationClass))
                 {
-                    String targetConceptionKindRealName = sourceConceptionKindList.contains(targetKindName) ? targetKindName+"(1)":targetKindName;
-                    if(!conceptionKindList.contains(targetConceptionKindRealName)){
-                        JsonObject jsonObject = Json.createObject();
-                        jsonObject.put("name",targetConceptionKindRealName);
-                        dataDataArray.set(idx_data, jsonObject);
-                        idx_data ++;
-                        conceptionKindList.add(targetConceptionKindRealName);
+                    conceptionKindsInRelation.add(sourceKindName);
+                    conceptionKindsInRelation.add(targetKindName);
+                }
+            }
+            for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
+                String sourceKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
+                if(conceptionKindsInRelation.contains(sourceKindName)){
+                    if(!sourceKindName.equals(RealmConstant.ConceptionKindClass)
+                            && !sourceKindName.equals(RealmConstant.AttributesViewKindClass)
+                            && !sourceKindName.equals(RealmConstant.AttributeKindClass)
+                            && !sourceKindName.equals(RealmConstant.RelationKindClass)
+                            && !sourceKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
+                            && !sourceKindName.equals(RealmConstant.ClassificationClass))
+                    {
+                        if(!conceptionKindList.contains(sourceKindName)){
+                            JsonObject jsonObject = Json.createObject();
+                            jsonObject.put("name",sourceKindName);
+                            dataDataArray.set(idx_data, jsonObject);
+                            idx_data ++;
+                            conceptionKindList.add(sourceKindName);
+                            sourceConceptionKindList.add(sourceKindName);
+                        }
+                    }
+                }
+            }
+            for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
+                String targetKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
+                if(conceptionKindsInRelation.contains(targetKindName)){
+                    if(! targetKindName.equals(RealmConstant.ConceptionKindClass)
+                            && !targetKindName.equals(RealmConstant.AttributesViewKindClass)
+                            && !targetKindName.equals(RealmConstant.AttributeKindClass)
+                            && !targetKindName.equals(RealmConstant.RelationKindClass)
+                            && !targetKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
+                            && !targetKindName.equals(RealmConstant.ClassificationClass))
+                    {
+                        String targetConceptionKindRealName = sourceConceptionKindList.contains(targetKindName) ? targetKindName+"(1)":targetKindName;
+                        if(!conceptionKindList.contains(targetConceptionKindRealName)){
+                            JsonObject jsonObject = Json.createObject();
+                            jsonObject.put("name",targetConceptionKindRealName);
+                            dataDataArray.set(idx_data, jsonObject);
+                            idx_data ++;
+                            conceptionKindList.add(targetConceptionKindRealName);
+                        }
                     }
                 }
             }
