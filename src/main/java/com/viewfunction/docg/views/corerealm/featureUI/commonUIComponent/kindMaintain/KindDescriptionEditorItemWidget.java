@@ -15,10 +15,7 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.eventHandling.AttributeKindDescriptionUpdatedEvent;
-import com.viewfunction.docg.element.eventHandling.AttributesViewKindDescriptionUpdatedEvent;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindDescriptionUpdatedEvent;
-import com.viewfunction.docg.element.eventHandling.RelationKindDescriptionUpdatedEvent;
+import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.util.ResourceHolder;
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -217,9 +214,10 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
                     attributesViewKindDescriptionUpdatedEvent.setAttributesViewKindDesc(this.currentKindDescription);
                     ResourceHolder.getApplicationBlackboard().fire(attributesViewKindDescriptionUpdatedEvent);
                 case Classification:
-
-
-
+                    ClassificationDescriptionUpdatedEvent classificationDescriptionUpdatedEvent = new ClassificationDescriptionUpdatedEvent();
+                    classificationDescriptionUpdatedEvent.setClassificationName(this.currentKindNameOrUID);
+                    classificationDescriptionUpdatedEvent.setClassificationDesc(this.currentKindDescription);
+                    ResourceHolder.getApplicationBlackboard().fire(classificationDescriptionUpdatedEvent);
             }
         }
     }
