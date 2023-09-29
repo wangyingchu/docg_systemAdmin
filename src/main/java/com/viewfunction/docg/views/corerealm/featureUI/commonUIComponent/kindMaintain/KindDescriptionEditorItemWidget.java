@@ -122,11 +122,15 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
                 if(targetAttributeKind != null){
                     this.currentKindDescription = targetAttributeKind.getAttributeKindDesc();
                 }
+            case Classification:
+                Classification targetClassification = coreRealm.getClassification(this.currentKindNameOrUID);
+                if(targetClassification != null){
+                    this.currentKindDescription = targetClassification.getClassificationDesc();
+                }
         }
         if(this.currentKindDescription != null){
             this.kindDescriptionLabel.setText("("+this.currentKindDescription+")");
         }
-
     }
 
     private void enableEditAttributeValue(){
@@ -174,6 +178,11 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
                 if(targetAttributeKind != null){
                     updateResult = targetAttributeKind.updateAttributeKindDesc(this.kindDescriptionEditor.getValue());
                 }
+            case Classification:
+                Classification targetClassification = coreRealm.getClassification(this.currentKindNameOrUID);
+                if(targetClassification != null){
+                    updateResult = targetClassification.updateClassificationDesc(this.kindDescriptionEditor.getValue());
+                }
         }
         if(updateResult){
             this.currentKindDescription = this.kindDescriptionEditor.getValue();
@@ -207,6 +216,10 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
                     attributesViewKindDescriptionUpdatedEvent.setAttributesViewKindUID(this.currentKindNameOrUID);
                     attributesViewKindDescriptionUpdatedEvent.setAttributesViewKindDesc(this.currentKindDescription);
                     ResourceHolder.getApplicationBlackboard().fire(attributesViewKindDescriptionUpdatedEvent);
+                case Classification:
+
+
+
             }
         }
     }
