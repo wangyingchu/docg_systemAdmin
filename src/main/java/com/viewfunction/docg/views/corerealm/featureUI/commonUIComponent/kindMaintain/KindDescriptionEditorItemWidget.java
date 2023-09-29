@@ -24,7 +24,7 @@ import dev.mett.vaadin.tooltip.Tooltips;
 
 public class KindDescriptionEditorItemWidget extends HorizontalLayout {
 
-    public enum KindType {ConceptionKind,RelationKind,AttributesViewKind,AttributeKind}
+    public enum KindType {ConceptionKind,RelationKind,AttributesViewKind,AttributeKind,Classification}
     private KindType currentKindType;
     private String currentKindNameOrUID;
     private String currentKindDescription;
