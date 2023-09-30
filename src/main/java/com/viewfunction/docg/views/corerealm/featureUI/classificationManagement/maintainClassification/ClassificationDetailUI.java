@@ -1,11 +1,12 @@
 package com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.maintainClassification;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -28,6 +29,9 @@ public class ClassificationDetailUI extends VerticalLayout implements
     private int currentBrowserHeight = 0;
     private Registration listener;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
+    private VerticalLayout leftSideContainerLayout;
+    private VerticalLayout rightSideContainerLayout;
+
     public ClassificationDetailUI(){}
 
     public ClassificationDetailUI(String classificationName){
@@ -69,7 +73,56 @@ public class ClassificationDetailUI extends VerticalLayout implements
         this.kindDescriptionEditorItemWidget = new KindDescriptionEditorItemWidget(this.classificationName,Classification);
         secTitleElementsList.add(this.kindDescriptionEditorItemWidget);
 
-        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAGS),"Classification 分类  ",secTitleElementsList,null);
+        List<Component> buttonList = new ArrayList<>();
+
+        Button attributesViewKindMetaInfoButton= new Button("分类元数据");
+        attributesViewKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
+        attributesViewKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        attributesViewKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //renderShowMetaInfoUI();
+            }
+        });
+        buttonList.add(attributesViewKindMetaInfoButton);
+
+        Icon divIcon = VaadinIcon.LINE_V.create();
+        divIcon.setSize("8px");
+        buttonList.add(divIcon);
+
+        Button refreshAttributesViewKindConfigInfoButton= new Button("刷新分类配置信息");
+        refreshAttributesViewKindConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
+        refreshAttributesViewKindConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        refreshAttributesViewKindConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //containerConceptionKindsConfigView.refreshConceptionKindsInfo();
+                //containsAttributeKindsConfigView.refreshAttributeTypesInfo();
+                //refreshAttributesViewKindCorrelationInfoChart();
+            }
+        });
+        buttonList.add(refreshAttributesViewKindConfigInfoButton);
+
+        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAGS),"Classification 分类  ",secTitleElementsList,buttonList);
         add(secondaryTitleActionBar);
+
+        HorizontalLayout mainContainerLayout = new HorizontalLayout();
+        mainContainerLayout.setWidthFull();
+        add(mainContainerLayout);
+
+
+        leftSideContainerLayout = new VerticalLayout();
+        leftSideContainerLayout.setSpacing(false);
+        leftSideContainerLayout.setPadding(false);
+        leftSideContainerLayout.setMargin(false);
+
+        mainContainerLayout.add(leftSideContainerLayout);
+        leftSideContainerLayout.setWidth(350, Unit.PIXELS);
+        leftSideContainerLayout.getStyle()
+                .set("border-right", "1px solid var(--lumo-contrast-20pct)");
+
+        ClassificationAttributesEditorView classificationAttributesEditorView= new ClassificationAttributesEditorView(this.classificationName,this.attributesViewKindDetailViewHeightOffset);
+        leftSideContainerLayout.add(classificationAttributesEditorView);
+
     }
 }
