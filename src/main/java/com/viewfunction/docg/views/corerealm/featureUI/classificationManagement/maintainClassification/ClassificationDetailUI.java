@@ -2,6 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.classificationManagement
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -21,7 +22,7 @@ import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.
 
 @Route("classificationDetailInfo/:classificationName")
 public class ClassificationDetailUI extends VerticalLayout implements
-        BeforeEnterObserver {
+        BeforeEnterObserver{
     private String classificationName;
     private int attributesViewKindDetailViewHeightOffset = 40;
     private int currentBrowserHeight = 0;
@@ -44,6 +45,14 @@ public class ClassificationDetailUI extends VerticalLayout implements
         super.onAttach(attachEvent);
         //ResourceHolder.getApplicationBlackboard().addListener(this);
         renderClassificationData();
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
+        super.onDetach(detachEvent);
+        //ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     private void renderClassificationData(){

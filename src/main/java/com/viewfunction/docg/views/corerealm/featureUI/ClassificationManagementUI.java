@@ -33,6 +33,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.ClassificationCreatedEvent;
+import com.viewfunction.docg.element.eventHandling.ClassificationDescriptionUpdatedEvent;
 import com.viewfunction.docg.element.eventHandling.ClassificationRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
@@ -47,7 +48,8 @@ import java.util.*;
 
 public class ClassificationManagementUI extends VerticalLayout implements
         ClassificationCreatedEvent.ClassificationCreatedListener,
-        ClassificationRemovedEvent.ClassificationRemovedListener {
+        ClassificationRemovedEvent.ClassificationRemovedListener,
+        ClassificationDescriptionUpdatedEvent.ClassificationDescriptionUpdatedListener{
     private TextField classificationNameFilterField;
     private TextField classificationDescFilterField;
     private TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid;
@@ -563,6 +565,27 @@ public class ClassificationManagementUI extends VerticalLayout implements
         }
         this.classificationsMetaInfoFilterGrid.select(this.lastSelectedClassificationMetaInfo);
         this.classificationsMetaInfoTreeGrid.select(this.lastSelectedClassificationMetaInfo);
+    }
+
+    @Override
+    public void receivedClassificationDescriptionUpdatedEvent(ClassificationDescriptionUpdatedEvent event) {
+        if(event.getClassificationName() != null && event.getClassificationDesc() != null){
+            ListDataProvider dataProvider=(ListDataProvider)classificationsMetaInfoFilterGrid.getDataProvider();
+            Collection<ClassificationMetaInfo> classificationMetaInfoList = dataProvider.getItems();
+            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationMetaInfoList){
+                if(currentClassificationMetaInfo.getClassificationName().equals(event.getClassificationName())){
+                    currentClassificationMetaInfo.setClassificationDesc(event.getClassificationDesc());
+                }
+            }
+            dataProvider.refreshAll();
+            TreeDataProvider<ClassificationMetaInfo> dataProvider2 = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
+            dataProvider2.refreshAll();
+            if(lastSelectedClassificationMetaInfo != null &&
+                    lastSelectedClassificationMetaInfo.getClassificationName().equals(event.getClassificationName())){
+                String attributeNameText = lastSelectedClassificationMetaInfo.getClassificationName() +" ( "+event.getClassificationDesc()+" )";
+                this.secondaryTitleActionBar.updateTitleContent(attributeNameText);
+            }
+        }
     }
 
     private void resetSingleClassificationSummaryInfoArea(){
