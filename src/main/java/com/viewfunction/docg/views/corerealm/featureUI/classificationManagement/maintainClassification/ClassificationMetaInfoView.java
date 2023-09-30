@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind;
+package com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.maintainClassification;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
@@ -8,7 +8,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
@@ -20,23 +21,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class AttributesViewKindMetaInfoView extends VerticalLayout {
-    private String attributesViewKindUID;
+public class ClassificationMetaInfoView extends VerticalLayout {
+
+    private String classificationName;
     private DateTimePicker createDate;
     private DateTimePicker lastUpdateDate;
     private TextField dataSource;
     private TextField creator;
 
-    public AttributesViewKindMetaInfoView(String attributesViewKindUID){
+    public ClassificationMetaInfoView(String classificationName){
         this.setMargin(false);
         this.setSpacing(false);
-        this.attributesViewKindUID = attributesViewKindUID;
+        this.classificationName = classificationName;
 
-        Icon attributesViewKindIcon = VaadinIcon.TASKS.create();
+        Icon attributesViewKindIcon = VaadinIcon.TAG.create();
         attributesViewKindIcon.setSize("12px");
         attributesViewKindIcon.getStyle().set("padding-right","3px");
         List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
-        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(attributesViewKindIcon, attributesViewKindUID));
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(attributesViewKindIcon, classificationName));
 
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
@@ -66,25 +68,26 @@ public class AttributesViewKindMetaInfoView extends VerticalLayout {
         super.onAttach(attachEvent);
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
-        AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
-        if(targetAttributesViewKind != null){
+        Classification targetClassification = coreRealm.getClassification(this.classificationName);
+
+        if(targetClassification != null){
             ZoneId zoneId = ZoneId.systemDefault();
-            Date createdDateValue = targetAttributesViewKind.getCreateDateTime();
+            Date createdDateValue = targetClassification.getCreateDateTime();
             Instant createInstant = createdDateValue.toInstant();
             createDate.setValue(createInstant.atZone(zoneId).toLocalDateTime());
-            Date lastModifyDateValue = targetAttributesViewKind.getLastModifyDateTime();
+            Date lastModifyDateValue = targetClassification.getLastModifyDateTime();
             Instant lastUpdateInstant = lastModifyDateValue.toInstant();
             lastUpdateDate.setValue(lastUpdateInstant.atZone(zoneId).toLocalDateTime());
-            String creatorIdValue = targetAttributesViewKind.getCreatorId();
+            String creatorIdValue = targetClassification.getCreatorId();
             if(creatorIdValue != null){
                 creator.setValue(creatorIdValue);
             }
-            String dataOriginValue = targetAttributesViewKind.getDataOrigin();
+            String dataOriginValue = targetClassification.getDataOrigin();
             if(dataOriginValue != null){
                 dataSource.setValue(dataOriginValue);
             }
         }else{
-            CommonUIOperationUtil.showPopupNotification(" UID 为："+ this.attributesViewKindUID +" 的属性视图类型不存在", NotificationVariant.LUMO_ERROR);
+            CommonUIOperationUtil.showPopupNotification(" 名称为："+ this.classificationName +" 的分类不存在", NotificationVariant.LUMO_ERROR);
         }
         coreRealm.closeGlobalSession();
     }

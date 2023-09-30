@@ -12,6 +12,7 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
@@ -81,7 +82,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
         attributesViewKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderShowMetaInfoUI();
+                renderShowMetaInfoUI();
             }
         });
         buttonList.add(attributesViewKindMetaInfoButton);
@@ -110,7 +111,6 @@ public class ClassificationDetailUI extends VerticalLayout implements
         mainContainerLayout.setWidthFull();
         add(mainContainerLayout);
 
-
         leftSideContainerLayout = new VerticalLayout();
         leftSideContainerLayout.setSpacing(false);
         leftSideContainerLayout.setPadding(false);
@@ -124,5 +124,13 @@ public class ClassificationDetailUI extends VerticalLayout implements
         ClassificationAttributesEditorView classificationAttributesEditorView= new ClassificationAttributesEditorView(this.classificationName,this.attributesViewKindDetailViewHeightOffset);
         leftSideContainerLayout.add(classificationAttributesEditorView);
 
+    }
+
+    private void renderShowMetaInfoUI(){
+        ClassificationMetaInfoView classificationMetaInfoView = new ClassificationMetaInfoView(this.classificationName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"分类元数据信息",null,true,500,340,false);
+        fixSizeWindow.setWindowContent(classificationMetaInfoView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }
