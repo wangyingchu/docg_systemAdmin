@@ -295,6 +295,8 @@ public class MainLayout extends AppLayout {
                 ClassificationAttributeAddedEvent.class);
         _BLACKBOARD.register(ClassificationAttributeDeletedEvent.ClassificationAttributeDeletedListener.class,
                 ClassificationAttributeDeletedEvent.class);
+        _BLACKBOARD.register(ClassificationAttributeUpdatedEvent.ClassificationAttributeUpdatedListener.class,
+                ClassificationAttributeUpdatedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

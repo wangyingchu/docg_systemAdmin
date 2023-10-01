@@ -31,6 +31,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
+import com.viewfunction.docg.element.eventHandling.ClassificationAttributeUpdatedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeUpdatedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationEntityAttributeUpdatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
@@ -534,10 +535,24 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                                     CommonUIOperationUtil.showPopupNotification("关系类型 " + kindName + " 中不存在 UID 为" + entityUID + " 的关系实体", NotificationVariant.LUMO_ERROR);
                                 }
                             }
+                            break;
+                        case Classification:
+                            targetEntity = coreRealm.getClassification(this.kindName);
+                            if (targetEntity == null) {
+                                CommonUIOperationUtil.showPopupNotification("分类 " + kindName + " 不存在", NotificationVariant.LUMO_ERROR);
+                            }
                     }
                     if(targetEntity != null){
                         if (!targetEntity.hasAttribute(attributeName)) {
-                            CommonUIOperationUtil.showPopupNotification("UID 为 " + entityUID + " 的实体中不存在属性 " + attributeName, NotificationVariant.LUMO_ERROR);
+                            boolean isClassification = false;
+                            switch(this.entityKindType){
+                                case Classification -> isClassification = true;
+                            }
+                            if(isClassification){
+                                CommonUIOperationUtil.showPopupNotification("名称为 " + kindName + " 的分类中不存在属性 " + attributeName, NotificationVariant.LUMO_ERROR);
+                            }else{
+                                CommonUIOperationUtil.showPopupNotification("UID 为 " + entityUID + " 的实体中不存在属性 " + attributeName, NotificationVariant.LUMO_ERROR);
+                            }
                         } else {
                             try {
                                 AttributeValue attributeValue = null;
@@ -585,8 +600,13 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                                             relationEntityAttributeUpdatedEvent.setAttributeValue(attributeValue);
                                             ResourceHolder.getApplicationBlackboard().fire(relationEntityAttributeUpdatedEvent);
                                             CommonUIOperationUtil.showPopupNotification("在 UID 为 " + entityUID + " 的关系实体中更新属性 " + attributeName + " 成功", NotificationVariant.LUMO_SUCCESS);
+                                        case Classification:
+                                            ClassificationAttributeUpdatedEvent classificationAttributeUpdatedEvent = new ClassificationAttributeUpdatedEvent();
+                                            classificationAttributeUpdatedEvent.setClassificationName(kindName);
+                                            classificationAttributeUpdatedEvent.setAttributeValue(attributeValue);
+                                            ResourceHolder.getApplicationBlackboard().fire(classificationAttributeUpdatedEvent);
+                                            CommonUIOperationUtil.showPopupNotification("在名称为 " + kindName + " 的分类中更新属性 " + attributeName + " 成功", NotificationVariant.LUMO_SUCCESS);
                                     }
-
                                     updateAttributeValueButton.setVisible(true);
                                     cancelUpdateValueButton.setVisible(false);
                                     confirmUpdateAttributeValueButton.setVisible(false);
