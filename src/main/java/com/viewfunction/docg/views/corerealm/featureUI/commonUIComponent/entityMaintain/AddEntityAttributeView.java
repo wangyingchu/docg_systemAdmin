@@ -740,7 +740,7 @@ public class AddEntityAttributeView extends VerticalLayout {
                                     classificationAttributeAddedEvent.setClassificationName(this.kindName);
                                     classificationAttributeAddedEvent.setAttributeValue(attributeValue);
                                     ResourceHolder.getApplicationBlackboard().fire(classificationAttributeAddedEvent);
-                                    CommonUIOperationUtil.showPopupNotification("在名称为 "+ entityUID +" 的分类中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
+                                    CommonUIOperationUtil.showPopupNotification("在名称为 "+ kindName +" 的分类中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
                             }
                             if(containerDialog != null){
                                 containerDialog.close();

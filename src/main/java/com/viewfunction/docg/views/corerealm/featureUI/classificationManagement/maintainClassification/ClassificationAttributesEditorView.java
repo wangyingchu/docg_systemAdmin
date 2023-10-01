@@ -11,20 +11,20 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.element.eventHandling.ClassificationAttributeAddedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
 
 import java.util.List;
 
-public class ClassificationAttributesEditorView extends VerticalLayout {
+public class ClassificationAttributesEditorView extends VerticalLayout implements
+        ClassificationAttributeAddedEvent.ClassificationAttributeAddedListener {
 
     private String classificationName;
     private int classificationAttributesEditorViewHeightOffset;
@@ -107,7 +107,7 @@ public class ClassificationAttributesEditorView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        //ResourceHolder.getApplicationBlackboard().addListener(this);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             attributeEditorsContainer.setHeight(event.getHeight()-classificationAttributesEditorViewHeightOffset,Unit.PIXELS);
@@ -125,7 +125,18 @@ public class ClassificationAttributesEditorView extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
+    @Override
+    public void receivedClassificationAttributeAddedEvent(ClassificationAttributeAddedEvent event) {
+        String classificationName = event.getClassificationName();
+        AttributeValue attributeValue = event.getAttributeValue();
+        if(classificationName != null && attributeValue != null){
+            if(this.classificationName.equals(classificationName)){
+                AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.classificationName,null,attributeValue, AttributeEditorItemWidget.KindType.Classification);
+                attributeEditorsContainer.add(attributeEditorItemWidget);
+            }
+        }
+    }
 }
