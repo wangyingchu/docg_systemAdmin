@@ -17,6 +17,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.eventHandling.ClassificationAttributeAddedEvent;
+import com.viewfunction.docg.element.eventHandling.ClassificationAttributeDeletedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
@@ -24,7 +25,8 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityM
 import java.util.List;
 
 public class ClassificationAttributesEditorView extends VerticalLayout implements
-        ClassificationAttributeAddedEvent.ClassificationAttributeAddedListener {
+        ClassificationAttributeAddedEvent.ClassificationAttributeAddedListener,
+        ClassificationAttributeDeletedEvent.ClassificationAttributeDeletedListener{
 
     private String classificationName;
     private int classificationAttributesEditorViewHeightOffset;
@@ -87,7 +89,7 @@ public class ClassificationAttributesEditorView extends VerticalLayout implement
                             currentAttributeName.equals(RealmConstant._NameProperty)||
                             currentAttributeName.equals(RealmConstant._DescProperty))
                     {}else{
-                        AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.classificationName,null,currentAttributeValue, AttributeEditorItemWidget.KindType.Classification);
+                        AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.classificationName,"PLACEHOLDER_UID",currentAttributeValue, AttributeEditorItemWidget.KindType.Classification);
                         attributeEditorsContainer.add(attributeEditorItemWidget);
                     }
                 }
@@ -96,8 +98,8 @@ public class ClassificationAttributesEditorView extends VerticalLayout implement
     }
 
     private void renderAddNewAttributeUI(){
-        AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.classificationName,"MOCK_UID", AddEntityAttributeView.KindType.Classification);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加实体属性",null,true,480,200,false);
+        AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.classificationName,"PLACEHOLDER_UID", AddEntityAttributeView.KindType.Classification);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加实体属性",null,true,480,210,false);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
@@ -134,8 +136,28 @@ public class ClassificationAttributesEditorView extends VerticalLayout implement
         AttributeValue attributeValue = event.getAttributeValue();
         if(classificationName != null && attributeValue != null){
             if(this.classificationName.equals(classificationName)){
-                AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.classificationName,null,attributeValue, AttributeEditorItemWidget.KindType.Classification);
+                AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.classificationName,"PLACEHOLDER_UID",attributeValue, AttributeEditorItemWidget.KindType.Classification);
                 attributeEditorsContainer.add(attributeEditorItemWidget);
+            }
+        }
+    }
+
+    @Override
+    public void receivedClassificationAttributeDeletedEvent(ClassificationAttributeDeletedEvent event) {
+        String classificationName = event.getClassificationName();
+        if(classificationName != null && event.getAttributeName() != null){
+            if(this.classificationName.equals(classificationName)){
+                String attributeName = event.getAttributeName();
+
+                int attributeEditorItemWidgetCount = attributeEditorsContainer.getComponentCount();
+                for(int i=0;i<attributeEditorItemWidgetCount;i++){
+                    AttributeEditorItemWidget currentAttributeEditorItemWidget = (AttributeEditorItemWidget)attributeEditorsContainer.getComponentAt(i);
+                    String currentAttributeName = currentAttributeEditorItemWidget.getAttributeName();
+                    if(attributeName.equals(currentAttributeName)){
+                        attributeEditorsContainer.remove(currentAttributeEditorItemWidget);
+                        return;
+                    }
+                }
             }
         }
     }

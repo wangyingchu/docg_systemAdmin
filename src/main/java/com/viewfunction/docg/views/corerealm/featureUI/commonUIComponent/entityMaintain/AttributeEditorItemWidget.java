@@ -36,6 +36,7 @@ import com.viewfunction.docg.element.eventHandling.RelationEntityAttributeUpdate
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.maintainClassification.DeleteClassificationAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.DeleteConceptionEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.DeleteRelationEntityAttributeView;
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -766,6 +767,13 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                     fixSizeWindow2.setModel(true);
                     deleteRelationEntityAttributeView.setContainerDialog(fixSizeWindow2);
                     fixSizeWindow2.show();
+                case Classification:
+                    DeleteClassificationAttributeView deleteClassificationAttributeView = new DeleteClassificationAttributeView(this.kindName,this.attributeName);
+                    FixSizeWindow fixSizeWindow3 = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除分类属性",null,true,550,160,false);
+                    fixSizeWindow3.setWindowContent(deleteClassificationAttributeView);
+                    fixSizeWindow3.setModel(true);
+                    deleteClassificationAttributeView.setContainerDialog(fixSizeWindow3);
+                    fixSizeWindow3.show();
             }
         }
         if(this.attributeValueOperateHandler != null){

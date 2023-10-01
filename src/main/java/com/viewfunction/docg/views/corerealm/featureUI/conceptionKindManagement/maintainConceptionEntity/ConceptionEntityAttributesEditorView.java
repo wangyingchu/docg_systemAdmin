@@ -118,7 +118,7 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
 
     private void renderAddNewAttributeUI(){
         AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.conceptionKind,this.conceptionEntityUID, AddEntityAttributeView.KindType.ConceptionKind);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加实体属性",null,true,480,200,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加实体属性",null,true,480,210,false);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
