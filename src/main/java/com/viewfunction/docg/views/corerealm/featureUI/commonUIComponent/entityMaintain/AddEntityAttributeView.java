@@ -75,7 +75,7 @@ public class AddEntityAttributeView extends VerticalLayout {
         switch (this.entityKindType){
             case ConceptionKind ->  kindIcon = VaadinIcon.CUBE.create();
             case RelationKind -> kindIcon = VaadinIcon.CONNECT_O.create();
-            case Classification -> kindIcon = VaadinIcon.TAG.create();
+            case Classification -> kindIcon = VaadinIcon.TAGS.create();
         }
         kindIcon.setSize("12px");
         kindIcon.getStyle().set("padding-right","3px");
