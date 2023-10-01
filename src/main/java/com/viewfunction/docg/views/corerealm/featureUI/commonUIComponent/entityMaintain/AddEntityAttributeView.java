@@ -30,6 +30,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.eventHandling.ClassificationAttributeAddedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeAddedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationEntityAttributeAddedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
@@ -45,7 +46,7 @@ import java.util.*;
 
 public class AddEntityAttributeView extends VerticalLayout {
 
-    public enum KindType {ConceptionKind,RelationKind}
+    public enum KindType {ConceptionKind,RelationKind,Classification}
 
     private Dialog containerDialog;
     private NativeLabel errorMessage;
@@ -675,6 +676,17 @@ public class AddEntityAttributeView extends VerticalLayout {
                                 }
                             }
                         }
+                    case Classification:
+                        targetEntity = coreRealm.getClassification(this.kindName);
+                        if(targetEntity == null){
+                            CommonUIOperationUtil.showPopupNotification("分类 "+ kindName +" 不存在", NotificationVariant.LUMO_ERROR);
+                            executeAddOperation = false;
+                        }else{
+                            if(targetEntity.hasAttribute(attributeName)){
+                                CommonUIOperationUtil.showPopupNotification("名称为 "+ entityUID +" 的分类中已经存在属性 "+attributeName, NotificationVariant.LUMO_ERROR);
+                                executeAddOperation = false;
+                            }
+                        }
                 }
                 if(executeAddOperation){
                     try {
@@ -723,6 +735,12 @@ public class AddEntityAttributeView extends VerticalLayout {
                                     relationEntityAttributeAddedEvent.setAttributeValue(attributeValue);
                                     ResourceHolder.getApplicationBlackboard().fire(relationEntityAttributeAddedEvent);
                                     CommonUIOperationUtil.showPopupNotification("在 UID 为 "+ entityUID +" 的关系实体中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
+                                case Classification:
+                                    ClassificationAttributeAddedEvent classificationAttributeAddedEvent = new ClassificationAttributeAddedEvent();
+                                    classificationAttributeAddedEvent.setClassificationName(this.kindName);
+                                    classificationAttributeAddedEvent.setAttributeValue(attributeValue);
+                                    ResourceHolder.getApplicationBlackboard().fire(classificationAttributeAddedEvent);
+                                    CommonUIOperationUtil.showPopupNotification("在名称为 "+ entityUID +" 的分类中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
                             }
                             if(containerDialog != null){
                                 containerDialog.close();

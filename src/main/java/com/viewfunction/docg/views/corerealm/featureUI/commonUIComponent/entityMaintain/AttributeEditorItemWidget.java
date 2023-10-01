@@ -47,7 +47,7 @@ import java.time.LocalTime;
 import java.util.Date;
 
 public class AttributeEditorItemWidget extends VerticalLayout {
-    public enum KindType {ConceptionKind,RelationKind}
+    public enum KindType {ConceptionKind,RelationKind,Classification}
     private Component valueEditor;
     private AttributeValue attributeValue;
     private String attributeName;
