@@ -26,7 +26,7 @@ import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.
 public class ClassificationDetailUI extends VerticalLayout implements
         BeforeEnterObserver{
     private String classificationName;
-    private int attributesViewKindDetailViewHeightOffset = 40;
+    private int attributesViewKindDetailViewHeightOffset = 170;
     private int currentBrowserHeight = 0;
     private Registration listener;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
@@ -42,7 +42,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.classificationName = beforeEnterEvent.getRouteParameters().get("classificationName").get();
-        this.attributesViewKindDetailViewHeightOffset = -10;
+        this.attributesViewKindDetailViewHeightOffset = 110;
     }
 
     @Override
