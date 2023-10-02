@@ -1,6 +1,7 @@
 {
  "packageJsonDependencies": {
   "@flowingcode/font-awesome-iron-iconset": "4.2.0",
+  "@polymer/iron-icon": "3.0.1",
   "@polymer/polymer": "3.5.1",
   "@vaadin/a11y-base": "24.1.9",
   "@vaadin/accordion": "24.1.9",
@@ -85,6 +86,9 @@
   "@flowingcode/font-awesome-iron-iconset": "4.2.0",
   "@lit/reactive-element": "1.6.2",
   "@open-wc/dedupe-mixin": "1.3.1",
+  "@polymer/iron-flex-layout": "3.0.1",
+  "@polymer/iron-icon": "3.0.1",
+  "@polymer/iron-meta": "3.0.1",
   "@polymer/polymer": "3.5.1",
   "@popperjs/core": "2.11.6",
   "@vaadin/a11y-base": "24.1.9",
@@ -177,6 +181,7 @@
   "wkt-parser": "1.3.2"
  },
  "bundleImports": [
+  "@polymer/iron-icon/iron-icon.js",
   "@vaadin/accordion/theme/lumo/vaadin-accordion-panel.js",
   "@vaadin/accordion/theme/lumo/vaadin-accordion.js",
   "@vaadin/app-layout/theme/lumo/vaadin-app-layout.js",
@@ -267,6 +272,7 @@
   "Frontend/generated/jar-resources/font-awesome-iron-iconset/fab.js",
   "Frontend/generated/jar-resources/font-awesome-iron-iconset/far.js",
   "Frontend/generated/jar-resources/font-awesome-iron-iconset/fas.js",
+  "Frontend/generated/jar-resources/grid-tree-toggle-adjust.css",
   "Frontend/generated/jar-resources/gridConnector.js",
   "Frontend/generated/jar-resources/gridProConnector.js",
   "Frontend/generated/jar-resources/js/tooltip/tooltips.js",
@@ -336,6 +342,7 @@
   "font-awesome-iron-iconset/fab.js": "d6f106dafa645db5f1a5ffb4cf90dbe6394c4265ed9775552cf09172b7b54da4",
   "font-awesome-iron-iconset/far.js": "9b638b8cdb41d7ec0099130fffa08a03052d836f147b36cb3de9d172f49cec38",
   "font-awesome-iron-iconset/fas.js": "eb6726c4304cd9b4dec6b956bc0f31d1e4e3623d7874b861d9c656573226fcb2",
+  "grid-tree-toggle-adjust.css": "a6cad36136feb6cb2b414d0ec79a83c120997311298510c0e21716a3fbddc3f8",
   "gridConnector.js": "8649f4d9b54b728900474be227074a41334c08d677903501220ce5a188492a14",
   "gridProConnector.js": "bda2f830ef5a534e672457a633787dad9d7e69467b90330d1f5310d01dcbb61f",
   "js/tooltip/tooltips.js": "09388049eeb193ce62efb550ff7a031a83d0b1a838571356b3bdf2629aa67d96",
@@ -356,7 +363,7 @@
   "docg-pac": "{\n  \"lumoImports\" : [ \"typography\", \"color\", \"spacing\", \"badge\", \"utility\" ]\n}"
  },
  "entryScripts": [
-  "VAADIN/build/indexhtml-a17b5b05.js"
+  "VAADIN/build/indexhtml-b02e6d0a.js"
  ],
  "webComponents": [],
  "cvdlModules": {
@@ -389,8 +396,8 @@
    "version": "24.1.9"
   }
  },
- "packageJsonHash": "a896ea83cb97c255f5f469bdd6a264ed342e768c6394c56e5742ab38c77be29f",
+ "packageJsonHash": "1eb45ebec9faea0134c15e73721c8da22276c5c296e0cc4bc17bdcdc75cebf22",
  "indexHtmlGenerated": [
-  "  <script type=\"module\" crossorigin src=\"./VAADIN/build/indexhtml-a17b5b05.js\"></script>"
+  "  <script type=\"module\" crossorigin src=\"./VAADIN/build/indexhtml-b02e6d0a.js\"></script>"
  ]
 }

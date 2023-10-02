@@ -8,14 +8,20 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
-import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
-import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
+import org.vaadin.tatu.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +37,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
     private Registration listener;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
     private VerticalLayout leftSideContainerLayout;
+    private VerticalLayout middleContainerLayout;
     private VerticalLayout rightSideContainerLayout;
 
     public ClassificationDetailUI(){}
@@ -118,11 +125,96 @@ public class ClassificationDetailUI extends VerticalLayout implements
 
         mainContainerLayout.add(leftSideContainerLayout);
         leftSideContainerLayout.setWidth(350, Unit.PIXELS);
-        leftSideContainerLayout.getStyle()
-                .set("border-right", "1px solid var(--lumo-contrast-20pct)");
+        leftSideContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
         ClassificationAttributesEditorView classificationAttributesEditorView= new ClassificationAttributesEditorView(this.classificationName,this.attributesViewKindDetailViewHeightOffset);
         leftSideContainerLayout.add(classificationAttributesEditorView);
+
+        middleContainerLayout = new VerticalLayout();
+        middleContainerLayout.setSpacing(false);
+        middleContainerLayout.setPadding(false);
+        middleContainerLayout.setMargin(false);
+        mainContainerLayout.add(middleContainerLayout);
+        middleContainerLayout.setWidth(400, Unit.PIXELS);
+        middleContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
+
+        HorizontalLayout actionButtonBarContainer = new HorizontalLayout();
+        actionButtonBarContainer.setSpacing(false);
+
+        SecondaryIconTitle viewTitle = new SecondaryIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类继承信息",actionButtonBarContainer);
+        //set height to 39 in order to make ConceptionEntityAttributesEditorView and ConceptionEntityIntegratedInfoView have the same tab bottom line align
+        viewTitle.setHeight(39, Unit.PIXELS);
+        middleContainerLayout.add(viewTitle);
+        HorizontalLayout spaceDivLayout = new HorizontalLayout();
+        spaceDivLayout.setWidthFull();
+        spaceDivLayout.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        middleContainerLayout.add(spaceDivLayout);
+
+        VerticalLayout displayItemContainer7 = new VerticalLayout();
+        displayItemContainer7.getStyle().set("padding-left","10px");
+        middleContainerLayout.add(displayItemContainer7);
+        SecondaryKeyValueDisplayItem conceptionEntityCount= new SecondaryKeyValueDisplayItem(displayItemContainer7, VaadinIcon.STOCK.create(),"相关 ConceptionEntity-概念实体数量:","-");
+
+        ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及三代内后代分类分布");
+        middleContainerLayout.add(infoTitle);
+        SecondaryTitleActionBar secondaryTitleActionBar2 = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"sssss(csssss)",null,null);
+        secondaryTitleActionBar2.setWidth(100,Unit.PERCENTAGE);
+        middleContainerLayout.add(secondaryTitleActionBar2);
+
+
+
+
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及三代内后代分类分布");
+        middleContainerLayout.add(infoTitle2);
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        try {
+            List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
+
+
+
+            Tree<ClassificationMetaInfo> tree = new Tree<>(ClassificationMetaInfo::getClassificationName);
+            TreeData<ClassificationMetaInfo> treeData = new TreeData<>();
+            treeData.addRootItems(classificationsMetaInfoList);
+
+
+
+            tree.setTreeData(treeData);
+
+
+            //tree.set
+            //tree.setItems(ClassificationMetaInfo::getClassificationName,
+              //      null);
+
+            //tree.setItemIconProvider(item -> getIcon(item));
+            //tree.setItemIconSrcProvider(item -> getImageIconSrc(item));
+           // tree.setItemTitleProvider(Department::getManager);
+
+           // tree.addExpandListener(event -> message.setValue(
+            //        String.format("Expanded %s item(s)", event.getItems().size())
+             //               + "\n" + message.getValue()));
+            //tree.addCollapseListener(event -> message.setValue(
+             //       String.format("Collapsed %s item(s)", event.getItems().size())
+             //               + "\n" + message.getValue()));
+
+            //tree.asSingleSelect().addValueChangeListener(event -> {
+          //      if (event.getValue() != null)
+                  //  System.out.println(event.getValue().getName() + " selected");
+          //  });
+            //tree.setHeightByRows(true);
+
+
+            middleContainerLayout.add(tree);
+
+
+
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+
 
     }
 

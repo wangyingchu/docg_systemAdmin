@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@flowingcode/font-awesome-iron-iconset": "4.2.0",
+    "@polymer/iron-icon": "3.0.1",
     "@polymer/polymer": "3.5.1",
     "@vaadin/a11y-base": "24.1.9",
     "@vaadin/accordion": "24.1.9",
@@ -181,11 +182,13 @@
     "@vaadin/overlay": "$@vaadin/overlay",
     "@vaadin/a11y-base": "$@vaadin/a11y-base",
     "@vaadin/side-nav": "$@vaadin/side-nav",
-    "mobile-drag-drop": "$mobile-drag-drop"
+    "mobile-drag-drop": "$mobile-drag-drop",
+    "@polymer/iron-icon": "$@polymer/iron-icon"
   },
   "vaadin": {
     "dependencies": {
       "@flowingcode/font-awesome-iron-iconset": "4.2.0",
+      "@polymer/iron-icon": "3.0.1",
       "@polymer/polymer": "3.5.1",
       "@vaadin/a11y-base": "24.1.9",
       "@vaadin/accordion": "24.1.9",
@@ -284,6 +287,6 @@
       "workbox-core": "7.0.0",
       "workbox-precaching": "7.0.0"
     },
-    "hash": "a896ea83cb97c255f5f469bdd6a264ed342e768c6394c56e5742ab38c77be29f"
+    "hash": "1eb45ebec9faea0134c15e73721c8da22276c5c296e0cc4bc17bdcdc75cebf22"
   }
 }
