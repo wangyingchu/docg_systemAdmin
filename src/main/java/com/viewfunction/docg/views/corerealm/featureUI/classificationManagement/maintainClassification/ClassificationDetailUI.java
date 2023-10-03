@@ -15,6 +15,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
@@ -157,7 +158,32 @@ public class ClassificationDetailUI extends VerticalLayout implements
 
         ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及三代内后代分类分布");
         middleContainerLayout.add(infoTitle);
-        SecondaryTitleActionBar secondaryTitleActionBar2 = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"sssss(csssss)",null,null);
+
+
+
+        List<Component> actionComponentsList1 = new ArrayList<>();
+        Button showParentClassificationButton= new Button("添加元属性");
+        showParentClassificationButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
+        showParentClassificationButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        showParentClassificationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //renderAddNewConfigItemUI();
+            }
+        });
+        actionComponentsList1.add(showParentClassificationButton);
+
+        String parentClassificationInfo = "-";
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        Classification targetClassification = coreRealm.getClassification(this.classificationName);
+        if(targetClassification != null && !targetClassification.isRootClassification()){
+            Classification parentClassification = targetClassification.getParentClassification();
+            parentClassificationInfo = parentClassification.getClassificationName() + "("+parentClassification.getClassificationDesc()+")";
+        }else{
+            showParentClassificationButton.setEnabled(false);
+        }
+
+        SecondaryTitleActionBar secondaryTitleActionBar2 = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),parentClassificationInfo,null,actionComponentsList1);
         secondaryTitleActionBar2.setWidth(100,Unit.PERCENTAGE);
         middleContainerLayout.add(secondaryTitleActionBar2);
 
@@ -167,7 +193,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及三代内后代分类分布");
         middleContainerLayout.add(infoTitle2);
 
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        //CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
             List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
 
@@ -175,7 +201,9 @@ public class ClassificationDetailUI extends VerticalLayout implements
 
             Tree<ClassificationMetaInfo> tree = new Tree<>(ClassificationMetaInfo::getClassificationName);
             TreeData<ClassificationMetaInfo> treeData = new TreeData<>();
-            treeData.addRootItems(classificationsMetaInfoList);
+
+            ClassificationMetaInfo classificationMetaInfo =new ClassificationMetaInfo("asas","sasasa",null,null,"dsds","dsds","wwew",111,true);
+            treeData.addRootItems(classificationMetaInfo);
 
 
 
