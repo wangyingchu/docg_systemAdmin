@@ -40,6 +40,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout middleContainerLayout;
     private VerticalLayout rightSideContainerLayout;
+    private String parentClassificationName;
 
     public ClassificationDetailUI(){}
 
@@ -143,7 +144,6 @@ public class ClassificationDetailUI extends VerticalLayout implements
         actionButtonBarContainer.setSpacing(false);
 
         SecondaryIconTitle viewTitle = new SecondaryIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类继承信息",actionButtonBarContainer);
-        //set height to 39 in order to make ConceptionEntityAttributesEditorView and ConceptionEntityIntegratedInfoView have the same tab bottom line align
         viewTitle.setHeight(39, Unit.PIXELS);
         middleContainerLayout.add(viewTitle);
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
@@ -151,24 +151,22 @@ public class ClassificationDetailUI extends VerticalLayout implements
         spaceDivLayout.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         middleContainerLayout.add(spaceDivLayout);
 
-        VerticalLayout displayItemContainer7 = new VerticalLayout();
-        displayItemContainer7.getStyle().set("padding-left","10px");
-        middleContainerLayout.add(displayItemContainer7);
-        SecondaryKeyValueDisplayItem conceptionEntityCount= new SecondaryKeyValueDisplayItem(displayItemContainer7, VaadinIcon.STOCK.create(),"相关 ConceptionEntity-概念实体数量:","-");
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setHeight(10,Unit.PIXELS);
+        middleContainerLayout.add(spaceDivLayout1);
 
-        ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及三代内后代分类分布");
+        ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"父分类信息");
         middleContainerLayout.add(infoTitle);
 
-
-
         List<Component> actionComponentsList1 = new ArrayList<>();
-        Button showParentClassificationButton= new Button("添加元属性");
+        Button showParentClassificationButton= new Button();
+        showParentClassificationButton.setTooltipText("父分类配置定义");
         showParentClassificationButton.setIcon(VaadinIcon.EYE.create());
         showParentClassificationButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         showParentClassificationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAddNewConfigItemUI();
+                renderParentClassificationConfigurationUI();
             }
         });
         actionComponentsList1.add(showParentClassificationButton);
@@ -178,17 +176,19 @@ public class ClassificationDetailUI extends VerticalLayout implements
         Classification targetClassification = coreRealm.getClassification(this.classificationName);
         if(targetClassification != null && !targetClassification.isRootClassification()){
             Classification parentClassification = targetClassification.getParentClassification();
+            this.parentClassificationName = parentClassification.getClassificationName();
             parentClassificationInfo = parentClassification.getClassificationName() + "("+parentClassification.getClassificationDesc()+")";
         }else{
             showParentClassificationButton.setEnabled(false);
         }
 
-        SecondaryTitleActionBar secondaryTitleActionBar2 = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),parentClassificationInfo,null,actionComponentsList1);
+        SecondaryTitleActionBar secondaryTitleActionBar2 = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAG),parentClassificationInfo,null,actionComponentsList1);
         secondaryTitleActionBar2.setWidth(100,Unit.PERCENTAGE);
         middleContainerLayout.add(secondaryTitleActionBar2);
 
-
-
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setHeight(10,Unit.PIXELS);
+        middleContainerLayout.add(spaceDivLayout2);
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及三代内后代分类分布");
         middleContainerLayout.add(infoTitle2);
@@ -196,17 +196,11 @@ public class ClassificationDetailUI extends VerticalLayout implements
         //CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
             List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
-
-
-
             Tree<ClassificationMetaInfo> tree = new Tree<>(ClassificationMetaInfo::getClassificationName);
             TreeData<ClassificationMetaInfo> treeData = new TreeData<>();
 
             ClassificationMetaInfo classificationMetaInfo =new ClassificationMetaInfo("asas","sasasa",null,null,"dsds","dsds","wwew",111,true);
             treeData.addRootItems(classificationMetaInfo);
-
-
-
             tree.setTreeData(treeData);
 
 
@@ -239,11 +233,6 @@ public class ClassificationDetailUI extends VerticalLayout implements
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
-
-
-
-
-
     }
 
     private void renderShowMetaInfoUI(){
@@ -252,5 +241,36 @@ public class ClassificationDetailUI extends VerticalLayout implements
         fixSizeWindow.setWindowContent(classificationMetaInfoView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+    private void renderParentClassificationConfigurationUI(){
+        ClassificationDetailUI classificationDetailUI = new ClassificationDetailUI(this.parentClassificationName);
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon attributesViewKindIcon = VaadinIcon.TAGS.create();
+        attributesViewKindIcon.setSize("10px");
+        titleDetailLayout.add(attributesViewKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel attributesViewKindName = new NativeLabel(this.parentClassificationName);
+        titleDetailLayout.add(attributesViewKindName);
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"分类配置",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(classificationDetailUI);
+        fullScreenWindow.show();
     }
 }
