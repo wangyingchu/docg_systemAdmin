@@ -163,7 +163,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
 
         List<Component> actionComponentsList1 = new ArrayList<>();
         Button showParentClassificationButton= new Button("添加元属性");
-        showParentClassificationButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
+        showParentClassificationButton.setIcon(VaadinIcon.EYE.create());
         showParentClassificationButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         showParentClassificationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
