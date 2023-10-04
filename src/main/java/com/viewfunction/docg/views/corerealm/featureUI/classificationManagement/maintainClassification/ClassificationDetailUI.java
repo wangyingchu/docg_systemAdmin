@@ -155,7 +155,8 @@ public class ClassificationDetailUI extends VerticalLayout implements
         spaceDivLayout1.setHeight(10,Unit.PIXELS);
         middleContainerLayout.add(spaceDivLayout1);
 
-        ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"父分类信息");
+        //ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.MALE_SOLID.create(),"父分类信息");
+        ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(VaadinIcon.MALE.create(),"父分类信息");
         middleContainerLayout.add(infoTitle);
 
         List<Component> actionComponentsList1 = new ArrayList<>();
@@ -190,7 +191,8 @@ public class ClassificationDetailUI extends VerticalLayout implements
         spaceDivLayout2.setHeight(10,Unit.PIXELS);
         middleContainerLayout.add(spaceDivLayout2);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及三代内后代分类分布");
+        //ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CHILD_SOLID.create(),"分类及三代内后代分类分布");
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(VaadinIcon.CHILD.create(),"后代分类分布");
         middleContainerLayout.add(infoTitle2);
 
         //CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
