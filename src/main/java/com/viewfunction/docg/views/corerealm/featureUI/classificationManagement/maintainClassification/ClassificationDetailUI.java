@@ -10,15 +10,13 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.treegrid.TreeGrid;
-import com.vaadin.flow.data.provider.hierarchy.TreeData;
-import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
-import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
-import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -26,22 +24,19 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
-import org.vaadin.tatu.Tree;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.Classification;
-
 
 @Route("classificationDetailInfo/:classificationName")
 public class ClassificationDetailUI extends VerticalLayout implements
         BeforeEnterObserver{
     private String classificationName;
     private int attributesViewKindDetailViewHeightOffset = 170;
+    private int rightSideLayoutWidthOffset = 20;
+
     private int currentBrowserHeight = 0;
     private Registration listener;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
@@ -49,7 +44,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
     private VerticalLayout middleContainerLayout;
     private VerticalLayout rightSideContainerLayout;
     private String parentClassificationName;
-
+    private TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid;
     private List<ClassificationMetaInfo> classificationsMetaInfoList;
 
     public ClassificationDetailUI(){}
@@ -62,6 +57,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.classificationName = beforeEnterEvent.getRouteParameters().get("classificationName").get();
         this.attributesViewKindDetailViewHeightOffset = 110;
+        this.rightSideLayoutWidthOffset = 30;
     }
 
     @Override
@@ -69,6 +65,20 @@ public class ClassificationDetailUI extends VerticalLayout implements
         super.onAttach(attachEvent);
         //ResourceHolder.getApplicationBlackboard().addListener(this);
         renderClassificationData();
+        // Add browser window listener to observe size change
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            currentBrowserHeight = event.getHeight();
+            int containerHeight = currentBrowserHeight - attributesViewKindDetailViewHeightOffset;
+            int rightSideContainerLayoutWidth = event.getWidth() - 350-450 - rightSideLayoutWidthOffset;
+            this.rightSideContainerLayout.setWidth(rightSideContainerLayoutWidth,Unit.PIXELS);
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            currentBrowserHeight = receiver.getBodyClientHeight();
+            int containerHeight = currentBrowserHeight - attributesViewKindDetailViewHeightOffset;
+            int rightSideContainerLayoutWidth = receiver.getBodyClientWidth() - 350-450 - rightSideLayoutWidthOffset;
+            this.rightSideContainerLayout.setWidth(rightSideContainerLayoutWidth,Unit.PIXELS);
+        }));
     }
 
     @Override
@@ -134,10 +144,9 @@ public class ClassificationDetailUI extends VerticalLayout implements
         leftSideContainerLayout.setSpacing(false);
         leftSideContainerLayout.setPadding(false);
         leftSideContainerLayout.setMargin(false);
-
-        mainContainerLayout.add(leftSideContainerLayout);
         leftSideContainerLayout.setWidth(350, Unit.PIXELS);
         leftSideContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
+        mainContainerLayout.add(leftSideContainerLayout);
 
         ClassificationAttributesEditorView classificationAttributesEditorView= new ClassificationAttributesEditorView(this.classificationName,this.attributesViewKindDetailViewHeightOffset);
         leftSideContainerLayout.add(classificationAttributesEditorView);
@@ -146,9 +155,9 @@ public class ClassificationDetailUI extends VerticalLayout implements
         middleContainerLayout.setSpacing(false);
         middleContainerLayout.setPadding(false);
         middleContainerLayout.setMargin(false);
-        mainContainerLayout.add(middleContainerLayout);
-        middleContainerLayout.setWidth(350, Unit.PIXELS);
+        middleContainerLayout.setWidth(450, Unit.PIXELS);
         middleContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
+        mainContainerLayout.add(middleContainerLayout);
 
         HorizontalLayout actionButtonBarContainer = new HorizontalLayout();
         actionButtonBarContainer.setSpacing(false);
@@ -212,86 +221,32 @@ public class ClassificationDetailUI extends VerticalLayout implements
         spaceDivLayout3.setHeight(10,Unit.PIXELS);
         middleContainerLayout.add(spaceDivLayout3);
 
-        //CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        try {
-            classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
-            Tree<ClassificationMetaInfo> tree = new Tree<>(ClassificationMetaInfo::getClassificationName);
-            TreeData<ClassificationMetaInfo> treeData = new TreeData<>();
+        classificationsMetaInfoTreeGrid = new TreeGrid<>();
+        //classificationsMetaInfoTreeGrid.setWidth(400,Unit.PIXELS);
+        classificationsMetaInfoTreeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_ROW_BORDERS);
+        classificationsMetaInfoTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getClassificationName).setKey("idx_0").setHeader("分类信息");
+        classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getClassificationDesc).setKey("idx_1").setHeader("操作").setFlexGrow(0).setWidth("80px").setResizable(false);;
+        LightGridColumnHeader gridColumnHeader_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"分类信息");
+        classificationsMetaInfoTreeGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_idx1 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
+        classificationsMetaInfoTreeGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+        middleContainerLayout.add(classificationsMetaInfoTreeGrid);
 
-            ClassificationMetaInfo classificationMetaInfo =new ClassificationMetaInfo("asas","sasasa",null,null,"dsds","dsds","wwew",111,true);
-            treeData.addRootItems(classificationMetaInfo);
-            //tree.setTreeData(treeData);
+        rightSideContainerLayout = new VerticalLayout();
+        rightSideContainerLayout.setSpacing(false);
+        rightSideContainerLayout.setPadding(false);
+        rightSideContainerLayout.setMargin(false);
+        rightSideContainerLayout.setWidth(500,Unit.PIXELS);
+        //rightSideContainerLayout.setWidth(100, Unit.PERCENTAGE);
+        mainContainerLayout.add(rightSideContainerLayout);
+        //mainContainerLayout.setFlexGrow(1,rightSideContainerLayout);
 
-            TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid = new TreeGrid<>();
-            classificationsMetaInfoTreeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_ROW_BORDERS);
-            classificationsMetaInfoTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-            classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getClassificationName).setKey("idx_0").setHeader("分类名称");
-            classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getClassificationDesc).setKey("idx_1").setHeader("分类描述");
-
-
-            LightGridColumnHeader gridColumnHeader_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"分类名称");
-            classificationsMetaInfoTreeGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
-            LightGridColumnHeader gridColumnHeader_idx1 = new LightGridColumnHeader(VaadinIcon.DESKTOP,"分类描述");
-            classificationsMetaInfoTreeGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
-
-
-
-
-
-           // TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
-            //tree.setItems(ClassificationDetailUI::getChildDepartments,ClassificationDetailUI::getChildDepartments);
-
-
-
-            //tree.set
-            //tree.setItems(ClassificationMetaInfo::getClassificationName,
-              //      null);
-
-            //tree.setItemIconProvider(item -> getIcon(item));
-            //tree.setItemIconSrcProvider(item -> getImageIconSrc(item));
-           // tree.setItemTitleProvider(Department::getManager);
-
-           // tree.addExpandListener(event -> message.setValue(
-            //        String.format("Expanded %s item(s)", event.getItems().size())
-             //               + "\n" + message.getValue()));
-            //tree.addCollapseListener(event -> message.setValue(
-             //       String.format("Collapsed %s item(s)", event.getItems().size())
-             //               + "\n" + message.getValue()));
-
-            //tree.asSingleSelect().addValueChangeListener(event -> {
-          //      if (event.getValue() != null)
-                  //  System.out.println(event.getValue().getName() + " selected");
-          //  });
-            //tree.setHeightByRows(true);
-
-
-            middleContainerLayout.add(classificationsMetaInfoTreeGrid);
-
-
-
-        } catch (CoreRealmServiceEntityExploreException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private ValueProvider<ClassificationMetaInfo, Collection<ClassificationMetaInfo>> ssss(){
-
-        TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid = new TreeGrid<>();
-
-        //return null;
-        return null;
-    }
-
-
-    public List<ClassificationMetaInfo> getChildDepartments(ClassificationMetaInfo parent) {
-
-        //return classificationsMetaInfoList.stream().filter(
-        //                department -> parent.getClassificationName().equals(department.getParentClassificationName()))
-        //        .collect(Collectors.toList());
-
-        return classificationsMetaInfoList.stream()
-                .filter(department -> department.getParentClassificationName() == null)
-                .collect(Collectors.toList());
+        TabSheet classificationRuntimeInfoTabSheet = new TabSheet();
+        classificationRuntimeInfoTabSheet.setWidthFull();
+        rightSideContainerLayout.add(classificationRuntimeInfoTabSheet);
+        rightSideContainerLayout.setFlexGrow(1,classificationRuntimeInfoTabSheet);
+        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.SPARK_LINE,"属性视图类型运行时配置"),new NativeLabel("222"));
     }
 
     private void renderShowMetaInfoUI(){
@@ -331,5 +286,19 @@ public class ClassificationDetailUI extends VerticalLayout implements
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"分类配置",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(classificationDetailUI);
         fullScreenWindow.show();
+    }
+
+    private HorizontalLayout generateTabTitle(VaadinIcon tabIcon, String tabTitleTxt){
+        HorizontalLayout  kindConfigTabLayout = new HorizontalLayout();
+        kindConfigTabLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        kindConfigTabLayout.setHeight(26,Unit.PIXELS);
+        Icon configTabIcon = new Icon(tabIcon);
+        configTabIcon.setSize("12px");
+        NativeLabel configTabLabel = new NativeLabel(" "+tabTitleTxt);
+        configTabLabel.getStyle()
+                . set("font-size","var(--lumo-font-size-s)")
+                .set("font-weight", "bold");
+        kindConfigTabLayout.add(configTabIcon,configTabLabel);
+        return kindConfigTabLayout;
     }
 }
