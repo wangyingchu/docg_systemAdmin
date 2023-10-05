@@ -3,12 +3,17 @@ package com.viewfunction.docg.views.corerealm.featureUI.classificationManagement
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
+import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
@@ -20,14 +25,17 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
-import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import org.vaadin.tatu.Tree;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.Classification;
+
 
 @Route("classificationDetailInfo/:classificationName")
 public class ClassificationDetailUI extends VerticalLayout implements
@@ -41,6 +49,8 @@ public class ClassificationDetailUI extends VerticalLayout implements
     private VerticalLayout middleContainerLayout;
     private VerticalLayout rightSideContainerLayout;
     private String parentClassificationName;
+
+    private List<ClassificationMetaInfo> classificationsMetaInfoList;
 
     public ClassificationDetailUI(){}
 
@@ -64,7 +74,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
     @Override
     protected void onDetach(DetachEvent detachEvent) {
         // Listener needs to be eventually removed in order to avoid resource leak
-        listener.remove();
+        //listener.remove();
         super.onDetach(detachEvent);
         //ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
@@ -137,7 +147,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
         middleContainerLayout.setPadding(false);
         middleContainerLayout.setMargin(false);
         mainContainerLayout.add(middleContainerLayout);
-        middleContainerLayout.setWidth(400, Unit.PIXELS);
+        middleContainerLayout.setWidth(350, Unit.PIXELS);
         middleContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
         HorizontalLayout actionButtonBarContainer = new HorizontalLayout();
@@ -172,20 +182,24 @@ public class ClassificationDetailUI extends VerticalLayout implements
         });
         actionComponentsList1.add(showParentClassificationButton);
 
-        String parentClassificationInfo = "-";
+        String parentClassificationName = "-";
+        String parentClassificationDesc = "-";
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         Classification targetClassification = coreRealm.getClassification(this.classificationName);
         if(targetClassification != null && !targetClassification.isRootClassification()){
             Classification parentClassification = targetClassification.getParentClassification();
             this.parentClassificationName = parentClassification.getClassificationName();
-            parentClassificationInfo = parentClassification.getClassificationName() + "("+parentClassification.getClassificationDesc()+")";
+            parentClassificationName = parentClassification.getClassificationName();
+            parentClassificationDesc = parentClassification.getClassificationDesc();
         }else{
             showParentClassificationButton.setEnabled(false);
         }
 
-        SecondaryTitleActionBar secondaryTitleActionBar2 = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAG),parentClassificationInfo,null,actionComponentsList1);
+        SecondaryTitleActionBar secondaryTitleActionBar2 = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAG),parentClassificationName,null,actionComponentsList1,false);
         secondaryTitleActionBar2.setWidth(100,Unit.PERCENTAGE);
         middleContainerLayout.add(secondaryTitleActionBar2);
+        SecondaryTitleActionBar secondaryTitleActionBar3 = new SecondaryTitleActionBar(new Icon(VaadinIcon.DESKTOP),parentClassificationDesc,null,null);
+        middleContainerLayout.add(secondaryTitleActionBar3);
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setHeight(10,Unit.PIXELS);
@@ -194,16 +208,39 @@ public class ClassificationDetailUI extends VerticalLayout implements
         //ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CHILD_SOLID.create(),"分类及三代内后代分类分布");
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(VaadinIcon.CHILD.create(),"后代分类分布");
         middleContainerLayout.add(infoTitle2);
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setHeight(10,Unit.PIXELS);
+        middleContainerLayout.add(spaceDivLayout3);
 
         //CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
-            List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
+            classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
             Tree<ClassificationMetaInfo> tree = new Tree<>(ClassificationMetaInfo::getClassificationName);
             TreeData<ClassificationMetaInfo> treeData = new TreeData<>();
 
             ClassificationMetaInfo classificationMetaInfo =new ClassificationMetaInfo("asas","sasasa",null,null,"dsds","dsds","wwew",111,true);
             treeData.addRootItems(classificationMetaInfo);
-            tree.setTreeData(treeData);
+            //tree.setTreeData(treeData);
+
+            TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid = new TreeGrid<>();
+            classificationsMetaInfoTreeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_ROW_BORDERS);
+            classificationsMetaInfoTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+            classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getClassificationName).setKey("idx_0").setHeader("分类名称");
+            classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getClassificationDesc).setKey("idx_1").setHeader("分类描述");
+
+
+            LightGridColumnHeader gridColumnHeader_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"分类名称");
+            classificationsMetaInfoTreeGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
+            LightGridColumnHeader gridColumnHeader_idx1 = new LightGridColumnHeader(VaadinIcon.DESKTOP,"分类描述");
+            classificationsMetaInfoTreeGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+
+
+
+
+
+           // TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
+            //tree.setItems(ClassificationDetailUI::getChildDepartments,ClassificationDetailUI::getChildDepartments);
+
 
 
             //tree.set
@@ -228,13 +265,33 @@ public class ClassificationDetailUI extends VerticalLayout implements
             //tree.setHeightByRows(true);
 
 
-            middleContainerLayout.add(tree);
+            middleContainerLayout.add(classificationsMetaInfoTreeGrid);
 
 
 
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private ValueProvider<ClassificationMetaInfo, Collection<ClassificationMetaInfo>> ssss(){
+
+        TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid = new TreeGrid<>();
+
+        //return null;
+        return null;
+    }
+
+
+    public List<ClassificationMetaInfo> getChildDepartments(ClassificationMetaInfo parent) {
+
+        //return classificationsMetaInfoList.stream().filter(
+        //                department -> parent.getClassificationName().equals(department.getParentClassificationName()))
+        //        .collect(Collectors.toList());
+
+        return classificationsMetaInfoList.stream()
+                .filter(department -> department.getParentClassificationName() == null)
+                .collect(Collectors.toList());
     }
 
     private void renderShowMetaInfoUI(){
