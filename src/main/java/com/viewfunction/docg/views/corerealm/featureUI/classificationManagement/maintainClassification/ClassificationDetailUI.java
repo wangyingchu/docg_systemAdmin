@@ -23,6 +23,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 
 import java.util.ArrayList;
@@ -105,25 +106,40 @@ public class ClassificationDetailUI extends VerticalLayout implements
 
         List<Component> buttonList = new ArrayList<>();
 
-        Button attributesViewKindMetaInfoButton= new Button("分类元数据");
-        attributesViewKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
-        attributesViewKindMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        attributesViewKindMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button createNewChildClassificationButton= new Button("创建子分类");
+        createNewChildClassificationButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
+        createNewChildClassificationButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        createNewChildClassificationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderCreateClassificationUI();
+            }
+        });
+        buttonList.add(createNewChildClassificationButton);
+
+        Icon divIcon0 = VaadinIcon.LINE_V.create();
+        divIcon0.setSize("8px");
+        buttonList.add(divIcon0);
+
+        Button classificationMetaInfoButton= new Button("分类元数据");
+        classificationMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
+        classificationMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        classificationMetaInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 renderShowMetaInfoUI();
             }
         });
-        buttonList.add(attributesViewKindMetaInfoButton);
+        buttonList.add(classificationMetaInfoButton);
 
-        Icon divIcon = VaadinIcon.LINE_V.create();
-        divIcon.setSize("8px");
-        buttonList.add(divIcon);
+        Icon divIcon1 = VaadinIcon.LINE_V.create();
+        divIcon1.setSize("8px");
+        buttonList.add(divIcon1);
 
-        Button refreshAttributesViewKindConfigInfoButton= new Button("刷新分类配置信息");
-        refreshAttributesViewKindConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
-        refreshAttributesViewKindConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        refreshAttributesViewKindConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button refreshClassificationConfigInfoButton= new Button("刷新分类配置信息");
+        refreshClassificationConfigInfoButton.setIcon(VaadinIcon.REFRESH.create());
+        refreshClassificationConfigInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        refreshClassificationConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 //containerConceptionKindsConfigView.refreshConceptionKindsInfo();
@@ -131,7 +147,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
                 //refreshAttributesViewKindCorrelationInfoChart();
             }
         });
-        buttonList.add(refreshAttributesViewKindConfigInfoButton);
+        buttonList.add(refreshClassificationConfigInfoButton);
 
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAGS),"Classification 分类  ",secTitleElementsList,buttonList);
         add(secondaryTitleActionBar);
@@ -222,7 +238,6 @@ public class ClassificationDetailUI extends VerticalLayout implements
         middleContainerLayout.add(spaceDivLayout3);
 
         classificationsMetaInfoTreeGrid = new TreeGrid<>();
-        //classificationsMetaInfoTreeGrid.setWidth(400,Unit.PIXELS);
         classificationsMetaInfoTreeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_ROW_BORDERS);
         classificationsMetaInfoTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getClassificationName).setKey("idx_0").setHeader("分类信息");
@@ -237,16 +252,17 @@ public class ClassificationDetailUI extends VerticalLayout implements
         rightSideContainerLayout.setSpacing(false);
         rightSideContainerLayout.setPadding(false);
         rightSideContainerLayout.setMargin(false);
-        rightSideContainerLayout.setWidth(500,Unit.PIXELS);
-        //rightSideContainerLayout.setWidth(100, Unit.PERCENTAGE);
         mainContainerLayout.add(rightSideContainerLayout);
-        //mainContainerLayout.setFlexGrow(1,rightSideContainerLayout);
 
         TabSheet classificationRuntimeInfoTabSheet = new TabSheet();
         classificationRuntimeInfoTabSheet.setWidthFull();
         rightSideContainerLayout.add(classificationRuntimeInfoTabSheet);
         rightSideContainerLayout.setFlexGrow(1,classificationRuntimeInfoTabSheet);
-        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.SPARK_LINE,"属性视图类型运行时配置"),new NativeLabel("222"));
+        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.CUBE,"相关概念类型信息"),new NativeLabel("111"));
+        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.CONNECT_O,"相关关系类型信息"),new NativeLabel("222"));
+        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.INPUT,"相关属性类型信息"),new NativeLabel("333"));
+        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.TASKS,"相关属性视图类型信息"),new NativeLabel("444"));
+        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.STOCK,"相关概念实体信息"),new NativeLabel("555"));
     }
 
     private void renderShowMetaInfoUI(){
@@ -300,5 +316,15 @@ public class ClassificationDetailUI extends VerticalLayout implements
                 .set("font-weight", "bold");
         kindConfigTabLayout.add(configTabIcon,configTabLabel);
         return kindConfigTabLayout;
+    }
+
+    private void renderCreateClassificationUI(){
+        CreateClassificationView createClassificationView = new CreateClassificationView();
+        createClassificationView.setParentClassification(this.classificationName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建分类",null,true,500,350,false);
+        fixSizeWindow.setWindowContent(createClassificationView);
+        createClassificationView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }

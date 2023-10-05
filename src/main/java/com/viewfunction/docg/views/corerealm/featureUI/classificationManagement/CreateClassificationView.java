@@ -38,6 +38,7 @@ public class CreateClassificationView extends VerticalLayout {
     private TextField classificationNameField;
     private TextField classificationDescField;
     private ComboBox<ClassificationMetaInfo> parentClassificationSelector;
+    private List<ClassificationMetaInfo> classificationsMetaInfoList;
 
     public CreateClassificationView(){
         this.setWidthFull();
@@ -81,12 +82,12 @@ public class CreateClassificationView extends VerticalLayout {
                 return itemLabelValue;
             }
         });
-        parentClassificationSelector.setRenderer(createRenderer());
+        this.parentClassificationSelector.setRenderer(createRenderer());
         add(parentClassificationSelector);
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
-            List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
+            classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
             this.parentClassificationSelector.setItems(classificationsMetaInfoList);
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
@@ -118,6 +119,15 @@ public class CreateClassificationView extends VerticalLayout {
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
+    }
+
+    public void setParentClassification(String parentClassificationName){
+        for(ClassificationMetaInfo currentClassificationMetaInfo : classificationsMetaInfoList){
+            if(parentClassificationName.equals(currentClassificationMetaInfo.getClassificationName())){
+                this.parentClassificationSelector.setValue(currentClassificationMetaInfo);
+                this.parentClassificationSelector.setEnabled(false);
+            }
+        }
     }
 
     private void doCreateNewClassification(){
