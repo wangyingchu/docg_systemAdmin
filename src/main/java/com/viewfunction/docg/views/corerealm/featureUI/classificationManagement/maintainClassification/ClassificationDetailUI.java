@@ -12,22 +12,26 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.treegrid.TreeGrid;
+import com.vaadin.flow.data.provider.hierarchy.TreeData;
+import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.structure.InheritanceTree;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.ClassificationCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
 
 import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.Classification;
 
@@ -45,8 +49,8 @@ public class ClassificationDetailUI extends VerticalLayout implements
     private VerticalLayout middleContainerLayout;
     private VerticalLayout rightSideContainerLayout;
     private String parentClassificationName;
-    private TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid;
-    private List<ClassificationMetaInfo> classificationsMetaInfoList;
+    private TreeGrid<Classification> classificationsMetaInfoTreeGrid;
+    private List<Classification> classificationsMetaInfoList;
 
     public ClassificationDetailUI(){}
 
@@ -240,8 +244,8 @@ public class ClassificationDetailUI extends VerticalLayout implements
         classificationsMetaInfoTreeGrid = new TreeGrid<>();
         classificationsMetaInfoTreeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_ROW_BORDERS);
         classificationsMetaInfoTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getClassificationName).setKey("idx_0").setHeader("分类信息");
-        classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getClassificationDesc).setKey("idx_1").setHeader("操作").setFlexGrow(0).setWidth("80px").setResizable(false);;
+        classificationsMetaInfoTreeGrid.addColumn(com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification::getClassificationName).setKey("idx_0").setHeader("分类信息");
+        classificationsMetaInfoTreeGrid.addColumn(com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification::getClassificationName).setKey("idx_1").setHeader("操作").setFlexGrow(0).setWidth("80px").setResizable(false);;
         LightGridColumnHeader gridColumnHeader_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"分类信息");
         classificationsMetaInfoTreeGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader_idx1 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
@@ -263,6 +267,84 @@ public class ClassificationDetailUI extends VerticalLayout implements
         classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.INPUT,"相关属性类型信息"),new NativeLabel("333"));
         classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.TASKS,"相关属性视图类型信息"),new NativeLabel("444"));
         classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.STOCK,"相关概念实体信息"),new NativeLabel("555"));
+
+        loadClassificationData();
+    }
+
+    private void loadClassificationData(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        Classification targetClassification = coreRealm.getClassification(this.classificationName);
+        if(targetClassification != null){
+            InheritanceTree<Classification> classificationsInheritanceTree = targetClassification.getOffspringClassifications();
+            Iterable<Classification> classificationsIterable = classificationsInheritanceTree.traversalTree(this.classificationName);
+            TreeDataProvider<Classification> dataProvider = (TreeDataProvider<Classification>)classificationsMetaInfoTreeGrid.getDataProvider();
+            TreeData<Classification> gridTreeData = dataProvider.getTreeData();
+
+            Map<String, Classification> classificationMap = new HashMap<>();
+            for(Classification currentClassification:classificationsIterable){
+                classificationMap.put(currentClassification.getClassificationName(),currentClassification);
+            }
+            for(Classification currentClassification:classificationsIterable){
+                gridTreeData.addItem(null,currentClassification);
+            }
+            for(Classification currentClassification:classificationsIterable){
+
+               // if(!currentClassification.getClassificationName().equals(this.classificationName)){
+                    Classification parentClassification = currentClassification.getParentClassification();
+                    if(parentClassification != null){
+                        if(!parentClassification.getClassificationName().equals(this.classificationName)){
+                            gridTreeData.setParent(currentClassification,classificationMap.get(parentClassification.getClassificationName()));
+                        }
+
+
+                        //
+                    }
+              //  }
+
+
+
+            }
+/*
+
+            Iterator<Classification> classificationIterator = classificationsIterable.iterator();
+
+
+
+            while(classificationIterator.hasNext()){
+                Classification currentClassification = classificationIterator.next();
+                Classification parentClassification = currentClassification.getParentClassification();
+                classificationMap.put(currentClassification.getClassificationName(),currentClassification);
+
+
+
+                Classification currentParentClassification = null;
+                if(parentClassification != null){
+                   classificationMap.put(parentClassification.getClassificationName(),parentClassification);
+                    currentParentClassification = parentClassification;
+                }
+
+
+
+                gridTreeData.addItem(currentParentClassification,currentClassification);
+            }
+*/
+            dataProvider.refreshAll();
+
+
+
+
+
+           //
+           // classificationsIterable.iterator()
+
+
+
+
+
+        }
+        coreRealm.closeGlobalSession();
+
     }
 
     private void renderShowMetaInfoUI(){
