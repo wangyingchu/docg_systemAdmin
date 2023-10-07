@@ -45,8 +45,8 @@ public class ClassificationDetailUI extends VerticalLayout implements
     private int currentBrowserHeight = 0;
     private Registration listener;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
-    private VerticalLayout leftSideContainerLayout;
     private VerticalLayout middleContainerLayout;
+    private VerticalLayout leftSideContainerLayout;
     private VerticalLayout rightSideContainerLayout;
     private String parentClassificationName;
     private TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid;
@@ -167,39 +167,28 @@ public class ClassificationDetailUI extends VerticalLayout implements
         leftSideContainerLayout.setSpacing(false);
         leftSideContainerLayout.setPadding(false);
         leftSideContainerLayout.setMargin(false);
-        leftSideContainerLayout.setWidth(350, Unit.PIXELS);
+        leftSideContainerLayout.setWidth(450, Unit.PIXELS);
         leftSideContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
         mainContainerLayout.add(leftSideContainerLayout);
-
-        ClassificationAttributesEditorView classificationAttributesEditorView= new ClassificationAttributesEditorView(this.classificationName,this.attributesViewKindDetailViewHeightOffset);
-        leftSideContainerLayout.add(classificationAttributesEditorView);
-
-        middleContainerLayout = new VerticalLayout();
-        middleContainerLayout.setSpacing(false);
-        middleContainerLayout.setPadding(false);
-        middleContainerLayout.setMargin(false);
-        middleContainerLayout.setWidth(450, Unit.PIXELS);
-        middleContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
-        mainContainerLayout.add(middleContainerLayout);
 
         HorizontalLayout actionButtonBarContainer = new HorizontalLayout();
         actionButtonBarContainer.setSpacing(false);
 
         SecondaryIconTitle viewTitle = new SecondaryIconTitle(VaadinIcon.SITEMAP.create(),"分类继承信息",actionButtonBarContainer);
         viewTitle.setHeight(39, Unit.PIXELS);
-        middleContainerLayout.add(viewTitle);
+        leftSideContainerLayout.add(viewTitle);
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setWidthFull();
         spaceDivLayout.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
-        middleContainerLayout.add(spaceDivLayout);
+        leftSideContainerLayout.add(spaceDivLayout);
 
         HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
         spaceDivLayout1.setHeight(10,Unit.PIXELS);
-        middleContainerLayout.add(spaceDivLayout1);
+        leftSideContainerLayout.add(spaceDivLayout1);
 
         //ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.MALE_SOLID.create(),"父分类信息");
         ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(VaadinIcon.MALE.create(),"父分类信息");
-        middleContainerLayout.add(infoTitle);
+        leftSideContainerLayout.add(infoTitle);
 
         List<Component> actionComponentsList1 = new ArrayList<>();
         Button showParentClassificationButton= new Button();
@@ -229,34 +218,34 @@ public class ClassificationDetailUI extends VerticalLayout implements
 
         SecondaryTitleActionBar secondaryTitleActionBar2 = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAG),parentClassificationName,null,actionComponentsList1,false);
         secondaryTitleActionBar2.setWidth(100,Unit.PERCENTAGE);
-        middleContainerLayout.add(secondaryTitleActionBar2);
+        leftSideContainerLayout.add(secondaryTitleActionBar2);
         SecondaryTitleActionBar secondaryTitleActionBar3 = new SecondaryTitleActionBar(new Icon(VaadinIcon.DESKTOP),parentClassificationDesc,null,null);
-        middleContainerLayout.add(secondaryTitleActionBar3);
+        leftSideContainerLayout.add(secondaryTitleActionBar3);
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setHeight(10,Unit.PIXELS);
-        middleContainerLayout.add(spaceDivLayout2);
+        leftSideContainerLayout.add(spaceDivLayout2);
 
         //ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CHILD_SOLID.create(),"分类及三代内后代分类分布");
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(VaadinIcon.CHILD.create(),"后代分类信息");
-        middleContainerLayout.add(infoTitle2);
+        leftSideContainerLayout.add(infoTitle2);
         HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
         spaceDivLayout3.setHeight(10,Unit.PIXELS);
-        middleContainerLayout.add(spaceDivLayout3);
+        leftSideContainerLayout.add(spaceDivLayout3);
 
         HorizontalLayout displayItemContainer5 = new HorizontalLayout();
         displayItemContainer5.getStyle().set("padding-left","10px");
-        middleContainerLayout.add(displayItemContainer5);
+        leftSideContainerLayout.add(displayItemContainer5);
         SecondaryKeyValueDisplayItem childClassificationCount = new SecondaryKeyValueDisplayItem(displayItemContainer5, VaadinIcon.TAG.create(),"Child Classification-子分类数量:","-");
 
         HorizontalLayout spaceDivLayout_ = new HorizontalLayout();
         spaceDivLayout_.setWidthFull();
         spaceDivLayout_.setHeight(5,Unit.PIXELS);
-        middleContainerLayout.add(spaceDivLayout_);
+        leftSideContainerLayout.add(spaceDivLayout_);
 
         HorizontalLayout displayItemContainer6 = new HorizontalLayout();
         displayItemContainer6.getStyle().set("padding-left","10px");
-        middleContainerLayout.add(displayItemContainer6);
+        leftSideContainerLayout.add(displayItemContainer6);
         SecondaryKeyValueDisplayItem offendClassificationCount = new SecondaryKeyValueDisplayItem(displayItemContainer6, FontAwesome.Solid.TAGS.create(),"Offspring Classification-后代分类数量:","-");
 
         HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
@@ -265,15 +254,15 @@ public class ClassificationDetailUI extends VerticalLayout implements
         spaceDivLayout4.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
                 .set("padding-bottom", "var(--lumo-space-s)");
-        middleContainerLayout.add(spaceDivLayout4);
+        leftSideContainerLayout.add(spaceDivLayout4);
 
         HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
         spaceDivLayout5.setWidthFull();
         spaceDivLayout5.setHeight(10,Unit.PIXELS);
-        middleContainerLayout.add(spaceDivLayout5);
+        leftSideContainerLayout.add(spaceDivLayout5);
 
         ThirdLevelIconTitle infoTitle3 = new ThirdLevelIconTitle(VaadinIcon.SPLIT.create(),"后代分类分布");
-        middleContainerLayout.add(infoTitle3);
+        leftSideContainerLayout.add(infoTitle3);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(classificationMetaInfo -> {
             Icon configIcon = new Icon(VaadinIcon.EYE);
@@ -338,7 +327,18 @@ public class ClassificationDetailUI extends VerticalLayout implements
         LightGridColumnHeader gridColumnHeader_idx3 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         classificationsMetaInfoTreeGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
 
-        middleContainerLayout.add(classificationsMetaInfoTreeGrid);
+        leftSideContainerLayout.add(classificationsMetaInfoTreeGrid);
+
+        middleContainerLayout = new VerticalLayout();
+        middleContainerLayout.setSpacing(false);
+        middleContainerLayout.setPadding(false);
+        middleContainerLayout.setMargin(false);
+        middleContainerLayout.setWidth(350, Unit.PIXELS);
+        middleContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
+        mainContainerLayout.add(middleContainerLayout);
+
+        ClassificationAttributesEditorView classificationAttributesEditorView= new ClassificationAttributesEditorView(this.classificationName,this.attributesViewKindDetailViewHeightOffset);
+        middleContainerLayout.add(classificationAttributesEditorView);
 
         rightSideContainerLayout = new VerticalLayout();
         rightSideContainerLayout.setSpacing(false);
