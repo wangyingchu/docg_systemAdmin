@@ -1,6 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.maintainClassification;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
+
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -22,6 +23,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ClassificationRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -50,10 +52,11 @@ public class ClassificationDetailUI extends VerticalLayout implements
     private VerticalLayout rightSideContainerLayout;
     private String parentClassificationName;
     private TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid;
-    private List<ClassificationMetaInfo> classificationsMetaInfoList;
     private Map<String,ClassificationMetaInfo> classificationMetaInfoMap;
-
     private List<ClassificationMetaInfo> allClassificationsMetaInfoList;
+    private ClassificationRuntimeStatistics classificationRuntimeStatistics;
+    private SecondaryKeyValueDisplayItem childClassificationCountDisplayItem;
+    private SecondaryKeyValueDisplayItem offendClassificationCountDisplayItem;
 
     public ClassificationDetailUI(){}
 
@@ -112,22 +115,6 @@ public class ClassificationDetailUI extends VerticalLayout implements
         secTitleElementsList.add(this.kindDescriptionEditorItemWidget);
 
         List<Component> buttonList = new ArrayList<>();
-
-        Button createNewChildClassificationButton= new Button("创建子分类");
-        createNewChildClassificationButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
-        createNewChildClassificationButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        createNewChildClassificationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderCreateClassificationUI();
-            }
-        });
-        buttonList.add(createNewChildClassificationButton);
-
-        Icon divIcon0 = VaadinIcon.LINE_V.create();
-        divIcon0.setSize("8px");
-        buttonList.add(divIcon0);
-
         Button classificationMetaInfoButton= new Button("分类元数据");
         classificationMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
         classificationMetaInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
@@ -174,6 +161,17 @@ public class ClassificationDetailUI extends VerticalLayout implements
         HorizontalLayout actionButtonBarContainer = new HorizontalLayout();
         actionButtonBarContainer.setSpacing(false);
 
+        Button createNewChildClassificationButton= new Button("创建子分类");
+        createNewChildClassificationButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
+        createNewChildClassificationButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        createNewChildClassificationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderCreateClassificationUI();
+            }
+        });
+        actionButtonBarContainer.add(createNewChildClassificationButton);
+
         SecondaryIconTitle viewTitle = new SecondaryIconTitle(VaadinIcon.SITEMAP.create(),"分类继承信息",actionButtonBarContainer);
         viewTitle.setHeight(39, Unit.PIXELS);
         leftSideContainerLayout.add(viewTitle);
@@ -193,7 +191,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
         List<Component> actionComponentsList1 = new ArrayList<>();
         Button showParentClassificationButton= new Button();
         showParentClassificationButton.setTooltipText("显示父分类配置定义");
-        showParentClassificationButton.setIcon(VaadinIcon.EYE.create());
+        showParentClassificationButton.setIcon(VaadinIcon.COG.create());
         showParentClassificationButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         showParentClassificationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -205,15 +203,22 @@ public class ClassificationDetailUI extends VerticalLayout implements
 
         String parentClassificationName = "-";
         String parentClassificationDesc = "-";
+        String childClassificationCount = "-";
+        String offspringClassificationsCount = "-";
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         Classification targetClassification = coreRealm.getClassification(this.classificationName);
-        if(targetClassification != null && !targetClassification.isRootClassification()){
-            Classification parentClassification = targetClassification.getParentClassification();
-            this.parentClassificationName = parentClassification.getClassificationName();
-            parentClassificationName = parentClassification.getClassificationName();
-            parentClassificationDesc = parentClassification.getClassificationDesc();
-        }else{
-            showParentClassificationButton.setEnabled(false);
+        if(targetClassification != null){
+            this.classificationRuntimeStatistics = targetClassification.getClassificationRuntimeStatistics();
+            childClassificationCount = ""+this.classificationRuntimeStatistics.getChildClassificationsCount();
+            offspringClassificationsCount = ""+this.classificationRuntimeStatistics.getOffspringClassificationsCount();
+            if(!targetClassification.isRootClassification()){
+                Classification parentClassification = targetClassification.getParentClassification();
+                this.parentClassificationName = parentClassification.getClassificationName();
+                parentClassificationName = parentClassification.getClassificationName();
+                parentClassificationDesc = parentClassification.getClassificationDesc();
+            }else{
+                showParentClassificationButton.setEnabled(false);
+            }
         }
 
         SecondaryTitleActionBar secondaryTitleActionBar2 = new SecondaryTitleActionBar(new Icon(VaadinIcon.TAG),parentClassificationName,null,actionComponentsList1,false);
@@ -236,7 +241,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
         HorizontalLayout displayItemContainer5 = new HorizontalLayout();
         displayItemContainer5.getStyle().set("padding-left","10px");
         leftSideContainerLayout.add(displayItemContainer5);
-        SecondaryKeyValueDisplayItem childClassificationCount = new SecondaryKeyValueDisplayItem(displayItemContainer5, VaadinIcon.TAG.create(),"Child Classification-子分类数量:","-");
+        childClassificationCountDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer5, VaadinIcon.TAG.create(),"Child Classification-子分类数量:",childClassificationCount);
 
         HorizontalLayout spaceDivLayout_ = new HorizontalLayout();
         spaceDivLayout_.setWidthFull();
@@ -246,7 +251,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
         HorizontalLayout displayItemContainer6 = new HorizontalLayout();
         displayItemContainer6.getStyle().set("padding-left","10px");
         leftSideContainerLayout.add(displayItemContainer6);
-        SecondaryKeyValueDisplayItem offendClassificationCount = new SecondaryKeyValueDisplayItem(displayItemContainer6, FontAwesome.Solid.TAGS.create(),"Offspring Classification-后代分类数量:","-");
+        offendClassificationCountDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer6, FontAwesome.Solid.TAGS.create(),"Offspring Classification-后代分类数量:",offspringClassificationsCount);
 
         HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
         spaceDivLayout4.setWidthFull();
@@ -265,7 +270,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
         leftSideContainerLayout.add(infoTitle3);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(classificationMetaInfo -> {
-            Icon configIcon = new Icon(VaadinIcon.EYE);
+            Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("18px");
             Button configClassification = new Button(configIcon, event -> {
                 if(classificationMetaInfo instanceof ClassificationMetaInfo){
