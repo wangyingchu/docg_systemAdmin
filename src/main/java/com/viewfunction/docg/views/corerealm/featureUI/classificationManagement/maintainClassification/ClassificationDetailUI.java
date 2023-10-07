@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.maintainClassification;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -237,11 +238,42 @@ public class ClassificationDetailUI extends VerticalLayout implements
         middleContainerLayout.add(spaceDivLayout2);
 
         //ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CHILD_SOLID.create(),"分类及三代内后代分类分布");
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(VaadinIcon.CHILD.create(),"后代分类分布");
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(VaadinIcon.CHILD.create(),"后代分类信息");
         middleContainerLayout.add(infoTitle2);
         HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
         spaceDivLayout3.setHeight(10,Unit.PIXELS);
         middleContainerLayout.add(spaceDivLayout3);
+
+        HorizontalLayout displayItemContainer5 = new HorizontalLayout();
+        displayItemContainer5.getStyle().set("padding-left","10px");
+        middleContainerLayout.add(displayItemContainer5);
+        SecondaryKeyValueDisplayItem childClassificationCount = new SecondaryKeyValueDisplayItem(displayItemContainer5, VaadinIcon.TAG.create(),"Child Classification-子分类数量:","-");
+
+        HorizontalLayout spaceDivLayout_ = new HorizontalLayout();
+        spaceDivLayout_.setWidthFull();
+        spaceDivLayout_.setHeight(5,Unit.PIXELS);
+        middleContainerLayout.add(spaceDivLayout_);
+
+        HorizontalLayout displayItemContainer6 = new HorizontalLayout();
+        displayItemContainer6.getStyle().set("padding-left","10px");
+        middleContainerLayout.add(displayItemContainer6);
+        SecondaryKeyValueDisplayItem offendClassificationCount = new SecondaryKeyValueDisplayItem(displayItemContainer6, FontAwesome.Solid.TAGS.create(),"Offspring Classification-后代分类数量:","-");
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidthFull();
+        spaceDivLayout4.setHeight(10,Unit.PIXELS);
+        spaceDivLayout4.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-s)");
+        middleContainerLayout.add(spaceDivLayout4);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidthFull();
+        spaceDivLayout5.setHeight(10,Unit.PIXELS);
+        middleContainerLayout.add(spaceDivLayout5);
+
+        ThirdLevelIconTitle infoTitle3 = new ThirdLevelIconTitle(VaadinIcon.SPLIT.create(),"后代分类分布");
+        middleContainerLayout.add(infoTitle3);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(classificationMetaInfo -> {
             Icon configIcon = new Icon(VaadinIcon.EYE);
@@ -301,9 +333,9 @@ public class ClassificationDetailUI extends VerticalLayout implements
         classificationsMetaInfoTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         classificationsMetaInfoTreeGrid.addHierarchyColumn(ClassificationMetaInfo::getClassificationName).setKey("idx_0").setHeader("分类名称");
         classificationsMetaInfoTreeGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("110px").setResizable(false);
-        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"分类名称");
+        LightGridColumnHeader gridColumnHeader_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"分类名称");
         classificationsMetaInfoTreeGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
+        LightGridColumnHeader gridColumnHeader_idx3 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         classificationsMetaInfoTreeGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
 
         middleContainerLayout.add(classificationsMetaInfoTreeGrid);
