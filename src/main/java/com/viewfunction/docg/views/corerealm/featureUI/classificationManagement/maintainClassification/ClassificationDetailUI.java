@@ -57,6 +57,11 @@ public class ClassificationDetailUI extends VerticalLayout implements
     private ClassificationRuntimeStatistics classificationRuntimeStatistics;
     private SecondaryKeyValueDisplayItem childClassificationCountDisplayItem;
     private SecondaryKeyValueDisplayItem offendClassificationCountDisplayItem;
+    private RelatedConceptionKindsView relatedConceptionKindsView;
+    private RelatedRelationKindsView relatedRelationKindsView;
+    private RelatedAttributeKindsView relatedAttributeKindsView;
+    private RelatedAttributesViewKindsView relatedAttributesViewKindsView;
+    private RelatedConceptionEntitiesView relatedConceptionEntitiesView;
 
     public ClassificationDetailUI(){}
 
@@ -355,11 +360,18 @@ public class ClassificationDetailUI extends VerticalLayout implements
         classificationRuntimeInfoTabSheet.setWidthFull();
         rightSideContainerLayout.add(classificationRuntimeInfoTabSheet);
         rightSideContainerLayout.setFlexGrow(1,classificationRuntimeInfoTabSheet);
-        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.CUBE,"相关概念类型信息"),new NativeLabel("111"));
-        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.CONNECT_O,"相关关系类型信息"),new NativeLabel("222"));
-        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.INPUT,"相关属性类型信息"),new NativeLabel("333"));
-        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.TASKS,"相关属性视图类型信息"),new NativeLabel("444"));
-        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.STOCK,"相关概念实体信息"),new NativeLabel("555"));
+
+        this.relatedConceptionKindsView = new RelatedConceptionKindsView(this.classificationName);
+        this.relatedRelationKindsView = new RelatedRelationKindsView(this.classificationName);
+        this.relatedAttributeKindsView = new RelatedAttributeKindsView(this.classificationName);
+        this.relatedAttributesViewKindsView = new RelatedAttributesViewKindsView(this.classificationName);
+        this.relatedConceptionEntitiesView = new RelatedConceptionEntitiesView(this.classificationName);
+
+        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.CUBE,"相关概念类型信息"),this.relatedConceptionKindsView);
+        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.CONNECT_O,"相关关系类型信息"),this.relatedRelationKindsView);
+        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.INPUT,"相关属性类型信息"),this.relatedAttributeKindsView);
+        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.TASKS,"相关属性视图类型信息"),this.relatedAttributesViewKindsView);
+        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.STOCK,"相关概念实体信息"),this.relatedConceptionEntitiesView);
 
         initLoadClassificationData();
     }
