@@ -31,7 +31,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.paylo
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
-import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.ClassificationCreatedEvent;
 import com.viewfunction.docg.element.eventHandling.ClassificationDescriptionUpdatedEvent;
 import com.viewfunction.docg.element.eventHandling.ClassificationRemovedEvent;
@@ -372,7 +371,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
                 .set("padding-bottom", "var(--lumo-space-s)");
         singleClassificationSummaryInfoContainerLayout.add(divLayout);
 
-        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类及三代内后代分类分布");
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(VaadinIcon.SITEMAP.create(),"分类及三代内后代分类分布");
         singleClassificationSummaryInfoContainerLayout.add(infoTitle2);
     }
 

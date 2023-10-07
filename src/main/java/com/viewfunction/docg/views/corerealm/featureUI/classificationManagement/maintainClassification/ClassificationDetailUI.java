@@ -26,7 +26,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
-import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 
@@ -52,6 +51,9 @@ public class ClassificationDetailUI extends VerticalLayout implements
     private TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid;
     private List<ClassificationMetaInfo> classificationsMetaInfoList;
     private Map<String,ClassificationMetaInfo> classificationMetaInfoMap;
+
+    private List<ClassificationMetaInfo> allClassificationsMetaInfoList;
+
     public ClassificationDetailUI(){}
 
     public ClassificationDetailUI(String classificationName){
@@ -182,7 +184,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
         HorizontalLayout actionButtonBarContainer = new HorizontalLayout();
         actionButtonBarContainer.setSpacing(false);
 
-        SecondaryIconTitle viewTitle = new SecondaryIconTitle(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"分类继承信息",actionButtonBarContainer);
+        SecondaryIconTitle viewTitle = new SecondaryIconTitle(VaadinIcon.SITEMAP.create(),"分类继承信息",actionButtonBarContainer);
         viewTitle.setHeight(39, Unit.PIXELS);
         middleContainerLayout.add(viewTitle);
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
@@ -322,34 +324,52 @@ public class ClassificationDetailUI extends VerticalLayout implements
         classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.TASKS,"相关属性视图类型信息"),new NativeLabel("444"));
         classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.STOCK,"相关概念实体信息"),new NativeLabel("555"));
 
-        loadClassificationData();
+        initLoadClassificationData();
     }
 
-    private void loadClassificationData(){
+    private void initLoadClassificationData(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
-            List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
+            allClassificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
             TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
             TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getTreeData();
             gridTreeData.clear();
+
             classificationMetaInfoMap = new HashMap<>();
-            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
+            for(ClassificationMetaInfo currentClassificationMetaInfo:allClassificationsMetaInfoList){
                 classificationMetaInfoMap.put(currentClassificationMetaInfo.getClassificationName(),currentClassificationMetaInfo);
             }
-            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
-                gridTreeData.addItem(null,currentClassificationMetaInfo);
+            for(ClassificationMetaInfo currentClassificationMetaInfo:allClassificationsMetaInfoList){
+                //   if(isSelfAndChildren(this.classificationName,currentClassificationMetaInfo)){
+                    gridTreeData.addItem(null,currentClassificationMetaInfo);
+                    //  }
             }
-            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
+            for(ClassificationMetaInfo currentClassificationMetaInfo:allClassificationsMetaInfoList){
                 if(!currentClassificationMetaInfo.isRootClassification()){
                     String parentClassificationName = currentClassificationMetaInfo.getParentClassificationName();
-                    gridTreeData.setParent(currentClassificationMetaInfo,classificationMetaInfoMap.get(parentClassificationName));
+                    //gridTreeData.setParent(currentClassificationMetaInfo,classificationMetaInfoMap.get(parentClassificationName));
+
+                //    if(isSelfAndChildren(this.classificationName,currentClassificationMetaInfo)){
+                        gridTreeData.setParent(currentClassificationMetaInfo,classificationMetaInfoMap.get(parentClassificationName));
+               //     }
                 }
             }
             dataProvider.refreshAll();
-            this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
+            this.classificationsMetaInfoTreeGrid.expand(allClassificationsMetaInfoList);
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private boolean isSelfAndChildren(String selfClassificationName,ClassificationMetaInfo classificationMetaInfo){
+        if(selfClassificationName.equals(classificationMetaInfo.getClassificationName())){
+            return true;
+        }else{
+            if(selfClassificationName.equals(classificationMetaInfo.getParentClassificationName())){
+                return true;
+            }
+        }
+        return false;
     }
 
     private void renderShowMetaInfoUI(){
