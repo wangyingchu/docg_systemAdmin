@@ -14,24 +14,25 @@ import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.structure.InheritanceTree;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
-import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.ClassificationCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 
+import dev.mett.vaadin.tooltip.Tooltips;
+
 import java.util.*;
-import java.util.function.Consumer;
 
 import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.Classification;
 
@@ -41,7 +42,6 @@ public class ClassificationDetailUI extends VerticalLayout implements
     private String classificationName;
     private int attributesViewKindDetailViewHeightOffset = 170;
     private int rightSideLayoutWidthOffset = 20;
-
     private int currentBrowserHeight = 0;
     private Registration listener;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
@@ -49,9 +49,9 @@ public class ClassificationDetailUI extends VerticalLayout implements
     private VerticalLayout middleContainerLayout;
     private VerticalLayout rightSideContainerLayout;
     private String parentClassificationName;
-    private TreeGrid<Classification> classificationsMetaInfoTreeGrid;
-    private List<Classification> classificationsMetaInfoList;
-
+    private TreeGrid<ClassificationMetaInfo> classificationsMetaInfoTreeGrid;
+    private List<ClassificationMetaInfo> classificationsMetaInfoList;
+    private Map<String,ClassificationMetaInfo> classificationMetaInfoMap;
     public ClassificationDetailUI(){}
 
     public ClassificationDetailUI(String classificationName){
@@ -200,7 +200,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
 
         List<Component> actionComponentsList1 = new ArrayList<>();
         Button showParentClassificationButton= new Button();
-        showParentClassificationButton.setTooltipText("父分类配置定义");
+        showParentClassificationButton.setTooltipText("显示父分类配置定义");
         showParentClassificationButton.setIcon(VaadinIcon.EYE.create());
         showParentClassificationButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         showParentClassificationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -241,15 +241,69 @@ public class ClassificationDetailUI extends VerticalLayout implements
         spaceDivLayout3.setHeight(10,Unit.PIXELS);
         middleContainerLayout.add(spaceDivLayout3);
 
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(classificationMetaInfo -> {
+            Icon configIcon = new Icon(VaadinIcon.EYE);
+            configIcon.setSize("18px");
+            Button configClassification = new Button(configIcon, event -> {
+                if(classificationMetaInfo instanceof ClassificationMetaInfo){
+                    //renderClassificationConfigurationUI((ClassificationMetaInfo)classificationMetaInfo);
+                }
+            });
+            configClassification.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            configClassification.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(configClassification, "显示子分类配置定义");
+
+            Icon detachClassificationIcon = new Icon(VaadinIcon.UNLINK);
+            detachClassificationIcon.setSize("18px");
+            Button detachClassification = new Button(detachClassificationIcon, event -> {});
+            detachClassification.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            detachClassification.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(detachClassification, "移除子分类");
+            detachClassification.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(classificationMetaInfo instanceof ClassificationMetaInfo){
+                        //renderRemoveClassificationUI((ClassificationMetaInfo)classificationMetaInfo);
+                    }
+                }
+            });
+
+            Icon deleteClassificationIcon = new Icon(VaadinIcon.TRASH);
+            deleteClassificationIcon.setSize("18px");
+            Button removeClassification = new Button(deleteClassificationIcon, event -> {});
+            removeClassification.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            removeClassification.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            removeClassification.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            Tooltips.getCurrent().setTooltip(removeClassification, "删除分类");
+            removeClassification.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(classificationMetaInfo instanceof ClassificationMetaInfo){
+                        //renderRemoveClassificationUI((ClassificationMetaInfo)classificationMetaInfo);
+                    }
+                }
+            });
+
+            HorizontalLayout buttons = new HorizontalLayout(configClassification,detachClassification,removeClassification);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(15, Unit.PIXELS);
+            buttons.setWidth(80,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
+
         classificationsMetaInfoTreeGrid = new TreeGrid<>();
-        classificationsMetaInfoTreeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_ROW_BORDERS);
+        classificationsMetaInfoTreeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_ROW_BORDERS,GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER);
         classificationsMetaInfoTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        classificationsMetaInfoTreeGrid.addColumn(com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification::getClassificationName).setKey("idx_0").setHeader("分类信息");
-        classificationsMetaInfoTreeGrid.addColumn(com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification::getClassificationName).setKey("idx_1").setHeader("操作").setFlexGrow(0).setWidth("80px").setResizable(false);;
-        LightGridColumnHeader gridColumnHeader_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"分类信息");
+        classificationsMetaInfoTreeGrid.addHierarchyColumn(ClassificationMetaInfo::getClassificationName).setKey("idx_0").setHeader("分类名称");
+        classificationsMetaInfoTreeGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("110px").setResizable(false);
+        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"分类名称");
         classificationsMetaInfoTreeGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
-        LightGridColumnHeader gridColumnHeader_idx1 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
-        classificationsMetaInfoTreeGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
+        classificationsMetaInfoTreeGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
+
         middleContainerLayout.add(classificationsMetaInfoTreeGrid);
 
         rightSideContainerLayout = new VerticalLayout();
@@ -273,78 +327,29 @@ public class ClassificationDetailUI extends VerticalLayout implements
 
     private void loadClassificationData(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        coreRealm.openGlobalSession();
-        Classification targetClassification = coreRealm.getClassification(this.classificationName);
-        if(targetClassification != null){
-            InheritanceTree<Classification> classificationsInheritanceTree = targetClassification.getOffspringClassifications();
-            Iterable<Classification> classificationsIterable = classificationsInheritanceTree.traversalTree(this.classificationName);
-            TreeDataProvider<Classification> dataProvider = (TreeDataProvider<Classification>)classificationsMetaInfoTreeGrid.getDataProvider();
-            TreeData<Classification> gridTreeData = dataProvider.getTreeData();
-
-            Map<String, Classification> classificationMap = new HashMap<>();
-            for(Classification currentClassification:classificationsIterable){
-                classificationMap.put(currentClassification.getClassificationName(),currentClassification);
+        try {
+            List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
+            TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
+            TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getTreeData();
+            gridTreeData.clear();
+            classificationMetaInfoMap = new HashMap<>();
+            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
+                classificationMetaInfoMap.put(currentClassificationMetaInfo.getClassificationName(),currentClassificationMetaInfo);
             }
-            for(Classification currentClassification:classificationsIterable){
-                gridTreeData.addItem(null,currentClassification);
+            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
+                gridTreeData.addItem(null,currentClassificationMetaInfo);
             }
-            for(Classification currentClassification:classificationsIterable){
-
-               // if(!currentClassification.getClassificationName().equals(this.classificationName)){
-                    Classification parentClassification = currentClassification.getParentClassification();
-                    if(parentClassification != null){
-                        if(!parentClassification.getClassificationName().equals(this.classificationName)){
-                            gridTreeData.setParent(currentClassification,classificationMap.get(parentClassification.getClassificationName()));
-                        }
-
-
-                        //
-                    }
-              //  }
-
-
-
-            }
-/*
-
-            Iterator<Classification> classificationIterator = classificationsIterable.iterator();
-
-
-
-            while(classificationIterator.hasNext()){
-                Classification currentClassification = classificationIterator.next();
-                Classification parentClassification = currentClassification.getParentClassification();
-                classificationMap.put(currentClassification.getClassificationName(),currentClassification);
-
-
-
-                Classification currentParentClassification = null;
-                if(parentClassification != null){
-                   classificationMap.put(parentClassification.getClassificationName(),parentClassification);
-                    currentParentClassification = parentClassification;
+            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
+                if(!currentClassificationMetaInfo.isRootClassification()){
+                    String parentClassificationName = currentClassificationMetaInfo.getParentClassificationName();
+                    gridTreeData.setParent(currentClassificationMetaInfo,classificationMetaInfoMap.get(parentClassificationName));
                 }
-
-
-
-                gridTreeData.addItem(currentParentClassification,currentClassification);
             }
-*/
             dataProvider.refreshAll();
-
-
-
-
-
-           //
-           // classificationsIterable.iterator()
-
-
-
-
-
+            this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
         }
-        coreRealm.closeGlobalSession();
-
     }
 
     private void renderShowMetaInfoUI(){
@@ -394,7 +399,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
         configTabIcon.setSize("12px");
         NativeLabel configTabLabel = new NativeLabel(" "+tabTitleTxt);
         configTabLabel.getStyle()
-                . set("font-size","var(--lumo-font-size-s)")
+                .set("font-size","var(--lumo-font-size-s)")
                 .set("font-weight", "bold");
         kindConfigTabLayout.add(configTabIcon,configTabLabel);
         return kindConfigTabLayout;
