@@ -13,10 +13,9 @@ import java.text.NumberFormat;
 public class RelatedConceptionKindsView extends VerticalLayout {
     private String classificationName;
     private NumberFormat numberFormat;
-    private PrimaryKeyValueDisplayItem conceptionEntitiesCountDisplayItem;
+    private PrimaryKeyValueDisplayItem conceptionKindCountDisplayItem;
     public RelatedConceptionKindsView(String classificationName){
-
-        SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.CUBES),"概念类型实体配置");
+        SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.SPARK_LINE),"相关概念类型运行时信息");
         add(filterTitle1);
 
         HorizontalLayout infoContainer = new HorizontalLayout();
@@ -27,11 +26,8 @@ public class RelatedConceptionKindsView extends VerticalLayout {
                 .set("padding-bottom", "var(--lumo-space-l)");
         add(infoContainer);
 
-
-
         this.numberFormat = NumberFormat.getInstance();
-        this.conceptionEntitiesCountDisplayItem =
-                new PrimaryKeyValueDisplayItem(infoContainer, FontAwesome.Solid.CIRCLE.create(),"概念实体数量:",this.numberFormat.format(123456789));
-
+        this.conceptionKindCountDisplayItem =
+                new PrimaryKeyValueDisplayItem(infoContainer, FontAwesome.Solid.CIRCLE.create(),"相关概念类型数量:",this.numberFormat.format(123456789));
     }
 }
