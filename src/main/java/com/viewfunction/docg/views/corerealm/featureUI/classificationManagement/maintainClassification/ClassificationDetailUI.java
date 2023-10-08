@@ -279,7 +279,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
             configIcon.setSize("18px");
             Button configClassification = new Button(configIcon, event -> {
                 if(classificationMetaInfo instanceof ClassificationMetaInfo){
-                    //renderClassificationConfigurationUI((ClassificationMetaInfo)classificationMetaInfo);
+                    renderClassificationConfigurationUI((ClassificationMetaInfo)classificationMetaInfo);
                 }
             });
             configClassification.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -452,6 +452,37 @@ public class ClassificationDetailUI extends VerticalLayout implements
         spaceDivLayout2.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout2);
         NativeLabel attributesViewKindName = new NativeLabel(this.parentClassificationName);
+        titleDetailLayout.add(attributesViewKindName);
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"分类配置",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(classificationDetailUI);
+        fullScreenWindow.show();
+    }
+
+    private void renderClassificationConfigurationUI(ClassificationMetaInfo classificationMetaInfo){
+        ClassificationDetailUI classificationDetailUI = new ClassificationDetailUI(classificationMetaInfo.getClassificationName());
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon attributesViewKindIcon = VaadinIcon.TAGS.create();
+        attributesViewKindIcon.setSize("10px");
+        titleDetailLayout.add(attributesViewKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel attributesViewKindName = new NativeLabel(classificationMetaInfo.getClassificationName());
         titleDetailLayout.add(attributesViewKindName);
         actionComponentList.add(titleDetailLayout);
 

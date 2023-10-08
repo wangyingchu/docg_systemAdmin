@@ -5,6 +5,9 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 
@@ -15,6 +18,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
     private NumberFormat numberFormat;
     private PrimaryKeyValueDisplayItem conceptionKindCountDisplayItem;
     public RelatedConceptionKindsView(String classificationName){
+        this.classificationName = classificationName;
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.SPARK_LINE),"相关概念类型运行时信息");
         add(filterTitle1);
 
@@ -29,5 +33,13 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         this.numberFormat = NumberFormat.getInstance();
         this.conceptionKindCountDisplayItem =
                 new PrimaryKeyValueDisplayItem(infoContainer, FontAwesome.Solid.CIRCLE.create(),"相关概念类型数量:",this.numberFormat.format(123456789));
+    }
+
+    public void renderRelatedConceptionKindsInfo(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+
+        Classification targetClassification = coreRealm.getClassification(this.classificationName);
+        //targetClassification
+
     }
 }
