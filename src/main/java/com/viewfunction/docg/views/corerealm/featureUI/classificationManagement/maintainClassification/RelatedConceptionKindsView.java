@@ -6,15 +6,20 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 
@@ -41,13 +46,25 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         this.conceptionKindCountDisplayItem =
                 new PrimaryKeyValueDisplayItem(infoContainer, FontAwesome.Solid.CIRCLE.create(),"相关概念类型数量:",this.numberFormat.format(123456789));
 
+        HorizontalLayout mainContentContainerLayout = new HorizontalLayout();
+        mainContentContainerLayout.setWidthFull();
+        add(mainContentContainerLayout);
 
+        VerticalLayout leftSideContainerLayout = new VerticalLayout();
+        leftSideContainerLayout.setWidth(650,Unit.PIXELS);
+        leftSideContainerLayout.setMargin(false);
+        leftSideContainerLayout.setPadding(false);
+        VerticalLayout rightSideContainerLayout = new VerticalLayout();
+        rightSideContainerLayout.setMargin(true);
+        rightSideContainerLayout.setPadding(false);
 
+        mainContentContainerLayout.add(leftSideContainerLayout);
+        mainContentContainerLayout.add(rightSideContainerLayout);
 
         HorizontalLayout classificationsSearchElementsContainerLayout = new HorizontalLayout();
         classificationsSearchElementsContainerLayout.setSpacing(false);
         classificationsSearchElementsContainerLayout.setMargin(false);
-        add(classificationsSearchElementsContainerLayout);
+        leftSideContainerLayout.add(classificationsSearchElementsContainerLayout);
 
         SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
         classificationsSearchElementsContainerLayout.add(filterTitle);
@@ -105,7 +122,51 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         });
 
 
+        Grid<ConceptionKind> conceptionKindMetaInfoGrid = new Grid<>();
+        conceptionKindMetaInfoGrid.setWidth(650,Unit.PIXELS);
+        conceptionKindMetaInfoGrid.setHeight(600,Unit.PIXELS);
+        conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        conceptionKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        conceptionKindMetaInfoGrid.addColumn(ConceptionKind::getConceptionKindName).setHeader("概念类型名称").setKey("idx_0");
+        conceptionKindMetaInfoGrid.addColumn(ConceptionKind::getConceptionKindDesc).setHeader("概念类型显示名称").setKey("idx_1");
+        /*
+        //conceptionKindMetaInfoGrid.addColumn(_createDateComponentRenderer).setHeader("类型创建时间").setKey("idx_2")
+        //        .setComparator(createDateComparator)
+        //        .setFlexGrow(0).setWidth("210px").setResizable(false);
+        //conceptionKindMetaInfoGrid.addColumn(_lastUpdateDateComponentRenderer).setHeader("类型最后更新时间").setKey("idx_3")
+        //        .setComparator(lastUpdateDateComparator)
+        //        .setFlexGrow(0).setWidth("210px").setResizable(false);
+        conceptionKindMetaInfoGrid.addColumn(new NumberRenderer<>(EntityStatisticsInfo::getEntitiesCount,NumberFormat.getIntegerInstance()))
+                .setComparator((entityStatisticsInfo1, entityStatisticsInfo2) ->
+                        (int)(entityStatisticsInfo1.getEntitiesCount() - entityStatisticsInfo2.getEntitiesCount()))
+                .setHeader("类型包含实体数量").setKey("idx_4")
+                .setFlexGrow(0).setWidth("150px").setResizable(false);
+        conceptionKindMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_5")
+                .setFlexGrow(0).setWidth("170px").setResizable(false);
+        */
+        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"概念类型名称");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"概念类型显示名称");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"类型创建时间");
+        /*
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"类型最后更新时间");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.STOCK,"类型包含实体数量");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5);
+*/
+        conceptionKindMetaInfoGrid.appendFooterRow();
 
+        leftSideContainerLayout.add(conceptionKindMetaInfoGrid);
+
+
+
+
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"概念类型概览");
+        rightSideContainerLayout.add(filterTitle2);
     }
 
     public void renderRelatedConceptionKindsInfo(){
