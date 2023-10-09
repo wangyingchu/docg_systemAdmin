@@ -12,12 +12,14 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
@@ -26,12 +28,14 @@ import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
+import java.util.List;
 
 public class RelatedConceptionKindsView extends VerticalLayout {
     private String classificationName;
     private NumberFormat numberFormat;
     private PrimaryKeyValueDisplayItem conceptionKindCountDisplayItem;
     private Grid<ConceptionKind> conceptionKindMetaInfoGrid;
+    private ClassificationRelatedDataQueryCriteriaView classificationRelatedDataQueryCriteriaView;
     public RelatedConceptionKindsView(String classificationName){
         this.setPadding(false);
         this.classificationName = classificationName;
@@ -50,7 +54,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
 
         this.numberFormat = NumberFormat.getInstance();
         this.conceptionKindCountDisplayItem =
-                new PrimaryKeyValueDisplayItem(infoContainer, FontAwesome.Solid.CIRCLE.create(),"相关概念类型数量:",this.numberFormat.format(123456789));
+                new PrimaryKeyValueDisplayItem(infoContainer, FontAwesome.Solid.CIRCLE.create(),"相关概念类型数量:","-");
 
         HorizontalLayout mainContentContainerLayout = new HorizontalLayout();
         mainContentContainerLayout.setWidthFull();
@@ -67,7 +71,15 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         mainContentContainerLayout.add(leftSideContainerLayout);
         mainContentContainerLayout.add(rightSideContainerLayout);
 
-        ClassificationRelatedDataQueryCriteriaView classificationRelatedDataQueryCriteriaView = new ClassificationRelatedDataQueryCriteriaView();
+        ClassificationRelatedDataQueryCriteriaView.ClassificationRelatedDataQueryHelper classificationRelatedDataQueryHelper =
+                new ClassificationRelatedDataQueryCriteriaView.ClassificationRelatedDataQueryHelper() {
+            @Override
+            public void executeQuery(String relationKindName, RelationDirection relationDirection, boolean includeOffspringClassifications, int offspringLevel) {
+                queryRelatedConceptionKind(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
+            }
+        };
+        classificationRelatedDataQueryCriteriaView = new ClassificationRelatedDataQueryCriteriaView();
+        classificationRelatedDataQueryCriteriaView.setClassificationRelatedDataQueryHelper(classificationRelatedDataQueryHelper);
         leftSideContainerLayout.add(classificationRelatedDataQueryCriteriaView);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
@@ -134,8 +146,6 @@ public class RelatedConceptionKindsView extends VerticalLayout {
             return new VerticalLayout(buttons);
         });
 
-
-
         conceptionKindMetaInfoGrid = new Grid<>();
         conceptionKindMetaInfoGrid.setWidth(700,Unit.PIXELS);
         conceptionKindMetaInfoGrid.setHeight(600,Unit.PIXELS);
@@ -143,11 +153,8 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         conceptionKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         conceptionKindMetaInfoGrid.addColumn(ConceptionKind::getConceptionKindName).setHeader("概念类型名称").setKey("idx_0");
         conceptionKindMetaInfoGrid.addColumn(ConceptionKind::getConceptionKindDesc).setHeader("概念类型显示名称").setKey("idx_1");
-
         conceptionKindMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_5")
                 .setFlexGrow(0).setWidth("170px").setResizable(false);
-
-
         /*
         //conceptionKindMetaInfoGrid.addColumn(_createDateComponentRenderer).setHeader("类型创建时间").setKey("idx_2")
         //        .setComparator(createDateComparator)
@@ -184,15 +191,22 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         rightSideContainerLayout.add(filterTitle2);
     }
 
-    public void renderRelatedConceptionKindsInfo(){
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-
-        Classification targetClassification = coreRealm.getClassification(this.classificationName);
-        //targetClassification
-
-    }
-
     public void setHeight(int viewHeight){
         this.conceptionKindMetaInfoGrid.setHeight(viewHeight-100,Unit.PIXELS);
+    }
+
+    public void setTotalCount(int totalCount){
+        this.conceptionKindCountDisplayItem.updateDisplayValue(this.numberFormat.format(totalCount));
+    }
+
+    private void queryRelatedConceptionKind(String relationKindName, RelationDirection relationDirection, boolean includeOffspringClassifications, int offspringLevel){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        Classification targetClassification = coreRealm.getClassification(this.classificationName);
+        try {
+            List<ConceptionKind>  conceptionKindList = targetClassification.getRelatedConceptionKind(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
+            conceptionKindMetaInfoGrid.setItems(conceptionKindList);
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

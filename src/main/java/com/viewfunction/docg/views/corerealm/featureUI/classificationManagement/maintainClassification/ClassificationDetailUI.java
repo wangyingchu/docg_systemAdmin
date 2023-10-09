@@ -380,6 +380,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
 
     private void initLoadClassificationData(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
         try {
             allClassificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
             TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
@@ -410,6 +411,12 @@ public class ClassificationDetailUI extends VerticalLayout implements
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
+
+        Classification targetClassification = coreRealm.getClassification(this.classificationName);
+        ClassificationRuntimeStatistics classificationRuntimeStatistics = targetClassification.getClassificationRuntimeStatistics();
+        this.relatedConceptionKindsView.setTotalCount(classificationRuntimeStatistics.getRelatedConceptionKindCount());
+
+        coreRealm.closeGlobalSession();
     }
 
     private boolean isSelfAndChildren(String selfClassificationName,ClassificationMetaInfo classificationMetaInfo){
