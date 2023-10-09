@@ -155,12 +155,14 @@ public class ClassificationRelatedDataQueryCriteriaView extends HorizontalLayout
             return;
         }
         String relationKindName = this.relationKindSelect.getValue().getKindName();
-        RelationDirection relationDirection = RelationDirection.TWO_WAY;
+        RelationDirection relationDirection = null;
         String relationDirectionStr = this.relationDirectionSelect.getValue().toString();
         if(relationDirectionStr.equals("FROM")){
             relationDirection = RelationDirection.FROM;
-        }else if(relationDirectionStr.equals("TO")){}else{
+        }else if(relationDirectionStr.equals("TO")){
             relationDirection = RelationDirection.TO;
+        }else{
+            relationDirection = RelationDirection.TWO_WAY;
         }
         boolean includeOffspringClassifications = includeOffspringClassificationsCheckbox.getValue();
 
