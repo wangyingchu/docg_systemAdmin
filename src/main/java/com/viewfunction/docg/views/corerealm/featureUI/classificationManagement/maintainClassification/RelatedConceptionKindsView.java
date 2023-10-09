@@ -22,6 +22,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -30,11 +31,9 @@ public class RelatedConceptionKindsView extends VerticalLayout {
     private String classificationName;
     private NumberFormat numberFormat;
     private PrimaryKeyValueDisplayItem conceptionKindCountDisplayItem;
+    private Grid<ConceptionKind> conceptionKindMetaInfoGrid;
     public RelatedConceptionKindsView(String classificationName){
-
-        //setMargin(false);
-      setPadding(false);
-
+        this.setPadding(false);
         this.classificationName = classificationName;
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.SPARK_LINE),"相关概念类型运行时信息");
 
@@ -137,8 +136,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
 
 
 
-
-        Grid<ConceptionKind> conceptionKindMetaInfoGrid = new Grid<>();
+        conceptionKindMetaInfoGrid = new Grid<>();
         conceptionKindMetaInfoGrid.setWidth(700,Unit.PIXELS);
         conceptionKindMetaInfoGrid.setHeight(600,Unit.PIXELS);
         conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
@@ -192,5 +190,9 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         Classification targetClassification = coreRealm.getClassification(this.classificationName);
         //targetClassification
 
+    }
+
+    public void setHeight(int viewHeight){
+        this.conceptionKindMetaInfoGrid.setHeight(viewHeight-100,Unit.PIXELS);
     }
 }
