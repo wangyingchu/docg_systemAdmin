@@ -14,6 +14,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.renderer.LitRenderer;
+import com.vaadin.flow.data.renderer.Renderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
@@ -54,6 +56,7 @@ public class ClassificationRelatedDataQueryCriteriaView extends HorizontalLayout
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
+        relationKindSelect.setRenderer(createRenderer());
         add(relationKindSelect);
         setVerticalComponentAlignment(Alignment.CENTER, relationKindSelect);
 
@@ -99,5 +102,19 @@ public class ClassificationRelatedDataQueryCriteriaView extends HorizontalLayout
                 //filterClassifications();
             }
         });
+    }
+
+    private Renderer<KindMetaInfo> createRenderer() {
+        StringBuilder tpl = new StringBuilder();
+        tpl.append("<div style=\"display: flex;\">");
+        tpl.append("  <div>");
+        tpl.append("    <span style=\"font-size: var(--lumo-font-size-m); color: var(--lumo-primary-text-color);\">${item.attributeKindName}</span>");
+        tpl.append("    <div style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">${item.attributeKindDesc}</div>");
+        tpl.append("  </div>");
+        tpl.append("</div>");
+
+        return LitRenderer.<KindMetaInfo>of(tpl.toString())
+                .withProperty("attributeKindName", KindMetaInfo::getKindName)
+                .withProperty("attributeKindDesc", KindMetaInfo::getKindDesc);
     }
 }
