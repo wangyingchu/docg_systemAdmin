@@ -12,8 +12,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.textfield.TextFieldVariant;
 
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
@@ -33,8 +31,14 @@ public class RelatedConceptionKindsView extends VerticalLayout {
     private NumberFormat numberFormat;
     private PrimaryKeyValueDisplayItem conceptionKindCountDisplayItem;
     public RelatedConceptionKindsView(String classificationName){
+
+        //setMargin(false);
+      setPadding(false);
+
         this.classificationName = classificationName;
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.SPARK_LINE),"相关概念类型运行时信息");
+
+        filterTitle1.getStyle().set("padding-top","10px");
         add(filterTitle1);
 
         HorizontalLayout infoContainer = new HorizontalLayout();
@@ -54,7 +58,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         add(mainContentContainerLayout);
 
         VerticalLayout leftSideContainerLayout = new VerticalLayout();
-        leftSideContainerLayout.setWidth(650,Unit.PIXELS);
+        leftSideContainerLayout.setWidth(700,Unit.PIXELS);
         leftSideContainerLayout.setMargin(false);
         leftSideContainerLayout.setPadding(false);
         VerticalLayout rightSideContainerLayout = new VerticalLayout();
@@ -64,68 +68,8 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         mainContentContainerLayout.add(leftSideContainerLayout);
         mainContentContainerLayout.add(rightSideContainerLayout);
 
-        HorizontalLayout classificationsSearchElementsContainerLayout = new HorizontalLayout();
-        classificationsSearchElementsContainerLayout.setSpacing(false);
-        classificationsSearchElementsContainerLayout.setMargin(false);
-        leftSideContainerLayout.add(classificationsSearchElementsContainerLayout);
-
-        SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
-        classificationsSearchElementsContainerLayout.add(filterTitle);
-        classificationsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
-        filterTitle.setWidth(80, Unit.PIXELS);
-
-        TextField classificationNameFilterField = new TextField();
-        classificationNameFilterField.setPlaceholder("分类名称");
-        classificationNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        classificationNameFilterField.setWidth(170,Unit.PIXELS);
-        classificationsSearchElementsContainerLayout.add(classificationNameFilterField);
-        classificationsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, classificationNameFilterField);
-
-        Icon plusIcon = new Icon(VaadinIcon.PLUS);
-        plusIcon.setSize("12px");
-        classificationsSearchElementsContainerLayout.add(plusIcon);
-        classificationsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
-
-        TextField classificationDescFilterField = new TextField();
-        classificationDescFilterField.setPlaceholder("分类描述");
-        classificationDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        classificationDescFilterField.setWidth(170,Unit.PIXELS);
-        classificationsSearchElementsContainerLayout.add(classificationDescFilterField);
-        classificationsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, classificationDescFilterField);
-
-        Button searchClassificationsButton = new Button("查找分类",new Icon(VaadinIcon.SEARCH));
-        searchClassificationsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        searchClassificationsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        classificationsSearchElementsContainerLayout.add(searchClassificationsButton);
-        classificationsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchClassificationsButton);
-        searchClassificationsButton.setWidth(90,Unit.PIXELS);
-        searchClassificationsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //filterClassifications();
-            }
-        });
-
-        Icon divIcon = new Icon(VaadinIcon.LINE_V);
-        divIcon.setSize("8px");
-        classificationsSearchElementsContainerLayout.add(divIcon);
-        classificationsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
-
-        Button clearSearchCriteriaButton = new Button("清除查询条件",new Icon(VaadinIcon.ERASER));
-        clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        classificationsSearchElementsContainerLayout.add(clearSearchCriteriaButton);
-        classificationsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
-        clearSearchCriteriaButton.setWidth(120,Unit.PIXELS);
-        clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //cancelFilterClassifications();
-            }
-        });
-
-
-
+        ClassificationRelatedDataQueryCriteriaView classificationRelatedDataQueryCriteriaView = new ClassificationRelatedDataQueryCriteriaView();
+        leftSideContainerLayout.add(classificationRelatedDataQueryCriteriaView);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
             Icon queryIcon = new Icon(VaadinIcon.RECORDS);
@@ -195,7 +139,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
 
 
         Grid<ConceptionKind> conceptionKindMetaInfoGrid = new Grid<>();
-        conceptionKindMetaInfoGrid.setWidth(650,Unit.PIXELS);
+        conceptionKindMetaInfoGrid.setWidth(700,Unit.PIXELS);
         conceptionKindMetaInfoGrid.setHeight(600,Unit.PIXELS);
         conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         conceptionKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
