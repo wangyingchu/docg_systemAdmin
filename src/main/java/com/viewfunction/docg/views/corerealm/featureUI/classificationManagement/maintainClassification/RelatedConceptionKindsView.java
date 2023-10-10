@@ -1,6 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.maintainClassification;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
+
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
@@ -8,10 +9,14 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
@@ -36,6 +41,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
     private PrimaryKeyValueDisplayItem conceptionKindCountDisplayItem;
     private Grid<ConceptionKind> conceptionKindMetaInfoGrid;
     private ClassificationRelatedDataQueryCriteriaView classificationRelatedDataQueryCriteriaView;
+
     public RelatedConceptionKindsView(String classificationName){
         this.setPadding(false);
         this.classificationName = classificationName;
@@ -48,17 +54,67 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         infoContainer.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         infoContainer.setWidthFull();
         infoContainer.getStyle()
-                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
-                .set("padding-bottom", "var(--lumo-space-l)");
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+               // .set("padding-bottom", "var(--lumo-space-l)");
         add(infoContainer);
 
         this.numberFormat = NumberFormat.getInstance();
         this.conceptionKindCountDisplayItem =
                 new PrimaryKeyValueDisplayItem(infoContainer, FontAwesome.Solid.CIRCLE.create(),"相关概念类型数量:","-");
 
+        TabSheet kindCorrelationInfoTabSheet = new TabSheet();
+        kindCorrelationInfoTabSheet.setWidthFull();
+
+
+
+        VerticalLayout conceptionKindCorrelationInfoGridContainer = new VerticalLayout();
+        conceptionKindCorrelationInfoGridContainer.setPadding(false);
+        conceptionKindCorrelationInfoGridContainer.setSpacing(false);
+        conceptionKindCorrelationInfoGridContainer.setMargin(false);
+
+        VerticalLayout conceptionKindCorrelationInfoChartContainer = new VerticalLayout();
+        conceptionKindCorrelationInfoChartContainer.setPadding(false);
+        conceptionKindCorrelationInfoChartContainer.setSpacing(false);
+        conceptionKindCorrelationInfoChartContainer.setMargin(false);
+
+
+
+
+        Tab conceptionRealTimeInfoTab = kindCorrelationInfoTabSheet.add("",conceptionKindCorrelationInfoGridContainer);
+        Span relationInfoSpan =new Span();
+        Icon relationInfoIcon = new Icon(VaadinIcon.BULLETS);
+        relationInfoIcon.setSize("12px");
+        NativeLabel relationInfoLabel = new NativeLabel(" 概念关联实时分布");
+        relationInfoSpan.add(relationInfoIcon,relationInfoLabel);
+        conceptionRealTimeInfoTab.add(relationInfoSpan);
+
+        Tab conceptionRealTimeChartTab = kindCorrelationInfoTabSheet.add("",conceptionKindCorrelationInfoChartContainer);
+        Span chartInfoSpan =new Span();
+        Icon chartInfoIcon = new Icon(VaadinIcon.SPLIT);
+        chartInfoIcon.setSize("12px");
+        NativeLabel chartInfoLabel = new NativeLabel(" 概念关联实时分布网络图");
+        chartInfoSpan.add(chartInfoIcon,chartInfoLabel);
+        conceptionRealTimeChartTab.add(chartInfoSpan);
+
+        kindCorrelationInfoTabSheet.addSelectedChangeListener(new ComponentEventListener<TabSheet.SelectedChangeEvent>() {
+            @Override
+            public void onComponentEvent(TabSheet.SelectedChangeEvent selectedChangeEvent) {
+                //renderKindCorrelationInfoTabContent();
+            }
+        });
+
+        add(kindCorrelationInfoTabSheet);
+
+
+
+
+
+
+
+
         HorizontalLayout mainContentContainerLayout = new HorizontalLayout();
         mainContentContainerLayout.setWidthFull();
-        add(mainContentContainerLayout);
+        conceptionKindCorrelationInfoGridContainer.add(mainContentContainerLayout);
 
         VerticalLayout leftSideContainerLayout = new VerticalLayout();
         leftSideContainerLayout.setWidth(700,Unit.PIXELS);
@@ -146,6 +202,16 @@ public class RelatedConceptionKindsView extends VerticalLayout {
             return new VerticalLayout(buttons);
         });
 
+
+
+
+
+
+
+
+
+
+
         conceptionKindMetaInfoGrid = new Grid<>();
         conceptionKindMetaInfoGrid.setWidth(700,Unit.PIXELS);
         conceptionKindMetaInfoGrid.setHeight(600,Unit.PIXELS);
@@ -192,7 +258,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
     }
 
     public void setHeight(int viewHeight){
-        this.conceptionKindMetaInfoGrid.setHeight(viewHeight-100,Unit.PIXELS);
+        this.conceptionKindMetaInfoGrid.setHeight(viewHeight-125,Unit.PIXELS);
     }
 
     public void setTotalCount(int totalCount){
