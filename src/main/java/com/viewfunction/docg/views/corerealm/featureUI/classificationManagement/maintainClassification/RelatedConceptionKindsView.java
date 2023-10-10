@@ -203,7 +203,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         Classification targetClassification = coreRealm.getClassification(this.classificationName);
         try {
-            List<ConceptionKind>  conceptionKindList = targetClassification.getRelatedConceptionKind(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
+            List<ConceptionKind>  conceptionKindList = targetClassification.getRelatedConceptionKinds(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
             conceptionKindMetaInfoGrid.setItems(conceptionKindList);
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
