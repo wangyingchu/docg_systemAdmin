@@ -2,9 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.classificationManagement
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
@@ -20,6 +18,7 @@ import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
@@ -40,6 +39,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
     private NumberFormat numberFormat;
     private PrimaryKeyValueDisplayItem conceptionKindCountDisplayItem;
     private Grid<ConceptionKind> conceptionKindMetaInfoGrid;
+    private Grid<ConceptionKindAttachInfo> directRelatedConceptionKindInfoGrid;
     private ClassificationRelatedDataQueryCriteriaView classificationRelatedDataQueryCriteriaView;
 
     public RelatedConceptionKindsView(String classificationName){
@@ -99,6 +99,22 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         });
 
         add(componentsSwitchTabSheet);
+
+
+
+        directRelatedConceptionKindInfoGrid = new Grid<>();
+
+
+
+        directRelatedConceptionKindsContainer.add(directRelatedConceptionKindInfoGrid);
+
+
+
+
+
+
+
+
 
         HorizontalLayout mainContentContainerLayout = new HorizontalLayout();
         mainContentContainerLayout.setWidthFull();
@@ -237,10 +253,22 @@ public class RelatedConceptionKindsView extends VerticalLayout {
 
     public void setHeight(int viewHeight){
         this.conceptionKindMetaInfoGrid.setHeight(viewHeight-125,Unit.PIXELS);
+        this.directRelatedConceptionKindInfoGrid.setHeight(viewHeight-125,Unit.PIXELS);
     }
 
     public void setTotalCount(int totalCount){
         this.conceptionKindCountDisplayItem.updateDisplayValue(this.numberFormat.format(totalCount));
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        loadDirectRelatedConceptionKindsInfo();
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
     }
 
     private void queryRelatedConceptionKind(String relationKindName, RelationDirection relationDirection, boolean includeOffspringClassifications, int offspringLevel){
@@ -248,10 +276,16 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         Classification targetClassification = coreRealm.getClassification(this.classificationName);
         try {
             List<ConceptionKind>  conceptionKindList = targetClassification.getRelatedConceptionKinds(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
-            targetClassification.getAllDirectRelatedConceptionKindsInfo();
             conceptionKindMetaInfoGrid.setItems(conceptionKindList);
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void loadDirectRelatedConceptionKindsInfo(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        Classification targetClassification = coreRealm.getClassification(this.classificationName);
+        List<ConceptionKindAttachInfo> directRelatedConceptionKindList = targetClassification.getAllDirectRelatedConceptionKindsInfo();
+        directRelatedConceptionKindInfoGrid.setItems(directRelatedConceptionKindList);
     }
 }
