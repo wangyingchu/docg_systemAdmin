@@ -62,59 +62,47 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         this.conceptionKindCountDisplayItem =
                 new PrimaryKeyValueDisplayItem(infoContainer, FontAwesome.Solid.CIRCLE.create(),"相关概念类型数量:","-");
 
-        TabSheet kindCorrelationInfoTabSheet = new TabSheet();
-        kindCorrelationInfoTabSheet.setWidthFull();
+        TabSheet componentsSwitchTabSheet = new TabSheet();
+        componentsSwitchTabSheet.setWidthFull();
 
+        VerticalLayout directRelatedConceptionKindsContainer = new VerticalLayout();
+        directRelatedConceptionKindsContainer.setPadding(false);
+        directRelatedConceptionKindsContainer.setSpacing(false);
+        directRelatedConceptionKindsContainer.setMargin(false);
 
+        VerticalLayout advancedConceptionKindsQueryContainer = new VerticalLayout();
+        advancedConceptionKindsQueryContainer.setPadding(false);
+        advancedConceptionKindsQueryContainer.setSpacing(false);
+        advancedConceptionKindsQueryContainer.setMargin(false);
 
-        VerticalLayout conceptionKindCorrelationInfoGridContainer = new VerticalLayout();
-        conceptionKindCorrelationInfoGridContainer.setPadding(false);
-        conceptionKindCorrelationInfoGridContainer.setSpacing(false);
-        conceptionKindCorrelationInfoGridContainer.setMargin(false);
+        Tab directRelatedConceptionKindsInfoTab = componentsSwitchTabSheet.add("",directRelatedConceptionKindsContainer);
+        Span info1Span =new Span();
+        Icon info1Icon = new Icon(VaadinIcon.ALIGN_JUSTIFY);
+        info1Icon.setSize("12px");
+        NativeLabel info1Label = new NativeLabel(" 直接关联概念类型");
+        info1Span.add(info1Icon,info1Label);
+        directRelatedConceptionKindsInfoTab.add(info1Span);
 
-        VerticalLayout conceptionKindCorrelationInfoChartContainer = new VerticalLayout();
-        conceptionKindCorrelationInfoChartContainer.setPadding(false);
-        conceptionKindCorrelationInfoChartContainer.setSpacing(false);
-        conceptionKindCorrelationInfoChartContainer.setMargin(false);
+        Tab advancedConceptionKindsQueryTab = componentsSwitchTabSheet.add("",advancedConceptionKindsQueryContainer);
+        Span info2Span =new Span();
+        Icon info2Icon = new Icon(VaadinIcon.CONTROLLER);
+        info2Icon.setSize("12px");
+        NativeLabel info2Label = new NativeLabel(" 自定义条件查询");
+        info2Span.add(info2Icon,info2Label);
+        advancedConceptionKindsQueryTab.add(info2Span);
 
-
-
-
-        Tab conceptionRealTimeInfoTab = kindCorrelationInfoTabSheet.add("",conceptionKindCorrelationInfoGridContainer);
-        Span relationInfoSpan =new Span();
-        Icon relationInfoIcon = new Icon(VaadinIcon.BULLETS);
-        relationInfoIcon.setSize("12px");
-        NativeLabel relationInfoLabel = new NativeLabel(" 概念关联实时分布");
-        relationInfoSpan.add(relationInfoIcon,relationInfoLabel);
-        conceptionRealTimeInfoTab.add(relationInfoSpan);
-
-        Tab conceptionRealTimeChartTab = kindCorrelationInfoTabSheet.add("",conceptionKindCorrelationInfoChartContainer);
-        Span chartInfoSpan =new Span();
-        Icon chartInfoIcon = new Icon(VaadinIcon.SPLIT);
-        chartInfoIcon.setSize("12px");
-        NativeLabel chartInfoLabel = new NativeLabel(" 概念关联实时分布网络图");
-        chartInfoSpan.add(chartInfoIcon,chartInfoLabel);
-        conceptionRealTimeChartTab.add(chartInfoSpan);
-
-        kindCorrelationInfoTabSheet.addSelectedChangeListener(new ComponentEventListener<TabSheet.SelectedChangeEvent>() {
+        componentsSwitchTabSheet.addSelectedChangeListener(new ComponentEventListener<TabSheet.SelectedChangeEvent>() {
             @Override
             public void onComponentEvent(TabSheet.SelectedChangeEvent selectedChangeEvent) {
                 //renderKindCorrelationInfoTabContent();
             }
         });
 
-        add(kindCorrelationInfoTabSheet);
-
-
-
-
-
-
-
+        add(componentsSwitchTabSheet);
 
         HorizontalLayout mainContentContainerLayout = new HorizontalLayout();
         mainContentContainerLayout.setWidthFull();
-        conceptionKindCorrelationInfoGridContainer.add(mainContentContainerLayout);
+        advancedConceptionKindsQueryContainer.add(mainContentContainerLayout);
 
         VerticalLayout leftSideContainerLayout = new VerticalLayout();
         leftSideContainerLayout.setWidth(700,Unit.PIXELS);
@@ -202,16 +190,6 @@ public class RelatedConceptionKindsView extends VerticalLayout {
             return new VerticalLayout(buttons);
         });
 
-
-
-
-
-
-
-
-
-
-
         conceptionKindMetaInfoGrid = new Grid<>();
         conceptionKindMetaInfoGrid.setWidth(700,Unit.PIXELS);
         conceptionKindMetaInfoGrid.setHeight(600,Unit.PIXELS);
@@ -270,6 +248,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         Classification targetClassification = coreRealm.getClassification(this.classificationName);
         try {
             List<ConceptionKind>  conceptionKindList = targetClassification.getRelatedConceptionKinds(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
+            targetClassification.getAllDirectRelatedConceptionKindsInfo();
             conceptionKindMetaInfoGrid.setItems(conceptionKindList);
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
