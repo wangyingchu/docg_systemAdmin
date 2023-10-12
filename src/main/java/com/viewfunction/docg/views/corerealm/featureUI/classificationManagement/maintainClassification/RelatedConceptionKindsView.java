@@ -37,15 +37,53 @@ import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RelatedConceptionKindsView extends VerticalLayout {
     private String classificationName;
     private NumberFormat numberFormat;
     private PrimaryKeyValueDisplayItem conceptionKindCountDisplayItem;
     private Grid<ConceptionKind> conceptionKindMetaInfoGrid;
-    private Grid<ConceptionKindAttachInfo> directRelatedConceptionKindInfoGrid;
+    private Grid<ConceptionKindAttachInfoVO> directRelatedConceptionKindInfoGrid;
     private ClassificationRelatedDataQueryCriteriaView classificationRelatedDataQueryCriteriaView;
+
+    private class ConceptionKindAttachInfoVO {
+        private  String conceptionKindName;
+        private  String conceptionKindDesc;
+        private String relationKind;
+        private RelationDirection relationDirection;
+        private Map<String, Object> relationData;
+
+        public ConceptionKindAttachInfoVO(ConceptionKindAttachInfo conceptionKindAttachInfo){
+            this.conceptionKindName = conceptionKindAttachInfo.getAttachedConceptionKind().getConceptionKindName();
+            this.conceptionKindDesc = conceptionKindAttachInfo.getAttachedConceptionKind().getConceptionKindDesc();
+            this.relationKind = conceptionKindAttachInfo.getRelationAttachInfo().getRelationKind();
+            this.relationData = conceptionKindAttachInfo.getRelationAttachInfo().getRelationData();
+            this.relationDirection = conceptionKindAttachInfo.getRelationAttachInfo().getRelationDirection();
+        }
+
+        public String getConceptionKindName() {
+            return conceptionKindName;
+        }
+
+        public String getConceptionKindDesc() {
+            return conceptionKindDesc;
+        }
+
+        public String getRelationKind() {
+            return relationKind;
+        }
+
+        public RelationDirection getRelationDirection() {
+            return relationDirection;
+        }
+
+        public Map<String, Object> getRelationData() {
+            return relationData;
+        }
+    }
 
     public RelatedConceptionKindsView(String classificationName){
         this.setPadding(false);
@@ -157,13 +195,90 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         relationDirectionSelect.setItems("FROM", "TO","TWO_WAY");
         directRelatedConceptionKindFilterControlLayout.add(relationDirectionSelect);
 
+
+
+
+
+
+        ComponentRenderer _toolBarComponentRenderer0 = new ComponentRenderer<>(entityStatisticsInfo -> {
+            Icon queryIcon = new Icon(VaadinIcon.RECORDS);
+            queryIcon.setSize("20px");
+            Button queryConceptionKind = new Button(queryIcon, event -> {
+                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                    //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
+                }
+            });
+            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(queryConceptionKind, "查询概念类型实体");
+
+            Icon configIcon = new Icon(VaadinIcon.COG);
+            configIcon.setSize("21px");
+            Button configConceptionKind = new Button(configIcon, event -> {
+                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                    //renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
+                }
+            });
+            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(configConceptionKind, "配置概念类型定义");
+
+            Icon cleanKindIcon = new Icon(VaadinIcon.RECYCLE);
+            cleanKindIcon.setSize("21px");
+            Button cleanConceptionKind = new Button(cleanKindIcon, event -> {});
+            cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(cleanConceptionKind, "清除概念类型所有实例");
+            cleanConceptionKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                        //renderCleanConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
+                    }
+                }
+            });
+
+            Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
+            deleteKindIcon.setSize("21px");
+            Button removeConceptionKind = new Button(deleteKindIcon, event -> {});
+            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            Tooltips.getCurrent().setTooltip(removeConceptionKind, "删除概念类型");
+            removeConceptionKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                        //renderRemoveConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
+                    }
+                }
+            });
+
+            HorizontalLayout buttons = new HorizontalLayout(queryConceptionKind,configConceptionKind, cleanConceptionKind,removeConceptionKind);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(15,Unit.PIXELS);
+            buttons.setWidth(80,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
+
         directRelatedConceptionKindInfoGrid = new Grid<>();
         directRelatedConceptionKindMainContentContainerLayout.add(directRelatedConceptionKindInfoGrid);
 
+        directRelatedConceptionKindInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        directRelatedConceptionKindInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
-
-
-
+        directRelatedConceptionKindInfoGrid.addColumn(ConceptionKindAttachInfoVO::getRelationKind).setHeader("关系类型名称").setKey("idx_0");
+        directRelatedConceptionKindInfoGrid.addColumn(ConceptionKindAttachInfoVO::getRelationDirection).setHeader("关联方向").setKey("idx_1");
+        directRelatedConceptionKindInfoGrid.addColumn(ConceptionKindAttachInfoVO::getConceptionKindName).setHeader("概念类型名称").setKey("idx_2");
+        directRelatedConceptionKindInfoGrid.addColumn(ConceptionKindAttachInfoVO::getConceptionKindDesc).setHeader("概念类型名称").setKey("idx_3");
+        directRelatedConceptionKindInfoGrid.addColumn(ConceptionKindAttachInfoVO::getRelationData).setHeader("概念类型名称").setKey("idx_4");
+       // directRelatedConceptionKindInfoGrid.addColumn(ConceptionKind::getConceptionKindDesc).setHeader("概念类型显示名称").setKey("idx_1");
+        directRelatedConceptionKindInfoGrid.addColumn(_toolBarComponentRenderer0).setHeader("操作").setKey("idx_5")
+                .setFlexGrow(0).setWidth("170px").setResizable(false);
+        directRelatedConceptionKindInfoGrid.appendFooterRow();
 
         HorizontalLayout advancedConceptionKindsQueryMainContentContainerLayout = new HorizontalLayout();
         advancedConceptionKindsQueryMainContentContainerLayout.setWidthFull();
@@ -191,7 +306,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         classificationRelatedDataQueryCriteriaView.setClassificationRelatedDataQueryHelper(classificationRelatedDataQueryHelper);
         advancedConceptionKindsQueryLeftSideContainerLayout.add(classificationRelatedDataQueryCriteriaView);
 
-        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+        ComponentRenderer _toolBarComponentRenderer1 = new ComponentRenderer<>(entityStatisticsInfo -> {
             Icon queryIcon = new Icon(VaadinIcon.RECORDS);
             queryIcon.setSize("20px");
             Button queryConceptionKind = new Button(queryIcon, event -> {
@@ -262,7 +377,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         conceptionKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         conceptionKindMetaInfoGrid.addColumn(ConceptionKind::getConceptionKindName).setHeader("概念类型名称").setKey("idx_0");
         conceptionKindMetaInfoGrid.addColumn(ConceptionKind::getConceptionKindDesc).setHeader("概念类型显示名称").setKey("idx_1");
-        conceptionKindMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_5")
+        conceptionKindMetaInfoGrid.addColumn(_toolBarComponentRenderer1).setHeader("操作").setKey("idx_5")
                 .setFlexGrow(0).setWidth("170px").setResizable(false);
         /*
         //conceptionKindMetaInfoGrid.addColumn(_createDateComponentRenderer).setHeader("类型创建时间").setKey("idx_2")
@@ -335,6 +450,10 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         Classification targetClassification = coreRealm.getClassification(this.classificationName);
         List<ConceptionKindAttachInfo> directRelatedConceptionKindList = targetClassification.getAllDirectRelatedConceptionKindsInfo();
-        directRelatedConceptionKindInfoGrid.setItems(directRelatedConceptionKindList);
+        List<ConceptionKindAttachInfoVO> conceptionKindAttachInfoVOList = new ArrayList<>();
+        for(ConceptionKindAttachInfo currentConceptionKindAttachInfo:directRelatedConceptionKindList){
+            conceptionKindAttachInfoVOList.add(new ConceptionKindAttachInfoVO(currentConceptionKindAttachInfo));
+        }
+        directRelatedConceptionKindInfoGrid.setItems(conceptionKindAttachInfoVOList);
     }
 }
