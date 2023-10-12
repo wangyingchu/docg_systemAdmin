@@ -6,6 +6,7 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
@@ -13,6 +14,7 @@ import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -20,8 +22,8 @@ import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-
 import com.vaadin.flow.function.ValueProvider;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
@@ -29,6 +31,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.ConceptionKindDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationKind.RelationKindDetailUI;
 
@@ -47,6 +50,9 @@ public class RelatedConceptionKindsView extends VerticalLayout {
     private Grid<ConceptionKindAttachInfoVO> directRelatedConceptionKindInfoGrid;
     private GridListDataView<ConceptionKindAttachInfoVO> directRelatedConceptionKindInfoGridListDataView;
     private ClassificationRelatedDataQueryCriteriaView classificationRelatedDataQueryCriteriaView;
+    private TextField relationKindNameField;
+    private ComboBox<String> relationDirectionSelect;
+    private TextField conceptionKindNameField;
 
     private class ConceptionKindAttachInfoVO {
         private  String conceptionKindName;
@@ -150,7 +156,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
         filterTitle.setWidth(80, Unit.PIXELS);
 
-        TextField relationKindNameField = new TextField();
+        relationKindNameField = new TextField();
         relationKindNameField.setPlaceholder("关系类型名称");
         relationKindNameField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         relationKindNameField.setWidth(250,Unit.PIXELS);
@@ -162,8 +168,8 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         directRelatedConceptionKindFilterControlLayout.add(plusIcon0);
         directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, plusIcon0);
 
-        ComboBox relationDirectionSelect = new ComboBox();
-        relationDirectionSelect.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        relationDirectionSelect = new ComboBox();
+        relationDirectionSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         relationDirectionSelect.setPageSize(3);
         relationDirectionSelect.setPlaceholder("关联关系方向");
         relationDirectionSelect.setWidth(120,Unit.PIXELS);
@@ -175,7 +181,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         directRelatedConceptionKindFilterControlLayout.add(plusIcon1);
         directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, plusIcon1);
 
-        TextField conceptionKindNameField = new TextField();
+        conceptionKindNameField = new TextField();
         conceptionKindNameField.setPlaceholder("概念类型名称");
         conceptionKindNameField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         conceptionKindNameField.setWidth(250,Unit.PIXELS);
@@ -191,7 +197,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         searchRelationKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //filterRelationKinds();
+                filterConceptionKindLinks();
             }
         });
 
@@ -209,7 +215,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //cancelFilterRelationKinds();
+                cancelFilterConceptionKindLinks();
             }
         });
 
@@ -464,52 +470,42 @@ public class RelatedConceptionKindsView extends VerticalLayout {
             conceptionKindAttachInfoVOList.add(new ConceptionKindAttachInfoVO(currentConceptionKindAttachInfo));
         }
         this.directRelatedConceptionKindInfoGridListDataView = this.directRelatedConceptionKindInfoGrid.setItems(conceptionKindAttachInfoVOList);
-
-
-
-
-
         this.directRelatedConceptionKindInfoGridListDataView.addFilter(item->{
             String conceptionKindName = item.getConceptionKindName();
             String relationKindName = item.getRelationKindName();
             RelationDirection relationDirection = item.getRelationDirection();
 
-
-
-
-
-            /*
-            String entityKindName = item.getEntityKindName();
-            String entityKindDesc = item.getEntityKindDesc();
+            boolean relationKindNameFilterResult = true;
+            if(!relationKindNameField.getValue().trim().equals("")){
+                if(relationKindName.contains(relationKindNameField.getValue().trim())){
+                    relationKindNameFilterResult = true;
+                }else{
+                    relationKindNameFilterResult = false;
+                }
+            }
 
             boolean conceptionKindNameFilterResult = true;
-            if(!conceptionKindNameFilterField.getValue().trim().equals("")){
-                if(entityKindName.contains(conceptionKindNameFilterField.getValue().trim())){
+            if(!conceptionKindNameField.getValue().trim().equals("")){
+                if(conceptionKindName.contains(conceptionKindNameField.getValue().trim())){
                     conceptionKindNameFilterResult = true;
                 }else{
                     conceptionKindNameFilterResult = false;
                 }
             }
 
-            boolean conceptionKindDescFilterResult = true;
-            if(!conceptionKindDescFilterField.getValue().trim().equals("")){
-                if(entityKindDesc.contains(conceptionKindDescFilterField.getValue().trim())){
-                    conceptionKindDescFilterResult = true;
-                }else{
-                    conceptionKindDescFilterResult = false;
+            boolean relationDirectionFilterResult = true;
+            String selectedRelationDirectionValue = relationDirectionSelect.getValue();
+            if(selectedRelationDirectionValue != null){
+                if(!selectedRelationDirectionValue.equals("TWO_WAY")){
+                    if(relationDirection.toString().equals(selectedRelationDirectionValue)){
+                        relationDirectionFilterResult = true;
+                    }else{
+                        relationDirectionFilterResult = false;
+                    }
                 }
             }
-            return conceptionKindNameFilterResult & conceptionKindDescFilterResult;
-            */
-
-            return false;
-
+            return relationKindNameFilterResult & conceptionKindNameFilterResult & relationDirectionFilterResult;
         });
-
-
-
-
-
     }
 
     private void renderRelationKindQueryUI(ConceptionKindAttachInfoVO conceptionKindAttachInfoVO){
@@ -572,6 +568,23 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"概念类型配置",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(conceptionKindDetailUI);
         fullScreenWindow.show();
+    }
+
+    private void filterConceptionKindLinks(){
+        String relationKindFilterValue = relationKindNameField.getValue().trim();
+        String conceptionKindFilterValue = conceptionKindNameField.getValue().trim();
+        if(relationKindFilterValue.equals("") & conceptionKindFilterValue.equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入关系类型名称 和/或 概念类型名称", NotificationVariant.LUMO_ERROR);
+        }else{
+            this.directRelatedConceptionKindInfoGridListDataView.refreshAll();
+        }
+    }
+
+    private void cancelFilterConceptionKindLinks(){
+        relationKindNameField.setValue("");
+        conceptionKindNameField.setValue("");
+        relationDirectionSelect.setValue(null);
+        this.directRelatedConceptionKindInfoGridListDataView.refreshAll();
     }
 
     private class RelationDirectionIconValueProvider implements ValueProvider<ConceptionKindAttachInfoVO,Icon> {
