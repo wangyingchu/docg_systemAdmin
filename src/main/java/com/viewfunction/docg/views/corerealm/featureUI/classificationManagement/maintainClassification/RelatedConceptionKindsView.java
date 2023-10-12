@@ -6,7 +6,6 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
@@ -17,25 +16,21 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.TabSheet;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.vaadin.flow.function.ValueProvider;
-import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
-import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
-import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
-import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
-
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.ConceptionKindDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationKind.RelationKindDetailUI;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -153,41 +148,68 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
         filterTitle.setWidth(80, Unit.PIXELS);
 
-        ComboBox relationKindSelect = new ComboBox();
-        relationKindSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
-        relationKindSelect.setPageSize(30);
-        relationKindSelect.setPlaceholder("选择关系类型定义");
-        relationKindSelect.setWidth(315,Unit.PIXELS);
-        relationKindSelect.setItemLabelGenerator(new ItemLabelGenerator<KindMetaInfo>() {
-            @Override
-            public String apply(KindMetaInfo kindMetaInfo) {
-                String itemLabelValue = kindMetaInfo.getKindName()+ " ("+
-                        kindMetaInfo.getKindDesc()+")";
-                return itemLabelValue;
-            }
-        });
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        try {
-            List<KindMetaInfo> reltionKindsList = coreRealm.getRelationKindsMetaInfo();
-            relationKindSelect.setItems(reltionKindsList);
-        } catch (CoreRealmServiceEntityExploreException e) {
-            throw new RuntimeException(e);
-        }
-        //relationKindSelect.setRenderer(createRenderer());
-        directRelatedConceptionKindFilterControlLayout.add(relationKindSelect);
-        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, relationKindSelect);
+        TextField relationKindNameField = new TextField();
+        relationKindNameField.setPlaceholder("关系类型名称");
+        relationKindNameField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        relationKindNameField.setWidth(250,Unit.PIXELS);
+        directRelatedConceptionKindFilterControlLayout.add(relationKindNameField);
+        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, relationKindNameField);
 
-        HorizontalLayout divLayout1 = new HorizontalLayout();
-        divLayout1.setWidth(6,Unit.PIXELS);
-        directRelatedConceptionKindFilterControlLayout.add(divLayout1);
+        Icon plusIcon0 = new Icon(VaadinIcon.PLUS);
+        plusIcon0.setSize("12px");
+        directRelatedConceptionKindFilterControlLayout.add(plusIcon0);
+        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, plusIcon0);
 
         ComboBox relationDirectionSelect = new ComboBox();
         relationDirectionSelect.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         relationDirectionSelect.setPageSize(3);
-        relationDirectionSelect.setPlaceholder("选择关系方向");
-        relationDirectionSelect.setWidth(100,Unit.PIXELS);
+        relationDirectionSelect.setPlaceholder("关联关系方向");
+        relationDirectionSelect.setWidth(120,Unit.PIXELS);
         relationDirectionSelect.setItems("FROM", "TO","TWO_WAY");
         directRelatedConceptionKindFilterControlLayout.add(relationDirectionSelect);
+
+        Icon plusIcon1 = new Icon(VaadinIcon.PLUS);
+        plusIcon1.setSize("12px");
+        directRelatedConceptionKindFilterControlLayout.add(plusIcon1);
+        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, plusIcon1);
+
+        TextField conceptionKindNameField = new TextField();
+        conceptionKindNameField.setPlaceholder("概念类型名称");
+        conceptionKindNameField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        conceptionKindNameField.setWidth(250,Unit.PIXELS);
+        directRelatedConceptionKindFilterControlLayout.add(conceptionKindNameField);
+        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, conceptionKindNameField);
+
+        Button searchRelationKindsButton = new Button("查找概念类型关联",new Icon(VaadinIcon.SEARCH));
+        searchRelationKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        searchRelationKindsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        directRelatedConceptionKindFilterControlLayout.add(searchRelationKindsButton);
+        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER,searchRelationKindsButton);
+        searchRelationKindsButton.setWidth(140,Unit.PIXELS);
+        searchRelationKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //filterRelationKinds();
+            }
+        });
+
+        Icon divIcon = new Icon(VaadinIcon.LINE_V);
+        divIcon.setSize("8px");
+        directRelatedConceptionKindFilterControlLayout.add(divIcon);
+        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+
+        Button clearSearchCriteriaButton = new Button("清除查询条件",new Icon(VaadinIcon.ERASER));
+        clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        directRelatedConceptionKindFilterControlLayout.add(clearSearchCriteriaButton);
+        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
+        clearSearchCriteriaButton.setWidth(120,Unit.PIXELS);
+        clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //cancelFilterRelationKinds();
+            }
+        });
 
         ComponentRenderer _toolBarComponentRenderer0 = new ComponentRenderer<>(conceptionKindAttachInfoVO -> {
             Icon queryIcon = LineAwesomeIconsSvg.COG_SOLID.create();
@@ -241,21 +263,29 @@ public class RelatedConceptionKindsView extends VerticalLayout {
             buttons.setMargin(false);
             buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
             buttons.setHeight(15,Unit.PIXELS);
-            buttons.setWidth(80,Unit.PIXELS);
             return new VerticalLayout(buttons);
         });
 
         directRelatedConceptionKindInfoGrid = new Grid<>();
-        directRelatedConceptionKindMainContentContainerLayout.add(directRelatedConceptionKindInfoGrid);
-
         directRelatedConceptionKindInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         directRelatedConceptionKindInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         directRelatedConceptionKindInfoGrid.addComponentColumn(new RelationDirectionIconValueProvider()).setHeader("").setKey("idx_0").setFlexGrow(0).setWidth("35px").setResizable(false);
         directRelatedConceptionKindInfoGrid.addColumn(ConceptionKindAttachInfoVO::getRelationKindName).setHeader("关系类型名称").setKey("idx_1");
         directRelatedConceptionKindInfoGrid.addColumn(ConceptionKindAttachInfoVO::getConceptionKindName).setHeader("概念类型名称").setKey("idx_2");
         directRelatedConceptionKindInfoGrid.addColumn(ConceptionKindAttachInfoVO::getRelationData).setHeader("关联关系属性").setKey("idx_3");
-        directRelatedConceptionKindInfoGrid.addColumn(_toolBarComponentRenderer0).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("170px").setResizable(false);
+        directRelatedConceptionKindInfoGrid.addColumn(_toolBarComponentRenderer0).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("150px").setResizable(false);
         directRelatedConceptionKindInfoGrid.appendFooterRow();
+
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.CONNECT_O,"关系类型名称");
+        directRelatedConceptionKindInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.CUBE,"概念类型名称");
+        directRelatedConceptionKindInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(VaadinIcon.INPUT,"关联关系属性");
+        directRelatedConceptionKindInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
+        directRelatedConceptionKindInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_1_idx4);
+
+        directRelatedConceptionKindMainContentContainerLayout.add(directRelatedConceptionKindInfoGrid);
 
         HorizontalLayout advancedConceptionKindsQueryMainContentContainerLayout = new HorizontalLayout();
         advancedConceptionKindsQueryMainContentContainerLayout.setWidthFull();
