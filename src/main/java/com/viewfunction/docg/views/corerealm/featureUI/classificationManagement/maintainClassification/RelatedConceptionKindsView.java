@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -44,6 +45,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
     private PrimaryKeyValueDisplayItem conceptionKindCountDisplayItem;
     private Grid<ConceptionKind> conceptionKindMetaInfoGrid;
     private Grid<ConceptionKindAttachInfoVO> directRelatedConceptionKindInfoGrid;
+    private GridListDataView<ConceptionKindAttachInfoVO> directRelatedConceptionKindInfoGridListDataView;
     private ClassificationRelatedDataQueryCriteriaView classificationRelatedDataQueryCriteriaView;
 
     private class ConceptionKindAttachInfoVO {
@@ -461,7 +463,53 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         for(ConceptionKindAttachInfo currentConceptionKindAttachInfo:directRelatedConceptionKindList){
             conceptionKindAttachInfoVOList.add(new ConceptionKindAttachInfoVO(currentConceptionKindAttachInfo));
         }
-        directRelatedConceptionKindInfoGrid.setItems(conceptionKindAttachInfoVOList);
+        this.directRelatedConceptionKindInfoGridListDataView = this.directRelatedConceptionKindInfoGrid.setItems(conceptionKindAttachInfoVOList);
+
+
+
+
+
+        this.directRelatedConceptionKindInfoGridListDataView.addFilter(item->{
+            String conceptionKindName = item.getConceptionKindName();
+            String relationKindName = item.getRelationKindName();
+            RelationDirection relationDirection = item.getRelationDirection();
+
+
+
+
+
+            /*
+            String entityKindName = item.getEntityKindName();
+            String entityKindDesc = item.getEntityKindDesc();
+
+            boolean conceptionKindNameFilterResult = true;
+            if(!conceptionKindNameFilterField.getValue().trim().equals("")){
+                if(entityKindName.contains(conceptionKindNameFilterField.getValue().trim())){
+                    conceptionKindNameFilterResult = true;
+                }else{
+                    conceptionKindNameFilterResult = false;
+                }
+            }
+
+            boolean conceptionKindDescFilterResult = true;
+            if(!conceptionKindDescFilterField.getValue().trim().equals("")){
+                if(entityKindDesc.contains(conceptionKindDescFilterField.getValue().trim())){
+                    conceptionKindDescFilterResult = true;
+                }else{
+                    conceptionKindDescFilterResult = false;
+                }
+            }
+            return conceptionKindNameFilterResult & conceptionKindDescFilterResult;
+            */
+
+            return false;
+
+        });
+
+
+
+
+
     }
 
     private void renderRelationKindQueryUI(ConceptionKindAttachInfoVO conceptionKindAttachInfoVO){
