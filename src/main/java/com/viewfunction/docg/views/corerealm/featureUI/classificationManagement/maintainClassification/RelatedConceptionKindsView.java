@@ -423,6 +423,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         try {
             List<ConceptionKind>  conceptionKindList = targetClassification.getRelatedConceptionKinds(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
             conceptionKindMetaInfoGrid.setItems(conceptionKindList);
+            CommonUIOperationUtil.showPopupNotification("查询关联概念类型成功,查询返回 "+conceptionKindList.size()+" 项关联概念类型", NotificationVariant.LUMO_SUCCESS);
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
         }
