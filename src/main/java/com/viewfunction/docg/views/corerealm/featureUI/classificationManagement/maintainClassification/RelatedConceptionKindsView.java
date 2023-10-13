@@ -23,6 +23,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.function.ValueProvider;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
@@ -40,6 +42,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RelatedConceptionKindsView extends VerticalLayout {
     private String classificationName;
@@ -52,6 +55,10 @@ public class RelatedConceptionKindsView extends VerticalLayout {
     private TextField relationKindNameField;
     private ComboBox<String> relationDirectionSelect;
     private TextField conceptionKindNameField;
+    private String currentAdvanceQueryRelationKindName;
+    private RelationDirection currentAdvanceQueryRelationDirection;
+    private boolean currentAdvanceQueryIncludeOffspringClassifications;
+    private int currentAdvanceQueryOffspringLevel;
 
     private class ConceptionKindAttachInfoVO {
         private  String conceptionKindName;
@@ -104,8 +111,8 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         infoContainer.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         infoContainer.setWidthFull();
         infoContainer.getStyle()
-                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
-               // .set("padding-bottom", "var(--lumo-space-l)");
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-s)");
         add(infoContainer);
 
         this.numberFormat = NumberFormat.getInstance();
@@ -322,6 +329,10 @@ public class RelatedConceptionKindsView extends VerticalLayout {
                 new ClassificationRelatedDataQueryCriteriaView.ClassificationRelatedDataQueryHelper() {
             @Override
             public void executeQuery(String relationKindName, RelationDirection relationDirection, boolean includeOffspringClassifications, int offspringLevel) {
+                currentAdvanceQueryRelationKindName = relationKindName;
+                currentAdvanceQueryRelationDirection = relationDirection;
+                currentAdvanceQueryIncludeOffspringClassifications = includeOffspringClassifications;
+                currentAdvanceQueryOffspringLevel = offspringLevel;
                 queryRelatedConceptionKind(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
             }
         };
@@ -367,6 +378,18 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         LightGridColumnHeader gridColumnHeader_2_idx2 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         conceptionKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_2_idx2);
         conceptionKindMetaInfoGrid.appendFooterRow();
+        conceptionKindMetaInfoGrid.addSelectionListener(new SelectionListener<Grid<ConceptionKind>, ConceptionKind>() {
+            @Override
+            public void selectionChange(SelectionEvent<Grid<ConceptionKind>, ConceptionKind> selectionEvent) {
+                Set<ConceptionKind> selectedItemSet = selectionEvent.getAllSelectedItems();
+                if(selectedItemSet.size() == 0){
+                    //unselected item, reset link detail info
+                }else{
+                    ConceptionKind selectedConceptionKind = selectedItemSet.iterator().next();
+                    renderSelectedConceptionKindLinkInfo(selectedConceptionKind);
+                }
+            }
+        });
 
         advancedConceptionKindsQueryLeftSideContainerLayout.add(conceptionKindMetaInfoGrid);
 
@@ -635,6 +658,15 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         conceptionKindNameField.setValue("");
         relationDirectionSelect.setValue(null);
         this.directRelatedConceptionKindInfoGridListDataView.refreshAll();
+    }
+
+    private void renderSelectedConceptionKindLinkInfo(ConceptionKind selectedConceptionKind){
+        /*
+        currentAdvanceQueryRelationKindName;
+        currentAdvanceQueryRelationDirection;
+        currentAdvanceQueryIncludeOffspringClassification;
+        currentAdvanceQueryOffspringLevel;
+        */
     }
 
     private class RelationDirectionIconValueProvider implements ValueProvider<ConceptionKindAttachInfoVO,Icon> {
