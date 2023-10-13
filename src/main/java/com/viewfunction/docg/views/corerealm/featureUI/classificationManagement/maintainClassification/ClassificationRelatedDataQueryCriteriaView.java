@@ -154,6 +154,10 @@ public class ClassificationRelatedDataQueryCriteriaView extends HorizontalLayout
             CommonUIOperationUtil.showPopupNotification("请选择关系类型定义", NotificationVariant.LUMO_WARNING);
             return;
         }
+        if(this.relationDirectionSelect.getValue() == null){
+            CommonUIOperationUtil.showPopupNotification("请选择关系方向", NotificationVariant.LUMO_WARNING);
+            return;
+        }
         String relationKindName = this.relationKindSelect.getValue().getKindName();
         RelationDirection relationDirection = null;
         String relationDirectionStr = this.relationDirectionSelect.getValue().toString();
