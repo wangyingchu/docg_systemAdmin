@@ -27,7 +27,6 @@ import com.vaadin.flow.function.ValueProvider;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindAttachInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
@@ -36,8 +35,6 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.ConceptionKindDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationKind.RelationKindDetailUI;
-
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -234,7 +231,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
             Icon queryIcon = LineAwesomeIconsSvg.COG_SOLID.create();
             queryIcon.setSize("18px");
             Button configRelationKind = new Button(queryIcon, event -> {
-                renderRelationKindQueryUI((ConceptionKindAttachInfoVO)conceptionKindAttachInfoVO);
+                renderRelationKindDetailUI((ConceptionKindAttachInfoVO)conceptionKindAttachInfoVO);
             });
             configRelationKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configRelationKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -243,7 +240,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
             Button configConceptionKind = new Button(configIcon, event -> {
-                renderConceptionKindQueryUI((ConceptionKindAttachInfoVO)conceptionKindAttachInfoVO);
+                renderConceptionKindDetailUI(((ConceptionKindAttachInfoVO)conceptionKindAttachInfoVO).conceptionKindName);
             });
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -332,61 +329,19 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         classificationRelatedDataQueryCriteriaView.setClassificationRelatedDataQueryHelper(classificationRelatedDataQueryHelper);
         advancedConceptionKindsQueryLeftSideContainerLayout.add(classificationRelatedDataQueryCriteriaView);
 
-        ComponentRenderer _toolBarComponentRenderer1 = new ComponentRenderer<>(entityStatisticsInfo -> {
-            Icon queryIcon = new Icon(VaadinIcon.RECORDS);
-            queryIcon.setSize("20px");
-            Button queryConceptionKind = new Button(queryIcon, event -> {
-                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                    //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
-                }
-            });
-            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(queryConceptionKind, "查询概念类型实体");
-
+        ComponentRenderer _toolBarComponentRenderer1 = new ComponentRenderer<>(conceptionKind -> {
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
             Button configConceptionKind = new Button(configIcon, event -> {
-                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                    //renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
+                if(conceptionKind instanceof ConceptionKind){
+                    renderConceptionKindDetailUI(((ConceptionKind)conceptionKind).getConceptionKindName());
                 }
             });
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(configConceptionKind, "配置概念类型定义");
+            configConceptionKind.setTooltipText("配置概念类型定义");
 
-            Icon cleanKindIcon = new Icon(VaadinIcon.RECYCLE);
-            cleanKindIcon.setSize("21px");
-            Button cleanConceptionKind = new Button(cleanKindIcon, event -> {});
-            cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(cleanConceptionKind, "清除概念类型所有实例");
-            cleanConceptionKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-                @Override
-                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                        //renderCleanConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
-                    }
-                }
-            });
-
-            Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
-            deleteKindIcon.setSize("21px");
-            Button removeConceptionKind = new Button(deleteKindIcon, event -> {});
-            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeConceptionKind, "删除概念类型");
-            removeConceptionKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-                @Override
-                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                        //renderRemoveConceptionKindEntitiesUI((EntityStatisticsInfo)entityStatisticsInfo);
-                    }
-                }
-            });
-
-            HorizontalLayout buttons = new HorizontalLayout(queryConceptionKind,configConceptionKind, cleanConceptionKind,removeConceptionKind);
+            HorizontalLayout buttons = new HorizontalLayout(configConceptionKind);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -403,36 +358,14 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         conceptionKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         conceptionKindMetaInfoGrid.addColumn(ConceptionKind::getConceptionKindName).setHeader("概念类型名称").setKey("idx_0");
         conceptionKindMetaInfoGrid.addColumn(ConceptionKind::getConceptionKindDesc).setHeader("概念类型显示名称").setKey("idx_1");
-        conceptionKindMetaInfoGrid.addColumn(_toolBarComponentRenderer1).setHeader("操作").setKey("idx_5")
-                .setFlexGrow(0).setWidth("170px").setResizable(false);
-        /*
-        //conceptionKindMetaInfoGrid.addColumn(_createDateComponentRenderer).setHeader("类型创建时间").setKey("idx_2")
-        //        .setComparator(createDateComparator)
-        //        .setFlexGrow(0).setWidth("210px").setResizable(false);
-        //conceptionKindMetaInfoGrid.addColumn(_lastUpdateDateComponentRenderer).setHeader("类型最后更新时间").setKey("idx_3")
-        //        .setComparator(lastUpdateDateComparator)
-        //        .setFlexGrow(0).setWidth("210px").setResizable(false);
-        conceptionKindMetaInfoGrid.addColumn(new NumberRenderer<>(EntityStatisticsInfo::getEntitiesCount,NumberFormat.getIntegerInstance()))
-                .setComparator((entityStatisticsInfo1, entityStatisticsInfo2) ->
-                        (int)(entityStatisticsInfo1.getEntitiesCount() - entityStatisticsInfo2.getEntitiesCount()))
-                .setHeader("类型包含实体数量").setKey("idx_4")
-                .setFlexGrow(0).setWidth("150px").setResizable(false);
+        conceptionKindMetaInfoGrid.addColumn(_toolBarComponentRenderer1).setHeader("操作").setKey("idx_2").setFlexGrow(0).setWidth("70px").setResizable(false);
 
-        */
-        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"概念类型名称");
-        conceptionKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"概念类型显示名称");
-        conceptionKindMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"类型创建时间");
-        /*
-        conceptionKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"类型最后更新时间");
-        conceptionKindMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.STOCK,"类型包含实体数量");
-        conceptionKindMetaInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
-        conceptionKindMetaInfoGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5);
-        */
+        LightGridColumnHeader gridColumnHeader_2_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"概念类型名称");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_2_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_2_idx1 = new LightGridColumnHeader(VaadinIcon.DESKTOP,"概念类型显示名称");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_2_idx1).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_2_idx2 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
+        conceptionKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_2_idx2);
         conceptionKindMetaInfoGrid.appendFooterRow();
 
         advancedConceptionKindsQueryLeftSideContainerLayout.add(conceptionKindMetaInfoGrid);
@@ -519,7 +452,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         });
     }
 
-    private void renderRelationKindQueryUI(ConceptionKindAttachInfoVO conceptionKindAttachInfoVO){
+    private void renderRelationKindDetailUI(ConceptionKindAttachInfoVO conceptionKindAttachInfoVO){
         RelationKindDetailUI relationKindDetailUI = new RelationKindDetailUI(conceptionKindAttachInfoVO.relationKindName);
         List<Component> actionComponentList = new ArrayList<>();
 
@@ -550,8 +483,8 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         fullScreenWindow.show();
     }
 
-    private void renderConceptionKindQueryUI(ConceptionKindAttachInfoVO conceptionKindAttachInfoVO){
-        ConceptionKindDetailUI conceptionKindDetailUI = new ConceptionKindDetailUI(conceptionKindAttachInfoVO.conceptionKindName);
+    private void renderConceptionKindDetailUI(String  conceptionKindName){
+        ConceptionKindDetailUI conceptionKindDetailUI = new ConceptionKindDetailUI(conceptionKindName);
         List<Component> actionComponentList = new ArrayList<>();
 
         HorizontalLayout titleDetailLayout = new HorizontalLayout();
@@ -572,8 +505,8 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout2);
-        NativeLabel conceptionKindName = new NativeLabel(conceptionKindAttachInfoVO.conceptionKindName);
-        titleDetailLayout.add(conceptionKindName);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(conceptionKindName);
+        titleDetailLayout.add(conceptionKindNameLabel);
         actionComponentList.add(titleDetailLayout);
 
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"概念类型配置",actionComponentList,null,true);
