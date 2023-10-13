@@ -573,8 +573,8 @@ public class RelatedConceptionKindsView extends VerticalLayout {
     private void filterConceptionKindLinks(){
         String relationKindFilterValue = relationKindNameField.getValue().trim();
         String conceptionKindFilterValue = conceptionKindNameField.getValue().trim();
-        if(relationKindFilterValue.equals("") & conceptionKindFilterValue.equals("")){
-            CommonUIOperationUtil.showPopupNotification("请输入关系类型名称 和/或 概念类型名称", NotificationVariant.LUMO_ERROR);
+        if(relationKindFilterValue.equals("") & conceptionKindFilterValue.equals("") & relationDirectionSelect.getValue() == null){
+            CommonUIOperationUtil.showPopupNotification("请输入或选择关系类型名称 和/或 概念类型名称 和/或 关联关系方向", NotificationVariant.LUMO_ERROR);
         }else{
             this.directRelatedConceptionKindInfoGridListDataView.refreshAll();
         }
