@@ -40,7 +40,7 @@ public class ClassificationRelatedDataQueryCriteriaView extends HorizontalLayout
         setSpacing(false);
         setMargin(false);
 
-        SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
+        SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.SEARCH),"查询条件");
         add(filterTitle);
         setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
         filterTitle.setWidth(80, Unit.PIXELS);
