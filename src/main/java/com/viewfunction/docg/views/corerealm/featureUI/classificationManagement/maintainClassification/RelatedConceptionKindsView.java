@@ -31,7 +31,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServi
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ClassificationAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.structure.InheritanceTree;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
@@ -665,17 +664,9 @@ public class RelatedConceptionKindsView extends VerticalLayout {
     }
 
     private void renderSelectedConceptionKindLinkInfo(ConceptionKind selectedConceptionKind){
-        /*
-        currentAdvanceQueryRelationKindName;
-        currentAdvanceQueryRelationDirection;
-        currentAdvanceQueryIncludeOffspringClassifications;
-        currentAdvanceQueryOffspringLevel;
-        */
-        Map<String, Object> relationData;
-        String RelationEntityUID;
-
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         Classification currentClassification = coreRealm.getClassification(this.classificationName);
+        RelationAttachInfo targetRelationAttachInfo = null;
         if(!currentAdvanceQueryIncludeOffspringClassifications){
 
             List<ConceptionKindAttachInfo> conceptionKindAttachInfoList = currentClassification.getAllDirectRelatedConceptionKindsInfo();
@@ -686,10 +677,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
                         currentAdvanceQueryRelationKindName.equals(relationAttachInfo.getRelationKind()) &&
                         currentAdvanceQueryRelationDirection.toString().equals(relationAttachInfo.getRelationDirection().toString())
                 ){
-                    relationAttachInfo.getRelationData();
-                    relationAttachInfo.getRelationEntityUID();
-                    //render relation info ,coceptionKind info
-
+                    targetRelationAttachInfo = relationAttachInfo;
                 }
             }
         }else{
@@ -699,13 +687,12 @@ public class RelatedConceptionKindsView extends VerticalLayout {
                 RelationAttachInfo relationAttachInfo = currentClassificationAttachInfo.getRelationAttachInfo();
                 if(relationAttachInfo.getRelationKind().equals(currentAdvanceQueryRelationKindName) &&
                         relationAttachInfo.getRelationDirection().toString().equals(currentAdvanceQueryRelationDirection.toString())){
-                    relationAttachInfo.getRelationData();
-                    relationAttachInfo.getRelationEntityUID();
-                    //render relation info ,coceptionKind info
+                    targetRelationAttachInfo = relationAttachInfo;
                 }
-
-
             }
+        }
+        if(targetRelationAttachInfo != null){
+            //render relation info ,coceptionKind info
         }
     }
 
