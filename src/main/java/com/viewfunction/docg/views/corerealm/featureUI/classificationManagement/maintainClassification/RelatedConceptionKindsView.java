@@ -28,7 +28,6 @@ import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.function.ValueProvider;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ClassificationAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachInfo;
@@ -67,7 +66,9 @@ public class RelatedConceptionKindsView extends VerticalLayout {
     private NativeLabel classificationLinkRelationKindLabel;
     private NativeLabel classificationLinkEntityUIDLabel;
     private Button showClassificationLinkDetailButton;
-    private Grid<AttributeValue> classificationLinkEntityAttributesInfoGrid;
+    private Grid<AttributeValueVO> classificationLinkEntityAttributesInfoGrid;
+    private String currentSelectedClassificationLinkEntityKind;
+    private String currentSelectedClassificationLinkEntityUID;
 
     private class ConceptionKindAttachInfoVO {
         private  String conceptionKindName;
@@ -105,6 +106,32 @@ public class RelatedConceptionKindsView extends VerticalLayout {
 
         public void setRelationEntityUID(String relationEntityUID) {
             this.relationEntityUID = relationEntityUID;
+        }
+    }
+
+    private class AttributeValueVO{
+        private String attributeName;
+        private Object attributeValue;
+
+        public AttributeValueVO(String attributeName,Object attributeValue){
+            this.attributeName = attributeName;
+            this.attributeValue = attributeValue;
+        }
+
+        public String getAttributeName() {
+            return attributeName;
+        }
+
+        public void setAttributeName(String attributeName) {
+            this.attributeName = attributeName;
+        }
+
+        public Object getAttributeValue() {
+            return attributeValue;
+        }
+
+        public void setAttributeValue(Object attributeValue) {
+            this.attributeValue = attributeValue;
         }
     }
 
@@ -271,7 +298,8 @@ public class RelatedConceptionKindsView extends VerticalLayout {
             editLinkProperties.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    renderRelationEntityDetailUI((ConceptionKindAttachInfoVO)conceptionKindAttachInfoVO);
+                    renderRelationEntityDetailUI(((ConceptionKindAttachInfoVO) conceptionKindAttachInfoVO).relationKindName,
+                            ((ConceptionKindAttachInfoVO) conceptionKindAttachInfoVO).getRelationEntityUID());
                 }
             });
 
@@ -342,6 +370,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
                 currentAdvanceQueryRelationDirection = relationDirection;
                 currentAdvanceQueryIncludeOffspringClassifications = includeOffspringClassifications;
                 currentAdvanceQueryOffspringLevel = offspringLevel;
+                clearClassificationLinkRelationInfo();
                 queryRelatedConceptionKind(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
             }
         };
@@ -393,6 +422,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
                 Set<ConceptionKind> selectedItemSet = selectionEvent.getAllSelectedItems();
                 if(selectedItemSet.size() == 0){
                     //unselected item, reset link detail info
+                    clearClassificationLinkRelationInfo();
                 }else{
                     ConceptionKind selectedConceptionKind = selectedItemSet.iterator().next();
                     renderSelectedConceptionKindLinkInfo(selectedConceptionKind);
@@ -442,7 +472,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         showClassificationLinkDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderRelatedRelationEntityUI();
+                renderRelationEntityDetailUI(currentSelectedClassificationLinkEntityKind,currentSelectedClassificationLinkEntityUID);
             }
         });
         classificationLinkEntityUIDInfoContainer.add(showClassificationLinkDetailButton);
@@ -462,8 +492,8 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         classificationLinkEntityAttributesInfoGrid.setWidth(100, Unit.PERCENTAGE);
         classificationLinkEntityAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
         classificationLinkEntityAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
-        classificationLinkEntityAttributesInfoGrid.addColumn(AttributeValue::getAttributeName).setHeader("属性名称").setKey("idx_0");
-        classificationLinkEntityAttributesInfoGrid.addColumn(AttributeValue::getAttributeValue).setHeader("属性值").setKey("idx_1").setFlexGrow(1).setResizable(true);
+        classificationLinkEntityAttributesInfoGrid.addColumn(AttributeValueVO::getAttributeName).setHeader("属性名称").setKey("idx_0");
+        classificationLinkEntityAttributesInfoGrid.addColumn(AttributeValueVO::getAttributeValue).setHeader("属性值").setKey("idx_1").setFlexGrow(1).setResizable(true);
         LightGridColumnHeader gridColumnHeader_3_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
         classificationLinkEntityAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_3_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader_3_idx1 = new LightGridColumnHeader(VaadinIcon.INPUT,"属性值");
@@ -613,8 +643,8 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         fullScreenWindow.show();
     }
 
-    private void renderRelationEntityDetailUI(ConceptionKindAttachInfoVO conceptionKindAttachInfoVO){
-        RelationEntityDetailUI relationEntityDetailUI = new RelationEntityDetailUI(conceptionKindAttachInfoVO.relationKindName,conceptionKindAttachInfoVO.relationEntityUID);
+    private void renderRelationEntityDetailUI(String relationKindName,String relationEntityUID){
+        RelationEntityDetailUI relationEntityDetailUI = new RelationEntityDetailUI(relationKindName,relationEntityUID);
 
         List<Component> actionComponentList = new ArrayList<>();
 
@@ -636,7 +666,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout2);
-        NativeLabel conceptionKindNameLabel = new NativeLabel(conceptionKindAttachInfoVO.relationKindName);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(relationKindName);
         titleDetailLayout.add(conceptionKindNameLabel);
 
         HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
@@ -658,7 +688,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
         spaceDivLayout5.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout5);
-        NativeLabel relationEntityUIDLabel = new NativeLabel(conceptionKindAttachInfoVO.relationEntityUID);
+        NativeLabel relationEntityUIDLabel = new NativeLabel(relationEntityUID);
         titleDetailLayout.add(relationEntityUIDLabel);
 
         actionComponentList.add(titleDetailLayout);
@@ -757,43 +787,52 @@ public class RelatedConceptionKindsView extends VerticalLayout {
             List<ClassificationAttachInfo> classificationAttachInfoList = targetConceptionKind.getAllAttachedClassificationsInfo();
             for(ClassificationAttachInfo currentClassificationAttachInfo:classificationAttachInfoList){
                 RelationAttachInfo relationAttachInfo = currentClassificationAttachInfo.getRelationAttachInfo();
+                Classification relatedClassification = currentClassificationAttachInfo.getAttachedClassification();
                 RelationDirection classificationSideRelationDirection = RelationDirection.TWO_WAY;
                 switch (relationAttachInfo.getRelationDirection()){
                     case FROM -> classificationSideRelationDirection = RelationDirection.TO;
                     case TO -> classificationSideRelationDirection = RelationDirection.FROM;
                 }
-
-
-                System.out.println(relationAttachInfo.getRelationKind());
-                System.out.println(currentAdvanceQueryRelationKindName);
-                System.out.println(relationAttachInfo.getRelationDirection());
-                System.out.println(currentAdvanceQueryRelationDirection);
-                System.out.println();
-                System.out.println();
-
-
                 if(relationAttachInfo.getRelationKind().equals(currentAdvanceQueryRelationKindName) &&
-                        classificationSideRelationDirection.toString().equals(currentAdvanceQueryRelationDirection.toString())){
+                        classificationSideRelationDirection.toString().equals(currentAdvanceQueryRelationDirection.toString()) &&
+                        relatedClassification.getClassificationName().equals(this.classificationName)){
                     targetRelationAttachInfo = relationAttachInfo;
                 }
             }
         }
-
-
-        System.out.println(targetRelationAttachInfo);
-        System.out.println(targetRelationAttachInfo);
-        System.out.println(targetRelationAttachInfo);
-
         if(targetRelationAttachInfo != null){
             classificationLinkRelationKindLabel.setText(targetRelationAttachInfo.getRelationKind());
             classificationLinkEntityUIDLabel.setText(targetRelationAttachInfo.getRelationEntityUID());
             showClassificationLinkDetailButton.setEnabled(true);
+            Map<String,Object> relationData = targetRelationAttachInfo.getRelationData();
+            Set<String> attributeNameSet = relationData.keySet();
+            List<AttributeValueVO> attributeValueVOList = new ArrayList<>();
+            for(String currentKey:attributeNameSet){
+                AttributeValueVO currentAttributeValueVO = new AttributeValueVO(currentKey,relationData.get(currentKey));
+                attributeValueVOList.add(currentAttributeValueVO);
+            }
+            classificationLinkEntityAttributesInfoGrid.setItems(attributeValueVOList);
+            currentSelectedClassificationLinkEntityKind = targetRelationAttachInfo.getRelationKind();
+            currentSelectedClassificationLinkEntityUID = targetRelationAttachInfo.getRelationEntityUID();
         }else{
             classificationLinkRelationKindLabel.setText("-");
             classificationLinkEntityUIDLabel.setText("-");
             showClassificationLinkDetailButton.setEnabled(false);
-
+            List<AttributeValueVO> attributeValueVOList = new ArrayList<>();
+            classificationLinkEntityAttributesInfoGrid.setItems(attributeValueVOList);
+            currentSelectedClassificationLinkEntityKind = null;
+            currentSelectedClassificationLinkEntityUID = null;
         }
+    }
+
+    private void clearClassificationLinkRelationInfo(){
+        classificationLinkRelationKindLabel.setText("-");
+        classificationLinkEntityUIDLabel.setText("-");
+        showClassificationLinkDetailButton.setEnabled(false);
+        List<AttributeValueVO> attributeValueVOList = new ArrayList<>();
+        classificationLinkEntityAttributesInfoGrid.setItems(attributeValueVOList);
+        currentSelectedClassificationLinkEntityKind = null;
+        currentSelectedClassificationLinkEntityUID = null;
     }
 
     private class RelationDirectionIconValueProvider implements ValueProvider<ConceptionKindAttachInfoVO,Icon> {
