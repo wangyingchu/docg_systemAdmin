@@ -28,6 +28,7 @@ import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.function.ValueProvider;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ClassificationAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachInfo;
@@ -39,6 +40,8 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.ConceptionKindDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationKind.RelationKindDetailUI;
+
+import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -61,6 +64,10 @@ public class RelatedConceptionKindsView extends VerticalLayout {
     private RelationDirection currentAdvanceQueryRelationDirection;
     private boolean currentAdvanceQueryIncludeOffspringClassifications;
     private int currentAdvanceQueryOffspringLevel;
+    private NativeLabel classificationLinkRelationKindLabel;
+    private NativeLabel classificationLinkEntityUIDLabel;
+    private Button showClassificationLinkDetailButton;
+    private Grid<AttributeValue> classificationLinkEntityAttributesInfoGrid;
 
     private class ConceptionKindAttachInfoVO {
         private  String conceptionKindName;
@@ -395,8 +402,74 @@ public class RelatedConceptionKindsView extends VerticalLayout {
 
         advancedConceptionKindsQueryLeftSideContainerLayout.add(conceptionKindMetaInfoGrid);
 
-        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LINK),"分类关联信息");
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(LineAwesomeIconsSvg.LINK_SOLID.create(),"关联链接信息");
         advancedConceptionKindsQueryRightSideContainerLayout.add(filterTitle2);
+
+        HorizontalLayout classificationLinkNameInfoContainer = new HorizontalLayout();
+        advancedConceptionKindsQueryRightSideContainerLayout.add(classificationLinkNameInfoContainer);
+        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+        relationKindIcon.setSize("16px");
+        relationKindIcon.getStyle().set("padding-right","3px");
+        classificationLinkNameInfoContainer.add(relationKindIcon);
+        classificationLinkNameInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,relationKindIcon);
+        classificationLinkRelationKindLabel = new NativeLabel("-");
+        classificationLinkRelationKindLabel.addClassNames("text-s","font-extrabold","border-b","border-contrast-10");
+        classificationLinkRelationKindLabel.getStyle().set("font-weight","bold").set("color","#2e4e7e");
+        classificationLinkNameInfoContainer.getStyle().set("padding-top","15px");
+        classificationLinkNameInfoContainer.add(classificationLinkRelationKindLabel);
+        classificationLinkNameInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,classificationLinkRelationKindLabel);
+
+        HorizontalLayout classificationLinkEntityUIDInfoContainer = new HorizontalLayout();
+        advancedConceptionKindsQueryRightSideContainerLayout.add(classificationLinkEntityUIDInfoContainer);
+        Icon linkRelationEntityIcon = VaadinIcon.KEY_O.create();
+        linkRelationEntityIcon.setSize("18px");
+        linkRelationEntityIcon.getStyle().set("padding-right","3px");
+        classificationLinkEntityUIDInfoContainer.add(linkRelationEntityIcon);
+        classificationLinkEntityUIDInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,linkRelationEntityIcon);
+
+        classificationLinkEntityUIDLabel = new NativeLabel("-");
+        classificationLinkEntityUIDLabel.addClassNames("text-s","font-extrabold","border-b","border-contrast-10");
+        classificationLinkEntityUIDLabel.getStyle().set("font-weight","bold").set("color","#2e4e7e");
+        classificationLinkEntityUIDInfoContainer.getStyle().set("padding-top","5px");
+        classificationLinkEntityUIDInfoContainer.add(classificationLinkEntityUIDLabel);
+        classificationLinkEntityUIDInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,classificationLinkEntityUIDLabel);
+
+        showClassificationLinkDetailButton = new Button("显示关系实体详情");
+        showClassificationLinkDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
+        showClassificationLinkDetailButton.getStyle().set("font-size","12px");
+        showClassificationLinkDetailButton.setIcon(VaadinIcon.EYE.create());
+        Tooltips.getCurrent().setTooltip(showClassificationLinkDetailButton, "显示关系实体详情");
+        showClassificationLinkDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //renderRelatedRelationEntityUI();
+            }
+        });
+        classificationLinkEntityUIDInfoContainer.add(showClassificationLinkDetailButton);
+        classificationLinkEntityUIDInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,showClassificationLinkDetailButton);
+        classificationLinkEntityUIDInfoContainer.getStyle().set("padding-bottom", "3px");
+        showClassificationLinkDetailButton.setEnabled(false);
+
+        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"关系实体属性");
+        infoTitle1.getStyle().set("padding-top","15px");
+        advancedConceptionKindsQueryRightSideContainerLayout.add(infoTitle1);
+        HorizontalLayout horizontalDiv02 = new HorizontalLayout();
+        horizontalDiv02.setWidthFull();
+        horizontalDiv02.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        advancedConceptionKindsQueryRightSideContainerLayout.add(horizontalDiv02);
+
+        classificationLinkEntityAttributesInfoGrid = new Grid<>();
+        classificationLinkEntityAttributesInfoGrid.setWidth(100, Unit.PERCENTAGE);
+        classificationLinkEntityAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        classificationLinkEntityAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
+        classificationLinkEntityAttributesInfoGrid.addColumn(AttributeValue::getAttributeName).setHeader("属性名称").setKey("idx_0");
+        classificationLinkEntityAttributesInfoGrid.addColumn(AttributeValue::getAttributeValue).setHeader("属性值").setKey("idx_1").setFlexGrow(1).setResizable(true);
+        LightGridColumnHeader gridColumnHeader_3_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
+        classificationLinkEntityAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_3_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_3_idx1 = new LightGridColumnHeader(VaadinIcon.INPUT,"属性值");
+        classificationLinkEntityAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_3_idx1).setSortable(true);
+        classificationLinkEntityAttributesInfoGrid.setHeight(400,Unit.PIXELS);
+        advancedConceptionKindsQueryRightSideContainerLayout.add(classificationLinkEntityAttributesInfoGrid);
     }
 
     public void setHeight(int viewHeight){
@@ -668,7 +741,6 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         Classification currentClassification = coreRealm.getClassification(this.classificationName);
         RelationAttachInfo targetRelationAttachInfo = null;
         if(!currentAdvanceQueryIncludeOffspringClassifications){
-
             List<ConceptionKindAttachInfo> conceptionKindAttachInfoList = currentClassification.getAllDirectRelatedConceptionKindsInfo();
             for(ConceptionKindAttachInfo currentConceptionKindAttachInfo:conceptionKindAttachInfoList){
                 RelationAttachInfo relationAttachInfo = currentConceptionKindAttachInfo.getRelationAttachInfo();
@@ -685,14 +757,42 @@ public class RelatedConceptionKindsView extends VerticalLayout {
             List<ClassificationAttachInfo> classificationAttachInfoList = targetConceptionKind.getAllAttachedClassificationsInfo();
             for(ClassificationAttachInfo currentClassificationAttachInfo:classificationAttachInfoList){
                 RelationAttachInfo relationAttachInfo = currentClassificationAttachInfo.getRelationAttachInfo();
+                RelationDirection classificationSideRelationDirection = RelationDirection.TWO_WAY;
+                switch (relationAttachInfo.getRelationDirection()){
+                    case FROM -> classificationSideRelationDirection = RelationDirection.TO;
+                    case TO -> classificationSideRelationDirection = RelationDirection.FROM;
+                }
+
+
+                System.out.println(relationAttachInfo.getRelationKind());
+                System.out.println(currentAdvanceQueryRelationKindName);
+                System.out.println(relationAttachInfo.getRelationDirection());
+                System.out.println(currentAdvanceQueryRelationDirection);
+                System.out.println();
+                System.out.println();
+
+
                 if(relationAttachInfo.getRelationKind().equals(currentAdvanceQueryRelationKindName) &&
-                        relationAttachInfo.getRelationDirection().toString().equals(currentAdvanceQueryRelationDirection.toString())){
+                        classificationSideRelationDirection.toString().equals(currentAdvanceQueryRelationDirection.toString())){
                     targetRelationAttachInfo = relationAttachInfo;
                 }
             }
         }
+
+
+        System.out.println(targetRelationAttachInfo);
+        System.out.println(targetRelationAttachInfo);
+        System.out.println(targetRelationAttachInfo);
+
         if(targetRelationAttachInfo != null){
-            //render relation info ,coceptionKind info
+            classificationLinkRelationKindLabel.setText(targetRelationAttachInfo.getRelationKind());
+            classificationLinkEntityUIDLabel.setText(targetRelationAttachInfo.getRelationEntityUID());
+            showClassificationLinkDetailButton.setEnabled(true);
+        }else{
+            classificationLinkRelationKindLabel.setText("-");
+            classificationLinkEntityUIDLabel.setText("-");
+            showClassificationLinkDetailButton.setEnabled(false);
+
         }
     }
 

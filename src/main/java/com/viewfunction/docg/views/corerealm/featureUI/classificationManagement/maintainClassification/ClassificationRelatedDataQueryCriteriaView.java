@@ -78,7 +78,7 @@ public class ClassificationRelatedDataQueryCriteriaView extends HorizontalLayout
         relationDirectionSelect.setPageSize(3);
         relationDirectionSelect.setPlaceholder("选择关系方向");
         relationDirectionSelect.setWidth(100,Unit.PIXELS);
-        relationDirectionSelect.setItems("FROM", "TO","TWO_WAY");
+        relationDirectionSelect.setItems("FROM", "TO");
         add(relationDirectionSelect);
 
         includeOffspringClassificationsCheckbox = new Checkbox();
