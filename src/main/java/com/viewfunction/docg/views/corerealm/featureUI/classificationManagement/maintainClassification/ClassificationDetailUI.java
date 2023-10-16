@@ -25,6 +25,7 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ClassificationRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.structure.InheritanceTree;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -391,19 +392,32 @@ public class ClassificationDetailUI extends VerticalLayout implements
             for(ClassificationMetaInfo currentClassificationMetaInfo:allClassificationsMetaInfoList){
                 classificationMetaInfoMap.put(currentClassificationMetaInfo.getClassificationName(),currentClassificationMetaInfo);
             }
-            for(ClassificationMetaInfo currentClassificationMetaInfo:allClassificationsMetaInfoList){
-                //   if(isSelfAndChildren(this.classificationName,currentClassificationMetaInfo)){
-                    gridTreeData.addItem(null,currentClassificationMetaInfo);
-                    //  }
-            }
-            for(ClassificationMetaInfo currentClassificationMetaInfo:allClassificationsMetaInfoList){
-                if(!currentClassificationMetaInfo.isRootClassification()){
-                    String parentClassificationName = currentClassificationMetaInfo.getParentClassificationName();
-                    //gridTreeData.setParent(currentClassificationMetaInfo,classificationMetaInfoMap.get(parentClassificationName));
 
-                //    if(isSelfAndChildren(this.classificationName,currentClassificationMetaInfo)){
-                        gridTreeData.setParent(currentClassificationMetaInfo,classificationMetaInfoMap.get(parentClassificationName));
-               //     }
+            Classification targetClassification = coreRealm.getClassification(this.classificationName);
+            ClassificationRuntimeStatistics classificationRuntimeStatistics = targetClassification.getClassificationRuntimeStatistics();
+            this.relatedConceptionKindsView.setTotalCount(classificationRuntimeStatistics.getRelatedConceptionKindCount());
+
+            InheritanceTree<Classification> classificationInheritanceTree =  targetClassification.getOffspringClassifications();
+            Map<String,Classification> flattedClassificationMap = new HashMap<>();
+            Classification startClassification = classificationInheritanceTree.getRoot();
+            flatClassificationInheritanceTreeToList(classificationInheritanceTree,startClassification,flattedClassificationMap);
+
+            Collection<Classification> classificationsSet = flattedClassificationMap.values();
+
+            for(Classification currentClassification : classificationsSet){
+                String classificationName = currentClassification.getClassificationName();
+                if(!classificationName.equals(this.classificationName)){
+                    ClassificationMetaInfo currentClassificationMetaInfo = classificationMetaInfoMap.get(classificationName);
+                    gridTreeData.addItem(null,currentClassificationMetaInfo);
+                }
+            }
+            for(Classification currentClassification : classificationsSet){
+                String classificationName = currentClassification.getClassificationName();
+                if(!classificationName.equals(this.classificationName)){
+                    Classification parentClassification = currentClassification.getParentClassification();
+                    if(parentClassification != null && ! parentClassification.getClassificationName().equals(this.classificationName)){
+                        gridTreeData.setParent(classificationMetaInfoMap.get(currentClassification.getClassificationName()),classificationMetaInfoMap.get(parentClassification.getClassificationName()));
+                    }
                 }
             }
             dataProvider.refreshAll();
@@ -411,23 +425,19 @@ public class ClassificationDetailUI extends VerticalLayout implements
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
-
-        Classification targetClassification = coreRealm.getClassification(this.classificationName);
-        ClassificationRuntimeStatistics classificationRuntimeStatistics = targetClassification.getClassificationRuntimeStatistics();
-        this.relatedConceptionKindsView.setTotalCount(classificationRuntimeStatistics.getRelatedConceptionKindCount());
-
         coreRealm.closeGlobalSession();
     }
 
-    private boolean isSelfAndChildren(String selfClassificationName,ClassificationMetaInfo classificationMetaInfo){
-        if(selfClassificationName.equals(classificationMetaInfo.getClassificationName())){
-            return true;
-        }else{
-            if(selfClassificationName.equals(classificationMetaInfo.getParentClassificationName())){
-                return true;
+    private void flatClassificationInheritanceTreeToList(InheritanceTree<Classification> classificationInheritanceTree,Classification startClassification,Map<String,Classification> flattedClassificationMap){
+        if(classificationInheritanceTree != null && flattedClassificationMap != null && startClassification != null){
+            Classification currentClassification = classificationInheritanceTree.getNode(startClassification.getClassificationName());
+            flattedClassificationMap.put(currentClassification.getClassificationName(),currentClassification);
+            Collection<Classification> childOfCurrentClassification = classificationInheritanceTree.getChildren(currentClassification.getClassificationName());
+            for(Classification currentChildClassification :childOfCurrentClassification){
+                flattedClassificationMap.put(currentChildClassification.getClassificationName(),currentChildClassification);
+                flatClassificationInheritanceTreeToList(classificationInheritanceTree,currentChildClassification,flattedClassificationMap);
             }
         }
-        return false;
     }
 
     private void renderShowMetaInfoUI(){
