@@ -30,7 +30,12 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.eventHandling.ClassificationDetachedEvent;
+import com.viewfunction.docg.element.eventHandling.ClassificationRemovedEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
+import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.DetachClassificationView;
+import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.RemoveClassificationView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 
 import dev.mett.vaadin.tooltip.Tooltips;
@@ -41,7 +46,9 @@ import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.
 
 @Route("classificationDetailInfo/:classificationName")
 public class ClassificationDetailUI extends VerticalLayout implements
-        BeforeEnterObserver{
+        BeforeEnterObserver,
+        ClassificationRemovedEvent.ClassificationRemovedListener,
+        ClassificationDetachedEvent.ClassificationDetachedListener{
     private String classificationName;
     private int attributesViewKindDetailViewHeightOffset = 170;
     private int rightSideLayoutWidthOffset = 20;
@@ -80,7 +87,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        //ResourceHolder.getApplicationBlackboard().addListener(this);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         renderClassificationData();
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
@@ -103,9 +110,9 @@ public class ClassificationDetailUI extends VerticalLayout implements
     @Override
     protected void onDetach(DetachEvent detachEvent) {
         // Listener needs to be eventually removed in order to avoid resource leak
-        //listener.remove();
+        listener.remove();
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     private void renderClassificationData(){
@@ -299,7 +306,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(classificationMetaInfo instanceof ClassificationMetaInfo){
-                        //renderRemoveClassificationUI((ClassificationMetaInfo)classificationMetaInfo);
+                        renderDetachChildClassificationUI((ClassificationMetaInfo)classificationMetaInfo);
                     }
                 }
             });
@@ -315,7 +322,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(classificationMetaInfo instanceof ClassificationMetaInfo){
-                        //renderRemoveClassificationUI((ClassificationMetaInfo)classificationMetaInfo);
+                        renderRemoveChildClassificationUI((ClassificationMetaInfo)classificationMetaInfo);
                     }
                 }
             });
@@ -510,6 +517,48 @@ public class ClassificationDetailUI extends VerticalLayout implements
         fullScreenWindow.show();
     }
 
+    private void renderDetachChildClassificationUI(ClassificationMetaInfo classificationMetaInfo){
+        DetachClassificationView detachClassificationView = new DetachClassificationView(classificationMetaInfo.getParentClassificationName(),classificationMetaInfo.getClassificationName());
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"移除子分类",null,true,600,210,false);
+        fixSizeWindow.setWindowContent(detachClassificationView);
+        fixSizeWindow.setModel(true);
+        detachClassificationView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderRemoveChildClassificationUI(ClassificationMetaInfo classificationMetaInfo){
+        RemoveClassificationView removeClassificationView = new RemoveClassificationView(classificationMetaInfo);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"删除分类",null,true,600,240,false);
+        fixSizeWindow.setWindowContent(removeClassificationView);
+        fixSizeWindow.setModel(true);
+        removeClassificationView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderCreateClassificationUI(){
+        CreateClassificationView createClassificationView = new CreateClassificationView();
+        createClassificationView.setParentClassification(this.classificationName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建分类",null,true,500,350,false);
+        fixSizeWindow.setWindowContent(createClassificationView);
+        createClassificationView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    @Override
+    public void receivedClassificationRemovedEvent(ClassificationRemovedEvent event) {
+        if(event.getClassificationName() != null){
+            initLoadClassificationData();
+        }
+    }
+
+    @Override
+    public void receivedClassificationDetachedEvent(ClassificationDetachedEvent event) {
+        if(event.getParentClassificationName() != null){
+            initLoadClassificationData();
+        }
+    }
+
     private HorizontalLayout generateTabTitle(VaadinIcon tabIcon, String tabTitleTxt){
         HorizontalLayout  kindConfigTabLayout = new HorizontalLayout();
         kindConfigTabLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -522,15 +571,5 @@ public class ClassificationDetailUI extends VerticalLayout implements
                 .set("font-weight", "bold");
         kindConfigTabLayout.add(configTabIcon,configTabLabel);
         return kindConfigTabLayout;
-    }
-
-    private void renderCreateClassificationUI(){
-        CreateClassificationView createClassificationView = new CreateClassificationView();
-        createClassificationView.setParentClassification(this.classificationName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建分类",null,true,500,350,false);
-        fixSizeWindow.setWindowContent(createClassificationView);
-        createClassificationView.setContainerDialog(fixSizeWindow);
-        fixSizeWindow.setModel(true);
-        fixSizeWindow.show();
     }
 }
