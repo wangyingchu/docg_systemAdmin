@@ -30,4 +30,8 @@ public class RelatedAttributesViewKindsView extends VerticalLayout {
         this.attributesViewKindCountDisplayItem =
                 new PrimaryKeyValueDisplayItem(infoContainer, FontAwesome.Solid.CIRCLE.create(),"相关属性视图类型数量:",this.numberFormat.format(123456789));
     }
+
+    public void loadDirectRelatedAttributesViewKindsInfo(){
+
+    }
 }

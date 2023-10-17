@@ -30,4 +30,8 @@ public class RelatedRelationKindsView extends VerticalLayout {
         this.relationKindCountDisplayItem =
                 new PrimaryKeyValueDisplayItem(infoContainer, FontAwesome.Solid.CIRCLE.create(),"相关关系类型数量:",this.numberFormat.format(123456789));
     }
+
+    public void loadDirectRelatedRelationKindsInfo(){
+
+    }
 }

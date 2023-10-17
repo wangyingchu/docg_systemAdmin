@@ -12,6 +12,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
@@ -70,6 +71,9 @@ public class ClassificationDetailUI extends VerticalLayout implements
     private RelatedAttributeKindsView relatedAttributeKindsView;
     private RelatedAttributesViewKindsView relatedAttributesViewKindsView;
     private RelatedConceptionEntitiesView relatedConceptionEntitiesView;
+    private boolean relationKindClassificationInfoTabRendered = false;
+    private boolean attributeKindClassificationInfoTabRendered = false;
+    private boolean attributesViewKindClassificationInfoTabRendered = false;
 
     public ClassificationDetailUI(){}
 
@@ -378,10 +382,26 @@ public class ClassificationDetailUI extends VerticalLayout implements
         this.relatedConceptionEntitiesView = new RelatedConceptionEntitiesView(this.classificationName);
 
         classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.CUBE,"相关概念类型信息"),this.relatedConceptionKindsView);
-        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.CONNECT_O,"相关关系类型信息"),this.relatedRelationKindsView);
-        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.INPUT,"相关属性类型信息"),this.relatedAttributeKindsView);
-        classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.TASKS,"相关属性视图类型信息"),this.relatedAttributesViewKindsView);
+        Tab relationKindClassificationInfoTab = classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.CONNECT_O,"相关关系类型信息"),this.relatedRelationKindsView);
+        Tab attributeKindClassificationInfoTab = classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.INPUT,"相关属性类型信息"),this.relatedAttributeKindsView);
+        Tab attributesViewKindClassificationInfoTab = classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.TASKS,"相关属性视图类型信息"),this.relatedAttributesViewKindsView);
         classificationRuntimeInfoTabSheet.add(generateTabTitle(VaadinIcon.STOCK,"相关概念实体信息"),this.relatedConceptionEntitiesView);
+
+        classificationRuntimeInfoTabSheet.addSelectedChangeListener(new ComponentEventListener<TabSheet.SelectedChangeEvent>() {
+            @Override
+            public void onComponentEvent(TabSheet.SelectedChangeEvent selectedChangeEvent) {
+                Tab selectedTab = selectedChangeEvent.getSelectedTab();
+                if(selectedTab == relationKindClassificationInfoTab){
+                    renderRelationKindClassificationInfoTab();
+                }
+                if(selectedTab == attributeKindClassificationInfoTab){
+                    renderAttributeKindClassificationInfoTab();
+                }
+                if(selectedTab == attributesViewKindClassificationInfoTab){
+                    renderAttributesViewKindClassificationInfoTab();
+                }
+            }
+        });
 
         initLoadClassificationData();
     }
@@ -571,5 +591,26 @@ public class ClassificationDetailUI extends VerticalLayout implements
                 .set("font-weight", "bold");
         kindConfigTabLayout.add(configTabIcon,configTabLabel);
         return kindConfigTabLayout;
+    }
+
+    private void renderRelationKindClassificationInfoTab(){
+        if(!relationKindClassificationInfoTabRendered){
+            relationKindClassificationInfoTabRendered = true;
+            relatedRelationKindsView.loadDirectRelatedRelationKindsInfo();
+        }
+    }
+
+    private void renderAttributeKindClassificationInfoTab(){
+        if(!attributeKindClassificationInfoTabRendered){
+            attributeKindClassificationInfoTabRendered = true;
+            relatedAttributeKindsView.loadDirectRelatedAttributeKindsInfo();
+        }
+    }
+
+    private void renderAttributesViewKindClassificationInfoTab(){
+        if(!attributesViewKindClassificationInfoTabRendered){
+            attributesViewKindClassificationInfoTabRendered = true;
+            relatedAttributesViewKindsView.loadDirectRelatedAttributesViewKindsInfo();
+        }
     }
 }
