@@ -31,6 +31,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServi
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ClassificationAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationKindAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -108,32 +109,6 @@ public class RelatedRelationKindsView extends VerticalLayout {
 
         public void setRelationEntityUID(String relationEntityUID) {
             this.relationEntityUID = relationEntityUID;
-        }
-    }
-
-    private class AttributeValueVO{
-        private String attributeName;
-        private Object attributeValue;
-
-        public AttributeValueVO(String attributeName,Object attributeValue){
-            this.attributeName = attributeName;
-            this.attributeValue = attributeValue;
-        }
-
-        public String getAttributeName() {
-            return attributeName;
-        }
-
-        public void setAttributeName(String attributeName) {
-            this.attributeName = attributeName;
-        }
-
-        public Object getAttributeValue() {
-            return attributeValue;
-        }
-
-        public void setAttributeValue(Object attributeValue) {
-            this.attributeValue = attributeValue;
         }
     }
 
@@ -530,6 +505,10 @@ public class RelatedRelationKindsView extends VerticalLayout {
     }
 
     public void loadDirectRelatedRelationKindsInfo(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        Classification targetClassification = coreRealm.getClassification(this.classificationName);
+        List<RelationKindAttachInfo> directRelatedConceptionKindList = targetClassification.getAllDirectRelatedRelationKindsInfo();
+
 
     }
 
