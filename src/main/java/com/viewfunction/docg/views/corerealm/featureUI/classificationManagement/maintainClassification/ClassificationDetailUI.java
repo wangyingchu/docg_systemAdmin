@@ -423,6 +423,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
             Classification targetClassification = coreRealm.getClassification(this.classificationName);
             ClassificationRuntimeStatistics classificationRuntimeStatistics = targetClassification.getClassificationRuntimeStatistics();
             this.relatedConceptionKindsView.setTotalCount(classificationRuntimeStatistics.getRelatedConceptionKindCount());
+            this.relatedRelationKindsView.setTotalCount(classificationRuntimeStatistics.getRelatedRelationKindCount());
 
             InheritanceTree<Classification> classificationInheritanceTree =  targetClassification.getOffspringClassifications();
             Map<String,Classification> flattedClassificationMap = new HashMap<>();

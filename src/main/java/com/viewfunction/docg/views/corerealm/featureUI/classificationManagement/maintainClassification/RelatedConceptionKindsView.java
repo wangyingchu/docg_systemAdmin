@@ -139,7 +139,6 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         this.setPadding(false);
         this.classificationName = classificationName;
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.SPARK_LINE),"相关概念类型运行时信息");
-
         filterTitle1.getStyle().set("padding-top","10px");
         add(filterTitle1);
 
@@ -208,7 +207,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         filterTitle.setWidth(80, Unit.PIXELS);
 
         relationKindNameField = new TextField();
-        relationKindNameField.setPlaceholder("关系类型名称");
+        relationKindNameField.setPlaceholder("关联关系类型名称");
         relationKindNameField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         relationKindNameField.setWidth(250,Unit.PIXELS);
         directRelatedConceptionKindFilterControlLayout.add(relationKindNameField);
@@ -233,7 +232,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, plusIcon1);
 
         conceptionKindNameField = new TextField();
-        conceptionKindNameField.setPlaceholder("概念类型名称");
+        conceptionKindNameField.setPlaceholder("相关概念类型名称");
         conceptionKindNameField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         conceptionKindNameField.setWidth(250,Unit.PIXELS);
         directRelatedConceptionKindFilterControlLayout.add(conceptionKindNameField);
@@ -330,15 +329,15 @@ public class RelatedConceptionKindsView extends VerticalLayout {
         directRelatedConceptionKindInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         directRelatedConceptionKindInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         directRelatedConceptionKindInfoGrid.addComponentColumn(new RelationDirectionIconValueProvider()).setHeader("").setKey("idx_0").setFlexGrow(0).setWidth("35px").setResizable(false);
-        directRelatedConceptionKindInfoGrid.addColumn(ConceptionKindAttachInfoVO::getRelationKindName).setHeader("关系类型名称").setKey("idx_1");
-        directRelatedConceptionKindInfoGrid.addColumn(ConceptionKindAttachInfoVO::getConceptionKindName).setHeader("概念类型名称").setKey("idx_2");
+        directRelatedConceptionKindInfoGrid.addColumn(ConceptionKindAttachInfoVO::getRelationKindName).setHeader("关联关系类型名称").setKey("idx_1");
+        directRelatedConceptionKindInfoGrid.addColumn(ConceptionKindAttachInfoVO::getConceptionKindName).setHeader("相关概念类型名称").setKey("idx_2");
         directRelatedConceptionKindInfoGrid.addColumn(ConceptionKindAttachInfoVO::getRelationData).setHeader("关联关系属性").setKey("idx_3");
         directRelatedConceptionKindInfoGrid.addColumn(_toolBarComponentRenderer0).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("150px").setResizable(false);
         directRelatedConceptionKindInfoGrid.appendFooterRow();
 
-        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.CONNECT_O,"关系类型名称");
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.CONNECT_O,"关联关系类型名称");
         directRelatedConceptionKindInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
-        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.CUBE,"概念类型名称");
+        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.CUBE,"相关概念类型名称");
         directRelatedConceptionKindInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(VaadinIcon.INPUT,"关联关系属性");
         directRelatedConceptionKindInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
