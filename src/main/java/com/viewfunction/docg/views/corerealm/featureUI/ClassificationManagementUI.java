@@ -42,7 +42,6 @@ import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.
 
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.RemoveClassificationView;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.maintainClassification.ClassificationDetailUI;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.*;
 
@@ -210,7 +209,18 @@ public class ClassificationManagementUI extends VerticalLayout implements
             });
             configClassification.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configClassification.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(configClassification, "配置分类定义");
+            configClassification.setTooltipText("配置分类定义");
+
+            Icon relinkIcon = new Icon(VaadinIcon.RETWEET);
+            relinkIcon.setSize("21px");
+            Button relinkClassification = new Button(relinkIcon, event -> {
+                if(classificationMetaInfo instanceof ClassificationMetaInfo){
+                    renderClassificationConfigurationUI((ClassificationMetaInfo)classificationMetaInfo);
+                }
+            });
+            relinkClassification.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            relinkClassification.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            relinkClassification.setTooltipText("重新设定父分类");
 
             Icon deleteClassificationIcon = new Icon(VaadinIcon.TRASH);
             deleteClassificationIcon.setSize("21px");
@@ -218,7 +228,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
             removeClassification.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeClassification.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeClassification.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeClassification, "删除分类");
+            removeClassification.setTooltipText("删除分类");
             removeClassification.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -228,7 +238,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
                 }
             });
 
-            HorizontalLayout buttons = new HorizontalLayout(configClassification,removeClassification);
+            HorizontalLayout buttons = new HorizontalLayout(configClassification,relinkClassification,removeClassification);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -245,7 +255,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
         classificationsMetaInfoTreeGrid.addHierarchyColumn(ClassificationMetaInfo::getClassificationName).setKey("idx_0").setHeader("分类名称");
         classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getClassificationDesc).setKey("idx_1").setHeader("分类描述");
         classificationsMetaInfoTreeGrid.addColumn(ClassificationMetaInfo::getChildClassificationCount).setKey("idx_2").setHeader("子分类数量").setFlexGrow(0).setWidth("110px").setResizable(false);
-        classificationsMetaInfoTreeGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("110px").setResizable(false);
+        classificationsMetaInfoTreeGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("130px").setResizable(false);
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"分类名称");
         classificationsMetaInfoTreeGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"分类描述");

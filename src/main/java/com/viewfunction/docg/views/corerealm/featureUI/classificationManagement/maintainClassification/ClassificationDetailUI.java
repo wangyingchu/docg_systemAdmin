@@ -519,7 +519,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
 
     private void renderDetachChildClassificationUI(ClassificationMetaInfo classificationMetaInfo){
         DetachClassificationView detachClassificationView = new DetachClassificationView(classificationMetaInfo.getParentClassificationName(),classificationMetaInfo.getClassificationName());
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"移除子分类",null,true,600,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"移除子分类",null,true,600,200,false);
         fixSizeWindow.setWindowContent(detachClassificationView);
         fixSizeWindow.setModel(true);
         detachClassificationView.setContainerDialog(fixSizeWindow);
