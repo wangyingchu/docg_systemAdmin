@@ -20,11 +20,15 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.payloadImpl.ClassificationMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.eventHandling.ClassificationAttachedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -242,5 +246,59 @@ public class AttachClassificationView extends VerticalLayout {
         this.selectedParentTitleActionBar.updateTitleContent(this.selectedParentClassificationMetaInfo.getClassificationName());
     }
 
-    private void attachClassification(){}
+    private void attachClassification(){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认关联父分类",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行为分类 "+ this.classificationMetaInfo.getClassificationName()+" ("+this.classificationMetaInfo.getClassificationDesc()+") 关联父分类 "+
+                        this.selectedParentClassificationMetaInfo.getClassificationName()+" ("+this.selectedParentClassificationMetaInfo.getClassificationDesc()+") 的操作",actionButtonList,550,200);
+        confirmWindow.open();
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doAttachClassificationLink(confirmWindow);
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doAttachClassificationLink(ConfirmWindow confirmWindow){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        try {
+            if(this.classificationMetaInfo.getParentClassificationName() != null){
+                Classification oldParentClassification = coreRealm.getClassification(this.classificationMetaInfo.getParentClassificationName());
+                oldParentClassification.detachChildClassification(this.classificationMetaInfo.getClassificationName());
+            }
+            Classification newParentClassification = coreRealm.getClassification(this.selectedParentClassificationMetaInfo.getClassificationName());
+            boolean attachResult = newParentClassification.attachChildClassification(this.classificationMetaInfo.getClassificationName());
+            if(attachResult){
+                CommonUIOperationUtil.showPopupNotification("为分类 "+ this.classificationMetaInfo.getClassificationName()+
+                        " 关联父分类 "+this.selectedParentClassificationMetaInfo.getClassificationName() +" 操作成功", NotificationVariant.LUMO_SUCCESS);
+                ClassificationAttachedEvent classificationAttachedEvent = new ClassificationAttachedEvent();
+                classificationAttachedEvent.setParentClassificationName(this.selectedParentClassificationMetaInfo.getClassificationName());
+                classificationAttachedEvent.setChildClassificationName(this.classificationMetaInfo.getClassificationName());
+                ResourceHolder.getApplicationBlackboard().fire(classificationAttachedEvent);
+                confirmWindow.closeConfirmWindow();
+                if(this.containerDialog != null){
+                    this.containerDialog.close();
+                }
+            }else{
+                CommonUIOperationUtil.showPopupNotification("为分类 "+ this.classificationMetaInfo.getClassificationName()+
+                        " 关联父分类 "+this.selectedParentClassificationMetaInfo.getClassificationName() +" 操作失败", NotificationVariant.LUMO_ERROR);
+            }
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

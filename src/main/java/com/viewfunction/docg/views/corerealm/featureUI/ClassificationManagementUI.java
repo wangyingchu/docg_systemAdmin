@@ -31,10 +31,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.spi.common.paylo
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
-import com.viewfunction.docg.element.eventHandling.ClassificationCreatedEvent;
-import com.viewfunction.docg.element.eventHandling.ClassificationDescriptionUpdatedEvent;
-import com.viewfunction.docg.element.eventHandling.ClassificationDetachedEvent;
-import com.viewfunction.docg.element.eventHandling.ClassificationRemovedEvent;
+import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.AttachClassificationView;
@@ -50,6 +47,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
         ClassificationCreatedEvent.ClassificationCreatedListener,
         ClassificationRemovedEvent.ClassificationRemovedListener,
         ClassificationDetachedEvent.ClassificationDetachedListener,
+        ClassificationAttachedEvent.ClassificationAttachedListener,
         ClassificationDescriptionUpdatedEvent.ClassificationDescriptionUpdatedListener{
     private TextField classificationNameFilterField;
     private TextField classificationDescFilterField;
@@ -568,6 +566,16 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
     @Override
     public void receivedClassificationDetachedEvent(ClassificationDetachedEvent event) {
+        refreshClassificationsData();
+        if(this.lastSelectedClassificationName != null){
+            this.lastSelectedClassificationMetaInfo = classificationMetaInfoMap.get(this.lastSelectedClassificationName);
+        }
+        this.classificationsMetaInfoFilterGrid.select(this.lastSelectedClassificationMetaInfo);
+        this.classificationsMetaInfoTreeGrid.select(this.lastSelectedClassificationMetaInfo);
+    }
+
+    @Override
+    public void receivedClassificationAttachedEvent(ClassificationAttachedEvent event) {
         refreshClassificationsData();
         if(this.lastSelectedClassificationName != null){
             this.lastSelectedClassificationMetaInfo = classificationMetaInfoMap.get(this.lastSelectedClassificationName);
