@@ -100,6 +100,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
             int rightSideContainerLayoutWidth = event.getWidth() - 350-450 - rightSideLayoutWidthOffset;
             this.rightSideContainerLayout.setWidth(rightSideContainerLayoutWidth,Unit.PIXELS);
             this.relatedConceptionKindsView.setHeight(containerHeight-30);
+            this.relatedRelationKindsView.setHeight(containerHeight-30);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -108,6 +109,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
             int rightSideContainerLayoutWidth = receiver.getBodyClientWidth() - 350-450 - rightSideLayoutWidthOffset;
             this.rightSideContainerLayout.setWidth(rightSideContainerLayoutWidth,Unit.PIXELS);
             this.relatedConceptionKindsView.setHeight(containerHeight-30);
+            this.relatedRelationKindsView.setHeight(containerHeight-30);
         }));
     }
 
