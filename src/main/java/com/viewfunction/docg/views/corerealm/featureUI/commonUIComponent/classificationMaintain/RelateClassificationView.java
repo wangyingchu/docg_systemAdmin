@@ -231,7 +231,7 @@ public class RelateClassificationView extends VerticalLayout {
         targetConceptionEntitiesInfoContainerLayout.setSpacing(false);
         mainContainerLayout.add(targetConceptionEntitiesInfoContainerLayout);
 
-        ThirdLevelIconTitle infoTitle4 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CUBES),"选择目标分类");
+        ThirdLevelIconTitle infoTitle4 = new ThirdLevelIconTitle(new Icon(VaadinIcon.TAGS),"选择目标分类");
         targetConceptionEntitiesInfoContainerLayout.add(infoTitle4);
 
         VerticalLayout classificationMetaInfoGridContainerLayout = new VerticalLayout();

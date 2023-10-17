@@ -37,6 +37,7 @@ import com.viewfunction.docg.element.eventHandling.ClassificationDetachedEvent;
 import com.viewfunction.docg.element.eventHandling.ClassificationRemovedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.AttachClassificationView;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.ClassificationCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.CreateClassificationView;
 
@@ -215,7 +216,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
             relinkIcon.setSize("21px");
             Button relinkClassification = new Button(relinkIcon, event -> {
                 if(classificationMetaInfo instanceof ClassificationMetaInfo){
-                    renderClassificationConfigurationUI((ClassificationMetaInfo)classificationMetaInfo);
+                    renderAttachClassificationUI((ClassificationMetaInfo)classificationMetaInfo);
                 }
             });
             relinkClassification.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -660,5 +661,14 @@ public class ClassificationManagementUI extends VerticalLayout implements
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"分类配置",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(classificationDetailUI);
         fullScreenWindow.show();
+    }
+
+    private void renderAttachClassificationUI(ClassificationMetaInfo classificationMetaInfo){
+        AttachClassificationView attachClassificationView = new AttachClassificationView(classificationMetaInfo);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RETWEET),"设定父分类",null,true,770,590,false);
+        fixSizeWindow.setWindowContent(attachClassificationView);
+        fixSizeWindow.setModel(true);
+        attachClassificationView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }
