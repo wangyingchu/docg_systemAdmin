@@ -251,7 +251,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
             });
             configRelationKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configRelationKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            configRelationKind.setTooltipText("配置关系类型定义");
+            configRelationKind.setTooltipText("关联关系类型定义配置");
 
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
@@ -260,7 +260,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
             });
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            configConceptionKind.setTooltipText("配置概念类型定义");
+            configConceptionKind.setTooltipText("相关概念类型定义配置");
 
             Icon linkIcon = LineAwesomeIconsSvg.LINK_SOLID.create();
             linkIcon.setSize("17px");
@@ -361,7 +361,7 @@ public class RelatedConceptionKindsView extends VerticalLayout {
             });
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            configConceptionKind.setTooltipText("配置概念类型定义");
+            configConceptionKind.setTooltipText("关联概念类型定义配置");
 
             HorizontalLayout buttons = new HorizontalLayout(configConceptionKind);
             buttons.setPadding(false);
