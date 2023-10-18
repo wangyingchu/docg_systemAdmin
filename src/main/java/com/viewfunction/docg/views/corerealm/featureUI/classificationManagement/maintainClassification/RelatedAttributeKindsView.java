@@ -55,10 +55,10 @@ public class RelatedAttributeKindsView extends VerticalLayout {
     private PrimaryKeyValueDisplayItem attributeKindCountDisplayItem;
     private TextField relationKindNameField;
     private ComboBox<String> relationDirectionSelect;
-    private TextField conceptionKindNameField;
-    private Grid<AttributeKindAttachInfoVO> directRelatedConceptionKindInfoGrid;
-    private Grid<AttributeKind> conceptionKindMetaInfoGrid;
-    private GridListDataView<AttributeKindAttachInfoVO> directRelatedConceptionKindInfoGridListDataView;
+    private TextField attributeKindNameField;
+    private Grid<AttributeKindAttachInfoVO> directRelatedAttributeKindInfoGrid;
+    private Grid<AttributeKind> attributeKindMetaInfoGrid;
+    private GridListDataView<AttributeKindAttachInfoVO> directRelatedAttributeKindInfoGridListDataView;
     private ClassificationRelatedDataQueryCriteriaView classificationRelatedDataQueryCriteriaView;
     private String currentAdvanceQueryRelationKindName;
     private RelationDirection currentAdvanceQueryRelationDirection;
@@ -138,31 +138,31 @@ public class RelatedAttributeKindsView extends VerticalLayout {
         TabSheet componentsSwitchTabSheet = new TabSheet();
         componentsSwitchTabSheet.setWidthFull();
 
-        VerticalLayout directRelatedConceptionKindsContainer = new VerticalLayout();
-        directRelatedConceptionKindsContainer.setPadding(false);
-        directRelatedConceptionKindsContainer.setSpacing(false);
-        directRelatedConceptionKindsContainer.setMargin(false);
+        VerticalLayout directRelatedAttributeKindsContainer = new VerticalLayout();
+        directRelatedAttributeKindsContainer.setPadding(false);
+        directRelatedAttributeKindsContainer.setSpacing(false);
+        directRelatedAttributeKindsContainer.setMargin(false);
 
-        VerticalLayout advancedConceptionKindsQueryContainer = new VerticalLayout();
-        advancedConceptionKindsQueryContainer.setPadding(false);
-        advancedConceptionKindsQueryContainer.setSpacing(false);
-        advancedConceptionKindsQueryContainer.setMargin(false);
+        VerticalLayout advancedAttributeKindsQueryContainer = new VerticalLayout();
+        advancedAttributeKindsQueryContainer.setPadding(false);
+        advancedAttributeKindsQueryContainer.setSpacing(false);
+        advancedAttributeKindsQueryContainer.setMargin(false);
 
-        Tab directRelatedConceptionKindsInfoTab = componentsSwitchTabSheet.add("",directRelatedConceptionKindsContainer);
+        Tab directRelatedAttributeKindsInfoTab = componentsSwitchTabSheet.add("",directRelatedAttributeKindsContainer);
         Span info1Span =new Span();
         Icon info1Icon = new Icon(VaadinIcon.ALIGN_JUSTIFY);
         info1Icon.setSize("12px");
         NativeLabel info1Label = new NativeLabel(" 全量直接关联属性类型");
         info1Span.add(info1Icon,info1Label);
-        directRelatedConceptionKindsInfoTab.add(info1Span);
+        directRelatedAttributeKindsInfoTab.add(info1Span);
 
-        Tab advancedConceptionKindsQueryTab = componentsSwitchTabSheet.add("",advancedConceptionKindsQueryContainer);
+        Tab advancedAttributeKindsQueryTab = componentsSwitchTabSheet.add("",advancedAttributeKindsQueryContainer);
         Span info2Span =new Span();
         Icon info2Icon = new Icon(VaadinIcon.CONTROLLER);
         info2Icon.setSize("12px");
         NativeLabel info2Label = new NativeLabel(" 关联属性类型自定义条件查询");
         info2Span.add(info2Icon,info2Label);
-        advancedConceptionKindsQueryTab.add(info2Span);
+        advancedAttributeKindsQueryTab.add(info2Span);
 
         componentsSwitchTabSheet.addSelectedChangeListener(new ComponentEventListener<TabSheet.SelectedChangeEvent>() {
             @Override
@@ -171,33 +171,33 @@ public class RelatedAttributeKindsView extends VerticalLayout {
 
         add(componentsSwitchTabSheet);
 
-        VerticalLayout directRelatedConceptionKindMainContentContainerLayout = new VerticalLayout();
-        directRelatedConceptionKindMainContentContainerLayout.setWidthFull();
-        directRelatedConceptionKindMainContentContainerLayout.setPadding(false);
-        directRelatedConceptionKindMainContentContainerLayout.setMargin(false);
-        directRelatedConceptionKindsContainer.add(directRelatedConceptionKindMainContentContainerLayout);
+        VerticalLayout directRelatedAttributeKindMainContentContainerLayout = new VerticalLayout();
+        directRelatedAttributeKindMainContentContainerLayout.setWidthFull();
+        directRelatedAttributeKindMainContentContainerLayout.setPadding(false);
+        directRelatedAttributeKindMainContentContainerLayout.setMargin(false);
+        directRelatedAttributeKindsContainer.add(directRelatedAttributeKindMainContentContainerLayout);
 
-        HorizontalLayout directRelatedConceptionKindFilterControlLayout = new HorizontalLayout();
-        directRelatedConceptionKindFilterControlLayout.setSpacing(false);
-        directRelatedConceptionKindFilterControlLayout.setMargin(false);
-        directRelatedConceptionKindMainContentContainerLayout.add(directRelatedConceptionKindFilterControlLayout);
+        HorizontalLayout directRelatedAttributeKindFilterControlLayout = new HorizontalLayout();
+        directRelatedAttributeKindFilterControlLayout.setSpacing(false);
+        directRelatedAttributeKindFilterControlLayout.setMargin(false);
+        directRelatedAttributeKindMainContentContainerLayout.add(directRelatedAttributeKindFilterControlLayout);
 
         SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
-        directRelatedConceptionKindFilterControlLayout.add(filterTitle);
-        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
+        directRelatedAttributeKindFilterControlLayout.add(filterTitle);
+        directRelatedAttributeKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
         filterTitle.setWidth(80, Unit.PIXELS);
 
         relationKindNameField = new TextField();
         relationKindNameField.setPlaceholder("关联关系类型名称");
         relationKindNameField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         relationKindNameField.setWidth(250,Unit.PIXELS);
-        directRelatedConceptionKindFilterControlLayout.add(relationKindNameField);
-        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, relationKindNameField);
+        directRelatedAttributeKindFilterControlLayout.add(relationKindNameField);
+        directRelatedAttributeKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, relationKindNameField);
 
         Icon plusIcon0 = new Icon(VaadinIcon.PLUS);
         plusIcon0.setSize("12px");
-        directRelatedConceptionKindFilterControlLayout.add(plusIcon0);
-        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, plusIcon0);
+        directRelatedAttributeKindFilterControlLayout.add(plusIcon0);
+        directRelatedAttributeKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, plusIcon0);
 
         relationDirectionSelect = new ComboBox();
         relationDirectionSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
@@ -205,56 +205,56 @@ public class RelatedAttributeKindsView extends VerticalLayout {
         relationDirectionSelect.setPlaceholder("关联关系方向");
         relationDirectionSelect.setWidth(120,Unit.PIXELS);
         relationDirectionSelect.setItems("FROM", "TO","TWO_WAY");
-        directRelatedConceptionKindFilterControlLayout.add(relationDirectionSelect);
+        directRelatedAttributeKindFilterControlLayout.add(relationDirectionSelect);
 
         Icon plusIcon1 = new Icon(VaadinIcon.PLUS);
         plusIcon1.setSize("12px");
-        directRelatedConceptionKindFilterControlLayout.add(plusIcon1);
-        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, plusIcon1);
+        directRelatedAttributeKindFilterControlLayout.add(plusIcon1);
+        directRelatedAttributeKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, plusIcon1);
 
-        conceptionKindNameField = new TextField();
-        conceptionKindNameField.setPlaceholder("相关属性类型名称");
-        conceptionKindNameField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        conceptionKindNameField.setWidth(250,Unit.PIXELS);
-        directRelatedConceptionKindFilterControlLayout.add(conceptionKindNameField);
-        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, conceptionKindNameField);
+        attributeKindNameField = new TextField();
+        attributeKindNameField.setPlaceholder("相关属性类型名称");
+        attributeKindNameField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        attributeKindNameField.setWidth(250,Unit.PIXELS);
+        directRelatedAttributeKindFilterControlLayout.add(attributeKindNameField);
+        directRelatedAttributeKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER, attributeKindNameField);
 
         Button searchRelationKindsButton = new Button("查找属性类型关联",new Icon(VaadinIcon.SEARCH));
         searchRelationKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         searchRelationKindsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        directRelatedConceptionKindFilterControlLayout.add(searchRelationKindsButton);
-        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER,searchRelationKindsButton);
+        directRelatedAttributeKindFilterControlLayout.add(searchRelationKindsButton);
+        directRelatedAttributeKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER,searchRelationKindsButton);
         searchRelationKindsButton.setWidth(140,Unit.PIXELS);
         searchRelationKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                filterConceptionKindLinks();
+                filterAttributeKindLinks();
             }
         });
 
         Icon divIcon = new Icon(VaadinIcon.LINE_V);
         divIcon.setSize("8px");
-        directRelatedConceptionKindFilterControlLayout.add(divIcon);
-        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+        directRelatedAttributeKindFilterControlLayout.add(divIcon);
+        directRelatedAttributeKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
 
         Button clearSearchCriteriaButton = new Button("清除查询条件",new Icon(VaadinIcon.ERASER));
         clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        directRelatedConceptionKindFilterControlLayout.add(clearSearchCriteriaButton);
-        directRelatedConceptionKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
+        directRelatedAttributeKindFilterControlLayout.add(clearSearchCriteriaButton);
+        directRelatedAttributeKindFilterControlLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
         clearSearchCriteriaButton.setWidth(120,Unit.PIXELS);
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                cancelFilterConceptionKindLinks();
+                cancelFilterAttributeKindLinks();
             }
         });
 
-        ComponentRenderer _toolBarComponentRenderer0 = new ComponentRenderer<>(conceptionKindAttachInfoVO -> {
+        ComponentRenderer _toolBarComponentRenderer0 = new ComponentRenderer<>(attributeKindAttachInfoVO -> {
             Icon queryIcon = LineAwesomeIconsSvg.COG_SOLID.create();
             queryIcon.setSize("18px");
             Button configRelationKind = new Button(queryIcon, event -> {
-                renderRelationKindDetailUI((AttributeKindAttachInfoVO)conceptionKindAttachInfoVO);
+                renderRelationKindDetailUI((AttributeKindAttachInfoVO)attributeKindAttachInfoVO);
             });
             configRelationKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configRelationKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -262,13 +262,13 @@ public class RelatedAttributeKindsView extends VerticalLayout {
 
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
-            Button configConceptionKind = new Button(configIcon, event -> {
-                AttributeKindAttachInfoVO attributeKindAttachInfoVO = (AttributeKindAttachInfoVO)conceptionKindAttachInfoVO;
-                renderAttributeKindDetailUI(attributeKindAttachInfoVO.getAttributeKindName(),attributeKindAttachInfoVO.getAttributeKindUID());
+            Button configAttributeKindAttachInfoVO_Kind = new Button(configIcon, event -> {
+                AttributeKindAttachInfoVO attributeKindAttachInfoVO_ = (AttributeKindAttachInfoVO)attributeKindAttachInfoVO;
+                renderAttributeKindDetailUI(attributeKindAttachInfoVO_.getAttributeKindName(),attributeKindAttachInfoVO_.getAttributeKindUID());
             });
-            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            configConceptionKind.setTooltipText("相关属性类型定义配置");
+            configAttributeKindAttachInfoVO_Kind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            configAttributeKindAttachInfoVO_Kind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            configAttributeKindAttachInfoVO_Kind.setTooltipText("相关属性类型定义配置");
 
             Icon linkIcon = LineAwesomeIconsSvg.LINK_SOLID.create();
             linkIcon.setSize("17px");
@@ -279,8 +279,8 @@ public class RelatedAttributeKindsView extends VerticalLayout {
             editLinkProperties.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    renderRelationEntityDetailUI(((AttributeKindAttachInfoVO) conceptionKindAttachInfoVO).relationKindName,
-                            ((AttributeKindAttachInfoVO) conceptionKindAttachInfoVO).getRelationEntityUID());
+                    renderRelationEntityDetailUI(((AttributeKindAttachInfoVO) attributeKindAttachInfoVO).relationKindName,
+                            ((AttributeKindAttachInfoVO) attributeKindAttachInfoVO).getRelationEntityUID());
                 }
             });
 
@@ -294,11 +294,11 @@ public class RelatedAttributeKindsView extends VerticalLayout {
             removeClassificationLink.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    renderDetachAttributeKindUI((AttributeKindAttachInfoVO)conceptionKindAttachInfoVO);
+                    renderDetachAttributeKindUI((AttributeKindAttachInfoVO)attributeKindAttachInfoVO);
                 }
             });
 
-            HorizontalLayout buttons = new HorizontalLayout(configRelationKind,configConceptionKind, editLinkProperties,removeClassificationLink);
+            HorizontalLayout buttons = new HorizontalLayout(configRelationKind,configAttributeKindAttachInfoVO_Kind, editLinkProperties,removeClassificationLink);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -307,41 +307,41 @@ public class RelatedAttributeKindsView extends VerticalLayout {
             return new VerticalLayout(buttons);
         });
 
-        directRelatedConceptionKindInfoGrid = new Grid<>();
-        directRelatedConceptionKindInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-        directRelatedConceptionKindInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        directRelatedConceptionKindInfoGrid.addComponentColumn(new RelationDirectionIconValueProvider()).setHeader("").setKey("idx_0").setFlexGrow(0).setWidth("35px").setResizable(false);
-        directRelatedConceptionKindInfoGrid.addColumn(AttributeKindAttachInfoVO::getRelationKindName).setHeader("关联关系类型名称").setKey("idx_1");
-        directRelatedConceptionKindInfoGrid.addColumn(AttributeKindAttachInfoVO::getAttributeKindName).setHeader("相关属性类型名称").setKey("idx_2");
-        directRelatedConceptionKindInfoGrid.addColumn(AttributeKindAttachInfoVO::getRelationData).setHeader("关联关系属性").setKey("idx_3");
-        directRelatedConceptionKindInfoGrid.addColumn(_toolBarComponentRenderer0).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("150px").setResizable(false);
-        directRelatedConceptionKindInfoGrid.appendFooterRow();
+        directRelatedAttributeKindInfoGrid = new Grid<>();
+        directRelatedAttributeKindInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        directRelatedAttributeKindInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        directRelatedAttributeKindInfoGrid.addComponentColumn(new RelationDirectionIconValueProvider()).setHeader("").setKey("idx_0").setFlexGrow(0).setWidth("35px").setResizable(false);
+        directRelatedAttributeKindInfoGrid.addColumn(AttributeKindAttachInfoVO::getRelationKindName).setHeader("关联关系类型名称").setKey("idx_1");
+        directRelatedAttributeKindInfoGrid.addColumn(AttributeKindAttachInfoVO::getAttributeKindName).setHeader("相关属性类型名称").setKey("idx_2");
+        directRelatedAttributeKindInfoGrid.addColumn(AttributeKindAttachInfoVO::getRelationData).setHeader("关联关系属性").setKey("idx_3");
+        directRelatedAttributeKindInfoGrid.addColumn(_toolBarComponentRenderer0).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("150px").setResizable(false);
+        directRelatedAttributeKindInfoGrid.appendFooterRow();
 
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.CONNECT,"关联关系类型名称");
-        directRelatedConceptionKindInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+        directRelatedAttributeKindInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.INPUT,"相关属性类型名称");
-        directRelatedConceptionKindInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
+        directRelatedAttributeKindInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"关联关系属性");
-        directRelatedConceptionKindInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
+        directRelatedAttributeKindInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
-        directRelatedConceptionKindInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_1_idx4);
+        directRelatedAttributeKindInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_1_idx4);
 
-        directRelatedConceptionKindMainContentContainerLayout.add(directRelatedConceptionKindInfoGrid);
+        directRelatedAttributeKindMainContentContainerLayout.add(directRelatedAttributeKindInfoGrid);
 
-        HorizontalLayout advancedConceptionKindsQueryMainContentContainerLayout = new HorizontalLayout();
-        advancedConceptionKindsQueryMainContentContainerLayout.setWidthFull();
-        advancedConceptionKindsQueryContainer.add(advancedConceptionKindsQueryMainContentContainerLayout);
+        HorizontalLayout advancedAttributeKindAttachInfoVO_KindsQueryMainContentContainerLayout = new HorizontalLayout();
+        advancedAttributeKindAttachInfoVO_KindsQueryMainContentContainerLayout.setWidthFull();
+        advancedAttributeKindsQueryContainer.add(advancedAttributeKindAttachInfoVO_KindsQueryMainContentContainerLayout);
 
-        VerticalLayout advancedConceptionKindsQueryLeftSideContainerLayout = new VerticalLayout();
-        advancedConceptionKindsQueryLeftSideContainerLayout.setWidth(700,Unit.PIXELS);
-        advancedConceptionKindsQueryLeftSideContainerLayout.setMargin(false);
-        advancedConceptionKindsQueryLeftSideContainerLayout.setPadding(false);
-        VerticalLayout advancedConceptionKindsQueryRightSideContainerLayout = new VerticalLayout();
-        advancedConceptionKindsQueryRightSideContainerLayout.setMargin(true);
-        advancedConceptionKindsQueryRightSideContainerLayout.setPadding(false);
+        VerticalLayout advancedAttributeKindAttachInfoVO_KindsQueryLeftSideContainerLayout = new VerticalLayout();
+        advancedAttributeKindAttachInfoVO_KindsQueryLeftSideContainerLayout.setWidth(700,Unit.PIXELS);
+        advancedAttributeKindAttachInfoVO_KindsQueryLeftSideContainerLayout.setMargin(false);
+        advancedAttributeKindAttachInfoVO_KindsQueryLeftSideContainerLayout.setPadding(false);
+        VerticalLayout advancedAttributeKindAttachInfoVO_KindsQueryRightSideContainerLayout = new VerticalLayout();
+        advancedAttributeKindAttachInfoVO_KindsQueryRightSideContainerLayout.setMargin(true);
+        advancedAttributeKindAttachInfoVO_KindsQueryRightSideContainerLayout.setPadding(false);
 
-        advancedConceptionKindsQueryMainContentContainerLayout.add(advancedConceptionKindsQueryLeftSideContainerLayout);
-        advancedConceptionKindsQueryMainContentContainerLayout.add(advancedConceptionKindsQueryRightSideContainerLayout);
+        advancedAttributeKindAttachInfoVO_KindsQueryMainContentContainerLayout.add(advancedAttributeKindAttachInfoVO_KindsQueryLeftSideContainerLayout);
+        advancedAttributeKindAttachInfoVO_KindsQueryMainContentContainerLayout.add(advancedAttributeKindAttachInfoVO_KindsQueryRightSideContainerLayout);
 
         ClassificationRelatedDataQueryCriteriaView.ClassificationRelatedDataQueryHelper classificationRelatedDataQueryHelper =
                 new ClassificationRelatedDataQueryCriteriaView.ClassificationRelatedDataQueryHelper() {
@@ -352,26 +352,26 @@ public class RelatedAttributeKindsView extends VerticalLayout {
                         currentAdvanceQueryIncludeOffspringClassifications = includeOffspringClassifications;
                         currentAdvanceQueryOffspringLevel = offspringLevel;
                         clearClassificationLinkRelationInfo();
-                        queryRelatedConceptionKind(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
+                        queryRelatedAttributeKindAttachInfoVO_Kind(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
                     }
                 };
         classificationRelatedDataQueryCriteriaView = new ClassificationRelatedDataQueryCriteriaView();
         classificationRelatedDataQueryCriteriaView.setClassificationRelatedDataQueryHelper(classificationRelatedDataQueryHelper);
-        advancedConceptionKindsQueryLeftSideContainerLayout.add(classificationRelatedDataQueryCriteriaView);
+        advancedAttributeKindAttachInfoVO_KindsQueryLeftSideContainerLayout.add(classificationRelatedDataQueryCriteriaView);
 
-        ComponentRenderer _toolBarComponentRenderer1 = new ComponentRenderer<>(conceptionKind -> {
+        ComponentRenderer _toolBarComponentRenderer1 = new ComponentRenderer<>(attributeKind -> {
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
-            Button configConceptionKind = new Button(configIcon, event -> {
-                if(conceptionKind instanceof AttributeKind){
-                    renderAttributeKindDetailUI(((AttributeKind)conceptionKind).getAttributeKindName(),((AttributeKind)conceptionKind).getAttributeKindUID());
+            Button configAttributeKind = new Button(configIcon, event -> {
+                if(attributeKind instanceof AttributeKind){
+                    renderAttributeKindDetailUI(((AttributeKind)attributeKind).getAttributeKindName(),((AttributeKind)attributeKind).getAttributeKindUID());
                 }
             });
-            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            configConceptionKind.setTooltipText("关联概念类型定义配置");
+            configAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            configAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            configAttributeKind.setTooltipText("关联概念类型定义配置");
 
-            HorizontalLayout buttons = new HorizontalLayout(configConceptionKind);
+            HorizontalLayout buttons = new HorizontalLayout(configAttributeKind);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -381,23 +381,23 @@ public class RelatedAttributeKindsView extends VerticalLayout {
             return new VerticalLayout(buttons);
         });
 
-        conceptionKindMetaInfoGrid = new Grid<>();
-        conceptionKindMetaInfoGrid.setWidth(700,Unit.PIXELS);
-        conceptionKindMetaInfoGrid.setHeight(600,Unit.PIXELS);
-        conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-        conceptionKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        conceptionKindMetaInfoGrid.addColumn(AttributeKind::getAttributeKindName).setHeader("属性类型名称").setKey("idx_0");
-        conceptionKindMetaInfoGrid.addColumn(AttributeKind::getAttributeKindDesc).setHeader("属性类型显示名称").setKey("idx_1");
-        conceptionKindMetaInfoGrid.addColumn(_toolBarComponentRenderer1).setHeader("操作").setKey("idx_2").setFlexGrow(0).setWidth("70px").setResizable(false);
+        attributeKindMetaInfoGrid = new Grid<>();
+        attributeKindMetaInfoGrid.setWidth(700,Unit.PIXELS);
+        attributeKindMetaInfoGrid.setHeight(600,Unit.PIXELS);
+        attributeKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        attributeKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        attributeKindMetaInfoGrid.addColumn(AttributeKind::getAttributeKindName).setHeader("属性类型名称").setKey("idx_0");
+        attributeKindMetaInfoGrid.addColumn(AttributeKind::getAttributeKindDesc).setHeader("属性类型显示名称").setKey("idx_1");
+        attributeKindMetaInfoGrid.addColumn(_toolBarComponentRenderer1).setHeader("操作").setKey("idx_2").setFlexGrow(0).setWidth("70px").setResizable(false);
 
         LightGridColumnHeader gridColumnHeader_2_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"属性类型名称");
-        conceptionKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_2_idx0).setSortable(true);
+        attributeKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_2_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader_2_idx1 = new LightGridColumnHeader(VaadinIcon.DESKTOP,"属性类型显示名称");
-        conceptionKindMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_2_idx1).setSortable(true);
+        attributeKindMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_2_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader_2_idx2 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
-        conceptionKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_2_idx2);
-        conceptionKindMetaInfoGrid.appendFooterRow();
-        conceptionKindMetaInfoGrid.addSelectionListener(new SelectionListener<Grid<AttributeKind>, AttributeKind>() {
+        attributeKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_2_idx2);
+        attributeKindMetaInfoGrid.appendFooterRow();
+        attributeKindMetaInfoGrid.addSelectionListener(new SelectionListener<Grid<AttributeKind>, AttributeKind>() {
             @Override
             public void selectionChange(SelectionEvent<Grid<AttributeKind>, AttributeKind> selectionEvent) {
                 Set<AttributeKind> selectedItemSet = selectionEvent.getAllSelectedItems();
@@ -405,19 +405,19 @@ public class RelatedAttributeKindsView extends VerticalLayout {
                     //unselected item, reset link detail info
                     clearClassificationLinkRelationInfo();
                 }else{
-                    AttributeKind selectedConceptionKind = selectedItemSet.iterator().next();
-                    renderSelectedConceptionKindLinkInfo(selectedConceptionKind);
+                    AttributeKind selectedAttributeKind = selectedItemSet.iterator().next();
+                    renderSelectedAttributeKindLinkInfo(selectedAttributeKind);
                 }
             }
         });
 
-        advancedConceptionKindsQueryLeftSideContainerLayout.add(conceptionKindMetaInfoGrid);
+        advancedAttributeKindAttachInfoVO_KindsQueryLeftSideContainerLayout.add(attributeKindMetaInfoGrid);
 
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(LineAwesomeIconsSvg.LINK_SOLID.create(),"关联链接信息");
-        advancedConceptionKindsQueryRightSideContainerLayout.add(filterTitle2);
+        advancedAttributeKindAttachInfoVO_KindsQueryRightSideContainerLayout.add(filterTitle2);
 
         HorizontalLayout classificationLinkNameInfoContainer = new HorizontalLayout();
-        advancedConceptionKindsQueryRightSideContainerLayout.add(classificationLinkNameInfoContainer);
+        advancedAttributeKindAttachInfoVO_KindsQueryRightSideContainerLayout.add(classificationLinkNameInfoContainer);
         Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
         relationKindIcon.setSize("16px");
         relationKindIcon.getStyle().set("padding-right","3px");
@@ -431,7 +431,7 @@ public class RelatedAttributeKindsView extends VerticalLayout {
         classificationLinkNameInfoContainer.setVerticalComponentAlignment(Alignment.CENTER,classificationLinkRelationKindLabel);
 
         HorizontalLayout classificationLinkEntityUIDInfoContainer = new HorizontalLayout();
-        advancedConceptionKindsQueryRightSideContainerLayout.add(classificationLinkEntityUIDInfoContainer);
+        advancedAttributeKindAttachInfoVO_KindsQueryRightSideContainerLayout.add(classificationLinkEntityUIDInfoContainer);
         Icon linkRelationEntityIcon = VaadinIcon.KEY_O.create();
         linkRelationEntityIcon.setSize("18px");
         linkRelationEntityIcon.getStyle().set("padding-right","3px");
@@ -463,11 +463,11 @@ public class RelatedAttributeKindsView extends VerticalLayout {
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"关系实体属性");
         infoTitle1.getStyle().set("padding-top","15px");
-        advancedConceptionKindsQueryRightSideContainerLayout.add(infoTitle1);
+        advancedAttributeKindAttachInfoVO_KindsQueryRightSideContainerLayout.add(infoTitle1);
         HorizontalLayout horizontalDiv02 = new HorizontalLayout();
         horizontalDiv02.setWidthFull();
         horizontalDiv02.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
-        advancedConceptionKindsQueryRightSideContainerLayout.add(horizontalDiv02);
+        advancedAttributeKindAttachInfoVO_KindsQueryRightSideContainerLayout.add(horizontalDiv02);
 
         classificationLinkEntityAttributesInfoGrid = new Grid<>();
         classificationLinkEntityAttributesInfoGrid.setWidth(100, Unit.PERCENTAGE);
@@ -480,12 +480,12 @@ public class RelatedAttributeKindsView extends VerticalLayout {
         LightGridColumnHeader gridColumnHeader_3_idx1 = new LightGridColumnHeader(VaadinIcon.INPUT,"属性值");
         classificationLinkEntityAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_3_idx1).setSortable(true);
         classificationLinkEntityAttributesInfoGrid.setHeight(400,Unit.PIXELS);
-        advancedConceptionKindsQueryRightSideContainerLayout.add(classificationLinkEntityAttributesInfoGrid);
+        advancedAttributeKindAttachInfoVO_KindsQueryRightSideContainerLayout.add(classificationLinkEntityAttributesInfoGrid);
     }
 
     public void setHeight(int viewHeight){
-        this.conceptionKindMetaInfoGrid.setHeight(viewHeight-125, Unit.PIXELS);
-        this.directRelatedConceptionKindInfoGrid.setHeight(viewHeight-125,Unit.PIXELS);
+        this.attributeKindMetaInfoGrid.setHeight(viewHeight-125, Unit.PIXELS);
+        this.directRelatedAttributeKindInfoGrid.setHeight(viewHeight-125,Unit.PIXELS);
     }
 
     public void setTotalCount(int totalCount){
@@ -495,14 +495,14 @@ public class RelatedAttributeKindsView extends VerticalLayout {
     public void loadDirectRelatedAttributeKindsInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         Classification targetClassification = coreRealm.getClassification(this.classificationName);
-        List<AttributeKindAttachInfo> directRelatedConceptionKindList = targetClassification.getAllDirectRelatedAttributeKindsInfo();
-        List<AttributeKindAttachInfoVO> conceptionKindAttachInfoVOList = new ArrayList<>();
-        for(AttributeKindAttachInfo currentConceptionKindAttachInfo:directRelatedConceptionKindList){
-            conceptionKindAttachInfoVOList.add(new AttributeKindAttachInfoVO(currentConceptionKindAttachInfo));
+        List<AttributeKindAttachInfo> directRelatedAttributeKindList = targetClassification.getAllDirectRelatedAttributeKindsInfo();
+        List<AttributeKindAttachInfoVO> attributeKindAttachInfoVOList = new ArrayList<>();
+        for(AttributeKindAttachInfo currentAttributeKindAttachInfo:directRelatedAttributeKindList){
+            attributeKindAttachInfoVOList.add(new AttributeKindAttachInfoVO(currentAttributeKindAttachInfo));
         }
-        this.directRelatedConceptionKindInfoGridListDataView = this.directRelatedConceptionKindInfoGrid.setItems(conceptionKindAttachInfoVOList);
-        this.directRelatedConceptionKindInfoGridListDataView.addFilter(item->{
-            String conceptionKindName = item.getAttributeKindName();
+        this.directRelatedAttributeKindInfoGridListDataView = this.directRelatedAttributeKindInfoGrid.setItems(attributeKindAttachInfoVOList);
+        this.directRelatedAttributeKindInfoGridListDataView.addFilter(item->{
+            String attributeKindName = item.getAttributeKindName();
             String relationKindName = item.getRelationKindName();
             RelationDirection relationDirection = item.getRelationDirection();
 
@@ -515,12 +515,12 @@ public class RelatedAttributeKindsView extends VerticalLayout {
                 }
             }
 
-            boolean conceptionKindNameFilterResult = true;
-            if(!conceptionKindNameField.getValue().trim().equals("")){
-                if(conceptionKindName.contains(conceptionKindNameField.getValue().trim())){
-                    conceptionKindNameFilterResult = true;
+            boolean attributeKindNameFilterResult = true;
+            if(!attributeKindNameField.getValue().trim().equals("")){
+                if(attributeKindName.contains(attributeKindNameField.getValue().trim())){
+                    attributeKindNameFilterResult = true;
                 }else{
-                    conceptionKindNameFilterResult = false;
+                    attributeKindNameFilterResult = false;
                 }
             }
 
@@ -535,25 +535,25 @@ public class RelatedAttributeKindsView extends VerticalLayout {
                     }
                 }
             }
-            return relationKindNameFilterResult & conceptionKindNameFilterResult & relationDirectionFilterResult;
+            return relationKindNameFilterResult & attributeKindNameFilterResult & relationDirectionFilterResult;
         });
     }
 
-    private void filterConceptionKindLinks(){
+    private void filterAttributeKindLinks(){
         String relationKindFilterValue = relationKindNameField.getValue().trim();
-        String conceptionKindFilterValue = conceptionKindNameField.getValue().trim();
-        if(relationKindFilterValue.equals("") & conceptionKindFilterValue.equals("") & relationDirectionSelect.getValue() == null){
+        String attributeKindFilterValue = attributeKindNameField.getValue().trim();
+        if(relationKindFilterValue.equals("") & attributeKindFilterValue.equals("") & relationDirectionSelect.getValue() == null){
             CommonUIOperationUtil.showPopupNotification("请输入或选择关系类型名称 和/或 概念类型名称 和/或 关联关系方向", NotificationVariant.LUMO_WARNING);
         }else{
-            this.directRelatedConceptionKindInfoGridListDataView.refreshAll();
+            this.directRelatedAttributeKindInfoGridListDataView.refreshAll();
         }
     }
 
-    private void cancelFilterConceptionKindLinks(){
+    private void cancelFilterAttributeKindLinks(){
         relationKindNameField.setValue("");
-        conceptionKindNameField.setValue("");
+        attributeKindNameField.setValue("");
         relationDirectionSelect.setValue(null);
-        this.directRelatedConceptionKindInfoGridListDataView.refreshAll();
+        this.directRelatedAttributeKindInfoGridListDataView.refreshAll();
     }
 
     private void renderRelationKindDetailUI(AttributeKindAttachInfoVO attributeKindAttachInfoVO){
@@ -647,8 +647,8 @@ public class RelatedAttributeKindsView extends VerticalLayout {
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout2);
-        NativeLabel conceptionKindNameLabel = new NativeLabel(relationKindName);
-        titleDetailLayout.add(conceptionKindNameLabel);
+        NativeLabel attributeKindNameLabel = new NativeLabel(relationKindName);
+        titleDetailLayout.add(attributeKindNameLabel);
 
         HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
         spaceDivLayout3.setWidth(5,Unit.PIXELS);
@@ -709,17 +709,17 @@ public class RelatedAttributeKindsView extends VerticalLayout {
     private void doDetachClassificationLink(AttributeKindAttachInfoVO attributeKindAttachInfoVO, ConfirmWindow confirmWindow){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         AttributeKind targetAttributeKind = coreRealm.getAttributeKind(attributeKindAttachInfoVO.getAttributeKindUID());
-        RelationDirection conceptionKindViewRelationDirection = RelationDirection.TWO_WAY;
+        RelationDirection attributeKindViewRelationDirection = RelationDirection.TWO_WAY;
         switch(attributeKindAttachInfoVO.relationDirection){
-            case FROM -> conceptionKindViewRelationDirection = RelationDirection.TO;
-            case TO -> conceptionKindViewRelationDirection = RelationDirection.FROM;
+            case FROM -> attributeKindViewRelationDirection = RelationDirection.TO;
+            case TO -> attributeKindViewRelationDirection = RelationDirection.FROM;
         }
         try {
-            boolean detachResult = targetAttributeKind.detachClassification(this.classificationName,attributeKindAttachInfoVO.getRelationKindName(),conceptionKindViewRelationDirection);
+            boolean detachResult = targetAttributeKind.detachClassification(this.classificationName,attributeKindAttachInfoVO.getRelationKindName(),attributeKindViewRelationDirection);
             if(detachResult){
                 CommonUIOperationUtil.showPopupNotification("删除分类关联 "+ this.classificationName+" - ["+attributeKindAttachInfoVO.relationKindName+"] -"+attributeKindAttachInfoVO.getAttributeKindName() +" 成功", NotificationVariant.LUMO_SUCCESS);
                 confirmWindow.closeConfirmWindow();
-                ListDataProvider dataProvider=(ListDataProvider)directRelatedConceptionKindInfoGrid.getDataProvider();
+                ListDataProvider dataProvider=(ListDataProvider) directRelatedAttributeKindInfoGrid.getDataProvider();
                 dataProvider.getItems().remove(attributeKindAttachInfoVO);
                 dataProvider.refreshAll();
             }else{
@@ -740,28 +740,28 @@ public class RelatedAttributeKindsView extends VerticalLayout {
         currentSelectedClassificationLinkEntityUID = null;
     }
 
-    private void queryRelatedConceptionKind(String relationKindName, RelationDirection relationDirection, boolean includeOffspringClassifications, int offspringLevel){
+    private void queryRelatedAttributeKindAttachInfoVO_Kind(String relationKindName, RelationDirection relationDirection, boolean includeOffspringClassifications, int offspringLevel){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         Classification targetClassification = coreRealm.getClassification(this.classificationName);
         try {
             List<AttributeKind>  attributeKindList = targetClassification.getRelatedAttributeKinds(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
-            conceptionKindMetaInfoGrid.setItems(attributeKindList);
+            attributeKindMetaInfoGrid.setItems(attributeKindList);
             CommonUIOperationUtil.showPopupNotification("查询关联概念类型成功,查询返回 "+attributeKindList.size()+" 项关联属性类型", NotificationVariant.LUMO_SUCCESS);
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void renderSelectedConceptionKindLinkInfo(AttributeKind selectedConceptionKind){
+    private void renderSelectedAttributeKindLinkInfo(AttributeKind selectedAttributeKind){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         Classification currentClassification = coreRealm.getClassification(this.classificationName);
         RelationAttachInfo targetRelationAttachInfo = null;
         if(!currentAdvanceQueryIncludeOffspringClassifications){
-            List<AttributeKindAttachInfo> conceptionKindAttachInfoList = currentClassification.getAllDirectRelatedAttributeKindsInfo();
-            for(AttributeKindAttachInfo currentConceptionKindAttachInfo:conceptionKindAttachInfoList){
-                RelationAttachInfo relationAttachInfo = currentConceptionKindAttachInfo.getRelationAttachInfo();
-                AttributeKind conceptionKind = currentConceptionKindAttachInfo.getAttachedAttributeKind();
-                if(selectedConceptionKind.getAttributeKindUID().equals(conceptionKind.getAttributeKindUID()) &&
+            List<AttributeKindAttachInfo> attributeKindAttachInfoList = currentClassification.getAllDirectRelatedAttributeKindsInfo();
+            for(AttributeKindAttachInfo currentAttributeKindAttachInfo:attributeKindAttachInfoList){
+                RelationAttachInfo relationAttachInfo = currentAttributeKindAttachInfo.getRelationAttachInfo();
+                AttributeKind attributeKind = currentAttributeKindAttachInfo.getAttachedAttributeKind();
+                if(selectedAttributeKind.getAttributeKindUID().equals(attributeKind.getAttributeKindUID()) &&
                         currentAdvanceQueryRelationKindName.equals(relationAttachInfo.getRelationKind()) &&
                         currentAdvanceQueryRelationDirection.toString().equals(relationAttachInfo.getRelationDirection().toString())
                 ){
@@ -769,8 +769,8 @@ public class RelatedAttributeKindsView extends VerticalLayout {
                 }
             }
         }else{
-            AttributeKind targetConceptionKind = coreRealm.getAttributeKind(selectedConceptionKind.getAttributeKindUID());
-            List<ClassificationAttachInfo> classificationAttachInfoList = targetConceptionKind.getAllAttachedClassificationsInfo();
+            AttributeKind targetAttributeKind = coreRealm.getAttributeKind(selectedAttributeKind.getAttributeKindUID());
+            List<ClassificationAttachInfo> classificationAttachInfoList = targetAttributeKind.getAllAttachedClassificationsInfo();
             for(ClassificationAttachInfo currentClassificationAttachInfo:classificationAttachInfoList){
                 RelationAttachInfo relationAttachInfo = currentClassificationAttachInfo.getRelationAttachInfo();
                 Classification relatedClassification = currentClassificationAttachInfo.getAttachedClassification();
