@@ -2,6 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.classificationManagement
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -26,18 +27,19 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.function.ValueProvider;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeKindAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
-import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
-import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
-import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
+import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.maintainAttributeKind.AttributeKindDetailUI;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationKind.RelationKindDetailUI;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -68,28 +70,16 @@ public class RelatedAttributeKindsView extends VerticalLayout {
     private String currentSelectedClassificationLinkEntityKind;
     private String currentSelectedClassificationLinkEntityUID;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private class AttributeKindAttachInfoVO {
         private  String attributeKindName;
+        private  String attributeKindUID;
         private String relationKindName;
         private RelationDirection relationDirection;
         private Map<String, Object> relationData;
         private String relationEntityUID;
         public AttributeKindAttachInfoVO(AttributeKindAttachInfo attributeKindAttachInfo){
             this.attributeKindName = attributeKindAttachInfo.getAttachedAttributeKind().getAttributeKindName();
+            this.attributeKindUID = attributeKindAttachInfo.getAttachedAttributeKind().getAttributeKindUID();
             this.relationKindName = attributeKindAttachInfo.getRelationAttachInfo().getRelationKind();
             this.relationData = attributeKindAttachInfo.getRelationAttachInfo().getRelationData();
             this.relationDirection = attributeKindAttachInfo.getRelationAttachInfo().getRelationDirection();
@@ -118,6 +108,10 @@ public class RelatedAttributeKindsView extends VerticalLayout {
 
         public void setRelationEntityUID(String relationEntityUID) {
             this.relationEntityUID = relationEntityUID;
+        }
+
+        public String getAttributeKindUID() {
+            return attributeKindUID;
         }
     }
 
@@ -259,7 +253,7 @@ public class RelatedAttributeKindsView extends VerticalLayout {
             Icon queryIcon = LineAwesomeIconsSvg.COG_SOLID.create();
             queryIcon.setSize("18px");
             Button configRelationKind = new Button(queryIcon, event -> {
-                //renderRelationKindDetailUI((RelatedConceptionKindsView.ConceptionKindAttachInfoVO)conceptionKindAttachInfoVO);
+                renderRelationKindDetailUI((AttributeKindAttachInfoVO)conceptionKindAttachInfoVO);
             });
             configRelationKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configRelationKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -268,11 +262,11 @@ public class RelatedAttributeKindsView extends VerticalLayout {
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
             Button configConceptionKind = new Button(configIcon, event -> {
-                //renderConceptionKindDetailUI(((RelatedConceptionKindsView.ConceptionKindAttachInfoVO)conceptionKindAttachInfoVO).conceptionKindName);
+                renderAttributeKindDetailUI((AttributeKindAttachInfoVO)conceptionKindAttachInfoVO);
             });
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            configConceptionKind.setTooltipText("相关概念类型定义配置");
+            configConceptionKind.setTooltipText("相关属性类型定义配置");
 
             Icon linkIcon = LineAwesomeIconsSvg.LINK_SOLID.create();
             linkIcon.setSize("17px");
@@ -283,8 +277,8 @@ public class RelatedAttributeKindsView extends VerticalLayout {
             editLinkProperties.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    //renderRelationEntityDetailUI(((RelatedConceptionKindsView.ConceptionKindAttachInfoVO) conceptionKindAttachInfoVO).relationKindName,
-                    //        ((RelatedConceptionKindsView.ConceptionKindAttachInfoVO) conceptionKindAttachInfoVO).getRelationEntityUID());
+                    renderRelationEntityDetailUI(((AttributeKindAttachInfoVO) conceptionKindAttachInfoVO).relationKindName,
+                            ((AttributeKindAttachInfoVO) conceptionKindAttachInfoVO).getRelationEntityUID());
                 }
             });
 
@@ -575,6 +569,136 @@ public class RelatedAttributeKindsView extends VerticalLayout {
         relationDirectionSelect.setValue(null);
         this.directRelatedConceptionKindInfoGridListDataView.refreshAll();
     }
+
+    private void renderRelationKindDetailUI(AttributeKindAttachInfoVO attributeKindAttachInfoVO){
+        RelationKindDetailUI relationKindDetailUI = new RelationKindDetailUI(attributeKindAttachInfoVO.getRelationKindName());
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+        relationKindIcon.setSize("10px");
+        titleDetailLayout.add(relationKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel relationKindName = new NativeLabel(attributeKindAttachInfoVO.getRelationKindName());
+        titleDetailLayout.add(relationKindName);
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"关系类型配置",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(relationKindDetailUI);
+        fullScreenWindow.show();
+    }
+
+    private void renderAttributeKindDetailUI(AttributeKindAttachInfoVO attributeKindAttachInfoVO){
+        AttributeKindDetailUI attributeKindDetailUI = new AttributeKindDetailUI(attributeKindAttachInfoVO.getAttributeKindUID());
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon attributeKindIcon = VaadinIcon.INPUT.create();
+        attributeKindIcon.setSize("10px");
+        titleDetailLayout.add(attributeKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel attributeKindName = new NativeLabel(attributeKindAttachInfoVO.getAttributeKindName()+" ( ");
+        titleDetailLayout.add(attributeKindName);
+
+        Icon _UIDIcon = VaadinIcon.KEY_O.create();
+        _UIDIcon.setSize("10px");
+        titleDetailLayout.add(_UIDIcon);
+        NativeLabel attributeKindUID = new NativeLabel(" "+attributeKindAttachInfoVO.getAttributeKindUID()+")");
+        titleDetailLayout.add(attributeKindUID);
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"属性类型配置",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(attributeKindDetailUI);
+        fullScreenWindow.show();
+    }
+
+    private void renderRelationEntityDetailUI(String relationKindName,String relationEntityUID){
+        RelationEntityDetailUI relationEntityDetailUI = new RelationEntityDetailUI(relationKindName,relationEntityUID);
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+        relationKindIcon.setSize("10px");
+        titleDetailLayout.add(relationKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(relationKindName);
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon relationEntityIcon = VaadinIcon.KEY_O.create();
+        relationEntityIcon.setSize("10px");
+        titleDetailLayout.add(relationEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel relationEntityUIDLabel = new NativeLabel(relationEntityUID);
+        titleDetailLayout.add(relationEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"关系实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(relationEntityDetailUI);
+        relationEntityDetailUI.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
+    }
+
+
+
+
+
+
 
     private class RelationDirectionIconValueProvider implements ValueProvider<AttributeKindAttachInfoVO,Icon> {
         @Override
