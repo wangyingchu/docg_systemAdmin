@@ -23,16 +23,15 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.function.ValueProvider;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeKindAttachInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
@@ -292,7 +291,7 @@ public class RelatedAttributeKindsView extends VerticalLayout {
             removeClassificationLink.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    //renderDetachConceptionKindUI((RelatedConceptionKindsView.ConceptionKindAttachInfoVO)conceptionKindAttachInfoVO);
+                    renderDetachAttributeKindUI((AttributeKindAttachInfoVO)conceptionKindAttachInfoVO);
                 }
             });
 
@@ -325,20 +324,6 @@ public class RelatedAttributeKindsView extends VerticalLayout {
         directRelatedConceptionKindInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_1_idx4);
 
         directRelatedConceptionKindMainContentContainerLayout.add(directRelatedConceptionKindInfoGrid);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         HorizontalLayout advancedConceptionKindsQueryMainContentContainerLayout = new HorizontalLayout();
         advancedConceptionKindsQueryMainContentContainerLayout.setWidthFull();
@@ -694,7 +679,55 @@ public class RelatedAttributeKindsView extends VerticalLayout {
         fullScreenWindow.show();
     }
 
+    private void renderDetachAttributeKindUI(AttributeKindAttachInfoVO attributeKindAttachInfoVO){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认删除分类关联",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
 
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行删除分类关联 "+ this.classificationName+" - ["+attributeKindAttachInfoVO.relationKindName+"] -"+attributeKindAttachInfoVO.attributeKindName+" 的操作",actionButtonList,400,180);
+        confirmWindow.open();
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doDetachClassificationLink(attributeKindAttachInfoVO,confirmWindow);
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doDetachClassificationLink(AttributeKindAttachInfoVO attributeKindAttachInfoVO, ConfirmWindow confirmWindow){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        AttributeKind targetAttributeKind = coreRealm.getAttributeKind(attributeKindAttachInfoVO.getAttributeKindUID());
+        RelationDirection conceptionKindViewRelationDirection = RelationDirection.TWO_WAY;
+        switch(attributeKindAttachInfoVO.relationDirection){
+            case FROM -> conceptionKindViewRelationDirection = RelationDirection.TO;
+            case TO -> conceptionKindViewRelationDirection = RelationDirection.FROM;
+        }
+        try {
+            boolean detachResult = targetAttributeKind.detachClassification(this.classificationName,attributeKindAttachInfoVO.getRelationKindName(),conceptionKindViewRelationDirection);
+            if(detachResult){
+                CommonUIOperationUtil.showPopupNotification("删除分类关联 "+ this.classificationName+" - ["+attributeKindAttachInfoVO.relationKindName+"] -"+attributeKindAttachInfoVO.getAttributeKindName() +" 成功", NotificationVariant.LUMO_SUCCESS);
+                confirmWindow.closeConfirmWindow();
+                ListDataProvider dataProvider=(ListDataProvider)directRelatedConceptionKindInfoGrid.getDataProvider();
+                dataProvider.getItems().remove(attributeKindAttachInfoVO);
+                dataProvider.refreshAll();
+            }else{
+                CommonUIOperationUtil.showPopupNotification("删除分类关联 "+ this.classificationName+" - ["+attributeKindAttachInfoVO.relationKindName+"] -"+attributeKindAttachInfoVO.getAttributeKindName() +" 失败", NotificationVariant.LUMO_ERROR);
+            }
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 
