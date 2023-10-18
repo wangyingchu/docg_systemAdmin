@@ -556,11 +556,11 @@ public class RelatedRelationKindsView extends VerticalLayout {
         Classification currentClassification = coreRealm.getClassification(this.classificationName);
         RelationAttachInfo targetRelationAttachInfo = null;
         if(!currentAdvanceQueryIncludeOffspringClassifications){
-            List<ConceptionKindAttachInfo> conceptionKindAttachInfoList = currentClassification.getAllDirectRelatedConceptionKindsInfo();
-            for(ConceptionKindAttachInfo currentConceptionKindAttachInfo:conceptionKindAttachInfoList){
+            List<RelationKindAttachInfo> relationKindAttachInfoList = currentClassification.getAllDirectRelatedRelationKindsInfo();
+            for(RelationKindAttachInfo currentConceptionKindAttachInfo:relationKindAttachInfoList){
                 RelationAttachInfo relationAttachInfo = currentConceptionKindAttachInfo.getRelationAttachInfo();
-                ConceptionKind conceptionKind = currentConceptionKindAttachInfo.getAttachedConceptionKind();
-                if(selectedConceptionKind.getRelationKindName().equals(conceptionKind.getConceptionKindName()) &&
+                RelationKind relationKind = currentConceptionKindAttachInfo.getAttachedRelationKind();
+                if(selectedConceptionKind.getRelationKindName().equals(relationKind.getRelationKindName()) &&
                         currentAdvanceQueryRelationKindName.equals(relationAttachInfo.getRelationKind()) &&
                         currentAdvanceQueryRelationDirection.toString().equals(relationAttachInfo.getRelationDirection().toString())
                 ){
@@ -568,8 +568,8 @@ public class RelatedRelationKindsView extends VerticalLayout {
                 }
             }
         }else{
-            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(selectedConceptionKind.getRelationKindName());
-            List<ClassificationAttachInfo> classificationAttachInfoList = targetConceptionKind.getAllAttachedClassificationsInfo();
+            RelationKind targetRelationKind = coreRealm.getRelationKind(selectedConceptionKind.getRelationKindName());
+            List<ClassificationAttachInfo> classificationAttachInfoList = targetRelationKind.getAllAttachedClassificationsInfo();
             for(ClassificationAttachInfo currentClassificationAttachInfo:classificationAttachInfoList){
                 RelationAttachInfo relationAttachInfo = currentClassificationAttachInfo.getRelationAttachInfo();
                 Classification relatedClassification = currentClassificationAttachInfo.getAttachedClassification();
