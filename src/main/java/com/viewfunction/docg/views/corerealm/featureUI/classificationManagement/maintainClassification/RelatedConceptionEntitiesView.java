@@ -20,6 +20,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServi
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -35,7 +36,9 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
     private String classificationName;
     private NumberFormat numberFormat;
     private PrimaryKeyValueDisplayItem conceptionEntitiesCountDisplayItem;
-    private Grid<ConceptionEntityValue> queryResultGrid;
+    //private Grid<ConceptionEntityValue> queryResultGrid;
+    private Grid<ConceptionEntity> queryResultGrid;
+
     private final String _rowIndexPropertyName = "ROW_INDEX";
     private List<String> currentRowKeyList;
 
@@ -107,10 +110,41 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
 
 
 
+        queryResultGrid = new Grid<>();
+        queryResultGrid.setWidth(100, Unit.PERCENTAGE);
+        queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        queryResultGrid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
+        queryResultGrid.addColumn(new ValueProvider<ConceptionEntity, Object>() {
+            @Override
+            public Object apply(ConceptionEntity conceptionEntityValue) {
+              //  return conceptionEntityValue.getEntityAttributesValue().get(_rowIndexPropertyName);
+                return "1";
+            }
+        }).setHeader("").setHeader("IDX").setKey("idx").setFlexGrow(0).setWidth("75px").setResizable(false);
+        queryResultGrid.addComponentColumn(new ConceptionEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("120px").setResizable(false);
+        queryResultGrid.addColumn(ConceptionEntity::getConceptionEntityUID).setHeader(" EntityUID").setKey("idx_1").setFlexGrow(1).setWidth("150px").setResizable(false);
+
+        LightGridColumnHeader gridColumnHeader_idx = new LightGridColumnHeader(VaadinIcon.LIST_OL,"");
+        queryResultGrid.getColumnByKey("idx").setHeader(gridColumnHeader_idx).setSortable(false);
+        LightGridColumnHeader gridColumnHeader_idx1 = new LightGridColumnHeader(VaadinIcon.WRENCH,"操作");
+        queryResultGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx1).setSortable(false);
+        LightGridColumnHeader gridColumnHeader_idx0 = new LightGridColumnHeader(VaadinIcon.KEY_O,"概念实体UID");
+        queryResultGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx0).setSortable(false).setResizable(true);
+        add(queryResultGrid);
+
+        queryResultGrid.addItemDoubleClickListener(new ComponentEventListener<ItemDoubleClickEvent<ConceptionEntity>>() {
+            @Override
+            public void onComponentEvent(ItemDoubleClickEvent<ConceptionEntity> conceptionEntityValueItemDoubleClickEvent) {
+                ConceptionEntity targetConceptionEntityValue = conceptionEntityValueItemDoubleClickEvent.getItem();
+                if(targetConceptionEntityValue!= null){
+                    //renderConceptionEntityUI(targetConceptionEntityValue);
+                }
+            }
+        });
 
 
 
-
+/*
         queryResultGrid = new Grid<>();
         queryResultGrid.setWidth(100, Unit.PERCENTAGE);
         queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
@@ -141,7 +175,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                 }
             }
         });
-
+*/
         this.currentRowKeyList = new ArrayList<>();
 
 
@@ -172,8 +206,8 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
         Classification targetClassification = coreRealm.getClassification(this.classificationName);
         try {
             QueryParameters queryParameters = new QueryParameters();
-            targetClassification.getRelatedConceptionEntities(relationKindName,relationDirection,queryParameters,includeOffspringClassifications,offspringLevel);
-
+            List<ConceptionEntity> conceptionEntitiesList = targetClassification.getRelatedConceptionEntities(relationKindName,relationDirection,queryParameters,includeOffspringClassifications,offspringLevel);
+            queryResultGrid.setItems(conceptionEntitiesList);
 
             //List<AttributesViewKind> attributesViewKindList = targetClassification.getRelatedAttributesViewKinds(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
             //attributesViewKindMetaInfoGrid.setItems(attributesViewKindList);
@@ -186,12 +220,62 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
 
 
 
+    private class ConceptionEntityActionButtonsValueProvider implements ValueProvider<ConceptionEntity,HorizontalLayout>{
+        @Override
+        public HorizontalLayout apply(ConceptionEntity conceptionEntityValue) {
+            HorizontalLayout actionButtonContainerLayout = new HorizontalLayout();
+            actionButtonContainerLayout.setMargin(false);
+            actionButtonContainerLayout.setSpacing(false);
+            Button showDetailButton = new Button();
+            showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            showDetailButton.setIcon(VaadinIcon.EYE.create());
+            Tooltips.getCurrent().setTooltip(showDetailButton, "显示概念实体详情");
+            actionButtonContainerLayout.add(showDetailButton);
+            showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(conceptionEntityValue != null){
+                        //renderConceptionEntityUI(conceptionEntityValue);
+                    }
+                }
+            });
+
+            Button addToProcessListButton = new Button();
+            addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            addToProcessListButton.setIcon(VaadinIcon.INBOX.create());
+            Tooltips.getCurrent().setTooltip(addToProcessListButton, "加入待处理数据列表");
+            actionButtonContainerLayout.add(addToProcessListButton);
+            addToProcessListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(conceptionEntityValue != null){
+                        //addConceptionEntityToProcessingList(conceptionEntityValue);
+                    }
+                }
+            });
+
+            Button deleteButton = new Button();
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
+            deleteButton.setIcon(VaadinIcon.TRASH.create());
+            Tooltips.getCurrent().setTooltip(deleteButton, "删除概念实体");
+            actionButtonContainerLayout.add(deleteButton);
+            deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(conceptionEntityValue != null){
+                        //deleteConceptionEntity(conceptionEntityValue);
+                    }
+                }
+            });
+            return actionButtonContainerLayout;
+        }
+    }
 
 
 
 
-
-
+/*
 
     private class ConceptionEntityActionButtonsValueProvider implements ValueProvider<ConceptionEntityValue,HorizontalLayout>{
         @Override
@@ -244,4 +328,5 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
             return actionButtonContainerLayout;
         }
     }
+    */
 }
