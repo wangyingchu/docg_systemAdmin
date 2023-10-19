@@ -369,7 +369,7 @@ public class RelatedAttributeKindsView extends VerticalLayout {
             });
             configAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            configAttributeKind.setTooltipText("关联概念类型定义配置");
+            configAttributeKind.setTooltipText("关联属性类型定义配置");
 
             HorizontalLayout buttons = new HorizontalLayout(configAttributeKind);
             buttons.setPadding(false);

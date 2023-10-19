@@ -31,6 +31,8 @@ import com.vaadin.flow.function.ValueProvider;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributesViewKindAttachInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ClassificationAttachInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
@@ -55,7 +57,7 @@ public class RelatedAttributesViewKindsView extends VerticalLayout {
     private ComboBox<String> relationDirectionSelect;
     private TextField attributeKindNameField;
     private Grid<AttributesViewKindAttachInfoVO> directRelatedAttributeKindInfoGrid;
-    private Grid<AttributeKind> attributeKindMetaInfoGrid;
+    private Grid<AttributesViewKind> attributeKindMetaInfoGrid;
     private GridListDataView<AttributesViewKindAttachInfoVO> directRelatedAttributeKindInfoGridListDataView;
     private ClassificationRelatedDataQueryCriteriaView classificationRelatedDataQueryCriteriaView;
     private String currentAdvanceQueryRelationKindName;
@@ -262,7 +264,8 @@ public class RelatedAttributesViewKindsView extends VerticalLayout {
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
             Button configAttributeKindAttachInfoVO_Kind = new Button(configIcon, event -> {
-                renderAttributesViewKindDetailUI((AttributesViewKindAttachInfoVO)attributeKindAttachInfoVO);
+                renderAttributesViewKindDetailUI(((AttributesViewKindAttachInfoVO)attributeKindAttachInfoVO).getAttributesViewKindName(),
+                        ((AttributesViewKindAttachInfoVO)attributeKindAttachInfoVO).getAttributesViewKindUID());
             });
             configAttributeKindAttachInfoVO_Kind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configAttributeKindAttachInfoVO_Kind.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -349,8 +352,8 @@ public class RelatedAttributesViewKindsView extends VerticalLayout {
                         currentAdvanceQueryRelationDirection = relationDirection;
                         currentAdvanceQueryIncludeOffspringClassifications = includeOffspringClassifications;
                         currentAdvanceQueryOffspringLevel = offspringLevel;
-                        //clearClassificationLinkRelationInfo();
-                        //queryRelatedAttributeKindAttachInfoVO_Kind(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
+                        clearClassificationLinkRelationInfo();
+                        queryRelatedAttributesViewKind(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
                     }
                 };
         classificationRelatedDataQueryCriteriaView = new ClassificationRelatedDataQueryCriteriaView();
@@ -361,13 +364,14 @@ public class RelatedAttributesViewKindsView extends VerticalLayout {
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
             Button configAttributeKind = new Button(configIcon, event -> {
-                if(attributeKind instanceof AttributeKind){
-                    //renderAttributeKindDetailUI(((AttributeKind)attributeKind).getAttributeKindName(),((AttributeKind)attributeKind).getAttributeKindUID());
+                if(attributeKind instanceof AttributesViewKind){
+                    renderAttributesViewKindDetailUI(((AttributesViewKind)attributeKind).getAttributesViewKindName(),
+                            ((AttributesViewKind)attributeKind).getAttributesViewKindUID());
                 }
             });
             configAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            configAttributeKind.setTooltipText("关联概念类型定义配置");
+            configAttributeKind.setTooltipText("关联属性视图类型定义配置");
 
             HorizontalLayout buttons = new HorizontalLayout(configAttributeKind);
             buttons.setPadding(false);
@@ -384,27 +388,27 @@ public class RelatedAttributesViewKindsView extends VerticalLayout {
         attributeKindMetaInfoGrid.setHeight(600,Unit.PIXELS);
         attributeKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         attributeKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        attributeKindMetaInfoGrid.addColumn(AttributeKind::getAttributeKindName).setHeader("属性类型名称").setKey("idx_0");
-        attributeKindMetaInfoGrid.addColumn(AttributeKind::getAttributeKindDesc).setHeader("属性类型显示名称").setKey("idx_1");
+        attributeKindMetaInfoGrid.addColumn(AttributesViewKind::getAttributesViewKindName).setHeader("属性视图类型名称").setKey("idx_0");
+        attributeKindMetaInfoGrid.addColumn(AttributesViewKind::getAttributesViewKindDesc).setHeader("属性视图类型显示名称").setKey("idx_1");
         attributeKindMetaInfoGrid.addColumn(_toolBarComponentRenderer1).setHeader("操作").setKey("idx_2").setFlexGrow(0).setWidth("70px").setResizable(false);
 
-        LightGridColumnHeader gridColumnHeader_2_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"属性类型名称");
+        LightGridColumnHeader gridColumnHeader_2_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"属性视图类型名称");
         attributeKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_2_idx0).setSortable(true);
-        LightGridColumnHeader gridColumnHeader_2_idx1 = new LightGridColumnHeader(VaadinIcon.DESKTOP,"属性类型显示名称");
+        LightGridColumnHeader gridColumnHeader_2_idx1 = new LightGridColumnHeader(VaadinIcon.DESKTOP,"属性视图类型显示名称");
         attributeKindMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_2_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader_2_idx2 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         attributeKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_2_idx2);
         attributeKindMetaInfoGrid.appendFooterRow();
-        attributeKindMetaInfoGrid.addSelectionListener(new SelectionListener<Grid<AttributeKind>, AttributeKind>() {
+        attributeKindMetaInfoGrid.addSelectionListener(new SelectionListener<Grid<AttributesViewKind>, AttributesViewKind>() {
             @Override
-            public void selectionChange(SelectionEvent<Grid<AttributeKind>, AttributeKind> selectionEvent) {
-                Set<AttributeKind> selectedItemSet = selectionEvent.getAllSelectedItems();
+            public void selectionChange(SelectionEvent<Grid<AttributesViewKind>, AttributesViewKind> selectionEvent) {
+                Set<AttributesViewKind> selectedItemSet = selectionEvent.getAllSelectedItems();
                 if(selectedItemSet.size() == 0){
                     //unselected item, reset link detail info
-                    //clearClassificationLinkRelationInfo();
+                    clearClassificationLinkRelationInfo();
                 }else{
-                    AttributeKind selectedAttributeKind = selectedItemSet.iterator().next();
-                    //renderSelectedAttributeKindLinkInfo(selectedAttributeKind);
+                    AttributesViewKind selectedAttributeKind = selectedItemSet.iterator().next();
+                    renderSelectedAttributeKindLinkInfo(selectedAttributeKind);
                 }
             }
         });
@@ -451,7 +455,7 @@ public class RelatedAttributesViewKindsView extends VerticalLayout {
         showClassificationLinkDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderRelationEntityDetailUI(currentSelectedClassificationLinkEntityKind,currentSelectedClassificationLinkEntityUID);
+                renderRelationEntityDetailUI(currentSelectedClassificationLinkEntityKind,currentSelectedClassificationLinkEntityUID);
             }
         });
         classificationLinkEntityUIDInfoContainer.add(showClassificationLinkDetailButton);
@@ -585,8 +589,8 @@ public class RelatedAttributesViewKindsView extends VerticalLayout {
         fullScreenWindow.show();
     }
 
-    private void renderAttributesViewKindDetailUI(AttributesViewKindAttachInfoVO attributesViewKindAttachInfoVO){
-        AttributesViewKindDetailUI attributesViewKindDetailUI = new AttributesViewKindDetailUI(attributesViewKindAttachInfoVO.getAttributesViewKindUID());
+    private void renderAttributesViewKindDetailUI(String attributesViewKindStr, String attributesViewKindUIDStr){
+        AttributesViewKindDetailUI attributesViewKindDetailUI = new AttributesViewKindDetailUI(attributesViewKindUIDStr);
         List<Component> actionComponentList = new ArrayList<>();
 
         HorizontalLayout titleDetailLayout = new HorizontalLayout();
@@ -607,13 +611,13 @@ public class RelatedAttributesViewKindsView extends VerticalLayout {
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout2);
-        NativeLabel attributesViewKindName = new NativeLabel(attributesViewKindAttachInfoVO.getAttributesViewKindName()+" ( ");
+        NativeLabel attributesViewKindName = new NativeLabel(attributesViewKindStr+" ( ");
         titleDetailLayout.add(attributesViewKindName);
 
         Icon _UIDIcon = VaadinIcon.KEY_O.create();
         _UIDIcon.setSize("10px");
         titleDetailLayout.add(_UIDIcon);
-        NativeLabel attributesViewKindUID = new NativeLabel(" "+attributesViewKindAttachInfoVO.getAttributesViewKindUID()+")");
+        NativeLabel attributesViewKindUID = new NativeLabel(" "+attributesViewKindUIDStr+")");
         titleDetailLayout.add(attributesViewKindUID);
         actionComponentList.add(titleDetailLayout);
 
@@ -726,6 +730,87 @@ public class RelatedAttributesViewKindsView extends VerticalLayout {
             }
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void clearClassificationLinkRelationInfo(){
+        classificationLinkRelationKindLabel.setText("-");
+        classificationLinkEntityUIDLabel.setText("-");
+        showClassificationLinkDetailButton.setEnabled(false);
+        List<AttributeValueVO> attributeValueVOList = new ArrayList<>();
+        classificationLinkEntityAttributesInfoGrid.setItems(attributeValueVOList);
+        currentSelectedClassificationLinkEntityKind = null;
+        currentSelectedClassificationLinkEntityUID = null;
+    }
+
+    private void queryRelatedAttributesViewKind(String relationKindName, RelationDirection relationDirection, boolean includeOffspringClassifications, int offspringLevel){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        Classification targetClassification = coreRealm.getClassification(this.classificationName);
+        try {
+            List<AttributesViewKind>  attributeKindList = targetClassification.getRelatedAttributesViewKinds(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
+            attributeKindMetaInfoGrid.setItems(attributeKindList);
+            CommonUIOperationUtil.showPopupNotification("查询关联概念类型成功,查询返回 "+attributeKindList.size()+" 项关联属性类型", NotificationVariant.LUMO_SUCCESS);
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void renderSelectedAttributeKindLinkInfo(AttributesViewKind selectedAttributeKind){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        Classification currentClassification = coreRealm.getClassification(this.classificationName);
+        RelationAttachInfo targetRelationAttachInfo = null;
+        if(!currentAdvanceQueryIncludeOffspringClassifications){
+            List<AttributesViewKindAttachInfo> attributeKindAttachInfoList = currentClassification.getAllDirectRelatedAttributesViewKindsInfo();
+            for(AttributesViewKindAttachInfo currentAttributeKindAttachInfo:attributeKindAttachInfoList){
+                RelationAttachInfo relationAttachInfo = currentAttributeKindAttachInfo.getRelationAttachInfo();
+                AttributesViewKind attributeKind = currentAttributeKindAttachInfo.getAttachedAttributesViewKind();
+                if(selectedAttributeKind.getAttributesViewKindUID().equals(attributeKind.getAttributesViewKindUID()) &&
+                        currentAdvanceQueryRelationKindName.equals(relationAttachInfo.getRelationKind()) &&
+                        currentAdvanceQueryRelationDirection.toString().equals(relationAttachInfo.getRelationDirection().toString())
+                ){
+                    targetRelationAttachInfo = relationAttachInfo;
+                }
+            }
+        }else{
+            AttributeKind targetAttributeKind = coreRealm.getAttributeKind(selectedAttributeKind.getAttributesViewKindUID());
+            List<ClassificationAttachInfo> classificationAttachInfoList = targetAttributeKind.getAllAttachedClassificationsInfo();
+            for(ClassificationAttachInfo currentClassificationAttachInfo:classificationAttachInfoList){
+                RelationAttachInfo relationAttachInfo = currentClassificationAttachInfo.getRelationAttachInfo();
+                Classification relatedClassification = currentClassificationAttachInfo.getAttachedClassification();
+                RelationDirection classificationSideRelationDirection = RelationDirection.TWO_WAY;
+                switch (relationAttachInfo.getRelationDirection()){
+                    case FROM -> classificationSideRelationDirection = RelationDirection.TO;
+                    case TO -> classificationSideRelationDirection = RelationDirection.FROM;
+                }
+                if(relationAttachInfo.getRelationKind().equals(currentAdvanceQueryRelationKindName) &&
+                        classificationSideRelationDirection.toString().equals(currentAdvanceQueryRelationDirection.toString()) &&
+                        relatedClassification.getClassificationName().equals(this.classificationName)){
+                    targetRelationAttachInfo = relationAttachInfo;
+                }
+            }
+        }
+        if(targetRelationAttachInfo != null){
+            classificationLinkRelationKindLabel.setText(targetRelationAttachInfo.getRelationKind());
+            classificationLinkEntityUIDLabel.setText(targetRelationAttachInfo.getRelationEntityUID());
+            showClassificationLinkDetailButton.setEnabled(true);
+            Map<String,Object> relationData = targetRelationAttachInfo.getRelationData();
+            Set<String> attributeNameSet = relationData.keySet();
+            List<AttributeValueVO> attributeValueVOList = new ArrayList<>();
+            for(String currentKey:attributeNameSet){
+                AttributeValueVO currentAttributeValueVO = new AttributeValueVO(currentKey,relationData.get(currentKey));
+                attributeValueVOList.add(currentAttributeValueVO);
+            }
+            classificationLinkEntityAttributesInfoGrid.setItems(attributeValueVOList);
+            currentSelectedClassificationLinkEntityKind = targetRelationAttachInfo.getRelationKind();
+            currentSelectedClassificationLinkEntityUID = targetRelationAttachInfo.getRelationEntityUID();
+        }else{
+            classificationLinkRelationKindLabel.setText("-");
+            classificationLinkEntityUIDLabel.setText("-");
+            showClassificationLinkDetailButton.setEnabled(false);
+            List<AttributeValueVO> attributeValueVOList = new ArrayList<>();
+            classificationLinkEntityAttributesInfoGrid.setItems(attributeValueVOList);
+            currentSelectedClassificationLinkEntityKind = null;
+            currentSelectedClassificationLinkEntityUID = null;
         }
     }
 
