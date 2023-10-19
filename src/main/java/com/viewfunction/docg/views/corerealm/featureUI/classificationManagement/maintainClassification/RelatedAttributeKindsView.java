@@ -690,7 +690,7 @@ public class RelatedAttributeKindsView extends VerticalLayout {
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行删除分类关联 "+ this.classificationName+" - ["+attributeKindAttachInfoVO.relationKindName+"] -"+attributeKindAttachInfoVO.attributeKindName+" 的操作",actionButtonList,400,180);
+                "请确认执行删除分类关联 "+ this.classificationName+" - ["+attributeKindAttachInfoVO.relationKindName+"] -"+attributeKindAttachInfoVO.attributeKindName+" 的操作",actionButtonList,500,180);
         confirmWindow.open();
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
