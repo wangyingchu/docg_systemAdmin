@@ -15,6 +15,7 @@ import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -38,6 +39,7 @@ import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -226,7 +228,7 @@ public class RelatedAttributesViewKindsView extends VerticalLayout {
         searchRelationKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //filterAttributeKindLinks();
+                filterAttributeKindLinks();
             }
         });
 
@@ -244,7 +246,7 @@ public class RelatedAttributesViewKindsView extends VerticalLayout {
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //cancelFilterAttributeKindLinks();
+                cancelFilterAttributeKindLinks();
             }
         });
 
@@ -266,7 +268,7 @@ public class RelatedAttributesViewKindsView extends VerticalLayout {
             });
             configAttributeKindAttachInfoVO_Kind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configAttributeKindAttachInfoVO_Kind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            configAttributeKindAttachInfoVO_Kind.setTooltipText("相关属性类型定义配置");
+            configAttributeKindAttachInfoVO_Kind.setTooltipText("相关属性视图类型定义配置");
 
             Icon linkIcon = LineAwesomeIconsSvg.LINK_SOLID.create();
             linkIcon.setSize("17px");
@@ -535,6 +537,23 @@ public class RelatedAttributesViewKindsView extends VerticalLayout {
             }
             return relationKindNameFilterResult & attributeKindNameFilterResult & relationDirectionFilterResult;
         });
+    }
+
+    private void filterAttributeKindLinks(){
+        String relationKindFilterValue = relationKindNameField.getValue().trim();
+        String attributeKindFilterValue = attributeKindNameField.getValue().trim();
+        if(relationKindFilterValue.equals("") & attributeKindFilterValue.equals("") & relationDirectionSelect.getValue() == null){
+            CommonUIOperationUtil.showPopupNotification("请输入或选择关系类型名称 和/或 属性视图类型名称 和/或 关联关系方向", NotificationVariant.LUMO_WARNING);
+        }else{
+            this.directRelatedAttributeKindInfoGridListDataView.refreshAll();
+        }
+    }
+
+    private void cancelFilterAttributeKindLinks(){
+        relationKindNameField.setValue("");
+        attributeKindNameField.setValue("");
+        relationDirectionSelect.setValue(null);
+        this.directRelatedAttributeKindInfoGridListDataView.refreshAll();
     }
 
     private class RelationDirectionIconValueProvider implements ValueProvider<AttributesViewKindAttachInfoVO,Icon> {

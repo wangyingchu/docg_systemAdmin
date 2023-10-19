@@ -543,7 +543,7 @@ public class RelatedAttributeKindsView extends VerticalLayout {
         String relationKindFilterValue = relationKindNameField.getValue().trim();
         String attributeKindFilterValue = attributeKindNameField.getValue().trim();
         if(relationKindFilterValue.equals("") & attributeKindFilterValue.equals("") & relationDirectionSelect.getValue() == null){
-            CommonUIOperationUtil.showPopupNotification("请输入或选择关系类型名称 和/或 概念类型名称 和/或 关联关系方向", NotificationVariant.LUMO_WARNING);
+            CommonUIOperationUtil.showPopupNotification("请输入或选择关系类型名称 和/或 属性类型名称 和/或 关联关系方向", NotificationVariant.LUMO_WARNING);
         }else{
             this.directRelatedAttributeKindInfoGridListDataView.refreshAll();
         }
