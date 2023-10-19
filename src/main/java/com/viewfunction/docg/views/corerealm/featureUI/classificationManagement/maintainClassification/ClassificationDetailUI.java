@@ -103,6 +103,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
             this.relatedRelationKindsView.setHeight(containerHeight-30);
             this.relatedAttributeKindsView.setHeight(containerHeight-30);
             this.relatedAttributesViewKindsView.setHeight(containerHeight-30);
+            this.relatedConceptionEntitiesView.setHeight(containerHeight-30);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -114,6 +115,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
             this.relatedRelationKindsView.setHeight(containerHeight-30);
             this.relatedAttributeKindsView.setHeight(containerHeight-30);
             this.relatedAttributesViewKindsView.setHeight(containerHeight-30);
+            this.relatedConceptionEntitiesView.setHeight(containerHeight-30);
         }));
     }
 
@@ -432,6 +434,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
             this.relatedRelationKindsView.setTotalCount(classificationRuntimeStatistics.getRelatedRelationKindCount());
             this.relatedAttributeKindsView.setTotalCount(classificationRuntimeStatistics.getRelatedAttributeKindCount());
             this.relatedAttributesViewKindsView.setTotalCount(classificationRuntimeStatistics.getRelatedAttributesViewKindCount());
+            this.relatedConceptionEntitiesView.setTotalCount(classificationRuntimeStatistics.getRelatedConceptionEntityCount());
 
             InheritanceTree<Classification> classificationInheritanceTree =  targetClassification.getOffspringClassifications();
             Map<String,Classification> flattedClassificationMap = new HashMap<>();
