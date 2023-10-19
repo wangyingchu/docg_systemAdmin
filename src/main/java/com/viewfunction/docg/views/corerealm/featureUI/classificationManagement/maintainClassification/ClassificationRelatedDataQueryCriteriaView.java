@@ -35,6 +35,7 @@ public class ClassificationRelatedDataQueryCriteriaView extends HorizontalLayout
     private ComboBox relationDirectionSelect;
     private Checkbox includeOffspringClassificationsCheckbox;
     private TextField offspringLevelField;
+    private HorizontalLayout customQueryCriteriaElementsContainer;
 
     public ClassificationRelatedDataQueryCriteriaView(){
         setSpacing(false);
@@ -112,6 +113,10 @@ public class ClassificationRelatedDataQueryCriteriaView extends HorizontalLayout
         offspringLevelField.setEnabled(false);
         add(offspringLevelField);
         setVerticalComponentAlignment(Alignment.CENTER, offspringLevelField);
+
+        customQueryCriteriaElementsContainer = new HorizontalLayout();
+        add(customQueryCriteriaElementsContainer);
+        setVerticalComponentAlignment(Alignment.CENTER, customQueryCriteriaElementsContainer);
 
         Button searchClassificationsButton = new Button("查询",new Icon(VaadinIcon.SEARCH));
         searchClassificationsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -195,5 +200,9 @@ public class ClassificationRelatedDataQueryCriteriaView extends HorizontalLayout
                 getClassificationRelatedDataQueryHelper().executeQuery(relationKindName,relationDirection,false,0);
             }
         }
+    }
+
+    public HorizontalLayout getCustomQueryCriteriaElementsContainer(){
+        return this.customQueryCriteriaElementsContainer;
     }
 }
