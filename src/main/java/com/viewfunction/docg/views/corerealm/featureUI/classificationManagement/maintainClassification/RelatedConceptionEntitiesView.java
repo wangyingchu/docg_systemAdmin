@@ -18,11 +18,12 @@ import com.vaadin.flow.function.ValueProvider;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -37,7 +38,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
     private NumberFormat numberFormat;
     private PrimaryKeyValueDisplayItem conceptionEntitiesCountDisplayItem;
     //private Grid<ConceptionEntityValue> queryResultGrid;
-    private Grid<ConceptionEntity> queryResultGrid;
+    private Grid<ConceptionEntityValue> queryResultGrid;
 
     private final String _rowIndexPropertyName = "ROW_INDEX";
     private List<String> currentRowKeyList;
@@ -114,28 +115,31 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
         queryResultGrid.setWidth(100, Unit.PERCENTAGE);
         queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         queryResultGrid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
-        queryResultGrid.addColumn(new ValueProvider<ConceptionEntity, Object>() {
+        queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
             @Override
-            public Object apply(ConceptionEntity conceptionEntityValue) {
+            public Object apply(ConceptionEntityValue conceptionEntityValue) {
               //  return conceptionEntityValue.getEntityAttributesValue().get(_rowIndexPropertyName);
                 return "1";
             }
         }).setHeader("").setHeader("IDX").setKey("idx").setFlexGrow(0).setWidth("75px").setResizable(false);
         queryResultGrid.addComponentColumn(new ConceptionEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("120px").setResizable(false);
-        queryResultGrid.addColumn(ConceptionEntity::getConceptionEntityUID).setHeader(" EntityUID").setKey("idx_1").setFlexGrow(1).setWidth("150px").setResizable(false);
+        queryResultGrid.addColumn(ConceptionEntityValue::getAllConceptionKindNames).setHeader(" ConceptionKinds").setKey("idx_1").setFlexGrow(1).setWidth("150px").setResizable(false);
+        queryResultGrid.addColumn(ConceptionEntityValue::getConceptionEntityUID).setHeader(" EntityUID").setKey("idx_2").setFlexGrow(1).setWidth("150px").setResizable(false);
 
         LightGridColumnHeader gridColumnHeader_idx = new LightGridColumnHeader(VaadinIcon.LIST_OL,"");
         queryResultGrid.getColumnByKey("idx").setHeader(gridColumnHeader_idx).setSortable(false);
         LightGridColumnHeader gridColumnHeader_idx1 = new LightGridColumnHeader(VaadinIcon.WRENCH,"操作");
         queryResultGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx1).setSortable(false);
-        LightGridColumnHeader gridColumnHeader_idx0 = new LightGridColumnHeader(VaadinIcon.KEY_O,"概念实体UID");
+        LightGridColumnHeader gridColumnHeader_idx0 = new LightGridColumnHeader(VaadinIcon.CUBES,"实体概念类型");
         queryResultGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx0).setSortable(false).setResizable(true);
+        LightGridColumnHeader gridColumnHeader_idx2 = new LightGridColumnHeader(VaadinIcon.KEY_O,"概念实体UID");
+        queryResultGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(false).setResizable(true);
         add(queryResultGrid);
 
-        queryResultGrid.addItemDoubleClickListener(new ComponentEventListener<ItemDoubleClickEvent<ConceptionEntity>>() {
+        queryResultGrid.addItemDoubleClickListener(new ComponentEventListener<ItemDoubleClickEvent<ConceptionEntityValue>>() {
             @Override
-            public void onComponentEvent(ItemDoubleClickEvent<ConceptionEntity> conceptionEntityValueItemDoubleClickEvent) {
-                ConceptionEntity targetConceptionEntityValue = conceptionEntityValueItemDoubleClickEvent.getItem();
+            public void onComponentEvent(ItemDoubleClickEvent<ConceptionEntityValue> conceptionEntityValueItemDoubleClickEvent) {
+                ConceptionEntityValue targetConceptionEntityValue = conceptionEntityValueItemDoubleClickEvent.getItem();
                 if(targetConceptionEntityValue!= null){
                     //renderConceptionEntityUI(targetConceptionEntityValue);
                 }
@@ -206,76 +210,36 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
         Classification targetClassification = coreRealm.getClassification(this.classificationName);
         try {
             QueryParameters queryParameters = new QueryParameters();
-            List<ConceptionEntity> conceptionEntitiesList = targetClassification.getRelatedConceptionEntities(relationKindName,relationDirection,queryParameters,includeOffspringClassifications,offspringLevel);
-            queryResultGrid.setItems(conceptionEntitiesList);
+            List<String> attributesList = new ArrayList<>();
+            /*
+            if(resultAttributesList != null && resultAttributesList.size() > 0){
+                attributesList.addAll(resultAttributesList);
+            }else{
+                attributesList.add(RealmConstant._createDateProperty);
+                attributesList.add(RealmConstant._lastModifyDateProperty);
+                attributesList.add(RealmConstant._creatorIdProperty);
+                attributesList.add(RealmConstant._dataOriginProperty);
+            }
+            */
 
-            //List<AttributesViewKind> attributesViewKindList = targetClassification.getRelatedAttributesViewKinds(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
-            //attributesViewKindMetaInfoGrid.setItems(attributesViewKindList);
-            //CommonUIOperationUtil.showPopupNotification("查询关联概念类型成功,查询返回 "+attributesViewKindList.size()+" 项关联属性类型", NotificationVariant.LUMO_SUCCESS);
+            attributesList.add(RealmConstant._createDateProperty);
+            attributesList.add(RealmConstant._lastModifyDateProperty);
+            attributesList.add(RealmConstant._creatorIdProperty);
+            attributesList.add(RealmConstant._dataOriginProperty);
+
+            ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
+                    targetClassification.getRelatedConceptionEntityAttributes(relationKindName,relationDirection,queryParameters,
+                            attributesList,includeOffspringClassifications,offspringLevel);
+            List<ConceptionEntityValue> conceptionEntityValueList = conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
+            queryResultGrid.setItems(conceptionEntityValueList);
+
+
+            CommonUIOperationUtil.showPopupNotification("查询关联概念实体成功,查询返回 "+
+                    conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount()+" 项关联概念实体", NotificationVariant.LUMO_SUCCESS);
         } catch (CoreRealmServiceRuntimeException | CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
     }
-
-
-
-
-    private class ConceptionEntityActionButtonsValueProvider implements ValueProvider<ConceptionEntity,HorizontalLayout>{
-        @Override
-        public HorizontalLayout apply(ConceptionEntity conceptionEntityValue) {
-            HorizontalLayout actionButtonContainerLayout = new HorizontalLayout();
-            actionButtonContainerLayout.setMargin(false);
-            actionButtonContainerLayout.setSpacing(false);
-            Button showDetailButton = new Button();
-            showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            showDetailButton.setIcon(VaadinIcon.EYE.create());
-            Tooltips.getCurrent().setTooltip(showDetailButton, "显示概念实体详情");
-            actionButtonContainerLayout.add(showDetailButton);
-            showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-                @Override
-                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(conceptionEntityValue != null){
-                        //renderConceptionEntityUI(conceptionEntityValue);
-                    }
-                }
-            });
-
-            Button addToProcessListButton = new Button();
-            addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            addToProcessListButton.setIcon(VaadinIcon.INBOX.create());
-            Tooltips.getCurrent().setTooltip(addToProcessListButton, "加入待处理数据列表");
-            actionButtonContainerLayout.add(addToProcessListButton);
-            addToProcessListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-                @Override
-                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(conceptionEntityValue != null){
-                        //addConceptionEntityToProcessingList(conceptionEntityValue);
-                    }
-                }
-            });
-
-            Button deleteButton = new Button();
-            deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
-            deleteButton.setIcon(VaadinIcon.TRASH.create());
-            Tooltips.getCurrent().setTooltip(deleteButton, "删除概念实体");
-            actionButtonContainerLayout.add(deleteButton);
-            deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-                @Override
-                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(conceptionEntityValue != null){
-                        //deleteConceptionEntity(conceptionEntityValue);
-                    }
-                }
-            });
-            return actionButtonContainerLayout;
-        }
-    }
-
-
-
-
-/*
 
     private class ConceptionEntityActionButtonsValueProvider implements ValueProvider<ConceptionEntityValue,HorizontalLayout>{
         @Override
@@ -328,5 +292,5 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
             return actionButtonContainerLayout;
         }
     }
-    */
+
 }
