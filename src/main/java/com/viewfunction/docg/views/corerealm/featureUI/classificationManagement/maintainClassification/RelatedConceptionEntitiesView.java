@@ -27,6 +27,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -108,13 +109,18 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
         queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
             @Override
             public Object apply(ConceptionEntityValue conceptionEntityValue) {
-              //  return conceptionEntityValue.getEntityAttributesValue().get(_rowIndexPropertyName);
-                return "1";
+                return conceptionEntityValue.getEntityAttributesValue().get(_rowIndexPropertyName);
             }
         }).setHeader("").setHeader("IDX").setKey("idx").setFlexGrow(0).setWidth("75px").setResizable(false);
-        queryResultGrid.addComponentColumn(new ConceptionEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("120px").setResizable(false);
-        queryResultGrid.addColumn(ConceptionEntityValue::getAllConceptionKindNames).setHeader(" ConceptionKinds").setKey("idx_1").setFlexGrow(1).setWidth("150px").setResizable(false);
-        queryResultGrid.addColumn(ConceptionEntityValue::getConceptionEntityUID).setHeader(" EntityUID").setKey("idx_2").setFlexGrow(1).setWidth("150px").setResizable(false);
+        queryResultGrid.addComponentColumn(new ConceptionEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("150px").setResizable(false);
+        queryResultGrid.addColumn(ConceptionEntityValue::getAllConceptionKindNames).setHeader(" ConceptionKinds").setKey("idx_1").setFlexGrow(1).setWidth("150px").setResizable(true)
+                .setTooltipGenerator(new ValueProvider<ConceptionEntityValue, String>() {
+            @Override
+            public String apply(ConceptionEntityValue conceptionEntityValue) {
+                return conceptionEntityValue.getAllConceptionKindNames().toString();
+            }
+        });
+        queryResultGrid.addColumn(ConceptionEntityValue::getConceptionEntityUID).setHeader(" EntityUID").setKey("idx_2").setFlexGrow(1).setWidth("70px").setResizable(false);
 
         LightGridColumnHeader gridColumnHeader_idx = new LightGridColumnHeader(VaadinIcon.LIST_OL,"");
         queryResultGrid.getColumnByKey("idx").setHeader(gridColumnHeader_idx).setSortable(false);
@@ -195,7 +201,15 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                             public Object apply(ConceptionEntityValue conceptionEntityValue) {
                                 return conceptionEntityValue.getEntityAttributesValue().get(currentProperty);
                             }
-                        }).setHeader(" " + currentProperty).setKey(currentProperty + "_KEY");
+                        }).setHeader(" " + currentProperty).setKey(currentProperty + "_KEY").
+                                setTooltipGenerator(new ValueProvider<ConceptionEntityValue, String>() {
+                                    @Override
+                                    public String apply(ConceptionEntityValue conceptionEntityValue) {
+                                        return conceptionEntityValue.getEntityAttributesValue().get(currentProperty) != null ?
+                                                conceptionEntityValue.getEntityAttributesValue().get(currentProperty).toString():
+                                                "";
+                                    }
+                                });
                         queryResultGrid.getColumnByKey(currentProperty + "_KEY").setSortable(true).setResizable(true);
                     }
 
@@ -245,6 +259,36 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                 }
             });
 
+            Icon linkIcon = LineAwesomeIconsSvg.LINK_SOLID.create();
+            linkIcon.setSize("17px");
+            Button editLinkProperties = new Button(linkIcon, event -> {});
+            editLinkProperties.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            editLinkProperties.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            editLinkProperties.setTooltipText("关联链接信息");
+            actionButtonContainerLayout.add(editLinkProperties);
+            editLinkProperties.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    //renderRelationEntityDetailUI(((RelatedConceptionKindsView.ConceptionKindAttachInfoVO) conceptionKindAttachInfoVO).relationKindName,
+                    //        ((RelatedConceptionKindsView.ConceptionKindAttachInfoVO) conceptionKindAttachInfoVO).getRelationEntityUID());
+                }
+            });
+
+            Icon deleteLinkIcon = new Icon(VaadinIcon.UNLINK);
+            deleteLinkIcon.setSize("21px");
+            Button removeClassificationLink = new Button(deleteLinkIcon, event -> {});
+            removeClassificationLink.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            removeClassificationLink.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            removeClassificationLink.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            removeClassificationLink.setTooltipText("删除分类关联");
+            actionButtonContainerLayout.add(removeClassificationLink);
+            removeClassificationLink.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    //renderDetachConceptionKindUI((RelatedConceptionKindsView.ConceptionKindAttachInfoVO)conceptionKindAttachInfoVO);
+                }
+            });
+            /*
             Button deleteButton = new Button();
             deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
@@ -259,6 +303,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                     }
                 }
             });
+            */
             return actionButtonContainerLayout;
         }
     }
