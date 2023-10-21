@@ -2,6 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.classificationManagement
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -9,26 +10,30 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.function.ValueProvider;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.Classification;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.AddConceptionEntityToProcessingListView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -42,7 +47,9 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
     private Grid<ConceptionEntityValue> queryResultGrid;
     private final String _rowIndexPropertyName = "ROW_INDEX";
     private List<String> currentRowKeyList;
-    private  List<String> lastQueryAttributesList;
+    private List<String> lastQueryAttributesList;
+    private String currentWorkingRelationKindName;
+    private RelationDirection currentWorkingRelationDirection;
 
     public RelatedConceptionEntitiesView(String classificationName){
         this.setPadding(false);
@@ -69,11 +76,6 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                 new ClassificationRelatedDataQueryCriteriaView.ClassificationRelatedDataQueryHelper() {
                     @Override
                     public void executeQuery(String relationKindName, RelationDirection relationDirection, boolean includeOffspringClassifications, int offspringLevel) {
-                        //currentAdvanceQueryRelationKindName = relationKindName;
-                        //currentAdvanceQueryRelationDirection = relationDirection;
-                        //currentAdvanceQueryIncludeOffspringClassifications = includeOffspringClassifications;
-                        //currentAdvanceQueryOffspringLevel = offspringLevel;
-                        //clearClassificationLinkRelationInfo();
                         queryRelatedConceptionEntities(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
                     }
                 };
@@ -137,7 +139,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
             public void onComponentEvent(ItemDoubleClickEvent<ConceptionEntityValue> conceptionEntityValueItemDoubleClickEvent) {
                 ConceptionEntityValue targetConceptionEntityValue = conceptionEntityValueItemDoubleClickEvent.getItem();
                 if(targetConceptionEntityValue!= null){
-                    //renderConceptionEntityUI(targetConceptionEntityValue);
+                    renderConceptionEntityUI(targetConceptionEntityValue);
                 }
             }
         });
@@ -154,6 +156,8 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
     }
 
     private void queryRelatedConceptionEntities(String relationKindName, RelationDirection relationDirection, boolean includeOffspringClassifications, int offspringLevel){
+        currentWorkingRelationKindName = relationKindName;
+        currentWorkingRelationDirection = relationDirection;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         Classification targetClassification = coreRealm.getClassification(this.classificationName);
 
@@ -185,7 +189,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
             this.lastQueryAttributesList = attributesList;
 
             ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
-                    targetClassification.getRelatedConceptionEntityAttributes(relationKindName,relationDirection,queryParameters,
+                    targetClassification.getRelatedConceptionEntityAttributes(currentWorkingRelationKindName, currentWorkingRelationDirection,queryParameters,
                             attributesList,includeOffspringClassifications,offspringLevel);
             List<ConceptionEntityValue> conceptionEntityValueList = conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
 
@@ -225,6 +229,254 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
         }
     }
 
+    private void renderConceptionEntityUI(ConceptionEntityValue conceptionEntityValue){
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(conceptionEntityValue.getAllConceptionKindNames().get(0),conceptionEntityValue.getConceptionEntityUID());
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("10px");
+        titleDetailLayout.add(conceptionKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(conceptionEntityValue.getAllConceptionKindNames().get(0));
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+        conceptionEntityIcon.setSize("10px");
+        titleDetailLayout.add(conceptionEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel conceptionEntityUIDLabel = new NativeLabel(conceptionEntityValue.getConceptionEntityUID());
+        titleDetailLayout.add(conceptionEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
+    }
+
+    private void addConceptionEntityToProcessingList(ConceptionEntityValue conceptionEntityValue){
+        AddConceptionEntityToProcessingListView addConceptionEntityToProcessingListView = new AddConceptionEntityToProcessingListView(conceptionEntityValue.getAllConceptionKindNames().get(0),conceptionEntityValue);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INBOX),"待处理数据列表添加概念实例",null,true,600,300,false);
+        fixSizeWindow.setWindowContent(addConceptionEntityToProcessingListView);
+        fixSizeWindow.setModel(true);
+        addConceptionEntityToProcessingListView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderRelationEntityDetailUI(ConceptionEntityValue conceptionEntityValue){
+        String conceptionEntityUID = conceptionEntityValue.getConceptionEntityUID();
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        try {
+            coreRealm.openGlobalSession();
+            Classification targetClassification = coreRealm.getClassification(this.classificationName);
+            String classificationUID = targetClassification.getClassificationUID();
+            CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
+            List<String> conceptionPairUIDList = new ArrayList<>();
+            conceptionPairUIDList.add(conceptionEntityUID);
+            conceptionPairUIDList.add(classificationUID);
+            List<RelationEntity> relationEntityList = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionPairUIDList);
+            RelationEntity targetRelationEntity = null;
+            if(relationEntityList != null && relationEntityList.size() >0){
+                if(relationEntityList.size() == 1){
+                    targetRelationEntity = relationEntityList.get(0);
+                }else{
+                    for(RelationEntity currentRelationEntity:relationEntityList){
+                        if(currentRelationEntity.getRelationKindName().equals(currentWorkingRelationKindName)){
+                            switch (currentWorkingRelationDirection){
+                                case FROM :
+                                    if(currentRelationEntity.getFromConceptionEntityUID().equals(classificationUID)){
+                                        targetRelationEntity = currentRelationEntity;
+                                    }
+                                    break;
+                                case TO:
+                                    if(currentRelationEntity.getToConceptionEntityUID().equals(classificationUID)){
+                                        targetRelationEntity = currentRelationEntity;
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+            if(targetRelationEntity != null){
+                RelationEntityDetailUI relationEntityDetailUI = new RelationEntityDetailUI(targetRelationEntity.getRelationKindName(),targetRelationEntity.getRelationEntityUID());
+                List<Component> actionComponentList = new ArrayList<>();
+
+                HorizontalLayout titleDetailLayout = new HorizontalLayout();
+                titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                titleDetailLayout.setSpacing(false);
+
+                Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+                footPrintStartIcon.setSize("14px");
+                footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+                titleDetailLayout.add(footPrintStartIcon);
+                HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+                spaceDivLayout1.setWidth(8,Unit.PIXELS);
+                titleDetailLayout.add(spaceDivLayout1);
+
+                Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+                relationKindIcon.setSize("10px");
+                titleDetailLayout.add(relationKindIcon);
+                HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+                spaceDivLayout2.setWidth(5,Unit.PIXELS);
+                titleDetailLayout.add(spaceDivLayout2);
+                NativeLabel relationKindNameLabel = new NativeLabel(targetRelationEntity.getRelationKindName());
+                titleDetailLayout.add(relationKindNameLabel);
+
+                HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+                spaceDivLayout3.setWidth(5,Unit.PIXELS);
+                titleDetailLayout.add(spaceDivLayout3);
+
+                Icon divIcon = VaadinIcon.ITALIC.create();
+                divIcon.setSize("8px");
+                titleDetailLayout.add(divIcon);
+
+                HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+                spaceDivLayout4.setWidth(5,Unit.PIXELS);
+                titleDetailLayout.add(spaceDivLayout4);
+
+                Icon relationEntityIcon = VaadinIcon.KEY_O.create();
+                relationEntityIcon.setSize("10px");
+                titleDetailLayout.add(relationEntityIcon);
+
+                HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+                spaceDivLayout5.setWidth(5,Unit.PIXELS);
+                titleDetailLayout.add(spaceDivLayout5);
+                NativeLabel relationEntityUIDLabel = new NativeLabel(targetRelationEntity.getRelationEntityUID());
+                titleDetailLayout.add(relationEntityUIDLabel);
+
+                actionComponentList.add(titleDetailLayout);
+
+                FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"关系实体详情",actionComponentList,null,true);
+                fullScreenWindow.setWindowContent(relationEntityDetailUI);
+                relationEntityDetailUI.setContainerDialog(fullScreenWindow);
+                fullScreenWindow.show();
+            }
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }finally {
+            coreRealm.closeGlobalSession();
+        }
+    }
+
+    private void renderDetachClassificationLinkUI(ConceptionEntityValue conceptionEntityValue){
+        String conceptionEntityUID = conceptionEntityValue.getConceptionEntityUID();
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        try {
+            Classification targetClassification = coreRealm.getClassification(this.classificationName);
+            String classificationUID = targetClassification.getClassificationUID();
+            CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
+            List<String> conceptionPairUIDList = new ArrayList<>();
+            conceptionPairUIDList.add(conceptionEntityUID);
+            conceptionPairUIDList.add(classificationUID);
+            List<RelationEntity> relationEntityList = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionPairUIDList);
+            RelationEntity targetRelationEntity = null;
+            if(relationEntityList != null && relationEntityList.size() >0){
+                if(relationEntityList.size() == 1){
+                    targetRelationEntity = relationEntityList.get(0);
+                }else{
+                    for(RelationEntity currentRelationEntity:relationEntityList){
+                        if(currentRelationEntity.getRelationKindName().equals(currentWorkingRelationKindName)){
+                            switch (currentWorkingRelationDirection){
+                                case FROM :
+                                    if(currentRelationEntity.getFromConceptionEntityUID().equals(classificationUID)){
+                                        targetRelationEntity = currentRelationEntity;
+                                    }
+                                    break;
+                                case TO:
+                                    if(currentRelationEntity.getToConceptionEntityUID().equals(classificationUID)){
+                                        targetRelationEntity = currentRelationEntity;
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+            if(targetRelationEntity != null){
+                List<Button> actionButtonList = new ArrayList<>();
+                Button confirmButton = new Button("确认删除分类关联",new Icon(VaadinIcon.CHECK_CIRCLE));
+                confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+                Button cancelButton = new Button("取消操作");
+                cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+                actionButtonList.add(confirmButton);
+                actionButtonList.add(cancelButton);
+
+                ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                        "请确认执行删除分类关联 "+ this.classificationName+" - ["+targetRelationEntity.getRelationKindName()+"] -"+
+                                conceptionEntityValue.getAllConceptionKindNames().get(0)+"("+conceptionEntityValue.getConceptionEntityUID()+") 的操作",actionButtonList,400,180);
+                confirmWindow.open();
+                final RelationEntity finalDetachRelationEntity = targetRelationEntity;
+                confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                        doDetachClassificationLink(conceptionEntityValue,finalDetachRelationEntity,confirmWindow);
+                    }
+                });
+                cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                        confirmWindow.closeConfirmWindow();
+                    }
+                });
+            }
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void doDetachClassificationLink(ConceptionEntityValue conceptionEntityValue,RelationEntity targetRelationEntity, ConfirmWindow confirmWindow){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        RelationKind targetRelationKind = coreRealm.getRelationKind(targetRelationEntity.getRelationKindName());
+        try {
+            boolean detachResult = targetRelationKind.deleteEntity(targetRelationEntity.getRelationEntityUID());
+            if(detachResult){
+                CommonUIOperationUtil.showPopupNotification("删除分类关联 "+ this.classificationName+" - ["+targetRelationEntity.getRelationKindName()+"] -"+
+                        conceptionEntityValue.getAllConceptionKindNames().get(0)+"("+conceptionEntityValue.getConceptionEntityUID() +") 成功", NotificationVariant.LUMO_SUCCESS);
+                confirmWindow.closeConfirmWindow();
+                ListDataProvider dataProvider=(ListDataProvider)queryResultGrid.getDataProvider();
+                dataProvider.getItems().remove(conceptionEntityValue);
+                dataProvider.refreshAll();
+            }else{
+                CommonUIOperationUtil.showPopupNotification("删除分类关联 "+ this.classificationName+" - ["+targetRelationEntity.getRelationKindName()+"] -"+
+                        conceptionEntityValue.getAllConceptionKindNames().get(0)+"("+conceptionEntityValue.getConceptionEntityUID() +") 失败", NotificationVariant.LUMO_ERROR);
+            }
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private class ConceptionEntityActionButtonsValueProvider implements ValueProvider<ConceptionEntityValue,HorizontalLayout>{
         @Override
         public HorizontalLayout apply(ConceptionEntityValue conceptionEntityValue) {
@@ -240,7 +492,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(conceptionEntityValue != null){
-                        //renderConceptionEntityUI(conceptionEntityValue);
+                        renderConceptionEntityUI(conceptionEntityValue);
                     }
                 }
             });
@@ -254,7 +506,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(conceptionEntityValue != null){
-                        //addConceptionEntityToProcessingList(conceptionEntityValue);
+                        addConceptionEntityToProcessingList(conceptionEntityValue);
                     }
                 }
             });
@@ -269,8 +521,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
             editLinkProperties.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    //renderRelationEntityDetailUI(((RelatedConceptionKindsView.ConceptionKindAttachInfoVO) conceptionKindAttachInfoVO).relationKindName,
-                    //        ((RelatedConceptionKindsView.ConceptionKindAttachInfoVO) conceptionKindAttachInfoVO).getRelationEntityUID());
+                    renderRelationEntityDetailUI(conceptionEntityValue);
                 }
             });
 
@@ -285,25 +536,9 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
             removeClassificationLink.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    //renderDetachConceptionKindUI((RelatedConceptionKindsView.ConceptionKindAttachInfoVO)conceptionKindAttachInfoVO);
+                    renderDetachClassificationLinkUI(conceptionEntityValue);
                 }
             });
-            /*
-            Button deleteButton = new Button();
-            deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
-            deleteButton.setIcon(VaadinIcon.TRASH.create());
-            Tooltips.getCurrent().setTooltip(deleteButton, "删除概念实体");
-            actionButtonContainerLayout.add(deleteButton);
-            deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-                @Override
-                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(conceptionEntityValue != null){
-                        //deleteConceptionEntity(conceptionEntityValue);
-                    }
-                }
-            });
-            */
             return actionButtonContainerLayout;
         }
     }
