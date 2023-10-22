@@ -37,7 +37,12 @@ import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.ma
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RelatedConceptionEntitiesView extends VerticalLayout {
@@ -50,6 +55,10 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
     private List<String> lastQueryAttributesList;
     private String currentWorkingRelationKindName;
     private RelationDirection currentWorkingRelationDirection;
+    private SecondaryKeyValueDisplayItem startTimeDisplayItem;
+    private SecondaryKeyValueDisplayItem finishTimeDisplayItem;
+    private SecondaryKeyValueDisplayItem dataCountDisplayItem;
+    private final ZoneId id = ZoneId.systemDefault();
 
     public RelatedConceptionEntitiesView(String classificationName){
         this.setPadding(false);
@@ -100,9 +109,9 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
         toolbarLayout.add(titleLayout);
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.HARDDRIVE_O),"查询结果");
         titleLayout.add(filterTitle2);
-        SecondaryKeyValueDisplayItem startTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询开始时间","-");
-        SecondaryKeyValueDisplayItem finishTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询结束时间","-");
-        SecondaryKeyValueDisplayItem dataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"结果集数据量","-");
+        startTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询开始时间","-");
+        finishTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询结束时间","-");
+        dataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"结果集数据量","-");
 
         queryResultGrid = new Grid<>();
         queryResultGrid.setWidth(100, Unit.PERCENTAGE);
@@ -192,6 +201,17 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                     targetClassification.getRelatedConceptionEntityAttributes(currentWorkingRelationKindName, currentWorkingRelationDirection,queryParameters,
                             attributesList,includeOffspringClassifications,offspringLevel);
             List<ConceptionEntityValue> conceptionEntityValueList = conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
+
+            Date startDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime();
+            ZonedDateTime startZonedDateTime = ZonedDateTime.ofInstant(startDateTime.toInstant(), id);
+            String startTimeStr = startZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
+            startTimeDisplayItem.updateDisplayValue(startTimeStr);
+            Date finishDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getFinishTime();
+            ZonedDateTime finishZonedDateTime = ZonedDateTime.ofInstant(finishDateTime.toInstant(), id);
+            String finishTimeStr = finishZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
+            startTimeDisplayItem.updateDisplayValue(startTimeStr);
+            finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
+            dataCountDisplayItem.updateDisplayValue(""+   numberFormat.format(conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount()));
 
             for(int i=0 ; i<conceptionEntityValueList.size();i++){
                 ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
