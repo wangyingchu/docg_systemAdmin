@@ -184,71 +184,78 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
         this.currentRowKeyList.clear();
         this.lastQueryAttributesList = null;
         try {
+            boolean isCorrectInput = true;
             QueryParameters customQueryParameters = null;
             List<String> resultAttributesList = null;
             if(attributesQueryCriteriaView != null){
-                customQueryParameters = attributesQueryCriteriaView.getQueryParameters();
-                resultAttributesList = attributesQueryCriteriaView.getResultAttributesList();
-            }
-
-            QueryParameters queryParameters = customQueryParameters != null ? customQueryParameters : new QueryParameters();
-            List<String> attributesList = new ArrayList<>();
-            if(resultAttributesList != null && resultAttributesList.size() > 0){
-                attributesList.addAll(resultAttributesList);
-            }else{
-                attributesList.add(RealmConstant._createDateProperty);
-                attributesList.add(RealmConstant._lastModifyDateProperty);
-                attributesList.add(RealmConstant._creatorIdProperty);
-                attributesList.add(RealmConstant._dataOriginProperty);
-            }
-            this.lastQueryAttributesList = attributesList;
-
-            ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
-                    targetClassification.getRelatedConceptionEntityAttributes(currentWorkingRelationKindName, currentWorkingRelationDirection,queryParameters,
-                            attributesList,includeOffspringClassifications,offspringLevel);
-            List<ConceptionEntityValue> conceptionEntityValueList = conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
-
-            Date startDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime();
-            ZonedDateTime startZonedDateTime = ZonedDateTime.ofInstant(startDateTime.toInstant(), id);
-            String startTimeStr = startZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
-            startTimeDisplayItem.updateDisplayValue(startTimeStr);
-            Date finishDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getFinishTime();
-            ZonedDateTime finishZonedDateTime = ZonedDateTime.ofInstant(finishDateTime.toInstant(), id);
-            String finishTimeStr = finishZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
-            startTimeDisplayItem.updateDisplayValue(startTimeStr);
-            finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
-            dataCountDisplayItem.updateDisplayValue(""+   numberFormat.format(conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount()));
-
-            for(int i=0 ; i<conceptionEntityValueList.size();i++){
-                ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
-                currentConceptionEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName,i+1);
-            }
-            if(attributesList != null && attributesList.size() > 0) {
-                for (String currentProperty : attributesList) {
-                    if (!currentProperty.equals(_rowIndexPropertyName)) {
-                        queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
-                            @Override
-                            public Object apply(ConceptionEntityValue conceptionEntityValue) {
-                                return conceptionEntityValue.getEntityAttributesValue().get(currentProperty);
-                            }
-                        }).setHeader(" " + currentProperty).setKey(currentProperty + "_KEY").
-                                setTooltipGenerator(new ValueProvider<ConceptionEntityValue, String>() {
-                                    @Override
-                                    public String apply(ConceptionEntityValue conceptionEntityValue) {
-                                        return conceptionEntityValue.getEntityAttributesValue().get(currentProperty) != null ?
-                                                conceptionEntityValue.getEntityAttributesValue().get(currentProperty).toString():
-                                                "";
-                                    }
-                                });
-                        queryResultGrid.getColumnByKey(currentProperty + "_KEY").setSortable(true).setResizable(true);
-                    }
-                    this.currentRowKeyList.add(currentProperty + "_KEY");
+                if(attributesQueryCriteriaView.isCorrectQueryCriteria()){
+                    customQueryParameters = attributesQueryCriteriaView.getQueryParameters();
+                    resultAttributesList = attributesQueryCriteriaView.getResultAttributesList();
+                }else{
+                    isCorrectInput = false;
                 }
             }
-            queryResultGrid.setItems(conceptionEntityValueList);
 
-            CommonUIOperationUtil.showPopupNotification("查询关联概念实体成功,查询返回 "+
-                    conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount()+" 项关联概念实体", NotificationVariant.LUMO_SUCCESS);
+            if(isCorrectInput){
+                QueryParameters queryParameters = customQueryParameters != null ? customQueryParameters : new QueryParameters();
+                List<String> attributesList = new ArrayList<>();
+                if(resultAttributesList != null && resultAttributesList.size() > 0){
+                    attributesList.addAll(resultAttributesList);
+                }else{
+                    attributesList.add(RealmConstant._createDateProperty);
+                    attributesList.add(RealmConstant._lastModifyDateProperty);
+                    attributesList.add(RealmConstant._creatorIdProperty);
+                    attributesList.add(RealmConstant._dataOriginProperty);
+                }
+                this.lastQueryAttributesList = attributesList;
+
+                ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
+                        targetClassification.getRelatedConceptionEntityAttributes(currentWorkingRelationKindName, currentWorkingRelationDirection,queryParameters,
+                                attributesList,includeOffspringClassifications,offspringLevel);
+                List<ConceptionEntityValue> conceptionEntityValueList = conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
+
+                Date startDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime();
+                ZonedDateTime startZonedDateTime = ZonedDateTime.ofInstant(startDateTime.toInstant(), id);
+                String startTimeStr = startZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
+                startTimeDisplayItem.updateDisplayValue(startTimeStr);
+                Date finishDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getFinishTime();
+                ZonedDateTime finishZonedDateTime = ZonedDateTime.ofInstant(finishDateTime.toInstant(), id);
+                String finishTimeStr = finishZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
+                startTimeDisplayItem.updateDisplayValue(startTimeStr);
+                finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
+                dataCountDisplayItem.updateDisplayValue(""+   numberFormat.format(conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount()));
+
+                for(int i=0 ; i<conceptionEntityValueList.size();i++){
+                    ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
+                    currentConceptionEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName,i+1);
+                }
+                if(attributesList != null && attributesList.size() > 0) {
+                    for (String currentProperty : attributesList) {
+                        if (!currentProperty.equals(_rowIndexPropertyName)) {
+                            queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
+                                        @Override
+                                        public Object apply(ConceptionEntityValue conceptionEntityValue) {
+                                            return conceptionEntityValue.getEntityAttributesValue().get(currentProperty);
+                                        }
+                                    }).setHeader(" " + currentProperty).setKey(currentProperty + "_KEY").
+                                    setTooltipGenerator(new ValueProvider<ConceptionEntityValue, String>() {
+                                        @Override
+                                        public String apply(ConceptionEntityValue conceptionEntityValue) {
+                                            return conceptionEntityValue.getEntityAttributesValue().get(currentProperty) != null ?
+                                                    conceptionEntityValue.getEntityAttributesValue().get(currentProperty).toString():
+                                                    "";
+                                        }
+                                    });
+                            queryResultGrid.getColumnByKey(currentProperty + "_KEY").setSortable(true).setResizable(true);
+                        }
+                        this.currentRowKeyList.add(currentProperty + "_KEY");
+                    }
+                }
+                queryResultGrid.setItems(conceptionEntityValueList);
+
+                CommonUIOperationUtil.showPopupNotification("查询关联概念实体成功,查询返回 "+
+                        conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount()+" 项关联概念实体", NotificationVariant.LUMO_SUCCESS);
+            }
         } catch (CoreRealmServiceRuntimeException | CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }

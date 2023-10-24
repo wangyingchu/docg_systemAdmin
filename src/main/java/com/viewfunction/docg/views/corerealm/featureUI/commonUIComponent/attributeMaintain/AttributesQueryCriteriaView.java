@@ -229,4 +229,12 @@ public class AttributesQueryCriteriaView extends VerticalLayout implements KindQ
             return queryParameters;
         }
     }
+    public boolean isCorrectQueryCriteria(){
+        if(!defaultQueryConditionIsSet & otherQueryConditionsAreSet){
+            CommonUIOperationUtil.showPopupNotification("请设定默认查询条件的属性过滤值", NotificationVariant.LUMO_ERROR);
+            return false;
+        }else{
+            return true;
+        }
+    }
 }
