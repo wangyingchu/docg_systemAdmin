@@ -62,6 +62,7 @@ public class AttributesQueryCriteriaView extends VerticalLayout implements KindQ
         buttonSpaceDivLayout.setWidth(99, Unit.PERCENTAGE);
 
         resultAttributesList = new ArrayList<>();
+
         Button addCustomQueryCriteriaButton = new Button("添加自定义查询条件/显示属性",VaadinIcon.KEYBOARD_O.create());
 
         addCustomQueryCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -74,8 +75,22 @@ public class AttributesQueryCriteriaView extends VerticalLayout implements KindQ
             }
         });
 
-        buttonSpaceDivLayout.add(addCustomQueryCriteriaButton);
+        Icon divIcon0 = new Icon(VaadinIcon.LINE_V);
+        divIcon0.setSize("8px");
+
+        Button clearCustomQueryCriteriasButton = new Button("清除全部条件",VaadinIcon.DEL_A.create());
+        clearCustomQueryCriteriasButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ERROR);
+        clearCustomQueryCriteriasButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                clearAllCustomQueryCriteria();
+            }
+        });
+
+        buttonSpaceDivLayout.add(addCustomQueryCriteriaButton,divIcon0,clearCustomQueryCriteriasButton);
         buttonSpaceDivLayout.setVerticalComponentAlignment(Alignment.CENTER,addCustomQueryCriteriaButton);
+        buttonSpaceDivLayout.setVerticalComponentAlignment(Alignment.CENTER, divIcon0);
+        buttonSpaceDivLayout.setVerticalComponentAlignment(Alignment.CENTER,clearCustomQueryCriteriasButton);
         filterDropdownSelectorContainerLayout.add(buttonSpaceDivLayout);
 
         criteriaItemsContainer = new VerticalLayout();
@@ -229,6 +244,7 @@ public class AttributesQueryCriteriaView extends VerticalLayout implements KindQ
     public List<String> getResultAttributesList(){
         return resultAttributesList;
     }
+
     public QueryParameters getQueryParameters(){
         queryParameters.getAndFilteringItemsList().clear();
         queryParameters.getOrFilteringItemsList().clear();
@@ -271,5 +287,15 @@ public class AttributesQueryCriteriaView extends VerticalLayout implements KindQ
         }else{
             return true;
         }
+    }
+
+    private void clearAllCustomQueryCriteria(){
+        criteriaItemsContainer.getChildren().forEach(new Consumer<Component>() {
+            @Override
+            public void accept(Component component) {
+                QueryConditionItemWidget currentQueryConditionItemWidget = (QueryConditionItemWidget)component;
+                removeCriteriaFilterItem(currentQueryConditionItemWidget);
+            }
+        });
     }
 }
