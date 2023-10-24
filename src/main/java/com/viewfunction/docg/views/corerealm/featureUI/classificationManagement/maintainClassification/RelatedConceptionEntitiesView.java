@@ -4,16 +4,12 @@ import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.contextmenu.HasMenuItems;
-import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.menubar.MenuBar;
-import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -32,6 +28,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesQueryCriteriaView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.AddConceptionEntityToProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
@@ -60,6 +57,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
     private SecondaryKeyValueDisplayItem finishTimeDisplayItem;
     private SecondaryKeyValueDisplayItem dataCountDisplayItem;
     private final ZoneId id = ZoneId.systemDefault();
+    private AttributesQueryCriteriaView attributesQueryCriteriaView;
 
     public RelatedConceptionEntitiesView(String classificationName){
         this.setPadding(false);
@@ -94,19 +92,16 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
         classificationRelatedDataQueryCriteriaView.setClassificationRelatedDataQueryHelper(classificationRelatedDataQueryHelper);
         add(classificationRelatedDataQueryCriteriaView);
 
-        MenuBar entitiesQueryCriteriaMenuBar = new MenuBar();
-        entitiesQueryCriteriaMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
-        classificationRelatedDataQueryCriteriaView.getCustomQueryCriteriaElementsContainer().add(entitiesQueryCriteriaMenuBar);
-        MenuItem queryCriteriaContainerMenu = createIconItem(entitiesQueryCriteriaMenuBar, VaadinIcon.OPTIONS, "属性查询条件", null);
-
-        Icon downArrowIcon = new Icon(VaadinIcon.CHEVRON_DOWN);
-        downArrowIcon.setSize("12px");
-        queryCriteriaContainerMenu.add(downArrowIcon);
-
-        VerticalLayout queryCriteriaContainerLayout = new VerticalLayout();
-        queryCriteriaContainerLayout.setWidth(500,Unit.PIXELS);
-        queryCriteriaContainerLayout.setHeight(600,Unit.PIXELS);
-        queryCriteriaContainerMenu.getSubMenu().addItem(queryCriteriaContainerLayout);
+        Button displayEntitiesQueryCriteriaDialogButton = new Button("查询属性条件",new Icon(VaadinIcon.OPTIONS));
+        displayEntitiesQueryCriteriaDialogButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        displayEntitiesQueryCriteriaDialogButton.setWidth(110,Unit.PIXELS);
+        displayEntitiesQueryCriteriaDialogButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                displayEntitiesQueryCriteriaView();
+            }
+        });
+        classificationRelatedDataQueryCriteriaView.getCustomQueryCriteriaElementsContainer().add(displayEntitiesQueryCriteriaDialogButton);
 
         HorizontalLayout sectionDiv01 = new HorizontalLayout();
         sectionDiv01.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -509,35 +504,17 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
         }
     }
 
-    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
-        return createIconItem(menu, iconName, label, ariaLabel, false);
+    private void displayEntitiesQueryCriteriaView(){
+        if(this.attributesQueryCriteriaView == null){
+            attributesQueryCriteriaView = new AttributesQueryCriteriaView();
+            attributesQueryCriteriaView.setViewHeight(590);
+        }
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.OPTIONS),"设定属性查询条件",null,true,390,700,false);
+        fixSizeWindow.setWindowContent(attributesQueryCriteriaView);
+        fixSizeWindow.setModel(true);
+        attributesQueryCriteriaView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
-
-    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName,String label, String ariaLabel, boolean isChild) {
-        Icon icon = new Icon(iconName);
-        icon.setSize("14px");
-        if (isChild) {
-            icon.getStyle().set("width", "var(--lumo-icon-size-s)");
-            icon.getStyle().set("height", "var(--lumo-icon-size-s)");
-            icon.getStyle().set("marginRight", "var(--lumo-space-s)");
-        }
-        MenuItem item = menu.addItem(icon, e -> {
-        });
-        if (ariaLabel != null) {
-            item.getElement().setAttribute("aria-label", ariaLabel);
-        }
-        if (label != null) {
-
-            NativeLabel xxx = new NativeLabel(label);
-
-            //xxx.addClassNames("text-tertiary");
-            xxx.getStyle().set("font-size","0.65rem");
-
-            item.add(xxx);
-        }
-        return item;
-    }
-
 
     private class ConceptionEntityActionButtonsValueProvider implements ValueProvider<ConceptionEntityValue,HorizontalLayout>{
         @Override
