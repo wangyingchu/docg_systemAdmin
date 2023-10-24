@@ -84,7 +84,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                 new ClassificationRelatedDataQueryCriteriaView.ClassificationRelatedDataQueryHelper() {
                     @Override
                     public void executeQuery(String relationKindName, RelationDirection relationDirection, boolean includeOffspringClassifications, int offspringLevel) {
-                        queryRelatedConceptionEntities(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
+                        queryRelatedConceptionEntities(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel,true);
                     }
                 };
 
@@ -176,7 +176,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                 RelationDirection relationDirection = classificationRelatedDataQueryCriteriaView.getRelationDirection();
                 boolean includeOffspringClassifications = classificationRelatedDataQueryCriteriaView.getIncludeOffspringClassifications();
                 int offspringLevel = classificationRelatedDataQueryCriteriaView.getOffspringLevel();
-                queryRelatedConceptionEntities(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
+                queryRelatedConceptionEntities(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel,false);
             }
         };
 
@@ -193,7 +193,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
         this.conceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(totalCount));
     }
 
-    private void queryRelatedConceptionEntities(String relationKindName, RelationDirection relationDirection, boolean includeOffspringClassifications, int offspringLevel){
+    private void queryRelatedConceptionEntities(String relationKindName, RelationDirection relationDirection, boolean includeOffspringClassifications, int offspringLevel,boolean ignoreCustomQueryParameters){
         currentWorkingRelationKindName = relationKindName;
         currentWorkingRelationDirection = relationDirection;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -209,14 +209,22 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
             boolean isCorrectInput = true;
             QueryParameters customQueryParameters = null;
             List<String> resultAttributesList = null;
-            if(attributesQueryCriteriaView.isCorrectQueryCriteria()){
-                customQueryParameters = attributesQueryCriteriaView.getQueryParameters();
-                resultAttributesList = attributesQueryCriteriaView.getResultAttributesList();
-            }else{
-                isCorrectInput = false;
+            if(!ignoreCustomQueryParameters){
+                if(attributesQueryCriteriaView.isCorrectQueryCriteria()){
+                    customQueryParameters = attributesQueryCriteriaView.getQueryParameters();
+                    resultAttributesList = attributesQueryCriteriaView.getResultAttributesList();
+                }else{
+                    isCorrectInput = false;
+                }
             }
             if(isCorrectInput){
-                QueryParameters queryParameters = customQueryParameters != null ? customQueryParameters : new QueryParameters();
+                QueryParameters queryParameters = null;
+                if(ignoreCustomQueryParameters){
+                    queryParameters = new QueryParameters();
+                }else{
+                    queryParameters = customQueryParameters != null ? customQueryParameters : new QueryParameters();
+                }
+
                 List<String> attributesList = new ArrayList<>();
                 if(resultAttributesList != null && resultAttributesList.size() > 0){
                     attributesList.addAll(resultAttributesList);
