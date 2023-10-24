@@ -161,6 +161,9 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
         });
 
         this.currentRowKeyList = new ArrayList<>();
+
+        this.attributesQueryCriteriaView = new AttributesQueryCriteriaView();
+        this.attributesQueryCriteriaView.setViewHeight(590);
     }
 
     public void setHeight(int viewHeight){
@@ -187,15 +190,12 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
             boolean isCorrectInput = true;
             QueryParameters customQueryParameters = null;
             List<String> resultAttributesList = null;
-            if(attributesQueryCriteriaView != null){
-                if(attributesQueryCriteriaView.isCorrectQueryCriteria()){
-                    customQueryParameters = attributesQueryCriteriaView.getQueryParameters();
-                    resultAttributesList = attributesQueryCriteriaView.getResultAttributesList();
-                }else{
-                    isCorrectInput = false;
-                }
+            if(attributesQueryCriteriaView.isCorrectQueryCriteria()){
+                customQueryParameters = attributesQueryCriteriaView.getQueryParameters();
+                resultAttributesList = attributesQueryCriteriaView.getResultAttributesList();
+            }else{
+                isCorrectInput = false;
             }
-
             if(isCorrectInput){
                 QueryParameters queryParameters = customQueryParameters != null ? customQueryParameters : new QueryParameters();
                 List<String> attributesList = new ArrayList<>();
@@ -510,10 +510,6 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
     }
 
     private void displayEntitiesQueryCriteriaView(){
-        if(this.attributesQueryCriteriaView == null){
-            attributesQueryCriteriaView = new AttributesQueryCriteriaView();
-            attributesQueryCriteriaView.setViewHeight(590);
-        }
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.OPTIONS),"设定属性查询条件",null,true,390,700,false);
         fixSizeWindow.setWindowContent(attributesQueryCriteriaView);
         fixSizeWindow.setModel(true);
