@@ -92,7 +92,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
         classificationRelatedDataQueryCriteriaView.setClassificationRelatedDataQueryHelper(classificationRelatedDataQueryHelper);
         add(classificationRelatedDataQueryCriteriaView);
 
-        Button displayEntitiesQueryCriteriaDialogButton = new Button("查询属性条件",new Icon(VaadinIcon.OPTIONS));
+        Button displayEntitiesQueryCriteriaDialogButton = new Button("属性查询条件",new Icon(VaadinIcon.OPTIONS));
         displayEntitiesQueryCriteriaDialogButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         displayEntitiesQueryCriteriaDialogButton.setWidth(110,Unit.PIXELS);
         displayEntitiesQueryCriteriaDialogButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -184,9 +184,18 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
         this.currentRowKeyList.clear();
         this.lastQueryAttributesList = null;
         try {
-            QueryParameters queryParameters = new QueryParameters();
+            QueryParameters customQueryParameters = null;
+            List<String> resultAttributesList = null;
+            if(attributesQueryCriteriaView != null){
+                customQueryParameters = attributesQueryCriteriaView.getQueryParameters();
+                resultAttributesList = attributesQueryCriteriaView.getResultAttributesList();
+            }
+
+            QueryParameters queryParameters = customQueryParameters != null ? customQueryParameters : new QueryParameters();
+
+
             List<String> attributesList = new ArrayList<>();
-            /*
+
             if(resultAttributesList != null && resultAttributesList.size() > 0){
                 attributesList.addAll(resultAttributesList);
             }else{
@@ -195,12 +204,6 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                 attributesList.add(RealmConstant._creatorIdProperty);
                 attributesList.add(RealmConstant._dataOriginProperty);
             }
-            */
-
-            attributesList.add(RealmConstant._createDateProperty);
-            attributesList.add(RealmConstant._lastModifyDateProperty);
-            attributesList.add(RealmConstant._creatorIdProperty);
-            attributesList.add(RealmConstant._dataOriginProperty);
 
             this.lastQueryAttributesList = attributesList;
 

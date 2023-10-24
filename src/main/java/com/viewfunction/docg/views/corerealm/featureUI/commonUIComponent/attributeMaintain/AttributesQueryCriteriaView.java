@@ -6,17 +6,19 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.FilteringItem;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.AddCustomQueryCriteriaUI;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.KindQueryCriteriaView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.QueryConditionItemWidget;
@@ -24,10 +26,10 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQue
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class AttributesQueryCriteriaView extends VerticalLayout implements KindQueryCriteriaView {
     private VerticalLayout criteriaItemsContainer;
-    private Registration listener;
     private List<String> resultAttributesList;
     private QueryParameters queryParameters;
     private Binder<String> queryConditionDataBinder;
@@ -178,6 +180,53 @@ public class AttributesQueryCriteriaView extends VerticalLayout implements KindQ
                 Component currentNewDefaultItem = criteriaItemsContainer.getChildren().findFirst().get();
                 ((QueryConditionItemWidget)currentNewDefaultItem).setAsDefaultQueryConditionItem();
             }
+        }
+    }
+
+    private void setDefaultQueryConditionIsSet(boolean defaultQueryConditionIsSet) {
+        this.defaultQueryConditionIsSet = defaultQueryConditionIsSet;
+    }
+
+    private void setOtherQueryConditionsAreSet(boolean otherQueryConditionsAreSet) {
+        this.otherQueryConditionsAreSet = otherQueryConditionsAreSet;
+    }
+
+    public List<String> getResultAttributesList(){
+        return resultAttributesList;
+    }
+    public QueryParameters getQueryParameters(){
+        queryParameters.getAndFilteringItemsList().clear();
+        queryParameters.getOrFilteringItemsList().clear();
+        queryParameters.setDefaultFilteringItem(null);
+        setDefaultQueryConditionIsSet(true);
+        setOtherQueryConditionsAreSet(false);
+
+        criteriaItemsContainer.getChildren().forEach(new Consumer<Component>() {
+            @Override
+            public void accept(Component component) {
+                QueryConditionItemWidget currentQueryConditionItemWidget = (QueryConditionItemWidget)component;
+                FilteringItem currentFilteringItem = currentQueryConditionItemWidget.getFilteringItem();
+                if(currentQueryConditionItemWidget.isDefaultQueryConditionItem() & currentFilteringItem == null){
+                    setDefaultQueryConditionIsSet(false);
+                }
+                if(currentQueryConditionItemWidget.isDefaultQueryConditionItem()){
+                    queryParameters.setDefaultFilteringItem(currentFilteringItem);
+                }else{
+                    if(currentFilteringItem != null){
+                        QueryParameters.FilteringLogic currentFilteringLogic = currentQueryConditionItemWidget.getFilteringLogic();
+                        queryParameters.addFilteringItem(currentFilteringItem, currentFilteringLogic);
+                        setOtherQueryConditionsAreSet(true);
+                    }else{
+                        currentQueryConditionItemWidget.resetQueryConditionItem();
+                    }
+                }
+            }
+        });
+        if(!defaultQueryConditionIsSet & otherQueryConditionsAreSet){
+            CommonUIOperationUtil.showPopupNotification("请设定默认查询条件的属性过滤值", NotificationVariant.LUMO_ERROR);
+            return null;
+        }else{
+            return queryParameters;
         }
     }
 }
