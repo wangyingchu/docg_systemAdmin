@@ -29,6 +29,11 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class AttributesQueryCriteriaView extends VerticalLayout implements KindQueryCriteriaView {
+
+    public interface AttributesCriteriaQueryHelper{
+        void executeQuery(QueryParameters queryParameters);
+    }
+
     private VerticalLayout criteriaItemsContainer;
     private List<String> resultAttributesList;
     private QueryParameters queryParameters;
@@ -36,6 +41,8 @@ public class AttributesQueryCriteriaView extends VerticalLayout implements KindQ
     private boolean defaultQueryConditionIsSet = true;
     private boolean otherQueryConditionsAreSet = false;
     private Dialog containerDialog;
+    private AttributesCriteriaQueryHelper attributesCriteriaQueryHelper;
+
     public AttributesQueryCriteriaView(){
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"设定查询条件属性:");
         add(filterTitle1);
@@ -93,14 +100,16 @@ public class AttributesQueryCriteriaView extends VerticalLayout implements KindQ
         buttonsContainerLayout.setPadding(false);
         add(buttonsContainerLayout);
 
-        Button executeQueryButton = new Button("确定");
+        Button executeQueryButton = new Button("确认查询");
         executeQueryButton.setIcon(new Icon(VaadinIcon.CHECK));
-        executeQueryButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        executeQueryButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_PRIMARY);
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                if(getContainerDialog() != null){
-                    getContainerDialog().close();
+                if(isCorrectQueryCriteria()){
+                        if(attributesCriteriaQueryHelper != null){
+                            attributesCriteriaQueryHelper.executeQuery(getQueryParameters());
+                    }
                 }
             }
         });
@@ -118,6 +127,28 @@ public class AttributesQueryCriteriaView extends VerticalLayout implements KindQ
                 .set("padding-left","20px");
         buttonsContainerLayout.add(resultSetConfigButton);
         buttonsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,resultSetConfigButton);
+
+        HorizontalLayout divLayout = new HorizontalLayout();
+        divLayout.setWidth(10,Unit.PIXELS);
+        buttonsContainerLayout.add(divLayout);
+
+        Icon divIcon = new Icon(VaadinIcon.LINE_V);
+        divIcon.setSize("8px");
+        buttonsContainerLayout.add(divIcon);
+        buttonsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, divIcon);
+
+        Button closeButton = new Button("关闭");
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        closeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                if(getContainerDialog() != null){
+                    getContainerDialog().close();
+                }
+            }
+        });
+        buttonsContainerLayout.add(closeButton);
 
         this.queryParameters = new QueryParameters();
         this.queryConditionDataBinder = new Binder<>();
@@ -152,6 +183,10 @@ public class AttributesQueryCriteriaView extends VerticalLayout implements KindQ
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
+    }
+
+    public void setAttributesCriteriaQueryHelper(AttributesCriteriaQueryHelper attributesCriteriaQueryHelper) {
+        this.attributesCriteriaQueryHelper = attributesCriteriaQueryHelper;
     }
 
     @Override

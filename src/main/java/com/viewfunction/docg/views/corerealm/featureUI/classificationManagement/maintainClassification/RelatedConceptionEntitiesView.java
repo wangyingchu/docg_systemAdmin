@@ -92,13 +92,20 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
         classificationRelatedDataQueryCriteriaView.setClassificationRelatedDataQueryHelper(classificationRelatedDataQueryHelper);
         add(classificationRelatedDataQueryCriteriaView);
 
-        Button displayEntitiesQueryCriteriaDialogButton = new Button("属性查询条件",new Icon(VaadinIcon.OPTIONS));
+        Icon divIcon = new Icon(VaadinIcon.LINE_V);
+        divIcon.setSize("8px");
+        classificationRelatedDataQueryCriteriaView.getCustomQueryCriteriaElementsContainer().add(divIcon);
+        classificationRelatedDataQueryCriteriaView.getCustomQueryCriteriaElementsContainer().setVerticalComponentAlignment(Alignment.CENTER, divIcon);
+
+        Button displayEntitiesQueryCriteriaDialogButton = new Button("自定义属性过滤查询",new Icon(VaadinIcon.FILTER));
         displayEntitiesQueryCriteriaDialogButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        displayEntitiesQueryCriteriaDialogButton.setWidth(110,Unit.PIXELS);
+        displayEntitiesQueryCriteriaDialogButton.setWidth(130,Unit.PIXELS);
         displayEntitiesQueryCriteriaDialogButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                displayEntitiesQueryCriteriaView();
+                if(classificationRelatedDataQueryCriteriaView.validQueryConditions()){
+                    displayEntitiesQueryCriteriaView();
+                }
             }
         });
         classificationRelatedDataQueryCriteriaView.getCustomQueryCriteriaElementsContainer().add(displayEntitiesQueryCriteriaDialogButton);
@@ -162,7 +169,19 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
 
         this.currentRowKeyList = new ArrayList<>();
 
+        AttributesQueryCriteriaView.AttributesCriteriaQueryHelper attributesCriteriaQueryHelper = new AttributesQueryCriteriaView.AttributesCriteriaQueryHelper() {
+            @Override
+            public void executeQuery(QueryParameters queryParameters) {
+                String relationKindName = classificationRelatedDataQueryCriteriaView.getRelationKindName();
+                RelationDirection relationDirection = classificationRelatedDataQueryCriteriaView.getRelationDirection();
+                boolean includeOffspringClassifications = classificationRelatedDataQueryCriteriaView.getIncludeOffspringClassifications();
+                int offspringLevel = classificationRelatedDataQueryCriteriaView.getOffspringLevel();
+                queryRelatedConceptionEntities(relationKindName,relationDirection,includeOffspringClassifications,offspringLevel);
+            }
+        };
+
         this.attributesQueryCriteriaView = new AttributesQueryCriteriaView();
+        attributesQueryCriteriaView.setAttributesCriteriaQueryHelper(attributesCriteriaQueryHelper);
         this.attributesQueryCriteriaView.setViewHeight(590);
     }
 
@@ -510,7 +529,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
     }
 
     private void displayEntitiesQueryCriteriaView(){
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.OPTIONS),"设定属性查询条件",null,true,390,700,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.FILTER),"自定义属性过滤查询",null,true,390,700,false);
         fixSizeWindow.setWindowContent(attributesQueryCriteriaView);
         fixSizeWindow.setModel(true);
         attributesQueryCriteriaView.setContainerDialog(fixSizeWindow);

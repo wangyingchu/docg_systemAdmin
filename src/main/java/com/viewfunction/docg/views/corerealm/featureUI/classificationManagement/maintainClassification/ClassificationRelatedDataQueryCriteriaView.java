@@ -114,10 +114,6 @@ public class ClassificationRelatedDataQueryCriteriaView extends HorizontalLayout
         add(offspringLevelField);
         setVerticalComponentAlignment(Alignment.CENTER, offspringLevelField);
 
-        customQueryCriteriaElementsContainer = new HorizontalLayout();
-        add(customQueryCriteriaElementsContainer);
-        setVerticalComponentAlignment(Alignment.CENTER, customQueryCriteriaElementsContainer);
-
         Button searchClassificationsButton = new Button("查询",new Icon(VaadinIcon.SEARCH));
         searchClassificationsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         searchClassificationsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -130,6 +126,10 @@ public class ClassificationRelatedDataQueryCriteriaView extends HorizontalLayout
                 executeQueryLogic();
             }
         });
+
+        customQueryCriteriaElementsContainer = new HorizontalLayout();
+        add(customQueryCriteriaElementsContainer);
+        setVerticalComponentAlignment(Alignment.CENTER, customQueryCriteriaElementsContainer);
     }
 
     private Renderer<KindMetaInfo> createRenderer() {
@@ -202,7 +202,77 @@ public class ClassificationRelatedDataQueryCriteriaView extends HorizontalLayout
         }
     }
 
+    public boolean validQueryConditions(){
+        if(this.relationKindSelect.getValue() == null){
+            CommonUIOperationUtil.showPopupNotification("请选择关系类型定义", NotificationVariant.LUMO_WARNING);
+            return false;
+        }
+        if(this.relationDirectionSelect.getValue() == null){
+            CommonUIOperationUtil.showPopupNotification("请选择关系方向", NotificationVariant.LUMO_WARNING);
+            return false;
+        }
+        boolean includeOffspringClassifications = includeOffspringClassificationsCheckbox.getValue();
+        if(includeOffspringClassifications){
+            String offspringLevelFieldStr = offspringLevelField.getValue();
+            if (offspringLevelFieldStr.equals("")) {
+                CommonUIOperationUtil.showPopupNotification("请输入后代分类层数", NotificationVariant.LUMO_WARNING);
+                return false;
+            }else{
+                try {
+                    int offspringLevel = Integer.parseInt(offspringLevelFieldStr);
+                    if(offspringLevel<1){
+                        CommonUIOperationUtil.showPopupNotification("后代分类层数必须是大于等于 1 的整数", NotificationVariant.LUMO_ERROR);
+                        return false;
+                    }
+                } catch(NumberFormatException e){
+                    CommonUIOperationUtil.showPopupNotification("后代分类层数必须是大于等于 1 的整数", NotificationVariant.LUMO_ERROR);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public HorizontalLayout getCustomQueryCriteriaElementsContainer(){
         return this.customQueryCriteriaElementsContainer;
+    }
+
+    public String getRelationKindName(){
+        return this.relationKindSelect.getValue().getKindName();
+    }
+
+    public RelationDirection getRelationDirection(){
+        RelationDirection relationDirection = null;
+        String relationDirectionStr = this.relationDirectionSelect.getValue().toString();
+        if(relationDirectionStr.equals("FROM")){
+            relationDirection = RelationDirection.FROM;
+        }else if(relationDirectionStr.equals("TO")){
+            relationDirection = RelationDirection.TO;
+        }else{
+            relationDirection = RelationDirection.TWO_WAY;
+        }
+        return relationDirection;
+    }
+
+    public boolean getIncludeOffspringClassifications(){
+        return includeOffspringClassificationsCheckbox.getValue();
+    }
+
+    public int getOffspringLevel(){
+        String offspringLevelFieldStr = offspringLevelField.getValue();
+        if (offspringLevelFieldStr.equals("")) {
+            return -1;
+        }else{
+            try {
+                int offspringLevel = Integer.parseInt(offspringLevelFieldStr);
+                if(offspringLevel<1){
+                    return -1;
+                }else{
+                    return offspringLevel;
+                }
+            } catch(NumberFormatException e){
+                return -1;
+            }
+        }
     }
 }
