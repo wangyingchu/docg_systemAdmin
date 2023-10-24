@@ -192,10 +192,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
             }
 
             QueryParameters queryParameters = customQueryParameters != null ? customQueryParameters : new QueryParameters();
-
-
             List<String> attributesList = new ArrayList<>();
-
             if(resultAttributesList != null && resultAttributesList.size() > 0){
                 attributesList.addAll(resultAttributesList);
             }else{
@@ -204,7 +201,6 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                 attributesList.add(RealmConstant._creatorIdProperty);
                 attributesList.add(RealmConstant._dataOriginProperty);
             }
-
             this.lastQueryAttributesList = attributesList;
 
             ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
@@ -227,7 +223,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                 ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
                 currentConceptionEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName,i+1);
             }
-            if (attributesList != null && attributesList.size() > 0) {
+            if(attributesList != null && attributesList.size() > 0) {
                 for (String currentProperty : attributesList) {
                     if (!currentProperty.equals(_rowIndexPropertyName)) {
                         queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
@@ -246,7 +242,6 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                                 });
                         queryResultGrid.getColumnByKey(currentProperty + "_KEY").setSortable(true).setResizable(true);
                     }
-
                     this.currentRowKeyList.add(currentProperty + "_KEY");
                 }
             }
