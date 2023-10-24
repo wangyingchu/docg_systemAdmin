@@ -211,7 +211,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
 
                 ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
                         targetClassification.getRelatedConceptionEntityAttributes(currentWorkingRelationKindName, currentWorkingRelationDirection,queryParameters,
-                                attributesList,includeOffspringClassifications,offspringLevel);
+                                this.lastQueryAttributesList,includeOffspringClassifications,offspringLevel);
                 List<ConceptionEntityValue> conceptionEntityValueList = conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
 
                 Date startDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime();
@@ -223,13 +223,13 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
                 String finishTimeStr = finishZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
                 startTimeDisplayItem.updateDisplayValue(startTimeStr);
                 finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
-                dataCountDisplayItem.updateDisplayValue(""+   numberFormat.format(conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount()));
+                dataCountDisplayItem.updateDisplayValue(""+ numberFormat.format(conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount()));
 
                 for(int i=0 ; i<conceptionEntityValueList.size();i++){
                     ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
                     currentConceptionEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName,i+1);
                 }
-                if(attributesList != null && attributesList.size() > 0) {
+                if(this.lastQueryAttributesList != null && this.lastQueryAttributesList.size() > 0) {
                     for (String currentProperty : attributesList) {
                         if (!currentProperty.equals(_rowIndexPropertyName)) {
                             queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
