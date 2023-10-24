@@ -93,6 +93,11 @@ public class AttributesQueryCriteriaView extends VerticalLayout implements KindQ
         buttonSpaceDivLayout.setVerticalComponentAlignment(Alignment.CENTER,clearCustomQueryCriteriasButton);
         filterDropdownSelectorContainerLayout.add(buttonSpaceDivLayout);
 
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidthFull();
+        spaceDivLayout1.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-10pct)");
+        add(spaceDivLayout1);
+
         criteriaItemsContainer = new VerticalLayout();
         criteriaItemsContainer.setMargin(false);
         criteriaItemsContainer.setSpacing(false);
