@@ -2,14 +2,21 @@ package com.viewfunction.docg.views.corerealm.featureUI;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.TabSheet;
+import com.vaadin.flow.component.tabs.TabSheetVariant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 
 import java.util.ArrayList;
@@ -18,7 +25,6 @@ import java.util.List;
 public class TimeFlowManagementUI extends VerticalLayout {
 
     public TimeFlowManagementUI(){
-
         Button refreshDataButton = new Button("刷新时间流数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -46,5 +52,47 @@ public class TimeFlowManagementUI extends VerticalLayout {
 
         TitleActionBar titleActionBar = new TitleActionBar(new Icon(VaadinIcon.COG_O),"Time Flow 时间流数据管理",secTitleElementsList,buttonList);
         add(titleActionBar);
+
+        List<Component> timeFlowManagementOperationButtonList = new ArrayList<>();
+
+        Button createTimeFlowButton = new Button("创建时间流",new Icon(VaadinIcon.PLUS_SQUARE_O));
+        createTimeFlowButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        createTimeFlowButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        timeFlowManagementOperationButtonList.add(createTimeFlowButton);
+        createTimeFlowButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //renderCreateClassificationUI();
+            }
+        });
+
+        Icon icon = new Icon(VaadinIcon.LIST);
+        SectionActionBar sectionActionBar = new SectionActionBar(icon,"时间流数据:",timeFlowManagementOperationButtonList);
+        add(sectionActionBar);
+
+        TabSheet timeFlowInfoTabSheet = new TabSheet();
+        timeFlowInfoTabSheet.addThemeVariants(TabSheetVariant.LUMO_TABS_SMALL);
+        timeFlowInfoTabSheet.setWidthFull();
+        add(timeFlowInfoTabSheet);
+
+        List<TimeFlow> timeFlowList = coreRealm.getTimeFlows();
+        for(TimeFlow currentTimeFlow : timeFlowList){
+            String currentTimeFlowName = currentTimeFlow.getTimeFlowName();
+            timeFlowInfoTabSheet.add(generateTabTitle(VaadinIcon.CLOCK,currentTimeFlowName),new HorizontalLayout());
+        }
+    }
+
+    private HorizontalLayout generateTabTitle(VaadinIcon tabIcon, String tabTitleTxt){
+        HorizontalLayout  tabTitleLayout = new HorizontalLayout();
+        tabTitleLayout.setDefaultVerticalComponentAlignment(Alignment.START);
+        //tabTitleLayout.setHeight(5,Unit.PIXELS);
+        Icon tabTitleIcon = new Icon(tabIcon);
+        tabTitleIcon.setSize("8px");
+        NativeLabel tabTitleLabel = new NativeLabel(" "+tabTitleTxt);
+        tabTitleLabel.getStyle()
+                .set("font-size","var(--lumo-font-size-s)")
+                .set("font-weight", "bold");
+        tabTitleLayout.add(tabTitleIcon,tabTitleLabel);
+        return tabTitleLayout;
     }
 }
