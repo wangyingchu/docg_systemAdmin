@@ -30,6 +30,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
     private String timeFlowName;
     private VerticalLayout leftSideContainerLayout;
+    private VerticalLayout middleContainerLayout;
     private Registration listener;
 
     public TimeFlowDetailUI(){}
@@ -49,11 +50,13 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         renderTimeFlowData();
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             leftSideContainerLayout.setHeight(event.getHeight()-265,Unit.PIXELS);
+            middleContainerLayout.setHeight(event.getHeight()-265,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             leftSideContainerLayout.setHeight(browserHeight-265,Unit.PIXELS);
+            middleContainerLayout.setHeight(browserHeight-265,Unit.PIXELS);
         }));
     }
 
@@ -81,7 +84,6 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         leftSideContainerLayout.setWidth(290, Unit.PIXELS);
         leftSideContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
-
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"时间流概览");
         leftSideContainerLayout.add(filterTitle1);
 
@@ -91,7 +93,6 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         heightSpaceDiv0.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
                 .set("padding-bottom", "var(--lumo-space-s)");
-
 
         VerticalLayout timeFlowInformationLayout = new VerticalLayout();
         leftSideContainerLayout.add(timeFlowInformationLayout);
@@ -358,7 +359,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         spaceDivSpan.setHeight(10,Unit.PIXELS);
         leftSideContainerLayout.add(spaceDivSpan);
 
-        Button executeQueryButton = new Button("查询时间尺度实体");
+        Button executeQueryButton = new Button("检索时间尺度实体");
         executeQueryButton.setIcon(new Icon(VaadinIcon.SEARCH));
         executeQueryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -368,5 +369,28 @@ public class TimeFlowDetailUI extends VerticalLayout implements
             }
         });
         leftSideContainerLayout.add(executeQueryButton);
+
+        middleContainerLayout = new VerticalLayout();
+        middleContainerLayout.setSpacing(false);
+        middleContainerLayout.setPadding(false);
+        middleContainerLayout.setMargin(false);
+
+        mainContainerLayout.add(middleContainerLayout);
+        middleContainerLayout.setWidth(400, Unit.PIXELS);
+        middleContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
+
+        SecondaryIconTitle filterTitle3 = new SecondaryIconTitle(FontAwesome.Solid.CLOCK.create(),"时间尺度实体检索结果");
+        filterTitle3.getStyle().set("padding-left","10px");
+        middleContainerLayout.add(filterTitle3);
+
+        HorizontalLayout heightSpaceDivM0 = new HorizontalLayout();
+        heightSpaceDivM0.setWidth(100,Unit.PERCENTAGE);
+        middleContainerLayout.add(heightSpaceDivM0);
+        heightSpaceDivM0.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-s)");
+
+
+
     }
 }
