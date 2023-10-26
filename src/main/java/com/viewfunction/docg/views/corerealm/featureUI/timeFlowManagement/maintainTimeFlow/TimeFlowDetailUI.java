@@ -1,9 +1,10 @@
 package com.viewfunction.docg.views.corerealm.featureUI.timeFlowManagement.maintainTimeFlow;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -11,15 +12,15 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
-import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
+import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
-import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
-import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.TimeFlowInfoWidget;
 
 @Route("timeFlowDetailInfo/:timeFlow")
 public class TimeFlowDetailUI extends VerticalLayout implements
@@ -27,6 +28,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
     private String timeFlowName;
     private VerticalLayout leftSideContainerLayout;
+    private Registration listener;
+
     public TimeFlowDetailUI(){}
 
     public TimeFlowDetailUI(String timeFlowName){
@@ -42,10 +45,20 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         renderTimeFlowData();
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            leftSideContainerLayout.setHeight(event.getHeight()-265,Unit.PIXELS);
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            int browserHeight = receiver.getBodyClientHeight();
+            leftSideContainerLayout.setHeight(browserHeight-265,Unit.PIXELS);
+        }));
     }
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
         super.onDetach(detachEvent);
     }
 
@@ -53,7 +66,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         HorizontalLayout mainContainerLayout = new HorizontalLayout();
         mainContainerLayout.setSpacing(false);
         mainContainerLayout.setPadding(false);
-        //mainContainerLayout.setMargin(false);
+        mainContainerLayout.setMargin(false);
         mainContainerLayout.setWidthFull();
         add(mainContainerLayout);
 
@@ -63,85 +76,64 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         leftSideContainerLayout.setMargin(false);
 
         mainContainerLayout.add(leftSideContainerLayout);
-        leftSideContainerLayout.setWidth(280, Unit.PIXELS);
-        leftSideContainerLayout.getStyle()
-                .set("border-right", "1px solid var(--lumo-contrast-20pct)");
-
-        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"时间流概览");
-        leftSideContainerLayout.add(filterTitle2);
-        //singleConceptionKindInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
+        leftSideContainerLayout.setWidth(290, Unit.PIXELS);
+        leftSideContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
 
-        HorizontalLayout singleConceptionKindInfoElementsContainerLayout = new HorizontalLayout();
-        singleConceptionKindInfoElementsContainerLayout.setSpacing(false);
-        singleConceptionKindInfoElementsContainerLayout.setMargin(false);
-        singleConceptionKindInfoElementsContainerLayout.setHeight(10,Unit.PIXELS);
-        leftSideContainerLayout.add(singleConceptionKindInfoElementsContainerLayout);
+        SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"时间流概览");
+        leftSideContainerLayout.add(filterTitle1);
 
-
-        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TIMER),this.timeFlowName,
-                null,null);
-        secondaryTitleActionBar.setWidth(95,Unit.PERCENTAGE);
-        leftSideContainerLayout.add(secondaryTitleActionBar);
-
-
+        HorizontalLayout heightSpaceDiv0 = new HorizontalLayout();
+        heightSpaceDiv0.setWidth(95,Unit.PERCENTAGE);
+        leftSideContainerLayout.add(heightSpaceDiv0);
+        heightSpaceDiv0.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-s)");
 
 
         VerticalLayout timeFlowInformationLayout = new VerticalLayout();
-        //timeFlowInformationLayout.setPadding(false);
         leftSideContainerLayout.add(timeFlowInformationLayout);
 
         HorizontalLayout timeHorizontalLayout = new HorizontalLayout();
         timeHorizontalLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
 
-
-
-/*
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
-        horizontalLayout.setSpacing(false);
-        horizontalLayout.setMargin(false);
-      //  if(icon != null){
-       //     icon.setSize("10px");
-       //     icon.addClassNames("text-secondary");
-      //      horizontalLayout.add(icon);
-            HorizontalLayout spaceDivHorizontalLayout = new HorizontalLayout();
-            spaceDivHorizontalLayout.setWidth(5, Unit.PIXELS);
-            horizontalLayout.add(spaceDivHorizontalLayout);
-     //   }
-*/
-        NativeLabel conceptionEntityNumberText = new NativeLabel("时间跨度:");
-        conceptionEntityNumberText.addClassNames("text-xs","font-semibold","text-secondary");
-        timeHorizontalLayout.add(conceptionEntityNumberText);
+        NativeLabel yearSpanText = new NativeLabel("时间跨度:");
+        yearSpanText.addClassNames("text-xs","font-semibold","text-secondary");
+        timeHorizontalLayout.add(yearSpanText);
 
         Span fromYear = new Span();
-
-        NativeLabel displayValue = new NativeLabel("1990");
-        displayValue.addClassNames("text-xl","font-extrabold");
-        fromYear.add(displayValue);
-
+        NativeLabel startYearValue = new NativeLabel("1990");
+        startYearValue.addClassNames("text-l","font-extrabold");
+        fromYear.add(startYearValue);
         fromYear.getElement().getThemeList().add("badge pill");
         fromYear.addClassNames("text-xl","text-primary","font-extrabold");
-
         fromYear.getStyle().set("color","#2e4e7e");
-        Span toYear = new Span("2050");
+
+        Icon yearDivIcon = VaadinIcon.ARROWS_LONG_RIGHT.create();
+        yearDivIcon.setSize("12px");
+
+        Span toYear = new Span();
+        NativeLabel toYearValue = new NativeLabel("2050");
+        toYearValue.addClassNames("text-l","font-extrabold");
+        toYear.add(toYearValue);
         toYear.getElement().getThemeList().add("badge pill");
         toYear.addClassNames("text-xl","font-bold");
         toYear.getStyle().set("color","#2e4e7e");
-        Span yearDiv = new Span(" - ");
+
         timeHorizontalLayout.add(fromYear);
-        timeHorizontalLayout.add(yearDiv);
+        timeHorizontalLayout.add(yearDivIcon);
         timeHorizontalLayout.add(toYear);
+        timeHorizontalLayout.setVerticalComponentAlignment(Alignment.CENTER,yearDivIcon);
         timeFlowInformationLayout.add(timeHorizontalLayout);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        new PrimaryKeyValueDisplayItem(horizontalLayout, FontAwesome.Solid.CLOCK.create(),"TimeScaleEntity 数量:","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(horizontalLayout, FontAwesome.Solid.CLOCK.create(),"TimeScaleEntity 数量:","1,000,000,000");
         timeFlowInformationLayout.add(horizontalLayout);
 
         HorizontalLayout horizontalLayout2 = new HorizontalLayout();
         horizontalLayout2.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        new PrimaryKeyValueDisplayItem(horizontalLayout2,FontAwesome.Solid.BEZIER_CURVE.create(),"TimeScaleEvent 数量:","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(horizontalLayout2,FontAwesome.Solid.BEZIER_CURVE.create(),"TimeScaleEvent 数量:","1,000,000,000");
         timeFlowInformationLayout.add(horizontalLayout2);
 
         HorizontalLayout horizontalLayout3 = new HorizontalLayout();
@@ -153,9 +145,6 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         new SecondaryKeyValueDisplayItem(horizontalLayout3,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
         timeFlowInformationLayout.add(horizontalLayout3);
 
-        HorizontalLayout heightSpaceDiv01 = new HorizontalLayout();
-        timeFlowInformationLayout.add(heightSpaceDiv01);
-
         HorizontalLayout horizontalLayout4 = new HorizontalLayout();
         horizontalLayout4.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         NativeLabel label4 = new NativeLabel("Month Entities:");
@@ -164,9 +153,6 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         new SecondaryKeyValueDisplayItem(horizontalLayout4,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
         new SecondaryKeyValueDisplayItem(horizontalLayout4,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
         timeFlowInformationLayout.add(horizontalLayout4);
-
-        HorizontalLayout heightSpaceDiv02 = new HorizontalLayout();
-        timeFlowInformationLayout.add(heightSpaceDiv02);
 
         HorizontalLayout horizontalLayout5 = new HorizontalLayout();
         horizontalLayout5.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -177,9 +163,6 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         new SecondaryKeyValueDisplayItem(horizontalLayout5,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
         timeFlowInformationLayout.add(horizontalLayout5);
 
-        HorizontalLayout heightSpaceDiv03 = new HorizontalLayout();
-        timeFlowInformationLayout.add(heightSpaceDiv03);
-
         HorizontalLayout horizontalLayout6 = new HorizontalLayout();
         horizontalLayout6.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         NativeLabel label6 = new NativeLabel("Hour Entities:");
@@ -188,9 +171,6 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         new SecondaryKeyValueDisplayItem(horizontalLayout6,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
         new SecondaryKeyValueDisplayItem(horizontalLayout6,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
         timeFlowInformationLayout.add(horizontalLayout6);
-
-        HorizontalLayout heightSpaceDiv04 = new HorizontalLayout();
-        timeFlowInformationLayout.add(heightSpaceDiv04);
 
         HorizontalLayout horizontalLayout7 = new HorizontalLayout();
         horizontalLayout7.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -201,5 +181,168 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         new SecondaryKeyValueDisplayItem(horizontalLayout7,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
         timeFlowInformationLayout.add(horizontalLayout7);
 
+        HorizontalLayout heightSpaceDiv05 = new HorizontalLayout();
+        timeFlowInformationLayout.add(heightSpaceDiv05);
+
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"时间流检索");
+        leftSideContainerLayout.add(filterTitle2);
+
+        HorizontalLayout heightSpaceDiv06 = new HorizontalLayout();
+        heightSpaceDiv06.setWidth(95,Unit.PERCENTAGE);
+        leftSideContainerLayout.add(heightSpaceDiv06);
+        heightSpaceDiv06.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-m)");
+
+        HorizontalLayout checkBoxesContainer1 = new HorizontalLayout();
+        checkBoxesContainer1.getStyle().set("padding-top", "var(--lumo-space-m)");
+        leftSideContainerLayout.add(checkBoxesContainer1);
+
+        NativeLabel timeGuLevelFilterText = new NativeLabel("时间粒度 :");
+        timeGuLevelFilterText.getStyle().set("font-size","0.7rem").set("color","var(--lumo-contrast-80pct)");
+        checkBoxesContainer1.add(timeGuLevelFilterText);
+
+        Checkbox yearCheckbox = new Checkbox("年");
+        yearCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
+        checkBoxesContainer1.add(yearCheckbox);
+        Checkbox monthCheckbox = new Checkbox("月");
+        monthCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
+        checkBoxesContainer1.add(monthCheckbox);
+        Checkbox dayCheckbox = new Checkbox("日");
+        dayCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
+        checkBoxesContainer1.add(dayCheckbox);
+        Checkbox hourCheckbox = new Checkbox("小时");
+        hourCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
+        checkBoxesContainer1.add(hourCheckbox);
+        Checkbox minuteCheckbox = new Checkbox("分钟");
+        minuteCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
+        checkBoxesContainer1.add(minuteCheckbox);
+
+        HorizontalLayout yearValueContainer = new HorizontalLayout();
+        leftSideContainerLayout.add(yearValueContainer);
+        NativeLabel yearFilterText = new NativeLabel("年 :");
+        yearFilterText.addClassNames("text-xs","font-semibold","text-secondary");
+        yearValueContainer.add(yearFilterText);
+        yearValueContainer.setVerticalComponentAlignment(Alignment.CENTER,yearFilterText);
+
+        TextField startYearTextField = new TextField();
+        startYearTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        startYearTextField.setWidth(50,Unit.PIXELS);
+        yearValueContainer.add(startYearTextField);
+
+        Icon inputDivIcon0 = VaadinIcon.ARROWS_LONG_RIGHT.create();
+        inputDivIcon0.setSize("10px");
+        yearValueContainer.add(inputDivIcon0);
+        yearValueContainer.setVerticalComponentAlignment(Alignment.CENTER,inputDivIcon0);
+
+        TextField toYearTextField = new TextField();
+        toYearTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        toYearTextField.setWidth(50,Unit.PIXELS);
+        yearValueContainer.add(toYearTextField);
+
+        HorizontalLayout monthValueContainer = new HorizontalLayout();
+        leftSideContainerLayout.add(monthValueContainer);
+        NativeLabel monthFilterText = new NativeLabel("月 :");
+        monthFilterText.addClassNames("text-xs","font-semibold","text-secondary");
+        monthValueContainer.add(monthFilterText);
+        monthValueContainer.setVerticalComponentAlignment(Alignment.CENTER,monthFilterText);
+
+        TextField startMonthTextField = new TextField();
+        startMonthTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        startMonthTextField.setWidth(50,Unit.PIXELS);
+        monthValueContainer.add(startMonthTextField);
+
+        Icon inputDivIcon1 = VaadinIcon.ARROWS_LONG_RIGHT.create();
+        inputDivIcon1.setSize("10px");
+        monthValueContainer.add(inputDivIcon1);
+        monthValueContainer.setVerticalComponentAlignment(Alignment.CENTER,inputDivIcon1);
+
+        TextField toMonthTextField = new TextField();
+        toMonthTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        toMonthTextField.setWidth(50,Unit.PIXELS);
+        monthValueContainer.add(toMonthTextField);
+
+        HorizontalLayout dayValueContainer = new HorizontalLayout();
+        leftSideContainerLayout.add(dayValueContainer);
+        NativeLabel dayFilterText = new NativeLabel("日 :");
+        dayFilterText.addClassNames("text-xs","font-semibold","text-secondary");
+        dayValueContainer.add(dayFilterText);
+        dayValueContainer.setVerticalComponentAlignment(Alignment.CENTER,dayFilterText);
+
+        TextField startDayTextField = new TextField();
+        startDayTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        startDayTextField.setWidth(50,Unit.PIXELS);
+        dayValueContainer.add(startDayTextField);
+
+        Icon inputDivIcon2 = VaadinIcon.ARROWS_LONG_RIGHT.create();
+        inputDivIcon2.setSize("10px");
+        dayValueContainer.add(inputDivIcon2);
+        dayValueContainer.setVerticalComponentAlignment(Alignment.CENTER,inputDivIcon2);
+
+        TextField toDayTextField = new TextField();
+        toDayTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        toDayTextField.setWidth(50,Unit.PIXELS);
+        dayValueContainer.add(toDayTextField);
+
+        HorizontalLayout hourValueContainer = new HorizontalLayout();
+        leftSideContainerLayout.add(hourValueContainer);
+        NativeLabel hourFilterText = new NativeLabel("小时 :");
+        hourFilterText.addClassNames("text-xs","font-semibold","text-secondary");
+        hourValueContainer.add(hourFilterText);
+        hourValueContainer.setVerticalComponentAlignment(Alignment.CENTER,hourFilterText);
+
+        TextField startHourTextField = new TextField();
+        startHourTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        startHourTextField.setWidth(50,Unit.PIXELS);
+        hourValueContainer.add(startHourTextField);
+
+        Icon inputDivIcon3 = VaadinIcon.ARROWS_LONG_RIGHT.create();
+        inputDivIcon3.setSize("10px");
+        hourValueContainer.add(inputDivIcon3);
+        hourValueContainer.setVerticalComponentAlignment(Alignment.CENTER,inputDivIcon3);
+
+        TextField toHourTextField = new TextField();
+        toHourTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        toHourTextField.setWidth(50,Unit.PIXELS);
+        hourValueContainer.add(toHourTextField);
+
+        HorizontalLayout minuteValueContainer = new HorizontalLayout();
+        leftSideContainerLayout.add(minuteValueContainer);
+        NativeLabel minuteFilterText = new NativeLabel("分钟 :");
+        minuteFilterText.addClassNames("text-xs","font-semibold","text-secondary");
+        minuteValueContainer.add(minuteFilterText);
+        minuteValueContainer.setVerticalComponentAlignment(Alignment.CENTER,minuteFilterText);
+
+        TextField startMinuteTextField = new TextField();
+        startMinuteTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        startMinuteTextField.setWidth(50,Unit.PIXELS);
+        minuteValueContainer.add(startMinuteTextField);
+
+        Icon inputDivIcon4 = VaadinIcon.ARROWS_LONG_RIGHT.create();
+        inputDivIcon4.setSize("10px");
+        minuteValueContainer.add(inputDivIcon4);
+        minuteValueContainer.setVerticalComponentAlignment(Alignment.CENTER,inputDivIcon4);
+
+        TextField toMinuteTextField = new TextField();
+        toMinuteTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        toMinuteTextField.setWidth(50,Unit.PIXELS);
+        minuteValueContainer.add(toMinuteTextField);
+
+        HorizontalLayout heightSpaceDiv1 = new HorizontalLayout();
+        heightSpaceDiv1.setWidth(90,Unit.PERCENTAGE);
+        leftSideContainerLayout.add(heightSpaceDiv1);
+        heightSpaceDiv1.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)").set("padding-bottom","2px");
+
+        Button executeQueryButton = new Button("查询概念实体");
+        executeQueryButton.setIcon(new Icon(VaadinIcon.SEARCH));
+        executeQueryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //queryConceptionEntities();
+            }
+        });
+        leftSideContainerLayout.add(executeQueryButton);
     }
 }
