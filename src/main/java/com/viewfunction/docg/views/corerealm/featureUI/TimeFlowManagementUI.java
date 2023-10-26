@@ -13,18 +13,25 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabSheetVariant;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import com.viewfunction.docg.views.corerealm.featureUI.timeFlowManagement.maintainTimeFlow.TimeFlowDetailUI;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TimeFlowManagementUI extends VerticalLayout {
 
+    private Map<String, TimeFlowDetailUI> timeFlowDetailUIMap;
+
     public TimeFlowManagementUI(){
+        this.timeFlowDetailUIMap = new HashMap<>();
         Button refreshDataButton = new Button("刷新时间流数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -78,14 +85,15 @@ public class TimeFlowManagementUI extends VerticalLayout {
         List<TimeFlow> timeFlowList = coreRealm.getTimeFlows();
         for(TimeFlow currentTimeFlow : timeFlowList){
             String currentTimeFlowName = currentTimeFlow.getTimeFlowName();
-            timeFlowInfoTabSheet.add(generateTabTitle(VaadinIcon.CLOCK,currentTimeFlowName),new HorizontalLayout());
+            TimeFlowDetailUI currentTimeFlowDetailUI = new TimeFlowDetailUI(currentTimeFlowName);
+            this.timeFlowDetailUIMap.put(currentTimeFlowName,currentTimeFlowDetailUI);
+            timeFlowInfoTabSheet.add(generateTabTitle(VaadinIcon.CLOCK,currentTimeFlowName),currentTimeFlowDetailUI);
         }
     }
 
     private HorizontalLayout generateTabTitle(VaadinIcon tabIcon, String tabTitleTxt){
         HorizontalLayout  tabTitleLayout = new HorizontalLayout();
         tabTitleLayout.setDefaultVerticalComponentAlignment(Alignment.START);
-        //tabTitleLayout.setHeight(5,Unit.PIXELS);
         Icon tabTitleIcon = new Icon(tabIcon);
         tabTitleIcon.setSize("8px");
         NativeLabel tabTitleLabel = new NativeLabel(" "+tabTitleTxt);
