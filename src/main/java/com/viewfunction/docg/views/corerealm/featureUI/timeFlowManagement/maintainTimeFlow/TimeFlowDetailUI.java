@@ -5,6 +5,8 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -184,7 +186,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         HorizontalLayout heightSpaceDiv05 = new HorizontalLayout();
         timeFlowInformationLayout.add(heightSpaceDiv05);
 
-        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"时间流检索");
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"时间尺度实体检索");
         leftSideContainerLayout.add(filterTitle2);
 
         HorizontalLayout heightSpaceDiv06 = new HorizontalLayout();
@@ -247,20 +249,24 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         monthValueContainer.add(monthFilterText);
         monthValueContainer.setVerticalComponentAlignment(Alignment.CENTER,monthFilterText);
 
-        TextField startMonthTextField = new TextField();
-        startMonthTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        startMonthTextField.setWidth(50,Unit.PIXELS);
-        monthValueContainer.add(startMonthTextField);
+        ComboBox<Integer> startMonthComboBox = new ComboBox<>();
+        startMonthComboBox.setItems(1,2,3,4,5,6,7,8,9,10,11,12);
+        startMonthComboBox.setWidth(50,Unit.PIXELS);
+        startMonthComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+        startMonthComboBox.setAllowCustomValue(false);
+        monthValueContainer.add(startMonthComboBox);
 
         Icon inputDivIcon1 = VaadinIcon.ARROWS_LONG_RIGHT.create();
         inputDivIcon1.setSize("10px");
         monthValueContainer.add(inputDivIcon1);
         monthValueContainer.setVerticalComponentAlignment(Alignment.CENTER,inputDivIcon1);
 
-        TextField toMonthTextField = new TextField();
-        toMonthTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        toMonthTextField.setWidth(50,Unit.PIXELS);
-        monthValueContainer.add(toMonthTextField);
+        ComboBox<Integer> toMonthComboBox = new ComboBox<>();
+        toMonthComboBox.setItems(1,2,3,4,5,6,7,8,9,10,11,12);
+        toMonthComboBox.setWidth(50,Unit.PIXELS);
+        toMonthComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+        toMonthComboBox.setAllowCustomValue(false);
+        monthValueContainer.add(toMonthComboBox);
 
         HorizontalLayout dayValueContainer = new HorizontalLayout();
         leftSideContainerLayout.add(dayValueContainer);
@@ -269,20 +275,24 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         dayValueContainer.add(dayFilterText);
         dayValueContainer.setVerticalComponentAlignment(Alignment.CENTER,dayFilterText);
 
-        TextField startDayTextField = new TextField();
-        startDayTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        startDayTextField.setWidth(50,Unit.PIXELS);
-        dayValueContainer.add(startDayTextField);
+        ComboBox<Integer> startDayComboBox = new ComboBox<>();
+        startDayComboBox.setItems(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31);
+        startDayComboBox.setWidth(50,Unit.PIXELS);
+        startDayComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+        startDayComboBox.setAllowCustomValue(false);
+        dayValueContainer.add(startDayComboBox);
 
         Icon inputDivIcon2 = VaadinIcon.ARROWS_LONG_RIGHT.create();
         inputDivIcon2.setSize("10px");
         dayValueContainer.add(inputDivIcon2);
         dayValueContainer.setVerticalComponentAlignment(Alignment.CENTER,inputDivIcon2);
 
-        TextField toDayTextField = new TextField();
-        toDayTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        toDayTextField.setWidth(50,Unit.PIXELS);
-        dayValueContainer.add(toDayTextField);
+        ComboBox<Integer> toDayComboBox = new ComboBox<>();
+        toDayComboBox.setItems(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31);
+        toDayComboBox.setWidth(50,Unit.PIXELS);
+        toDayComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+        toDayComboBox.setAllowCustomValue(false);
+        dayValueContainer.add(toDayComboBox);
 
         HorizontalLayout hourValueContainer = new HorizontalLayout();
         leftSideContainerLayout.add(hourValueContainer);
@@ -291,20 +301,24 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         hourValueContainer.add(hourFilterText);
         hourValueContainer.setVerticalComponentAlignment(Alignment.CENTER,hourFilterText);
 
-        TextField startHourTextField = new TextField();
-        startHourTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        startHourTextField.setWidth(50,Unit.PIXELS);
-        hourValueContainer.add(startHourTextField);
+        ComboBox<Integer> startHourComboBox = new ComboBox<>();
+        startHourComboBox.setItems(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23);
+        startHourComboBox.setWidth(50,Unit.PIXELS);
+        startHourComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+        startHourComboBox.setAllowCustomValue(false);
+        hourValueContainer.add(startHourComboBox);
 
         Icon inputDivIcon3 = VaadinIcon.ARROWS_LONG_RIGHT.create();
         inputDivIcon3.setSize("10px");
         hourValueContainer.add(inputDivIcon3);
         hourValueContainer.setVerticalComponentAlignment(Alignment.CENTER,inputDivIcon3);
 
-        TextField toHourTextField = new TextField();
-        toHourTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        toHourTextField.setWidth(50,Unit.PIXELS);
-        hourValueContainer.add(toHourTextField);
+        ComboBox<Integer> toHourComboBox = new ComboBox<>();
+        toHourComboBox.setItems(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23);
+        toHourComboBox.setWidth(50,Unit.PIXELS);
+        toHourComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+        toHourComboBox.setAllowCustomValue(false);
+        hourValueContainer.add(toHourComboBox);
 
         HorizontalLayout minuteValueContainer = new HorizontalLayout();
         leftSideContainerLayout.add(minuteValueContainer);
@@ -313,20 +327,26 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         minuteValueContainer.add(minuteFilterText);
         minuteValueContainer.setVerticalComponentAlignment(Alignment.CENTER,minuteFilterText);
 
-        TextField startMinuteTextField = new TextField();
-        startMinuteTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        startMinuteTextField.setWidth(50,Unit.PIXELS);
-        minuteValueContainer.add(startMinuteTextField);
+        ComboBox<Integer> startMinuteComboBox = new ComboBox<>();
+        startMinuteComboBox.setItems(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
+                31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59);
+        startMinuteComboBox.setWidth(50,Unit.PIXELS);
+        startMinuteComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+        startMinuteComboBox.setAllowCustomValue(false);
+        minuteValueContainer.add(startMinuteComboBox);
 
         Icon inputDivIcon4 = VaadinIcon.ARROWS_LONG_RIGHT.create();
         inputDivIcon4.setSize("10px");
         minuteValueContainer.add(inputDivIcon4);
         minuteValueContainer.setVerticalComponentAlignment(Alignment.CENTER,inputDivIcon4);
 
-        TextField toMinuteTextField = new TextField();
-        toMinuteTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        toMinuteTextField.setWidth(50,Unit.PIXELS);
-        minuteValueContainer.add(toMinuteTextField);
+        ComboBox<Integer> toMinuteComboBox = new ComboBox<>();
+        toMinuteComboBox.setItems(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
+                31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59);
+        toMinuteComboBox.setWidth(50,Unit.PIXELS);
+        toMinuteComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+        toMinuteComboBox.setAllowCustomValue(false);
+        minuteValueContainer.add(toMinuteComboBox);
 
         HorizontalLayout heightSpaceDiv1 = new HorizontalLayout();
         heightSpaceDiv1.setWidth(90,Unit.PERCENTAGE);
@@ -334,7 +354,11 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         heightSpaceDiv1.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)").set("padding-bottom","2px");
 
-        Button executeQueryButton = new Button("查询概念实体");
+        Span spaceDivSpan = new Span(" ");
+        spaceDivSpan.setHeight(50,Unit.PIXELS);
+        leftSideContainerLayout.add(spaceDivSpan);
+
+        Button executeQueryButton = new Button("查询时间尺度实体");
         executeQueryButton.setIcon(new Icon(VaadinIcon.SEARCH));
         executeQueryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
