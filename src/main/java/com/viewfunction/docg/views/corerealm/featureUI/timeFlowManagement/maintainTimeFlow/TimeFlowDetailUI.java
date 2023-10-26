@@ -355,7 +355,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)").set("padding-bottom","2px");
 
         Span spaceDivSpan = new Span(" ");
-        spaceDivSpan.setHeight(50,Unit.PIXELS);
+        spaceDivSpan.setHeight(10,Unit.PIXELS);
         leftSideContainerLayout.add(spaceDivSpan);
 
         Button executeQueryButton = new Button("查询时间尺度实体");
