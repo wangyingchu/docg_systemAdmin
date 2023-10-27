@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.timeFlowManagement.maintainTimeFlow;
 
+import ch.carnet.kasparscherrer.VerticalScrollLayout;
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
@@ -14,6 +15,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -23,6 +25,8 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
+import com.viewfunction.docg.element.commonComponent.SectionWallContainer;
+import com.viewfunction.docg.element.commonComponent.SectionWallTitle;
 
 @Route("timeFlowDetailInfo/:timeFlow")
 public class TimeFlowDetailUI extends VerticalLayout implements
@@ -81,7 +85,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         leftSideContainerLayout.setMargin(false);
 
         mainContainerLayout.add(leftSideContainerLayout);
-        leftSideContainerLayout.setWidth(290, Unit.PIXELS);
+        leftSideContainerLayout.setWidth(270, Unit.PIXELS);
         leftSideContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"时间流概览");
@@ -95,6 +99,10 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 .set("padding-bottom", "var(--lumo-space-s)");
 
         VerticalLayout timeFlowInformationLayout = new VerticalLayout();
+        timeFlowInformationLayout.setMargin(false);
+
+
+
         leftSideContainerLayout.add(timeFlowInformationLayout);
 
         HorizontalLayout timeHorizontalLayout = new HorizontalLayout();
@@ -139,50 +147,73 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         new SecondaryKeyValueDisplayItem(horizontalLayout2,FontAwesome.Solid.BEZIER_CURVE.create(),"TimeScaleEvent 数量:","1,000,000,000");
         timeFlowInformationLayout.add(horizontalLayout2);
 
-        HorizontalLayout horizontalLayout3 = new HorizontalLayout();
-        horizontalLayout3.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        NativeLabel label3 = new NativeLabel("Year Entities:");
-        label3.getElement().getThemeList().add("badge success small");
-        timeFlowInformationLayout.add(label3);
-        new SecondaryKeyValueDisplayItem(horizontalLayout3,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(horizontalLayout3,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
-        timeFlowInformationLayout.add(horizontalLayout3);
+        VerticalScrollLayout leftSideSectionContainerScrollLayout = new VerticalScrollLayout();
+        leftSideSectionContainerScrollLayout.setPadding(false);
+        leftSideSectionContainerScrollLayout.setSpacing(false);
+        leftSideSectionContainerScrollLayout.setMargin(false);
 
-        HorizontalLayout horizontalLayout4 = new HorizontalLayout();
-        horizontalLayout4.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        NativeLabel label4 = new NativeLabel("Month Entities:");
-        label4.getElement().getThemeList().add("badge success small");
-        timeFlowInformationLayout.add(label4);
-        new SecondaryKeyValueDisplayItem(horizontalLayout4,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(horizontalLayout4,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
-        timeFlowInformationLayout.add(horizontalLayout4);
+        timeFlowInformationLayout.add(leftSideSectionContainerScrollLayout);
 
-        HorizontalLayout horizontalLayout5 = new HorizontalLayout();
-        horizontalLayout5.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        NativeLabel label5 = new NativeLabel("Day Entities:");
-        label5.getElement().getThemeList().add("badge success small");
-        timeFlowInformationLayout.add(label5);
-        new SecondaryKeyValueDisplayItem(horizontalLayout5,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(horizontalLayout5,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
-        timeFlowInformationLayout.add(horizontalLayout5);
+        HorizontalLayout yearEntitiesInfoLayout = new HorizontalLayout();
+        yearEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel yearEntitiesLabel = new NativeLabel("Year Entities:");
+        new SecondaryKeyValueDisplayItem(yearEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(yearEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
+        Icon yearInfoTitleIcon = new Icon(VaadinIcon.CALENDAR);
+        yearInfoTitleIcon.setSize("10px");
+        SectionWallTitle yearInfoSectionWallTitle = new SectionWallTitle(yearInfoTitleIcon,yearEntitiesLabel);
+        SectionWallContainer yearInfoSectionWallContainer = new SectionWallContainer(yearInfoSectionWallTitle,yearEntitiesInfoLayout);
+        yearInfoSectionWallContainer.setOpened(false);
+        leftSideSectionContainerScrollLayout.add(yearInfoSectionWallContainer);
 
-        HorizontalLayout horizontalLayout6 = new HorizontalLayout();
-        horizontalLayout6.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        NativeLabel label6 = new NativeLabel("Hour Entities:");
-        label6.getElement().getThemeList().add("badge success small");
-        timeFlowInformationLayout.add(label6);
-        new SecondaryKeyValueDisplayItem(horizontalLayout6,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(horizontalLayout6,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
-        timeFlowInformationLayout.add(horizontalLayout6);
+        HorizontalLayout monthEntitiesInfoLayout = new HorizontalLayout();
+        monthEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel monthEntitiesLabel = new NativeLabel("Month Entities:");
+        new SecondaryKeyValueDisplayItem(monthEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(monthEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
+        Icon monthInfoTitleIcon = new Icon(VaadinIcon.CALENDAR);
+        monthInfoTitleIcon.setSize("10px");
+        SectionWallTitle monthInfoSectionWallTitle = new SectionWallTitle(monthInfoTitleIcon,monthEntitiesLabel);
+        SectionWallContainer monthInfoSectionWallContainer = new SectionWallContainer(monthInfoSectionWallTitle,monthEntitiesInfoLayout);
+        monthInfoSectionWallContainer.setOpened(false);
+        leftSideSectionContainerScrollLayout.add(monthInfoSectionWallContainer);
 
-        HorizontalLayout horizontalLayout7 = new HorizontalLayout();
-        horizontalLayout7.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        NativeLabel label7 = new NativeLabel("Minute Entities:");
-        label7.getElement().getThemeList().add("badge success small");
-        timeFlowInformationLayout.add(label7);
-        new SecondaryKeyValueDisplayItem(horizontalLayout7,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(horizontalLayout7,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
-        timeFlowInformationLayout.add(horizontalLayout7);
+        HorizontalLayout dayEntitiesInfoLayout = new HorizontalLayout();
+        dayEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel dayEntitiesLabel = new NativeLabel("Day Entities:");
+        new SecondaryKeyValueDisplayItem(dayEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(dayEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
+        Icon dayInfoTitleIcon = new Icon(VaadinIcon.CALENDAR);
+        dayInfoTitleIcon.setSize("10px");
+        SectionWallTitle dayInfoSectionWallTitle = new SectionWallTitle(dayInfoTitleIcon,dayEntitiesLabel);
+        SectionWallContainer dayInfoSectionWallContainer = new SectionWallContainer(dayInfoSectionWallTitle,dayEntitiesInfoLayout);
+        dayInfoSectionWallContainer.setOpened(false);
+        leftSideSectionContainerScrollLayout.add(dayInfoSectionWallContainer);
+
+        HorizontalLayout hourEntitiesInfoLayout = new HorizontalLayout();
+        hourEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel hourEntitiesLabel = new NativeLabel("Hour Entities:");
+        new SecondaryKeyValueDisplayItem(hourEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(hourEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
+        Icon hourInfoTitleIcon = new Icon(VaadinIcon.CLOCK);
+        hourInfoTitleIcon.setSize("10px");
+        SectionWallTitle hourInfoSectionWallTitle = new SectionWallTitle(hourInfoTitleIcon,hourEntitiesLabel);
+        SectionWallContainer hourInfoSectionWallContainer = new SectionWallContainer(hourInfoSectionWallTitle,hourEntitiesInfoLayout);
+        hourInfoSectionWallContainer.setOpened(false);
+        leftSideSectionContainerScrollLayout.add(hourInfoSectionWallContainer);
+
+        HorizontalLayout minuteEntitiesInfoLayout = new HorizontalLayout();
+        minuteEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel minuteEntitiesLabel = new NativeLabel("Minute Entities:");
+        new SecondaryKeyValueDisplayItem(minuteEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(minuteEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
+        Icon minuteInfoTitleIcon = new Icon(VaadinIcon.CLOCK);
+        minuteInfoTitleIcon.setSize("10px");
+        SectionWallTitle minuteInfoSectionWallTitle = new SectionWallTitle(minuteInfoTitleIcon,minuteEntitiesLabel);
+        SectionWallContainer minuteInfoSectionWallContainer = new SectionWallContainer(minuteInfoSectionWallTitle,minuteEntitiesInfoLayout);
+        minuteInfoSectionWallContainer.setOpened(false);
+        leftSideSectionContainerScrollLayout.add(minuteInfoSectionWallContainer);
+
 
         HorizontalLayout heightSpaceDiv05 = new HorizontalLayout();
         timeFlowInformationLayout.add(heightSpaceDiv05);
@@ -207,19 +238,32 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
         Checkbox yearCheckbox = new Checkbox("年");
         yearCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
-        checkBoxesContainer1.add(yearCheckbox);
+        //checkBoxesContainer1.add(yearCheckbox);
         Checkbox monthCheckbox = new Checkbox("月");
         monthCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
-        checkBoxesContainer1.add(monthCheckbox);
+        //checkBoxesContainer1.add(monthCheckbox);
         Checkbox dayCheckbox = new Checkbox("日");
         dayCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
-        checkBoxesContainer1.add(dayCheckbox);
+        //checkBoxesContainer1.add(dayCheckbox);
         Checkbox hourCheckbox = new Checkbox("小时");
         hourCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
-        checkBoxesContainer1.add(hourCheckbox);
+        //checkBoxesContainer1.add(hourCheckbox);
         Checkbox minuteCheckbox = new Checkbox("分钟");
         minuteCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
-        checkBoxesContainer1.add(minuteCheckbox);
+        //checkBoxesContainer1.add(minuteCheckbox);
+
+        RadioButtonGroup<String> radioGroup = new RadioButtonGroup<>();
+        //radioGroup.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+        //radioGroup.setLabel("Travel class");
+        radioGroup.setItems("年", "月", "日","小时","分钟");
+
+        //radioGroup.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
+
+
+
+        leftSideContainerLayout.add(radioGroup);
+
+
 
         HorizontalLayout yearValueContainer = new HorizontalLayout();
         leftSideContainerLayout.add(yearValueContainer);
