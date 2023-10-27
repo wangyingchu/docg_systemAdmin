@@ -28,6 +28,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -274,8 +275,14 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
         TextField startYearTextField = new TextField();
         startYearTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        startYearTextField.setWidth(50,Unit.PIXELS);
+        startYearTextField.setWidth(80,Unit.PIXELS);
+        Button syncStartToEndYear = new Button();
+        syncStartToEndYear.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        Icon rightDirIcon0 = LineAwesomeIconsSvg.CHEVRON_CIRCLE_RIGHT_SOLID.create();
+        rightDirIcon0.setSize("14px");
+        syncStartToEndYear.setIcon(rightDirIcon0);
         yearValueContainer.add(startYearTextField);
+        startYearTextField.setPrefixComponent(syncStartToEndYear);
 
         Icon inputDivIcon0 = VaadinIcon.ARROWS_LONG_RIGHT.create();
         inputDivIcon0.setSize("10px");
@@ -284,8 +291,14 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
         TextField toYearTextField = new TextField();
         toYearTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        toYearTextField.setWidth(50,Unit.PIXELS);
+        toYearTextField.setWidth(80,Unit.PIXELS);
         yearValueContainer.add(toYearTextField);
+        Button syncEndToStartYear = new Button();
+        syncEndToStartYear.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        Icon leftDirIcon0 = LineAwesomeIconsSvg.CHEVRON_CIRCLE_LEFT_SOLID.create();
+        leftDirIcon0.setSize("14px");
+        syncEndToStartYear.setIcon(leftDirIcon0);
+        toYearTextField.setPrefixComponent(syncEndToStartYear);
 
         HorizontalLayout monthValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(monthValueContainer);
@@ -297,10 +310,16 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
         ComboBox<Integer> startMonthComboBox = new ComboBox<>();
         startMonthComboBox.setItems(1,2,3,4,5,6,7,8,9,10,11,12);
-        startMonthComboBox.setWidth(50,Unit.PIXELS);
+        startMonthComboBox.setWidth(80,Unit.PIXELS);
         startMonthComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         startMonthComboBox.setAllowCustomValue(false);
         monthValueContainer.add(startMonthComboBox);
+        Button syncStartToEndMonth = new Button();
+        syncStartToEndMonth.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        Icon rightDirIcon1 = LineAwesomeIconsSvg.CHEVRON_CIRCLE_RIGHT_SOLID.create();
+        rightDirIcon1.setSize("14px");
+        syncStartToEndMonth.setIcon(rightDirIcon1);
+        startMonthComboBox.setPrefixComponent(syncStartToEndMonth);
 
         Icon inputDivIcon1 = VaadinIcon.ARROWS_LONG_RIGHT.create();
         inputDivIcon1.setSize("10px");
@@ -309,10 +328,16 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
         ComboBox<Integer> toMonthComboBox = new ComboBox<>();
         toMonthComboBox.setItems(1,2,3,4,5,6,7,8,9,10,11,12);
-        toMonthComboBox.setWidth(50,Unit.PIXELS);
+        toMonthComboBox.setWidth(80,Unit.PIXELS);
         toMonthComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         toMonthComboBox.setAllowCustomValue(false);
         monthValueContainer.add(toMonthComboBox);
+        Button syncEndToStartMonth = new Button();
+        syncEndToStartMonth.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        Icon leftDirIcon1 = LineAwesomeIconsSvg.CHEVRON_CIRCLE_LEFT_SOLID.create();
+        leftDirIcon1.setSize("14px");
+        syncEndToStartMonth.setIcon(leftDirIcon1);
+        toMonthComboBox.setPrefixComponent(syncEndToStartMonth);
 
         HorizontalLayout dayValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(dayValueContainer);
@@ -324,10 +349,16 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
         ComboBox<Integer> startDayComboBox = new ComboBox<>();
         startDayComboBox.setItems(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31);
-        startDayComboBox.setWidth(50,Unit.PIXELS);
+        startDayComboBox.setWidth(80,Unit.PIXELS);
         startDayComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         startDayComboBox.setAllowCustomValue(false);
         dayValueContainer.add(startDayComboBox);
+        Button syncStartToEndDay = new Button();
+        syncStartToEndDay.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        Icon rightDirIcon2 = LineAwesomeIconsSvg.CHEVRON_CIRCLE_RIGHT_SOLID.create();
+        rightDirIcon2.setSize("14px");
+        syncStartToEndDay.setIcon(rightDirIcon2);
+        startDayComboBox.setPrefixComponent(syncStartToEndDay);
 
         Icon inputDivIcon2 = VaadinIcon.ARROWS_LONG_RIGHT.create();
         inputDivIcon2.setSize("10px");
@@ -336,10 +367,16 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
         ComboBox<Integer> toDayComboBox = new ComboBox<>();
         toDayComboBox.setItems(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31);
-        toDayComboBox.setWidth(50,Unit.PIXELS);
+        toDayComboBox.setWidth(80,Unit.PIXELS);
         toDayComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         toDayComboBox.setAllowCustomValue(false);
         dayValueContainer.add(toDayComboBox);
+        Button syncEndToStartDay = new Button();
+        syncEndToStartDay.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        Icon leftDirIcon2 = LineAwesomeIconsSvg.CHEVRON_CIRCLE_LEFT_SOLID.create();
+        leftDirIcon2.setSize("14px");
+        syncEndToStartDay.setIcon(leftDirIcon2);
+        toDayComboBox.setPrefixComponent(syncEndToStartDay);
 
         HorizontalLayout hourValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(hourValueContainer);
@@ -351,10 +388,16 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
         ComboBox<Integer> startHourComboBox = new ComboBox<>();
         startHourComboBox.setItems(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23);
-        startHourComboBox.setWidth(50,Unit.PIXELS);
+        startHourComboBox.setWidth(80,Unit.PIXELS);
         startHourComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         startHourComboBox.setAllowCustomValue(false);
         hourValueContainer.add(startHourComboBox);
+        Button syncStartToEndHour = new Button();
+        syncStartToEndHour.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        Icon rightDirIcon3 = LineAwesomeIconsSvg.CHEVRON_CIRCLE_RIGHT_SOLID.create();
+        rightDirIcon3.setSize("14px");
+        syncStartToEndHour.setIcon(rightDirIcon3);
+        startHourComboBox.setPrefixComponent(syncStartToEndHour);
 
         Icon inputDivIcon3 = VaadinIcon.ARROWS_LONG_RIGHT.create();
         inputDivIcon3.setSize("10px");
@@ -363,10 +406,16 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
         ComboBox<Integer> toHourComboBox = new ComboBox<>();
         toHourComboBox.setItems(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23);
-        toHourComboBox.setWidth(50,Unit.PIXELS);
+        toHourComboBox.setWidth(80,Unit.PIXELS);
         toHourComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         toHourComboBox.setAllowCustomValue(false);
         hourValueContainer.add(toHourComboBox);
+        Button syncEndToStartHour = new Button();
+        syncEndToStartHour.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        Icon leftDirIcon3 = LineAwesomeIconsSvg.CHEVRON_CIRCLE_LEFT_SOLID.create();
+        leftDirIcon3.setSize("14px");
+        syncEndToStartHour.setIcon(leftDirIcon3);
+        toHourComboBox.setPrefixComponent(syncEndToStartHour);
 
         HorizontalLayout minuteValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(minuteValueContainer);
@@ -379,10 +428,16 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         ComboBox<Integer> startMinuteComboBox = new ComboBox<>();
         startMinuteComboBox.setItems(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
                 31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59);
-        startMinuteComboBox.setWidth(50,Unit.PIXELS);
+        startMinuteComboBox.setWidth(80,Unit.PIXELS);
         startMinuteComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         startMinuteComboBox.setAllowCustomValue(false);
         minuteValueContainer.add(startMinuteComboBox);
+        Button syncStartToEndMinute = new Button();
+        syncStartToEndMinute.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        Icon rightDirIcon4 = LineAwesomeIconsSvg.CHEVRON_CIRCLE_RIGHT_SOLID.create();
+        rightDirIcon4.setSize("14px");
+        syncStartToEndMinute.setIcon(rightDirIcon4);
+        startMinuteComboBox.setPrefixComponent(syncStartToEndMinute);
 
         Icon inputDivIcon4 = VaadinIcon.ARROWS_LONG_RIGHT.create();
         inputDivIcon4.setSize("10px");
@@ -392,10 +447,16 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         ComboBox<Integer> toMinuteComboBox = new ComboBox<>();
         toMinuteComboBox.setItems(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
                 31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59);
-        toMinuteComboBox.setWidth(50,Unit.PIXELS);
+        toMinuteComboBox.setWidth(80,Unit.PIXELS);
         toMinuteComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         toMinuteComboBox.setAllowCustomValue(false);
         minuteValueContainer.add(toMinuteComboBox);
+        Button syncEndToStartMinute = new Button();
+        syncEndToStartMinute.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        Icon leftDirIcon4 = LineAwesomeIconsSvg.CHEVRON_CIRCLE_LEFT_SOLID.create();
+        leftDirIcon4.setSize("14px");
+        syncEndToStartMinute.setIcon(leftDirIcon4);
+        toMinuteComboBox.setPrefixComponent(syncEndToStartMinute);
 
         HorizontalLayout heightSpaceDiv1 = new HorizontalLayout();
         heightSpaceDiv1.setWidth(90,Unit.PERCENTAGE);
