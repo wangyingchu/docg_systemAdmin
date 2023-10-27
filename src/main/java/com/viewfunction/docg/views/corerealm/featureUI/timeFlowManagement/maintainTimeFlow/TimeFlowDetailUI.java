@@ -10,6 +10,8 @@ import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -27,6 +29,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEntity;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
@@ -41,6 +44,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout middleContainerLayout;
     private Registration listener;
+    private Grid<TimeScaleEntity> timeScaleEntitiesGrid;
 
     public TimeFlowDetailUI(){}
 
@@ -485,7 +489,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         middleContainerLayout.setMargin(false);
 
         mainContainerLayout.add(middleContainerLayout);
-        middleContainerLayout.setWidth(400, Unit.PIXELS);
+        middleContainerLayout.setWidth(300, Unit.PIXELS);
         middleContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
         SecondaryIconTitle filterTitle3 = new SecondaryIconTitle(FontAwesome.Solid.CLOCK.create(),"时间尺度实体检索结果");
@@ -500,6 +504,15 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 .set("padding-left", "var(--lumo-space-l)")
                 .set("padding-right", "var(--lumo-space-l)")
                 .set("padding-bottom", "var(--lumo-space-s)");
+
+        timeScaleEntitiesGrid = new Grid<>();
+        timeScaleEntitiesGrid.setWidth(295,Unit.PIXELS);
+        timeScaleEntitiesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER);
+        timeScaleEntitiesGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        timeScaleEntitiesGrid.addColumn(TimeScaleEntity::getTimeScaleGrade).setHeader("实体时间尺度").setKey("idx_0");
+        timeScaleEntitiesGrid.addColumn(TimeScaleEntity::getEntityValue).setHeader("实体值").setKey("idx_1");
+        middleContainerLayout.add(timeScaleEntitiesGrid);
+
     }
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
