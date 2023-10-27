@@ -7,10 +7,15 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.ComboBoxVariant;
+import com.vaadin.flow.component.contextmenu.HasMenuItems;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -22,12 +27,10 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
-import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
-import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
-import com.viewfunction.docg.element.commonComponent.SectionWallContainer;
-import com.viewfunction.docg.element.commonComponent.SectionWallTitle;
+import com.viewfunction.docg.element.commonComponent.*;
 
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.List;
 
 @Route("timeFlowDetailInfo/:timeFlow")
 public class TimeFlowDetailUI extends VerticalLayout implements
@@ -109,6 +112,30 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         HorizontalLayout timeHorizontalLayout = new HorizontalLayout();
         timeHorizontalLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
 
+        MenuBar timeflowOperationMenuBar = new MenuBar();
+        timeflowOperationMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+        MenuItem timeFlowOperationMenu = createIconItem(timeflowOperationMenuBar, VaadinIcon.COG, "配置", null);
+        timeFlowOperationMenu.getStyle().set("font-size","0.7rem");
+        Icon downArrowIcon = new Icon(VaadinIcon.CHEVRON_DOWN);
+        downArrowIcon.setSize("10px");
+        timeFlowOperationMenu.add(downArrowIcon);
+
+        SubMenu operationSubItems = timeFlowOperationMenu.getSubMenu();
+        MenuItem expandFlowActionItem = operationSubItems.addItem("扩展时间跨度");
+        expandFlowActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                //renderLoadCSVFormatConceptionEntitiesView();
+            }
+        });
+
+        List<Component> actionComponentsList = new ArrayList<>();
+        actionComponentsList.add(timeflowOperationMenuBar);
+
+        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TIMER),this.timeFlowName,null,actionComponentsList);
+        secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
+        timeFlowInformationLayout.add(secondaryTitleActionBar);
+
         NativeLabel yearSpanText = new NativeLabel("时间跨度:");
         yearSpanText.addClassNames("text-xs","font-semibold","text-secondary");
         timeHorizontalLayout.add(yearSpanText);
@@ -153,7 +180,6 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         timeFlowInfoWallContainerLayout.setPadding(false);
         timeFlowInfoWallContainerLayout.setSpacing(false);
         timeFlowInfoWallContainerLayout.setWidth(95,Unit.PERCENTAGE);
-
         timeFlowInformationLayout.add(timeFlowInfoWallContainerLayout);
 
         HorizontalLayout yearEntitiesInfoLayout = new HorizontalLayout();
@@ -216,10 +242,6 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         minuteInfoSectionWallContainer.setOpened(false);
         timeFlowInfoWallContainerLayout.add(minuteInfoSectionWallContainer);
 
-
-        HorizontalLayout heightSpaceDiv05 = new HorizontalLayout();
-        timeFlowInformationLayout.add(heightSpaceDiv05);
-
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"时间尺度实体检索");
         leftSideSectionContainerScrollLayout.add(filterTitle2);
 
@@ -239,18 +261,13 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         checkBoxesContainer1.add(timeGuLevelFilterText);
 
         RadioButtonGroup<String> timeScaleGradeLevelRadioGroup = new RadioButtonGroup<>();
-        timeScaleGradeLevelRadioGroup.getChildren().forEach(new Consumer<Component>() {
-            @Override
-            public void accept(Component component) {
-                //component.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
-            }
-        });
         timeScaleGradeLevelRadioGroup.setItems("年", "月", "日","小时","分钟");
         leftSideSectionContainerScrollLayout.add(timeScaleGradeLevelRadioGroup);
 
         HorizontalLayout yearValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(yearValueContainer);
         NativeLabel yearFilterText = new NativeLabel("年 :");
+        yearFilterText.setWidth(30,Unit.PIXELS);
         yearFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         yearValueContainer.add(yearFilterText);
         yearValueContainer.setVerticalComponentAlignment(Alignment.CENTER,yearFilterText);
@@ -273,6 +290,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         HorizontalLayout monthValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(monthValueContainer);
         NativeLabel monthFilterText = new NativeLabel("月 :");
+        monthFilterText.setWidth(30,Unit.PIXELS);
         monthFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         monthValueContainer.add(monthFilterText);
         monthValueContainer.setVerticalComponentAlignment(Alignment.CENTER,monthFilterText);
@@ -299,6 +317,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         HorizontalLayout dayValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(dayValueContainer);
         NativeLabel dayFilterText = new NativeLabel("日 :");
+        dayFilterText.setWidth(30,Unit.PIXELS);
         dayFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         dayValueContainer.add(dayFilterText);
         dayValueContainer.setVerticalComponentAlignment(Alignment.CENTER,dayFilterText);
@@ -325,6 +344,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         HorizontalLayout hourValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(hourValueContainer);
         NativeLabel hourFilterText = new NativeLabel("小时 :");
+        hourFilterText.setWidth(30,Unit.PIXELS);
         hourFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         hourValueContainer.add(hourFilterText);
         hourValueContainer.setVerticalComponentAlignment(Alignment.CENTER,hourFilterText);
@@ -351,6 +371,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         HorizontalLayout minuteValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(minuteValueContainer);
         NativeLabel minuteFilterText = new NativeLabel("分钟 :");
+        minuteFilterText.setWidth(30,Unit.PIXELS);
         minuteFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         minuteValueContainer.add(minuteFilterText);
         minuteValueContainer.setVerticalComponentAlignment(Alignment.CENTER,minuteFilterText);
@@ -415,9 +436,29 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         middleContainerLayout.add(heightSpaceDivM0);
         heightSpaceDivM0.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-left", "var(--lumo-space-l)")
+                .set("padding-right", "var(--lumo-space-l)")
                 .set("padding-bottom", "var(--lumo-space-s)");
+    }
 
+    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
+        return createIconItem(menu, iconName, label, ariaLabel, false);
+    }
 
-
+    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName,String label, String ariaLabel, boolean isChild) {
+        Icon icon = new Icon(iconName);
+        if (isChild) {
+            icon.getStyle().set("width", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("height", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("marginRight", "var(--lumo-space-s)");
+        }
+        MenuItem item = menu.addItem(icon, e -> {});
+        if (ariaLabel != null) {
+            item.getElement().setAttribute("aria-label", ariaLabel);
+        }
+        if (label != null) {
+            item.add(new Text(label));
+        }
+        return item;
     }
 }
