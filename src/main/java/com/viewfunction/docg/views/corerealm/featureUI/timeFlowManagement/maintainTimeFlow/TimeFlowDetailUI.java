@@ -5,7 +5,6 @@ import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.html.NativeLabel;
@@ -27,6 +26,8 @@ import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SectionWallContainer;
 import com.viewfunction.docg.element.commonComponent.SectionWallTitle;
+
+import java.util.function.Consumer;
 
 @Route("timeFlowDetailInfo/:timeFlow")
 public class TimeFlowDetailUI extends VerticalLayout implements
@@ -101,9 +102,9 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         VerticalLayout timeFlowInformationLayout = new VerticalLayout();
         timeFlowInformationLayout.setMargin(false);
 
-
-
         leftSideContainerLayout.add(timeFlowInformationLayout);
+        VerticalScrollLayout leftSideSectionContainerScrollLayout = new VerticalScrollLayout();
+        leftSideContainerLayout.add(leftSideSectionContainerScrollLayout);
 
         HorizontalLayout timeHorizontalLayout = new HorizontalLayout();
         timeHorizontalLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
@@ -147,12 +148,13 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         new SecondaryKeyValueDisplayItem(horizontalLayout2,FontAwesome.Solid.BEZIER_CURVE.create(),"TimeScaleEvent 数量:","1,000,000,000");
         timeFlowInformationLayout.add(horizontalLayout2);
 
-        VerticalScrollLayout leftSideSectionContainerScrollLayout = new VerticalScrollLayout();
-        leftSideSectionContainerScrollLayout.setPadding(false);
-        leftSideSectionContainerScrollLayout.setSpacing(false);
-        leftSideSectionContainerScrollLayout.setMargin(false);
+        VerticalLayout timeFlowInfoWallContainerLayout = new VerticalLayout();
+        timeFlowInfoWallContainerLayout.setMargin(false);
+        timeFlowInfoWallContainerLayout.setPadding(false);
+        timeFlowInfoWallContainerLayout.setSpacing(false);
+        timeFlowInfoWallContainerLayout.setWidth(95,Unit.PERCENTAGE);
 
-        timeFlowInformationLayout.add(leftSideSectionContainerScrollLayout);
+        timeFlowInformationLayout.add(timeFlowInfoWallContainerLayout);
 
         HorizontalLayout yearEntitiesInfoLayout = new HorizontalLayout();
         yearEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -164,7 +166,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         SectionWallTitle yearInfoSectionWallTitle = new SectionWallTitle(yearInfoTitleIcon,yearEntitiesLabel);
         SectionWallContainer yearInfoSectionWallContainer = new SectionWallContainer(yearInfoSectionWallTitle,yearEntitiesInfoLayout);
         yearInfoSectionWallContainer.setOpened(false);
-        leftSideSectionContainerScrollLayout.add(yearInfoSectionWallContainer);
+        timeFlowInfoWallContainerLayout.add(yearInfoSectionWallContainer);
 
         HorizontalLayout monthEntitiesInfoLayout = new HorizontalLayout();
         monthEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -176,7 +178,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         SectionWallTitle monthInfoSectionWallTitle = new SectionWallTitle(monthInfoTitleIcon,monthEntitiesLabel);
         SectionWallContainer monthInfoSectionWallContainer = new SectionWallContainer(monthInfoSectionWallTitle,monthEntitiesInfoLayout);
         monthInfoSectionWallContainer.setOpened(false);
-        leftSideSectionContainerScrollLayout.add(monthInfoSectionWallContainer);
+        timeFlowInfoWallContainerLayout.add(monthInfoSectionWallContainer);
 
         HorizontalLayout dayEntitiesInfoLayout = new HorizontalLayout();
         dayEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -188,7 +190,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         SectionWallTitle dayInfoSectionWallTitle = new SectionWallTitle(dayInfoTitleIcon,dayEntitiesLabel);
         SectionWallContainer dayInfoSectionWallContainer = new SectionWallContainer(dayInfoSectionWallTitle,dayEntitiesInfoLayout);
         dayInfoSectionWallContainer.setOpened(false);
-        leftSideSectionContainerScrollLayout.add(dayInfoSectionWallContainer);
+        timeFlowInfoWallContainerLayout.add(dayInfoSectionWallContainer);
 
         HorizontalLayout hourEntitiesInfoLayout = new HorizontalLayout();
         hourEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -200,7 +202,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         SectionWallTitle hourInfoSectionWallTitle = new SectionWallTitle(hourInfoTitleIcon,hourEntitiesLabel);
         SectionWallContainer hourInfoSectionWallContainer = new SectionWallContainer(hourInfoSectionWallTitle,hourEntitiesInfoLayout);
         hourInfoSectionWallContainer.setOpened(false);
-        leftSideSectionContainerScrollLayout.add(hourInfoSectionWallContainer);
+        timeFlowInfoWallContainerLayout.add(hourInfoSectionWallContainer);
 
         HorizontalLayout minuteEntitiesInfoLayout = new HorizontalLayout();
         minuteEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -212,61 +214,42 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         SectionWallTitle minuteInfoSectionWallTitle = new SectionWallTitle(minuteInfoTitleIcon,minuteEntitiesLabel);
         SectionWallContainer minuteInfoSectionWallContainer = new SectionWallContainer(minuteInfoSectionWallTitle,minuteEntitiesInfoLayout);
         minuteInfoSectionWallContainer.setOpened(false);
-        leftSideSectionContainerScrollLayout.add(minuteInfoSectionWallContainer);
+        timeFlowInfoWallContainerLayout.add(minuteInfoSectionWallContainer);
 
 
         HorizontalLayout heightSpaceDiv05 = new HorizontalLayout();
         timeFlowInformationLayout.add(heightSpaceDiv05);
 
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"时间尺度实体检索");
-        leftSideContainerLayout.add(filterTitle2);
+        leftSideSectionContainerScrollLayout.add(filterTitle2);
 
         HorizontalLayout heightSpaceDiv06 = new HorizontalLayout();
         heightSpaceDiv06.setWidth(95,Unit.PERCENTAGE);
-        leftSideContainerLayout.add(heightSpaceDiv06);
+        leftSideSectionContainerScrollLayout.add(heightSpaceDiv06);
         heightSpaceDiv06.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
                 .set("padding-bottom", "var(--lumo-space-m)");
 
         HorizontalLayout checkBoxesContainer1 = new HorizontalLayout();
         checkBoxesContainer1.getStyle().set("padding-top", "var(--lumo-space-m)");
-        leftSideContainerLayout.add(checkBoxesContainer1);
+        leftSideSectionContainerScrollLayout.add(checkBoxesContainer1);
 
         NativeLabel timeGuLevelFilterText = new NativeLabel("时间粒度 :");
         timeGuLevelFilterText.getStyle().set("font-size","0.7rem").set("color","var(--lumo-contrast-80pct)");
         checkBoxesContainer1.add(timeGuLevelFilterText);
 
-        Checkbox yearCheckbox = new Checkbox("年");
-        yearCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
-        //checkBoxesContainer1.add(yearCheckbox);
-        Checkbox monthCheckbox = new Checkbox("月");
-        monthCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
-        //checkBoxesContainer1.add(monthCheckbox);
-        Checkbox dayCheckbox = new Checkbox("日");
-        dayCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
-        //checkBoxesContainer1.add(dayCheckbox);
-        Checkbox hourCheckbox = new Checkbox("小时");
-        hourCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
-        //checkBoxesContainer1.add(hourCheckbox);
-        Checkbox minuteCheckbox = new Checkbox("分钟");
-        minuteCheckbox.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
-        //checkBoxesContainer1.add(minuteCheckbox);
-
-        RadioButtonGroup<String> radioGroup = new RadioButtonGroup<>();
-        //radioGroup.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
-        //radioGroup.setLabel("Travel class");
-        radioGroup.setItems("年", "月", "日","小时","分钟");
-
-        //radioGroup.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
-
-
-
-        leftSideContainerLayout.add(radioGroup);
-
-
+        RadioButtonGroup<String> timeScaleGradeLevelRadioGroup = new RadioButtonGroup<>();
+        timeScaleGradeLevelRadioGroup.getChildren().forEach(new Consumer<Component>() {
+            @Override
+            public void accept(Component component) {
+                //component.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-80pct)");
+            }
+        });
+        timeScaleGradeLevelRadioGroup.setItems("年", "月", "日","小时","分钟");
+        leftSideSectionContainerScrollLayout.add(timeScaleGradeLevelRadioGroup);
 
         HorizontalLayout yearValueContainer = new HorizontalLayout();
-        leftSideContainerLayout.add(yearValueContainer);
+        leftSideSectionContainerScrollLayout.add(yearValueContainer);
         NativeLabel yearFilterText = new NativeLabel("年 :");
         yearFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         yearValueContainer.add(yearFilterText);
@@ -288,7 +271,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         yearValueContainer.add(toYearTextField);
 
         HorizontalLayout monthValueContainer = new HorizontalLayout();
-        leftSideContainerLayout.add(monthValueContainer);
+        leftSideSectionContainerScrollLayout.add(monthValueContainer);
         NativeLabel monthFilterText = new NativeLabel("月 :");
         monthFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         monthValueContainer.add(monthFilterText);
@@ -314,7 +297,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         monthValueContainer.add(toMonthComboBox);
 
         HorizontalLayout dayValueContainer = new HorizontalLayout();
-        leftSideContainerLayout.add(dayValueContainer);
+        leftSideSectionContainerScrollLayout.add(dayValueContainer);
         NativeLabel dayFilterText = new NativeLabel("日 :");
         dayFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         dayValueContainer.add(dayFilterText);
@@ -340,7 +323,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         dayValueContainer.add(toDayComboBox);
 
         HorizontalLayout hourValueContainer = new HorizontalLayout();
-        leftSideContainerLayout.add(hourValueContainer);
+        leftSideSectionContainerScrollLayout.add(hourValueContainer);
         NativeLabel hourFilterText = new NativeLabel("小时 :");
         hourFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         hourValueContainer.add(hourFilterText);
@@ -366,7 +349,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         hourValueContainer.add(toHourComboBox);
 
         HorizontalLayout minuteValueContainer = new HorizontalLayout();
-        leftSideContainerLayout.add(minuteValueContainer);
+        leftSideSectionContainerScrollLayout.add(minuteValueContainer);
         NativeLabel minuteFilterText = new NativeLabel("分钟 :");
         minuteFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         minuteValueContainer.add(minuteFilterText);
@@ -395,13 +378,13 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
         HorizontalLayout heightSpaceDiv1 = new HorizontalLayout();
         heightSpaceDiv1.setWidth(90,Unit.PERCENTAGE);
-        leftSideContainerLayout.add(heightSpaceDiv1);
+        leftSideSectionContainerScrollLayout.add(heightSpaceDiv1);
         heightSpaceDiv1.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)").set("padding-bottom","2px");
 
         Span spaceDivSpan = new Span(" ");
         spaceDivSpan.setHeight(10,Unit.PIXELS);
-        leftSideContainerLayout.add(spaceDivSpan);
+        leftSideSectionContainerScrollLayout.add(spaceDivSpan);
 
         Button executeQueryButton = new Button("检索时间尺度实体");
         executeQueryButton.setIcon(new Icon(VaadinIcon.SEARCH));
@@ -412,7 +395,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 //queryConceptionEntities();
             }
         });
-        leftSideContainerLayout.add(executeQueryButton);
+        leftSideSectionContainerScrollLayout.add(executeQueryButton);
 
         middleContainerLayout = new VerticalLayout();
         middleContainerLayout.setSpacing(false);
