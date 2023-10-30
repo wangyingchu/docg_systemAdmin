@@ -24,14 +24,21 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -505,14 +512,130 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 .set("padding-right", "var(--lumo-space-l)")
                 .set("padding-bottom", "var(--lumo-space-s)");
 
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(timeScaleEntity -> {
+            Icon eyeIcon = new Icon(VaadinIcon.EYE);
+            eyeIcon.setSize("20px");
+            Button timeScaleEntityDetailButton = new Button(eyeIcon, event -> {
+                if(timeScaleEntity instanceof TimeScaleEntity){
+                    renderTimeScaleEntityDetailUI((TimeScaleEntity)timeScaleEntity);
+                }
+            });
+            timeScaleEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            timeScaleEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            timeScaleEntityDetailButton.setTooltipText("显示时间粒度实体详情");
+
+            HorizontalLayout buttons = new HorizontalLayout(timeScaleEntityDetailButton);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(15,Unit.PIXELS);
+            buttons.setWidth(80,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
+
         timeScaleEntitiesGrid = new Grid<>();
         timeScaleEntitiesGrid.setWidth(295,Unit.PIXELS);
         timeScaleEntitiesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER);
         timeScaleEntitiesGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        timeScaleEntitiesGrid.addColumn(TimeScaleEntity::getTimeScaleGrade).setHeader("实体时间尺度").setKey("idx_0");
-        timeScaleEntitiesGrid.addColumn(TimeScaleEntity::getEntityValue).setHeader("实体值").setKey("idx_1");
-        middleContainerLayout.add(timeScaleEntitiesGrid);
+        timeScaleEntitiesGrid.addColumn(TimeScaleEntity::getTimeScaleGrade).setHeader("时间粒度").setKey("idx_0").setWidth("80px");
+        timeScaleEntitiesGrid.addColumn(TimeScaleEntity::getTimeScaleEntityDesc).setHeader("时间描述").setKey("idx_1");
+        timeScaleEntitiesGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_2").setWidth("60px");
 
+        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"时间粒度");
+        timeScaleEntitiesGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.DESKTOP,"时间描述");
+        timeScaleEntitiesGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
+        timeScaleEntitiesGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        TimeFlow targetTimeFlow = coreRealm.getOrCreateTimeFlow(this.timeFlowName);
+
+        List<Integer> availableTimeSpanYearsList = targetTimeFlow.getAvailableTimeSpanYears();
+
+        if(availableTimeSpanYearsList != null && availableTimeSpanYearsList.size() >0){
+            if(availableTimeSpanYearsList.size() ==1){
+                Integer onlyYear = availableTimeSpanYearsList.get(0);
+                timeScaleEntitiesGrid.setItems(targetTimeFlow.getYearEntity(onlyYear));
+            }else{
+                Integer firstYear = availableTimeSpanYearsList.get(0);
+                Integer lastYear = availableTimeSpanYearsList.get(availableTimeSpanYearsList.size() -1);
+                try {
+                    List<TimeScaleEntity> timeScaleEntityList = targetTimeFlow.getYearEntities(firstYear,lastYear);
+                    timeScaleEntitiesGrid.setItems(timeScaleEntityList);
+                } catch (CoreRealmServiceRuntimeException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        middleContainerLayout.add(timeScaleEntitiesGrid);
+    }
+
+    private void renderTimeScaleEntityDetailUI(TimeScaleEntity timeScaleEntity){
+        String timeScaleEntityClassName = RealmConstant.TimeScaleEntityClass;
+        TimeFlow.TimeScaleGrade currentTimeScaleGrade = timeScaleEntity.getTimeScaleGrade();
+        switch(currentTimeScaleGrade){
+            case YEAR -> timeScaleEntityClassName = RealmConstant.TimeScaleYearEntityClass;
+            case MONTH -> timeScaleEntityClassName = RealmConstant.TimeScaleMonthEntityClass;
+            case DAY -> timeScaleEntityClassName = RealmConstant.TimeScaleDayEntityClass;
+            case HOUR -> timeScaleEntityClassName = RealmConstant.TimeScaleHourEntityClass;
+            case MINUTE -> timeScaleEntityClassName = RealmConstant.TimeScaleMinuteEntityClass;
+        }
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(timeScaleEntityClassName,timeScaleEntity.getTimeScaleEntityUID());
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("10px");
+        titleDetailLayout.add(conceptionKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(timeScaleEntityClassName);
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+        conceptionEntityIcon.setSize("10px");
+        titleDetailLayout.add(conceptionEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel conceptionEntityUIDLabel = new NativeLabel(timeScaleEntity.getTimeScaleEntityUID());
+        titleDetailLayout.add(conceptionEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
     }
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
