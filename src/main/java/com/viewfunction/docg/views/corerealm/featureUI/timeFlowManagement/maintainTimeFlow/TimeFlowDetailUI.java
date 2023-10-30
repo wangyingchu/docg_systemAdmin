@@ -18,6 +18,8 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -31,6 +33,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleMoment;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEntity;
@@ -38,9 +41,11 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Route("timeFlowDetailInfo/:timeFlow")
@@ -52,6 +57,20 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private VerticalLayout middleContainerLayout;
     private Registration listener;
     private Grid<TimeScaleEntity> timeScaleEntitiesGrid;
+    private NativeLabel startYearValue;
+    private NativeLabel toYearValue;
+    private RadioButtonGroup<String> timeScaleGradeLevelRadioGroup;
+    private TextField startYearTextField;
+    private TextField toYearTextField;
+    private ComboBox<Integer> startMonthComboBox;
+    private ComboBox<Integer> toMonthComboBox;
+    private ComboBox<Integer> startDayComboBox;
+    private ComboBox<Integer> toDayComboBox;
+    private ComboBox<Integer> startHourComboBox;
+    private ComboBox<Integer> toHourComboBox;
+    private ComboBox<Integer> startMinuteComboBox;
+    private ComboBox<Integer> toMinuteComboBox;
+    private TimeFlow.TimeScaleGrade queryTimeScaleGrade;
 
     public TimeFlowDetailUI(){}
 
@@ -78,6 +97,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
             leftSideContainerLayout.setHeight(browserHeight-265,Unit.PIXELS);
             middleContainerLayout.setHeight(browserHeight-265,Unit.PIXELS);
         }));
+        renderTimeFlowBasicInfo();
     }
 
     @Override
@@ -153,7 +173,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         timeHorizontalLayout.add(yearSpanText);
 
         Span fromYear = new Span();
-        NativeLabel startYearValue = new NativeLabel("1990");
+        startYearValue = new NativeLabel("");
         startYearValue.addClassNames("text-l","font-extrabold");
         fromYear.add(startYearValue);
         fromYear.getElement().getThemeList().add("badge pill");
@@ -164,7 +184,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         yearDivIcon.setSize("12px");
 
         Span toYear = new Span();
-        NativeLabel toYearValue = new NativeLabel("2050");
+        toYearValue = new NativeLabel("2050");
         toYearValue.addClassNames("text-l","font-extrabold");
         toYear.add(toYearValue);
         toYear.getElement().getThemeList().add("badge pill");
@@ -272,9 +292,17 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         timeGuLevelFilterText.getStyle().set("font-size","0.7rem").set("color","var(--lumo-contrast-80pct)");
         checkBoxesContainer1.add(timeGuLevelFilterText);
 
-        RadioButtonGroup<String> timeScaleGradeLevelRadioGroup = new RadioButtonGroup<>();
+        timeScaleGradeLevelRadioGroup = new RadioButtonGroup<>();
         timeScaleGradeLevelRadioGroup.setItems("年", "月", "日","小时","分钟");
         leftSideSectionContainerScrollLayout.add(timeScaleGradeLevelRadioGroup);
+        timeScaleGradeLevelRadioGroup.setValue("年");
+        timeScaleGradeLevelRadioGroup.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<RadioButtonGroup<String>, String>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<RadioButtonGroup<String>, String> radioButtonGroupStringComponentValueChangeEvent) {
+                String newValue = radioButtonGroupStringComponentValueChangeEvent.getValue();
+                setupTimeScaleGradeSearchElements(newValue);
+            }
+        });
 
         HorizontalLayout yearValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(yearValueContainer);
@@ -284,7 +312,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         yearValueContainer.add(yearFilterText);
         yearValueContainer.setVerticalComponentAlignment(Alignment.CENTER,yearFilterText);
 
-        TextField startYearTextField = new TextField();
+        startYearTextField = new TextField();
         startYearTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         startYearTextField.setWidth(80,Unit.PIXELS);
         Button syncStartToEndYear = new Button();
@@ -300,7 +328,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         yearValueContainer.add(inputDivIcon0);
         yearValueContainer.setVerticalComponentAlignment(Alignment.CENTER,inputDivIcon0);
 
-        TextField toYearTextField = new TextField();
+        toYearTextField = new TextField();
         toYearTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         toYearTextField.setWidth(80,Unit.PIXELS);
         yearValueContainer.add(toYearTextField);
@@ -319,7 +347,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         monthValueContainer.add(monthFilterText);
         monthValueContainer.setVerticalComponentAlignment(Alignment.CENTER,monthFilterText);
 
-        ComboBox<Integer> startMonthComboBox = new ComboBox<>();
+        startMonthComboBox = new ComboBox<>();
         startMonthComboBox.setItems(1,2,3,4,5,6,7,8,9,10,11,12);
         startMonthComboBox.setWidth(80,Unit.PIXELS);
         startMonthComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
@@ -337,7 +365,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         monthValueContainer.add(inputDivIcon1);
         monthValueContainer.setVerticalComponentAlignment(Alignment.CENTER,inputDivIcon1);
 
-        ComboBox<Integer> toMonthComboBox = new ComboBox<>();
+        toMonthComboBox = new ComboBox<>();
         toMonthComboBox.setItems(1,2,3,4,5,6,7,8,9,10,11,12);
         toMonthComboBox.setWidth(80,Unit.PIXELS);
         toMonthComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
@@ -358,7 +386,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         dayValueContainer.add(dayFilterText);
         dayValueContainer.setVerticalComponentAlignment(Alignment.CENTER,dayFilterText);
 
-        ComboBox<Integer> startDayComboBox = new ComboBox<>();
+        startDayComboBox = new ComboBox<>();
         startDayComboBox.setItems(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31);
         startDayComboBox.setWidth(80,Unit.PIXELS);
         startDayComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
@@ -376,7 +404,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         dayValueContainer.add(inputDivIcon2);
         dayValueContainer.setVerticalComponentAlignment(Alignment.CENTER,inputDivIcon2);
 
-        ComboBox<Integer> toDayComboBox = new ComboBox<>();
+        toDayComboBox = new ComboBox<>();
         toDayComboBox.setItems(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31);
         toDayComboBox.setWidth(80,Unit.PIXELS);
         toDayComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
@@ -397,7 +425,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         hourValueContainer.add(hourFilterText);
         hourValueContainer.setVerticalComponentAlignment(Alignment.CENTER,hourFilterText);
 
-        ComboBox<Integer> startHourComboBox = new ComboBox<>();
+        startHourComboBox = new ComboBox<>();
         startHourComboBox.setItems(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23);
         startHourComboBox.setWidth(80,Unit.PIXELS);
         startHourComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
@@ -415,7 +443,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         hourValueContainer.add(inputDivIcon3);
         hourValueContainer.setVerticalComponentAlignment(Alignment.CENTER,inputDivIcon3);
 
-        ComboBox<Integer> toHourComboBox = new ComboBox<>();
+        toHourComboBox = new ComboBox<>();
         toHourComboBox.setItems(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23);
         toHourComboBox.setWidth(80,Unit.PIXELS);
         toHourComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
@@ -436,7 +464,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         minuteValueContainer.add(minuteFilterText);
         minuteValueContainer.setVerticalComponentAlignment(Alignment.CENTER,minuteFilterText);
 
-        ComboBox<Integer> startMinuteComboBox = new ComboBox<>();
+        startMinuteComboBox = new ComboBox<>();
         startMinuteComboBox.setItems(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
                 31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59);
         startMinuteComboBox.setWidth(80,Unit.PIXELS);
@@ -455,7 +483,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         minuteValueContainer.add(inputDivIcon4);
         minuteValueContainer.setVerticalComponentAlignment(Alignment.CENTER,inputDivIcon4);
 
-        ComboBox<Integer> toMinuteComboBox = new ComboBox<>();
+        toMinuteComboBox = new ComboBox<>();
         toMinuteComboBox.setItems(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
                 31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59);
         toMinuteComboBox.setWidth(80,Unit.PIXELS);
@@ -475,9 +503,10 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         heightSpaceDiv1.getStyle()
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)").set("padding-bottom","2px");
 
-        Span spaceDivSpan = new Span(" ");
-        spaceDivSpan.setHeight(10,Unit.PIXELS);
-        leftSideSectionContainerScrollLayout.add(spaceDivSpan);
+        HorizontalLayout heightSpaceDiv2 = new HorizontalLayout();
+        heightSpaceDiv2.setWidth(10,Unit.PIXELS);
+        heightSpaceDiv2.setHeight(15,Unit.PIXELS);
+        leftSideSectionContainerScrollLayout.add(heightSpaceDiv2);
 
         Button executeQueryButton = new Button("检索时间尺度实体");
         executeQueryButton.setIcon(new Icon(VaadinIcon.SEARCH));
@@ -485,7 +514,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //queryConceptionEntities();
+                queryTimeScaleEntities();
             }
         });
         leftSideSectionContainerScrollLayout.add(executeQueryButton);
@@ -538,39 +567,172 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         timeScaleEntitiesGrid.setWidth(295,Unit.PIXELS);
         timeScaleEntitiesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER);
         timeScaleEntitiesGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        timeScaleEntitiesGrid.addColumn(TimeScaleEntity::getTimeScaleGrade).setHeader("时间粒度").setKey("idx_0").setWidth("80px");
+        timeScaleEntitiesGrid.addColumn(TimeScaleEntity::getTimeScaleGrade).setHeader("粒度").setKey("idx_0").setWidth("70px");
         timeScaleEntitiesGrid.addColumn(TimeScaleEntity::getTimeScaleEntityDesc).setHeader("时间描述").setKey("idx_1");
         timeScaleEntitiesGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_2").setWidth("60px");
 
-        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"时间粒度");
+        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"粒度");
         timeScaleEntitiesGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.DESKTOP,"时间描述");
         timeScaleEntitiesGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         timeScaleEntitiesGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
+        middleContainerLayout.add(timeScaleEntitiesGrid);
+    }
 
+    private void renderTimeFlowBasicInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         TimeFlow targetTimeFlow = coreRealm.getOrCreateTimeFlow(this.timeFlowName);
-
         List<Integer> availableTimeSpanYearsList = targetTimeFlow.getAvailableTimeSpanYears();
-
         if(availableTimeSpanYearsList != null && availableTimeSpanYearsList.size() >0){
             if(availableTimeSpanYearsList.size() ==1){
                 Integer onlyYear = availableTimeSpanYearsList.get(0);
+                startYearValue.setText(""+onlyYear);
+                toYearValue.setText(""+onlyYear);
                 timeScaleEntitiesGrid.setItems(targetTimeFlow.getYearEntity(onlyYear));
+                startYearTextField.setValue(""+onlyYear);
             }else{
                 Integer firstYear = availableTimeSpanYearsList.get(0);
                 Integer lastYear = availableTimeSpanYearsList.get(availableTimeSpanYearsList.size() -1);
+                startYearValue.setText(""+firstYear);
+                toYearValue.setText(""+lastYear);
+                startYearTextField.setValue(""+firstYear);
+                toYearTextField.setValue(""+lastYear);
                 try {
                     List<TimeScaleEntity> timeScaleEntityList = targetTimeFlow.getYearEntities(firstYear,lastYear);
                     timeScaleEntitiesGrid.setItems(timeScaleEntityList);
                 } catch (CoreRealmServiceRuntimeException e) {
                     throw new RuntimeException(e);
                 }
-
             }
         }
-        middleContainerLayout.add(timeScaleEntitiesGrid);
+        setupTimeScaleGradeSearchElements("年");
+        queryTimeScaleGrade = TimeFlow.TimeScaleGrade.YEAR;
+    }
+
+    private void setupTimeScaleGradeSearchElements(String gradeValue){
+        if(gradeValue.equals("年")){
+            queryTimeScaleGrade = TimeFlow.TimeScaleGrade.YEAR;
+            startMonthComboBox.setEnabled(false);
+            toMonthComboBox.setEnabled(false);
+            startDayComboBox.setEnabled(false);
+            toDayComboBox.setEnabled(false);
+            startHourComboBox.setEnabled(false);
+            toHourComboBox.setEnabled(false);
+            startMinuteComboBox.setEnabled(false);
+            toMinuteComboBox.setEnabled(false);
+        }else if(gradeValue.equals("月")){
+            queryTimeScaleGrade = TimeFlow.TimeScaleGrade.MONTH;
+            startMonthComboBox.setEnabled(true);
+            toMonthComboBox.setEnabled(true);
+            startDayComboBox.setEnabled(false);
+            toDayComboBox.setEnabled(false);
+            startHourComboBox.setEnabled(false);
+            toHourComboBox.setEnabled(false);
+            startMinuteComboBox.setEnabled(false);
+            toMinuteComboBox.setEnabled(false);
+        }else if(gradeValue.equals("日")){
+            queryTimeScaleGrade = TimeFlow.TimeScaleGrade.DAY;
+            startMonthComboBox.setEnabled(true);
+            toMonthComboBox.setEnabled(true);
+            startDayComboBox.setEnabled(true);
+            toDayComboBox.setEnabled(true);
+            startHourComboBox.setEnabled(false);
+            toHourComboBox.setEnabled(false);
+            startMinuteComboBox.setEnabled(false);
+            toMinuteComboBox.setEnabled(false);
+        }else if(gradeValue.equals("小时")){
+            queryTimeScaleGrade = TimeFlow.TimeScaleGrade.HOUR;
+            startMonthComboBox.setEnabled(true);
+            toMonthComboBox.setEnabled(true);
+            startDayComboBox.setEnabled(true);
+            toDayComboBox.setEnabled(true);
+            startHourComboBox.setEnabled(true);
+            toHourComboBox.setEnabled(true);
+            startMinuteComboBox.setEnabled(false);
+            toMinuteComboBox.setEnabled(false);
+        }else if(gradeValue.equals("分钟")){
+            queryTimeScaleGrade = TimeFlow.TimeScaleGrade.MINUTE;
+            startMonthComboBox.setEnabled(true);
+            toMonthComboBox.setEnabled(true);
+            startDayComboBox.setEnabled(true);
+            toDayComboBox.setEnabled(true);
+            startHourComboBox.setEnabled(true);
+            toHourComboBox.setEnabled(true);
+            startMinuteComboBox.setEnabled(true);
+            toMinuteComboBox.setEnabled(true);
+        }
+    }
+
+    private void queryTimeScaleEntities(){
+        timeScaleEntitiesGrid.setItems(new ArrayList<>());
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        TimeFlow targetTimeFlow = coreRealm.getOrCreateTimeFlow(this.timeFlowName);
+        LinkedList<TimeScaleEntity> resultTimeScaleEntityList = null;
+        try {
+            switch(queryTimeScaleGrade){
+                case YEAR :
+                    int startYear0 = Integer.parseInt(startYearTextField.getValue());
+                    int toYear0 = Integer.parseInt(toYearTextField.getValue());
+                    resultTimeScaleEntityList = targetTimeFlow.getYearEntities(startYear0,toYear0);
+                    break;
+                case MONTH:
+                    int startYear1 = Integer.parseInt(startYearTextField.getValue());
+                    int toYear1 = Integer.parseInt(toYearTextField.getValue());
+                    int startMonth1 = startMonthComboBox.getValue();
+                    int toMonth1 = toMonthComboBox.getValue();
+                    TimeScaleMoment startTimeScaleMoment1 = new TimeScaleMoment(startYear1,startMonth1);
+                    TimeScaleMoment toTimeScaleMoment1 = new TimeScaleMoment(toYear1,toMonth1);
+                    resultTimeScaleEntityList = targetTimeFlow.getMonthEntities(startTimeScaleMoment1,toTimeScaleMoment1);
+                    break;
+                case DAY:
+                    int startYear2 = Integer.parseInt(startYearTextField.getValue());
+                    int toYear2 = Integer.parseInt(toYearTextField.getValue());
+                    int startMonth2 = startMonthComboBox.getValue();
+                    int toMonth2 = toMonthComboBox.getValue();
+                    int startDay2 = startDayComboBox.getValue();
+                    int toDay2 = toDayComboBox.getValue();
+                    TimeScaleMoment startTimeScaleMoment2 = new TimeScaleMoment(startYear2,startMonth2,startDay2);
+                    TimeScaleMoment toTimeScaleMoment2 = new TimeScaleMoment(toYear2,toMonth2,toDay2);
+                    resultTimeScaleEntityList = targetTimeFlow.getDayEntities(startTimeScaleMoment2,toTimeScaleMoment2);
+                    break;
+                case HOUR:
+                    int startYear3 = Integer.parseInt(startYearTextField.getValue());
+                    int toYear3 = Integer.parseInt(toYearTextField.getValue());
+                    int startMonth3 = startMonthComboBox.getValue();
+                    int toMonth3 = toMonthComboBox.getValue();
+                    int startDay3 = startDayComboBox.getValue();
+                    int toDay3 = toDayComboBox.getValue();
+                    int startHour3 = startHourComboBox.getValue();
+                    int toHour3 = toHourComboBox.getValue();
+                    TimeScaleMoment startTimeScaleMoment3 = new TimeScaleMoment(startYear3,startMonth3,startDay3,startHour3);
+                    TimeScaleMoment toTimeScaleMoment3 = new TimeScaleMoment(toYear3,toMonth3,toDay3,toHour3);
+                    resultTimeScaleEntityList = targetTimeFlow.getHourEntities(startTimeScaleMoment3,toTimeScaleMoment3);
+                    break;
+                case MINUTE:
+                    int startYear4 = Integer.parseInt(startYearTextField.getValue());
+                    int toYear4 = Integer.parseInt(toYearTextField.getValue());
+                    int startMonth4 = startMonthComboBox.getValue();
+                    int toMonth4 = toMonthComboBox.getValue();
+                    int startDay4 = startDayComboBox.getValue();
+                    int toDay4 = toDayComboBox.getValue();
+                    int startHour4 = startHourComboBox.getValue();
+                    int toHour4 = toHourComboBox.getValue();
+                    int startMinute4 = startMinuteComboBox.getValue();
+                    int toMinute4 = toMinuteComboBox.getValue();
+                    TimeScaleMoment startTimeScaleMoment4 = new TimeScaleMoment(startYear4,startMonth4,startDay4,startHour4,startMinute4);
+                    TimeScaleMoment toTimeScaleMoment4 = new TimeScaleMoment(toYear4,toMonth4,toDay4,toHour4,toMinute4);
+                    resultTimeScaleEntityList = targetTimeFlow.getMinuteEntities(startTimeScaleMoment4,toTimeScaleMoment4);
+                    break;
+            }
+            if(resultTimeScaleEntityList != null){
+                CommonUIOperationUtil.showPopupNotification("时间粒度实体查询操作成功，查询返回实体数: "+resultTimeScaleEntityList.size(),
+                        NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
+                timeScaleEntitiesGrid.setItems(resultTimeScaleEntityList);
+            }
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void renderTimeScaleEntityDetailUI(TimeScaleEntity timeScaleEntity){
