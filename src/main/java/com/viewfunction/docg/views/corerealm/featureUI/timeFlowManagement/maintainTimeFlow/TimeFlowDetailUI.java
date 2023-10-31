@@ -33,6 +33,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeFlowRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleMoment;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
@@ -44,6 +45,7 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,6 +73,9 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private ComboBox<Integer> startMinuteComboBox;
     private ComboBox<Integer> toMinuteComboBox;
     private TimeFlow.TimeScaleGrade queryTimeScaleGrade;
+    private NumberFormat numberFormat;
+    private SecondaryKeyValueDisplayItem hourTimeScaleEntityCountDisplayItem;
+    private SecondaryKeyValueDisplayItem totalTimeScaleEntityCountDisplayItem;
 
     public TimeFlowDetailUI(){}
 
@@ -199,12 +204,12 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        new SecondaryKeyValueDisplayItem(horizontalLayout, FontAwesome.Solid.CLOCK.create(),"TimeScaleEntity 数量:","1,000,000,000");
+        totalTimeScaleEntityCountDisplayItem = new SecondaryKeyValueDisplayItem(horizontalLayout, FontAwesome.Solid.CLOCK.create(),"TimeScaleEntity 数量:","-");
         timeFlowInformationLayout.add(horizontalLayout);
 
         HorizontalLayout horizontalLayout2 = new HorizontalLayout();
         horizontalLayout2.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        new SecondaryKeyValueDisplayItem(horizontalLayout2,FontAwesome.Solid.BEZIER_CURVE.create(),"TimeScaleEvent 数量:","1,000,000,000");
+        new SecondaryKeyValueDisplayItem(horizontalLayout2,FontAwesome.Solid.BEZIER_CURVE.create(),"TimeScaleEvent 数量:","-");
         timeFlowInformationLayout.add(horizontalLayout2);
 
         VerticalLayout timeFlowInfoWallContainerLayout = new VerticalLayout();
@@ -253,7 +258,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         HorizontalLayout hourEntitiesInfoLayout = new HorizontalLayout();
         hourEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         NativeLabel hourEntitiesLabel = new NativeLabel("Hour Entities:");
-        new SecondaryKeyValueDisplayItem(hourEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
+        hourTimeScaleEntityCountDisplayItem = new SecondaryKeyValueDisplayItem(hourEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
         new SecondaryKeyValueDisplayItem(hourEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
         Icon hourInfoTitleIcon = new Icon(VaadinIcon.CLOCK);
         hourInfoTitleIcon.setSize("10px");
@@ -608,6 +613,10 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         }
         setupTimeScaleGradeSearchElements("年");
         queryTimeScaleGrade = TimeFlow.TimeScaleGrade.YEAR;
+
+        this.numberFormat = NumberFormat.getInstance();
+        TimeFlowRuntimeStatistics timeFlowRuntimeStatistics = targetTimeFlow.getTimeFlowRuntimeStatistics();
+        totalTimeScaleEntityCountDisplayItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsTotalTimeScaleEntityCount()));
     }
 
     private void setupTimeScaleGradeSearchElements(String gradeValue){
