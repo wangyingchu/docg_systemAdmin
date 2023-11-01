@@ -26,7 +26,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.Setter;
+import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.validator.IntegerRangeValidator;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
@@ -74,7 +79,6 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private ComboBox<Integer> toMinuteComboBox;
     private TimeFlow.TimeScaleGrade queryTimeScaleGrade;
     private NumberFormat numberFormat;
-
     private SecondaryKeyValueDisplayItem totalTimeScaleEntityCountDisplayItem;
     private SecondaryKeyValueDisplayItem totalTimeScaleEventCountDisplayItem;
     private SecondaryKeyValueDisplayItem yearEntityCountItem;
@@ -87,11 +91,13 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private SecondaryKeyValueDisplayItem hourEventCountItem;
     private SecondaryKeyValueDisplayItem minuteEntityCountItem;
     private SecondaryKeyValueDisplayItem minuteEventCountItem;
+    private Binder<String> binder;
 
     public TimeFlowDetailUI(){}
 
     public TimeFlowDetailUI(String timeFlowName){
         this.timeFlowName = timeFlowName;
+        this.binder = new Binder<>();
     }
 
     @Override
@@ -200,7 +206,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         yearDivIcon.setSize("12px");
 
         Span toYear = new Span();
-        toYearValue = new NativeLabel("2050");
+        toYearValue = new NativeLabel("");
         toYearValue.addClassNames("text-l","font-extrabold");
         toYear.add(toYearValue);
         toYear.getElement().getThemeList().add("badge pill");
@@ -338,6 +344,14 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         syncStartToEndYear.setIcon(rightDirIcon0);
         yearValueContainer.add(startYearTextField);
         startYearTextField.setPrefixComponent(syncStartToEndYear);
+        syncStartToEndYear.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                if(!startYearTextField.isInvalid() && startYearTextField.getValue() != ""){
+                    toYearTextField.setValue(startYearTextField.getValue());
+                }
+            }
+        });
 
         Icon inputDivIcon0 = VaadinIcon.ARROWS_LONG_RIGHT.create();
         inputDivIcon0.setSize("10px");
@@ -354,6 +368,14 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         leftDirIcon0.setSize("14px");
         syncEndToStartYear.setIcon(leftDirIcon0);
         toYearTextField.setPrefixComponent(syncEndToStartYear);
+        syncEndToStartYear.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                if(!toYearTextField.isInvalid() && toYearTextField.getValue() != ""){
+                    startYearTextField.setValue(toYearTextField.getValue());
+                }
+            }
+        });
 
         HorizontalLayout monthValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(monthValueContainer);
@@ -375,6 +397,14 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         rightDirIcon1.setSize("14px");
         syncStartToEndMonth.setIcon(rightDirIcon1);
         startMonthComboBox.setPrefixComponent(syncStartToEndMonth);
+        syncStartToEndMonth.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                if(startMonthComboBox.getValue() != null){
+                    toMonthComboBox.setValue(startMonthComboBox.getValue());
+                }
+            }
+        });
 
         Icon inputDivIcon1 = VaadinIcon.ARROWS_LONG_RIGHT.create();
         inputDivIcon1.setSize("10px");
@@ -393,6 +423,14 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         leftDirIcon1.setSize("14px");
         syncEndToStartMonth.setIcon(leftDirIcon1);
         toMonthComboBox.setPrefixComponent(syncEndToStartMonth);
+        syncEndToStartMonth.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                if(toMonthComboBox.getValue() != null){
+                    startMonthComboBox.setValue(toMonthComboBox.getValue());
+                }
+            }
+        });
 
         HorizontalLayout dayValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(dayValueContainer);
@@ -414,6 +452,14 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         rightDirIcon2.setSize("14px");
         syncStartToEndDay.setIcon(rightDirIcon2);
         startDayComboBox.setPrefixComponent(syncStartToEndDay);
+        syncStartToEndDay.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                if(startDayComboBox.getValue() != null){
+                    toDayComboBox.setValue(startDayComboBox.getValue());
+                }
+            }
+        });
 
         Icon inputDivIcon2 = VaadinIcon.ARROWS_LONG_RIGHT.create();
         inputDivIcon2.setSize("10px");
@@ -432,6 +478,14 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         leftDirIcon2.setSize("14px");
         syncEndToStartDay.setIcon(leftDirIcon2);
         toDayComboBox.setPrefixComponent(syncEndToStartDay);
+        syncEndToStartDay.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                if(toDayComboBox.getValue() != null){
+                    startDayComboBox.setValue(toDayComboBox.getValue());
+                }
+            }
+        });
 
         HorizontalLayout hourValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(hourValueContainer);
@@ -453,6 +507,14 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         rightDirIcon3.setSize("14px");
         syncStartToEndHour.setIcon(rightDirIcon3);
         startHourComboBox.setPrefixComponent(syncStartToEndHour);
+        syncStartToEndHour.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                if(startHourComboBox.getValue() != null){
+                    toHourComboBox.setValue(startHourComboBox.getValue());
+                }
+            }
+        });
 
         Icon inputDivIcon3 = VaadinIcon.ARROWS_LONG_RIGHT.create();
         inputDivIcon3.setSize("10px");
@@ -471,6 +533,14 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         leftDirIcon3.setSize("14px");
         syncEndToStartHour.setIcon(leftDirIcon3);
         toHourComboBox.setPrefixComponent(syncEndToStartHour);
+        syncEndToStartHour.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                if(toHourComboBox.getValue() != null){
+                    startHourComboBox.setValue(toHourComboBox.getValue());
+                }
+            }
+        });
 
         HorizontalLayout minuteValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(minuteValueContainer);
@@ -493,6 +563,14 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         rightDirIcon4.setSize("14px");
         syncStartToEndMinute.setIcon(rightDirIcon4);
         startMinuteComboBox.setPrefixComponent(syncStartToEndMinute);
+        syncStartToEndMinute.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                if(startMinuteComboBox.getValue() != null){
+                    toMinuteComboBox.setValue(startMinuteComboBox.getValue());
+                }
+            }
+        });
 
         Icon inputDivIcon4 = VaadinIcon.ARROWS_LONG_RIGHT.create();
         inputDivIcon4.setSize("10px");
@@ -512,6 +590,14 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         leftDirIcon4.setSize("14px");
         syncEndToStartMinute.setIcon(leftDirIcon4);
         toMinuteComboBox.setPrefixComponent(syncEndToStartMinute);
+        syncEndToStartMinute.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                if(toMinuteComboBox.getValue() != null){
+                    startMinuteComboBox.setValue(toMinuteComboBox.getValue());
+                }
+            }
+        });
 
         HorizontalLayout heightSpaceDiv1 = new HorizontalLayout();
         heightSpaceDiv1.setWidth(90,Unit.PERCENTAGE);
@@ -634,11 +720,35 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         monthEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsMonthScaleTimeScaleEntityCount()));
         monthEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersMonthScaleTimeScaleEventCount()));
         dayEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsDayScaleTimeScaleEntityCount()));
-        dayEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersDayScaleTimeScaleEventCount()));;
+        dayEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersDayScaleTimeScaleEventCount()));
         hourEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsHourScaleTimeScaleEntityCount()));
-        hourEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersHourScaleTimeScaleEventCount()));;
+        hourEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersHourScaleTimeScaleEventCount()));
         minuteEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsMinuteScaleTimeScaleEntityCount()));
-        minuteEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersMinuteScaleTimeScaleEventCount()));;
+        minuteEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersMinuteScaleTimeScaleEventCount()));
+
+        binder.forField((TextField)startYearTextField).withConverter(new StringToIntegerConverter("该项属性值必须为INT类型"))
+                .withValidator(new IntegerRangeValidator("该项属性值必须为INT类型", null, null))
+                .bind(new ValueProvider<String, Integer>() {
+                    @Override
+                    public Integer apply(String s) {
+                        return new Integer(s);
+                    }
+                }, new Setter<String, Integer>() {
+                    @Override
+                    public void accept(String s, Integer intValue) {}
+                });
+
+        binder.forField((TextField)toYearTextField).withConverter(new StringToIntegerConverter("该项属性值必须为INT类型"))
+                .withValidator(new IntegerRangeValidator("该项属性值必须为INT类型", null, null))
+                .bind(new ValueProvider<String, Integer>() {
+                    @Override
+                    public Integer apply(String s) {
+                        return new Integer(s);
+                    }
+                }, new Setter<String, Integer>() {
+                    @Override
+                    public void accept(String s, Integer intValue) {}
+                });
     }
 
     private void setupTimeScaleGradeSearchElements(String gradeValue){
@@ -696,6 +806,11 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     }
 
     private void queryTimeScaleEntities(){
+        if(startYearTextField.isInvalid() || toYearTextField.isInvalid()){
+            CommonUIOperationUtil.showPopupNotification("请输入正确的年时间数值 ",
+                    NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+            return;
+        }
         timeScaleEntitiesGrid.setItems(new ArrayList<>());
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         TimeFlow targetTimeFlow = coreRealm.getOrCreateTimeFlow(this.timeFlowName);
