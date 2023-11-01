@@ -74,9 +74,19 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private ComboBox<Integer> toMinuteComboBox;
     private TimeFlow.TimeScaleGrade queryTimeScaleGrade;
     private NumberFormat numberFormat;
-    private SecondaryKeyValueDisplayItem hourTimeScaleEntityCountDisplayItem;
+
     private SecondaryKeyValueDisplayItem totalTimeScaleEntityCountDisplayItem;
     private SecondaryKeyValueDisplayItem totalTimeScaleEventCountDisplayItem;
+    private SecondaryKeyValueDisplayItem yearEntityCountItem;
+    private SecondaryKeyValueDisplayItem yearEventCountItem;
+    private SecondaryKeyValueDisplayItem monthEntityCountItem;
+    private SecondaryKeyValueDisplayItem monthEventCountItem;
+    private SecondaryKeyValueDisplayItem dayEntityCountItem;
+    private SecondaryKeyValueDisplayItem dayEventCountItem;
+    private SecondaryKeyValueDisplayItem hourEntityCountItem;
+    private SecondaryKeyValueDisplayItem hourEventCountItem;
+    private SecondaryKeyValueDisplayItem minuteEntityCountItem;
+    private SecondaryKeyValueDisplayItem minuteEventCountItem;
 
     public TimeFlowDetailUI(){}
 
@@ -223,8 +233,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         HorizontalLayout yearEntitiesInfoLayout = new HorizontalLayout();
         yearEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         NativeLabel yearEntitiesLabel = new NativeLabel("Year Entities:");
-        new SecondaryKeyValueDisplayItem(yearEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(yearEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
+        yearEntityCountItem = new SecondaryKeyValueDisplayItem(yearEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
+        yearEventCountItem = new SecondaryKeyValueDisplayItem(yearEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
         Icon yearInfoTitleIcon = new Icon(VaadinIcon.CALENDAR);
         yearInfoTitleIcon.setSize("10px");
         SectionWallTitle yearInfoSectionWallTitle = new SectionWallTitle(yearInfoTitleIcon,yearEntitiesLabel);
@@ -235,8 +245,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         HorizontalLayout monthEntitiesInfoLayout = new HorizontalLayout();
         monthEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         NativeLabel monthEntitiesLabel = new NativeLabel("Month Entities:");
-        new SecondaryKeyValueDisplayItem(monthEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(monthEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
+        monthEntityCountItem = new SecondaryKeyValueDisplayItem(monthEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
+        monthEventCountItem = new SecondaryKeyValueDisplayItem(monthEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
         Icon monthInfoTitleIcon = new Icon(VaadinIcon.CALENDAR);
         monthInfoTitleIcon.setSize("10px");
         SectionWallTitle monthInfoSectionWallTitle = new SectionWallTitle(monthInfoTitleIcon,monthEntitiesLabel);
@@ -247,8 +257,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         HorizontalLayout dayEntitiesInfoLayout = new HorizontalLayout();
         dayEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         NativeLabel dayEntitiesLabel = new NativeLabel("Day Entities:");
-        new SecondaryKeyValueDisplayItem(dayEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(dayEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
+        dayEntityCountItem = new SecondaryKeyValueDisplayItem(dayEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
+        dayEventCountItem = new SecondaryKeyValueDisplayItem(dayEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
         Icon dayInfoTitleIcon = new Icon(VaadinIcon.CALENDAR);
         dayInfoTitleIcon.setSize("10px");
         SectionWallTitle dayInfoSectionWallTitle = new SectionWallTitle(dayInfoTitleIcon,dayEntitiesLabel);
@@ -259,8 +269,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         HorizontalLayout hourEntitiesInfoLayout = new HorizontalLayout();
         hourEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         NativeLabel hourEntitiesLabel = new NativeLabel("Hour Entities:");
-        hourTimeScaleEntityCountDisplayItem = new SecondaryKeyValueDisplayItem(hourEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(hourEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
+        hourEntityCountItem = new SecondaryKeyValueDisplayItem(hourEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
+        hourEventCountItem = new SecondaryKeyValueDisplayItem(hourEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
         Icon hourInfoTitleIcon = new Icon(VaadinIcon.CLOCK);
         hourInfoTitleIcon.setSize("10px");
         SectionWallTitle hourInfoSectionWallTitle = new SectionWallTitle(hourInfoTitleIcon,hourEntitiesLabel);
@@ -271,8 +281,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         HorizontalLayout minuteEntitiesInfoLayout = new HorizontalLayout();
         minuteEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         NativeLabel minuteEntitiesLabel = new NativeLabel("Minute Entities:");
-        new SecondaryKeyValueDisplayItem(minuteEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","1,000,000,000");
-        new SecondaryKeyValueDisplayItem(minuteEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","1,000,000,000");
+        minuteEntityCountItem = new SecondaryKeyValueDisplayItem(minuteEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
+        minuteEventCountItem = new SecondaryKeyValueDisplayItem(minuteEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
         Icon minuteInfoTitleIcon = new Icon(VaadinIcon.CLOCK);
         minuteInfoTitleIcon.setSize("10px");
         SectionWallTitle minuteInfoSectionWallTitle = new SectionWallTitle(minuteInfoTitleIcon,minuteEntitiesLabel);
@@ -619,6 +629,16 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         TimeFlowRuntimeStatistics timeFlowRuntimeStatistics = targetTimeFlow.getTimeFlowRuntimeStatistics();
         totalTimeScaleEntityCountDisplayItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsTotalTimeScaleEntityCount()));
         totalTimeScaleEventCountDisplayItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersTotalTimeScaleEventCount()));
+        yearEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsYearScaleTimeScaleEntityCount()));
+        yearEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersYearScaleTimeScaleEventCount()));
+        monthEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsMonthScaleTimeScaleEntityCount()));
+        monthEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersMonthScaleTimeScaleEventCount()));
+        dayEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsDayScaleTimeScaleEntityCount()));
+        dayEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersDayScaleTimeScaleEventCount()));;
+        hourEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsHourScaleTimeScaleEntityCount()));
+        hourEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersHourScaleTimeScaleEventCount()));;
+        minuteEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsMinuteScaleTimeScaleEntityCount()));
+        minuteEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersMinuteScaleTimeScaleEventCount()));;
     }
 
     private void setupTimeScaleGradeSearchElements(String gradeValue){
