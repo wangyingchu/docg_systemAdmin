@@ -76,6 +76,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private NumberFormat numberFormat;
     private SecondaryKeyValueDisplayItem hourTimeScaleEntityCountDisplayItem;
     private SecondaryKeyValueDisplayItem totalTimeScaleEntityCountDisplayItem;
+    private SecondaryKeyValueDisplayItem totalTimeScaleEventCountDisplayItem;
 
     public TimeFlowDetailUI(){}
 
@@ -209,7 +210,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
         HorizontalLayout horizontalLayout2 = new HorizontalLayout();
         horizontalLayout2.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        new SecondaryKeyValueDisplayItem(horizontalLayout2,FontAwesome.Solid.BEZIER_CURVE.create(),"TimeScaleEvent 数量:","-");
+        totalTimeScaleEventCountDisplayItem = new SecondaryKeyValueDisplayItem(horizontalLayout2,FontAwesome.Solid.BEZIER_CURVE.create(),"TimeScaleEvent 数量:","-");
         timeFlowInformationLayout.add(horizontalLayout2);
 
         VerticalLayout timeFlowInfoWallContainerLayout = new VerticalLayout();
@@ -617,6 +618,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         this.numberFormat = NumberFormat.getInstance();
         TimeFlowRuntimeStatistics timeFlowRuntimeStatistics = targetTimeFlow.getTimeFlowRuntimeStatistics();
         totalTimeScaleEntityCountDisplayItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsTotalTimeScaleEntityCount()));
+        totalTimeScaleEventCountDisplayItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersTotalTimeScaleEventCount()));
     }
 
     private void setupTimeScaleGradeSearchElements(String gradeValue){
