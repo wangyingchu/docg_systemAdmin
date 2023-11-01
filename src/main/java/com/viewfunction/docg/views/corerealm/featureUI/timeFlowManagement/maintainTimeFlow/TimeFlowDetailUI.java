@@ -731,7 +731,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 .bind(new ValueProvider<String, Integer>() {
                     @Override
                     public Integer apply(String s) {
-                        return new Integer(s);
+                        return Integer.valueOf(s);
                     }
                 }, new Setter<String, Integer>() {
                     @Override
@@ -743,7 +743,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 .bind(new ValueProvider<String, Integer>() {
                     @Override
                     public Integer apply(String s) {
-                        return new Integer(s);
+                        return Integer.valueOf(s);
                     }
                 }, new Setter<String, Integer>() {
                     @Override
