@@ -843,7 +843,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                     monthDateTimeCheckResult = checkMonthInputsData(startMonthComboBox,toMonthComboBox,"请输入起始月时间值");
                     if(!DateTimeCheckResult.inCorrect.equals(yearDateTimeCheckResult) &&
                             !DateTimeCheckResult.inCorrect.equals(monthDateTimeCheckResult)){
-                        if(DateTimeCheckResult.correct.equals(yearDateTimeCheckResult) &&
+                        if(DateTimeCheckResult.correct.equals(yearDateTimeCheckResult) &
                                 DateTimeCheckResult.correct.equals(monthDateTimeCheckResult)){
                             if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
                                     toMonthComboBox.getValue() <= startMonthComboBox.getValue()){
@@ -867,17 +867,35 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                     yearDateTimeCheckResult = checkYearInputsData(true);
                     monthDateTimeCheckResult = checkMonthInputsData(startMonthComboBox,toMonthComboBox,"请输入起始月时间值");
                     dayDateTimeCheckResult = checkMonthInputsData(startDayComboBox,toDayComboBox,"请输入起始日时间值");
-
-                    int startYear2 = Integer.parseInt(startYearTextField.getValue());
-                    int toYear2 = Integer.parseInt(toYearTextField.getValue());
-                    int startMonth2 = startMonthComboBox.getValue();
-                    int toMonth2 = toMonthComboBox.getValue();
-                    int startDay2 = startDayComboBox.getValue();
-                    int toDay2 = toDayComboBox.getValue();
-                    TimeScaleMoment startTimeScaleMoment2 = new TimeScaleMoment(startYear2,startMonth2,startDay2);
-                    TimeScaleMoment toTimeScaleMoment2 = new TimeScaleMoment(toYear2,toMonth2,toDay2);
-                    resultTimeScaleEntityList.addAll(targetTimeFlow.getDayEntities(startTimeScaleMoment2,toTimeScaleMoment2));
-                    executedQuery = true;
+                    if(!DateTimeCheckResult.inCorrect.equals(yearDateTimeCheckResult) &&
+                            !DateTimeCheckResult.inCorrect.equals(monthDateTimeCheckResult) &&
+                            !DateTimeCheckResult.inCorrect.equals(dayDateTimeCheckResult)){
+                    }{
+                        if(DateTimeCheckResult.correct.equals(yearDateTimeCheckResult) &
+                                DateTimeCheckResult.correct.equals(monthDateTimeCheckResult) &
+                                DateTimeCheckResult.correct.equals(dayDateTimeCheckResult)){
+                            if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() == startMonthComboBox.getValue() & toDayComboBox.getValue() <= startDayComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束日时间值必须大于起始日时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else{
+                                int startYear2 = Integer.parseInt(startYearTextField.getValue());
+                                int toYear2 = Integer.parseInt(toYearTextField.getValue());
+                                int startMonth2 = startMonthComboBox.getValue();
+                                int toMonth2 = toMonthComboBox.getValue();
+                                int startDay2 = startDayComboBox.getValue();
+                                int toDay2 = toDayComboBox.getValue();
+                                TimeScaleMoment startTimeScaleMoment2 = new TimeScaleMoment(startYear2,startMonth2,startDay2);
+                                TimeScaleMoment toTimeScaleMoment2 = new TimeScaleMoment(toYear2,toMonth2,toDay2);
+                                resultTimeScaleEntityList.addAll(targetTimeFlow.getDayEntities(startTimeScaleMoment2,toTimeScaleMoment2));
+                                executedQuery = true;
+                            }
+                        }else{
+                            TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getDayEntity(Integer.parseInt(startYearTextField.getValue()),startMonthComboBox.getValue(),startDayComboBox.getValue());
+                            resultTimeScaleEntityList.add(resultTimeScaleEntity);
+                            executedQuery = true;
+                        }
+                    }
                     break;
                 case HOUR:
                     int startYear3 = Integer.parseInt(startYearTextField.getValue());
