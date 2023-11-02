@@ -816,10 +816,13 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         TimeFlow targetTimeFlow = coreRealm.getOrCreateTimeFlow(this.timeFlowName);
         List<TimeScaleEntity> resultTimeScaleEntityList = new ArrayList<>();
         boolean executedQuery = false;
+        DateTimeCheckResult yearDateTimeCheckResult;
+        DateTimeCheckResult monthDateTimeCheckResult;
+        DateTimeCheckResult dayDateTimeCheckResult;
         try {
             switch(queryTimeScaleGrade){
                 case YEAR :
-                    DateTimeCheckResult yearDateTimeCheckResult = checkYearInputsData(false);
+                    yearDateTimeCheckResult = checkYearInputsData(false);
                     switch(yearDateTimeCheckResult){
                         case correct :
                             resultTimeScaleEntityList.addAll(
@@ -836,16 +839,35 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                     }
                     break;
                 case MONTH:
-                    int startYear1 = Integer.parseInt(startYearTextField.getValue());
-                    int toYear1 = Integer.parseInt(toYearTextField.getValue());
-                    int startMonth1 = startMonthComboBox.getValue();
-                    int toMonth1 = toMonthComboBox.getValue();
-                    TimeScaleMoment startTimeScaleMoment1 = new TimeScaleMoment(startYear1,startMonth1);
-                    TimeScaleMoment toTimeScaleMoment1 = new TimeScaleMoment(toYear1,toMonth1);
-                    resultTimeScaleEntityList.addAll(targetTimeFlow.getMonthEntities(startTimeScaleMoment1,toTimeScaleMoment1));
-                    executedQuery = true;
+                    yearDateTimeCheckResult = checkYearInputsData(true);
+                    monthDateTimeCheckResult = checkMonthInputsData(startMonthComboBox,toMonthComboBox,"请输入起始月时间值");
+                    if(!DateTimeCheckResult.inCorrect.equals(yearDateTimeCheckResult) &&
+                            !DateTimeCheckResult.inCorrect.equals(monthDateTimeCheckResult)){
+                        if(DateTimeCheckResult.correct.equals(yearDateTimeCheckResult) &&
+                                DateTimeCheckResult.correct.equals(monthDateTimeCheckResult)){
+                            if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() <= startMonthComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束月时间值必须大于起始月时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else{
+                                TimeScaleMoment startTimeScaleMoment1 = new TimeScaleMoment(Integer.parseInt(startYearTextField.getValue()),startMonthComboBox.getValue());
+                                TimeScaleMoment toTimeScaleMoment1 = new TimeScaleMoment(Integer.parseInt(toYearTextField.getValue()),toMonthComboBox.getValue());
+                                resultTimeScaleEntityList.addAll(targetTimeFlow.getMonthEntities(startTimeScaleMoment1,toTimeScaleMoment1));
+                                executedQuery = true;
+                            }
+                        }else{
+                            TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getMonthEntity(Integer.parseInt(startYearTextField.getValue()),startMonthComboBox.getValue());
+                            resultTimeScaleEntityList.add(resultTimeScaleEntity);
+                            executedQuery = true;
+                            break;
+                        }
+                    }
                     break;
                 case DAY:
+                    yearDateTimeCheckResult = checkYearInputsData(true);
+                    monthDateTimeCheckResult = checkMonthInputsData(startMonthComboBox,toMonthComboBox,"请输入起始月时间值");
+                    dayDateTimeCheckResult = checkMonthInputsData(startDayComboBox,toDayComboBox,"请输入起始日时间值");
+
                     int startYear2 = Integer.parseInt(startYearTextField.getValue());
                     int toYear2 = Integer.parseInt(toYearTextField.getValue());
                     int startMonth2 = startMonthComboBox.getValue();
@@ -912,18 +934,31 @@ public class TimeFlowDetailUI extends VerticalLayout implements
             }else {
                 int toYear = Integer.parseInt(toYearTextField.getValue());
                 if(allowEqual){
-                    if(toYear <= startYear){
+                    if(toYear < startYear){
                         CommonUIOperationUtil.showPopupNotification("结束年时间值必须大于等于起始年时间值",
                                 NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
                         return DateTimeCheckResult.inCorrect;
                     }
                 }else{
-                    if(toYear < startYear){
+                    if(toYear <= startYear){
                         CommonUIOperationUtil.showPopupNotification("结束年时间值必须大于起始年时间值",
                                 NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
                         return DateTimeCheckResult.inCorrect;
                     }
                 }
+            }
+        }
+        return DateTimeCheckResult.correct;
+    }
+
+    private DateTimeCheckResult checkMonthInputsData(ComboBox<Integer> startDate,ComboBox<Integer> toDate,String errorMessage){
+        if(startDate.getValue() == null){
+            CommonUIOperationUtil.showPopupNotification(errorMessage,
+                    NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+            return DateTimeCheckResult.inCorrect;
+        }else{
+            if(toDate.getValue() == null){
+                return DateTimeCheckResult.singleEntity;
             }
         }
         return DateTimeCheckResult.correct;
