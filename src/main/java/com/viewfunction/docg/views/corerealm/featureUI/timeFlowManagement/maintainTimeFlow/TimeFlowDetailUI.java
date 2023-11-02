@@ -814,13 +814,26 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         timeScaleEntitiesGrid.setItems(new ArrayList<>());
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         TimeFlow targetTimeFlow = coreRealm.getOrCreateTimeFlow(this.timeFlowName);
-        LinkedList<TimeScaleEntity> resultTimeScaleEntityList = null;
+        List<TimeScaleEntity> resultTimeScaleEntityList = new ArrayList<>();
+        boolean executedQuery = false;
         try {
             switch(queryTimeScaleGrade){
                 case YEAR :
-                    int startYear0 = Integer.parseInt(startYearTextField.getValue());
-                    int toYear0 = Integer.parseInt(toYearTextField.getValue());
-                    resultTimeScaleEntityList = targetTimeFlow.getYearEntities(startYear0,toYear0);
+                    DateTimeCheckResult yearDateTimeCheckResult = checkYearInputsData(false);
+                    switch(yearDateTimeCheckResult){
+                        case correct :
+                            resultTimeScaleEntityList.addAll(
+                                    targetTimeFlow.getYearEntities(Integer.parseInt(startYearTextField.getValue()),
+                                            Integer.parseInt(toYearTextField.getValue())));
+                            executedQuery = true;
+                            break;
+                        case singleEntity:
+                            int startYear0 = Integer.parseInt(startYearTextField.getValue());
+                            TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getYearEntity(startYear0);
+                            resultTimeScaleEntityList.add(resultTimeScaleEntity);
+                            executedQuery = true;
+                            break;
+                    }
                     break;
                 case MONTH:
                     int startYear1 = Integer.parseInt(startYearTextField.getValue());
@@ -829,7 +842,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                     int toMonth1 = toMonthComboBox.getValue();
                     TimeScaleMoment startTimeScaleMoment1 = new TimeScaleMoment(startYear1,startMonth1);
                     TimeScaleMoment toTimeScaleMoment1 = new TimeScaleMoment(toYear1,toMonth1);
-                    resultTimeScaleEntityList = targetTimeFlow.getMonthEntities(startTimeScaleMoment1,toTimeScaleMoment1);
+                    resultTimeScaleEntityList.addAll(targetTimeFlow.getMonthEntities(startTimeScaleMoment1,toTimeScaleMoment1));
+                    executedQuery = true;
                     break;
                 case DAY:
                     int startYear2 = Integer.parseInt(startYearTextField.getValue());
@@ -840,7 +854,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                     int toDay2 = toDayComboBox.getValue();
                     TimeScaleMoment startTimeScaleMoment2 = new TimeScaleMoment(startYear2,startMonth2,startDay2);
                     TimeScaleMoment toTimeScaleMoment2 = new TimeScaleMoment(toYear2,toMonth2,toDay2);
-                    resultTimeScaleEntityList = targetTimeFlow.getDayEntities(startTimeScaleMoment2,toTimeScaleMoment2);
+                    resultTimeScaleEntityList.addAll(targetTimeFlow.getDayEntities(startTimeScaleMoment2,toTimeScaleMoment2));
+                    executedQuery = true;
                     break;
                 case HOUR:
                     int startYear3 = Integer.parseInt(startYearTextField.getValue());
@@ -853,7 +868,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                     int toHour3 = toHourComboBox.getValue();
                     TimeScaleMoment startTimeScaleMoment3 = new TimeScaleMoment(startYear3,startMonth3,startDay3,startHour3);
                     TimeScaleMoment toTimeScaleMoment3 = new TimeScaleMoment(toYear3,toMonth3,toDay3,toHour3);
-                    resultTimeScaleEntityList = targetTimeFlow.getHourEntities(startTimeScaleMoment3,toTimeScaleMoment3);
+                    resultTimeScaleEntityList.addAll(targetTimeFlow.getHourEntities(startTimeScaleMoment3,toTimeScaleMoment3));
+                    executedQuery = true;
                     break;
                 case MINUTE:
                     int startYear4 = Integer.parseInt(startYearTextField.getValue());
@@ -868,10 +884,11 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                     int toMinute4 = toMinuteComboBox.getValue();
                     TimeScaleMoment startTimeScaleMoment4 = new TimeScaleMoment(startYear4,startMonth4,startDay4,startHour4,startMinute4);
                     TimeScaleMoment toTimeScaleMoment4 = new TimeScaleMoment(toYear4,toMonth4,toDay4,toHour4,toMinute4);
-                    resultTimeScaleEntityList = targetTimeFlow.getMinuteEntities(startTimeScaleMoment4,toTimeScaleMoment4);
+                    resultTimeScaleEntityList.addAll(targetTimeFlow.getMinuteEntities(startTimeScaleMoment4,toTimeScaleMoment4));
+                    executedQuery = true;
                     break;
             }
-            if(resultTimeScaleEntityList != null){
+            if(executedQuery){
                 CommonUIOperationUtil.showPopupNotification("时间粒度实体查询操作成功，查询返回实体数: "+resultTimeScaleEntityList.size(),
                         NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
                 timeScaleEntitiesGrid.setItems(resultTimeScaleEntityList);
@@ -879,6 +896,37 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private enum DateTimeCheckResult { correct,singleEntity,inCorrect}
+
+    private DateTimeCheckResult checkYearInputsData(boolean allowEqual){
+        if(startYearTextField.getValue().equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入起始年时间值",
+                    NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+            return DateTimeCheckResult.inCorrect;
+        }else{
+            int startYear = Integer.parseInt(startYearTextField.getValue());
+            if(toYearTextField.getValue().equals("")){
+                return DateTimeCheckResult.singleEntity;
+            }else {
+                int toYear = Integer.parseInt(toYearTextField.getValue());
+                if(allowEqual){
+                    if(toYear <= startYear){
+                        CommonUIOperationUtil.showPopupNotification("结束年时间值必须大于等于起始年时间值",
+                                NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                        return DateTimeCheckResult.inCorrect;
+                    }
+                }else{
+                    if(toYear < startYear){
+                        CommonUIOperationUtil.showPopupNotification("结束年时间值必须大于起始年时间值",
+                                NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                        return DateTimeCheckResult.inCorrect;
+                    }
+                }
+            }
+        }
+        return DateTimeCheckResult.correct;
     }
 
     private void renderTimeScaleEntityDetailUI(TimeScaleEntity timeScaleEntity){
