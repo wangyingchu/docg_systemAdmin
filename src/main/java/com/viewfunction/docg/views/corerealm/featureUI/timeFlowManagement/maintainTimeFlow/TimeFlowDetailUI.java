@@ -879,7 +879,14 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                         if(DateTimeCheckResult.correct.equals(yearDateTimeCheckResult) &
                                 DateTimeCheckResult.correct.equals(monthDateTimeCheckResult) &
                                 DateTimeCheckResult.correct.equals(dayDateTimeCheckResult)){
-                            if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                            if(Integer.parseInt(toYearTextField.getValue()) < Integer.parseInt(startYearTextField.getValue())){
+                                CommonUIOperationUtil.showPopupNotification("结束年时间值必须大于等于起始年时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() < startMonthComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束月时间值必须大于等于起始月时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
                                     toMonthComboBox.getValue() == startMonthComboBox.getValue() & toDayComboBox.getValue() <= startDayComboBox.getValue()){
                                 CommonUIOperationUtil.showPopupNotification("结束日时间值必须大于起始日时间值",
                                         NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
@@ -917,7 +924,18 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 DateTimeCheckResult.correct.equals(monthDateTimeCheckResult) &
                                 DateTimeCheckResult.correct.equals(dayDateTimeCheckResult) &
                                 DateTimeCheckResult.correct.equals(hourDateTimeCheckResult)){
-                            if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                            if(Integer.parseInt(toYearTextField.getValue()) < Integer.parseInt(startYearTextField.getValue())){
+                                CommonUIOperationUtil.showPopupNotification("结束年时间值必须大于等于起始年时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() < startMonthComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束月时间值必须大于等于起始月时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() == startMonthComboBox.getValue() & toDayComboBox.getValue() < startDayComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束日时间值必须大于等于起始日时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
                                     toMonthComboBox.getValue() == startMonthComboBox.getValue() & toDayComboBox.getValue() == startDayComboBox.getValue() &
                                     toHourComboBox.getValue() <= startHourComboBox.getValue()){
                                 CommonUIOperationUtil.showPopupNotification("结束小时时间值必须大于起始小时时间值",
@@ -962,7 +980,23 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 DateTimeCheckResult.correct.equals(dayDateTimeCheckResult) &
                                 DateTimeCheckResult.correct.equals(hourDateTimeCheckResult) &
                                 DateTimeCheckResult.correct.equals(minuteDateTimeCheckResult)){
-                            if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                            if(Integer.parseInt(toYearTextField.getValue()) < Integer.parseInt(startYearTextField.getValue())){
+                                CommonUIOperationUtil.showPopupNotification("结束年时间值必须大于等于起始年时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() < startMonthComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束月时间值必须大于等于起始月时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() == startMonthComboBox.getValue() & toDayComboBox.getValue() < startDayComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束日时间值必须大于等于起始日时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() == startMonthComboBox.getValue() & toDayComboBox.getValue() == startDayComboBox.getValue() &
+                                    toHourComboBox.getValue() < startHourComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束小时时间值必须大于等于起始小时时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
                                     toMonthComboBox.getValue() == startMonthComboBox.getValue() & toDayComboBox.getValue() == startDayComboBox.getValue() &
                                     toHourComboBox.getValue() == startHourComboBox.getValue() & toMinuteComboBox.getValue() <= startMinuteComboBox.getValue()){
                                 CommonUIOperationUtil.showPopupNotification("结束分钟时间值必须大于起始分钟时间值",
@@ -992,31 +1026,6 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                             executedQuery = true;
                         }
                     }
-
-
-
-
-
-
-                    /*
-                    int startYear4 = Integer.parseInt(startYearTextField.getValue());
-                    int toYear4 = Integer.parseInt(toYearTextField.getValue());
-                    int startMonth4 = startMonthComboBox.getValue();
-                    int toMonth4 = toMonthComboBox.getValue();
-                    int startDay4 = startDayComboBox.getValue();
-                    int toDay4 = toDayComboBox.getValue();
-                    int startHour4 = startHourComboBox.getValue();
-                    int toHour4 = toHourComboBox.getValue();
-                    int startMinute4 = startMinuteComboBox.getValue();
-                    int toMinute4 = toMinuteComboBox.getValue();
-                    TimeScaleMoment startTimeScaleMoment4 = new TimeScaleMoment(startYear4,startMonth4,startDay4,startHour4,startMinute4);
-                    TimeScaleMoment toTimeScaleMoment4 = new TimeScaleMoment(toYear4,toMonth4,toDay4,toHour4,toMinute4);
-                    resultTimeScaleEntityList.addAll(targetTimeFlow.getMinuteEntities(startTimeScaleMoment4,toTimeScaleMoment4));
-                    executedQuery = true;
-                    */
-
-
-
                     break;
             }
             if(executedQuery){
