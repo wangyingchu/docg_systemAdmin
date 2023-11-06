@@ -93,19 +93,22 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private SecondaryKeyValueDisplayItem minuteEventCountItem;
     private Binder<String> binder;
     private TimeFlowCorrelationInfoChart timeFlowCorrelationInfoChart;
-
+    private int contentContainerHeightOffset;
     public TimeFlowDetailUI(){
         this.binder = new Binder<>();
+        this.contentContainerHeightOffset = 265;
     }
 
     public TimeFlowDetailUI(String timeFlowName){
         this.timeFlowName = timeFlowName;
         this.binder = new Binder<>();
+        this.contentContainerHeightOffset = 265;
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.timeFlowName = beforeEnterEvent.getRouteParameters().get("timeFlow").get();
+        this.contentContainerHeightOffset = 30;
     }
 
     @Override
@@ -113,16 +116,16 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         super.onAttach(attachEvent);
         renderTimeFlowData();
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            leftSideContainerLayout.setHeight(event.getHeight()-265,Unit.PIXELS);
-            middleContainerLayout.setHeight(event.getHeight()-265,Unit.PIXELS);
-            rightSideContainerLayout.setHeight(event.getHeight()-265,Unit.PIXELS);
+            leftSideContainerLayout.setHeight(event.getHeight()- contentContainerHeightOffset,Unit.PIXELS);
+            middleContainerLayout.setHeight(event.getHeight()- contentContainerHeightOffset,Unit.PIXELS);
+            rightSideContainerLayout.setHeight(event.getHeight()- contentContainerHeightOffset,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            leftSideContainerLayout.setHeight(browserHeight-265,Unit.PIXELS);
-            middleContainerLayout.setHeight(browserHeight-265,Unit.PIXELS);
-            rightSideContainerLayout.setHeight(browserHeight-265,Unit.PIXELS);
+            leftSideContainerLayout.setHeight(browserHeight- contentContainerHeightOffset,Unit.PIXELS);
+            middleContainerLayout.setHeight(browserHeight- contentContainerHeightOffset,Unit.PIXELS);
+            rightSideContainerLayout.setHeight(browserHeight- contentContainerHeightOffset,Unit.PIXELS);
         }));
         renderTimeFlowBasicInfo();
     }
