@@ -116,16 +116,21 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         super.onAttach(attachEvent);
         renderTimeFlowData();
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            leftSideContainerLayout.setHeight(event.getHeight()- contentContainerHeightOffset,Unit.PIXELS);
-            middleContainerLayout.setHeight(event.getHeight()- contentContainerHeightOffset,Unit.PIXELS);
-            rightSideContainerLayout.setHeight(event.getHeight()- contentContainerHeightOffset,Unit.PIXELS);
+            leftSideContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset,Unit.PIXELS);
+            middleContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset,Unit.PIXELS);
+            rightSideContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset,Unit.PIXELS);
+            timeFlowCorrelationInfoChart.setGraphWidth(event.getWidth() - 600);
+            timeFlowCorrelationInfoChart.setHeight(event.getHeight() - contentContainerHeightOffset-10,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            leftSideContainerLayout.setHeight(browserHeight- contentContainerHeightOffset,Unit.PIXELS);
-            middleContainerLayout.setHeight(browserHeight- contentContainerHeightOffset,Unit.PIXELS);
-            rightSideContainerLayout.setHeight(browserHeight- contentContainerHeightOffset,Unit.PIXELS);
+            int browserWidth = receiver.getBodyClientWidth();
+            leftSideContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
+            middleContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
+            rightSideContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
+            timeFlowCorrelationInfoChart.setGraphWidth(browserWidth - 600);
+            timeFlowCorrelationInfoChart.setHeight(browserHeight - contentContainerHeightOffset-10,Unit.PIXELS);
         }));
         renderTimeFlowBasicInfo();
     }
@@ -697,7 +702,6 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         mainContainerLayout.add(rightSideContainerLayout);
         rightSideContainerLayout.setWidthFull();
         rightSideContainerLayout.setHeight(600,Unit.PIXELS);
-        rightSideContainerLayout.getStyle().set("background-color","#CE0000");
 
         timeFlowCorrelationInfoChart = new TimeFlowCorrelationInfoChart();
         rightSideContainerLayout.add(timeFlowCorrelationInfoChart);
