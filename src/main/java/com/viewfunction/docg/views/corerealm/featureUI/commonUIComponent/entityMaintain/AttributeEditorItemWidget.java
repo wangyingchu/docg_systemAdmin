@@ -787,6 +787,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                     fixSizeWindow2.setModel(true);
                     deleteRelationEntityAttributeView.setContainerDialog(fixSizeWindow2);
                     fixSizeWindow2.show();
+                    break;
                 case Classification:
                     DeleteClassificationAttributeView deleteClassificationAttributeView = new DeleteClassificationAttributeView(this.kindName,this.attributeName);
                     FixSizeWindow fixSizeWindow3 = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除分类属性",null,true,550,160,false);
@@ -794,6 +795,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
                     fixSizeWindow3.setModel(true);
                     deleteClassificationAttributeView.setContainerDialog(fixSizeWindow3);
                     fixSizeWindow3.show();
+                    break;
             }
         }
         if(this.attributeValueOperateHandler != null){
