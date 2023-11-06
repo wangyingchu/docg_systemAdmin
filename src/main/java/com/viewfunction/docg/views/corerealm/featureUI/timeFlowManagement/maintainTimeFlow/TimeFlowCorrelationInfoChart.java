@@ -3,6 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.timeFlowManagement.maint
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.dependency.StyleSheet;
@@ -12,7 +13,6 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEntity;
@@ -28,8 +28,6 @@ import java.util.Map;
 @JavaScript("./visualization/feature/timeFlowCorrelationInfoChart-connector.js")
 public class TimeFlowCorrelationInfoChart extends VerticalLayout {
 
-    private List<ConceptionEntity> conceptionEntityList;
-    private List<RelationEntity> relationEntityList;
     private Registration listener;
     private int colorIndex = 0;
     private int colorIndex2 = 0;
@@ -76,6 +74,23 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
         */
     }
 
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.emptyGraph",
+                        new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        // 此处调用 listener.remove() 会抛出 java.lang.NullPointerException 异常，
+        // 但是此异常的抛出能够阻止在多次打开 3d-force-graph 蒲公英图的场景下系统UI卡顿，停止相应并出现持续性的线程调用无法回收的情况
+        //具体原理未知，有待调查
+        listener.remove();
+        super.onDetach(detachEvent);
+    }
+
     public void renderTimeFlowCorrelationData(List<TimeScaleEntity> timeScaleEntityList){
         if(timeScaleEntityList != null && timeScaleEntityList.size() > 0){
             List<String> timeScaleEntityUIDList = new ArrayList<>();
@@ -114,16 +129,6 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
             try {
                 Map<String,Object> valueMap =new HashMap<>();
                 List<Map<String,String>> nodeInfoList = new ArrayList<>();
-                /*
-                Map<String,String> centerNodeInfo = new HashMap<>();
-                centerNodeInfo.put("id",this.mainConceptionEntityUID);
-                centerNodeInfo.put("entityKind",this.mainConceptionKind);
-                centerNodeInfo.put("color","#888888");
-                nodeInfoList.add(centerNodeInfo);
-                */
-
-
-
 
                 List<String> attachedConceptionKinds = new ArrayList<>();
                 for(TimeScaleEntity currentConceptionEntity:timeScaleEntityList){
@@ -132,7 +137,6 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                     }
                 }
                 generateConceptionKindColorMap(attachedConceptionKinds);
-
 
                 for(TimeScaleEntity currentConceptionEntity:timeScaleEntityList){
                     Map<String,String> currentNodeInfo = new HashMap<>();
@@ -147,10 +151,6 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                 }
 
                 List<Map<String,String>> edgeInfoList = new ArrayList<>();
-
-
-
-
 
                 List<String> attachedRelationKinds = new ArrayList<>();
                 for(RelationEntity currentRelationEntity:timeEntitiesRelationList){
@@ -169,14 +169,8 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                     edgeInfoList.add(currentEdgeInfo);
                 }
 
-
-
-                //valueMap.put("graphHeight",graphHeight-120);
-                //valueMap.put("graphWidth",graphWidth- 40);
-
-                valueMap.put("graphHeight",700);
-                valueMap.put("graphWidth",1300);
-
+                valueMap.put("graphHeight",graphHeight);
+                valueMap.put("graphWidth",graphWidth);
                 valueMap.put("nodesInfo",nodeInfoList);
                 valueMap.put("edgesInfo",edgeInfoList);
                 getElement().callJsFunction("$connector.generateGraph",
