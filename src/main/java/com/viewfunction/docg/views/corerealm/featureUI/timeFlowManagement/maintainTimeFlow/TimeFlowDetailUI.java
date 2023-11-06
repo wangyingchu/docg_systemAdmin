@@ -61,6 +61,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private String timeFlowName;
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout middleContainerLayout;
+    private HorizontalLayout rightSideContainerLayout;
     private Registration listener;
     private Grid<TimeScaleEntity> timeScaleEntitiesGrid;
     private NativeLabel startYearValue;
@@ -91,8 +92,11 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private SecondaryKeyValueDisplayItem minuteEntityCountItem;
     private SecondaryKeyValueDisplayItem minuteEventCountItem;
     private Binder<String> binder;
+    private TimeFlowCorrelationInfoChart timeFlowCorrelationInfoChart;
 
-    public TimeFlowDetailUI(){}
+    public TimeFlowDetailUI(){
+        this.binder = new Binder<>();
+    }
 
     public TimeFlowDetailUI(String timeFlowName){
         this.timeFlowName = timeFlowName;
@@ -111,12 +115,14 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             leftSideContainerLayout.setHeight(event.getHeight()-265,Unit.PIXELS);
             middleContainerLayout.setHeight(event.getHeight()-265,Unit.PIXELS);
+            rightSideContainerLayout.setHeight(event.getHeight()-265,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             leftSideContainerLayout.setHeight(browserHeight-265,Unit.PIXELS);
             middleContainerLayout.setHeight(browserHeight-265,Unit.PIXELS);
+            rightSideContainerLayout.setHeight(browserHeight-265,Unit.PIXELS);
         }));
         renderTimeFlowBasicInfo();
     }
@@ -679,6 +685,19 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         timeScaleEntitiesGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         middleContainerLayout.add(timeScaleEntitiesGrid);
+
+        rightSideContainerLayout = new HorizontalLayout();
+        rightSideContainerLayout.setSpacing(false);
+        rightSideContainerLayout.setMargin(false);
+        rightSideContainerLayout.setPadding(false);
+
+        mainContainerLayout.add(rightSideContainerLayout);
+        rightSideContainerLayout.setWidthFull();
+        rightSideContainerLayout.setHeight(600,Unit.PIXELS);
+        rightSideContainerLayout.getStyle().set("background-color","#CE0000");
+
+        timeFlowCorrelationInfoChart = new TimeFlowCorrelationInfoChart();
+        rightSideContainerLayout.add(timeFlowCorrelationInfoChart);
     }
 
     private void renderTimeFlowBasicInfo(){
