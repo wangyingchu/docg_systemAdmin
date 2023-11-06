@@ -712,7 +712,11 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 Integer onlyYear = availableTimeSpanYearsList.get(0);
                 startYearValue.setText(""+onlyYear);
                 toYearValue.setText(""+onlyYear);
-                timeScaleEntitiesGrid.setItems(targetTimeFlow.getYearEntity(onlyYear));
+                TimeScaleEntity onlyYearEntity = targetTimeFlow.getYearEntity(onlyYear);
+                timeScaleEntitiesGrid.setItems(onlyYearEntity);
+                List<TimeScaleEntity> timeScaleEntityList = new ArrayList<>();
+                timeScaleEntityList.add(onlyYearEntity);
+                renderTimeFlowCorrelationChart(timeScaleEntityList);
                 startYearTextField.setValue(""+onlyYear);
             }else{
                 Integer firstYear = availableTimeSpanYearsList.get(0);
@@ -724,6 +728,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 try {
                     List<TimeScaleEntity> timeScaleEntityList = targetTimeFlow.getYearEntities(firstYear,lastYear);
                     timeScaleEntitiesGrid.setItems(timeScaleEntityList);
+                    renderTimeFlowCorrelationChart(timeScaleEntityList);
                 } catch (CoreRealmServiceRuntimeException e) {
                     throw new RuntimeException(e);
                 }
@@ -1054,6 +1059,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 CommonUIOperationUtil.showPopupNotification("时间粒度实体查询操作成功，查询返回实体数: "+resultTimeScaleEntityList.size(),
                         NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
                 timeScaleEntitiesGrid.setItems(resultTimeScaleEntityList);
+                renderTimeFlowCorrelationChart(resultTimeScaleEntityList);
             }
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
@@ -1102,6 +1108,10 @@ public class TimeFlowDetailUI extends VerticalLayout implements
             }
         }
         return DateTimeCheckResult.correct;
+    }
+
+    private void renderTimeFlowCorrelationChart(List<TimeScaleEntity> timeScaleEntityList){
+        this.timeFlowCorrelationInfoChart.renderTimeFlowCorrelationData(timeScaleEntityList);
     }
 
     private void renderTimeScaleEntityDetailUI(TimeScaleEntity timeScaleEntity){
