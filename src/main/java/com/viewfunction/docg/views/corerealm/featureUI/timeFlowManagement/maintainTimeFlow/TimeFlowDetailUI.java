@@ -732,7 +732,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 try {
                     List<TimeScaleEntity> timeScaleEntityList = targetTimeFlow.getYearEntities(firstYear,lastYear);
                     timeScaleEntitiesGrid.setItems(timeScaleEntityList);
-                    renderTimeFlowCorrelationChart(""+firstYear+"-"+lastYear,timeScaleEntityList);
+                    renderTimeFlowCorrelationChart(""+firstYear+" - "+lastYear,timeScaleEntityList);
                 } catch (CoreRealmServiceRuntimeException e) {
                     throw new RuntimeException(e);
                 }
@@ -862,7 +862,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                     targetTimeFlow.getYearEntities(Integer.parseInt(startYearTextField.getValue()),
                                             Integer.parseInt(toYearTextField.getValue())));
                             executedQuery = true;
-                            queryTimeArea = ""+startYearTextField.getValue() + "-"+toYearTextField.getValue();
+                            queryTimeArea = ""+startYearTextField.getValue() + " - "+toYearTextField.getValue();
                             break;
                         case singleEntity:
                             int startYear0 = Integer.parseInt(startYearTextField.getValue());
@@ -891,7 +891,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 TimeScaleMoment toTimeScaleMoment1 = new TimeScaleMoment(Integer.parseInt(toYearTextField.getValue()),toMonthComboBox.getValue());
                                 resultTimeScaleEntityList.addAll(targetTimeFlow.getMonthEntities(startTimeScaleMoment1,toTimeScaleMoment1));
                                 executedQuery = true;
-                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+ "-"+toYearTextField.getValue()+"/"+toMonthComboBox.getValue();
+                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+ " - "+toYearTextField.getValue()+"/"+toMonthComboBox.getValue();
                             }
                         }else{
                             TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getMonthEntity(Integer.parseInt(startYearTextField.getValue()),startMonthComboBox.getValue());
@@ -937,7 +937,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 TimeScaleMoment toTimeScaleMoment2 = new TimeScaleMoment(toYear2,toMonth2,toDay2);
                                 resultTimeScaleEntityList.addAll(targetTimeFlow.getDayEntities(startTimeScaleMoment2,toTimeScaleMoment2));
                                 executedQuery = true;
-                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+ "-"+toYearTextField.getValue()+"/"+toMonthComboBox.getValue()+"/"+toDayComboBox.getValue();
+                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+ " - "+toYearTextField.getValue()+"/"+toMonthComboBox.getValue()+"/"+toDayComboBox.getValue();
                             }
                         }else{
                             TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getDayEntity(Integer.parseInt(startYearTextField.getValue()),startMonthComboBox.getValue(),startDayComboBox.getValue());
@@ -991,7 +991,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 TimeScaleMoment toTimeScaleMoment2 = new TimeScaleMoment(toYear,toMonth,toDay,toHour);
                                 resultTimeScaleEntityList.addAll(targetTimeFlow.getHourEntities(startTimeScaleMoment2,toTimeScaleMoment2));
                                 executedQuery = true;
-                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+" "+startHourComboBox.getValue()+ "-"+toYearTextField.getValue()+"/"+toMonthComboBox.getValue()+"/"+toDayComboBox.getValue()+" "+toHourComboBox.getValue();
+                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+" "+startHourComboBox.getValue()+ " - "+toYearTextField.getValue()+"/"+toMonthComboBox.getValue()+"/"+toDayComboBox.getValue()+" "+toHourComboBox.getValue();
                             }
                         }else{
                             TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getHourEntity(Integer.parseInt(startYearTextField.getValue()),
@@ -1056,7 +1056,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 TimeScaleMoment toTimeScaleMoment2 = new TimeScaleMoment(toYear,toMonth,toDay,toHour,toMinute);
                                 resultTimeScaleEntityList.addAll(targetTimeFlow.getMinuteEntities(startTimeScaleMoment2,toTimeScaleMoment2));
                                 executedQuery = true;
-                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+" "+startHourComboBox.getValue()+":"+startMinuteComboBox.getValue()+ "-"+toYearTextField.getValue()+"/"+toMonthComboBox.getValue()+"/"+toDayComboBox.getValue()+" "+toHourComboBox.getValue()+":"+toMinuteComboBox.getValue();
+                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+" "+startHourComboBox.getValue()+":"+startMinuteComboBox.getValue()+ " - "+toYearTextField.getValue()+"/"+toMonthComboBox.getValue()+"/"+toDayComboBox.getValue()+" "+toHourComboBox.getValue()+":"+toMinuteComboBox.getValue();
                             }
                         }else{
                             TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getMinuteEntity(Integer.parseInt(startYearTextField.getValue()),
