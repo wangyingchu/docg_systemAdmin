@@ -92,7 +92,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private SecondaryKeyValueDisplayItem minuteEntityCountItem;
     private SecondaryKeyValueDisplayItem minuteEventCountItem;
     private Binder<String> binder;
-    private TimeFlowCorrelationInfoChart timeFlowCorrelationInfoChart;
+    private TimeFlowCorrelationExploreView timeFlowCorrelationExploreView;
     private int contentContainerHeightOffset;
     public TimeFlowDetailUI(){
         this.binder = new Binder<>();
@@ -119,8 +119,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
             leftSideContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset,Unit.PIXELS);
             middleContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset,Unit.PIXELS);
             rightSideContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset,Unit.PIXELS);
-            timeFlowCorrelationInfoChart.setGraphWidth(event.getWidth() - 600);
-            timeFlowCorrelationInfoChart.setGraphHeight(event.getHeight() - contentContainerHeightOffset);
+            timeFlowCorrelationExploreView.setViewWidth(event.getWidth() - 600);
+            timeFlowCorrelationExploreView.setViewHeight(event.getHeight() - contentContainerHeightOffset);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -129,8 +129,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
             leftSideContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
             middleContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
             rightSideContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
-            timeFlowCorrelationInfoChart.setGraphWidth(browserWidth - 600);
-            timeFlowCorrelationInfoChart.setGraphHeight(browserHeight - contentContainerHeightOffset);
+            timeFlowCorrelationExploreView.setViewWidth(browserWidth - 600);
+            timeFlowCorrelationExploreView.setViewHeight(browserHeight - contentContainerHeightOffset);
         }));
         renderTimeFlowBasicInfo();
     }
@@ -703,8 +703,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         rightSideContainerLayout.setWidthFull();
         rightSideContainerLayout.setHeight(600,Unit.PIXELS);
 
-        timeFlowCorrelationInfoChart = new TimeFlowCorrelationInfoChart();
-        rightSideContainerLayout.add(timeFlowCorrelationInfoChart);
+        timeFlowCorrelationExploreView = new TimeFlowCorrelationExploreView();
+        rightSideContainerLayout.add(timeFlowCorrelationExploreView);
     }
 
     private void renderTimeFlowBasicInfo(){
@@ -1115,7 +1115,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     }
 
     private void renderTimeFlowCorrelationChart(List<TimeScaleEntity> timeScaleEntityList){
-        this.timeFlowCorrelationInfoChart.renderTimeFlowCorrelationData(timeScaleEntityList);
+        this.timeFlowCorrelationExploreView.renderTimeFlowCorrelationData(timeScaleEntityList);
     }
 
     private void renderTimeScaleEntityDetailUI(TimeScaleEntity timeScaleEntity){
