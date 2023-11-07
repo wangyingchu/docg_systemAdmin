@@ -46,7 +46,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         toolbarActionsContainerLayout.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         add(toolbarActionsContainerLayout);
 
-        SecondaryIconTitle filterTitle3 = new SecondaryIconTitle(LineAwesomeIconsSvg.HUBSPOT.create(),"时间流关联探索");
+        SecondaryIconTitle filterTitle3 = new SecondaryIconTitle(LineAwesomeIconsSvg.HUBSPOT.create(),"时间流实体探索");
         filterTitle3.getStyle().set("padding-left","10px");
         toolbarActionsContainerLayout.add(filterTitle3);
 
