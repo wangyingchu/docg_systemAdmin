@@ -29,6 +29,9 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
     private NativeLabel timeEntityCountDisplayValue;
     private NativeLabel currentDisplayCountDisplayValue;
     private NumberFormat numberFormat;
+    private int entitiesDisplayBatchSize = 100;
+    private int currentLastDisplayEntityIndex = 0;
+    private List<TimeScaleEntity> timeScaleEntityList;
 
     public TimeFlowCorrelationExploreView(){
         this.setSpacing(false);
@@ -65,7 +68,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         timeGuLevelDisplayValue.getStyle().set("top","-2px").set("position","relative").set("padding-left","5px");
 
         NativeLabel timeAreaInfoMessage = new NativeLabel("时间范围:");
-        timeAreaInfoMessage.getStyle().set("font-size","10px").set("padding-left","30px");
+        timeAreaInfoMessage.getStyle().set("font-size","10px").set("padding-left","20px");
         timeAreaInfoMessage.addClassNames("text-tertiary");
         toolbarActionsContainerLayout.add(timeAreaInfoMessage);
 
@@ -79,7 +82,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         timeAreaDisplayValue.getStyle().set("top","-2px").set("position","relative").set("padding-left","5px");
 
         NativeLabel timeEntityCountInfoMessage = new NativeLabel("时间尺度实体数量:");
-        timeEntityCountInfoMessage.getStyle().set("font-size","10px").set("padding-left","30px");
+        timeEntityCountInfoMessage.getStyle().set("font-size","10px").set("padding-left","20px");
         timeEntityCountInfoMessage.addClassNames("text-tertiary");
         toolbarActionsContainerLayout.add(timeEntityCountInfoMessage);
 
@@ -93,7 +96,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         timeEntityCountDisplayValue.getStyle().set("top","-2px").set("position","relative").set("padding-left","5px");
 
         NativeLabel currentDisplayCountInfoMessage = new NativeLabel("当前显示实体数量(前):");
-        currentDisplayCountInfoMessage.getStyle().set("font-size","10px").set("padding-left","30px");
+        currentDisplayCountInfoMessage.getStyle().set("font-size","10px").set("padding-left","20px");
         currentDisplayCountInfoMessage.addClassNames("text-tertiary");
         toolbarActionsContainerLayout.add(currentDisplayCountInfoMessage);
 
@@ -116,10 +119,11 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         toolbarActionsContainerLayout.add(divIcon);
 
         HorizontalLayout spaceDiv02 = new HorizontalLayout();
-        spaceDiv02.setWidth(10,Unit.PIXELS);
+        spaceDiv02.setWidth(20,Unit.PIXELS);
         toolbarActionsContainerLayout.add(spaceDiv02);
 
         Button addMoreTimeFlowEntitiesInfoButton = new Button();
+        addMoreTimeFlowEntitiesInfoButton.setTooltipText("追加显示最多下100个时间流实体");
         addMoreTimeFlowEntitiesInfoButton.setIcon(VaadinIcon.ARROW_RIGHT.create());
         addMoreTimeFlowEntitiesInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -136,6 +140,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         toolbarActionsContainerLayout.add(spaceDiv03);
 
         Button reloadTimeFlowEntitiesInfoButton = new Button();
+        reloadTimeFlowEntitiesInfoButton.setTooltipText("刷新显示初始时间流实体");
         reloadTimeFlowEntitiesInfoButton.setIcon(VaadinIcon.REFRESH.create());
         reloadTimeFlowEntitiesInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -146,6 +151,23 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         reloadTimeFlowEntitiesInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
         toolbarActionsContainerLayout.add(reloadTimeFlowEntitiesInfoButton);
         reloadTimeFlowEntitiesInfoButton.getStyle().set("top","-4px").set("position","relative");
+
+        HorizontalLayout spaceDiv04 = new HorizontalLayout();
+        spaceDiv04.setWidth(10,Unit.PIXELS);
+        toolbarActionsContainerLayout.add(spaceDiv04);
+
+        Button clearFlowEntitiesInfoButton = new Button();
+        clearFlowEntitiesInfoButton.setTooltipText("清除当前显示时间流实体");
+        clearFlowEntitiesInfoButton.setIcon(VaadinIcon.ERASER.create());
+        clearFlowEntitiesInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+
+            }
+        });
+        clearFlowEntitiesInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
+        toolbarActionsContainerLayout.add(clearFlowEntitiesInfoButton);
+        clearFlowEntitiesInfoButton.getStyle().set("top","-4px").set("position","relative");
 
         this.timeFlowCorrelationInfoChart = new TimeFlowCorrelationInfoChart();
         add(this.timeFlowCorrelationInfoChart);
@@ -170,12 +192,15 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
     }
 
     public void renderTimeFlowCorrelationData(TimeFlow.TimeScaleGrade queryTimeScaleGrade,String timeArea, List<TimeScaleEntity> timeScaleEntityList){
-
-        timeGuLevelDisplayValue.setText(queryTimeScaleGrade.toString());
-        timeAreaDisplayValue.setText(timeArea);
-        timeEntityCountDisplayValue.setText(numberFormat.format(timeScaleEntityList.size()));
-
-
-        //this.timeFlowCorrelationInfoChart.renderTimeFlowCorrelationData(timeScaleEntityList);
+        this.timeGuLevelDisplayValue.setText(queryTimeScaleGrade.toString());
+        this.timeAreaDisplayValue.setText(timeArea);
+        this.timeEntityCountDisplayValue.setText(numberFormat.format(timeScaleEntityList.size()));
+        this.timeScaleEntityList = timeScaleEntityList;
+        if(this.timeScaleEntityList != null){
+            int currentDisplayEntitiesCount = this.timeScaleEntityList.size() <= this.entitiesDisplayBatchSize ? this.timeScaleEntityList.size() : this.entitiesDisplayBatchSize;
+            this.currentLastDisplayEntityIndex = currentDisplayEntitiesCount;
+            this.currentDisplayCountDisplayValue .setText(""+currentDisplayEntitiesCount);
+            this.timeFlowCorrelationInfoChart.renderTimeFlowCorrelationData(this.timeScaleEntityList.subList(0,currentDisplayEntitiesCount-1));
+        }
     }
 }
