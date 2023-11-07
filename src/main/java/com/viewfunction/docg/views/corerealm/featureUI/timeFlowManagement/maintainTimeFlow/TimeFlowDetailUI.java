@@ -77,7 +77,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private ComboBox<Integer> toHourComboBox;
     private ComboBox<Integer> startMinuteComboBox;
     private ComboBox<Integer> toMinuteComboBox;
-    private TimeFlow.TimeScaleGrade queryTimeScaleGrade;
+    private TimeFlow.TimeScaleGrade queryTimeScaleGrade = TimeFlow.TimeScaleGrade.YEAR;
     private NumberFormat numberFormat;
     private SecondaryKeyValueDisplayItem totalTimeScaleEntityCountDisplayItem;
     private SecondaryKeyValueDisplayItem totalTimeScaleEventCountDisplayItem;
@@ -720,7 +720,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 timeScaleEntitiesGrid.setItems(onlyYearEntity);
                 List<TimeScaleEntity> timeScaleEntityList = new ArrayList<>();
                 timeScaleEntityList.add(onlyYearEntity);
-                renderTimeFlowCorrelationChart(timeScaleEntityList);
+                renderTimeFlowCorrelationChart(""+onlyYear,timeScaleEntityList);
                 startYearTextField.setValue(""+onlyYear);
             }else{
                 Integer firstYear = availableTimeSpanYearsList.get(0);
@@ -732,7 +732,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 try {
                     List<TimeScaleEntity> timeScaleEntityList = targetTimeFlow.getYearEntities(firstYear,lastYear);
                     timeScaleEntitiesGrid.setItems(timeScaleEntityList);
-                    renderTimeFlowCorrelationChart(timeScaleEntityList);
+                    renderTimeFlowCorrelationChart(""+firstYear+"-"+lastYear,timeScaleEntityList);
                 } catch (CoreRealmServiceRuntimeException e) {
                     throw new RuntimeException(e);
                 }
@@ -851,6 +851,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         DateTimeCheckResult dayDateTimeCheckResult;
         DateTimeCheckResult hourDateTimeCheckResult;
         DateTimeCheckResult minuteDateTimeCheckResult;
+        String queryTimeArea = "";
         try {
             switch(queryTimeScaleGrade){
                 case YEAR:
@@ -861,6 +862,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                     targetTimeFlow.getYearEntities(Integer.parseInt(startYearTextField.getValue()),
                                             Integer.parseInt(toYearTextField.getValue())));
                             executedQuery = true;
+                            queryTimeArea = ""+startYearTextField.getValue() + "-"+toYearTextField.getValue();
                             break;
                         case singleEntity:
                             int startYear0 = Integer.parseInt(startYearTextField.getValue());
@@ -869,6 +871,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 resultTimeScaleEntityList.add(resultTimeScaleEntity);
                             }
                             executedQuery = true;
+                            queryTimeArea = ""+startYearTextField.getValue();
                             break;
                     }
                     break;
@@ -888,6 +891,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 TimeScaleMoment toTimeScaleMoment1 = new TimeScaleMoment(Integer.parseInt(toYearTextField.getValue()),toMonthComboBox.getValue());
                                 resultTimeScaleEntityList.addAll(targetTimeFlow.getMonthEntities(startTimeScaleMoment1,toTimeScaleMoment1));
                                 executedQuery = true;
+                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+ "-"+toYearTextField.getValue()+"/"+toMonthComboBox.getValue();
                             }
                         }else{
                             TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getMonthEntity(Integer.parseInt(startYearTextField.getValue()),startMonthComboBox.getValue());
@@ -895,6 +899,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 resultTimeScaleEntityList.add(resultTimeScaleEntity);
                             }
                             executedQuery = true;
+                            queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue();
                             break;
                         }
                     }
@@ -932,6 +937,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 TimeScaleMoment toTimeScaleMoment2 = new TimeScaleMoment(toYear2,toMonth2,toDay2);
                                 resultTimeScaleEntityList.addAll(targetTimeFlow.getDayEntities(startTimeScaleMoment2,toTimeScaleMoment2));
                                 executedQuery = true;
+                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+ "-"+toYearTextField.getValue()+"/"+toMonthComboBox.getValue()+"/"+toDayComboBox.getValue();
                             }
                         }else{
                             TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getDayEntity(Integer.parseInt(startYearTextField.getValue()),startMonthComboBox.getValue(),startDayComboBox.getValue());
@@ -939,6 +945,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 resultTimeScaleEntityList.add(resultTimeScaleEntity);
                             }
                             executedQuery = true;
+                            queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue();
                         }
                     }
                     break;
@@ -984,6 +991,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 TimeScaleMoment toTimeScaleMoment2 = new TimeScaleMoment(toYear,toMonth,toDay,toHour);
                                 resultTimeScaleEntityList.addAll(targetTimeFlow.getHourEntities(startTimeScaleMoment2,toTimeScaleMoment2));
                                 executedQuery = true;
+                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+" "+startHourComboBox.getValue()+ "-"+toYearTextField.getValue()+"/"+toMonthComboBox.getValue()+"/"+toDayComboBox.getValue()+" "+toHourComboBox.getValue();
                             }
                         }else{
                             TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getHourEntity(Integer.parseInt(startYearTextField.getValue()),
@@ -992,6 +1000,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 resultTimeScaleEntityList.add(resultTimeScaleEntity);
                             }
                             executedQuery = true;
+                            queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+" "+startHourComboBox.getValue();
                         }
                     }
                     break;
@@ -1047,6 +1056,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 TimeScaleMoment toTimeScaleMoment2 = new TimeScaleMoment(toYear,toMonth,toDay,toHour,toMinute);
                                 resultTimeScaleEntityList.addAll(targetTimeFlow.getMinuteEntities(startTimeScaleMoment2,toTimeScaleMoment2));
                                 executedQuery = true;
+                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+" "+startHourComboBox.getValue()+":"+startMinuteComboBox.getValue()+ "-"+toYearTextField.getValue()+"/"+toMonthComboBox.getValue()+"/"+toDayComboBox.getValue()+" "+toHourComboBox.getValue()+":"+toMinuteComboBox.getValue();
                             }
                         }else{
                             TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getMinuteEntity(Integer.parseInt(startYearTextField.getValue()),
@@ -1055,6 +1065,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                                 resultTimeScaleEntityList.add(resultTimeScaleEntity);
                             }
                             executedQuery = true;
+                            queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+" "+startHourComboBox.getValue()+":"+startMinuteComboBox.getValue();
                         }
                     }
                     break;
@@ -1063,7 +1074,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 CommonUIOperationUtil.showPopupNotification("时间粒度实体查询操作成功，查询返回实体数: "+resultTimeScaleEntityList.size(),
                         NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
                 timeScaleEntitiesGrid.setItems(resultTimeScaleEntityList);
-                renderTimeFlowCorrelationChart(resultTimeScaleEntityList);
+                renderTimeFlowCorrelationChart(queryTimeArea,resultTimeScaleEntityList);
             }
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
@@ -1114,8 +1125,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         return DateTimeCheckResult.correct;
     }
 
-    private void renderTimeFlowCorrelationChart(List<TimeScaleEntity> timeScaleEntityList){
-        this.timeFlowCorrelationExploreView.renderTimeFlowCorrelationData(timeScaleEntityList);
+    private void renderTimeFlowCorrelationChart(String timeArea,List<TimeScaleEntity> timeScaleEntityList){
+        this.timeFlowCorrelationExploreView.renderTimeFlowCorrelationData(queryTimeScaleGrade,timeArea,timeScaleEntityList);
     }
 
     private void renderTimeScaleEntityDetailUI(TimeScaleEntity timeScaleEntity){
