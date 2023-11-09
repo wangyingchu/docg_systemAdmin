@@ -32,6 +32,10 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
     private int entitiesDisplayBatchSize = 100;
     private int currentLastDisplayEntityIndex = 0;
     private List<TimeScaleEntity> timeScaleEntityList;
+    private TimeFlow.TimeScaleGrade initQueryTimeScaleGrade;
+    private String initTimeArea;
+    private List<TimeScaleEntity> initTimeScaleEntityList;
+    private int initDisplayEntitiesCount;
 
     public TimeFlowCorrelationExploreView(){
         this.setSpacing(false);
@@ -145,7 +149,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         reloadTimeFlowEntitiesInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-
+                refreshInitTimeFlowEntitiesInfo();
             }
         });
         reloadTimeFlowEntitiesInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
@@ -162,7 +166,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         clearFlowEntitiesInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-
+                cleanCurrentTimeFlowEntitiesData();
             }
         });
         clearFlowEntitiesInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
@@ -192,15 +196,30 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
     }
 
     public void renderTimeFlowCorrelationData(TimeFlow.TimeScaleGrade queryTimeScaleGrade,String timeArea, List<TimeScaleEntity> timeScaleEntityList){
+        this.initQueryTimeScaleGrade = queryTimeScaleGrade;
+        this.initTimeArea = timeArea;
+        this.initTimeScaleEntityList = timeScaleEntityList;
         this.timeGuLevelDisplayValue.setText(queryTimeScaleGrade.toString());
         this.timeAreaDisplayValue.setText(timeArea);
         this.timeEntityCountDisplayValue.setText(numberFormat.format(timeScaleEntityList.size()));
         this.timeScaleEntityList = timeScaleEntityList;
         if(this.timeScaleEntityList != null){
             int currentDisplayEntitiesCount = this.timeScaleEntityList.size() <= this.entitiesDisplayBatchSize ? this.timeScaleEntityList.size() : this.entitiesDisplayBatchSize;
+            initDisplayEntitiesCount = currentDisplayEntitiesCount;
             this.currentLastDisplayEntityIndex = currentDisplayEntitiesCount;
             this.currentDisplayCountDisplayValue .setText(""+currentDisplayEntitiesCount);
             this.timeFlowCorrelationInfoChart.renderTimeFlowCorrelationData(this.timeScaleEntityList.subList(0,currentDisplayEntitiesCount-1));
         }
+    }
+
+    private void cleanCurrentTimeFlowEntitiesData(){
+        this.timeFlowCorrelationInfoChart.emptyGraph();
+        this.currentDisplayCountDisplayValue .setText(""+0);
+    }
+
+    private void refreshInitTimeFlowEntitiesInfo(){
+        this.timeFlowCorrelationInfoChart.emptyGraph();
+        this.currentDisplayCountDisplayValue .setText(""+initDisplayEntitiesCount);
+        renderTimeFlowCorrelationData(this.initQueryTimeScaleGrade,this.initTimeArea, this.initTimeScaleEntityList);
     }
 }

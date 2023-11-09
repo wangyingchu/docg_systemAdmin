@@ -106,23 +106,20 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
             }
-
-
             //coreRealm.closeGlobalSession();
-
-
-
-
-
-
-
-
         }
     }
 
-
-
-
+    public void emptyGraph(){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.emptyGraph",
+                        new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 
     private void generateGraph(List<TimeScaleEntity> timeScaleEntityList,List<RelationEntity> timeEntitiesRelationList){
         runBeforeClientResponse(ui -> {
