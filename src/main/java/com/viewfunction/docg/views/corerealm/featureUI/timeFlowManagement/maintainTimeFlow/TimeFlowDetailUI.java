@@ -10,6 +10,7 @@ import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
@@ -39,6 +40,7 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeFlowRuntimeStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeFlowSummaryStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleMoment;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
@@ -94,6 +96,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private Binder<String> binder;
     private TimeFlowCorrelationExploreView timeFlowCorrelationExploreView;
     private int contentContainerHeightOffset;
+    private boolean timeFlowRuntimeStatisticsQueried = false;
+
     public TimeFlowDetailUI(){
         this.binder = new Binder<>();
         this.contentContainerHeightOffset = 265;
@@ -259,6 +263,12 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         SectionWallTitle yearInfoSectionWallTitle = new SectionWallTitle(yearInfoTitleIcon,yearEntitiesLabel);
         SectionWallContainer yearInfoSectionWallContainer = new SectionWallContainer(yearInfoSectionWallTitle,yearEntitiesInfoLayout);
         yearInfoSectionWallContainer.setOpened(false);
+        yearInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+                setupTimeFlowRuntimeStatisticInfo();
+            }
+        });
         timeFlowInfoWallContainerLayout.add(yearInfoSectionWallContainer);
 
         HorizontalLayout monthEntitiesInfoLayout = new HorizontalLayout();
@@ -271,6 +281,12 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         SectionWallTitle monthInfoSectionWallTitle = new SectionWallTitle(monthInfoTitleIcon,monthEntitiesLabel);
         SectionWallContainer monthInfoSectionWallContainer = new SectionWallContainer(monthInfoSectionWallTitle,monthEntitiesInfoLayout);
         monthInfoSectionWallContainer.setOpened(false);
+        monthInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+                setupTimeFlowRuntimeStatisticInfo();
+            }
+        });
         timeFlowInfoWallContainerLayout.add(monthInfoSectionWallContainer);
 
         HorizontalLayout dayEntitiesInfoLayout = new HorizontalLayout();
@@ -283,6 +299,12 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         SectionWallTitle dayInfoSectionWallTitle = new SectionWallTitle(dayInfoTitleIcon,dayEntitiesLabel);
         SectionWallContainer dayInfoSectionWallContainer = new SectionWallContainer(dayInfoSectionWallTitle,dayEntitiesInfoLayout);
         dayInfoSectionWallContainer.setOpened(false);
+        dayInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+                setupTimeFlowRuntimeStatisticInfo();
+            }
+        });
         timeFlowInfoWallContainerLayout.add(dayInfoSectionWallContainer);
 
         HorizontalLayout hourEntitiesInfoLayout = new HorizontalLayout();
@@ -295,6 +317,12 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         SectionWallTitle hourInfoSectionWallTitle = new SectionWallTitle(hourInfoTitleIcon,hourEntitiesLabel);
         SectionWallContainer hourInfoSectionWallContainer = new SectionWallContainer(hourInfoSectionWallTitle,hourEntitiesInfoLayout);
         hourInfoSectionWallContainer.setOpened(false);
+        hourInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+                setupTimeFlowRuntimeStatisticInfo();
+            }
+        });
         timeFlowInfoWallContainerLayout.add(hourInfoSectionWallContainer);
 
         HorizontalLayout minuteEntitiesInfoLayout = new HorizontalLayout();
@@ -307,6 +335,12 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         SectionWallTitle minuteInfoSectionWallTitle = new SectionWallTitle(minuteInfoTitleIcon,minuteEntitiesLabel);
         SectionWallContainer minuteInfoSectionWallContainer = new SectionWallContainer(minuteInfoSectionWallTitle,minuteEntitiesInfoLayout);
         minuteInfoSectionWallContainer.setOpened(false);
+        minuteInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+                setupTimeFlowRuntimeStatisticInfo();
+            }
+        });
         timeFlowInfoWallContainerLayout.add(minuteInfoSectionWallContainer);
 
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"时间尺度实体检索");
@@ -742,19 +776,9 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         queryTimeScaleGrade = TimeFlow.TimeScaleGrade.YEAR;
 
         this.numberFormat = NumberFormat.getInstance();
-        TimeFlowRuntimeStatistics timeFlowRuntimeStatistics = targetTimeFlow.getTimeFlowRuntimeStatistics();
-        totalTimeScaleEntityCountDisplayItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsTotalTimeScaleEntityCount()));
-        totalTimeScaleEventCountDisplayItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersTotalTimeScaleEventCount()));
-        yearEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsYearScaleTimeScaleEntityCount()));
-        yearEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersYearScaleTimeScaleEventCount()));
-        monthEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsMonthScaleTimeScaleEntityCount()));
-        monthEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersMonthScaleTimeScaleEventCount()));
-        dayEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsDayScaleTimeScaleEntityCount()));
-        dayEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersDayScaleTimeScaleEventCount()));
-        hourEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsHourScaleTimeScaleEntityCount()));
-        hourEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersHourScaleTimeScaleEventCount()));
-        minuteEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsMinuteScaleTimeScaleEntityCount()));
-        minuteEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersMinuteScaleTimeScaleEventCount()));
+        TimeFlowSummaryStatistics timeFlowSummaryStatistics = targetTimeFlow.getTimeFlowSummaryStatistics();
+        totalTimeScaleEntityCountDisplayItem.updateDisplayValue(this.numberFormat.format(timeFlowSummaryStatistics.getContainsTotalTimeScaleEntityCount()));
+        totalTimeScaleEventCountDisplayItem.updateDisplayValue(this.numberFormat.format(timeFlowSummaryStatistics.getRefersTotalTimeScaleEventCount()));
 
         binder.forField((TextField)startYearTextField).withConverter(new StringToIntegerConverter("该项属性值必须为INT类型"))
                 .withValidator(new IntegerRangeValidator("该项属性值必须为INT类型", null, null))
@@ -779,6 +803,25 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                     @Override
                     public void accept(String s, Integer intValue) {}
                 });
+    }
+
+    private void setupTimeFlowRuntimeStatisticInfo(){
+        if(!timeFlowRuntimeStatisticsQueried){
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            TimeFlow targetTimeFlow = coreRealm.getOrCreateTimeFlow(this.timeFlowName);
+            TimeFlowRuntimeStatistics timeFlowRuntimeStatistics = targetTimeFlow.getTimeFlowRuntimeStatistics();
+            timeFlowRuntimeStatisticsQueried = true;
+            yearEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsYearScaleTimeScaleEntityCount()));
+            yearEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersYearScaleTimeScaleEventCount()));
+            monthEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsMonthScaleTimeScaleEntityCount()));
+            monthEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersMonthScaleTimeScaleEventCount()));
+            dayEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsDayScaleTimeScaleEntityCount()));
+            dayEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersDayScaleTimeScaleEventCount()));
+            hourEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsHourScaleTimeScaleEntityCount()));
+            hourEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersHourScaleTimeScaleEventCount()));
+            minuteEntityCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getContainsMinuteScaleTimeScaleEntityCount()));
+            minuteEventCountItem.updateDisplayValue(this.numberFormat.format(timeFlowRuntimeStatistics.getRefersMinuteScaleTimeScaleEventCount()));
+        }
     }
 
     private void setupTimeScaleGradeSearchElements(String gradeValue){
