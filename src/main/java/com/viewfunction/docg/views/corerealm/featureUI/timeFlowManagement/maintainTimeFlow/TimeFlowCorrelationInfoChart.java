@@ -35,6 +35,8 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
     private Map<String,String> relationKindColorMap;
     private int graphHeight;
     private int graphWidth;
+    private List<String> timeScaleEntityUIDList;
+    private List<RelationEntity> timeEntitiesRelationList;
 
     public TimeFlowCorrelationInfoChart(){
         this.setSpacing(false);
@@ -43,6 +45,8 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
 
         this.conceptionKindColorMap = new HashMap<>();
         this.relationKindColorMap = new HashMap<>();
+        this.timeScaleEntityUIDList = new ArrayList<>();
+        this.timeEntitiesRelationList = new ArrayList<>();
 
         //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/three.js");
@@ -50,8 +54,6 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/CSS2DRenderer.js");
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/3d-force-graph.min.js");
         initConnector();
-
-
     }
 
     private void initConnector() {
@@ -66,12 +68,6 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
 
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        /*
-        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            graphHeight=receiver.getBodyClientHeight();
-            graphWidth=receiver.getBodyClientWidth();
-        }));
-        */
     }
 
     @Override
@@ -93,6 +89,27 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
 
     public void renderTimeFlowCorrelationData(List<TimeScaleEntity> timeScaleEntityList){
         if(timeScaleEntityList != null && timeScaleEntityList.size() > 0){
+            timeScaleEntityUIDList.clear();
+            timeEntitiesRelationList.clear();
+            for(TimeScaleEntity currentTimeScaleEntity:timeScaleEntityList){
+                timeScaleEntityUIDList.add(currentTimeScaleEntity.getTimeScaleEntityUID());
+            }
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            //coreRealm.openGlobalSession();
+            CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
+            try {
+                List<RelationEntity> timeEntitiesPairRelationList = crossKindDataOperator.getRelationsOfConceptionEntityPair(timeScaleEntityUIDList);
+                timeEntitiesRelationList.addAll(timeEntitiesPairRelationList);
+                generateGraph(timeScaleEntityList,timeEntitiesRelationList);
+            } catch (CoreRealmServiceEntityExploreException e) {
+                throw new RuntimeException(e);
+            }
+            //coreRealm.closeGlobalSession();
+        }
+    }
+
+    public void renderMoreTimeFlowCorrelationData(List<TimeScaleEntity> timeScaleEntityList){
+        if(timeScaleEntityList != null && timeScaleEntityList.size() > 0){
             List<String> timeScaleEntityUIDList = new ArrayList<>();
             for(TimeScaleEntity currentTimeScaleEntity:timeScaleEntityList){
                 timeScaleEntityUIDList.add(currentTimeScaleEntity.getTimeScaleEntityUID());
@@ -102,7 +119,7 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
             CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
             try {
                 List<RelationEntity> timeEntitiesRelationList = crossKindDataOperator.getRelationsOfConceptionEntityPair(timeScaleEntityUIDList);
-                generateGraph(timeScaleEntityList,timeEntitiesRelationList);
+                insertInGenerateGraph(timeScaleEntityList,timeEntitiesRelationList);
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
             }
@@ -171,6 +188,63 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                 valueMap.put("nodesInfo",nodeInfoList);
                 valueMap.put("edgesInfo",edgeInfoList);
                 getElement().callJsFunction("$connector.generateGraph",
+                        new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private void insertInGenerateGraph(List<TimeScaleEntity> timeScaleEntityList,List<RelationEntity> timeEntitiesRelationList){
+        runBeforeClientResponse(ui -> {
+            try {
+                Map<String,Object> valueMap =new HashMap<>();
+                List<Map<String,String>> nodeInfoList = new ArrayList<>();
+
+                List<String> attachedConceptionKinds = new ArrayList<>();
+                for(TimeScaleEntity currentConceptionEntity:timeScaleEntityList){
+                    if(!attachedConceptionKinds.contains(currentConceptionEntity.getTimeScaleGrade().toString())){
+                        attachedConceptionKinds.add(currentConceptionEntity.getTimeScaleGrade().toString());
+                    }
+                }
+                generateConceptionKindColorMap(attachedConceptionKinds);
+
+                for(TimeScaleEntity currentConceptionEntity:timeScaleEntityList){
+                    Map<String,String> currentNodeInfo = new HashMap<>();
+                    currentNodeInfo.put("id",currentConceptionEntity.getTimeScaleEntityUID());
+                    currentNodeInfo.put("entityKind",currentConceptionEntity.getTimeScaleGrade().toString());
+                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionEntity.getTimeScaleGrade().toString())!=null){
+                        currentNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionEntity.getTimeScaleGrade().toString()));
+                    }else{
+                        currentNodeInfo.put("color","#0099FF");
+                    }
+                    nodeInfoList.add(currentNodeInfo);
+                }
+
+                List<Map<String,String>> edgeInfoList = new ArrayList<>();
+
+                List<String> attachedRelationKinds = new ArrayList<>();
+                for(RelationEntity currentRelationEntity:timeEntitiesRelationList){
+                    if(!attachedRelationKinds.contains(currentRelationEntity.getRelationKindName())){
+                        attachedRelationKinds.add(currentRelationEntity.getRelationKindName());
+                    }
+                }
+                generateRelationKindColorMap(attachedRelationKinds);
+
+                for(RelationEntity currentRelationEntity:timeEntitiesRelationList){
+                    Map<String,String> currentEdgeInfo = new HashMap<>();
+                    currentEdgeInfo.put("source",currentRelationEntity.getFromConceptionEntityUID());
+                    currentEdgeInfo.put("target",currentRelationEntity.getToConceptionEntityUID());
+                    currentEdgeInfo.put("entityKind",currentRelationEntity.getRelationKindName());
+                    currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
+                    edgeInfoList.add(currentEdgeInfo);
+                }
+
+                valueMap.put("graphHeight",graphHeight);
+                valueMap.put("graphWidth",graphWidth);
+                valueMap.put("nodesInfo",nodeInfoList);
+                valueMap.put("edgesInfo",edgeInfoList);
+                getElement().callJsFunction("$connector.insertGraph",
                         new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);

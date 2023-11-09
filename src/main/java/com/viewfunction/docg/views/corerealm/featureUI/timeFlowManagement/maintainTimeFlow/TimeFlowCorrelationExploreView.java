@@ -132,7 +132,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         addMoreTimeFlowEntitiesInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-
+                renderMoreTimeFlowCorrelationData();
             }
         });
         addMoreTimeFlowEntitiesInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
@@ -195,7 +195,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         this.timeFlowCorrelationInfoChart.setGraphWidth(this.viewWidth);
     }
 
-    public void renderTimeFlowCorrelationData(TimeFlow.TimeScaleGrade queryTimeScaleGrade,String timeArea, List<TimeScaleEntity> timeScaleEntityList){
+    public void renderInitTimeFlowCorrelationData(TimeFlow.TimeScaleGrade queryTimeScaleGrade, String timeArea, List<TimeScaleEntity> timeScaleEntityList){
         this.initQueryTimeScaleGrade = queryTimeScaleGrade;
         this.initTimeArea = timeArea;
         this.initTimeScaleEntityList = timeScaleEntityList;
@@ -212,6 +212,14 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         }
     }
 
+    public void renderMoreTimeFlowCorrelationData(){
+        int newDisplayEntityIndex = this.currentLastDisplayEntityIndex + entitiesDisplayBatchSize;
+        List<TimeScaleEntity> newAddedTimeScaleEntityList = this.timeScaleEntityList.subList(this.currentLastDisplayEntityIndex,newDisplayEntityIndex-1);
+        this.currentLastDisplayEntityIndex = newDisplayEntityIndex;
+        this.currentDisplayCountDisplayValue.setText(""+currentLastDisplayEntityIndex);
+        this.timeFlowCorrelationInfoChart.renderMoreTimeFlowCorrelationData(newAddedTimeScaleEntityList);
+    }
+
     private void cleanCurrentTimeFlowEntitiesData(){
         this.timeFlowCorrelationInfoChart.emptyGraph();
         this.currentDisplayCountDisplayValue .setText(""+0);
@@ -220,6 +228,6 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
     private void refreshInitTimeFlowEntitiesInfo(){
         this.timeFlowCorrelationInfoChart.emptyGraph();
         this.currentDisplayCountDisplayValue .setText(""+initDisplayEntitiesCount);
-        renderTimeFlowCorrelationData(this.initQueryTimeScaleGrade,this.initTimeArea, this.initTimeScaleEntityList);
+        renderInitTimeFlowCorrelationData(this.initQueryTimeScaleGrade,this.initTimeArea, this.initTimeScaleEntityList);
     }
 }

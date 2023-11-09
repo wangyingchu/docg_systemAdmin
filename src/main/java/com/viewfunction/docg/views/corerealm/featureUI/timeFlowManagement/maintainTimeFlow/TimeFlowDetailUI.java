@@ -1169,7 +1169,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     }
 
     private void renderTimeFlowCorrelationChart(String timeArea,List<TimeScaleEntity> timeScaleEntityList){
-        this.timeFlowCorrelationExploreView.renderTimeFlowCorrelationData(queryTimeScaleGrade,timeArea,timeScaleEntityList);
+        this.timeFlowCorrelationExploreView.renderInitTimeFlowCorrelationData(queryTimeScaleGrade,timeArea,timeScaleEntityList);
     }
 
     private void renderTimeScaleEntityDetailUI(TimeScaleEntity timeScaleEntity){
