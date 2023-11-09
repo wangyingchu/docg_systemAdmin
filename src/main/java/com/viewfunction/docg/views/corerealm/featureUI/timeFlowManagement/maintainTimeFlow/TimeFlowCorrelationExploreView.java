@@ -123,7 +123,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         toolbarActionsContainerLayout.add(spaceDiv02);
 
         Button addMoreTimeFlowEntitiesInfoButton = new Button();
-        addMoreTimeFlowEntitiesInfoButton.setTooltipText("追加显示最多下100个时间流实体");
+        addMoreTimeFlowEntitiesInfoButton.setTooltipText("追加显示最多后续100个时间流实体");
         addMoreTimeFlowEntitiesInfoButton.setIcon(VaadinIcon.ARROW_RIGHT.create());
         addMoreTimeFlowEntitiesInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
