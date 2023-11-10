@@ -29,8 +29,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
     private NativeLabel timeEntityCountDisplayValue;
     private NativeLabel currentDisplayCountDisplayValue;
     private NumberFormat numberFormat;
-    //private int entitiesDisplayBatchSize = 100;
-    private int entitiesDisplayBatchSize = 5;
+    private int entitiesDisplayBatchSize = 100;
     private int currentLastDisplayEntityIndex = 0;
     private List<TimeScaleEntity> timeScaleEntityList;
     private TimeFlow.TimeScaleGrade initQueryTimeScaleGrade;

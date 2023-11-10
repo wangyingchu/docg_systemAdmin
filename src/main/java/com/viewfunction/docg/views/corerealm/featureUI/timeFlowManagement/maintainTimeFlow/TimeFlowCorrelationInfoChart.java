@@ -9,7 +9,6 @@ import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
-import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
@@ -28,7 +27,6 @@ import java.util.Map;
 @JavaScript("./visualization/feature/timeFlowCorrelationInfoChart-connector.js")
 public class TimeFlowCorrelationInfoChart extends VerticalLayout {
 
-    private Registration listener;
     private int colorIndex = 0;
     private int colorIndex2 = 0;
     private Map<String,String> conceptionKindColorMap;
@@ -37,6 +35,7 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
     private int graphWidth;
     private List<String> allTimeScaleEntityUIDList;
     private List<String> allTimeEntitiesRelationUIDList;
+    private boolean isFirstLoad = true;
 
     public TimeFlowCorrelationInfoChart(){
         this.setSpacing(false);
@@ -80,10 +79,6 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                 throw new RuntimeException(e);
             }
         });
-        // 此处调用 listener.remove() 会抛出 java.lang.NullPointerException 异常，
-        // 但是此异常的抛出能够阻止在多次打开 3d-force-graph 蒲公英图的场景下系统UI卡顿，停止相应并出现持续性的线程调用无法回收的情况
-        //具体原理未知，有待调查
-        listener.remove();
         super.onDetach(detachEvent);
     }
 
@@ -101,7 +96,13 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                 for(RelationEntity currentRelationEntity : timeEntitiesPairRelationList){
                     allTimeEntitiesRelationUIDList.add(currentRelationEntity.getRelationEntityUID());
                 }
-                generateGraph(timeScaleEntityList, timeEntitiesPairRelationList);
+                if(isFirstLoad){
+                    generateGraph(timeScaleEntityList, timeEntitiesPairRelationList);
+                    isFirstLoad = false;
+                }else{
+                    emptyGraph();
+                    insertInGenerateGraph(timeScaleEntityList,timeEntitiesPairRelationList);
+                }
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
             }
