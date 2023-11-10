@@ -164,6 +164,7 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                     Map<String,String> currentNodeInfo = new HashMap<>();
                     currentNodeInfo.put("id",currentConceptionEntity.getTimeScaleEntityUID());
                     currentNodeInfo.put("entityKind",currentConceptionEntity.getTimeScaleGrade().toString());
+                    currentNodeInfo.put("entityDesc",currentConceptionEntity.getTimeScaleEntityDesc());
                     if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionEntity.getTimeScaleGrade().toString())!=null){
                         currentNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionEntity.getTimeScaleGrade().toString()));
                     }else{
@@ -221,6 +222,7 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                     Map<String,String> currentNodeInfo = new HashMap<>();
                     currentNodeInfo.put("id",currentConceptionEntity.getTimeScaleEntityUID());
                     currentNodeInfo.put("entityKind",currentConceptionEntity.getTimeScaleGrade().toString());
+                    currentNodeInfo.put("entityDesc",currentConceptionEntity.getTimeScaleEntityDesc());
                     if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionEntity.getTimeScaleGrade().toString())!=null){
                         currentNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionEntity.getTimeScaleGrade().toString()));
                     }else{

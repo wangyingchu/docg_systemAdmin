@@ -43,22 +43,20 @@ window.Vaadin.Flow.feature_TimeFlowCorrelationInfoChart = {
                     extraRenderers: [new THREE.CSS2DRenderer()]
                 })(c).graphData(gData)
                     .backgroundColor('#FFFFFF')
-                    .width(200)
-                    .height(200)
-                    .nodeRelSize(6)
+                    .nodeRelSize(12)
                     .nodeResolution(15)
                     .nodeOpacity(0.85)
-                    .linkOpacity(0.7)
-                    .linkDirectionalArrowLength(4)
-                    .linkCurvature(0.06)
-                    .linkDirectionalArrowRelPos(0.9)
-                    .linkWidth(0.8)
+                    .linkOpacity(0.95)
+                    .linkDirectionalArrowLength(8)
+                    .linkCurvature(0.02)
+                    .linkDirectionalArrowRelPos(0.5)
+                    .linkWidth(2)
                     .linkThreeObjectExtend(true)
                     .linkThreeObject(link => {
                         // extend link with text sprite
-                        const sprite = new SpriteText(`${link.entityKind} : ${link.source} > ${link.target}`);
+                        const sprite = new SpriteText(`${link.entityKind}`);
                         sprite.color = 'black';
-                        sprite.textHeight = 1.5;
+                        sprite.textHeight = 3;
                         return sprite;
                     })
                     .linkPositionUpdate((sprite, { start, end }) => {
@@ -70,7 +68,7 @@ window.Vaadin.Flow.feature_TimeFlowCorrelationInfoChart = {
                     })
                     .nodeThreeObject(node => {
                         const nodeEl = document.createElement('div');
-                        nodeEl.textContent = node.entityKind+' '+node.id;
+                        nodeEl.textContent = node.entityKind+' '+node.entityDesc;
                         //nodeEl.style.color = node.color;
                         nodeEl.className = 'node-label';
                         return new THREE.CSS2DObject(nodeEl);

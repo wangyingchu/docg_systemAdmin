@@ -331,7 +331,7 @@
   "visualization/feature/dataRelationDistributionChart-connector.js": "0d25b181f78a4c9b7aa45ecbbf5ca66ec1cd521cba445efdb36b7dd726341899",
   "visualization/feature/relationKindCorrelationInfoChart-connector.js": "d15d4f28c994d1cfbae257a366979f9b46aa287cf4fde215e05176d7b52924ec",
   "visualization/feature/relationConceptionEntitiesPairChart-connector.js": "6d483bf7bfbaa2b0bd4052a55e397731c319f5cc68b51fc7e95f53299a0cc8cf",
-  "visualization/feature/timeFlowCorrelationInfoChart-connector.js": "48ee080cddcda84c928be684f4be2f4c1575318bc17d0734803ebb06502603a4",
+  "visualization/feature/timeFlowCorrelationInfoChart-connector.js": "d63b531eb3c4778535cf9301c2d446a41592e7c3584368d0e50c702102677954",
   "buttonFunctions.js": "c852123f9b2c44eb75e555119d3e05a7dbe78b91d0ab616feb9df1654474707d",
   "comboBoxConnector.js": "1d004c3dae9c76f8bcc68678abe1b8f7bdc8b456f5c9c4c7f190df8ed25d66cd",
   "contextMenuConnector.js": "8960e00884b9a8b62e24be63e03fe7045dcb9b6844a8a238eb4619d5595e2cfc",
@@ -365,7 +365,7 @@
   "docg-pac": "{\n  \"lumoImports\" : [ \"typography\", \"color\", \"spacing\", \"badge\", \"utility\" ]\n}"
  },
  "entryScripts": [
-  "VAADIN/build/indexhtml-b76ed40a.js"
+  "VAADIN/build/indexhtml-ed64efb8.js"
  ],
  "webComponents": [],
  "cvdlModules": {
@@ -400,6 +400,6 @@
  },
  "packageJsonHash": "b8abc0f0dff78479da23968be805623fa6a908afef4f3f29f8e3b712b9d0346f",
  "indexHtmlGenerated": [
-  "  <script type=\"module\" crossorigin src=\"./VAADIN/build/indexhtml-b76ed40a.js\"></script>"
+  "  <script type=\"module\" crossorigin src=\"./VAADIN/build/indexhtml-ed64efb8.js\"></script>"
  ]
 }
