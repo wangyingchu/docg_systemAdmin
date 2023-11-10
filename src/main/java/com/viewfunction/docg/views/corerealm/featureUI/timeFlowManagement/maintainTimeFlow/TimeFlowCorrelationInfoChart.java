@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@StyleSheet("webApps/relatedConceptionEntitiesDandelionGraphChart/style.css")
+@StyleSheet("webApps/timeFlowCorrelationInfoChart/style.css")
 @JavaScript("./visualization/feature/timeFlowCorrelationInfoChart-connector.js")
 public class TimeFlowCorrelationInfoChart extends VerticalLayout {
 
