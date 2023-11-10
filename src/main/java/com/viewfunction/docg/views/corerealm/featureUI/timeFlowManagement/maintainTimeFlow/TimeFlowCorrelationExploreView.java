@@ -214,17 +214,17 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
             }
             this.initDisplayEntitiesCount = currentDisplayEntitiesCount;
             this.currentLastDisplayEntityIndex = currentDisplayEntitiesCount;
-            this.currentDisplayCountDisplayValue .setText(""+currentDisplayEntitiesCount);
-            this.timeFlowCorrelationInfoChart.renderTimeFlowCorrelationData(this.timeScaleEntityList.subList(0,currentLastDisplayEntityIndex-1));
+            this.currentDisplayCountDisplayValue.setText(""+currentDisplayEntitiesCount);
+            this.timeFlowCorrelationInfoChart.renderTimeFlowCorrelationData(this.timeScaleEntityList.subList(0,currentLastDisplayEntityIndex));
         }
     }
 
     public void renderMoreTimeFlowCorrelationData(){
-        int newDisplayEntityIndex = (this.currentLastDisplayEntityIndex-1 + this.entitiesDisplayBatchSize) <= (this.timeScaleEntityList.size()-1) ?
-                (this.currentLastDisplayEntityIndex-1 + this.entitiesDisplayBatchSize) : (this.timeScaleEntityList.size()-1);
+        int newDisplayEntityIndex = (this.currentLastDisplayEntityIndex + this.entitiesDisplayBatchSize) <= (this.timeScaleEntityList.size()-1) ?
+                (this.currentLastDisplayEntityIndex + this.entitiesDisplayBatchSize) : (this.timeScaleEntityList.size()-1);
         List<TimeScaleEntity> newAddedTimeScaleEntityList = this.timeScaleEntityList.subList(this.currentLastDisplayEntityIndex,newDisplayEntityIndex);
         this.currentLastDisplayEntityIndex = newDisplayEntityIndex;
-        this.currentDisplayCountDisplayValue.setText(""+currentLastDisplayEntityIndex+1);
+        this.currentDisplayCountDisplayValue.setText(""+currentLastDisplayEntityIndex);
         this.timeFlowCorrelationInfoChart.renderMoreTimeFlowCorrelationData(newAddedTimeScaleEntityList);
     }
 

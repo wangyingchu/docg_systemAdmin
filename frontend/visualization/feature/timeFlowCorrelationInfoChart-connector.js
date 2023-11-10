@@ -7,10 +7,7 @@ window.Vaadin.Flow.feature_TimeFlowCorrelationInfoChart = {
         c.$connector = {
             // functions
             emptyGraph:function(data){
-                Graph
-                    .width(200)
-                    .height(200)
-                    .graphData({
+                Graph.graphData({
                         nodes:[],
                         links:[]
                     }).refresh();
@@ -107,34 +104,17 @@ window.Vaadin.Flow.feature_TimeFlowCorrelationInfoChart = {
             },
             insertGraph : function(data) {
                 let dataObj = eval("(" + data + ")");
-                // Random tree
-                /*
-                const N = 300;
-                const gData = {
-                    nodes: [...Array(N).keys()].map(i => ({
-                        id: i,
-                        color:'#0099FF'
-
-                        //,name:'nodeName'+i
-                    })),
-                    links: [...Array(N).keys()]
-                        .filter(id => id)
-                        .map(id => ({
-                            source: id,
-                            target: Math.round(Math.random() * (id-1)),
-                            color:'#666666'
-                            //,name:'linkName'+id
-                        }))
-                };
-                */
-                const gData = {
-                    nodes:dataObj.nodesInfo,
-                    links:dataObj.edgesInfo
+                const { nodes, links } = Graph.graphData();
+                for(var index1 in dataObj.nodesInfo){
+                    nodes.push(dataObj.nodesInfo[index1]);
                 }
-
-                alert(Graph);
-
-
+                for(var index2 in dataObj.edgesInfo){
+                    links.push(dataObj.edgesInfo[index2]);
+                }
+                Graph.graphData({
+                    nodes: [...nodes],
+                    links: [...links]
+                });
             }
         };
 

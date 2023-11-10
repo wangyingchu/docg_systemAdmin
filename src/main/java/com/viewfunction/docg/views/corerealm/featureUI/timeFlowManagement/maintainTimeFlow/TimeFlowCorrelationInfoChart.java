@@ -120,8 +120,11 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                 List<RelationEntity> needAddTimeEntitiesRelationList = new ArrayList<>();
                 for(RelationEntity currentRelationEntity:timeEntitiesRelationList){
                     if(!allTimeEntitiesRelationUIDList.contains(currentRelationEntity.getRelationEntityUID())){
-                        needAddTimeEntitiesRelationList.add(currentRelationEntity);
-                        allTimeEntitiesRelationUIDList.add(currentRelationEntity.getRelationEntityUID());
+                        if(allTimeScaleEntityUIDList.contains(currentRelationEntity.getFromConceptionEntityUID()) &&
+                               allTimeScaleEntityUIDList.contains(currentRelationEntity.getToConceptionEntityUID())) {
+                           needAddTimeEntitiesRelationList.add(currentRelationEntity);
+                           allTimeEntitiesRelationUIDList.add(currentRelationEntity.getRelationEntityUID());
+                       }
                     }
                 }
                 insertInGenerateGraph(timeScaleEntityList,needAddTimeEntitiesRelationList);
@@ -248,8 +251,7 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                 valueMap.put("graphWidth",graphWidth);
                 valueMap.put("nodesInfo",nodeInfoList);
                 valueMap.put("edgesInfo",edgeInfoList);
-                //getElement().callJsFunction("$connector.insertGraph",
-                getElement().callJsFunction("$connector.generateGraph",
+                getElement().callJsFunction("$connector.insertGraph",
                         new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
