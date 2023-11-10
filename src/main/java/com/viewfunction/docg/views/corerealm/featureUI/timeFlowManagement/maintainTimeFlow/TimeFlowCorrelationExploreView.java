@@ -29,13 +29,15 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
     private NativeLabel timeEntityCountDisplayValue;
     private NativeLabel currentDisplayCountDisplayValue;
     private NumberFormat numberFormat;
-    private int entitiesDisplayBatchSize = 100;
+    //private int entitiesDisplayBatchSize = 100;
+    private int entitiesDisplayBatchSize = 5;
     private int currentLastDisplayEntityIndex = 0;
     private List<TimeScaleEntity> timeScaleEntityList;
     private TimeFlow.TimeScaleGrade initQueryTimeScaleGrade;
     private String initTimeArea;
     private List<TimeScaleEntity> initTimeScaleEntityList;
     private int initDisplayEntitiesCount;
+    private Button addMoreTimeFlowEntitiesInfoButton;
 
     public TimeFlowCorrelationExploreView(){
         this.setSpacing(false);
@@ -126,7 +128,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         spaceDiv02.setWidth(20,Unit.PIXELS);
         toolbarActionsContainerLayout.add(spaceDiv02);
 
-        Button addMoreTimeFlowEntitiesInfoButton = new Button();
+        addMoreTimeFlowEntitiesInfoButton = new Button();
         addMoreTimeFlowEntitiesInfoButton.setTooltipText("追加显示最多后续100个时间流实体");
         addMoreTimeFlowEntitiesInfoButton.setIcon(VaadinIcon.ARROW_RIGHT.create());
         addMoreTimeFlowEntitiesInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -205,18 +207,24 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         this.timeScaleEntityList = timeScaleEntityList;
         if(this.timeScaleEntityList != null){
             int currentDisplayEntitiesCount = this.timeScaleEntityList.size() <= this.entitiesDisplayBatchSize ? this.timeScaleEntityList.size() : this.entitiesDisplayBatchSize;
-            initDisplayEntitiesCount = currentDisplayEntitiesCount;
+            if(this.timeScaleEntityList.size() <= this.entitiesDisplayBatchSize){
+                addMoreTimeFlowEntitiesInfoButton.setEnabled(false);
+            }else{
+                addMoreTimeFlowEntitiesInfoButton.setEnabled(true);
+            }
+            this.initDisplayEntitiesCount = currentDisplayEntitiesCount;
             this.currentLastDisplayEntityIndex = currentDisplayEntitiesCount;
             this.currentDisplayCountDisplayValue .setText(""+currentDisplayEntitiesCount);
-            this.timeFlowCorrelationInfoChart.renderTimeFlowCorrelationData(this.timeScaleEntityList.subList(0,currentDisplayEntitiesCount-1));
+            this.timeFlowCorrelationInfoChart.renderTimeFlowCorrelationData(this.timeScaleEntityList.subList(0,currentLastDisplayEntityIndex-1));
         }
     }
 
     public void renderMoreTimeFlowCorrelationData(){
-        int newDisplayEntityIndex = this.currentLastDisplayEntityIndex + entitiesDisplayBatchSize;
-        List<TimeScaleEntity> newAddedTimeScaleEntityList = this.timeScaleEntityList.subList(this.currentLastDisplayEntityIndex,newDisplayEntityIndex-1);
+        int newDisplayEntityIndex = (this.currentLastDisplayEntityIndex-1 + this.entitiesDisplayBatchSize) <= (this.timeScaleEntityList.size()-1) ?
+                (this.currentLastDisplayEntityIndex-1 + this.entitiesDisplayBatchSize) : (this.timeScaleEntityList.size()-1);
+        List<TimeScaleEntity> newAddedTimeScaleEntityList = this.timeScaleEntityList.subList(this.currentLastDisplayEntityIndex,newDisplayEntityIndex);
         this.currentLastDisplayEntityIndex = newDisplayEntityIndex;
-        this.currentDisplayCountDisplayValue.setText(""+currentLastDisplayEntityIndex);
+        this.currentDisplayCountDisplayValue.setText(""+currentLastDisplayEntityIndex+1);
         this.timeFlowCorrelationInfoChart.renderMoreTimeFlowCorrelationData(newAddedTimeScaleEntityList);
     }
 

@@ -35,8 +35,8 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
     private Map<String,String> relationKindColorMap;
     private int graphHeight;
     private int graphWidth;
-    private List<String> timeScaleEntityUIDList;
-    private List<RelationEntity> timeEntitiesRelationList;
+    private List<String> allTimeScaleEntityUIDList;
+    private List<String> allTimeEntitiesRelationUIDList;
 
     public TimeFlowCorrelationInfoChart(){
         this.setSpacing(false);
@@ -45,8 +45,8 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
 
         this.conceptionKindColorMap = new HashMap<>();
         this.relationKindColorMap = new HashMap<>();
-        this.timeScaleEntityUIDList = new ArrayList<>();
-        this.timeEntitiesRelationList = new ArrayList<>();
+        this.allTimeScaleEntityUIDList = new ArrayList<>();
+        this.allTimeEntitiesRelationUIDList = new ArrayList<>();
 
         //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/three.js");
@@ -89,41 +89,45 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
 
     public void renderTimeFlowCorrelationData(List<TimeScaleEntity> timeScaleEntityList){
         if(timeScaleEntityList != null && timeScaleEntityList.size() > 0){
-            timeScaleEntityUIDList.clear();
-            timeEntitiesRelationList.clear();
+            allTimeScaleEntityUIDList.clear();
+            allTimeEntitiesRelationUIDList.clear();
             for(TimeScaleEntity currentTimeScaleEntity:timeScaleEntityList){
-                timeScaleEntityUIDList.add(currentTimeScaleEntity.getTimeScaleEntityUID());
+                allTimeScaleEntityUIDList.add(currentTimeScaleEntity.getTimeScaleEntityUID());
             }
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-            //coreRealm.openGlobalSession();
             CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
             try {
-                List<RelationEntity> timeEntitiesPairRelationList = crossKindDataOperator.getRelationsOfConceptionEntityPair(timeScaleEntityUIDList);
-                timeEntitiesRelationList.addAll(timeEntitiesPairRelationList);
-                generateGraph(timeScaleEntityList,timeEntitiesRelationList);
+                List<RelationEntity> timeEntitiesPairRelationList = crossKindDataOperator.getRelationsOfConceptionEntityPair(allTimeScaleEntityUIDList);
+                for(RelationEntity currentRelationEntity : timeEntitiesPairRelationList){
+                    allTimeEntitiesRelationUIDList.add(currentRelationEntity.getRelationEntityUID());
+                }
+                generateGraph(timeScaleEntityList, timeEntitiesPairRelationList);
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
             }
-            //coreRealm.closeGlobalSession();
         }
     }
 
     public void renderMoreTimeFlowCorrelationData(List<TimeScaleEntity> timeScaleEntityList){
         if(timeScaleEntityList != null && timeScaleEntityList.size() > 0){
-            List<String> timeScaleEntityUIDList = new ArrayList<>();
             for(TimeScaleEntity currentTimeScaleEntity:timeScaleEntityList){
-                timeScaleEntityUIDList.add(currentTimeScaleEntity.getTimeScaleEntityUID());
+                allTimeScaleEntityUIDList.add(currentTimeScaleEntity.getTimeScaleEntityUID());
             }
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-            //coreRealm.openGlobalSession();
             CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
             try {
-                List<RelationEntity> timeEntitiesRelationList = crossKindDataOperator.getRelationsOfConceptionEntityPair(timeScaleEntityUIDList);
-                insertInGenerateGraph(timeScaleEntityList,timeEntitiesRelationList);
+                List<RelationEntity> timeEntitiesRelationList = crossKindDataOperator.getRelationsOfConceptionEntityPair(allTimeScaleEntityUIDList);
+                List<RelationEntity> needAddTimeEntitiesRelationList = new ArrayList<>();
+                for(RelationEntity currentRelationEntity:timeEntitiesRelationList){
+                    if(!allTimeEntitiesRelationUIDList.contains(currentRelationEntity.getRelationEntityUID())){
+                        needAddTimeEntitiesRelationList.add(currentRelationEntity);
+                        allTimeEntitiesRelationUIDList.add(currentRelationEntity.getRelationEntityUID());
+                    }
+                }
+                insertInGenerateGraph(timeScaleEntityList,needAddTimeEntitiesRelationList);
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
             }
-            //coreRealm.closeGlobalSession();
         }
     }
 
@@ -244,7 +248,8 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                 valueMap.put("graphWidth",graphWidth);
                 valueMap.put("nodesInfo",nodeInfoList);
                 valueMap.put("edgesInfo",edgeInfoList);
-                getElement().callJsFunction("$connector.insertGraph",
+                //getElement().callJsFunction("$connector.insertGraph",
+                getElement().callJsFunction("$connector.generateGraph",
                         new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
