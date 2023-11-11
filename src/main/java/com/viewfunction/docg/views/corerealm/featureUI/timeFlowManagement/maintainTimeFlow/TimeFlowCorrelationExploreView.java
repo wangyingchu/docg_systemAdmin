@@ -219,8 +219,8 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
     }
 
     public void renderMoreTimeFlowCorrelationData(){
-        int newDisplayEntityIndex = (this.currentLastDisplayEntityIndex + this.entitiesDisplayBatchSize) <= (this.timeScaleEntityList.size()-1) ?
-                (this.currentLastDisplayEntityIndex + this.entitiesDisplayBatchSize) : (this.timeScaleEntityList.size()-1);
+        int newDisplayEntityIndex = (this.currentLastDisplayEntityIndex + this.entitiesDisplayBatchSize) <= (this.timeScaleEntityList.size()) ?
+                (this.currentLastDisplayEntityIndex + this.entitiesDisplayBatchSize) : (this.timeScaleEntityList.size());
         List<TimeScaleEntity> newAddedTimeScaleEntityList = this.timeScaleEntityList.subList(this.currentLastDisplayEntityIndex,newDisplayEntityIndex);
         this.currentLastDisplayEntityIndex = newDisplayEntityIndex;
         this.currentDisplayCountDisplayValue.setText(""+currentLastDisplayEntityIndex);
