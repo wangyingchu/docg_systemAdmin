@@ -92,7 +92,11 @@ window.Vaadin.Flow.feature_TimeFlowCorrelationInfoChart = {
                             node, // lookAt ({ x, y, z })
                             3000  // ms transition duration
                         );
+                    })
+                    .onNodeRightClick(node => {
+                        c.$server.expendTimeFlowEntity(node.entityKind,node.id);
                     });
+
                 Graph
                     .width(dataObj.graphWidth)
                     .height(dataObj.graphHeight)

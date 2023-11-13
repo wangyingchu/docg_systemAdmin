@@ -3,6 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.timeFlowManagement.maint
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.JavaScript;
@@ -338,5 +339,11 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
 
     public void setGraphWidth(int graphWidth) {
         this.graphWidth = graphWidth;
+    }
+
+    @ClientCallable
+    public void expendTimeFlowEntity(String entityType,String entityUID) {
+
+        System.out.println(entityType +" --- "+entityUID);
     }
 }
