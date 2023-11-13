@@ -175,6 +175,12 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         toolbarActionsContainerLayout.add(clearFlowEntitiesInfoButton);
         clearFlowEntitiesInfoButton.getStyle().set("top","-4px").set("position","relative");
 
+        NativeLabel selectMethodMessage = new NativeLabel("左键单击聚焦实体，右键单击拓展显示实体时间关联信息");
+        selectMethodMessage.getStyle().set("font-size","10px").set("padding-left","30px");
+        selectMethodMessage.addClassNames("text-tertiary");
+        toolbarActionsContainerLayout.add(selectMethodMessage);
+        selectMethodMessage.getStyle().set("top","0px").set("position","relative");
+
         this.timeFlowCorrelationInfoChart = new TimeFlowCorrelationInfoChart(this.timeFlowName);
         add(this.timeFlowCorrelationInfoChart);
     }

@@ -359,6 +359,9 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                 targetRelationCheckEntityList.add(entityUID);
                 renderMoreTimeFlowCorrelationData(childTimeScaleEntityList);
                 this.timeFlowEntityExpendedList.add(entityUID);
+
+                //targetTimeScaleEntity.getAttachedTimeScaleEvents(null, TimeScaleEntity.TimeScaleLevel.SELF);
+
             }
             coreRealm.closeGlobalSession();
         }
