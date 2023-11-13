@@ -737,7 +737,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         rightSideContainerLayout.setWidthFull();
         rightSideContainerLayout.setHeight(600,Unit.PIXELS);
 
-        timeFlowCorrelationExploreView = new TimeFlowCorrelationExploreView();
+        timeFlowCorrelationExploreView = new TimeFlowCorrelationExploreView(this.timeFlowName);
         rightSideContainerLayout.add(timeFlowCorrelationExploreView);
     }
 

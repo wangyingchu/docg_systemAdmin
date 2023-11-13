@@ -50,9 +50,9 @@ window.Vaadin.Flow.feature_TimeFlowCorrelationInfoChart = {
                     .nodeOpacity(0.85)
                     .linkOpacity(0.95)
                     .linkDirectionalArrowLength(8)
-                    .linkCurvature(0)
+                    .linkCurvature(0.025)
                     .linkDirectionalArrowRelPos(0.5)
-                    .linkWidth(2)
+                    .linkWidth(1)
                     .linkThreeObjectExtend(true)
                     .linkThreeObject(link => {
                         // extend link with text sprite

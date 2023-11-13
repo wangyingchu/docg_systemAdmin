@@ -37,13 +37,14 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
     private List<TimeScaleEntity> initTimeScaleEntityList;
     private int initDisplayEntitiesCount;
     private Button addMoreTimeFlowEntitiesInfoButton;
+    private String timeFlowName;
 
-    public TimeFlowCorrelationExploreView(){
+    public TimeFlowCorrelationExploreView(String timeFlowName){
         this.setSpacing(false);
         this.setMargin(false);
         this.setPadding(false);
-        numberFormat = NumberFormat.getInstance();
-
+        this.numberFormat = NumberFormat.getInstance();
+        this.timeFlowName = timeFlowName;
         HorizontalLayout toolbarActionsContainerLayout = new HorizontalLayout();
         toolbarActionsContainerLayout.setSpacing(false);
         toolbarActionsContainerLayout.setMargin(false);
@@ -174,7 +175,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         toolbarActionsContainerLayout.add(clearFlowEntitiesInfoButton);
         clearFlowEntitiesInfoButton.getStyle().set("top","-4px").set("position","relative");
 
-        this.timeFlowCorrelationInfoChart = new TimeFlowCorrelationInfoChart();
+        this.timeFlowCorrelationInfoChart = new TimeFlowCorrelationInfoChart(this.timeFlowName);
         add(this.timeFlowCorrelationInfoChart);
     }
 
