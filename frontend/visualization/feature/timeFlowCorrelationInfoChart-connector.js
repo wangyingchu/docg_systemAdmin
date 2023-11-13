@@ -43,12 +43,14 @@ window.Vaadin.Flow.feature_TimeFlowCorrelationInfoChart = {
                     extraRenderers: [new THREE.CSS2DRenderer()]
                 })(c).graphData(gData)
                     .backgroundColor('#FFFFFF')
-                    .nodeRelSize(12)
+                    .nodeVal(node => {
+                        return node.size;
+                    })
                     .nodeResolution(15)
                     .nodeOpacity(0.85)
                     .linkOpacity(0.95)
                     .linkDirectionalArrowLength(8)
-                    .linkCurvature(0.02)
+                    .linkCurvature(0)
                     .linkDirectionalArrowRelPos(0.5)
                     .linkWidth(2)
                     .linkThreeObjectExtend(true)
@@ -69,7 +71,6 @@ window.Vaadin.Flow.feature_TimeFlowCorrelationInfoChart = {
                     .nodeThreeObject(node => {
                         const nodeEl = document.createElement('div');
                         nodeEl.textContent = node.entityKind+' '+node.entityDesc;
-                        //nodeEl.style.color = node.color;
                         nodeEl.className = 'node-label';
                         return new THREE.CSS2DObject(nodeEl);
                     })

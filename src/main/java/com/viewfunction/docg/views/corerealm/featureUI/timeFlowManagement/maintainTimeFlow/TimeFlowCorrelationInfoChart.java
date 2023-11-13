@@ -43,6 +43,12 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
         this.setPadding(false);
 
         this.conceptionKindColorMap = new HashMap<>();
+        this.conceptionKindColorMap.put("YEAR","#001F3F");
+        this.conceptionKindColorMap.put("MONTH","#FF851B");
+        this.conceptionKindColorMap.put("DAY","#0074D9");
+        this.conceptionKindColorMap.put("HOUR","#FF4136");
+        this.conceptionKindColorMap.put("MINUTE","#7FDBFF");
+
         this.relationKindColorMap = new HashMap<>();
         this.allTimeScaleEntityUIDList = new ArrayList<>();
         this.allTimeEntitiesRelationUIDList = new ArrayList<>();
@@ -158,13 +164,21 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                         attachedConceptionKinds.add(currentConceptionEntity.getTimeScaleGrade().toString());
                     }
                 }
-                generateConceptionKindColorMap(attachedConceptionKinds);
+                //generateConceptionKindColorMap(attachedConceptionKinds);
 
                 for(TimeScaleEntity currentConceptionEntity:timeScaleEntityList){
                     Map<String,String> currentNodeInfo = new HashMap<>();
                     currentNodeInfo.put("id",currentConceptionEntity.getTimeScaleEntityUID());
                     currentNodeInfo.put("entityKind",currentConceptionEntity.getTimeScaleGrade().toString());
                     currentNodeInfo.put("entityDesc",currentConceptionEntity.getTimeScaleEntityDesc());
+                    switch(currentConceptionEntity.getTimeScaleGrade()){
+                        case YEAR -> currentNodeInfo.put("size","60");
+                        case MONTH -> currentNodeInfo.put("size","40");
+                        case DAY -> currentNodeInfo.put("size","30");
+                        case HOUR -> currentNodeInfo.put("size","20");
+                        case MINUTE -> currentNodeInfo.put("size","12");
+                    }
+
                     if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionEntity.getTimeScaleGrade().toString())!=null){
                         currentNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionEntity.getTimeScaleGrade().toString()));
                     }else{
@@ -188,7 +202,8 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                     currentEdgeInfo.put("source",currentRelationEntity.getFromConceptionEntityUID());
                     currentEdgeInfo.put("target",currentRelationEntity.getToConceptionEntityUID());
                     currentEdgeInfo.put("entityKind",currentRelationEntity.getRelationKindName());
-                    currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
+                    //currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
+                    currentEdgeInfo.put("color","#AAAAAA");
                     edgeInfoList.add(currentEdgeInfo);
                 }
 
@@ -216,13 +231,21 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                         attachedConceptionKinds.add(currentConceptionEntity.getTimeScaleGrade().toString());
                     }
                 }
-                generateConceptionKindColorMap(attachedConceptionKinds);
+                //generateConceptionKindColorMap(attachedConceptionKinds);
 
                 for(TimeScaleEntity currentConceptionEntity:timeScaleEntityList){
                     Map<String,String> currentNodeInfo = new HashMap<>();
                     currentNodeInfo.put("id",currentConceptionEntity.getTimeScaleEntityUID());
                     currentNodeInfo.put("entityKind",currentConceptionEntity.getTimeScaleGrade().toString());
                     currentNodeInfo.put("entityDesc",currentConceptionEntity.getTimeScaleEntityDesc());
+                    switch(currentConceptionEntity.getTimeScaleGrade()){
+                        case YEAR -> currentNodeInfo.put("size","60");
+                        case MONTH -> currentNodeInfo.put("size","40");
+                        case DAY -> currentNodeInfo.put("size","30");
+                        case HOUR -> currentNodeInfo.put("size","20");
+                        case MINUTE -> currentNodeInfo.put("size","12");
+                    }
+
                     if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionEntity.getTimeScaleGrade().toString())!=null){
                         currentNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionEntity.getTimeScaleGrade().toString()));
                     }else{
@@ -246,7 +269,8 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                     currentEdgeInfo.put("source",currentRelationEntity.getFromConceptionEntityUID());
                     currentEdgeInfo.put("target",currentRelationEntity.getToConceptionEntityUID());
                     currentEdgeInfo.put("entityKind",currentRelationEntity.getRelationKindName());
-                    currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
+                    //currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
+                    currentEdgeInfo.put("color","#AAAAAA");
                     edgeInfoList.add(currentEdgeInfo);
                 }
 
