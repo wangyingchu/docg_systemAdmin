@@ -221,7 +221,11 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
             this.initDisplayEntitiesCount = currentDisplayEntitiesCount;
             this.currentLastDisplayEntityIndex = currentDisplayEntitiesCount;
             this.currentDisplayCountDisplayValue.setText(""+currentDisplayEntitiesCount);
-            this.timeFlowCorrelationInfoChart.renderTimeFlowCorrelationData(this.timeScaleEntityList.subList(0,currentLastDisplayEntityIndex));
+            if(this.timeScaleEntityList.size() > 1){
+                this.timeFlowCorrelationInfoChart.renderTimeFlowCorrelationData(this.timeScaleEntityList.subList(0,currentLastDisplayEntityIndex));
+            }else{
+                this.timeFlowCorrelationInfoChart.renderTimeFlowCorrelationData(this.timeScaleEntityList);
+            }
         }
     }
 
