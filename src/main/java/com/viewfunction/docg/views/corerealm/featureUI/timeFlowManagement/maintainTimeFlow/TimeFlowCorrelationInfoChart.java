@@ -11,10 +11,9 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleEventsRetrieveResult;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleRelationsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
@@ -36,6 +35,8 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
     private boolean isFirstLoad = true;
     private String timeFlowName;
     private List<String> timeFlowEntityExpendedList;
+    private int timeScaleRelationsRetrieveBatchSize = 5;
+    private Map<String,Integer> timeScaleEntityRelationsRetrieveIndexMap;
 
     public TimeFlowCorrelationInfoChart(String timeFlowName){
         this.setSpacing(false);
@@ -53,7 +54,7 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
         this.allTimeScaleEntityUIDList = new ArrayList<>();
         this.allTimeEntitiesRelationUIDList = new ArrayList<>();
         this.timeFlowEntityExpendedList = new ArrayList<>();
-
+        this.timeScaleEntityRelationsRetrieveIndexMap = new HashMap<>();
         //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/three.js");
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/three-spritetext.min.js");
@@ -293,6 +294,111 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
         });
     }
 
+    private void insertInGenerateGraph(List<TimeScaleRelationsInfo> timeScaleRelationsInfoList){
+        runBeforeClientResponse(ui -> {
+            try {
+                Map<String,Object> valueMap =new HashMap<>();
+                List<Map<String,String>> nodeInfoList = new ArrayList<>();
+                List<Map<String,String>> edgeInfoList = new ArrayList<>();
+
+                /*
+                List<String> attachedConceptionKinds = new ArrayList<>();
+                for(TimeScaleEntity currentConceptionEntity:timeScaleEntityList){
+                    if(!attachedConceptionKinds.contains(currentConceptionEntity.getTimeScaleGrade().toString())){
+                        attachedConceptionKinds.add(currentConceptionEntity.getTimeScaleGrade().toString());
+                    }
+                }
+                //generateConceptionKindColorMap(attachedConceptionKinds);
+                */
+
+
+                for(TimeScaleRelationsInfo currentTimeScaleRelationsInfo:timeScaleRelationsInfoList){
+                    Map<String,String> currentEventNodeInfo = new HashMap<>();
+                    currentEventNodeInfo.put("id",currentTimeScaleRelationsInfo.getTimeScaleEventUID());
+                    currentEventNodeInfo.put("entityKind","TimeScaleEvent");
+                    currentEventNodeInfo.put("entityDesc",currentTimeScaleRelationsInfo.getReferTime().toString());
+                    currentEventNodeInfo.put("size","10");
+                    currentEventNodeInfo.put("color","#85144B");
+                    nodeInfoList.add(currentEventNodeInfo);
+
+                    Map<String,String> currentConceptionEntityNodeInfo = new HashMap<>();
+                    currentConceptionEntityNodeInfo.put("id",currentTimeScaleRelationsInfo.getConceptionEntityUID());
+                    currentConceptionEntityNodeInfo.put("entityKind",currentTimeScaleRelationsInfo.getConceptionKindName());
+                    currentConceptionEntityNodeInfo.put("entityDesc",currentTimeScaleRelationsInfo.getConceptionEntityUID());
+                    currentConceptionEntityNodeInfo.put("size","80");
+                    currentConceptionEntityNodeInfo.put("color","#39CCCC");
+                    nodeInfoList.add(currentConceptionEntityNodeInfo);
+
+
+                    Map<String,String> currentTimeReferToEdgeInfo = new HashMap<>();
+                    currentTimeReferToEdgeInfo.put("source",currentTimeScaleRelationsInfo.getTimeScaleEntityUID());
+                    currentTimeReferToEdgeInfo.put("target",currentTimeScaleRelationsInfo.getTimeScaleEventUID());
+                    currentTimeReferToEdgeInfo.put("entityKind","TimeReferTo");
+                    //currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
+                    currentTimeReferToEdgeInfo.put("color","#BBBBBB");
+                    edgeInfoList.add(currentTimeReferToEdgeInfo);
+
+
+
+                    Map<String,String> currentAttachToTimeScaleEdgeInfo = new HashMap<>();
+                    currentAttachToTimeScaleEdgeInfo.put("source",currentTimeScaleRelationsInfo.getConceptionEntityUID());
+                    currentAttachToTimeScaleEdgeInfo.put("target",currentTimeScaleRelationsInfo.getTimeScaleEventUID());
+                    currentAttachToTimeScaleEdgeInfo.put("entityKind","TimeReferTo");
+                    //currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
+                    currentAttachToTimeScaleEdgeInfo.put("color","#CCCCCC");
+                    edgeInfoList.add(currentAttachToTimeScaleEdgeInfo);
+
+
+
+
+                    /*
+                    switch(currentConceptionEntity.getTimeScaleGrade()){
+                        case YEAR -> currentNodeInfo.put("size","60");
+                        case MONTH -> currentNodeInfo.put("size","40");
+                        case DAY -> currentNodeInfo.put("size","30");
+                        case HOUR -> currentNodeInfo.put("size","20");
+                        case MINUTE -> currentNodeInfo.put("size","12");
+                    }
+
+                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionEntity.getTimeScaleGrade().toString())!=null){
+                        currentNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionEntity.getTimeScaleGrade().toString()));
+                    }else{
+                        currentNodeInfo.put("color","#0099FF");
+                    }
+                    */
+
+
+                }
+
+
+
+                /*
+                List<String> attachedRelationKinds = new ArrayList<>();
+                for(RelationEntity currentRelationEntity:timeEntitiesRelationList){
+                    if(!attachedRelationKinds.contains(currentRelationEntity.getRelationKindName())){
+                        attachedRelationKinds.add(currentRelationEntity.getRelationKindName());
+                    }
+                }
+                generateRelationKindColorMap(attachedRelationKinds);
+                */
+               // for(RelationEntity currentRelationEntity:timeEntitiesRelationList){
+
+               // }
+
+
+
+                valueMap.put("graphHeight",graphHeight);
+                valueMap.put("graphWidth",graphWidth);
+                valueMap.put("nodesInfo",nodeInfoList);
+                valueMap.put("edgesInfo",edgeInfoList);
+                getElement().callJsFunction("$connector.insertGraph",
+                        new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
     private Map<String,String> generateConceptionKindColorMap(List<String> attachedConceptionKinds){
         String[] colorList =new String[]{
                 "#EA2027","#006266","#1B1464","#5758BB","#6F1E51","#EE5A24","#009432","##0652DD","#9980FA","#833471",
@@ -349,12 +455,12 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
 
     @ClientCallable
     public void expendTimeFlowEntity(String entityType,String entityUID) {
-        if(!this.timeFlowEntityExpendedList.contains(entityUID)){
-            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-            coreRealm.openGlobalSession();
-            TimeFlow targetTimeFlow = coreRealm.getOrCreateTimeFlow(this.timeFlowName);
-            TimeScaleEntity targetTimeScaleEntity = targetTimeFlow.getTimeScaleEntityByUID(entityUID);
-            if(targetTimeScaleEntity != null){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        TimeFlow targetTimeFlow = coreRealm.getOrCreateTimeFlow(this.timeFlowName);
+        TimeScaleEntity targetTimeScaleEntity = targetTimeFlow.getTimeScaleEntityByUID(entityUID);
+        if(targetTimeScaleEntity != null){
+            if(!this.timeFlowEntityExpendedList.contains(entityUID)){
                 LinkedList<TimeScaleEntity> childTimeScaleEntityList = targetTimeScaleEntity.getChildEntities();
                 List<String> targetRelationCheckEntityList = new ArrayList<>();
                 for(TimeScaleEntity currentTimeScaleEntity:childTimeScaleEntityList){
@@ -363,28 +469,30 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                 targetRelationCheckEntityList.add(entityUID);
                 renderMoreTimeFlowCorrelationData(childTimeScaleEntityList);
                 this.timeFlowEntityExpendedList.add(entityUID);
-
-
-                /*
-                QueryParameters queryParameters = new QueryParameters();
-                queryParameters.setPageSize(50);
-                queryParameters.setStartPage(1);
-                queryParameters.setEndPage(2);
-
-                TimeScaleEventsRetrieveResult timeScaleEventsRetrieveResult = targetTimeScaleEntity.getAttachedTimeScaleEvents(queryParameters, TimeScaleEntity.TimeScaleLevel.SELF);
-                List<TimeScaleEvent> timeScaleEventList = timeScaleEventsRetrieveResult.getTimeScaleEvents();
-                if(timeScaleEventList != null){
-                    for(TimeScaleEvent currentTimeScaleEvent :timeScaleEventList){
-                        ConceptionEntity currentConceptionEntity = currentTimeScaleEvent.getAttachConceptionEntity();
-
-                    }
-                }
-                */
-
-
-
             }
+            try {
+                int currentIndexSize;
+                if(timeScaleEntityRelationsRetrieveIndexMap.containsKey(entityUID)){
+                    currentIndexSize = timeScaleEntityRelationsRetrieveIndexMap.get(entityUID);
+                }else{
+                    currentIndexSize = 0;
+                }
+                List<TimeScaleRelationsInfo> timeScaleRelationsInfoList = targetTimeScaleEntity.sampleSelfAttachedTimeScaleRelationsInfos(timeScaleRelationsRetrieveBatchSize,currentIndexSize);
+                if(timeScaleRelationsInfoList.size()>0){
+                    timeScaleEntityRelationsRetrieveIndexMap.put(entityUID,currentIndexSize+timeScaleRelationsRetrieveBatchSize);
+                    insertInGenerateGraph(timeScaleRelationsInfoList);
+                }
+            } catch (CoreRealmServiceEntityExploreException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+
+
             coreRealm.closeGlobalSession();
         }
-    }
+
+
+
+
 }
