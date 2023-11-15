@@ -24,8 +24,6 @@ import java.util.*;
 @JavaScript("./visualization/feature/timeFlowCorrelationInfoChart-connector.js")
 public class TimeFlowCorrelationInfoChart extends VerticalLayout {
 
-    private int colorIndex = 0;
-    private int colorIndex2 = 0;
     private Map<String,String> conceptionKindColorMap;
     private int graphHeight;
     private int graphWidth;
@@ -164,13 +162,6 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                 Map<String,Object> valueMap =new HashMap<>();
                 List<Map<String,String>> nodeInfoList = new ArrayList<>();
 
-                List<String> attachedConceptionKinds = new ArrayList<>();
-                for(TimeScaleEntity currentConceptionEntity:timeScaleEntityList){
-                    if(!attachedConceptionKinds.contains(currentConceptionEntity.getTimeScaleGrade().toString())){
-                        attachedConceptionKinds.add(currentConceptionEntity.getTimeScaleGrade().toString());
-                    }
-                }
-
                 for(TimeScaleEntity currentConceptionEntity:timeScaleEntityList){
                     Map<String,String> currentNodeInfo = new HashMap<>();
                     currentNodeInfo.put("id",currentConceptionEntity.getTimeScaleEntityUID());
@@ -226,13 +217,6 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
             try {
                 Map<String,Object> valueMap =new HashMap<>();
                 List<Map<String,String>> nodeInfoList = new ArrayList<>();
-
-                List<String> attachedConceptionKinds = new ArrayList<>();
-                for(TimeScaleEntity currentConceptionEntity:timeScaleEntityList){
-                    if(!attachedConceptionKinds.contains(currentConceptionEntity.getTimeScaleGrade().toString())){
-                        attachedConceptionKinds.add(currentConceptionEntity.getTimeScaleGrade().toString());
-                    }
-                }
 
                 for(TimeScaleEntity currentConceptionEntity:timeScaleEntityList){
                     Map<String,String> currentNodeInfo = new HashMap<>();
