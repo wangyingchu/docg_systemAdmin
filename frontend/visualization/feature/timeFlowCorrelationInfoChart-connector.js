@@ -70,7 +70,7 @@ window.Vaadin.Flow.feature_TimeFlowCorrelationInfoChart = {
                     })
                     .nodeThreeObject(node => {
                         const nodeEl = document.createElement('div');
-                        nodeEl.textContent = node.entityKind+' '+node.entityDesc;
+                        nodeEl.textContent = node.entityKind+' ('+node.entityDesc+')';
                         nodeEl.className = 'node-label';
                         return new THREE.CSS2DObject(nodeEl);
                     })
