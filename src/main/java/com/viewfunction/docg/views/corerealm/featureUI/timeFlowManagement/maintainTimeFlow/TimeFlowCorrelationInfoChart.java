@@ -247,7 +247,6 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                     }
                 }
 
-
                 for(RelationEntity currentRelationEntity:timeEntitiesRelationList){
                     Map<String,String> currentEdgeInfo = new HashMap<>();
                     currentEdgeInfo.put("source",currentRelationEntity.getFromConceptionEntityUID());
@@ -297,15 +296,14 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
                     currentTimeReferToEdgeInfo.put("source",currentTimeScaleRelationsInfo.getTimeScaleEntityUID());
                     currentTimeReferToEdgeInfo.put("target",currentTimeScaleRelationsInfo.getTimeScaleEventUID());
                     currentTimeReferToEdgeInfo.put("entityKind","TimeReferTo");
-                    currentTimeReferToEdgeInfo.put("color","#BBBBBB");
+                    currentTimeReferToEdgeInfo.put("color","#85144B");
                     edgeInfoList.add(currentTimeReferToEdgeInfo);
 
                     Map<String,String> currentAttachToTimeScaleEdgeInfo = new HashMap<>();
                     currentAttachToTimeScaleEdgeInfo.put("source",currentTimeScaleRelationsInfo.getConceptionEntityUID());
                     currentAttachToTimeScaleEdgeInfo.put("target",currentTimeScaleRelationsInfo.getTimeScaleEventUID());
-                    currentAttachToTimeScaleEdgeInfo.put("entityKind","TimeReferTo");
-
-                    currentAttachToTimeScaleEdgeInfo.put("color","#CCCCCC");
+                    currentAttachToTimeScaleEdgeInfo.put("entityKind","AttachToTimeScale");
+                    currentAttachToTimeScaleEdgeInfo.put("color","#39CCCC");
                     edgeInfoList.add(currentAttachToTimeScaleEdgeInfo);
                 }
 
@@ -320,8 +318,6 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
             }
         });
     }
-
-
 
     public int getGraphHeight() {
         return graphHeight;
