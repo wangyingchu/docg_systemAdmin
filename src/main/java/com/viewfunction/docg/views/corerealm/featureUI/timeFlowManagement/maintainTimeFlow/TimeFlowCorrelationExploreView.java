@@ -2,12 +2,18 @@ package com.viewfunction.docg.views.corerealm.featureUI.timeFlowManagement.maint
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.contextmenu.HasMenuItems;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -38,6 +44,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
     private int initDisplayEntitiesCount;
     private Button addMoreTimeFlowEntitiesInfoButton;
     private String timeFlowName;
+    private MenuBar selectedTimeScaleEntityOperationMenuBar;
 
     public TimeFlowCorrelationExploreView(String timeFlowName){
         this.setSpacing(false);
@@ -175,11 +182,31 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         toolbarActionsContainerLayout.add(clearFlowEntitiesInfoButton);
         clearFlowEntitiesInfoButton.getStyle().set("top","-4px").set("position","relative");
 
-        NativeLabel selectMethodMessage = new NativeLabel("左键单击聚焦实体，右键单击拓展显示实体时间关联信息");
+        NativeLabel selectMethodMessage = new NativeLabel("左键单击聚焦选择实体，右键单击拓展显示实体时间关联信息");
         selectMethodMessage.getStyle().set("font-size","10px").set("padding-left","30px");
         selectMethodMessage.addClassNames("text-tertiary");
         toolbarActionsContainerLayout.add(selectMethodMessage);
         selectMethodMessage.getStyle().set("top","0px").set("position","relative");
+
+        selectedTimeScaleEntityOperationMenuBar = new MenuBar();
+        selectedTimeScaleEntityOperationMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+        MenuItem timeScaleEntityOperationMenu = createIconItem(selectedTimeScaleEntityOperationMenuBar, VaadinIcon.CROSSHAIRS, "选中实体信息概览", null);
+        timeScaleEntityOperationMenu.getStyle().set("font-size","9px");
+        selectedTimeScaleEntityOperationMenuBar.getStyle().set("top","-7px").set("position","relative");
+        Icon downArrowIcon = new Icon(VaadinIcon.CHEVRON_DOWN);
+        downArrowIcon.setSize("10px");
+        timeScaleEntityOperationMenu.add(downArrowIcon);
+
+        SubMenu operationSubItems = timeScaleEntityOperationMenu.getSubMenu();
+        MenuItem expandFlowActionItem = operationSubItems.addItem("扩展时间跨度");
+        expandFlowActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                //renderLoadCSVFormatConceptionEntitiesView();
+            }
+        });
+        selectedTimeScaleEntityOperationMenuBar.setEnabled(false);
+        toolbarActionsContainerLayout.add(selectedTimeScaleEntityOperationMenuBar);
 
         this.timeFlowCorrelationInfoChart = new TimeFlowCorrelationInfoChart(this.timeFlowName);
         add(this.timeFlowCorrelationInfoChart);
@@ -247,5 +274,27 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         this.timeFlowCorrelationInfoChart.emptyGraph();
         this.currentDisplayCountDisplayValue .setText(""+initDisplayEntitiesCount);
         renderInitTimeFlowCorrelationData(this.initQueryTimeScaleGrade,this.initTimeArea, this.initTimeScaleEntityList);
+    }
+
+
+    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
+        return createIconItem(menu, iconName, label, ariaLabel, false);
+    }
+
+    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName,String label, String ariaLabel, boolean isChild) {
+        Icon icon = new Icon(iconName);
+        if (isChild) {
+            icon.getStyle().set("width", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("height", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("marginRight", "var(--lumo-space-s)");
+        }
+        MenuItem item = menu.addItem(icon, e -> {});
+        if (ariaLabel != null) {
+            item.getElement().setAttribute("aria-label", ariaLabel);
+        }
+        if (label != null) {
+            item.add(new Text(label));
+        }
+        return item;
     }
 }
