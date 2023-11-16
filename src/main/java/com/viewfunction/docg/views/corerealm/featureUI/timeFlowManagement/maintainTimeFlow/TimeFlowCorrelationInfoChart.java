@@ -15,6 +15,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServi
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleRelationsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
 import java.io.Serializable;
@@ -377,8 +378,15 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
 
     @ClientCallable
     public void showEntityDetail(String entityType,String entityUID){
+        String timeFlowRelatedEntityKind = entityType;
         if(this.containerTimeFlowCorrelationExploreView != null){
-            this.containerTimeFlowCorrelationExploreView.showEntityDetail(entityType,entityUID);
+            if(entityType.equals("YEAR")){ timeFlowRelatedEntityKind = RealmConstant.TimeScaleYearEntityClass;}
+            if(entityType.equals("MONTH")){ timeFlowRelatedEntityKind = RealmConstant.TimeScaleMonthEntityClass;}
+            if(entityType.equals("DAY")){ timeFlowRelatedEntityKind = RealmConstant.TimeScaleDayEntityClass;}
+            if(entityType.equals("HOUR")){ timeFlowRelatedEntityKind = RealmConstant.TimeScaleHourEntityClass;}
+            if(entityType.equals("MINUTE")){ timeFlowRelatedEntityKind = RealmConstant.TimeScaleMinuteEntityClass;}
+            if(entityType.equals("TimeScaleEvent")){ timeFlowRelatedEntityKind = RealmConstant.TimeScaleEventClass;}
+            this.containerTimeFlowCorrelationExploreView.showEntityDetail(timeFlowRelatedEntityKind,entityUID);
         }
     }
 
