@@ -192,11 +192,44 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         timeFlowOperationMenu.add(downArrowIcon);
 
         SubMenu operationSubItems = timeFlowOperationMenu.getSubMenu();
-        MenuItem expandFlowActionItem = operationSubItems.addItem("扩展时间跨度");
+
+        HorizontalLayout action0Layout = new HorizontalLayout();
+        action0Layout.setPadding(false);
+        action0Layout.setSpacing(false);
+        action0Layout.setMargin(false);
+        action0Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon action0Icon = VaadinIcon.ARROWS_LONG_H.create();
+        action0Icon.setSize("10px");
+        Span action0Space = new Span();
+        action0Space.setWidth(6,Unit.PIXELS);
+        NativeLabel action0Label = new NativeLabel("扩展时间流年跨度");
+        action0Label.addClassNames("text-xs","font-semibold","text-secondary");
+        action0Layout.add(action0Icon,action0Space,action0Label);
+        MenuItem expandFlowActionItem = operationSubItems.addItem(action0Layout);
         expandFlowActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                //renderLoadCSVFormatConceptionEntitiesView();
+
+            }
+        });
+
+        HorizontalLayout action1Layout = new HorizontalLayout();
+        action1Layout.setPadding(false);
+        action1Layout.setSpacing(false);
+        action1Layout.setMargin(false);
+        action1Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon action1Icon = VaadinIcon.ROCKET.create();
+        action1Icon.setSize("10px");
+        Span action1Space = new Span();
+        action1Space.setWidth(6,Unit.PIXELS);
+        NativeLabel action1Label = new NativeLabel("生成检索加速索引");
+        action1Label.addClassNames("text-xs","font-semibold","text-secondary");
+        action1Layout.add(action1Icon,action1Space,action1Label);
+        MenuItem generateIndexesActionItem = operationSubItems.addItem(action1Layout);
+        generateIndexesActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+
             }
         });
 
