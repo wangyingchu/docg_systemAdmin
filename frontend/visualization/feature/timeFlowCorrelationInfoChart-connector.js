@@ -81,6 +81,7 @@ window.Vaadin.Flow.feature_TimeFlowCorrelationInfoChart = {
                         node.fz = node.z;
                     })
                     .onNodeClick(node => {
+                        c.$server.showEntityDetail(node.entityKind,node.id);
                         // Aim at node from outside it
                         const distance = 40;
                         const distRatio = 1 + distance/Math.hypot(node.x, node.y, node.z);

@@ -209,6 +209,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         toolbarActionsContainerLayout.add(selectedTimeScaleEntityOperationMenuBar);
 
         this.timeFlowCorrelationInfoChart = new TimeFlowCorrelationInfoChart(this.timeFlowName);
+        this.timeFlowCorrelationInfoChart.setContainerTimeFlowCorrelationExploreView(this);
         add(this.timeFlowCorrelationInfoChart);
     }
 
@@ -254,6 +255,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
                 this.timeFlowCorrelationInfoChart.renderTimeFlowCorrelationData(this.timeScaleEntityList);
             }
         }
+        this.selectedTimeScaleEntityOperationMenuBar.setEnabled(false);
     }
 
     public void renderMoreTimeFlowCorrelationData(){
@@ -263,6 +265,15 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         this.currentLastDisplayEntityIndex = newDisplayEntityIndex;
         this.currentDisplayCountDisplayValue.setText(""+currentLastDisplayEntityIndex);
         this.timeFlowCorrelationInfoChart.renderMoreTimeFlowCorrelationData(newAddedTimeScaleEntityList);
+        this.selectedTimeScaleEntityOperationMenuBar.setEnabled(false);
+    }
+
+    public void showEntityDetail(String entityType,String entityUID){
+        this.selectedTimeScaleEntityOperationMenuBar.setEnabled(true);
+    }
+
+    public void hideEntityDetail(){
+        this.selectedTimeScaleEntityOperationMenuBar.setEnabled(false);
     }
 
     private void cleanCurrentTimeFlowEntitiesData(){
@@ -275,7 +286,6 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         this.currentDisplayCountDisplayValue .setText(""+initDisplayEntitiesCount);
         renderInitTimeFlowCorrelationData(this.initQueryTimeScaleGrade,this.initTimeArea, this.initTimeScaleEntityList);
     }
-
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
         return createIconItem(menu, iconName, label, ariaLabel, false);

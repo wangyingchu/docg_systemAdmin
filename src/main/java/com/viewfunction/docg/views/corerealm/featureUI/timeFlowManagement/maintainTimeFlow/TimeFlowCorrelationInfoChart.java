@@ -34,6 +34,7 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
     private List<String> timeFlowEntityExpendedList;
     private int timeScaleRelationsRetrieveBatchSize = 5;
     private Map<String,Integer> timeScaleEntityRelationsRetrieveIndexMap;
+    private TimeFlowCorrelationExploreView containerTimeFlowCorrelationExploreView;
 
     public TimeFlowCorrelationInfoChart(String timeFlowName){
         this.setSpacing(false);
@@ -369,5 +370,19 @@ public class TimeFlowCorrelationInfoChart extends VerticalLayout {
             }
         }
         coreRealm.closeGlobalSession();
+        if(this.containerTimeFlowCorrelationExploreView != null){
+            this.containerTimeFlowCorrelationExploreView.hideEntityDetail();
+        }
+    }
+
+    @ClientCallable
+    public void showEntityDetail(String entityType,String entityUID){
+        if(this.containerTimeFlowCorrelationExploreView != null){
+            this.containerTimeFlowCorrelationExploreView.showEntityDetail(entityType,entityUID);
+        }
+    }
+
+    public void setContainerTimeFlowCorrelationExploreView(TimeFlowCorrelationExploreView containerTimeFlowCorrelationExploreView) {
+        this.containerTimeFlowCorrelationExploreView = containerTimeFlowCorrelationExploreView;
     }
 }
