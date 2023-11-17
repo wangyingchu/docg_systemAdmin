@@ -51,7 +51,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.eventHandling.TimeFlowRefreshEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.text.NumberFormat;
@@ -61,7 +63,7 @@ import java.util.Set;
 
 @Route("timeFlowDetailInfo/:timeFlow")
 public class TimeFlowDetailUI extends VerticalLayout implements
-        BeforeEnterObserver {
+        BeforeEnterObserver, TimeFlowRefreshEvent.TimeFlowRefreshEventListener {
 
     private String timeFlowName;
     private VerticalLayout leftSideContainerLayout;
@@ -140,6 +142,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
             timeFlowCorrelationExploreView.setViewHeight(browserHeight - contentContainerHeightOffset);
         }));
         renderTimeFlowBasicInfo();
+        ResourceHolder.getApplicationBlackboard().addListener(this);
     }
 
     @Override
@@ -147,6 +150,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     private void renderTimeFlowData(){
@@ -1157,6 +1161,31 @@ public class TimeFlowDetailUI extends VerticalLayout implements
             }
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void receivedTimeFlowRefreshEvent(TimeFlowRefreshEvent event) {
+        if(event != null){
+            if(this.timeFlowName.equals(event.getTimeFlowName())){
+                timeFlowRuntimeStatisticsQueried = false;
+                setupTimeFlowRuntimeStatisticInfo();
+                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                TimeFlow targetTimeFlow = coreRealm.getOrCreateTimeFlow(this.timeFlowName);
+                List<Integer> availableTimeSpanYearsList = targetTimeFlow.getAvailableTimeSpanYears();
+                if(availableTimeSpanYearsList != null && availableTimeSpanYearsList.size() >0){
+                    if(availableTimeSpanYearsList.size() ==1){
+                        Integer onlyYear = availableTimeSpanYearsList.get(0);
+                        startYearValue.setText(""+onlyYear);
+                        toYearValue.setText(""+onlyYear);
+                    }else{
+                        Integer firstYear = availableTimeSpanYearsList.get(0);
+                        Integer lastYear = availableTimeSpanYearsList.get(availableTimeSpanYearsList.size() -1);
+                        startYearValue.setText(""+firstYear);
+                        toYearValue.setText(""+lastYear);
+                    }
+                }
+            }
         }
     }
 

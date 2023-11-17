@@ -301,6 +301,8 @@ public class MainLayout extends AppLayout {
                 ClassificationDetachedEvent.class);
         _BLACKBOARD.register(ClassificationAttachedEvent.ClassificationAttachedListener.class,
                 ClassificationAttachedEvent.class);
+        _BLACKBOARD.register(TimeFlowRefreshEvent.TimeFlowRefreshEventListener.class,
+                TimeFlowRefreshEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

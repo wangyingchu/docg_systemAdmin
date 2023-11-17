@@ -25,7 +25,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.eventHandling.TimeFlowRefreshEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -213,6 +215,9 @@ public class ExpendTimeFlowYearsView extends VerticalLayout {
                     this.containerDialog.close();
                 }
                 CommonUIOperationUtil.showPopupNotification("扩展时间流年跨度操作成功", NotificationVariant.LUMO_SUCCESS);
+                TimeFlowRefreshEvent timeFlowRefreshEvent = new TimeFlowRefreshEvent();
+                timeFlowRefreshEvent.setTimeFlowName(this.timeFlowName);
+                ResourceHolder.getApplicationBlackboard().fire(timeFlowRefreshEvent);
             }else{
                 CommonUIOperationUtil.showPopupNotification("扩展时间流年跨度操作错误", NotificationVariant.LUMO_SUCCESS);
             }
