@@ -1170,7 +1170,10 @@ public class TimeFlowDetailUI extends VerticalLayout implements
             if(this.timeFlowName.equals(event.getTimeFlowName())){
                 timeFlowRuntimeStatisticsQueried = false;
                 setupTimeFlowRuntimeStatisticInfo();
+
                 CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                coreRealm.openGlobalSession();
+
                 TimeFlow targetTimeFlow = coreRealm.getOrCreateTimeFlow(this.timeFlowName);
                 List<Integer> availableTimeSpanYearsList = targetTimeFlow.getAvailableTimeSpanYears();
                 if(availableTimeSpanYearsList != null && availableTimeSpanYearsList.size() >0){
@@ -1185,6 +1188,12 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                         toYearValue.setText(""+lastYear);
                     }
                 }
+                this.numberFormat = NumberFormat.getInstance();
+                TimeFlowSummaryStatistics timeFlowSummaryStatistics = targetTimeFlow.getTimeFlowSummaryStatistics();
+                totalTimeScaleEntityCountDisplayItem.updateDisplayValue(this.numberFormat.format(timeFlowSummaryStatistics.getContainsTotalTimeScaleEntityCount()));
+                totalTimeScaleEventCountDisplayItem.updateDisplayValue(this.numberFormat.format(timeFlowSummaryStatistics.getRefersTotalTimeScaleEventCount()));
+
+                coreRealm.closeGlobalSession();
             }
         }
     }
