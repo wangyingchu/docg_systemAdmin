@@ -798,11 +798,11 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 startYearValue.setText(""+firstYear);
                 toYearValue.setText(""+lastYear);
                 startYearTextField.setValue(""+firstYear);
-                toYearTextField.setValue(""+lastYear);
+                toYearTextField.setValue(""+(firstYear + 10));
                 try {
-                    List<TimeScaleEntity> timeScaleEntityList = targetTimeFlow.getYearEntities(firstYear,lastYear);
+                    List<TimeScaleEntity> timeScaleEntityList = targetTimeFlow.getYearEntities(firstYear,firstYear + 10);
                     timeScaleEntitiesGrid.setItems(timeScaleEntityList);
-                    renderTimeFlowCorrelationChart(""+firstYear+" - "+lastYear,timeScaleEntityList);
+                    renderTimeFlowCorrelationChart(""+firstYear+" - "+(firstYear + 10),timeScaleEntityList);
                 } catch (CoreRealmServiceRuntimeException e) {
                     throw new RuntimeException(e);
                 }
@@ -1336,7 +1336,12 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     }
 
     private void renderExpendTimeFlowYearsUI(){
-
+        ExpendTimeFlowYearsView expendTimeFlowYearsView = new ExpendTimeFlowYearsView(this.timeFlowName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.ARROWS_LONG_H),"扩展时间流年跨度",null,true,590,220,false);
+        fixSizeWindow.setWindowContent(expendTimeFlowYearsView);
+        fixSizeWindow.setModel(true);
+        expendTimeFlowYearsView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
