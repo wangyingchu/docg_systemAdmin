@@ -2,14 +2,21 @@ package com.viewfunction.docg.views.corerealm.featureUI;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.TabSheet;
+import com.vaadin.flow.component.tabs.TabSheetVariant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.GeospatialRegion;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 
 import java.util.ArrayList;
@@ -46,5 +53,56 @@ public class GeospatialRegionManagementUI extends VerticalLayout {
 
         TitleActionBar titleActionBar = new TitleActionBar(new Icon(VaadinIcon.COG_O),"Geospatial Region 地理空间区域数据管理",secTitleElementsList,buttonList);
         add(titleActionBar);
+
+
+        List<Component> timeFlowManagementOperationButtonList = new ArrayList<>();
+
+        Button createTimeFlowButton = new Button("创建地理空间区域",new Icon(VaadinIcon.PLUS_SQUARE_O));
+        createTimeFlowButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        createTimeFlowButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        timeFlowManagementOperationButtonList.add(createTimeFlowButton);
+        createTimeFlowButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //renderCreateClassificationUI();
+            }
+        });
+
+        Icon icon = new Icon(VaadinIcon.LIST);
+        SectionActionBar sectionActionBar = new SectionActionBar(icon,"地理空间区域数据:",timeFlowManagementOperationButtonList);
+        add(sectionActionBar);
+
+        TabSheet timeFlowInfoTabSheet = new TabSheet();
+        timeFlowInfoTabSheet.addThemeVariants(TabSheetVariant.LUMO_TABS_SMALL);
+        timeFlowInfoTabSheet.setWidthFull();
+        add(timeFlowInfoTabSheet);
+
+        List<GeospatialRegion> geospatialRegionList = coreRealm.getGeospatialRegions();
+        for(GeospatialRegion currentGeospatialRegion : geospatialRegionList){
+            String currentTimeFlowName = currentGeospatialRegion.getGeospatialRegionName();
+
+
+            timeFlowInfoTabSheet.add(generateTabTitle(VaadinIcon.CLOCK,currentTimeFlowName),new NativeLabel(currentTimeFlowName));
+
+
+        }
+
+
+
+
+
+    }
+
+    private HorizontalLayout generateTabTitle(VaadinIcon tabIcon, String tabTitleTxt){
+        HorizontalLayout  tabTitleLayout = new HorizontalLayout();
+        tabTitleLayout.setDefaultVerticalComponentAlignment(Alignment.START);
+        Icon tabTitleIcon = new Icon(tabIcon);
+        tabTitleIcon.setSize("8px");
+        NativeLabel tabTitleLabel = new NativeLabel(" "+tabTitleTxt);
+        tabTitleLabel.getStyle()
+                .set("font-size","var(--lumo-font-size-s)")
+                .set("font-weight", "bold");
+        tabTitleLayout.add(tabTitleIcon,tabTitleLabel);
+        return tabTitleLayout;
     }
 }
