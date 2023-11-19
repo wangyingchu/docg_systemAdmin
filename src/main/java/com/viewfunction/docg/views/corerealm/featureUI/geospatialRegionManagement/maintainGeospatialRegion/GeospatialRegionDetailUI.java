@@ -1,6 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.geospatialRegionManagement.maintainGeospatialRegion;
 
 import ch.carnet.kasparscherrer.VerticalScrollLayout;
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
 import com.vaadin.flow.component.contextmenu.MenuItem;
@@ -58,8 +59,8 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         renderGeospatialRegionData();
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             leftSideContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset, Unit.PIXELS);
-           // middleContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset,Unit.PIXELS);
-            //rightSideContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset,Unit.PIXELS);
+            middleContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset,Unit.PIXELS);
+            rightSideContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset,Unit.PIXELS);
             //timeFlowCorrelationExploreView.setViewWidth(event.getWidth() - 600);
             //timeFlowCorrelationExploreView.setViewHeight(event.getHeight() - contentContainerHeightOffset);
         }));
@@ -68,8 +69,8 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             int browserHeight = receiver.getBodyClientHeight();
             int browserWidth = receiver.getBodyClientWidth();
             leftSideContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
-            //middleContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
-            //rightSideContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
+            middleContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
+            rightSideContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
             //timeFlowCorrelationExploreView.setViewWidth(browserWidth - 600);
             //timeFlowCorrelationExploreView.setViewHeight(browserHeight - contentContainerHeightOffset);
         }));
@@ -178,6 +179,76 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.GLOBE_WIRE),this.geospatialRegionName,null,actionComponentsList);
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
         timeFlowInformationLayout.add(secondaryTitleActionBar);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        middleContainerLayout = new VerticalLayout();
+        middleContainerLayout.setSpacing(false);
+        middleContainerLayout.setPadding(false);
+        middleContainerLayout.setMargin(false);
+
+        mainContainerLayout.add(middleContainerLayout);
+        middleContainerLayout.setWidth(300, Unit.PIXELS);
+        middleContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
+
+        SecondaryIconTitle filterTitle3 = new SecondaryIconTitle(FontAwesome.Solid.CLOCK.create(),"地理空间尺度实体检索结果");
+        filterTitle3.getStyle().set("padding-left","10px");
+        middleContainerLayout.add(filterTitle3);
+
+        HorizontalLayout heightSpaceDivM0 = new HorizontalLayout();
+        heightSpaceDivM0.setWidth(100,Unit.PERCENTAGE);
+        middleContainerLayout.add(heightSpaceDivM0);
+        heightSpaceDivM0.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-left", "var(--lumo-space-l)")
+                .set("padding-right", "var(--lumo-space-l)")
+                .set("padding-bottom", "var(--lumo-space-s)");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        rightSideContainerLayout = new HorizontalLayout();
+        rightSideContainerLayout.setSpacing(false);
+        rightSideContainerLayout.setMargin(false);
+        rightSideContainerLayout.setPadding(false);
+
+        mainContainerLayout.add(rightSideContainerLayout);
+        rightSideContainerLayout.setWidthFull();
+        rightSideContainerLayout.setHeight(600,Unit.PIXELS);
+
 
     }
 
