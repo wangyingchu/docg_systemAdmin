@@ -13,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabSheetVariant;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.GeospatialRegion;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -86,7 +87,7 @@ public class GeospatialRegionManagementUI extends VerticalLayout {
             String currentTimeFlowName = currentGeospatialRegion.getGeospatialRegionName();
             GeospatialRegionDetailUI geospatialRegionDetailUI = new GeospatialRegionDetailUI(currentTimeFlowName);
             this.geospatialRegionDetailUIMap.put(currentTimeFlowName,geospatialRegionDetailUI);
-            timeFlowInfoTabSheet.add(generateTabTitle(VaadinIcon.GLOBE_WIRE,currentTimeFlowName),geospatialRegionDetailUI);
+            timeFlowInfoTabSheet.add(generateTabTitle(VaadinIcon.GLOBE,currentTimeFlowName),geospatialRegionDetailUI);
         }
     }
 
