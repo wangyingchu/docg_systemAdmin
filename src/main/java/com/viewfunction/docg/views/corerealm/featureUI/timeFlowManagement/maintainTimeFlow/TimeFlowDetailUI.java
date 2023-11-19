@@ -1166,8 +1166,8 @@ public class TimeFlowDetailUI extends VerticalLayout implements
 
     @Override
     public void receivedTimeFlowRefreshEvent(TimeFlowRefreshEvent event) {
-        if(event != null){
-            if(this.timeFlowName.equals(event.getTimeFlowName())){
+        if(event != null ){
+            if(this.timeFlowName.equals(event.getTimeFlowName()) || event.getTimeFlowName() == null){
                 timeFlowRuntimeStatisticsQueried = false;
                 setupTimeFlowRuntimeStatisticInfo();
 

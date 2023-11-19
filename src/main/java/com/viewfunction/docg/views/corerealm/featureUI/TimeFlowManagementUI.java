@@ -19,6 +19,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import com.viewfunction.docg.element.eventHandling.TimeFlowRefreshEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.timeFlowManagement.maintainTimeFlow.TimeFlowDetailUI;
 
 import java.util.ArrayList;
@@ -36,10 +38,9 @@ public class TimeFlowManagementUI extends VerticalLayout {
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
-            //loadConceptionKindsInfo();
-            //resetSingleConceptionKindSummaryInfoArea();
+            TimeFlowRefreshEvent timeFlowRefreshEvent = new TimeFlowRefreshEvent();
+            ResourceHolder.getApplicationBlackboard().fire(timeFlowRefreshEvent);
         });
 
         List<Component> buttonList = new ArrayList<>();
