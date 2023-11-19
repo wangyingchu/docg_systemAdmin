@@ -18,14 +18,19 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.GeospatialRegion;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import com.viewfunction.docg.views.corerealm.featureUI.geospatialRegionManagement.maintainGeospatialRegion.GeospatialRegionDetailUI;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GeospatialRegionManagementUI extends VerticalLayout {
 
-    public GeospatialRegionManagementUI(){
+    private Map<String, GeospatialRegionDetailUI> geospatialRegionDetailUIMap;
 
+    public GeospatialRegionManagementUI(){
+        this.geospatialRegionDetailUIMap = new HashMap<>();
         Button refreshDataButton = new Button("刷新地理空间区域数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -54,7 +59,6 @@ public class GeospatialRegionManagementUI extends VerticalLayout {
         TitleActionBar titleActionBar = new TitleActionBar(new Icon(VaadinIcon.COG_O),"Geospatial Region 地理空间区域数据管理",secTitleElementsList,buttonList);
         add(titleActionBar);
 
-
         List<Component> timeFlowManagementOperationButtonList = new ArrayList<>();
 
         Button createTimeFlowButton = new Button("创建地理空间区域",new Icon(VaadinIcon.PLUS_SQUARE_O));
@@ -80,17 +84,10 @@ public class GeospatialRegionManagementUI extends VerticalLayout {
         List<GeospatialRegion> geospatialRegionList = coreRealm.getGeospatialRegions();
         for(GeospatialRegion currentGeospatialRegion : geospatialRegionList){
             String currentTimeFlowName = currentGeospatialRegion.getGeospatialRegionName();
-
-
-            timeFlowInfoTabSheet.add(generateTabTitle(VaadinIcon.CLOCK,currentTimeFlowName),new NativeLabel(currentTimeFlowName));
-
-
+            GeospatialRegionDetailUI geospatialRegionDetailUI = new GeospatialRegionDetailUI(currentTimeFlowName);
+            this.geospatialRegionDetailUIMap.put(currentTimeFlowName,geospatialRegionDetailUI);
+            timeFlowInfoTabSheet.add(generateTabTitle(VaadinIcon.GLOBE_WIRE,currentTimeFlowName),geospatialRegionDetailUI);
         }
-
-
-
-
-
     }
 
     private HorizontalLayout generateTabTitle(VaadinIcon tabIcon, String tabTitleTxt){
