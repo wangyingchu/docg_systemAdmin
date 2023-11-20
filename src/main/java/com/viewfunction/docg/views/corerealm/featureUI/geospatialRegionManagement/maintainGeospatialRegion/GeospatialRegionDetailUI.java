@@ -26,6 +26,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.GeospatialRegion;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -179,107 +180,139 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         timeFlowInformationLayout.add(horizontalLayout2);
 
 
+        VerticalLayout geospatialRegionInfoWallContainerLayout = new VerticalLayout();
+        geospatialRegionInfoWallContainerLayout.setMargin(false);
+        geospatialRegionInfoWallContainerLayout.setPadding(false);
+        geospatialRegionInfoWallContainerLayout.setSpacing(false);
+        geospatialRegionInfoWallContainerLayout.setWidth(95,Unit.PERCENTAGE);
+        timeFlowInformationLayout.add(geospatialRegionInfoWallContainerLayout);
 
-
-
-
-
-        VerticalLayout timeFlowInfoWallContainerLayout = new VerticalLayout();
-        timeFlowInfoWallContainerLayout.setMargin(false);
-        timeFlowInfoWallContainerLayout.setPadding(false);
-        timeFlowInfoWallContainerLayout.setSpacing(false);
-        timeFlowInfoWallContainerLayout.setWidth(95,Unit.PERCENTAGE);
-        timeFlowInformationLayout.add(timeFlowInfoWallContainerLayout);
-
-        HorizontalLayout yearEntitiesInfoLayout = new HorizontalLayout();
-        yearEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        NativeLabel yearEntitiesLabel = new NativeLabel("Year Entities:");
-        SecondaryKeyValueDisplayItem yearEntityCountItem = new SecondaryKeyValueDisplayItem(yearEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
-        SecondaryKeyValueDisplayItem yearEventCountItem = new SecondaryKeyValueDisplayItem(yearEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
-        Icon yearInfoTitleIcon = new Icon(VaadinIcon.CALENDAR);
-        yearInfoTitleIcon.setSize("10px");
-        SectionWallTitle yearInfoSectionWallTitle = new SectionWallTitle(yearInfoTitleIcon,yearEntitiesLabel);
-        SectionWallContainer yearInfoSectionWallContainer = new SectionWallContainer(yearInfoSectionWallTitle,yearEntitiesInfoLayout);
-        yearInfoSectionWallContainer.setOpened(false);
-        yearInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+        HorizontalLayout continentEntitiesInfoLayout = new HorizontalLayout();
+        continentEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel continentEntitiesLabel = new NativeLabel("Continent Entities:");
+        SecondaryKeyValueDisplayItem continentEntityCountItem = new SecondaryKeyValueDisplayItem(continentEntitiesInfoLayout,FontAwesome.Solid.MAP.create(),"","-");
+        SecondaryKeyValueDisplayItem continentEventCountItem = new SecondaryKeyValueDisplayItem(continentEntitiesInfoLayout,FontAwesome.Solid.MAP_LOCATION.create(),"","-");
+        Icon continentInfoTitleIcon = LineAwesomeIconsSvg.GLOBE_AFRICA_SOLID.create();
+        continentInfoTitleIcon.setSize("10px");
+        SectionWallTitle yearInfoSectionWallTitle = new SectionWallTitle(continentInfoTitleIcon,continentEntitiesLabel);
+        SectionWallContainer continentInfoSectionWallContainer = new SectionWallContainer(yearInfoSectionWallTitle,continentEntitiesInfoLayout);
+        continentInfoSectionWallContainer.setOpened(false);
+        continentInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
                 //setupTimeFlowRuntimeStatisticInfo();
             }
         });
-        timeFlowInfoWallContainerLayout.add(yearInfoSectionWallContainer);
+        geospatialRegionInfoWallContainerLayout.add(continentInfoSectionWallContainer);
 
-        HorizontalLayout monthEntitiesInfoLayout = new HorizontalLayout();
-        monthEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        NativeLabel monthEntitiesLabel = new NativeLabel("Month Entities:");
-        SecondaryKeyValueDisplayItem monthEntityCountItem = new SecondaryKeyValueDisplayItem(monthEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
-        SecondaryKeyValueDisplayItem monthEventCountItem = new SecondaryKeyValueDisplayItem(monthEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
-        Icon monthInfoTitleIcon = new Icon(VaadinIcon.CALENDAR);
-        monthInfoTitleIcon.setSize("10px");
-        SectionWallTitle monthInfoSectionWallTitle = new SectionWallTitle(monthInfoTitleIcon,monthEntitiesLabel);
-        SectionWallContainer monthInfoSectionWallContainer = new SectionWallContainer(monthInfoSectionWallTitle,monthEntitiesInfoLayout);
-        monthInfoSectionWallContainer.setOpened(false);
-        monthInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+        HorizontalLayout countryRegionEntitiesInfoLayout = new HorizontalLayout();
+        countryRegionEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel countryRegionEntitiesLabel = new NativeLabel("Country_Region Entities:");
+        SecondaryKeyValueDisplayItem countryRegionEntityCountItem = new SecondaryKeyValueDisplayItem(countryRegionEntitiesInfoLayout,FontAwesome.Solid.MAP.create(),"","-");
+        SecondaryKeyValueDisplayItem countryRegionEventCountItem = new SecondaryKeyValueDisplayItem(countryRegionEntitiesInfoLayout,FontAwesome.Solid.MAP_LOCATION.create(),"","-");
+        Icon countryRegionInfoTitleIcon = new Icon(VaadinIcon.INSTITUTION);
+        countryRegionInfoTitleIcon.setSize("10px");
+        SectionWallTitle countryRegionInfoSectionWallTitle = new SectionWallTitle(countryRegionInfoTitleIcon,countryRegionEntitiesLabel);
+        SectionWallContainer countryRegionInfoSectionWallContainer = new SectionWallContainer(countryRegionInfoSectionWallTitle,countryRegionEntitiesInfoLayout);
+        countryRegionInfoSectionWallContainer.setOpened(false);
+        countryRegionInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
                 //setupTimeFlowRuntimeStatisticInfo();
             }
         });
-        timeFlowInfoWallContainerLayout.add(monthInfoSectionWallContainer);
+        geospatialRegionInfoWallContainerLayout.add(countryRegionInfoSectionWallContainer);
 
-        HorizontalLayout dayEntitiesInfoLayout = new HorizontalLayout();
-        dayEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        NativeLabel dayEntitiesLabel = new NativeLabel("Day Entities:");
-        SecondaryKeyValueDisplayItem dayEntityCountItem = new SecondaryKeyValueDisplayItem(dayEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
-        SecondaryKeyValueDisplayItem dayEventCountItem = new SecondaryKeyValueDisplayItem(dayEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
-        Icon dayInfoTitleIcon = new Icon(VaadinIcon.CALENDAR);
-        dayInfoTitleIcon.setSize("10px");
-        SectionWallTitle dayInfoSectionWallTitle = new SectionWallTitle(dayInfoTitleIcon,dayEntitiesLabel);
-        SectionWallContainer dayInfoSectionWallContainer = new SectionWallContainer(dayInfoSectionWallTitle,dayEntitiesInfoLayout);
-        dayInfoSectionWallContainer.setOpened(false);
-        dayInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+        HorizontalLayout provinceEntitiesInfoLayout = new HorizontalLayout();
+        provinceEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel provinceEntitiesLabel = new NativeLabel("Province Entities:");
+        SecondaryKeyValueDisplayItem provinceEntityCountItem = new SecondaryKeyValueDisplayItem(provinceEntitiesInfoLayout,FontAwesome.Solid.MAP.create(),"","-");
+        SecondaryKeyValueDisplayItem provinceEventCountItem = new SecondaryKeyValueDisplayItem(provinceEntitiesInfoLayout,FontAwesome.Solid.MAP_LOCATION.create(),"","-");
+        Icon provinceInfoTitleIcon = new Icon(VaadinIcon.OFFICE);
+        provinceInfoTitleIcon.setSize("10px");
+        SectionWallTitle provinceInfoSectionWallTitle = new SectionWallTitle(provinceInfoTitleIcon,provinceEntitiesLabel);
+        SectionWallContainer provinceInfoSectionWallContainer = new SectionWallContainer(provinceInfoSectionWallTitle,provinceEntitiesInfoLayout);
+        provinceInfoSectionWallContainer.setOpened(false);
+        provinceInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
                 //setupTimeFlowRuntimeStatisticInfo();
             }
         });
-        timeFlowInfoWallContainerLayout.add(dayInfoSectionWallContainer);
+        geospatialRegionInfoWallContainerLayout.add(provinceInfoSectionWallContainer);
 
-        HorizontalLayout hourEntitiesInfoLayout = new HorizontalLayout();
-        hourEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        NativeLabel hourEntitiesLabel = new NativeLabel("Hour Entities:");
-        SecondaryKeyValueDisplayItem hourEntityCountItem = new SecondaryKeyValueDisplayItem(hourEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
-        SecondaryKeyValueDisplayItem hourEventCountItem = new SecondaryKeyValueDisplayItem(hourEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
-        Icon hourInfoTitleIcon = new Icon(VaadinIcon.CLOCK);
-        hourInfoTitleIcon.setSize("10px");
-        SectionWallTitle hourInfoSectionWallTitle = new SectionWallTitle(hourInfoTitleIcon,hourEntitiesLabel);
-        SectionWallContainer hourInfoSectionWallContainer = new SectionWallContainer(hourInfoSectionWallTitle,hourEntitiesInfoLayout);
-        hourInfoSectionWallContainer.setOpened(false);
-        hourInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+        HorizontalLayout prefectureEntitiesInfoLayout = new HorizontalLayout();
+        prefectureEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel prefectureEntitiesLabel = new NativeLabel("Prefecture Entities:");
+        SecondaryKeyValueDisplayItem prefectureEntityCountItem = new SecondaryKeyValueDisplayItem(prefectureEntitiesInfoLayout,FontAwesome.Solid.MAP.create(),"","-");
+        SecondaryKeyValueDisplayItem prefectureEventCountItem = new SecondaryKeyValueDisplayItem(prefectureEntitiesInfoLayout,FontAwesome.Solid.MAP_LOCATION.create(),"","-");
+        Icon prefectureInfoTitleIcon = new Icon(VaadinIcon.BUILDING);
+        prefectureInfoTitleIcon.setSize("10px");
+        SectionWallTitle prefectureInfoSectionWallTitle = new SectionWallTitle(prefectureInfoTitleIcon,prefectureEntitiesLabel);
+        SectionWallContainer prefectureInfoSectionWallContainer = new SectionWallContainer(prefectureInfoSectionWallTitle,prefectureEntitiesInfoLayout);
+        prefectureInfoSectionWallContainer.setOpened(false);
+        prefectureInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
                 //setupTimeFlowRuntimeStatisticInfo();
             }
         });
-        timeFlowInfoWallContainerLayout.add(hourInfoSectionWallContainer);
+        geospatialRegionInfoWallContainerLayout.add(prefectureInfoSectionWallContainer);
 
-        HorizontalLayout minuteEntitiesInfoLayout = new HorizontalLayout();
-        minuteEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        NativeLabel minuteEntitiesLabel = new NativeLabel("Minute Entities:");
-        SecondaryKeyValueDisplayItem minuteEntityCountItem = new SecondaryKeyValueDisplayItem(minuteEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
-        SecondaryKeyValueDisplayItem minuteEventCountItem = new SecondaryKeyValueDisplayItem(minuteEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
-        Icon minuteInfoTitleIcon = new Icon(VaadinIcon.CLOCK);
-        minuteInfoTitleIcon.setSize("10px");
-        SectionWallTitle minuteInfoSectionWallTitle = new SectionWallTitle(minuteInfoTitleIcon,minuteEntitiesLabel);
-        SectionWallContainer minuteInfoSectionWallContainer = new SectionWallContainer(minuteInfoSectionWallTitle,minuteEntitiesInfoLayout);
-        minuteInfoSectionWallContainer.setOpened(false);
-        minuteInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+        HorizontalLayout countyEntitiesInfoLayout = new HorizontalLayout();
+        countyEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel countyEntitiesLabel = new NativeLabel("County Entities:");
+        SecondaryKeyValueDisplayItem countyEntityCountItem = new SecondaryKeyValueDisplayItem(countyEntitiesInfoLayout,FontAwesome.Solid.MAP.create(),"","-");
+        SecondaryKeyValueDisplayItem countyEventCountItem = new SecondaryKeyValueDisplayItem(countyEntitiesInfoLayout,FontAwesome.Solid.MAP_LOCATION.create(),"","-");
+        Icon countyInfoTitleIcon = new Icon(VaadinIcon.FACTORY);
+        countyInfoTitleIcon.setSize("10px");
+        SectionWallTitle countyInfoSectionWallTitle = new SectionWallTitle(countyInfoTitleIcon,countyEntitiesLabel);
+        SectionWallContainer countyInfoSectionWallContainer = new SectionWallContainer(countyInfoSectionWallTitle,countyEntitiesInfoLayout);
+        countyInfoSectionWallContainer.setOpened(false);
+        countyInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
                 //setupTimeFlowRuntimeStatisticInfo();
             }
         });
-        timeFlowInfoWallContainerLayout.add(minuteInfoSectionWallContainer);
+        geospatialRegionInfoWallContainerLayout.add(countyInfoSectionWallContainer);
+
+
+        HorizontalLayout townshipEntitiesInfoLayout = new HorizontalLayout();
+        townshipEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel townshipEntitiesLabel = new NativeLabel("Township Entities:");
+        SecondaryKeyValueDisplayItem townshipEntityCountItem = new SecondaryKeyValueDisplayItem(townshipEntitiesInfoLayout,FontAwesome.Solid.MAP.create(),"","-");
+        SecondaryKeyValueDisplayItem townshipEventCountItem = new SecondaryKeyValueDisplayItem(townshipEntitiesInfoLayout,FontAwesome.Solid.MAP_LOCATION.create(),"","-");
+        Icon townshipInfoTitleIcon = new Icon(VaadinIcon.SHOP);
+        townshipInfoTitleIcon.setSize("10px");
+        SectionWallTitle townshipInfoSectionWallTitle = new SectionWallTitle(townshipInfoTitleIcon,townshipEntitiesLabel);
+        SectionWallContainer townshipInfoSectionWallContainer = new SectionWallContainer(townshipInfoSectionWallTitle,townshipEntitiesInfoLayout);
+        townshipInfoSectionWallContainer.setOpened(false);
+        townshipInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+                //setupTimeFlowRuntimeStatisticInfo();
+            }
+        });
+        geospatialRegionInfoWallContainerLayout.add(townshipInfoSectionWallContainer);
+
+        HorizontalLayout villageEntitiesInfoLayout = new HorizontalLayout();
+        villageEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel villageEntitiesLabel = new NativeLabel("Village Entities:");
+        SecondaryKeyValueDisplayItem villageEntityCountItem = new SecondaryKeyValueDisplayItem(villageEntitiesInfoLayout,FontAwesome.Solid.MAP.create(),"","-");
+        SecondaryKeyValueDisplayItem villageEventCountItem = new SecondaryKeyValueDisplayItem(villageEntitiesInfoLayout,FontAwesome.Solid.MAP_LOCATION.create(),"","-");
+        Icon villageInfoTitleIcon = new Icon(VaadinIcon.HOME);
+        villageInfoTitleIcon.setSize("10px");
+        SectionWallTitle villageInfoSectionWallTitle = new SectionWallTitle(villageInfoTitleIcon,villageEntitiesLabel);
+        SectionWallContainer villageInfoSectionWallContainer = new SectionWallContainer(villageInfoSectionWallTitle,villageEntitiesInfoLayout);
+        villageInfoSectionWallContainer.setOpened(false);
+        villageInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+                //setupTimeFlowRuntimeStatisticInfo();
+            }
+        });
+        geospatialRegionInfoWallContainerLayout.add(villageInfoSectionWallContainer);
 
 
 
