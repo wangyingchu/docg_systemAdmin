@@ -6,6 +6,7 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -15,15 +16,18 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
-import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
-import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
-import com.viewfunction.docg.util.ResourceHolder;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.GeospatialRegionSummaryStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.GeospatialRegion;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.*;
+
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +40,10 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
     private HorizontalLayout rightSideContainerLayout;
     private int contentContainerHeightOffset;
     private Registration listener;
+    private SecondaryKeyValueDisplayItem totalGeospatialScaleEntityCountDisplayItem;
+    private SecondaryKeyValueDisplayItem totalGeospatialScaleEventCountDisplayItem;
+    private NumberFormat numberFormat;
+
     public GeospatialRegionDetailUI(){
         //this.binder = new Binder<>();
         this.contentContainerHeightOffset = 265;
@@ -74,7 +82,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             //timeFlowCorrelationExploreView.setViewWidth(browserWidth - 600);
             //timeFlowCorrelationExploreView.setViewHeight(browserHeight - contentContainerHeightOffset);
         }));
-        //renderTimeFlowBasicInfo();
+        renderGeospatialRegionBasicInfo();
         //ResourceHolder.getApplicationBlackboard().addListener(this);
     }
 
@@ -100,7 +108,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         leftSideContainerLayout.setMargin(false);
 
         mainContainerLayout.add(leftSideContainerLayout);
-        leftSideContainerLayout.setWidth(270, Unit.PIXELS);
+        leftSideContainerLayout.setWidth(320, Unit.PIXELS);
         leftSideContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"地理空间区域概览");
@@ -133,26 +141,6 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
 
         SubMenu operationSubItems = timeFlowOperationMenu.getSubMenu();
 
-        HorizontalLayout action0Layout = new HorizontalLayout();
-        action0Layout.setPadding(false);
-        action0Layout.setSpacing(false);
-        action0Layout.setMargin(false);
-        action0Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        Icon action0Icon = VaadinIcon.ARROWS_LONG_H.create();
-        action0Icon.setSize("10px");
-        Span action0Space = new Span();
-        action0Space.setWidth(6,Unit.PIXELS);
-        NativeLabel action0Label = new NativeLabel("扩展时间流年跨度");
-        action0Label.addClassNames("text-xs","font-semibold","text-secondary");
-        action0Layout.add(action0Icon,action0Space,action0Label);
-        MenuItem expandFlowActionItem = operationSubItems.addItem(action0Layout);
-        expandFlowActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                //renderExpendTimeFlowYearsUI();
-            }
-        });
-
         HorizontalLayout action1Layout = new HorizontalLayout();
         action1Layout.setPadding(false);
         action1Layout.setSpacing(false);
@@ -180,6 +168,15 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
         timeFlowInformationLayout.add(secondaryTitleActionBar);
 
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        totalGeospatialScaleEntityCountDisplayItem = new SecondaryKeyValueDisplayItem(horizontalLayout, FontAwesome.Solid.MAP.create(),"GeospatialScaleEntity 数量:","-");
+        timeFlowInformationLayout.add(horizontalLayout);
+
+        HorizontalLayout horizontalLayout2 = new HorizontalLayout();
+        horizontalLayout2.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        totalGeospatialScaleEventCountDisplayItem = new SecondaryKeyValueDisplayItem(horizontalLayout2,FontAwesome.Solid.MAP_LOCATION.create(),"GeospatialScaleEvent 数量:","-");
+        timeFlowInformationLayout.add(horizontalLayout2);
 
 
 
@@ -187,11 +184,102 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
 
 
 
+        VerticalLayout timeFlowInfoWallContainerLayout = new VerticalLayout();
+        timeFlowInfoWallContainerLayout.setMargin(false);
+        timeFlowInfoWallContainerLayout.setPadding(false);
+        timeFlowInfoWallContainerLayout.setSpacing(false);
+        timeFlowInfoWallContainerLayout.setWidth(95,Unit.PERCENTAGE);
+        timeFlowInformationLayout.add(timeFlowInfoWallContainerLayout);
 
+        HorizontalLayout yearEntitiesInfoLayout = new HorizontalLayout();
+        yearEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel yearEntitiesLabel = new NativeLabel("Year Entities:");
+        SecondaryKeyValueDisplayItem yearEntityCountItem = new SecondaryKeyValueDisplayItem(yearEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
+        SecondaryKeyValueDisplayItem yearEventCountItem = new SecondaryKeyValueDisplayItem(yearEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
+        Icon yearInfoTitleIcon = new Icon(VaadinIcon.CALENDAR);
+        yearInfoTitleIcon.setSize("10px");
+        SectionWallTitle yearInfoSectionWallTitle = new SectionWallTitle(yearInfoTitleIcon,yearEntitiesLabel);
+        SectionWallContainer yearInfoSectionWallContainer = new SectionWallContainer(yearInfoSectionWallTitle,yearEntitiesInfoLayout);
+        yearInfoSectionWallContainer.setOpened(false);
+        yearInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+                //setupTimeFlowRuntimeStatisticInfo();
+            }
+        });
+        timeFlowInfoWallContainerLayout.add(yearInfoSectionWallContainer);
 
+        HorizontalLayout monthEntitiesInfoLayout = new HorizontalLayout();
+        monthEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel monthEntitiesLabel = new NativeLabel("Month Entities:");
+        SecondaryKeyValueDisplayItem monthEntityCountItem = new SecondaryKeyValueDisplayItem(monthEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
+        SecondaryKeyValueDisplayItem monthEventCountItem = new SecondaryKeyValueDisplayItem(monthEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
+        Icon monthInfoTitleIcon = new Icon(VaadinIcon.CALENDAR);
+        monthInfoTitleIcon.setSize("10px");
+        SectionWallTitle monthInfoSectionWallTitle = new SectionWallTitle(monthInfoTitleIcon,monthEntitiesLabel);
+        SectionWallContainer monthInfoSectionWallContainer = new SectionWallContainer(monthInfoSectionWallTitle,monthEntitiesInfoLayout);
+        monthInfoSectionWallContainer.setOpened(false);
+        monthInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+                //setupTimeFlowRuntimeStatisticInfo();
+            }
+        });
+        timeFlowInfoWallContainerLayout.add(monthInfoSectionWallContainer);
 
+        HorizontalLayout dayEntitiesInfoLayout = new HorizontalLayout();
+        dayEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel dayEntitiesLabel = new NativeLabel("Day Entities:");
+        SecondaryKeyValueDisplayItem dayEntityCountItem = new SecondaryKeyValueDisplayItem(dayEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
+        SecondaryKeyValueDisplayItem dayEventCountItem = new SecondaryKeyValueDisplayItem(dayEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
+        Icon dayInfoTitleIcon = new Icon(VaadinIcon.CALENDAR);
+        dayInfoTitleIcon.setSize("10px");
+        SectionWallTitle dayInfoSectionWallTitle = new SectionWallTitle(dayInfoTitleIcon,dayEntitiesLabel);
+        SectionWallContainer dayInfoSectionWallContainer = new SectionWallContainer(dayInfoSectionWallTitle,dayEntitiesInfoLayout);
+        dayInfoSectionWallContainer.setOpened(false);
+        dayInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+                //setupTimeFlowRuntimeStatisticInfo();
+            }
+        });
+        timeFlowInfoWallContainerLayout.add(dayInfoSectionWallContainer);
 
+        HorizontalLayout hourEntitiesInfoLayout = new HorizontalLayout();
+        hourEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel hourEntitiesLabel = new NativeLabel("Hour Entities:");
+        SecondaryKeyValueDisplayItem hourEntityCountItem = new SecondaryKeyValueDisplayItem(hourEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
+        SecondaryKeyValueDisplayItem hourEventCountItem = new SecondaryKeyValueDisplayItem(hourEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
+        Icon hourInfoTitleIcon = new Icon(VaadinIcon.CLOCK);
+        hourInfoTitleIcon.setSize("10px");
+        SectionWallTitle hourInfoSectionWallTitle = new SectionWallTitle(hourInfoTitleIcon,hourEntitiesLabel);
+        SectionWallContainer hourInfoSectionWallContainer = new SectionWallContainer(hourInfoSectionWallTitle,hourEntitiesInfoLayout);
+        hourInfoSectionWallContainer.setOpened(false);
+        hourInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+                //setupTimeFlowRuntimeStatisticInfo();
+            }
+        });
+        timeFlowInfoWallContainerLayout.add(hourInfoSectionWallContainer);
 
+        HorizontalLayout minuteEntitiesInfoLayout = new HorizontalLayout();
+        minuteEntitiesInfoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        NativeLabel minuteEntitiesLabel = new NativeLabel("Minute Entities:");
+        SecondaryKeyValueDisplayItem minuteEntityCountItem = new SecondaryKeyValueDisplayItem(minuteEntitiesInfoLayout,FontAwesome.Solid.CLOCK.create(),"","-");
+        SecondaryKeyValueDisplayItem minuteEventCountItem = new SecondaryKeyValueDisplayItem(minuteEntitiesInfoLayout,FontAwesome.Solid.BEZIER_CURVE.create(),"","-");
+        Icon minuteInfoTitleIcon = new Icon(VaadinIcon.CLOCK);
+        minuteInfoTitleIcon.setSize("10px");
+        SectionWallTitle minuteInfoSectionWallTitle = new SectionWallTitle(minuteInfoTitleIcon,minuteEntitiesLabel);
+        SectionWallContainer minuteInfoSectionWallContainer = new SectionWallContainer(minuteInfoSectionWallTitle,minuteEntitiesInfoLayout);
+        minuteInfoSectionWallContainer.setOpened(false);
+        minuteInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+                //setupTimeFlowRuntimeStatisticInfo();
+            }
+        });
+        timeFlowInfoWallContainerLayout.add(minuteInfoSectionWallContainer);
 
 
 
@@ -251,6 +339,20 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
 
 
     }
+
+
+    private void renderGeospatialRegionBasicInfo(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
+        GeospatialRegionSummaryStatistics geospatialRegionSummaryStatistics = geospatialRegion.getGeospatialRegionSummaryStatistics();
+        this.numberFormat = NumberFormat.getInstance();
+
+        totalGeospatialScaleEntityCountDisplayItem.updateDisplayValue(this.numberFormat.format(geospatialRegionSummaryStatistics.getContainsTotalGeospatialScaleEntityCount()));
+        totalGeospatialScaleEventCountDisplayItem.updateDisplayValue(this.numberFormat.format(geospatialRegionSummaryStatistics.getRefersTotalGeospatialScaleEventCount()));
+
+
+    }
+
 
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
