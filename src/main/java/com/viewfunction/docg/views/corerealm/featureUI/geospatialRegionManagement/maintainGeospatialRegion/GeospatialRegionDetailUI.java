@@ -28,6 +28,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.GeospatialRegionRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.GeospatialRegionSummaryStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
@@ -673,24 +674,32 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
         List<GeospatialScaleEntity> geospatialScaleEntityList = null;
         geospatialScaleEntitiesGrid.setItems(new ArrayList<>());
-        switch (geospatialScaleGrade) {
-            case CONTINENT:
-                geospatialScaleEntityList = geospatialRegion.listContinentEntities();
-                break;
-            case COUNTRY_REGION:
-                geospatialScaleEntityList = geospatialRegion.listCountryRegionEntities(null,null);
-                break;
-            case PROVINCE:
-                //geospatialScaleEntityList = geospatialRegion.listProvinceEntities()
-                break;
-            case PREFECTURE:
-                break;
-            case COUNTY:
-                break;
-            case TOWNSHIP:
-                break;
-            case VILLAGE:
-                break;
+        try {
+            switch (geospatialScaleGrade) {
+                case CONTINENT:
+                    geospatialScaleEntityList = geospatialRegion.listContinentEntities();
+                    break;
+                case COUNTRY_REGION:
+                    geospatialScaleEntityList = geospatialRegion.listCountryRegionEntities(null,null);
+                    break;
+                case PROVINCE:
+                    geospatialScaleEntityList = geospatialRegion.listProvinceEntities(null,null,null);
+                    break;
+                case PREFECTURE:
+                    geospatialScaleEntityList = geospatialRegion.listPrefectureEntities(null,null,null,null);
+                    break;
+                case COUNTY:
+                    geospatialScaleEntityList = geospatialRegion.listCountyEntities(null,null,null,null,null);
+                    break;
+                case TOWNSHIP:
+                    geospatialScaleEntityList = geospatialRegion.listTownshipEntities(null,null,null,null,null,null);
+                    break;
+                case VILLAGE:
+                    geospatialScaleEntityList = geospatialRegion.listVillageEntities(null,null,null,null,null,null,null);
+                    break;
+            }
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
         }
         geospatialScaleEntitiesGrid.setItems(geospatialScaleEntityList);
     }
@@ -707,7 +716,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             case TOWNSHIP -> geospatialScaleEntityClassName = RealmConstant.GeospatialScaleTownshipEntityClass;
             case VILLAGE -> geospatialScaleEntityClassName = RealmConstant.GeospatialScaleVillageEntityClass;
         }
-        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(geospatialScaleEntityClassName,"geospatialScaleEntity.getTimeScaleEntityUID()");
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(geospatialScaleEntityClassName,geospatialScaleEntity.getGeospatialScaleEntityUID());
 
         List<Component> actionComponentList = new ArrayList<>();
 
@@ -751,7 +760,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
         spaceDivLayout5.setWidth(5,Unit.PIXELS);
         titleDetailLayout.add(spaceDivLayout5);
-        NativeLabel conceptionEntityUIDLabel = new NativeLabel("timeScaleEntity.getTimeScaleEntityUID()");
+        NativeLabel conceptionEntityUIDLabel = new NativeLabel(geospatialScaleEntity.getGeospatialScaleEntityUID());
         titleDetailLayout.add(conceptionEntityUIDLabel);
 
         actionComponentList.add(titleDetailLayout);
