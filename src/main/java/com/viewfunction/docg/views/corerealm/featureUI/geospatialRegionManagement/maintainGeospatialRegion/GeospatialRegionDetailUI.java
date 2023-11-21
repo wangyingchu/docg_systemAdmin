@@ -5,10 +5,14 @@ import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.details.Details;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -18,8 +22,7 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
@@ -27,11 +30,12 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.GeospatialRegionRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.GeospatialRegionSummaryStatistics;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.GeospatialRegion;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -62,8 +66,16 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
     private SecondaryKeyValueDisplayItem townshipEventCountItem;
     private SecondaryKeyValueDisplayItem villageEntityCountItem;
     private SecondaryKeyValueDisplayItem villageEventCountItem;
+    private ComboBox<String> continentValueTextField;
+    private ComboBox<String> countryRegionTextField;
+    private ComboBox<String> provinceValueTextField;
+    private ComboBox<String> prefectureValueTextField;
+    private ComboBox<String> countyValueTextField;
+    private ComboBox<String> townshipValueTextField;
+    private ComboBox<String> villageValueTextField;
     private boolean timeFlowRuntimeStatisticsQueried;
     private NumberFormat numberFormat;
+    private Grid<GeospatialScaleEntity> geospatialScaleEntitiesGrid;
 
     public GeospatialRegionDetailUI(){
         this.contentContainerHeightOffset = 265;
@@ -329,6 +341,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 .set("padding-bottom", "var(--lumo-space-m)");
 
         HorizontalLayout checkBoxesContainer1 = new HorizontalLayout();
+        checkBoxesContainer1.setWidth(280,Unit.PIXELS);
         checkBoxesContainer1.getStyle().set("padding-top", "var(--lumo-space-m)");
         leftSideSectionContainerScrollLayout.add(checkBoxesContainer1);
 
@@ -359,10 +372,21 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         continentFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         continentValueContainer.add(continentFilterText);
         continentValueContainer.setVerticalComponentAlignment(Alignment.CENTER,continentFilterText);
-        TextField continentValueTextField = new TextField();
-        continentValueTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        continentValueTextField = new ComboBox();
+        continentValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         continentValueTextField.setWidth(200,Unit.PIXELS);
         continentValueContainer.add(continentValueTextField);
+        Button listContinentEntitiesButton = new Button();
+        listContinentEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        listContinentEntitiesButton.setTooltipText("检索全部洲际尺度实体");
+        listContinentEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
+        continentValueTextField.setPrefixComponent(listContinentEntitiesButton);
+        listContinentEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.CONTINENT);
+            }
+        });
 
         HorizontalLayout countryRegionValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(countryRegionValueContainer);
@@ -371,10 +395,21 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         countryRegionFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         countryRegionValueContainer.add(countryRegionFilterText);
         countryRegionValueContainer.setVerticalComponentAlignment(Alignment.CENTER,countryRegionFilterText);
-        TextField countryRegionTextField = new TextField();
-        countryRegionTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        countryRegionTextField = new ComboBox();
+        countryRegionTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         countryRegionTextField.setWidth(200,Unit.PIXELS);
         countryRegionValueContainer.add(countryRegionTextField);
+        Button listCountryRegionEntitiesButton = new Button();
+        listCountryRegionEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        listCountryRegionEntitiesButton.setTooltipText("检索全部国家地区尺度实体");
+        listCountryRegionEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
+        countryRegionTextField.setPrefixComponent(listCountryRegionEntitiesButton);
+        listCountryRegionEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.COUNTRY_REGION);
+            }
+        });
 
         HorizontalLayout provinceValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(provinceValueContainer);
@@ -383,10 +418,21 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         provinceFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         provinceValueContainer.add(provinceFilterText);
         provinceValueContainer.setVerticalComponentAlignment(Alignment.CENTER,provinceFilterText);
-        TextField provinceValueTextField = new TextField();
-        provinceValueTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        provinceValueTextField = new ComboBox();
+        provinceValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         provinceValueTextField.setWidth(200,Unit.PIXELS);
         provinceValueContainer.add(provinceValueTextField);
+        Button listProvinceEntitiesButton = new Button();
+        listProvinceEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        listProvinceEntitiesButton.setTooltipText("检索全部省级尺度实体");
+        listProvinceEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
+        provinceValueTextField.setPrefixComponent(listProvinceEntitiesButton);
+        listProvinceEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.PROVINCE);
+            }
+        });
 
         HorizontalLayout prefectureValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(prefectureValueContainer);
@@ -395,10 +441,21 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         prefectureFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         prefectureValueContainer.add(prefectureFilterText);
         prefectureValueContainer.setVerticalComponentAlignment(Alignment.CENTER,prefectureFilterText);
-        TextField prefectureValueTextField = new TextField();
-        prefectureValueTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        prefectureValueTextField = new ComboBox();
+        prefectureValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         prefectureValueTextField.setWidth(200,Unit.PIXELS);
         prefectureValueContainer.add(prefectureValueTextField);
+        Button listPrefectureEntitiesButton = new Button();
+        listPrefectureEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        listPrefectureEntitiesButton.setTooltipText("检索全部地级尺度实体");
+        listPrefectureEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
+        prefectureValueTextField.setPrefixComponent(listPrefectureEntitiesButton);
+        listPrefectureEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.PREFECTURE);
+            }
+        });
 
         HorizontalLayout countyValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(countyValueContainer);
@@ -407,10 +464,21 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         countyFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         countyValueContainer.add(countyFilterText);
         countyValueContainer.setVerticalComponentAlignment(Alignment.CENTER,countyFilterText);
-        TextField countyValueTextField = new TextField();
-        countyValueTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        countyValueTextField = new ComboBox();
+        countyValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         countyValueTextField.setWidth(200,Unit.PIXELS);
         countyValueContainer.add(countyValueTextField);
+        Button listCountyEntitiesButton = new Button();
+        listCountyEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        listCountyEntitiesButton.setTooltipText("检索全部县级尺度实体");
+        listCountyEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
+        countyValueTextField.setPrefixComponent(listCountyEntitiesButton);
+        listCountyEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.COUNTY);
+            }
+        });
 
         HorizontalLayout townshipValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(townshipValueContainer);
@@ -419,10 +487,21 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         townshipFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         townshipValueContainer.add(townshipFilterText);
         townshipValueContainer.setVerticalComponentAlignment(Alignment.CENTER,townshipFilterText);
-        TextField townshipValueTextField = new TextField();
-        townshipValueTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        townshipValueTextField = new ComboBox();
+        townshipValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         townshipValueTextField.setWidth(200,Unit.PIXELS);
         townshipValueContainer.add(townshipValueTextField);
+        Button listTownshipEntitiesButton = new Button();
+        listTownshipEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        listTownshipEntitiesButton.setTooltipText("检索全部乡级尺度实体");
+        listTownshipEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
+        townshipValueTextField.setPrefixComponent(listTownshipEntitiesButton);
+        listTownshipEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.TOWNSHIP);
+            }
+        });
 
         HorizontalLayout villageValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(villageValueContainer);
@@ -431,10 +510,21 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         villageFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         villageValueContainer.add(villageFilterText);
         villageValueContainer.setVerticalComponentAlignment(Alignment.CENTER,villageFilterText);
-        TextField villageValueTextField = new TextField();
-        villageValueTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        villageValueTextField = new ComboBox();
+        villageValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         villageValueTextField.setWidth(200,Unit.PIXELS);
         villageValueContainer.add(villageValueTextField);
+        Button listVillageEntitiesButton = new Button();
+        listVillageEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        listVillageEntitiesButton.setTooltipText("检索全部乡级尺度实体");
+        listVillageEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
+        villageValueTextField.setPrefixComponent(listVillageEntitiesButton);
+        listVillageEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.VILLAGE);
+            }
+        });
 
         HorizontalLayout heightSpaceDiv2 = new HorizontalLayout();
         heightSpaceDiv2.setWidth(10,Unit.PIXELS);
@@ -452,51 +542,84 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
         leftSideSectionContainerScrollLayout.add(executeQueryButton);
 
-
-
-
-
-
-
-
-
-
         middleContainerLayout = new VerticalLayout();
         middleContainerLayout.setSpacing(false);
         middleContainerLayout.setPadding(false);
         middleContainerLayout.setMargin(false);
 
         mainContainerLayout.add(middleContainerLayout);
-        middleContainerLayout.setWidth(300, Unit.PIXELS);
+        middleContainerLayout.setWidth(510, Unit.PIXELS);
         middleContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
-        SecondaryIconTitle filterTitle3 = new SecondaryIconTitle(FontAwesome.Solid.CLOCK.create(),"地理空间尺度实体检索结果");
+        SecondaryIconTitle filterTitle3 = new SecondaryIconTitle(FontAwesome.Solid.MAP.create(),"地理空间尺度实体检索结果");
         filterTitle3.getStyle().set("padding-left","10px");
         middleContainerLayout.add(filterTitle3);
 
-        HorizontalLayout heightSpaceDivM0 = new HorizontalLayout();
-        heightSpaceDivM0.setWidth(100,Unit.PERCENTAGE);
-        middleContainerLayout.add(heightSpaceDivM0);
-        heightSpaceDivM0.getStyle()
-                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
-                .set("padding-left", "var(--lumo-space-l)")
-                .set("padding-right", "var(--lumo-space-l)")
-                .set("padding-bottom", "var(--lumo-space-s)");
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(geospatialScaleEntity -> {
+            Icon eyeIcon = new Icon(VaadinIcon.EYE);
+            eyeIcon.setSize("20px");
+            Button timeScaleEntityDetailButton = new Button(eyeIcon, event -> {
+                if(geospatialScaleEntity instanceof GeospatialScaleEntity){
+                    renderGeospatialScaleEntityDetailUI((GeospatialScaleEntity)geospatialScaleEntity);
+                }
+            });
+            timeScaleEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            timeScaleEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            timeScaleEntityDetailButton.setTooltipText("显示地理空间区域尺度实体详情");
 
+            HorizontalLayout buttons = new HorizontalLayout(timeScaleEntityDetailButton);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(15,Unit.PIXELS);
+            buttons.setWidth(80,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
 
+        geospatialScaleEntitiesGrid = new Grid<>();
 
+        geospatialScaleEntitiesGrid.setWidth(500,Unit.PIXELS);
+        geospatialScaleEntitiesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER);
+        geospatialScaleEntitiesGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        geospatialScaleEntitiesGrid.addColumn(GeospatialScaleEntity::getGeospatialScaleGrade).setHeader("粒度").setKey("idx_0").setWidth("60px").setTooltipGenerator(new ItemLabelGenerator<GeospatialScaleEntity>() {
+            @Override
+            public String apply(GeospatialScaleEntity geospatialScaleEntity) {
+                return geospatialScaleEntity.getGeospatialScaleGrade().toString();
+            }
+        });
+        geospatialScaleEntitiesGrid.addColumn(GeospatialScaleEntity::getGeospatialCode).setHeader("空间编码").setKey("idx_1").setWidth("90px").setTooltipGenerator(new ItemLabelGenerator<GeospatialScaleEntity>() {
+            @Override
+            public String apply(GeospatialScaleEntity geospatialScaleEntity) {
+                return geospatialScaleEntity.getGeospatialCode();
+            }
+        });
+        geospatialScaleEntitiesGrid.addColumn(GeospatialScaleEntity::getChineseName).setHeader("中文名称").setKey("idx_2").setTooltipGenerator(new ItemLabelGenerator<GeospatialScaleEntity>() {
+            @Override
+            public String apply(GeospatialScaleEntity geospatialScaleEntity) {
+                return geospatialScaleEntity.getChineseName();
+            }
+        });
+        geospatialScaleEntitiesGrid.addColumn(GeospatialScaleEntity::getEnglishName).setHeader("英文名称").setKey("idx_3").setTooltipGenerator(new ItemLabelGenerator<GeospatialScaleEntity>() {
+            @Override
+            public String apply(GeospatialScaleEntity geospatialScaleEntity) {
+                return geospatialScaleEntity.getEnglishName();
+            }
+        });
+        geospatialScaleEntitiesGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_4").setWidth("60px");
 
+        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.LOCATION_ARROW,"粒度");
+        geospatialScaleEntitiesGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(false);
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.CODE,"空间编码");
+        geospatialScaleEntitiesGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.COMMENT_ELLIPSIS,"中文名称");
+        geospatialScaleEntitiesGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(VaadinIcon.COMMENT_ELLIPSIS_O,"英文名称");
+        geospatialScaleEntitiesGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
+        geospatialScaleEntitiesGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_1_idx4).setSortable(false);
 
-
-
-
-
-
-
-
-
-
-
+        middleContainerLayout.add(geospatialScaleEntitiesGrid);
 
 
         rightSideContainerLayout = new HorizontalLayout();
@@ -545,6 +668,99 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         }
     }
 
+    private void renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade geospatialScaleGrade) {
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
+        List<GeospatialScaleEntity> geospatialScaleEntityList = null;
+        geospatialScaleEntitiesGrid.setItems(new ArrayList<>());
+        switch (geospatialScaleGrade) {
+            case CONTINENT:
+                geospatialScaleEntityList = geospatialRegion.listContinentEntities();
+                break;
+            case COUNTRY_REGION:
+                geospatialScaleEntityList = geospatialRegion.listCountryRegionEntities(null,null);
+                break;
+            case PROVINCE:
+                //geospatialScaleEntityList = geospatialRegion.listProvinceEntities()
+                break;
+            case PREFECTURE:
+                break;
+            case COUNTY:
+                break;
+            case TOWNSHIP:
+                break;
+            case VILLAGE:
+                break;
+        }
+        geospatialScaleEntitiesGrid.setItems(geospatialScaleEntityList);
+    }
+
+    private void renderGeospatialScaleEntityDetailUI(GeospatialScaleEntity geospatialScaleEntity){
+        String geospatialScaleEntityClassName = RealmConstant.GeospatialScaleEntityClass;
+        GeospatialRegion.GeospatialScaleGrade currentGeospatialScaleGrade = geospatialScaleEntity.getGeospatialScaleGrade();
+        switch(currentGeospatialScaleGrade){
+            case CONTINENT -> geospatialScaleEntityClassName = RealmConstant.GeospatialScaleContinentEntityClass;
+            case COUNTRY_REGION -> geospatialScaleEntityClassName = RealmConstant.GeospatialScaleCountryRegionEntityClass;
+            case PROVINCE -> geospatialScaleEntityClassName = RealmConstant.GeospatialScaleProvinceEntityClass;
+            case PREFECTURE -> geospatialScaleEntityClassName = RealmConstant.GeospatialScalePrefectureEntityClass;
+            case COUNTY -> geospatialScaleEntityClassName = RealmConstant.GeospatialScaleCountyEntityClass;
+            case TOWNSHIP -> geospatialScaleEntityClassName = RealmConstant.GeospatialScaleTownshipEntityClass;
+            case VILLAGE -> geospatialScaleEntityClassName = RealmConstant.GeospatialScaleVillageEntityClass;
+        }
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(geospatialScaleEntityClassName,"geospatialScaleEntity.getTimeScaleEntityUID()");
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("10px");
+        titleDetailLayout.add(conceptionKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(geospatialScaleEntityClassName);
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+        conceptionEntityIcon.setSize("10px");
+        titleDetailLayout.add(conceptionEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel conceptionEntityUIDLabel = new NativeLabel("timeScaleEntity.getTimeScaleEntityUID()");
+        titleDetailLayout.add(conceptionEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
+    }
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
         return createIconItem(menu, iconName, label, ariaLabel, false);
