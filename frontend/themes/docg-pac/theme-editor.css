@@ -1,0 +1,11 @@
+/*
+ * This file has been created by the Vaadin Theme Editor. Please note that
+ * manual changes to individual CSS properties may be overwritten by the theme editor.
+ */
+vaadin-radio-group.geospatial-region-detail-ui-radio-group-1 vaadin-radio-button label { font-size:var(--lumo-font-size-xxs); }
+
+vaadin-radio-group.geospatial-region-detail-ui-radio-group-1::part(error-message) { font-size:var(--lumo-font-size-xxs); }
+
+vaadin-radio-group.geospatial-region-detail-ui-radio-group-1::part(helper-text) { font-size:var(--lumo-font-size-xxs); }
+
+vaadin-radio-group.geospatial-region-detail-ui-radio-group-1::part(label) { font-size:var(--lumo-font-size-s); }
