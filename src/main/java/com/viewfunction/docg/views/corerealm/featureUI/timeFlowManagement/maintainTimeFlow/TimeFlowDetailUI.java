@@ -102,14 +102,17 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private TimeFlowCorrelationExploreView timeFlowCorrelationExploreView;
     private int contentContainerHeightOffset;
     private boolean timeFlowRuntimeStatisticsQueried = false;
+    private NativeLabel resultNumberValue;
 
     public TimeFlowDetailUI(){
         this.binder = new Binder<>();
+        this.numberFormat = NumberFormat.getInstance();
         this.contentContainerHeightOffset = 265;
     }
 
     public TimeFlowDetailUI(String timeFlowName){
         this.timeFlowName = timeFlowName;
+        this.numberFormat = NumberFormat.getInstance();
         this.binder = new Binder<>();
         this.contentContainerHeightOffset = 265;
     }
@@ -717,9 +720,13 @@ public class TimeFlowDetailUI extends VerticalLayout implements
         middleContainerLayout.setWidth(300, Unit.PIXELS);
         middleContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
-        SecondaryIconTitle filterTitle3 = new SecondaryIconTitle(FontAwesome.Solid.CLOCK.create(),"时间尺度实体检索结果");
-        filterTitle3.getStyle().set("padding-left","10px");
-        middleContainerLayout.add(filterTitle3);
+        resultNumberValue = new NativeLabel("");
+        resultNumberValue.addClassNames("text-xs","font-bold");
+        resultNumberValue.getStyle().set("padding-right","10px");
+
+        SecondaryIconTitle filterResultTitle = new SecondaryIconTitle(FontAwesome.Solid.CLOCK.create(),"时间尺度实体检索结果",resultNumberValue);
+        filterResultTitle.getStyle().set("padding-left","10px");
+        middleContainerLayout.add(filterResultTitle);
 
         HorizontalLayout heightSpaceDivM0 = new HorizontalLayout();
         heightSpaceDivM0.setWidth(100,Unit.PERCENTAGE);
@@ -795,6 +802,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 List<TimeScaleEntity> timeScaleEntityList = new ArrayList<>();
                 timeScaleEntityList.add(onlyYearEntity);
                 renderTimeFlowCorrelationChart(""+onlyYear,timeScaleEntityList);
+                resultNumberValue.setText("实体总量："+this.numberFormat.format(timeScaleEntityList.size()));
                 startYearTextField.setValue(""+onlyYear);
             }else{
                 Integer firstYear = availableTimeSpanYearsList.get(0);
@@ -807,6 +815,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                     List<TimeScaleEntity> timeScaleEntityList = targetTimeFlow.getYearEntities(firstYear,firstYear + 10);
                     timeScaleEntitiesGrid.setItems(timeScaleEntityList);
                     renderTimeFlowCorrelationChart(""+firstYear+" - "+(firstYear + 10),timeScaleEntityList);
+                    resultNumberValue.setText("实体总量："+this.numberFormat.format(timeScaleEntityList.size()));
                 } catch (CoreRealmServiceRuntimeException e) {
                     throw new RuntimeException(e);
                 }
@@ -1157,6 +1166,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                 CommonUIOperationUtil.showPopupNotification("时间粒度实体查询操作成功，查询返回实体数: "+resultTimeScaleEntityList.size(),
                         NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
                 timeScaleEntitiesGrid.setItems(resultTimeScaleEntityList);
+                resultNumberValue.setText("实体总量："+this.numberFormat.format(resultTimeScaleEntityList.size()));
                 renderTimeFlowCorrelationChart(queryTimeArea,resultTimeScaleEntityList);
             }
         } catch (CoreRealmServiceRuntimeException e) {
@@ -1188,7 +1198,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
                         toYearValue.setText(""+lastYear);
                     }
                 }
-                this.numberFormat = NumberFormat.getInstance();
+
                 TimeFlowSummaryStatistics timeFlowSummaryStatistics = targetTimeFlow.getTimeFlowSummaryStatistics();
                 totalTimeScaleEntityCountDisplayItem.updateDisplayValue(this.numberFormat.format(timeFlowSummaryStatistics.getContainsTotalTimeScaleEntityCount()));
                 totalTimeScaleEventCountDisplayItem.updateDisplayValue(this.numberFormat.format(timeFlowSummaryStatistics.getRefersTotalTimeScaleEventCount()));

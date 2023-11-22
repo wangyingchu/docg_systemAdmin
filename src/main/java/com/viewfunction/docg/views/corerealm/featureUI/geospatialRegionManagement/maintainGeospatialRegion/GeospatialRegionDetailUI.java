@@ -19,6 +19,8 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -36,6 +38,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.text.NumberFormat;
@@ -784,10 +787,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         mainContainerLayout.add(rightSideContainerLayout);
         rightSideContainerLayout.setWidthFull();
         rightSideContainerLayout.setHeight(600,Unit.PIXELS);
-
-
     }
-
 
     private void renderGeospatialRegionBasicInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -855,6 +855,8 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             throw new RuntimeException(e);
         }
         geospatialScaleEntitiesGrid.setItems(geospatialScaleEntityList);
+        CommonUIOperationUtil.showPopupNotification("地理空间区域粒度实体查询操作成功，查询返回实体数: "+geospatialScaleEntityList.size(),
+                NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
     }
 
     private void renderGeospatialScaleEntityDetailUI(GeospatialScaleEntity geospatialScaleEntity){
