@@ -80,14 +80,22 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
     private boolean timeFlowRuntimeStatisticsQueried;
     private NumberFormat numberFormat;
     private Grid<GeospatialScaleEntity> geospatialScaleEntitiesGrid;
+    private NativeLabel resultNumberValue;
+    private RadioButtonGroup<String> geospatialPropertyRadioGroup;
+    private List<String> continentEntityCodeList;
+    private List<String> continentEntityCNameList;
+    private List<String> continentEntityENameList;
+    private GeospatialRegion.GeospatialProperty currentGeospatialProperty;
 
     public GeospatialRegionDetailUI(){
         this.contentContainerHeightOffset = 265;
+        this.numberFormat = NumberFormat.getInstance();
     }
 
     public GeospatialRegionDetailUI(String geospatialRegionName){
         this.geospatialRegionName = geospatialRegionName;
         this.contentContainerHeightOffset = 265;
+        this.numberFormat = NumberFormat.getInstance();
     }
 
     @Override
@@ -354,18 +362,19 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         checkBoxesContainer1.add(geospatialPropertyFilterText);
         checkBoxesContainer1.setVerticalComponentAlignment(Alignment.CENTER,geospatialPropertyFilterText);
 
-        RadioButtonGroup<String> geospatialPropertyRadioGroup = new RadioButtonGroup<>();
+        geospatialPropertyRadioGroup = new RadioButtonGroup<>();
         //<theme-editor-local-classname>
         geospatialPropertyRadioGroup.addClassName("geospatial-region-detail-ui-radio-group-1");
         geospatialPropertyRadioGroup.setItems("地理空间编码", "中文名称", "英文名称");
         checkBoxesContainer1.add(geospatialPropertyRadioGroup);
         checkBoxesContainer1.setVerticalComponentAlignment(Alignment.CENTER,geospatialPropertyRadioGroup);
         geospatialPropertyRadioGroup.setValue("中文名称");
+        currentGeospatialProperty = GeospatialRegion.GeospatialProperty.ChineseName;
         geospatialPropertyRadioGroup.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<RadioButtonGroup<String>, String>>() {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<RadioButtonGroup<String>, String> radioButtonGroupStringComponentValueChangeEvent) {
                 String newValue = radioButtonGroupStringComponentValueChangeEvent.getValue();
-                //setupTimeScaleGradeSearchElements(newValue);
+                switchGeospatialRegionSearchElementsInfo(newValue);
             }
         });
 
@@ -380,6 +389,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         continentValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         continentValueTextField.setWidth(200,Unit.PIXELS);
         continentValueContainer.add(continentValueTextField);
+        continentValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
+                setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.CONTINENT);
+            }
+        });
 
         HorizontalLayout buttonsGroupContainer1 = new HorizontalLayout();
         buttonsGroupContainer1.setSpacing(false);
@@ -406,12 +421,13 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         clearContinentEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                countryRegionTextField.setValue(null);
-                provinceValueTextField.setValue(null);
-                prefectureValueTextField.setValue(null);
-                countyValueTextField.setValue(null);
-                townshipValueTextField.setValue(null);
-                villageValueTextField.setValue(null);
+                continentValueTextField.clear();
+                countryRegionTextField.clear();
+                provinceValueTextField.clear();
+                prefectureValueTextField.clear();
+                countyValueTextField.clear();
+                townshipValueTextField.clear();
+                villageValueTextField.clear();
             }
         });
         buttonsGroupContainer1.add(clearContinentEntitiesQueryInputButton);
@@ -427,6 +443,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         countryRegionTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         countryRegionTextField.setWidth(200,Unit.PIXELS);
         countryRegionValueContainer.add(countryRegionTextField);
+        countryRegionTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
+                setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.COUNTRY_REGION);
+            }
+        });
 
         HorizontalLayout buttonsGroupContainer2 = new HorizontalLayout();
         buttonsGroupContainer2.setSpacing(false);
@@ -453,12 +475,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         clearCountryRegionEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                countryRegionTextField.setValue(null);
-                provinceValueTextField.setValue(null);
-                prefectureValueTextField.setValue(null);
-                countyValueTextField.setValue(null);
-                townshipValueTextField.setValue(null);
-                villageValueTextField.setValue(null);
+                countryRegionTextField.clear();
+                provinceValueTextField.clear();
+                prefectureValueTextField.clear();
+                countyValueTextField.clear();
+                townshipValueTextField.clear();
+                villageValueTextField.clear();
             }
         });
         buttonsGroupContainer2.add(clearCountryRegionEntitiesQueryInputButton);
@@ -474,6 +496,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         provinceValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         provinceValueTextField.setWidth(200,Unit.PIXELS);
         provinceValueContainer.add(provinceValueTextField);
+        provinceValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
+                setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.PROVINCE);
+            }
+        });
 
         HorizontalLayout buttonsGroupContainer3 = new HorizontalLayout();
         buttonsGroupContainer3.setSpacing(false);
@@ -500,11 +528,11 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         clearProvinceEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                provinceValueTextField.setValue(null);
-                prefectureValueTextField.setValue(null);
-                countyValueTextField.setValue(null);
-                townshipValueTextField.setValue(null);
-                villageValueTextField.setValue(null);
+                provinceValueTextField.clear();
+                prefectureValueTextField.clear();
+                countyValueTextField.clear();
+                townshipValueTextField.clear();
+                villageValueTextField.clear();
             }
         });
         buttonsGroupContainer3.add(clearProvinceEntitiesQueryInputButton);
@@ -520,6 +548,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         prefectureValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         prefectureValueTextField.setWidth(200,Unit.PIXELS);
         prefectureValueContainer.add(prefectureValueTextField);
+        prefectureValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
+                setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.PREFECTURE);
+            }
+        });
 
         HorizontalLayout buttonsGroupContainer4 = new HorizontalLayout();
         buttonsGroupContainer4.setSpacing(false);
@@ -546,10 +580,10 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         clearPrefectureEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                prefectureValueTextField.setValue(null);
-                countyValueTextField.setValue(null);
-                townshipValueTextField.setValue(null);
-                villageValueTextField.setValue(null);
+                prefectureValueTextField.clear();
+                countyValueTextField.clear();
+                townshipValueTextField.clear();
+                villageValueTextField.clear();
             }
         });
         buttonsGroupContainer4.add(clearPrefectureEntitiesQueryInputButton);
@@ -565,6 +599,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         countyValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         countyValueTextField.setWidth(200,Unit.PIXELS);
         countyValueContainer.add(countyValueTextField);
+        countyValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
+                setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.COUNTY);
+            }
+        });
 
         HorizontalLayout buttonsGroupContainer5 = new HorizontalLayout();
         buttonsGroupContainer5.setSpacing(false);
@@ -591,9 +631,9 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         clearCountyEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                countyValueTextField.setValue(null);
-                townshipValueTextField.setValue(null);
-                villageValueTextField.setValue(null);
+                countyValueTextField.clear();
+                townshipValueTextField.clear();
+                villageValueTextField.clear();
             }
         });
         buttonsGroupContainer5.add(clearCountyEntitiesQueryInputButton);
@@ -609,6 +649,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         townshipValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         townshipValueTextField.setWidth(200,Unit.PIXELS);
         townshipValueContainer.add(townshipValueTextField);
+        townshipValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
+                setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.TOWNSHIP);
+            }
+        });
 
         HorizontalLayout buttonsGroupContainer6 = new HorizontalLayout();
         buttonsGroupContainer6.setSpacing(false);
@@ -635,8 +681,8 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         clearTownshipEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                townshipValueTextField.setValue(null);
-                villageValueTextField.setValue(null);
+                townshipValueTextField.clear();
+                villageValueTextField.clear();
             }
         });
         buttonsGroupContainer6.add(clearTownshipEntitiesQueryInputButton);
@@ -652,6 +698,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         villageValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         villageValueTextField.setWidth(200,Unit.PIXELS);
         villageValueContainer.add(villageValueTextField);
+        villageValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
+                setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.VILLAGE);
+            }
+        });
 
         HorizontalLayout buttonsGroupContainer7 = new HorizontalLayout();
         buttonsGroupContainer7.setSpacing(false);
@@ -678,7 +730,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         clearVillageEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                villageValueTextField.setValue(null);
+                villageValueTextField.clear();
             }
         });
         buttonsGroupContainer7.add(clearVillageEntitiesQueryInputButton);
@@ -708,7 +760,11 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         middleContainerLayout.setWidth(510, Unit.PIXELS);
         middleContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
-        SecondaryIconTitle filterTitle3 = new SecondaryIconTitle(FontAwesome.Solid.MAP.create(),"地理空间尺度实体检索结果");
+        resultNumberValue = new NativeLabel("");
+        resultNumberValue.addClassNames("text-xs","font-bold");
+        resultNumberValue.getStyle().set("padding-right","10px");
+
+        SecondaryIconTitle filterTitle3 = new SecondaryIconTitle(FontAwesome.Solid.MAP.create(),"地理空间尺度实体检索结果",resultNumberValue);
         filterTitle3.getStyle().set("padding-left","10px");
         middleContainerLayout.add(filterTitle3);
 
@@ -793,9 +849,84 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
         GeospatialRegionSummaryStatistics geospatialRegionSummaryStatistics = geospatialRegion.getGeospatialRegionSummaryStatistics();
-        this.numberFormat = NumberFormat.getInstance();
         totalGeospatialScaleEntityCountDisplayItem.updateDisplayValue(this.numberFormat.format(geospatialRegionSummaryStatistics.getContainsTotalGeospatialScaleEntityCount()));
         totalGeospatialScaleEventCountDisplayItem.updateDisplayValue(this.numberFormat.format(geospatialRegionSummaryStatistics.getRefersTotalGeospatialScaleEventCount()));
+
+        List<GeospatialScaleEntity> allContinentEntityList = geospatialRegion.listContinentEntities();
+        continentEntityCodeList = new ArrayList<>();
+        continentEntityCNameList = new ArrayList<>();
+        continentEntityENameList = new ArrayList<>();
+
+        for(GeospatialScaleEntity currentGeospatialScaleEntity : allContinentEntityList){
+            continentEntityCodeList.add(currentGeospatialScaleEntity.getGeospatialCode());
+            continentEntityCNameList.add(currentGeospatialScaleEntity.getChineseName());
+            continentEntityENameList.add(currentGeospatialScaleEntity.getEnglishName());
+        }
+
+        String filterPropertyName = geospatialPropertyRadioGroup.getValue();
+        if("地理空间编码".equals(filterPropertyName)){
+            continentValueTextField.setItems(continentEntityCodeList);
+        }else if ("中文名称".equals(filterPropertyName)) {
+            continentValueTextField.setItems(continentEntityCNameList);
+        }else if ("英文名称".equals(filterPropertyName)) {
+            continentValueTextField.setItems(continentEntityENameList);
+        }
+    }
+
+    private void switchGeospatialRegionSearchElementsInfo(String propertyName){
+        continentValueTextField.clear();
+        continentValueTextField.setItems(new ArrayList<>());
+        if("地理空间编码".equals(propertyName)){
+            continentValueTextField.setItems(continentEntityCodeList);
+            currentGeospatialProperty = GeospatialRegion.GeospatialProperty.GeospatialCode;
+        }else if ("中文名称".equals(propertyName)) {
+            continentValueTextField.setItems(continentEntityCNameList);
+            currentGeospatialProperty = GeospatialRegion.GeospatialProperty.ChineseName;
+        }else if ("英文名称".equals(propertyName)) {
+            continentValueTextField.setItems(continentEntityENameList);
+            currentGeospatialProperty = GeospatialRegion.GeospatialProperty.EnglishName;
+        }
+    }
+
+    private void setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade geospatialScaleGrade){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
+        String currentContinentValue;
+        String currentCountryRegionValue;
+        try {
+            switch(geospatialScaleGrade){
+                case CONTINENT:
+                    currentContinentValue = continentValueTextField.getValue();
+                    List<String> currentCountryRegionValueSelect =
+                            getPropertyValueList(geospatialRegion.listCountryRegionEntities(currentGeospatialProperty,currentContinentValue,null));
+                    countryRegionTextField.setItems(currentCountryRegionValueSelect);
+                    break;
+                case COUNTRY_REGION:
+                    //currentContinentValue = continentValueTextField.getValue();
+                    currentCountryRegionValue = countryRegionTextField.getValue();
+                    List<String> currentProvinceValueSelect = getPropertyValueList(geospatialRegion.listProvinceEntities(currentGeospatialProperty,currentCountryRegionValue,null));
+                    //System.out.println(geospatialRegion.listProvinceEntities(currentGeospatialProperty,currentCountryRegionValue,null));
+                    //System.out.println(currentProvinceValueSelect);
+                    provinceValueTextField.setItems(currentProvinceValueSelect);
+                    break;
+            }
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<String> getPropertyValueList(List<GeospatialScaleEntity> currentCountryRegionList){
+        List<String> resultValueList = new ArrayList<>();
+        if(currentCountryRegionList != null){
+            for(GeospatialScaleEntity currentGeospatialScaleEntity:currentCountryRegionList){
+                switch (currentGeospatialProperty){
+                    case GeospatialCode -> resultValueList.add(currentGeospatialScaleEntity.getGeospatialCode());
+                    case ChineseName -> resultValueList.add(currentGeospatialScaleEntity.getChineseName());
+                    case EnglishName -> resultValueList.add(currentGeospatialScaleEntity.getEnglishName());
+                }
+            }
+        }
+        return resultValueList;
     }
 
     private void setupTimeFlowRuntimeStatisticInfo(){
@@ -857,6 +988,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         geospatialScaleEntitiesGrid.setItems(geospatialScaleEntityList);
         CommonUIOperationUtil.showPopupNotification("地理空间区域粒度实体查询操作成功，查询返回实体数: "+geospatialScaleEntityList.size(),
                 NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
+        resultNumberValue.setText("实体总量："+this.numberFormat.format(geospatialScaleEntityList.size()));
     }
 
     private void renderGeospatialScaleEntityDetailUI(GeospatialScaleEntity geospatialScaleEntity){
