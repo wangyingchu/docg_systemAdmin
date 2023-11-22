@@ -469,17 +469,38 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         countyValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         countyValueTextField.setWidth(200,Unit.PIXELS);
         countyValueContainer.add(countyValueTextField);
+
+        HorizontalLayout buttonsGroupContainer5 = new HorizontalLayout();
+        buttonsGroupContainer5.setSpacing(false);
+        buttonsGroupContainer5.setMargin(false);
+        buttonsGroupContainer5.setPadding(false);
+        countyValueTextField.setPrefixComponent(buttonsGroupContainer5);
+
         Button listCountyEntitiesButton = new Button();
         listCountyEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         listCountyEntitiesButton.setTooltipText("检索全部县级尺度实体");
         listCountyEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
-        countyValueTextField.setPrefixComponent(listCountyEntitiesButton);
         listCountyEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.COUNTY);
             }
         });
+        buttonsGroupContainer5.add(listCountyEntitiesButton);
+
+        Button clearCountyEntitiesQueryInputButton = new Button();
+        clearCountyEntitiesQueryInputButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        clearCountyEntitiesQueryInputButton.setTooltipText("清除县级及下级尺度实体检索条件");
+        clearCountyEntitiesQueryInputButton.setIcon(VaadinIcon.REFRESH.create());
+        clearCountyEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                countyValueTextField.setValue(null);
+                townshipValueTextField.setValue(null);
+                villageValueTextField.setValue(null);
+            }
+        });
+        buttonsGroupContainer5.add(clearCountyEntitiesQueryInputButton);
 
         HorizontalLayout townshipValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(townshipValueContainer);
@@ -492,17 +513,37 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         townshipValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         townshipValueTextField.setWidth(200,Unit.PIXELS);
         townshipValueContainer.add(townshipValueTextField);
+
+        HorizontalLayout buttonsGroupContainer6 = new HorizontalLayout();
+        buttonsGroupContainer6.setSpacing(false);
+        buttonsGroupContainer6.setMargin(false);
+        buttonsGroupContainer6.setPadding(false);
+        townshipValueTextField.setPrefixComponent(buttonsGroupContainer6);
+
         Button listTownshipEntitiesButton = new Button();
         listTownshipEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         listTownshipEntitiesButton.setTooltipText("检索全部乡级尺度实体");
         listTownshipEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
-        townshipValueTextField.setPrefixComponent(listTownshipEntitiesButton);
         listTownshipEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.TOWNSHIP);
             }
         });
+        buttonsGroupContainer6.add(listTownshipEntitiesButton);
+
+        Button clearTownshipEntitiesQueryInputButton = new Button();
+        clearTownshipEntitiesQueryInputButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        clearTownshipEntitiesQueryInputButton.setTooltipText("清除乡级及下级尺度实体检索条件");
+        clearTownshipEntitiesQueryInputButton.setIcon(VaadinIcon.REFRESH.create());
+        clearTownshipEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                townshipValueTextField.setValue(null);
+                villageValueTextField.setValue(null);
+            }
+        });
+        buttonsGroupContainer6.add(clearTownshipEntitiesQueryInputButton);
 
         HorizontalLayout villageValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(villageValueContainer);
@@ -515,17 +556,36 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         villageValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         villageValueTextField.setWidth(200,Unit.PIXELS);
         villageValueContainer.add(villageValueTextField);
+
+        HorizontalLayout buttonsGroupContainer7 = new HorizontalLayout();
+        buttonsGroupContainer7.setSpacing(false);
+        buttonsGroupContainer7.setMargin(false);
+        buttonsGroupContainer7.setPadding(false);
+        villageValueTextField.setPrefixComponent(buttonsGroupContainer7);
+
         Button listVillageEntitiesButton = new Button();
         listVillageEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
-        listVillageEntitiesButton.setTooltipText("检索全部乡级尺度实体");
+        listVillageEntitiesButton.setTooltipText("检索全部村级尺度实体");
         listVillageEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
-        villageValueTextField.setPrefixComponent(listVillageEntitiesButton);
         listVillageEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.VILLAGE);
             }
         });
+        buttonsGroupContainer7.add(listVillageEntitiesButton);
+
+        Button clearVillageEntitiesQueryInputButton = new Button();
+        clearVillageEntitiesQueryInputButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        clearVillageEntitiesQueryInputButton.setTooltipText("清除村级尺度实体检索条件");
+        clearVillageEntitiesQueryInputButton.setIcon(VaadinIcon.REFRESH.create());
+        clearVillageEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                villageValueTextField.setValue(null);
+            }
+        });
+        buttonsGroupContainer7.add(clearVillageEntitiesQueryInputButton);
 
         HorizontalLayout heightSpaceDiv2 = new HorizontalLayout();
         heightSpaceDiv2.setWidth(10,Unit.PIXELS);
