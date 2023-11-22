@@ -377,17 +377,41 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         continentValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         continentValueTextField.setWidth(200,Unit.PIXELS);
         continentValueContainer.add(continentValueTextField);
+
+        HorizontalLayout buttonsGroupContainer1 = new HorizontalLayout();
+        buttonsGroupContainer1.setSpacing(false);
+        buttonsGroupContainer1.setMargin(false);
+        buttonsGroupContainer1.setPadding(false);
+        continentValueTextField.setPrefixComponent(buttonsGroupContainer1);
+
         Button listContinentEntitiesButton = new Button();
         listContinentEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         listContinentEntitiesButton.setTooltipText("检索全部洲际尺度实体");
         listContinentEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
-        continentValueTextField.setPrefixComponent(listContinentEntitiesButton);
         listContinentEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.CONTINENT);
             }
         });
+        buttonsGroupContainer1.add(listContinentEntitiesButton);
+
+        Button clearContinentEntitiesQueryInputButton = new Button();
+        clearContinentEntitiesQueryInputButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        clearContinentEntitiesQueryInputButton.setTooltipText("清除洲际及下级尺度实体检索条件");
+        clearContinentEntitiesQueryInputButton.setIcon(VaadinIcon.REFRESH.create());
+        clearContinentEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                countryRegionTextField.setValue(null);
+                provinceValueTextField.setValue(null);
+                prefectureValueTextField.setValue(null);
+                countyValueTextField.setValue(null);
+                townshipValueTextField.setValue(null);
+                villageValueTextField.setValue(null);
+            }
+        });
+        buttonsGroupContainer1.add(clearContinentEntitiesQueryInputButton);
 
         HorizontalLayout countryRegionValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(countryRegionValueContainer);
@@ -400,17 +424,41 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         countryRegionTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         countryRegionTextField.setWidth(200,Unit.PIXELS);
         countryRegionValueContainer.add(countryRegionTextField);
+
+        HorizontalLayout buttonsGroupContainer2 = new HorizontalLayout();
+        buttonsGroupContainer2.setSpacing(false);
+        buttonsGroupContainer2.setMargin(false);
+        buttonsGroupContainer2.setPadding(false);
+        countryRegionTextField.setPrefixComponent(buttonsGroupContainer2);
+
         Button listCountryRegionEntitiesButton = new Button();
         listCountryRegionEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         listCountryRegionEntitiesButton.setTooltipText("检索全部国家地区尺度实体");
         listCountryRegionEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
-        countryRegionTextField.setPrefixComponent(listCountryRegionEntitiesButton);
         listCountryRegionEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.COUNTRY_REGION);
             }
         });
+        buttonsGroupContainer2.add(listCountryRegionEntitiesButton);
+
+        Button clearCountryRegionEntitiesQueryInputButton = new Button();
+        clearCountryRegionEntitiesQueryInputButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        clearCountryRegionEntitiesQueryInputButton.setTooltipText("清除国家地区级及下级尺度实体检索条件");
+        clearCountryRegionEntitiesQueryInputButton.setIcon(VaadinIcon.REFRESH.create());
+        clearCountryRegionEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                countryRegionTextField.setValue(null);
+                provinceValueTextField.setValue(null);
+                prefectureValueTextField.setValue(null);
+                countyValueTextField.setValue(null);
+                townshipValueTextField.setValue(null);
+                villageValueTextField.setValue(null);
+            }
+        });
+        buttonsGroupContainer2.add(clearCountryRegionEntitiesQueryInputButton);
 
         HorizontalLayout provinceValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(provinceValueContainer);
@@ -423,17 +471,40 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         provinceValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         provinceValueTextField.setWidth(200,Unit.PIXELS);
         provinceValueContainer.add(provinceValueTextField);
+
+        HorizontalLayout buttonsGroupContainer3 = new HorizontalLayout();
+        buttonsGroupContainer3.setSpacing(false);
+        buttonsGroupContainer3.setMargin(false);
+        buttonsGroupContainer3.setPadding(false);
+        provinceValueTextField.setPrefixComponent(buttonsGroupContainer3);
+
         Button listProvinceEntitiesButton = new Button();
         listProvinceEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         listProvinceEntitiesButton.setTooltipText("检索全部省级尺度实体");
         listProvinceEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
-        provinceValueTextField.setPrefixComponent(listProvinceEntitiesButton);
         listProvinceEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.PROVINCE);
             }
         });
+        buttonsGroupContainer3.add(listProvinceEntitiesButton);
+
+        Button clearProvinceEntitiesQueryInputButton = new Button();
+        clearProvinceEntitiesQueryInputButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        clearProvinceEntitiesQueryInputButton.setTooltipText("清除省级及下级尺度实体检索条件");
+        clearProvinceEntitiesQueryInputButton.setIcon(VaadinIcon.REFRESH.create());
+        clearProvinceEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                provinceValueTextField.setValue(null);
+                prefectureValueTextField.setValue(null);
+                countyValueTextField.setValue(null);
+                townshipValueTextField.setValue(null);
+                villageValueTextField.setValue(null);
+            }
+        });
+        buttonsGroupContainer3.add(clearProvinceEntitiesQueryInputButton);
 
         HorizontalLayout prefectureValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(prefectureValueContainer);
@@ -446,17 +517,39 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         prefectureValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         prefectureValueTextField.setWidth(200,Unit.PIXELS);
         prefectureValueContainer.add(prefectureValueTextField);
+
+        HorizontalLayout buttonsGroupContainer4 = new HorizontalLayout();
+        buttonsGroupContainer4.setSpacing(false);
+        buttonsGroupContainer4.setMargin(false);
+        buttonsGroupContainer4.setPadding(false);
+        prefectureValueTextField.setPrefixComponent(buttonsGroupContainer4);
+
         Button listPrefectureEntitiesButton = new Button();
         listPrefectureEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         listPrefectureEntitiesButton.setTooltipText("检索全部地级尺度实体");
         listPrefectureEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
-        prefectureValueTextField.setPrefixComponent(listPrefectureEntitiesButton);
         listPrefectureEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.PREFECTURE);
             }
         });
+        buttonsGroupContainer4.add(listPrefectureEntitiesButton);
+
+        Button clearPrefectureEntitiesQueryInputButton = new Button();
+        clearPrefectureEntitiesQueryInputButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        clearPrefectureEntitiesQueryInputButton.setTooltipText("清除地级及下级尺度实体检索条件");
+        clearPrefectureEntitiesQueryInputButton.setIcon(VaadinIcon.REFRESH.create());
+        clearPrefectureEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                prefectureValueTextField.setValue(null);
+                countyValueTextField.setValue(null);
+                townshipValueTextField.setValue(null);
+                villageValueTextField.setValue(null);
+            }
+        });
+        buttonsGroupContainer4.add(clearPrefectureEntitiesQueryInputButton);
 
         HorizontalLayout countyValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(countyValueContainer);
