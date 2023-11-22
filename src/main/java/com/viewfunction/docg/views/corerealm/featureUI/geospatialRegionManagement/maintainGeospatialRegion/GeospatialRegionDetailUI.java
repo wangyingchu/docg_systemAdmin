@@ -893,6 +893,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
         String currentContinentValue;
         String currentCountryRegionValue;
+        String currentProvinceValue;
         try {
             switch(geospatialScaleGrade){
                 case CONTINENT:
@@ -902,12 +903,16 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                     countryRegionTextField.setItems(currentCountryRegionValueSelect);
                     break;
                 case COUNTRY_REGION:
-                    //currentContinentValue = continentValueTextField.getValue();
                     currentCountryRegionValue = countryRegionTextField.getValue();
                     List<String> currentProvinceValueSelect = getPropertyValueList(geospatialRegion.listProvinceEntities(currentGeospatialProperty,currentCountryRegionValue,null));
-                    //System.out.println(geospatialRegion.listProvinceEntities(currentGeospatialProperty,currentCountryRegionValue,null));
-                    //System.out.println(currentProvinceValueSelect);
                     provinceValueTextField.setItems(currentProvinceValueSelect);
+                    break;
+                case PROVINCE:
+                    currentCountryRegionValue = countryRegionTextField.getValue();
+                    currentProvinceValue = provinceValueTextField.getValue();
+                    List<String> currentPrefectureValueSelect = getPropertyValueList(geospatialRegion.listPrefectureEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,null));
+                    System.out.println(geospatialRegion.listPrefectureEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,null));
+                    prefectureValueTextField.setItems(currentPrefectureValueSelect);
                     break;
             }
         } catch (CoreRealmServiceRuntimeException e) {
