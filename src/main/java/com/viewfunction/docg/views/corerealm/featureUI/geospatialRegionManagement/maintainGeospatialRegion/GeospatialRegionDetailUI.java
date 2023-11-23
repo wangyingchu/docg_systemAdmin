@@ -444,6 +444,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
         buttonsGroupContainer1.add(clearContinentEntitiesQueryInputButton);
 
+        Button querySelectedContinentEntitiesButton = new Button();
+        querySelectedContinentEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        querySelectedContinentEntitiesButton.setTooltipText("显示当前选择洲际实体");
+        querySelectedContinentEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
+        buttonsGroupContainer1.add(querySelectedContinentEntitiesButton);
+
         HorizontalLayout countryRegionValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(countryRegionValueContainer);
         NativeLabel countryRegionFilterText = new NativeLabel("国家地区 :");
@@ -506,6 +512,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
         buttonsGroupContainer2.add(clearCountryRegionEntitiesQueryInputButton);
 
+        Button querySelectedCountryRegionEntitiesButton = new Button();
+        querySelectedCountryRegionEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        querySelectedCountryRegionEntitiesButton.setTooltipText("显示当前选择国家地区实体");
+        querySelectedCountryRegionEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
+        buttonsGroupContainer2.add(querySelectedCountryRegionEntitiesButton);
+
         HorizontalLayout provinceValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(provinceValueContainer);
         NativeLabel provinceFilterText = new NativeLabel("省级 :");
@@ -565,6 +577,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
         buttonsGroupContainer3.add(clearProvinceEntitiesQueryInputButton);
 
+        Button querySelectedProvinceEntitiesButton = new Button();
+        querySelectedProvinceEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        querySelectedProvinceEntitiesButton.setTooltipText("显示当前选择省级实体");
+        querySelectedProvinceEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
+        buttonsGroupContainer3.add(querySelectedProvinceEntitiesButton);
+
         HorizontalLayout prefectureValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(prefectureValueContainer);
         NativeLabel prefectureFilterText = new NativeLabel("地级 :");
@@ -623,6 +641,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
         buttonsGroupContainer4.add(clearPrefectureEntitiesQueryInputButton);
 
+        Button querySelectedPrefectureEntitiesButton = new Button();
+        querySelectedPrefectureEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        querySelectedPrefectureEntitiesButton.setTooltipText("显示当前选择地级实体");
+        querySelectedPrefectureEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
+        buttonsGroupContainer4.add(querySelectedPrefectureEntitiesButton);
+
         HorizontalLayout countyValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(countyValueContainer);
         NativeLabel countyFilterText = new NativeLabel("县级 :");
@@ -676,6 +700,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
         buttonsGroupContainer5.add(clearCountyEntitiesQueryInputButton);
 
+        Button querySelectedCountyEntitiesButton = new Button();
+        querySelectedCountyEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        querySelectedCountyEntitiesButton.setTooltipText("显示当前选择县级实体");
+        querySelectedCountyEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
+        buttonsGroupContainer5.add(querySelectedCountyEntitiesButton);
+
         HorizontalLayout townshipValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(townshipValueContainer);
         NativeLabel townshipFilterText = new NativeLabel("乡级 :");
@@ -726,6 +756,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
         buttonsGroupContainer6.add(clearTownshipEntitiesQueryInputButton);
 
+        Button querySelectedTownshipEntitiesButton = new Button();
+        querySelectedTownshipEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        querySelectedTownshipEntitiesButton.setTooltipText("显示当前选择乡级实体");
+        querySelectedTownshipEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
+        buttonsGroupContainer6.add(querySelectedTownshipEntitiesButton);
+
         HorizontalLayout villageValueContainer = new HorizontalLayout();
         leftSideSectionContainerScrollLayout.add(villageValueContainer);
         NativeLabel villageFilterText = new NativeLabel("村级 :");
@@ -773,6 +809,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             }
         });
         buttonsGroupContainer7.add(clearVillageEntitiesQueryInputButton);
+
+        Button querySelectedVillageEntitiesButton = new Button();
+        querySelectedVillageEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        querySelectedVillageEntitiesButton.setTooltipText("显示当前选择村级实体");
+        querySelectedVillageEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
+        buttonsGroupContainer7.add(querySelectedVillageEntitiesButton);
 
         HorizontalLayout heightSpaceDiv2 = new HorizontalLayout();
         heightSpaceDiv2.setWidth(10,Unit.PIXELS);
