@@ -927,6 +927,14 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
     private void switchGeospatialRegionSearchElementsInfo(String propertyName){
         continentValueTextField.clear();
         continentValueTextField.setItems(new ArrayList<>());
+
+        countryRegionTextField.setEnabled(false);
+        provinceValueTextField.setEnabled(false);
+        prefectureValueTextField.setEnabled(false);
+        countyValueTextField.setEnabled(false);
+        townshipValueTextField.setEnabled(false);
+        villageValueTextField.setEnabled(false);
+
         if("地理空间编码".equals(propertyName)){
             continentValueTextField.setItems(continentEntityCodeList);
             currentGeospatialProperty = GeospatialRegion.GeospatialProperty.GeospatialCode;
