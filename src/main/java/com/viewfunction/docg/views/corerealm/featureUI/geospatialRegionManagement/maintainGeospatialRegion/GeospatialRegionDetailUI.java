@@ -386,9 +386,20 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         continentFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         continentValueContainer.add(continentFilterText);
         continentValueContainer.setVerticalComponentAlignment(Alignment.CENTER,continentFilterText);
+        Button listContinentEntitiesButton = new Button();
+        listContinentEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        listContinentEntitiesButton.setTooltipText("检索全部洲际尺度实体");
+        listContinentEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
+        listContinentEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.CONTINENT);
+            }
+        });
+        continentValueContainer.add(listContinentEntitiesButton);
         continentValueTextField = new ComboBox();
         continentValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
-        continentValueTextField.setWidth(200,Unit.PIXELS);
+        continentValueTextField.setWidth(180,Unit.PIXELS);
         continentValueContainer.add(continentValueTextField);
         continentValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
             @Override
@@ -402,18 +413,6 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         buttonsGroupContainer1.setMargin(false);
         buttonsGroupContainer1.setPadding(false);
         continentValueTextField.setPrefixComponent(buttonsGroupContainer1);
-
-        Button listContinentEntitiesButton = new Button();
-        listContinentEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
-        listContinentEntitiesButton.setTooltipText("检索全部洲际尺度实体");
-        listContinentEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
-        listContinentEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.CONTINENT);
-            }
-        });
-        buttonsGroupContainer1.add(listContinentEntitiesButton);
 
         Button clearContinentEntitiesQueryInputButton = new Button();
         clearContinentEntitiesQueryInputButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
@@ -452,9 +451,20 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         countryRegionFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         countryRegionValueContainer.add(countryRegionFilterText);
         countryRegionValueContainer.setVerticalComponentAlignment(Alignment.CENTER,countryRegionFilterText);
+        Button listCountryRegionEntitiesButton = new Button();
+        listCountryRegionEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        listCountryRegionEntitiesButton.setTooltipText("检索全部国家地区尺度实体");
+        listCountryRegionEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
+        listCountryRegionEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.COUNTRY_REGION);
+            }
+        });
+        countryRegionValueContainer.add(listCountryRegionEntitiesButton);
         countryRegionTextField = new ComboBox();
         countryRegionTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
-        countryRegionTextField.setWidth(200,Unit.PIXELS);
+        countryRegionTextField.setWidth(180,Unit.PIXELS);
         countryRegionValueContainer.add(countryRegionTextField);
         countryRegionTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
             @Override
@@ -468,18 +478,6 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         buttonsGroupContainer2.setMargin(false);
         buttonsGroupContainer2.setPadding(false);
         countryRegionTextField.setPrefixComponent(buttonsGroupContainer2);
-
-        Button listCountryRegionEntitiesButton = new Button();
-        listCountryRegionEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
-        listCountryRegionEntitiesButton.setTooltipText("检索全部国家地区尺度实体");
-        listCountryRegionEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
-        listCountryRegionEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.COUNTRY_REGION);
-            }
-        });
-        buttonsGroupContainer2.add(listCountryRegionEntitiesButton);
 
         Button clearCountryRegionEntitiesQueryInputButton = new Button();
         clearCountryRegionEntitiesQueryInputButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
@@ -515,9 +513,20 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         provinceFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         provinceValueContainer.add(provinceFilterText);
         provinceValueContainer.setVerticalComponentAlignment(Alignment.CENTER,provinceFilterText);
+        Button listProvinceEntitiesButton = new Button();
+        listProvinceEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        listProvinceEntitiesButton.setTooltipText("检索全部省级尺度实体");
+        listProvinceEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
+        listProvinceEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.PROVINCE);
+            }
+        });
+        provinceValueContainer.add(listProvinceEntitiesButton);
         provinceValueTextField = new ComboBox();
         provinceValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
-        provinceValueTextField.setWidth(200,Unit.PIXELS);
+        provinceValueTextField.setWidth(180,Unit.PIXELS);
         provinceValueContainer.add(provinceValueTextField);
         provinceValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
             @Override
@@ -531,18 +540,6 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         buttonsGroupContainer3.setMargin(false);
         buttonsGroupContainer3.setPadding(false);
         provinceValueTextField.setPrefixComponent(buttonsGroupContainer3);
-
-        Button listProvinceEntitiesButton = new Button();
-        listProvinceEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
-        listProvinceEntitiesButton.setTooltipText("检索全部省级尺度实体");
-        listProvinceEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
-        listProvinceEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.PROVINCE);
-            }
-        });
-        buttonsGroupContainer3.add(listProvinceEntitiesButton);
 
         Button clearProvinceEntitiesQueryInputButton = new Button();
         clearProvinceEntitiesQueryInputButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
@@ -575,9 +572,22 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         prefectureFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         prefectureValueContainer.add(prefectureFilterText);
         prefectureValueContainer.setVerticalComponentAlignment(Alignment.CENTER,prefectureFilterText);
+
+        Button listPrefectureEntitiesButton = new Button();
+        listPrefectureEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        listPrefectureEntitiesButton.setTooltipText("检索全部地级尺度实体");
+        listPrefectureEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
+        listPrefectureEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.PREFECTURE);
+            }
+        });
+        prefectureValueContainer.add(listPrefectureEntitiesButton);
+
         prefectureValueTextField = new ComboBox();
         prefectureValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
-        prefectureValueTextField.setWidth(200,Unit.PIXELS);
+        prefectureValueTextField.setWidth(180,Unit.PIXELS);
         prefectureValueContainer.add(prefectureValueTextField);
         prefectureValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
             @Override
@@ -591,18 +601,6 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         buttonsGroupContainer4.setMargin(false);
         buttonsGroupContainer4.setPadding(false);
         prefectureValueTextField.setPrefixComponent(buttonsGroupContainer4);
-
-        Button listPrefectureEntitiesButton = new Button();
-        listPrefectureEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
-        listPrefectureEntitiesButton.setTooltipText("检索全部地级尺度实体");
-        listPrefectureEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
-        listPrefectureEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.PREFECTURE);
-            }
-        });
-        buttonsGroupContainer4.add(listPrefectureEntitiesButton);
 
         Button clearPrefectureEntitiesQueryInputButton = new Button();
         clearPrefectureEntitiesQueryInputButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
@@ -632,9 +630,20 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         countyFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         countyValueContainer.add(countyFilterText);
         countyValueContainer.setVerticalComponentAlignment(Alignment.CENTER,countyFilterText);
+        Button listCountyEntitiesButton = new Button();
+        listCountyEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        listCountyEntitiesButton.setTooltipText("检索全部县级尺度实体");
+        listCountyEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
+        listCountyEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.COUNTY);
+            }
+        });
+        countyValueContainer.add(listCountyEntitiesButton);
         countyValueTextField = new ComboBox();
         countyValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
-        countyValueTextField.setWidth(200,Unit.PIXELS);
+        countyValueTextField.setWidth(180,Unit.PIXELS);
         countyValueContainer.add(countyValueTextField);
         countyValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
             @Override
@@ -648,18 +657,6 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         buttonsGroupContainer5.setMargin(false);
         buttonsGroupContainer5.setPadding(false);
         countyValueTextField.setPrefixComponent(buttonsGroupContainer5);
-
-        Button listCountyEntitiesButton = new Button();
-        listCountyEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
-        listCountyEntitiesButton.setTooltipText("检索全部县级尺度实体");
-        listCountyEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
-        listCountyEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.COUNTY);
-            }
-        });
-        buttonsGroupContainer5.add(listCountyEntitiesButton);
 
         Button clearCountyEntitiesQueryInputButton = new Button();
         clearCountyEntitiesQueryInputButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
@@ -686,9 +683,20 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         townshipFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         townshipValueContainer.add(townshipFilterText);
         townshipValueContainer.setVerticalComponentAlignment(Alignment.CENTER,townshipFilterText);
+        Button listTownshipEntitiesButton = new Button();
+        listTownshipEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        listTownshipEntitiesButton.setTooltipText("检索全部乡级尺度实体");
+        listTownshipEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
+        listTownshipEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.TOWNSHIP);
+            }
+        });
+        townshipValueContainer.add(listTownshipEntitiesButton);
         townshipValueTextField = new ComboBox();
         townshipValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
-        townshipValueTextField.setWidth(200,Unit.PIXELS);
+        townshipValueTextField.setWidth(180,Unit.PIXELS);
         townshipValueContainer.add(townshipValueTextField);
         townshipValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
             @Override
@@ -702,18 +710,6 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         buttonsGroupContainer6.setMargin(false);
         buttonsGroupContainer6.setPadding(false);
         townshipValueTextField.setPrefixComponent(buttonsGroupContainer6);
-
-        Button listTownshipEntitiesButton = new Button();
-        listTownshipEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
-        listTownshipEntitiesButton.setTooltipText("检索全部乡级尺度实体");
-        listTownshipEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
-        listTownshipEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.TOWNSHIP);
-            }
-        });
-        buttonsGroupContainer6.add(listTownshipEntitiesButton);
 
         Button clearTownshipEntitiesQueryInputButton = new Button();
         clearTownshipEntitiesQueryInputButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
@@ -737,9 +733,20 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         villageFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         villageValueContainer.add(villageFilterText);
         villageValueContainer.setVerticalComponentAlignment(Alignment.CENTER,villageFilterText);
+        Button listVillageEntitiesButton = new Button();
+        listVillageEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
+        listVillageEntitiesButton.setTooltipText("检索全部村级尺度实体");
+        listVillageEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
+        listVillageEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.VILLAGE);
+            }
+        });
+        villageValueContainer.add(listVillageEntitiesButton);
         villageValueTextField = new ComboBox();
         villageValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
-        villageValueTextField.setWidth(200,Unit.PIXELS);
+        villageValueTextField.setWidth(180,Unit.PIXELS);
         villageValueContainer.add(villageValueTextField);
         /*
         villageValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
@@ -754,18 +761,6 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         buttonsGroupContainer7.setMargin(false);
         buttonsGroupContainer7.setPadding(false);
         villageValueTextField.setPrefixComponent(buttonsGroupContainer7);
-
-        Button listVillageEntitiesButton = new Button();
-        listVillageEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
-        listVillageEntitiesButton.setTooltipText("检索全部村级尺度实体");
-        listVillageEntitiesButton.setIcon(VaadinIcon.BULLETS.create());
-        listVillageEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade.VILLAGE);
-            }
-        });
-        buttonsGroupContainer7.add(listVillageEntitiesButton);
 
         Button clearVillageEntitiesQueryInputButton = new Button();
         clearVillageEntitiesQueryInputButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
