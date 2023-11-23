@@ -24,6 +24,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -428,6 +429,18 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 countyValueTextField.clear();
                 townshipValueTextField.clear();
                 villageValueTextField.clear();
+                ((ListDataProvider)(countryRegionTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(provinceValueTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(prefectureValueTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(countyValueTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(townshipValueTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(villageValueTextField.getDataProvider())).getItems().clear();
+                countryRegionTextField.setEnabled(false);
+                provinceValueTextField.setEnabled(false);
+                prefectureValueTextField.setEnabled(false);
+                countyValueTextField.setEnabled(false);
+                townshipValueTextField.setEnabled(false);
+                villageValueTextField.setEnabled(false);
             }
         });
         buttonsGroupContainer1.add(clearContinentEntitiesQueryInputButton);
@@ -481,6 +494,16 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 countyValueTextField.clear();
                 townshipValueTextField.clear();
                 villageValueTextField.clear();
+                ((ListDataProvider)(provinceValueTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(prefectureValueTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(countyValueTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(townshipValueTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(villageValueTextField.getDataProvider())).getItems().clear();
+                provinceValueTextField.setEnabled(false);
+                prefectureValueTextField.setEnabled(false);
+                countyValueTextField.setEnabled(false);
+                townshipValueTextField.setEnabled(false);
+                villageValueTextField.setEnabled(false);
             }
         });
         buttonsGroupContainer2.add(clearCountryRegionEntitiesQueryInputButton);
@@ -533,6 +556,14 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 countyValueTextField.clear();
                 townshipValueTextField.clear();
                 villageValueTextField.clear();
+                ((ListDataProvider)(prefectureValueTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(countyValueTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(townshipValueTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(villageValueTextField.getDataProvider())).getItems().clear();
+                prefectureValueTextField.setEnabled(false);
+                countyValueTextField.setEnabled(false);
+                townshipValueTextField.setEnabled(false);
+                villageValueTextField.setEnabled(false);
             }
         });
         buttonsGroupContainer3.add(clearProvinceEntitiesQueryInputButton);
@@ -584,6 +615,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 countyValueTextField.clear();
                 townshipValueTextField.clear();
                 villageValueTextField.clear();
+                ((ListDataProvider)(countyValueTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(townshipValueTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(villageValueTextField.getDataProvider())).getItems().clear();
+                countyValueTextField.setEnabled(false);
+                townshipValueTextField.setEnabled(false);
+                villageValueTextField.setEnabled(false);
             }
         });
         buttonsGroupContainer4.add(clearPrefectureEntitiesQueryInputButton);
@@ -634,6 +671,10 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 countyValueTextField.clear();
                 townshipValueTextField.clear();
                 villageValueTextField.clear();
+                ((ListDataProvider)(townshipValueTextField.getDataProvider())).getItems().clear();
+                ((ListDataProvider)(villageValueTextField.getDataProvider())).getItems().clear();
+                townshipValueTextField.setEnabled(false);
+                villageValueTextField.setEnabled(false);
             }
         });
         buttonsGroupContainer5.add(clearCountyEntitiesQueryInputButton);
@@ -683,6 +724,8 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 townshipValueTextField.clear();
                 villageValueTextField.clear();
+                ((ListDataProvider)(villageValueTextField.getDataProvider())).getItems().clear();
+                villageValueTextField.setEnabled(false);
             }
         });
         buttonsGroupContainer6.add(clearTownshipEntitiesQueryInputButton);
@@ -751,6 +794,13 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             }
         });
         leftSideSectionContainerScrollLayout.add(executeQueryButton);
+
+        countryRegionTextField.setEnabled(false);
+        provinceValueTextField.setEnabled(false);
+        prefectureValueTextField.setEnabled(false);
+        countyValueTextField.setEnabled(false);
+        townshipValueTextField.setEnabled(false);
+        villageValueTextField.setEnabled(false);
 
         middleContainerLayout = new VerticalLayout();
         middleContainerLayout.setSpacing(false);
@@ -905,11 +955,13 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                     List<String> currentCountryRegionValueSelect =
                             getPropertyValueList(geospatialRegion.listCountryRegionEntities(currentGeospatialProperty,currentContinentValue,null));
                     countryRegionTextField.setItems(currentCountryRegionValueSelect);
+                    countryRegionTextField.setEnabled(true);
                     break;
                 case COUNTRY_REGION:
                     currentCountryRegionValue = countryRegionTextField.getValue();
                     List<String> currentProvinceValueSelect = getPropertyValueList(geospatialRegion.listProvinceEntities(currentGeospatialProperty,currentCountryRegionValue,null));
                     provinceValueTextField.setItems(currentProvinceValueSelect);
+                    provinceValueTextField.setEnabled(true);
                     break;
                 case PROVINCE:
                     currentCountryRegionValue = countryRegionTextField.getValue();
@@ -917,6 +969,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                     List<String> currentPrefectureValueSelect = getPropertyValueList(geospatialRegion.listPrefectureEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,null));
                     System.out.println(geospatialRegion.listPrefectureEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,null));
                     prefectureValueTextField.setItems(currentPrefectureValueSelect);
+                    prefectureValueTextField.setEnabled(true);
                     break;
                 case PREFECTURE:
                     currentCountryRegionValue = countryRegionTextField.getValue();
@@ -924,6 +977,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                     currentPrefectureValue = prefectureValueTextField.getValue();
                     List<String> currentCountyValueSelect = getPropertyValueList(geospatialRegion.listCountyEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,currentPrefectureValue,null));
                     countyValueTextField.setItems(currentCountyValueSelect);
+                    countyValueTextField.setEnabled(true);
                     break;
                 case COUNTY:
                     currentCountryRegionValue = countryRegionTextField.getValue();
@@ -932,6 +986,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                     currentCountyValue = countyValueTextField.getValue();
                     List<String> currentTownshipValueSelect = getPropertyValueList(geospatialRegion.listTownshipEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,currentPrefectureValue,currentCountyValue,null));
                     townshipValueTextField.setItems(currentTownshipValueSelect);
+                    townshipValueTextField.setEnabled(true);
                     break;
                 case TOWNSHIP:
                     currentCountryRegionValue = countryRegionTextField.getValue();
@@ -941,6 +996,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                     currentTownshipValue = townshipValueTextField.getValue();
                     List<String> currentVillageValueSelect = getPropertyValueList(geospatialRegion.listVillageEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,currentPrefectureValue,currentCountyValue,currentTownshipValue,null));
                     villageValueTextField.setItems(currentVillageValueSelect);
+                    villageValueTextField.setEnabled(true);
                     break;
             }
         } catch (CoreRealmServiceRuntimeException e) {
