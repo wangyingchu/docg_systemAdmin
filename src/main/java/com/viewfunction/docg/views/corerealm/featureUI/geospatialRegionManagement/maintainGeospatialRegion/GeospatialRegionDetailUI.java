@@ -698,13 +698,14 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         villageValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         villageValueTextField.setWidth(200,Unit.PIXELS);
         villageValueContainer.add(villageValueTextField);
+        /*
         villageValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
                 setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.VILLAGE);
             }
         });
-
+        */
         HorizontalLayout buttonsGroupContainer7 = new HorizontalLayout();
         buttonsGroupContainer7.setSpacing(false);
         buttonsGroupContainer7.setMargin(false);
@@ -894,6 +895,9 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         String currentContinentValue;
         String currentCountryRegionValue;
         String currentProvinceValue;
+        String currentPrefectureValue;
+        String currentCountyValue;
+        String currentTownshipValue;
         try {
             switch(geospatialScaleGrade){
                 case CONTINENT:
@@ -913,6 +917,30 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                     List<String> currentPrefectureValueSelect = getPropertyValueList(geospatialRegion.listPrefectureEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,null));
                     System.out.println(geospatialRegion.listPrefectureEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,null));
                     prefectureValueTextField.setItems(currentPrefectureValueSelect);
+                    break;
+                case PREFECTURE:
+                    currentCountryRegionValue = countryRegionTextField.getValue();
+                    currentProvinceValue = provinceValueTextField.getValue();
+                    currentPrefectureValue = prefectureValueTextField.getValue();
+                    List<String> currentCountyValueSelect = getPropertyValueList(geospatialRegion.listCountyEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,currentPrefectureValue,null));
+                    countyValueTextField.setItems(currentCountyValueSelect);
+                    break;
+                case COUNTY:
+                    currentCountryRegionValue = countryRegionTextField.getValue();
+                    currentProvinceValue = provinceValueTextField.getValue();
+                    currentPrefectureValue = prefectureValueTextField.getValue();
+                    currentCountyValue = countyValueTextField.getValue();
+                    List<String> currentTownshipValueSelect = getPropertyValueList(geospatialRegion.listTownshipEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,currentPrefectureValue,currentCountyValue,null));
+                    townshipValueTextField.setItems(currentTownshipValueSelect);
+                    break;
+                case TOWNSHIP:
+                    currentCountryRegionValue = countryRegionTextField.getValue();
+                    currentProvinceValue = provinceValueTextField.getValue();
+                    currentPrefectureValue = prefectureValueTextField.getValue();
+                    currentCountyValue = countyValueTextField.getValue();
+                    currentTownshipValue = townshipValueTextField.getValue();
+                    List<String> currentVillageValueSelect = getPropertyValueList(geospatialRegion.listVillageEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,currentPrefectureValue,currentCountyValue,currentTownshipValue,null));
+                    villageValueTextField.setItems(currentVillageValueSelect);
                     break;
             }
         } catch (CoreRealmServiceRuntimeException e) {
