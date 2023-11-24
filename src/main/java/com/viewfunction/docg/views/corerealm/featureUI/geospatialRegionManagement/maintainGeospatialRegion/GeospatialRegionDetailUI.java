@@ -13,6 +13,7 @@ import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -31,6 +32,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.GeospatialRegionRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.GeospatialRegionSummaryStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
@@ -44,6 +46,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Route("timeFlowDetailInfo/:geospatialRegion")
 public class GeospatialRegionDetailUI extends VerticalLayout implements
@@ -196,7 +199,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         generateIndexesActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                //renderGenerateTimeFlowIndexesUI();
+                renderGenerateGeospatialRegionIndexesUI();
             }
         });
 
@@ -1346,8 +1349,6 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         CommonUIOperationUtil.showPopupNotification("地理空间区域粒度实体查询操作成功，查询返回实体数: "+geospatialScaleEntityList.size(),
                 NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
         resultNumberValue.setText("实体总量："+this.numberFormat.format(geospatialScaleEntityList.size()));
-
-
     }
 
     private void renderGeospatialScaleEntityDetailUI(GeospatialScaleEntity geospatialScaleEntity){
@@ -1415,6 +1416,68 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
         conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
+    }
+
+    private void renderGenerateGeospatialRegionIndexesUI(){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认生成加速索引",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","本操作将生成地理空间区域检索加速索引，请确认是否执行生成操作",actionButtonList,550,180);
+        confirmWindow.open();
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doCreateTimeFlowIndexes(confirmWindow);
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doCreateTimeFlowIndexes(ConfirmWindow confirmWindow){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
+        try {
+            Set<String> generatedIndexesSet = systemMaintenanceOperator.generateGeospatialRegionSearchIndexes();
+            showPopupNotification(generatedIndexesSet,NotificationVariant.LUMO_SUCCESS);
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+        confirmWindow.closeConfirmWindow();
+    }
+
+    private void showPopupNotification(Set<String> generatedIndexesSet,NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text("时间流检索加速索引生成操作成功"));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
+
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        if(generatedIndexesSet != null){
+            for(String currentIndex:generatedIndexesSet){
+                notificationMessageContainer.add(new Div(new Text("索引: "+currentIndex +" 创建成功")));
+            }
+        }
+        notification.add(notificationMessageContainer);
+        notification.setDuration(8000);
+        notification.open();
     }
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
