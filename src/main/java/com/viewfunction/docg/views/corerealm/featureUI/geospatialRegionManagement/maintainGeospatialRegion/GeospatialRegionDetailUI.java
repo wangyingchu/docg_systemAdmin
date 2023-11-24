@@ -93,6 +93,8 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
     private Button querySelectedCountyEntitiesButton;
     private Button querySelectedTownshipEntitiesButton;
     private Button querySelectedVillageEntitiesButton;
+    private Button executeQueryButton;
+
     public GeospatialRegionDetailUI(){
         this.contentContainerHeightOffset = 265;
         this.numberFormat = NumberFormat.getInstance();
@@ -412,6 +414,19 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 if(continentValueTextField.getValue() != null){
                     querySelectedContinentEntitiesButton.setEnabled(true);
                     setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.CONTINENT);
+
+                    countryRegionTextField.clear();
+                    provinceValueTextField.clear();
+                    prefectureValueTextField.clear();
+                    countyValueTextField.clear();
+                    townshipValueTextField.clear();
+                    villageValueTextField.clear();
+
+                    provinceValueTextField.setEnabled(false);
+                    prefectureValueTextField.setEnabled(false);
+                    countyValueTextField.setEnabled(false);
+                    townshipValueTextField.setEnabled(false);
+                    villageValueTextField.setEnabled(false);
                 }else{
                     querySelectedContinentEntitiesButton.setEnabled(false);
                 }
@@ -489,6 +504,17 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 if(countryRegionTextField.getValue() != null){
                     querySelectedCountryRegionEntitiesButton.setEnabled(true);
                     setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.COUNTRY_REGION);
+
+                    provinceValueTextField.clear();
+                    prefectureValueTextField.clear();
+                    countyValueTextField.clear();
+                    townshipValueTextField.clear();
+                    villageValueTextField.clear();
+
+                    prefectureValueTextField.setEnabled(false);
+                    countyValueTextField.setEnabled(false);
+                    townshipValueTextField.setEnabled(false);
+                    villageValueTextField.setEnabled(false);
                 }else{
                     querySelectedCountryRegionEntitiesButton.setEnabled(false);
                 }
@@ -565,6 +591,15 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 if(provinceValueTextField.getValue() != null){
                     querySelectedProvinceEntitiesButton.setEnabled(true);
                     setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.PROVINCE);
+
+                    prefectureValueTextField.clear();
+                    countyValueTextField.clear();
+                    townshipValueTextField.clear();
+                    villageValueTextField.clear();
+
+                    countyValueTextField.setEnabled(false);
+                    townshipValueTextField.setEnabled(false);
+                    villageValueTextField.setEnabled(false);
                 }else{
                     querySelectedProvinceEntitiesButton.setEnabled(false);
                 }
@@ -640,6 +675,13 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 if(prefectureValueTextField.getValue() != null){
                     querySelectedPrefectureEntitiesButton.setEnabled(true);
                     setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.PREFECTURE);
+
+                    countyValueTextField.clear();
+                    townshipValueTextField.clear();
+                    villageValueTextField.clear();
+
+                    townshipValueTextField.setEnabled(false);
+                    villageValueTextField.setEnabled(false);
                 }else{
                     querySelectedPrefectureEntitiesButton.setEnabled(false);
                 }
@@ -711,6 +753,11 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 if(countyValueTextField.getValue() != null){
                     querySelectedCountyEntitiesButton.setEnabled(true);
                     setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.COUNTY);
+
+                    townshipValueTextField.clear();
+                    villageValueTextField.clear();
+
+                    villageValueTextField.setEnabled(false);
                 }else{
                     querySelectedCountyEntitiesButton.setEnabled(false);
                 }
@@ -780,6 +827,9 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 if(townshipValueTextField.getValue() != null){
                     querySelectedTownshipEntitiesButton.setEnabled(true);
                     setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.TOWNSHIP);
+
+                    villageValueTextField.clear();
+
                 }else{
                     querySelectedTownshipEntitiesButton.setEnabled(false);
                 }
@@ -847,8 +897,10 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 if(villageValueTextField.getValue() != null){
                     querySelectedVillageEntitiesButton.setEnabled(true);
                     setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.VILLAGE);
+                    executeQueryButton.setEnabled(false);
                 }else{
                     querySelectedVillageEntitiesButton.setEnabled(false);
+                    executeQueryButton.setEnabled(true);
                 }
             }
         });
@@ -888,7 +940,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         heightSpaceDiv2.setHeight(5,Unit.PIXELS);
         leftSideSectionContainerScrollLayout.add(heightSpaceDiv2);
 
-        Button executeQueryButton = new Button("检索下级地理空间区域尺度实体");
+        executeQueryButton = new Button("检索下级地理空间区域尺度实体");
         executeQueryButton.setIcon(new Icon(VaadinIcon.SEARCH));
         executeQueryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
