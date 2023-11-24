@@ -453,6 +453,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         querySelectedContinentEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         querySelectedContinentEntitiesButton.setTooltipText("显示当前选择洲际实体");
         querySelectedContinentEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
+        querySelectedContinentEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderSelectedGeospatialScaleEntity(GeospatialRegion.GeospatialScaleGrade.CONTINENT);
+            }
+        });
         buttonsGroupContainer1.add(querySelectedContinentEntitiesButton);
 
         HorizontalLayout countryRegionValueContainer = new HorizontalLayout();
@@ -522,6 +528,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         querySelectedCountryRegionEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         querySelectedCountryRegionEntitiesButton.setTooltipText("显示当前选择国家地区实体");
         querySelectedCountryRegionEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
+        querySelectedCountryRegionEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderSelectedGeospatialScaleEntity(GeospatialRegion.GeospatialScaleGrade.COUNTRY_REGION);
+            }
+        });
         buttonsGroupContainer2.add(querySelectedCountryRegionEntitiesButton);
 
         HorizontalLayout provinceValueContainer = new HorizontalLayout();
@@ -590,6 +602,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         querySelectedProvinceEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         querySelectedProvinceEntitiesButton.setTooltipText("显示当前选择省级实体");
         querySelectedProvinceEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
+        querySelectedProvinceEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderSelectedGeospatialScaleEntity(GeospatialRegion.GeospatialScaleGrade.PROVINCE);
+            }
+        });
         buttonsGroupContainer3.add(querySelectedProvinceEntitiesButton);
 
         HorizontalLayout prefectureValueContainer = new HorizontalLayout();
@@ -657,6 +675,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         querySelectedPrefectureEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         querySelectedPrefectureEntitiesButton.setTooltipText("显示当前选择地级实体");
         querySelectedPrefectureEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
+        querySelectedPrefectureEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderSelectedGeospatialScaleEntity(GeospatialRegion.GeospatialScaleGrade.PREFECTURE);
+            }
+        });
         buttonsGroupContainer4.add(querySelectedPrefectureEntitiesButton);
 
         HorizontalLayout countyValueContainer = new HorizontalLayout();
@@ -720,6 +744,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         querySelectedCountyEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         querySelectedCountyEntitiesButton.setTooltipText("显示当前选择县级实体");
         querySelectedCountyEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
+        querySelectedCountyEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderSelectedGeospatialScaleEntity(GeospatialRegion.GeospatialScaleGrade.COUNTY);
+            }
+        });
         buttonsGroupContainer5.add(querySelectedCountyEntitiesButton);
 
         HorizontalLayout townshipValueContainer = new HorizontalLayout();
@@ -781,6 +811,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         querySelectedTownshipEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         querySelectedTownshipEntitiesButton.setTooltipText("显示当前选择乡级实体");
         querySelectedTownshipEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
+        querySelectedTownshipEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderSelectedGeospatialScaleEntity(GeospatialRegion.GeospatialScaleGrade.TOWNSHIP);
+            }
+        });
         buttonsGroupContainer6.add(querySelectedTownshipEntitiesButton);
 
         HorizontalLayout villageValueContainer = new HorizontalLayout();
@@ -839,6 +875,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         querySelectedVillageEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         querySelectedVillageEntitiesButton.setTooltipText("显示当前选择村级实体");
         querySelectedVillageEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
+        querySelectedVillageEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderSelectedGeospatialScaleEntity(GeospatialRegion.GeospatialScaleGrade.VILLAGE);
+            }
+        });
         buttonsGroupContainer7.add(querySelectedVillageEntitiesButton);
 
         HorizontalLayout heightSpaceDiv2 = new HorizontalLayout();
@@ -852,7 +894,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //queryTimeScaleEntities();
+                queryGeospatialScaleEntities();
             }
         });
         leftSideSectionContainerScrollLayout.add(executeQueryButton);
@@ -1155,6 +1197,61 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         CommonUIOperationUtil.showPopupNotification("地理空间区域粒度实体查询操作成功，查询返回实体数: "+geospatialScaleEntityList.size(),
                 NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
         resultNumberValue.setText("实体总量："+this.numberFormat.format(geospatialScaleEntityList.size()));
+    }
+
+    private void queryGeospatialScaleEntities(){}
+
+    private void renderSelectedGeospatialScaleEntity(GeospatialRegion.GeospatialScaleGrade geospatialScaleGrade){
+        geospatialScaleEntitiesGrid.setItems(new ArrayList<>());
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
+        List<GeospatialScaleEntity> geospatialScaleEntityList = new ArrayList<>();
+        GeospatialScaleEntity targetGeospatialScaleEntity = null;
+
+        String currentContinentValue = continentValueTextField.getValue();
+        String currentCountryRegionValue = countryRegionTextField.getValue();
+        String currentProvinceValue = provinceValueTextField.getValue();
+        String currentPrefectureValue = prefectureValueTextField.getValue();
+        String currentCountyValue = countyValueTextField.getValue();
+        String currentTownshipValue = townshipValueTextField.getValue();
+        String currentVillageValue = villageValueTextField.getValue();
+
+        try {
+            switch (geospatialScaleGrade) {
+                case CONTINENT:
+                    targetGeospatialScaleEntity = geospatialRegion.getContinentEntity(currentGeospatialProperty,currentContinentValue);
+                    break;
+                case COUNTRY_REGION:
+                    targetGeospatialScaleEntity = geospatialRegion.getCountryRegionEntity(currentGeospatialProperty,currentCountryRegionValue);
+                    break;
+                case PROVINCE:
+                    targetGeospatialScaleEntity = geospatialRegion.getProvinceEntity(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue);
+                    break;
+                case PREFECTURE:
+                    targetGeospatialScaleEntity = geospatialRegion.getPrefectureEntity(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,currentPrefectureValue);
+                    break;
+                case COUNTY:
+                    targetGeospatialScaleEntity = geospatialRegion.getCountyEntity(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,currentPrefectureValue,currentCountyValue);
+                    break;
+                case TOWNSHIP:
+                    targetGeospatialScaleEntity = geospatialRegion.getTownshipEntity(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,currentPrefectureValue,currentCountyValue,currentTownshipValue);
+                    break;
+                case VILLAGE:
+                    targetGeospatialScaleEntity = geospatialRegion.getVillageEntity(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,currentPrefectureValue,currentCountyValue,currentTownshipValue,currentVillageValue);
+                    break;
+            }
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+        if(targetGeospatialScaleEntity != null){
+            geospatialScaleEntityList.add(targetGeospatialScaleEntity);
+        }
+        geospatialScaleEntitiesGrid.setItems(geospatialScaleEntityList);
+        CommonUIOperationUtil.showPopupNotification("地理空间区域粒度实体查询操作成功，查询返回实体数: "+geospatialScaleEntityList.size(),
+                NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
+        resultNumberValue.setText("实体总量："+this.numberFormat.format(geospatialScaleEntityList.size()));
+
+
     }
 
     private void renderGeospatialScaleEntityDetailUI(GeospatialScaleEntity geospatialScaleEntity){
