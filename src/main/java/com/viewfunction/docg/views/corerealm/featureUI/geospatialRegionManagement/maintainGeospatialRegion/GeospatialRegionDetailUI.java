@@ -87,7 +87,13 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
     private List<String> continentEntityCNameList;
     private List<String> continentEntityENameList;
     private GeospatialRegion.GeospatialProperty currentGeospatialProperty;
-
+    private Button querySelectedContinentEntitiesButton;
+    private Button querySelectedCountryRegionEntitiesButton;
+    private Button querySelectedProvinceEntitiesButton;
+    private Button querySelectedPrefectureEntitiesButton;
+    private Button querySelectedCountyEntitiesButton;
+    private Button querySelectedTownshipEntitiesButton;
+    private Button querySelectedVillageEntitiesButton;
     public GeospatialRegionDetailUI(){
         this.contentContainerHeightOffset = 265;
         this.numberFormat = NumberFormat.getInstance();
@@ -404,6 +410,11 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         continentValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
+                if(continentValueTextField.getValue() != null){
+                    querySelectedContinentEntitiesButton.setEnabled(true);
+                }else{
+                    querySelectedContinentEntitiesButton.setEnabled(false);
+                }
                 setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.CONTINENT);
             }
         });
@@ -444,7 +455,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
         buttonsGroupContainer1.add(clearContinentEntitiesQueryInputButton);
 
-        Button querySelectedContinentEntitiesButton = new Button();
+        querySelectedContinentEntitiesButton = new Button();
         querySelectedContinentEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         querySelectedContinentEntitiesButton.setTooltipText("显示当前选择洲际实体");
         querySelectedContinentEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
@@ -475,6 +486,11 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         countryRegionTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
+                if(countryRegionTextField.getValue() != null){
+                    querySelectedCountryRegionEntitiesButton.setEnabled(true);
+                }else{
+                    querySelectedCountryRegionEntitiesButton.setEnabled(false);
+                }
                 setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.COUNTRY_REGION);
             }
         });
@@ -512,7 +528,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
         buttonsGroupContainer2.add(clearCountryRegionEntitiesQueryInputButton);
 
-        Button querySelectedCountryRegionEntitiesButton = new Button();
+        querySelectedCountryRegionEntitiesButton = new Button();
         querySelectedCountryRegionEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         querySelectedCountryRegionEntitiesButton.setTooltipText("显示当前选择国家地区实体");
         querySelectedCountryRegionEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
@@ -543,6 +559,11 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         provinceValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
+                if(provinceValueTextField.getValue() != null){
+                    querySelectedProvinceEntitiesButton.setEnabled(true);
+                }else{
+                    querySelectedProvinceEntitiesButton.setEnabled(false);
+                }
                 setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.PROVINCE);
             }
         });
@@ -577,7 +598,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
         buttonsGroupContainer3.add(clearProvinceEntitiesQueryInputButton);
 
-        Button querySelectedProvinceEntitiesButton = new Button();
+        querySelectedProvinceEntitiesButton = new Button();
         querySelectedProvinceEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         querySelectedProvinceEntitiesButton.setTooltipText("显示当前选择省级实体");
         querySelectedProvinceEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
@@ -610,6 +631,11 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         prefectureValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
+                if(prefectureValueTextField.getValue() != null){
+                    querySelectedPrefectureEntitiesButton.setEnabled(true);
+                }else{
+                    querySelectedPrefectureEntitiesButton.setEnabled(false);
+                }
                 setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.PREFECTURE);
             }
         });
@@ -641,7 +667,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
         buttonsGroupContainer4.add(clearPrefectureEntitiesQueryInputButton);
 
-        Button querySelectedPrefectureEntitiesButton = new Button();
+        querySelectedPrefectureEntitiesButton = new Button();
         querySelectedPrefectureEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         querySelectedPrefectureEntitiesButton.setTooltipText("显示当前选择地级实体");
         querySelectedPrefectureEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
@@ -672,6 +698,11 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         countyValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
+                if(countyValueTextField.getValue() != null){
+                    querySelectedCountyEntitiesButton.setEnabled(true);
+                }else{
+                    querySelectedCountyEntitiesButton.setEnabled(false);
+                }
                 setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.COUNTY);
             }
         });
@@ -700,7 +731,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
         buttonsGroupContainer5.add(clearCountyEntitiesQueryInputButton);
 
-        Button querySelectedCountyEntitiesButton = new Button();
+        querySelectedCountyEntitiesButton = new Button();
         querySelectedCountyEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         querySelectedCountyEntitiesButton.setTooltipText("显示当前选择县级实体");
         querySelectedCountyEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
@@ -731,6 +762,11 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         townshipValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
+                if(townshipValueTextField.getValue() != null){
+                    querySelectedTownshipEntitiesButton.setEnabled(true);
+                }else{
+                    querySelectedTownshipEntitiesButton.setEnabled(false);
+                }
                 setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.TOWNSHIP);
             }
         });
@@ -756,7 +792,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
         buttonsGroupContainer6.add(clearTownshipEntitiesQueryInputButton);
 
-        Button querySelectedTownshipEntitiesButton = new Button();
+        querySelectedTownshipEntitiesButton = new Button();
         querySelectedTownshipEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         querySelectedTownshipEntitiesButton.setTooltipText("显示当前选择乡级实体");
         querySelectedTownshipEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
@@ -784,14 +820,18 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         villageValueTextField.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         villageValueTextField.setWidth(180,Unit.PIXELS);
         villageValueContainer.add(villageValueTextField);
-        /*
         villageValueTextField.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<String>, String>>() {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
-                setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.VILLAGE);
+                if(villageValueTextField.getValue() != null){
+                    querySelectedVillageEntitiesButton.setEnabled(true);
+                }else{
+                    querySelectedVillageEntitiesButton.setEnabled(false);
+                }
+                //setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.VILLAGE);
             }
         });
-        */
+
         HorizontalLayout buttonsGroupContainer7 = new HorizontalLayout();
         buttonsGroupContainer7.setSpacing(false);
         buttonsGroupContainer7.setMargin(false);
@@ -810,7 +850,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
         buttonsGroupContainer7.add(clearVillageEntitiesQueryInputButton);
 
-        Button querySelectedVillageEntitiesButton = new Button();
+        querySelectedVillageEntitiesButton = new Button();
         querySelectedVillageEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE);
         querySelectedVillageEntitiesButton.setTooltipText("显示当前选择村级实体");
         querySelectedVillageEntitiesButton.setIcon(FontAwesome.Solid.MAP.create());
@@ -838,6 +878,14 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         countyValueTextField.setEnabled(false);
         townshipValueTextField.setEnabled(false);
         villageValueTextField.setEnabled(false);
+
+        querySelectedContinentEntitiesButton.setEnabled(false);
+        querySelectedCountryRegionEntitiesButton.setEnabled(false);
+        querySelectedProvinceEntitiesButton.setEnabled(false);
+        querySelectedPrefectureEntitiesButton.setEnabled(false);
+        querySelectedCountyEntitiesButton.setEnabled(false);
+        querySelectedTownshipEntitiesButton.setEnabled(false);
+        querySelectedVillageEntitiesButton.setEnabled(false);
 
         middleContainerLayout = new VerticalLayout();
         middleContainerLayout.setSpacing(false);
