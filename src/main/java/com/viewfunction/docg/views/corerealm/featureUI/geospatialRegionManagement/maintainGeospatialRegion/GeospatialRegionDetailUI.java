@@ -888,7 +888,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         heightSpaceDiv2.setHeight(5,Unit.PIXELS);
         leftSideSectionContainerScrollLayout.add(heightSpaceDiv2);
 
-        Button executeQueryButton = new Button("检索地理空间区域尺度实体");
+        Button executeQueryButton = new Button("检索下级地理空间区域尺度实体");
         executeQueryButton.setIcon(new Icon(VaadinIcon.SEARCH));
         executeQueryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -1199,7 +1199,47 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         resultNumberValue.setText("实体总量："+this.numberFormat.format(geospatialScaleEntityList.size()));
     }
 
-    private void queryGeospatialScaleEntities(){}
+    private void queryGeospatialScaleEntities(){
+        geospatialScaleEntitiesGrid.setItems(new ArrayList<>());
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
+        List<GeospatialScaleEntity> geospatialScaleEntityList = null;
+
+        String currentContinentValue = continentValueTextField.getValue();
+        String currentCountryRegionValue = countryRegionTextField.getValue();
+        String currentProvinceValue = provinceValueTextField.getValue();
+        String currentPrefectureValue = prefectureValueTextField.getValue();
+        String currentCountyValue = countyValueTextField.getValue();
+        String currentTownshipValue = townshipValueTextField.getValue();
+        String currentVillageValue = villageValueTextField.getValue();
+        try {
+            if(currentVillageValue != null){
+                GeospatialScaleEntity targetGeospatialScaleEntity = geospatialRegion.getVillageEntity(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,currentPrefectureValue,currentCountyValue,currentTownshipValue,currentVillageValue);
+                geospatialScaleEntityList = new ArrayList<>();
+                geospatialScaleEntityList.add(targetGeospatialScaleEntity);
+            }else if(currentTownshipValue != null){
+                geospatialScaleEntityList = geospatialRegion.listVillageEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,currentPrefectureValue,currentCountyValue,currentTownshipValue,null);
+            }else if(currentCountyValue != null){
+                geospatialScaleEntityList = geospatialRegion.listTownshipEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,currentPrefectureValue,currentCountyValue,null);
+            }else if(currentPrefectureValue != null){
+                geospatialScaleEntityList = geospatialRegion.listCountyEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,currentPrefectureValue,null);
+            }else if(currentProvinceValue != null){
+                geospatialScaleEntityList = geospatialRegion.listPrefectureEntities(currentGeospatialProperty,currentCountryRegionValue,currentProvinceValue,null);
+            }else if(currentCountryRegionValue != null){
+                geospatialScaleEntityList = geospatialRegion.listProvinceEntities(currentGeospatialProperty,currentCountryRegionValue,null);
+            }else if(currentContinentValue != null) {
+                geospatialScaleEntityList = geospatialRegion.listCountryRegionEntities(currentGeospatialProperty, currentContinentValue, null);
+            } else{
+
+            }
+        } catch (CoreRealmServiceRuntimeException e) {
+                throw new RuntimeException(e);
+        }
+        geospatialScaleEntitiesGrid.setItems(geospatialScaleEntityList);
+        CommonUIOperationUtil.showPopupNotification("地理空间区域粒度实体查询操作成功，查询返回实体数: "+geospatialScaleEntityList.size(),
+                NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
+        resultNumberValue.setText("实体总量："+this.numberFormat.format(geospatialScaleEntityList.size()));
+    }
 
     private void renderSelectedGeospatialScaleEntity(GeospatialRegion.GeospatialScaleGrade geospatialScaleGrade){
         geospatialScaleEntitiesGrid.setItems(new ArrayList<>());
