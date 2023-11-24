@@ -24,7 +24,6 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -432,19 +431,6 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         clearContinentEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-
-                continentValueTextField.setClearButtonVisible(true);
-
-
-                continentValueTextField.setValue(null);
-                countryRegionTextField.setValue(null);
-                provinceValueTextField.setValue(null);
-                prefectureValueTextField.setValue(null);
-                countyValueTextField.setValue(null);
-                townshipValueTextField.setValue(null);
-                villageValueTextField.setValue(null);
-
-                /*
                 continentValueTextField.clear();
                 countryRegionTextField.clear();
                 provinceValueTextField.clear();
@@ -452,14 +438,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 countyValueTextField.clear();
                 townshipValueTextField.clear();
                 villageValueTextField.clear();
-                */
 
-               // ((ListDataProvider)(countryRegionTextField.getDataProvider())).getItems().clear();
-                //((ListDataProvider)(provinceValueTextField.getDataProvider())).getItems().clear();
-                //((ListDataProvider)(prefectureValueTextField.getDataProvider())).getItems().clear();
-                //((ListDataProvider)(countyValueTextField.getDataProvider())).getItems().clear();
-                //((ListDataProvider)(townshipValueTextField.getDataProvider())).getItems().clear();
-                //((ListDataProvider)(villageValueTextField.getDataProvider())).getItems().clear();
                 countryRegionTextField.setEnabled(false);
                 provinceValueTextField.setEnabled(false);
                 prefectureValueTextField.setEnabled(false);
@@ -523,21 +502,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         clearCountryRegionEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                /*
                 countryRegionTextField.clear();
                 provinceValueTextField.clear();
                 prefectureValueTextField.clear();
                 countyValueTextField.clear();
                 townshipValueTextField.clear();
                 villageValueTextField.clear();
-                */
-               // ((ListDataProvider)(provinceValueTextField.getDataProvider())).getItems().clear();
-             //   ((ListDataProvider)(prefectureValueTextField.getDataProvider())).getItems().clear();
-             //   ((ListDataProvider)(countyValueTextField.getDataProvider())).getItems().clear();
-             //   ((ListDataProvider)(townshipValueTextField.getDataProvider())).getItems().clear();
-             //   ((ListDataProvider)(villageValueTextField.getDataProvider())).getItems().clear();
-             //   provinceValueTextField.setItems(new ArrayList<>());
-
 
                 provinceValueTextField.setEnabled(false);
                 prefectureValueTextField.setEnabled(false);
@@ -602,17 +572,12 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         clearProvinceEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                /*
                 provinceValueTextField.clear();
                 prefectureValueTextField.clear();
                 countyValueTextField.clear();
                 townshipValueTextField.clear();
                 villageValueTextField.clear();
-                */
-                ((ListDataProvider)(prefectureValueTextField.getDataProvider())).getItems().clear();
-                ((ListDataProvider)(countyValueTextField.getDataProvider())).getItems().clear();
-                ((ListDataProvider)(townshipValueTextField.getDataProvider())).getItems().clear();
-                ((ListDataProvider)(villageValueTextField.getDataProvider())).getItems().clear();
+
                 prefectureValueTextField.setEnabled(false);
                 countyValueTextField.setEnabled(false);
                 townshipValueTextField.setEnabled(false);
@@ -676,16 +641,11 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         clearPrefectureEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                /*
                 prefectureValueTextField.clear();
                 countyValueTextField.clear();
                 townshipValueTextField.clear();
                 villageValueTextField.clear();
-                ((ListDataProvider)(countyValueTextField.getDataProvider())).getItems().clear();
-                ((ListDataProvider)(townshipValueTextField.getDataProvider())).getItems().clear();
-                ((ListDataProvider)(villageValueTextField.getDataProvider())).getItems().clear();
 
-                 */
                 countyValueTextField.setEnabled(false);
                 townshipValueTextField.setEnabled(false);
                 villageValueTextField.setEnabled(false);
@@ -746,14 +706,10 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         clearCountyEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                /*
                 countyValueTextField.clear();
                 townshipValueTextField.clear();
                 villageValueTextField.clear();
-                ((ListDataProvider)(townshipValueTextField.getDataProvider())).getItems().clear();
-                ((ListDataProvider)(villageValueTextField.getDataProvider())).getItems().clear();
 
-                 */
                 townshipValueTextField.setEnabled(false);
                 villageValueTextField.setEnabled(false);
             }
@@ -813,12 +769,9 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         clearTownshipEntitiesQueryInputButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                /*
                 townshipValueTextField.clear();
                 villageValueTextField.clear();
 
-                 */
-                ((ListDataProvider)(villageValueTextField.getDataProvider())).getItems().clear();
                 villageValueTextField.setEnabled(false);
             }
         });
