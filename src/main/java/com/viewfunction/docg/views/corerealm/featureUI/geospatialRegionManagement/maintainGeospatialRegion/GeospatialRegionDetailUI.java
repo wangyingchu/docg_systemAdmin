@@ -376,8 +376,6 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         geospatialPropertyRadioGroup.setItems("地理空间编码", "中文名称", "英文名称");
         checkBoxesContainer1.add(geospatialPropertyRadioGroup);
         checkBoxesContainer1.setVerticalComponentAlignment(Alignment.CENTER,geospatialPropertyRadioGroup);
-        geospatialPropertyRadioGroup.setValue("中文名称");
-        currentGeospatialProperty = GeospatialRegion.GeospatialProperty.ChineseName;
         geospatialPropertyRadioGroup.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<RadioButtonGroup<String>, String>>() {
             @Override
             public void valueChanged(AbstractField.ComponentValueChangeEvent<RadioButtonGroup<String>, String> radioButtonGroupStringComponentValueChangeEvent) {
@@ -1078,6 +1076,9 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             continentEntityENameList.add(currentGeospatialScaleEntity.getEnglishName());
         }
 
+        geospatialPropertyRadioGroup.setValue("中文名称");
+        currentGeospatialProperty = GeospatialRegion.GeospatialProperty.ChineseName;
+
         String filterPropertyName = geospatialPropertyRadioGroup.getValue();
         if("地理空间编码".equals(filterPropertyName)){
             continentValueTextField.setItems(continentEntityCodeList);
@@ -1086,6 +1087,9 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         }else if ("英文名称".equals(filterPropertyName)) {
             continentValueTextField.setItems(continentEntityENameList);
         }
+
+        continentValueTextField.setValue("亚洲");
+        countryRegionTextField.setValue("中国");
     }
 
     private void switchGeospatialRegionSearchElementsInfo(String propertyName){
