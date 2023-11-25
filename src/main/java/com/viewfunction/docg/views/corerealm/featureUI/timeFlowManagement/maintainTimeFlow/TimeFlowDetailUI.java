@@ -1324,7 +1324,7 @@ public class TimeFlowDetailUI extends VerticalLayout implements
     private void renderGenerateTimeFlowIndexesUI(){
         List<Button> actionButtonList = new ArrayList<>();
         Button confirmButton = new Button("确认生成加速索引",new Icon(VaadinIcon.CHECK_CIRCLE));
-        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Button cancelButton = new Button("取消操作");
         cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
         actionButtonList.add(confirmButton);

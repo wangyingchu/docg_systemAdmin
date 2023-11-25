@@ -99,6 +99,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
     private Button querySelectedTownshipEntitiesButton;
     private Button querySelectedVillageEntitiesButton;
     private Button executeQueryButton;
+    private MenuItem initGeoSpatialDataActionItem;
 
     public GeospatialRegionDetailUI(){
         this.contentContainerHeightOffset = 265;
@@ -184,6 +185,27 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         geospatialRegionOperationMenu.add(downArrowIcon);
 
         SubMenu operationSubItems = geospatialRegionOperationMenu.getSubMenu();
+
+        HorizontalLayout action0Layout = new HorizontalLayout();
+        action0Layout.setPadding(false);
+        action0Layout.setSpacing(false);
+        action0Layout.setMargin(false);
+        action0Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon action0Icon = VaadinIcon.HARDDRIVE.create();
+        action0Icon.setSize("10px");
+        Span action0Space = new Span();
+        action0Space.setWidth(6,Unit.PIXELS);
+        NativeLabel action0Label = new NativeLabel("初始化地理空间区域数据");
+        action0Label.addClassNames("text-xs","font-semibold","text-secondary");
+        action0Layout.add(action0Icon,action0Space,action0Label);
+        initGeoSpatialDataActionItem = operationSubItems.addItem(action0Layout);
+        initGeoSpatialDataActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                initGeoSpatialData();
+            }
+        });
+        initGeoSpatialDataActionItem.setEnabled(false);
 
         HorizontalLayout action1Layout = new HorizontalLayout();
         action1Layout.setPadding(false);
@@ -1075,6 +1097,10 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         continentEntityCNameList = new ArrayList<>();
         continentEntityENameList = new ArrayList<>();
 
+        if(allContinentEntityList.size() == 0){
+            initGeoSpatialDataActionItem.setEnabled(true);
+        }
+
         for(GeospatialScaleEntity currentGeospatialScaleEntity : allContinentEntityList){
             continentEntityCodeList.add(currentGeospatialScaleEntity.getGeospatialCode());
             continentEntityCNameList.add(currentGeospatialScaleEntity.getChineseName());
@@ -1426,7 +1452,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
     private void renderGenerateGeospatialRegionIndexesUI(){
         List<Button> actionButtonList = new ArrayList<>();
         Button confirmButton = new Button("确认生成加速索引",new Icon(VaadinIcon.CHECK_CIRCLE));
-        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Button cancelButton = new Button("取消操作");
         cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
         actionButtonList.add(confirmButton);
@@ -1456,6 +1482,43 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             showPopupNotification(generatedIndexesSet,NotificationVariant.LUMO_SUCCESS);
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
+        }
+        confirmWindow.closeConfirmWindow();
+    }
+
+    private void initGeoSpatialData(){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认初始化地理空间区域数据",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","本操作将初始化创建地理空间区域数据，请确认是否执行生成操作",actionButtonList,550,180);
+        confirmWindow.open();
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doInitGeoSpatialData(confirmWindow);
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doInitGeoSpatialData(ConfirmWindow confirmWindow){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
+        boolean createResult = geospatialRegion.createGeospatialScaleEntities();
+        if(createResult){
+            CommonUIOperationUtil.showPopupNotification("初始化创建地理空间区域数据成功", NotificationVariant.LUMO_SUCCESS);
+        }else{
+            CommonUIOperationUtil.showPopupNotification("初始化创建地理空间区域数据错误", NotificationVariant.LUMO_ERROR);
         }
         confirmWindow.closeConfirmWindow();
     }
