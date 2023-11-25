@@ -303,6 +303,8 @@ public class MainLayout extends AppLayout {
                 ClassificationAttachedEvent.class);
         _BLACKBOARD.register(TimeFlowRefreshEvent.TimeFlowRefreshEventListener.class,
                 TimeFlowRefreshEvent.class);
+        _BLACKBOARD.register(GeospatialRegionRefreshEvent.GeospatialRegionRefreshEventListener.class,
+                GeospatialRegionRefreshEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

@@ -19,6 +19,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.GeospatialRegion;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import com.viewfunction.docg.element.eventHandling.GeospatialRegionRefreshEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.geospatialRegionManagement.maintainGeospatialRegion.GeospatialRegionDetailUI;
 
 import java.util.ArrayList;
@@ -38,8 +40,8 @@ public class GeospatialRegionManagementUI extends VerticalLayout {
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
-            //loadConceptionKindsInfo();
-            //resetSingleConceptionKindSummaryInfoArea();
+            GeospatialRegionRefreshEvent geospatialRegionRefreshEvent = new GeospatialRegionRefreshEvent();
+            ResourceHolder.getApplicationBlackboard().fire(geospatialRegionRefreshEvent);
         });
 
         List<Component> buttonList = new ArrayList<>();

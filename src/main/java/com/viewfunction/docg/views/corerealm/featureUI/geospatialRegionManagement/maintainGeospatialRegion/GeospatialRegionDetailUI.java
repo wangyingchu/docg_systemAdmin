@@ -40,7 +40,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.eventHandling.GeospatialRegionRefreshEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.text.NumberFormat;
@@ -50,7 +52,7 @@ import java.util.Set;
 
 @Route("timeFlowDetailInfo/:geospatialRegion")
 public class GeospatialRegionDetailUI extends VerticalLayout implements
-        BeforeEnterObserver {
+        BeforeEnterObserver, GeospatialRegionRefreshEvent.GeospatialRegionRefreshEventListener {
     private String geospatialRegionName;
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout middleContainerLayout;
@@ -137,7 +139,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             //timeFlowCorrelationExploreView.setViewHeight(browserHeight - contentContainerHeightOffset);
         }));
         renderGeospatialRegionBasicInfo();
-        //ResourceHolder.getApplicationBlackboard().addListener(this);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
     }
 
     @Override
@@ -145,7 +147,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     private void renderGeospatialRegionData(){
@@ -1196,7 +1198,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         return resultValueList;
     }
 
-    private void setupTimeFlowRuntimeStatisticInfo(){
+    private GeospatialRegionRuntimeStatistics setupTimeFlowRuntimeStatisticInfo(){
         if(!timeFlowRuntimeStatisticsQueried){
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
@@ -1217,7 +1219,10 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             townshipEventCountItem.updateDisplayValue(this.numberFormat.format(geospatialRegionRuntimeStatistics.getRefersTownshipScaleTimeScaleEventCount()));
             villageEntityCountItem.updateDisplayValue(this.numberFormat.format(geospatialRegionRuntimeStatistics.getContainsVillageScaleTimeScaleEntityCount()));
             villageEventCountItem.updateDisplayValue(this.numberFormat.format(geospatialRegionRuntimeStatistics.getRefersVillageScaleTimeScaleEventCount()));
+
+            return geospatialRegionRuntimeStatistics;
         }
+        return null;
     }
 
     private void renderGeospatialScaleEntityList(GeospatialRegion.GeospatialScaleGrade geospatialScaleGrade) {
@@ -1499,5 +1504,19 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             item.add(new Text(label));
         }
         return item;
+    }
+
+    @Override
+    public void receivedGeospatialRegionRefreshEvent(GeospatialRegionRefreshEvent event) {
+        if(event != null ){
+            if(this.geospatialRegionName.equals(event.getGeospatialRegionName()) || event.getGeospatialRegionName() == null){
+                timeFlowRuntimeStatisticsQueried = false;
+                GeospatialRegionRuntimeStatistics geospatialRegionRuntimeStatistics = setupTimeFlowRuntimeStatisticInfo();
+                if(geospatialRegionRuntimeStatistics != null){
+                    totalGeospatialScaleEntityCountDisplayItem.updateDisplayValue(this.numberFormat.format(geospatialRegionRuntimeStatistics.getContainsTotalGeospatialScaleEntityCount()));
+                    totalGeospatialScaleEventCountDisplayItem.updateDisplayValue(this.numberFormat.format(geospatialRegionRuntimeStatistics.getRefersTotalGeospatialScaleEventCount()));
+                }
+            }
+        }
     }
 }
