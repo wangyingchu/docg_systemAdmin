@@ -100,6 +100,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
     private Button querySelectedVillageEntitiesButton;
     private Button executeQueryButton;
     private MenuItem initGeoSpatialDataActionItem;
+    private GeospatialRegionCorrelationExploreView geospatialRegionCorrelationExploreView;
 
     public GeospatialRegionDetailUI(){
         this.contentContainerHeightOffset = 265;
@@ -1083,6 +1084,9 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         mainContainerLayout.add(rightSideContainerLayout);
         rightSideContainerLayout.setWidthFull();
         rightSideContainerLayout.setHeight(600,Unit.PIXELS);
+
+        geospatialRegionCorrelationExploreView = new GeospatialRegionCorrelationExploreView(this.geospatialRegionName);
+        rightSideContainerLayout.add(geospatialRegionCorrelationExploreView);
     }
 
     private void renderGeospatialRegionBasicInfo(){
