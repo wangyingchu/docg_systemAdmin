@@ -1291,6 +1291,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         CommonUIOperationUtil.showPopupNotification("地理空间区域粒度实体查询操作成功，查询返回实体数: "+geospatialScaleEntityList.size(),
                 NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
         resultNumberValue.setText("实体总量："+this.numberFormat.format(geospatialScaleEntityList.size()));
+        this.geospatialRegionCorrelationExploreView.renderGeospatialRegionData(geospatialScaleEntityList);
     }
 
     private void queryGeospatialScaleEntities(){
@@ -1333,6 +1334,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         CommonUIOperationUtil.showPopupNotification("地理空间区域粒度实体查询操作成功，查询返回实体数: "+geospatialScaleEntityList.size(),
                 NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
         resultNumberValue.setText("实体总量："+this.numberFormat.format(geospatialScaleEntityList.size()));
+        this.geospatialRegionCorrelationExploreView.renderGeospatialRegionData(geospatialScaleEntityList);
     }
 
     private void renderSelectedGeospatialScaleEntity(GeospatialRegion.GeospatialScaleGrade geospatialScaleGrade){
@@ -1384,6 +1386,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         CommonUIOperationUtil.showPopupNotification("地理空间区域粒度实体查询操作成功，查询返回实体数: "+geospatialScaleEntityList.size(),
                 NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
         resultNumberValue.setText("实体总量："+this.numberFormat.format(geospatialScaleEntityList.size()));
+        this.geospatialRegionCorrelationExploreView.renderGeospatialRegionData(geospatialScaleEntityList);
     }
 
     private void renderGeospatialScaleEntityDetailUI(GeospatialScaleEntity geospatialScaleEntity){
