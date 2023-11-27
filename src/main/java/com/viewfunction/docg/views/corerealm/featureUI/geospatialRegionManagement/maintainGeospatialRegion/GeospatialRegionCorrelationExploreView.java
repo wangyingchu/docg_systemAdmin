@@ -79,9 +79,15 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
 
     private void renderSameLevelGeospatialRegionEntityList(List<GeospatialScaleEntity> geospatialScaleEntityList){
         this.geospatialChartContainer.removeAll();
+        GeospatialRegionCorrelationInfoChart geospatialRegionCorrelationInfoChart = new GeospatialRegionCorrelationInfoChart(this.geospatialRegionName);
+        this.geospatialChartContainer.add(geospatialRegionCorrelationInfoChart);
+        geospatialRegionCorrelationInfoChart.renderEntitiesSpatialInfo(geospatialScaleEntityList);
     }
 
     private void renderSubLevelGeospatialRegionEntityList(List<GeospatialScaleEntity> geospatialScaleEntityList){
         this.geospatialChartContainer.removeAll();
+        GeospatialRegionCorrelationInfoChart geospatialRegionCorrelationInfoChart = new GeospatialRegionCorrelationInfoChart(this.geospatialRegionName);
+        this.geospatialChartContainer.add(geospatialRegionCorrelationInfoChart);
+        geospatialRegionCorrelationInfoChart.renderEntitiesSpatialInfo(geospatialScaleEntityList);
     }
 }
