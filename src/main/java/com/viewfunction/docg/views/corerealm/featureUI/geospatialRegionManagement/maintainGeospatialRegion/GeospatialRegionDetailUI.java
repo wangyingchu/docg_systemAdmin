@@ -127,8 +127,8 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             leftSideContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset, Unit.PIXELS);
             middleContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset,Unit.PIXELS);
             rightSideContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset,Unit.PIXELS);
-            //timeFlowCorrelationExploreView.setViewWidth(event.getWidth() - 600);
-            //timeFlowCorrelationExploreView.setViewHeight(event.getHeight() - contentContainerHeightOffset);
+            geospatialRegionCorrelationExploreView.setViewWidth(event.getWidth() - 855);
+            geospatialRegionCorrelationExploreView.setViewHeight(event.getHeight() - contentContainerHeightOffset);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -137,8 +137,8 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             leftSideContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
             middleContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
             rightSideContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
-            //timeFlowCorrelationExploreView.setViewWidth(browserWidth - 600);
-            //timeFlowCorrelationExploreView.setViewHeight(browserHeight - contentContainerHeightOffset);
+            geospatialRegionCorrelationExploreView.setViewWidth(browserWidth - 855);
+            geospatialRegionCorrelationExploreView.setViewHeight(browserHeight - contentContainerHeightOffset);
         }));
         renderGeospatialRegionBasicInfo();
         ResourceHolder.getApplicationBlackboard().addListener(this);
@@ -1075,7 +1075,6 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
 
         middleContainerLayout.add(geospatialScaleEntitiesGrid);
 
-
         rightSideContainerLayout = new HorizontalLayout();
         rightSideContainerLayout.setSpacing(false);
         rightSideContainerLayout.setMargin(false);
@@ -1291,7 +1290,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         CommonUIOperationUtil.showPopupNotification("地理空间区域粒度实体查询操作成功，查询返回实体数: "+geospatialScaleEntityList.size(),
                 NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
         resultNumberValue.setText("实体总量："+this.numberFormat.format(geospatialScaleEntityList.size()));
-        this.geospatialRegionCorrelationExploreView.renderGeospatialRegionData(geospatialScaleEntityList);
+        this.geospatialRegionCorrelationExploreView.renderGeospatialRegionData(GeospatialRegionCorrelationExploreView.RenderType.List_SameLevel,geospatialScaleEntityList);
     }
 
     private void queryGeospatialScaleEntities(){
@@ -1334,7 +1333,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         CommonUIOperationUtil.showPopupNotification("地理空间区域粒度实体查询操作成功，查询返回实体数: "+geospatialScaleEntityList.size(),
                 NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
         resultNumberValue.setText("实体总量："+this.numberFormat.format(geospatialScaleEntityList.size()));
-        this.geospatialRegionCorrelationExploreView.renderGeospatialRegionData(geospatialScaleEntityList);
+        this.geospatialRegionCorrelationExploreView.renderGeospatialRegionData(GeospatialRegionCorrelationExploreView.RenderType.List_SubLevel,geospatialScaleEntityList);
     }
 
     private void renderSelectedGeospatialScaleEntity(GeospatialRegion.GeospatialScaleGrade geospatialScaleGrade){
@@ -1386,7 +1385,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         CommonUIOperationUtil.showPopupNotification("地理空间区域粒度实体查询操作成功，查询返回实体数: "+geospatialScaleEntityList.size(),
                 NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
         resultNumberValue.setText("实体总量："+this.numberFormat.format(geospatialScaleEntityList.size()));
-        this.geospatialRegionCorrelationExploreView.renderGeospatialRegionData(geospatialScaleEntityList);
+        this.geospatialRegionCorrelationExploreView.renderGeospatialRegionData(GeospatialRegionCorrelationExploreView.RenderType.Single,geospatialScaleEntityList);
     }
 
     private void renderGeospatialScaleEntityDetailUI(GeospatialScaleEntity geospatialScaleEntity){
