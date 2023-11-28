@@ -1,14 +1,22 @@
 package com.viewfunction.docg.views.corerealm.featureUI.geospatialRegionManagement.maintainGeospatialRegion;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.contextmenu.HasMenuItems;
+import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
@@ -17,10 +25,6 @@ import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
-
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntitySpatialAttributeView;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -32,7 +36,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     private int viewWidth;
     private Grid<AttributeValue> entityAttributesInfoGrid;
     private SecondaryTitleActionBar geospatialScaleEntityTitleActionBar;
-    private NativeLabel entityUID;
+    private NativeLabel entityUIDLabel;
     private PrimaryKeyValueDisplayItem relatedConceptionEntitiesCountDisplayItem;
     private NumberFormat numberFormat;
     private VerticalLayout entityInfoContainerLayout;
@@ -126,9 +130,9 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         divIcon6.setSize("10px");
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon6);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon6);
-        entityUID = new NativeLabel("-");
-        singleGeospatialRegionElementsFootprintMessageLayout.add(entityUID);
-        singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,entityUID);
+        entityUIDLabel = new NativeLabel("-");
+        singleGeospatialRegionElementsFootprintMessageLayout.add(entityUIDLabel);
+        singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER, entityUIDLabel);
 
         this.geospatialScaleEntityTitleActionBar = new SecondaryTitleActionBar(FontAwesome.Solid.MAP.create(),"-",null,null);
         this.geospatialScaleEntityTitleActionBar.setWidth(100,Unit.PERCENTAGE);
@@ -158,7 +162,56 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         entityInfoContainerLayout.add(summaryInfoContainer);
 
         relatedConceptionEntitiesCountDisplayItem =
-                new PrimaryKeyValueDisplayItem(summaryInfoContainer, FontAwesome.Solid.CIRCLE.create(),"关联概念实体数量:","-");
+                new PrimaryKeyValueDisplayItem(summaryInfoContainer, FontAwesome.Solid.CIRCLE.create(),"地理空间关联概念实体数量:","-");
+
+        Icon divIcon7 = VaadinIcon.LINE_V.create();
+        divIcon7.setSize("8px");
+        summaryInfoContainer.add(divIcon7);
+
+        MenuBar importMenuBar0 = new MenuBar();
+        importMenuBar0.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+        MenuItem sameLevelEntitiesDataMenu = createIconItem(importMenuBar0, VaadinIcon.ARROWS_LONG_H, "同级地理空间区域实体", null);
+        sameLevelEntitiesDataMenu.getStyle().set("font-size","0.75rem");
+        Icon downArrowIcon2 = new Icon(VaadinIcon.CHEVRON_DOWN);
+        downArrowIcon2.setSize("10px");
+        sameLevelEntitiesDataMenu.add(downArrowIcon2);
+        summaryInfoContainer.add(importMenuBar0);
+
+        MenuBar importMenuBar1 = new MenuBar();
+        importMenuBar1.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+        MenuItem childrenEntitiesDataMenu = createIconItem(importMenuBar1, VaadinIcon.ARROW_LONG_DOWN, "下级地理空间区域实体", null);
+        childrenEntitiesDataMenu.getStyle().set("font-size","0.75rem");
+        Icon downArrowIcon1 = new Icon(VaadinIcon.CHEVRON_DOWN);
+        downArrowIcon1.setSize("10px");
+        childrenEntitiesDataMenu.add(downArrowIcon1);
+        summaryInfoContainer.add(importMenuBar1);
+
+        Icon divIcon8 = VaadinIcon.LINE_V.create();
+        divIcon8.setSize("8px");
+        summaryInfoContainer.add(divIcon8);
+
+        Button displayCurrentEntityDetail = new Button("显示实体详情");
+        displayCurrentEntityDetail.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        displayCurrentEntityDetail.setIcon(VaadinIcon.EYE.create());
+        displayCurrentEntityDetail.getStyle().set("font-size","0.75rem");
+        summaryInfoContainer.add(displayCurrentEntityDetail);
+
+        VerticalLayout gridContainer = new VerticalLayout();
+        gridContainer.setSpacing(false);
+        gridContainer.setMargin(false);
+        gridContainer.setPadding(false);
+        gridContainer.setWidth(300,Unit.PIXELS);
+        gridContainer.setAlignItems(Alignment.START);
+        geospatialScaleEntityInfoContainerLayout.add(gridContainer);
+        geospatialScaleEntityInfoContainerLayout.setVerticalComponentAlignment(Alignment.START,gridContainer);
+
+        VerticalLayout spaceMarginDiv = new VerticalLayout();
+        spaceMarginDiv.setSpacing(false);
+        spaceMarginDiv.setMargin(false);
+        spaceMarginDiv.setPadding(false);
+        spaceMarginDiv.setHeight(5,Unit.PIXELS);
+        gridContainer.add(spaceMarginDiv);
+        gridContainer.setHorizontalComponentAlignment(Alignment.START,spaceMarginDiv);
 
         entityAttributesInfoGrid = new Grid<>();
         entityAttributesInfoGrid.setWidth(300, Unit.PIXELS);
@@ -166,20 +219,22 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         entityAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         entityAttributesInfoGrid.addColumn(AttributeValue::getAttributeName).setHeader("属性名称").setKey("idx_0");
         entityAttributesInfoGrid.addColumn(AttributeValue::getAttributeValue).setHeader("属性值").setKey("idx_1").setFlexGrow(1).setResizable(true);
+        entityAttributesInfoGrid.getStyle().set("padding-top", "100px");
 
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
         entityAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.INPUT,"属性值");
         entityAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
 
-        geospatialScaleEntityInfoContainerLayout.add(entityAttributesInfoGrid);
-        geospatialScaleEntityInfoContainerLayout.setVerticalComponentAlignment(Alignment.START,entityAttributesInfoGrid);
+        gridContainer.add(entityAttributesInfoGrid);
+        gridContainer.setHorizontalComponentAlignment(Alignment.START,entityAttributesInfoGrid);
     }
 
     private void renderSingleGeospatialRegionEntity(GeospatialScaleEntity targetGeospatialScaleEntity){
         String currentGeospatialScaleEntityUID = targetGeospatialScaleEntity.getGeospatialScaleEntityUID();
         GeospatialRegion.GeospatialScaleGrade currentGeospatialScaleGrade = targetGeospatialScaleEntity.getGeospatialScaleGrade();
         String geospatialScaleEntityKindName = null;
+
         switch(currentGeospatialScaleGrade){
             case CONTINENT -> geospatialScaleEntityKindName = RealmConstant.GeospatialScaleContinentEntityClass;
             case COUNTRY_REGION -> geospatialScaleEntityKindName = RealmConstant.GeospatialScaleCountryRegionEntityClass;
@@ -190,9 +245,10 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
             case VILLAGE -> geospatialScaleEntityKindName = RealmConstant.GeospatialScaleVillageEntityClass;
         }
 
-        String entityEngliseName = targetGeospatialScaleEntity.getEnglishName() != null ? targetGeospatialScaleEntity.getEnglishName() : "-";
-        this.geospatialScaleEntityTitleActionBar.updateTitleContent( currentGeospatialScaleGrade.toString() + " : "+targetGeospatialScaleEntity.getChineseName()+" ("+entityEngliseName+") ");
-        this.entityUID.setText(currentGeospatialScaleEntityUID);
+        String entityEnglishName = targetGeospatialScaleEntity.getEnglishName() != null ? targetGeospatialScaleEntity.getEnglishName() : "-";
+        this.geospatialScaleEntityTitleActionBar.updateTitleContent(currentGeospatialScaleGrade.toString() + " : "+
+                targetGeospatialScaleEntity.getChineseName()+" ("+entityEnglishName+") - "+targetGeospatialScaleEntity.getGeospatialCode());
+        this.entityUIDLabel.setText(currentGeospatialScaleEntityUID);
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
@@ -200,11 +256,18 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         targetGeospatialScaleEntity = geospatialRegion.getEntityByGeospatialCode(targetGeospatialScaleEntity.getGeospatialCode());
 
         Long relatedConceptionEntitiesCount = targetGeospatialScaleEntity.countAttachedConceptionEntities(GeospatialScaleEntity.GeospatialScaleLevel.SELF);
+
+
         targetGeospatialScaleEntity.getChildEntities();
-        targetGeospatialScaleEntity.getParentEntity();
         targetGeospatialScaleEntity.getFellowEntities();
+        targetGeospatialScaleEntity.getParentEntity();
+
+
+
 
         relatedConceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(relatedConceptionEntitiesCount));
+
+
 
         ConceptionKind targetGeoConceptionKind = coreRealm.getConceptionKind(geospatialScaleEntityKindName);
         ConceptionEntity targetConceptionEntity = targetGeoConceptionKind.getEntityByUID(currentGeospatialScaleEntityUID);
@@ -212,8 +275,6 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         entityAttributesInfoGrid.setItems(allAttributesList);
 
         coreRealm.closeGlobalSession();
-
-
     }
 
     public int getViewHeight() {
@@ -245,28 +306,6 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         }
     }
 
-    private void renderSingleGeospatialRegionEntity0(GeospatialScaleEntity targetGeospatialScaleEntity){
-        //this.geospatialChartContainer.removeAll();
-        String currentGeospatialScaleEntityUID = targetGeospatialScaleEntity.getGeospatialScaleEntityUID();
-        GeospatialRegion.GeospatialScaleGrade currentGeospatialScaleGrade = targetGeospatialScaleEntity.getGeospatialScaleGrade();
-        String geospatialScaleEntityKindName = null;
-        switch(currentGeospatialScaleGrade){
-            case CONTINENT -> geospatialScaleEntityKindName = RealmConstant.GeospatialScaleContinentEntityClass;
-            case COUNTRY_REGION -> geospatialScaleEntityKindName = RealmConstant.GeospatialScaleCountryRegionEntityClass;
-            case PROVINCE -> geospatialScaleEntityKindName = RealmConstant.GeospatialScaleProvinceEntityClass;
-            case PREFECTURE -> geospatialScaleEntityKindName = RealmConstant.GeospatialScalePrefectureEntityClass;
-            case COUNTY -> geospatialScaleEntityKindName = RealmConstant.GeospatialScaleCountyEntityClass;
-            case TOWNSHIP -> geospatialScaleEntityKindName = RealmConstant.GeospatialScaleTownshipEntityClass;
-            case VILLAGE -> geospatialScaleEntityKindName = RealmConstant.GeospatialScaleVillageEntityClass;
-        }
-
-        ConceptionEntitySpatialAttributeView conceptionEntitySpatialAttributeView =
-                new ConceptionEntitySpatialAttributeView(geospatialScaleEntityKindName,currentGeospatialScaleEntityUID,265);
-        conceptionEntitySpatialAttributeView.setWidth(this.viewWidth, Unit.PIXELS);
-        //this.geospatialChartContainer.add(conceptionEntitySpatialAttributeView);
-        conceptionEntitySpatialAttributeView.renderEntitySpatialInfo();
-    }
-
     private void renderSameLevelGeospatialRegionEntityList(List<GeospatialScaleEntity> geospatialScaleEntityList){
         //this.geospatialChartContainer.removeAll();
         //GeospatialRegionCorrelationInfoChart geospatialRegionCorrelationInfoChart = new GeospatialRegionCorrelationInfoChart(this.geospatialRegionName);
@@ -279,5 +318,27 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         //GeospatialRegionCorrelationInfoChart geospatialRegionCorrelationInfoChart = new GeospatialRegionCorrelationInfoChart(this.geospatialRegionName);
        // this.geospatialChartContainer.add(geospatialRegionCorrelationInfoChart);
         //geospatialRegionCorrelationInfoChart.renderEntitiesSpatialInfo(geospatialScaleEntityList);
+    }
+
+    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
+        return createIconItem(menu, iconName, label, ariaLabel, false);
+    }
+
+    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName,String label, String ariaLabel, boolean isChild) {
+        Icon icon = new Icon(iconName);
+        if (isChild) {
+            icon.getStyle().set("width", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("height", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("marginRight", "var(--lumo-space-s)");
+        }
+        MenuItem item = menu.addItem(icon, e -> {
+        });
+        if (ariaLabel != null) {
+            item.getElement().setAttribute("aria-label", ariaLabel);
+        }
+        if (label != null) {
+            item.add(new Text(label));
+        }
+        return item;
     }
 }
