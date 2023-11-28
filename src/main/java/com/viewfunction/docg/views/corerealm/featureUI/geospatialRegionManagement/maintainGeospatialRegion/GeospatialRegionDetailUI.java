@@ -50,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Route("timeFlowDetailInfo/:geospatialRegion")
+@Route("geospatialRegionDetailInfo/:geospatialRegion")
 public class GeospatialRegionDetailUI extends VerticalLayout implements
         BeforeEnterObserver, GeospatialRegionRefreshEvent.GeospatialRegionRefreshEventListener {
     private String geospatialRegionName;
@@ -377,6 +377,10 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             }
         });
         geospatialRegionInfoWallContainerLayout.add(villageInfoSectionWallContainer);
+
+        HorizontalLayout heightSpaceDiv05 = new HorizontalLayout();
+        heightSpaceDiv05.setWidth(95,Unit.PERCENTAGE);
+        leftSideSectionContainerScrollLayout.add(heightSpaceDiv05);
 
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"地理空间区域尺度实体检索");
         leftSideSectionContainerScrollLayout.add(filterTitle2);
