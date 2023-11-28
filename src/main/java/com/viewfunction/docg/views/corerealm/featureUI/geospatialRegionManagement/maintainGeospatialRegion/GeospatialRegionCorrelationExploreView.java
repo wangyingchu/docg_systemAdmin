@@ -246,7 +246,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     }
 
     private void renderSingleGeospatialRegionEntity0(GeospatialScaleEntity targetGeospatialScaleEntity){
-        this.geospatialChartContainer.removeAll();
+        //this.geospatialChartContainer.removeAll();
         String currentGeospatialScaleEntityUID = targetGeospatialScaleEntity.getGeospatialScaleEntityUID();
         GeospatialRegion.GeospatialScaleGrade currentGeospatialScaleGrade = targetGeospatialScaleEntity.getGeospatialScaleGrade();
         String geospatialScaleEntityKindName = null;
@@ -263,7 +263,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         ConceptionEntitySpatialAttributeView conceptionEntitySpatialAttributeView =
                 new ConceptionEntitySpatialAttributeView(geospatialScaleEntityKindName,currentGeospatialScaleEntityUID,265);
         conceptionEntitySpatialAttributeView.setWidth(this.viewWidth, Unit.PIXELS);
-        this.geospatialChartContainer.add(conceptionEntitySpatialAttributeView);
+        //this.geospatialChartContainer.add(conceptionEntitySpatialAttributeView);
         conceptionEntitySpatialAttributeView.renderEntitySpatialInfo();
     }
 
