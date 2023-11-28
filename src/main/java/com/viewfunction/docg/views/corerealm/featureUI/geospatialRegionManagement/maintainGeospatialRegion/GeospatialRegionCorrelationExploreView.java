@@ -14,28 +14,31 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
+import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntitySpatialAttributeView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     private String geospatialRegionName;
-    private VerticalLayout geospatialChartContainer;
     public enum RenderType {Single,List_SameLevel,List_SubLevel}
     private int viewHeight;
     private int viewWidth;
     private Grid<AttributeValue> entityAttributesInfoGrid;
-
     private SecondaryTitleActionBar geospatialScaleEntityTitleActionBar;
-
     private NativeLabel entityUID;
-
+    private PrimaryKeyValueDisplayItem relatedConceptionEntitiesCountDisplayItem;
+    private NumberFormat numberFormat;
+    private VerticalLayout entityInfoContainerLayout;
     public GeospatialRegionCorrelationExploreView(String geospatialRegionName){
         this.geospatialRegionName = geospatialRegionName;
+        this.numberFormat = NumberFormat.getInstance();
 
         HorizontalLayout singleGeospatialRegionElementsContainerLayout = new HorizontalLayout();
         singleGeospatialRegionElementsContainerLayout.setSpacing(false);
@@ -47,9 +50,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         SecondaryIconTitle geospatialScaleEntityTitle = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"地理空间区域尺度实体概览");
         singleGeospatialRegionElementsContainerLayout.add(geospatialScaleEntityTitle);
 
-
         HorizontalLayout singleGeospatialRegionElementsFootprintMessageLayout = new HorizontalLayout();
-
         add(singleGeospatialRegionElementsFootprintMessageLayout);
 
         Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
@@ -107,7 +108,6 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon4);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon4);
 
-
         Button _TOWNSHIPButton = new Button("库兰萨日克乡");
         _TOWNSHIPButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         singleGeospatialRegionElementsFootprintMessageLayout.add(_TOWNSHIPButton);
@@ -124,27 +124,41 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
 
         Icon divIcon6 = VaadinIcon.KEY_O.create();
         divIcon6.setSize("10px");
-        //divIcon6.getStyle().set("padding-left","5px");
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon6);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon6);
         entityUID = new NativeLabel("-");
         singleGeospatialRegionElementsFootprintMessageLayout.add(entityUID);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,entityUID);
 
-
-
-
         this.geospatialScaleEntityTitleActionBar = new SecondaryTitleActionBar(FontAwesome.Solid.MAP.create(),"-",null,null);
         this.geospatialScaleEntityTitleActionBar.setWidth(100,Unit.PERCENTAGE);
         add(this.geospatialScaleEntityTitleActionBar);
-
 
         HorizontalLayout geospatialScaleEntityInfoContainerLayout = new HorizontalLayout();
         geospatialScaleEntityInfoContainerLayout.setSpacing(false);
         geospatialScaleEntityInfoContainerLayout.setMargin(false);
         geospatialScaleEntityInfoContainerLayout.setPadding(false);
-
         add(geospatialScaleEntityInfoContainerLayout);
+
+        entityInfoContainerLayout = new VerticalLayout();
+        entityInfoContainerLayout.setSpacing(false);
+        entityInfoContainerLayout.setMargin(false);
+        entityInfoContainerLayout.setPadding(false);
+        entityInfoContainerLayout.setWidth(500,Unit.PIXELS);
+        geospatialScaleEntityInfoContainerLayout.add(entityInfoContainerLayout);
+        entityInfoContainerLayout.getStyle()
+                .set("border-right", "1px solid var(--lumo-contrast-20pct)");
+
+        HorizontalLayout summaryInfoContainer = new HorizontalLayout();
+        summaryInfoContainer.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        summaryInfoContainer.setWidthFull();
+        summaryInfoContainer.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-s)");
+        entityInfoContainerLayout.add(summaryInfoContainer);
+
+        relatedConceptionEntitiesCountDisplayItem =
+                new PrimaryKeyValueDisplayItem(summaryInfoContainer, FontAwesome.Solid.CIRCLE.create(),"关联概念实体数量:","-");
 
         entityAttributesInfoGrid = new Grid<>();
         entityAttributesInfoGrid.setWidth(300, Unit.PIXELS);
@@ -157,14 +171,9 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         entityAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.INPUT,"属性值");
         entityAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
-        entityAttributesInfoGrid.setHeight(400,Unit.PIXELS);
+
         geospatialScaleEntityInfoContainerLayout.add(entityAttributesInfoGrid);
-
-
-        //this.geospatialChartContainer = new VerticalLayout();
-       // this.geospatialChartContainer.setMargin(false);
-
-       // add(this.geospatialChartContainer);
+        geospatialScaleEntityInfoContainerLayout.setVerticalComponentAlignment(Alignment.START,entityAttributesInfoGrid);
     }
 
     private void renderSingleGeospatialRegionEntity(GeospatialScaleEntity targetGeospatialScaleEntity){
@@ -190,10 +199,12 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
         targetGeospatialScaleEntity = geospatialRegion.getEntityByGeospatialCode(targetGeospatialScaleEntity.getGeospatialCode());
 
-        targetGeospatialScaleEntity.countAttachedConceptionEntities(GeospatialScaleEntity.GeospatialScaleLevel.SELF);
+        Long relatedConceptionEntitiesCount = targetGeospatialScaleEntity.countAttachedConceptionEntities(GeospatialScaleEntity.GeospatialScaleLevel.SELF);
         targetGeospatialScaleEntity.getChildEntities();
         targetGeospatialScaleEntity.getParentEntity();
         targetGeospatialScaleEntity.getFellowEntities();
+
+        relatedConceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(relatedConceptionEntitiesCount));
 
         ConceptionKind targetGeoConceptionKind = coreRealm.getConceptionKind(geospatialScaleEntityKindName);
         ConceptionEntity targetConceptionEntity = targetGeoConceptionKind.getEntityByUID(currentGeospatialScaleEntityUID);
@@ -211,6 +222,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
 
     public void setViewWidth(int value){
         this.viewWidth = value;
+        this.entityInfoContainerLayout.setWidth(this.viewWidth-310, Unit.PIXELS);
     }
 
     public int getViewWidth() {
@@ -219,6 +231,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
 
     public void setViewHeight(int value){
         this.viewHeight = value;
+        this.entityAttributesInfoGrid.setHeight(this.viewHeight-100,Unit.PIXELS);
     }
 
     public void renderGeospatialRegionData(RenderType renderType,List<GeospatialScaleEntity> geospatialScaleEntityList){
