@@ -5,6 +5,7 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
 import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
@@ -40,6 +41,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     private PrimaryKeyValueDisplayItem relatedConceptionEntitiesCountDisplayItem;
     private NumberFormat numberFormat;
     private VerticalLayout entityInfoContainerLayout;
+    private MenuItem childrenEntitiesDataMenu;
     public GeospatialRegionCorrelationExploreView(String geospatialRegionName){
         this.geospatialRegionName = geospatialRegionName;
         this.numberFormat = NumberFormat.getInstance();
@@ -179,7 +181,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
 
         MenuBar importMenuBar1 = new MenuBar();
         importMenuBar1.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
-        MenuItem childrenEntitiesDataMenu = createIconItem(importMenuBar1, VaadinIcon.ARROW_LONG_DOWN, "下级地理空间区域实体", null);
+        childrenEntitiesDataMenu = createIconItem(importMenuBar1, VaadinIcon.ARROW_LONG_DOWN, "下级地理空间区域实体", null);
         childrenEntitiesDataMenu.getStyle().set("font-size","0.75rem");
         Icon downArrowIcon1 = new Icon(VaadinIcon.CHEVRON_DOWN);
         downArrowIcon1.setSize("10px");
@@ -257,17 +259,20 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
 
         Long relatedConceptionEntitiesCount = targetGeospatialScaleEntity.countAttachedConceptionEntities(GeospatialScaleEntity.GeospatialScaleLevel.SELF);
 
+        List<GeospatialScaleEntity> childEntitiesList = targetGeospatialScaleEntity.getChildEntities();
+        if(childEntitiesList != null){
+            SubMenu childrenEntitiesSubItems = childrenEntitiesDataMenu.getSubMenu();
+            childrenEntitiesSubItems.removeAll();
+            for(GeospatialScaleEntity currentGeospatialScaleEntity : childEntitiesList){
+                String entityName = currentGeospatialScaleEntity.getChineseName();
+                MenuItem childEntityItem = childrenEntitiesSubItems.addItem(entityName);
+            }
+        }
 
-        targetGeospatialScaleEntity.getChildEntities();
         targetGeospatialScaleEntity.getFellowEntities();
         targetGeospatialScaleEntity.getParentEntity();
 
-
-
-
         relatedConceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(relatedConceptionEntitiesCount));
-
-
 
         ConceptionKind targetGeoConceptionKind = coreRealm.getConceptionKind(geospatialScaleEntityKindName);
         ConceptionEntity targetConceptionEntity = targetGeoConceptionKind.getEntityByUID(currentGeospatialScaleEntityUID);
