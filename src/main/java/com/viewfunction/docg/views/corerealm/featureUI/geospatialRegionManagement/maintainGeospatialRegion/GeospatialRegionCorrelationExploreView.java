@@ -328,27 +328,11 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
-
         this.geospatialScaleEntityMapInfoChart = new GeospatialScaleEntityMapInfoChart();
+        //<theme-editor-local-classname> 添加属性防止地图遮盖其他界面元素
+        addClassName("geospatial-region-correlation-explore-view-vertical-layout-1");
         this.geospatialScaleEntityMapInfoChart.setWidth(100,Unit.PERCENTAGE);
-        this.geospatialScaleEntityMapInfoChart.setHeight(300,Unit.PIXELS);
         this.entityInfoContainerLayout.add(this.geospatialScaleEntityMapInfoChart);
-
-        /*
-        conceptionEntitySpatialChart = new ConceptionEntitySpatialChart();
-        conceptionEntitySpatialChart.setWidth(100,Unit.PERCENTAGE);
-        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            conceptionEntitySpatialChart.setHeight(event.getHeight()-this.conceptionEntitySpatialInfoViewHeightOffset+20, Unit.PIXELS);
-        }));
-        // Adjust size according to initial width of the screen
-        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            int browserHeight = receiver.getBodyClientHeight();
-            conceptionEntitySpatialChart.setHeight(browserHeight-this.conceptionEntitySpatialInfoViewHeightOffset+20,Unit.PIXELS);
-        }));
-        add(conceptionEntitySpatialChart);
-        */
-
-        this.geospatialScaleEntityMapInfoChart.setVisible(false);
     }
 
     private void hideEntityNavigationBarElements(){
@@ -482,7 +466,6 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         List<AttributeValue> allAttributesList = targetConceptionEntity.getAttributes();
         entityAttributesInfoGrid.setItems(allAttributesList);
 
-        this.geospatialScaleEntityMapInfoChart.setVisible(true);
         this.geospatialScaleEntityMapInfoChart.renderMapAndSpatialInfo(geospatialScaleEntityKindName,currentGeospatialScaleEntityUID);
         renderEntityMapInfo(targetConceptionEntity);
         coreRealm.closeGlobalSession();

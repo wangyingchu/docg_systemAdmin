@@ -9,3 +9,5 @@ vaadin-radio-group.geospatial-region-detail-ui-radio-group-1::part(error-message
 vaadin-radio-group.geospatial-region-detail-ui-radio-group-1::part(helper-text) { font-size:var(--lumo-font-size-xxs); }
 
 vaadin-radio-group.geospatial-region-detail-ui-radio-group-1::part(label) { font-size:var(--lumo-font-size-s); }
+
+vaadin-vertical-layout.geospatial-region-correlation-explore-view-vertical-layout-1 { position:fixed; }
