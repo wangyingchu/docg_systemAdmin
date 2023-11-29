@@ -1,38 +1,44 @@
 package com.viewfunction.docg.views.corerealm.featureUI.geospatialRegionManagement.maintainGeospatialRegion;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.JsonSerializable;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.GeospatialScaleEntity;
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
+import java.io.Serializable;
 import java.util.List;
 
 @JavaScript("./visualization/feature/conceptionEntitySpatialChart-connector.js")
 public class GeospatialScaleEntityMapInfoChart extends VerticalLayout {
     private String geospatialRegionName;
-    public GeospatialScaleEntityMapInfoChart(String geospatialRegionName){
-        //https://www.amcharts.com/demos/rectangular-voronoi-tree-map/
+    private String centroidPointGeoJson;
+    private String interiorPointGeoJson;
+    private String envelopeGeoJson;
+    private String entityContentGeoJson;
+    private String conceptionKindName;
+    private String conceptionEntityUID;
+
+    public GeospatialScaleEntityMapInfoChart(){
         this.setPadding(false);
         this.setSpacing(false);
         this.setMargin(false);
-        this.setWidthFull();
-        this.setHeight(470, Unit.PIXELS);
-        UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/index.js");
-        UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/hierarchy.js");
-        UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/themes/Animated.js");
-        initConnector();
-        this.geospatialRegionName = geospatialRegionName;
+        //link to download latest leaflet build js: https://unpkg.com/leaflet
+        UI.getCurrent().getPage().addStyleSheet("js/leaflet/1.9.3/dist/leaflet.css");
+        UI.getCurrent().getPage().addJavaScript("js/leaflet/1.9.3/dist/leaflet.js");
     }
 
     private void initConnector() {
         runBeforeClientResponse(ui -> ui.getPage().executeJs(
-                "window.Vaadin.Flow.feature_AttributesCorrelationInfoSummaryChart.initLazy($0)", getElement()));
+                "window.Vaadin.Flow.feature_ConceptionEntitySpatialChart.initLazy($0)", getElement()));
     }
 
     private void runBeforeClientResponse(SerializableConsumer<UI> command) {
@@ -40,77 +46,128 @@ public class GeospatialScaleEntityMapInfoChart extends VerticalLayout {
                 .beforeClientResponse(this, context -> command.accept(ui)));
     }
 
-    private class VoronoiTreemapEntity implements JsonSerializable {
-        private String id;
-        private String name ="";
-        private long population = 0;
-        private List<VoronoiTreemapEntity> children;
-
-        @Override
-        public JsonObject toJson() {
-            JsonObject obj = Json.createObject();
-            if (getName() != null) {
-                obj.put("name", getName());
-            }
-            if (getId() != null) {
-                obj.put("id", getId());
-            }
-            if(getPopulation() >0){
-                obj.put("population", getPopulation());
-            }
-            if(getChildren() != null && getChildren().size()>0){
-                JsonArray childrenArray = Json.createArray();
-                for(int i=0; i< getChildren().size();i++ ){
-                    VoronoiTreemapEntity currentVoronoiTreemapNodeData = getChildren().get(i);
-                    JsonObject childJsonObject = currentVoronoiTreemapNodeData.toJson();
-                    childrenArray.set(i, childJsonObject);
-                }
-                obj.put("children", childrenArray);
-            }
-            return obj;
-        }
-
-        @Override
-        public JsonSerializable readJson(JsonObject jsonObject) {
-            return null;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public long getPopulation() {
-            return population;
-        }
-
-        public void setPopulation(long population) {
-            this.population = population;
-        }
-
-        public List<VoronoiTreemapEntity> getChildren() {
-            return children;
-        }
-
-        public void setChildren(List<VoronoiTreemapEntity> children) {
-            this.children = children;
-        }
+    public void renderMapAndSpatialInfo(String conceptionKindName,String conceptionEntityUID){
+        this.conceptionKindName = conceptionKindName;
+        this.conceptionEntityUID = conceptionEntityUID;
+        initConnector();
     }
 
+    public void renderCentroidPoint(String centroidPointGeoJson){
+        this.centroidPointGeoJson = centroidPointGeoJson;
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.renderCentroidPoint", new Serializable[]{(new ObjectMapper()).writeValueAsString(centroidPointGeoJson)});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 
-    public void renderEntitiesSpatialInfo(List<GeospatialScaleEntity> geospatialScaleEntityList){}
+    public void renderInteriorPoint(String interiorPointGeoJson){
+        this.interiorPointGeoJson = interiorPointGeoJson;
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.renderInteriorPoint", new Serializable[]{(new ObjectMapper()).writeValueAsString(interiorPointGeoJson)});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 
+    public void renderEnvelope(String envelopeGeoJson){
+        this.envelopeGeoJson = envelopeGeoJson;
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.renderEnvelope", new Serializable[]{(new ObjectMapper()).writeValueAsString(envelopeGeoJson)});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 
-
+    public void renderEntityContent(GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType, String entityContentGeoJson){
+        this.entityContentGeoJson = entityContentGeoJson;
+        switch (_WKTGeometryType){
+            case POINT:
+                runBeforeClientResponse(ui -> {
+                    try {
+                        getElement().callJsFunction("$connector.renderPointEntityContent", new Serializable[]{
+                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
+                        });
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                break;
+            case POLYGON:
+                runBeforeClientResponse(ui -> {
+                    try {
+                        getElement().callJsFunction("$connector.renderPolygonEntityContent", new Serializable[]{
+                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
+                        });
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                break;
+            case LINESTRING:
+                runBeforeClientResponse(ui -> {
+                    try {
+                        getElement().callJsFunction("$connector.renderLineEntityContent", new Serializable[]{
+                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
+                        });
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                break;
+            case MULTIPOINT:
+                runBeforeClientResponse(ui -> {
+                    try {
+                        getElement().callJsFunction("$connector.renderPointEntityContent", new Serializable[]{
+                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
+                        });
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                break;
+            case MULTIPOLYGON:
+                runBeforeClientResponse(ui -> {
+                    try {
+                        getElement().callJsFunction("$connector.renderPolygonEntityContent", new Serializable[]{
+                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
+                        });
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                break;
+            case MULTILINESTRING:
+                runBeforeClientResponse(ui -> {
+                    try {
+                        getElement().callJsFunction("$connector.renderLineEntityContent", new Serializable[]{
+                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
+                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
+                        });
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                break;
+            case GEOMETRYCOLLECTION:
+                break;
+        }
+    }
 }

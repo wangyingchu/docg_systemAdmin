@@ -18,10 +18,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.geospatial.GeospatialCalculateUtil;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
@@ -280,9 +284,6 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         });
         summaryInfoContainer.add(displayCurrentEntityDetailButton);
 
-        this.geospatialScaleEntityMapInfoChart = new GeospatialScaleEntityMapInfoChart(this.geospatialRegionName);
-        this.entityInfoContainerLayout.add(this.geospatialScaleEntityMapInfoChart);
-
         VerticalLayout gridContainer = new VerticalLayout();
         gridContainer.setSpacing(false);
         gridContainer.setMargin(false);
@@ -321,6 +322,33 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         displayCurrentEntityDetailButton.setEnabled(false);
 
         hideEntityNavigationBarElements();
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        // Add browser window listener to observe size change
+
+        this.geospatialScaleEntityMapInfoChart = new GeospatialScaleEntityMapInfoChart();
+        this.geospatialScaleEntityMapInfoChart.setWidth(100,Unit.PERCENTAGE);
+        this.geospatialScaleEntityMapInfoChart.setHeight(300,Unit.PIXELS);
+        this.entityInfoContainerLayout.add(this.geospatialScaleEntityMapInfoChart);
+
+        /*
+        conceptionEntitySpatialChart = new ConceptionEntitySpatialChart();
+        conceptionEntitySpatialChart.setWidth(100,Unit.PERCENTAGE);
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            conceptionEntitySpatialChart.setHeight(event.getHeight()-this.conceptionEntitySpatialInfoViewHeightOffset+20, Unit.PIXELS);
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            int browserHeight = receiver.getBodyClientHeight();
+            conceptionEntitySpatialChart.setHeight(browserHeight-this.conceptionEntitySpatialInfoViewHeightOffset+20,Unit.PIXELS);
+        }));
+        add(conceptionEntitySpatialChart);
+        */
+
+        this.geospatialScaleEntityMapInfoChart.setVisible(false);
     }
 
     private void hideEntityNavigationBarElements(){
@@ -454,7 +482,29 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         List<AttributeValue> allAttributesList = targetConceptionEntity.getAttributes();
         entityAttributesInfoGrid.setItems(allAttributesList);
 
+        this.geospatialScaleEntityMapInfoChart.setVisible(true);
+        this.geospatialScaleEntityMapInfoChart.renderMapAndSpatialInfo(geospatialScaleEntityKindName,currentGeospatialScaleEntityUID);
+        renderEntityMapInfo(targetConceptionEntity);
         coreRealm.closeGlobalSession();
+    }
+
+    private void renderEntityMapInfo(ConceptionEntity targetConceptionEntity){
+        GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = targetConceptionEntity.getGeometryType();
+        try {
+            String centroidPointWKT = targetConceptionEntity.getEntitySpatialCentroidPointWKTGeometryContent(GeospatialScaleCalculable.SpatialScaleLevel.Global);
+            String envelopeAreaWKT = targetConceptionEntity.getEntitySpatialEnvelopeWKTGeometryContent(GeospatialScaleCalculable.SpatialScaleLevel.Global);
+            String geometryCRSAID = targetConceptionEntity.getGlobalCRSAID();
+            String geometryContentWKT = targetConceptionEntity.getGLGeometryContent();
+            if(envelopeAreaWKT != null){
+                this.geospatialScaleEntityMapInfoChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
+            }
+            if(centroidPointWKT != null){
+                this.geospatialScaleEntityMapInfoChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+            }
+            this.geospatialScaleEntityMapInfoChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT));
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void setupEntityNavigationBar(GeospatialScaleEntity targetGeospatialScaleEntity){
@@ -519,6 +569,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     public void setViewHeight(int value){
         this.viewHeight = value;
         this.entityAttributesInfoGrid.setHeight(this.viewHeight-100,Unit.PIXELS);
+        this.geospatialScaleEntityMapInfoChart.setHeight(this.viewHeight-128,Unit.PIXELS);
     }
 
     private void renderGeospatialScaleEntityDetailUI(GeospatialScaleEntity geospatialScaleEntity){
@@ -608,5 +659,14 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
             item.add(new Text(label));
         }
         return item;
+    }
+
+    private String getGeoJsonFromWKTContent(String geometryCRSAID,String wktContent){
+        String geoJsonContent = GeospatialCalculateUtil.getGeoJsonFromWTK(wktContent);
+        if(geoJsonContent != null){
+            String resultGeoJson ="{\"type\": \"FeatureCollection\",\"crs\": { \"type\": \"name\", \"properties\": { \"name\": \""+geometryCRSAID+"\" } },\"features\": [{ \"type\": \"Feature\", \"geometry\": "+ geoJsonContent+" }]}";
+            return resultGeoJson;
+        }
+        return null;
     }
 }
