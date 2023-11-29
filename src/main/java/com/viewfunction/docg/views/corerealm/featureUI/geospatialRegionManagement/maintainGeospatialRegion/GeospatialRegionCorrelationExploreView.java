@@ -272,11 +272,31 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         sameLevelEntitiesMenuBar.setEnabled(false);
         childrenLvelMenuBar.setEnabled(false);
         displayCurrentEntityDetailButton.setEnabled(false);
+
+        hideEntityNavigationBarElements();
+    }
+
+    private void hideEntityNavigationBarElements(){
+        _CONTINENTButton.setVisible(false);
+        divIcon0.setVisible(false);
+        _COUNTRY_REGIONButton.setVisible(false);
+        divIcon1.setVisible(false);
+        _PROVINCEButton.setVisible(false);
+        divIcon2.setVisible(false);
+        _PREFECTUREButton.setVisible(false);
+        divIcon3.setVisible(false);
+        _COUNTYButton.setVisible(false);
+        divIcon4.setVisible(false);
+        _TOWNSHIPButton.setVisible(false);
+        divIcon5.setVisible(false);
+        _VillageButton.setVisible(false);
+        divIcon6.setVisible(false);
     }
 
     private void renderSingleGeospatialRegionEntity(GeospatialScaleEntity targetGeospatialScaleEntity){
         this.currentDisplayingGeospatialScaleEntity = targetGeospatialScaleEntity;
 
+        hideEntityNavigationBarElements();
         this.sameLevelEntitiesMenuBar.setEnabled(true);
         this.childrenLvelMenuBar.setEnabled(true);
         this.displayCurrentEntityDetailButton.setEnabled(true);
@@ -303,8 +323,10 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
-        targetGeospatialScaleEntity = geospatialRegion.getEntityByGeospatialCode(targetGeospatialScaleEntity.getGeospatialCode());
+        setupEntityNavigationBar(geospatialRegion,targetGeospatialScaleEntity);
+        divIcon6.setVisible(true);
 
+        targetGeospatialScaleEntity = geospatialRegion.getEntityByGeospatialCode(targetGeospatialScaleEntity.getGeospatialCode());
         Long relatedConceptionEntitiesCount = targetGeospatialScaleEntity.countAttachedConceptionEntities(GeospatialScaleEntity.GeospatialScaleLevel.SELF);
 
         List<GeospatialScaleEntity> childEntitiesList = targetGeospatialScaleEntity.getChildEntities();
@@ -381,6 +403,52 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         entityAttributesInfoGrid.setItems(allAttributesList);
 
         coreRealm.closeGlobalSession();
+    }
+
+    private void setupEntityNavigationBar(GeospatialRegion geospatialRegion,GeospatialScaleEntity targetGeospatialScaleEntity){
+        String entityChineseName = targetGeospatialScaleEntity.getChineseName();
+        GeospatialRegion.GeospatialScaleGrade entityGeospatialScaleGrade =  targetGeospatialScaleEntity.getGeospatialScaleGrade();
+        GeospatialScaleEntity workingGeospatialScaleEntity = geospatialRegion.getEntityByGeospatialCode(targetGeospatialScaleEntity.getGeospatialCode());
+        switch(entityGeospatialScaleGrade){
+            case CONTINENT :
+                _CONTINENTButton.setText(entityChineseName);
+                _CONTINENTButton.setVisible(true);
+                break;
+            case COUNTRY_REGION:
+                divIcon0.setVisible(true);
+                _COUNTRY_REGIONButton.setText(entityChineseName);
+                _COUNTRY_REGIONButton.setVisible(true);
+                break;
+            case PROVINCE:
+                divIcon1.setVisible(true);
+                _PROVINCEButton.setText(entityChineseName);
+                _PROVINCEButton.setVisible(true);
+                break;
+            case PREFECTURE:
+                divIcon2.setVisible(true);
+                _PREFECTUREButton.setText(entityChineseName);
+                _PREFECTUREButton.setVisible(true);
+                break;
+            case COUNTY:
+                divIcon3.setVisible(true);
+                _COUNTYButton.setText(entityChineseName);
+                _COUNTYButton.setVisible(true);
+                break;
+            case TOWNSHIP:
+                divIcon4.setVisible(true);
+                _TOWNSHIPButton.setText(entityChineseName);
+                _TOWNSHIPButton.setVisible(true);
+                break;
+            case VILLAGE:
+                divIcon5.setVisible(true);
+                _VillageButton.setText(entityChineseName);
+                _VillageButton.setVisible(true);
+                break;
+        }
+        GeospatialScaleEntity parentGeospatialScaleEntity = workingGeospatialScaleEntity.getParentEntity();
+        if(parentGeospatialScaleEntity != null){
+            setupEntityNavigationBar(geospatialRegion,parentGeospatialScaleEntity);
+        }
     }
 
     public int getViewHeight() {
