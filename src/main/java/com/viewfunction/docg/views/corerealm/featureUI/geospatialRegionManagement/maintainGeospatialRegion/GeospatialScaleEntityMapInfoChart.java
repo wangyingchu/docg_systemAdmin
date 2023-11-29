@@ -1,27 +1,22 @@
 package com.viewfunction.docg.views.corerealm.featureUI.geospatialRegionManagement.maintainGeospatialRegion;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.JsonSerializable;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
-import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.GeospatialScaleEntity;
-import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.AttributesCorrelationInfoSummaryChart;
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
-import java.io.Serializable;
 import java.util.List;
 
-@JavaScript("./visualization/feature/attributesCorrelationInfoSummaryChart-connector.js")
-public class GeospatialRegionCorrelationInfoChart extends VerticalLayout {
+@JavaScript("./visualization/feature/conceptionEntitySpatialChart-connector.js")
+public class GeospatialScaleEntityMapInfoChart extends VerticalLayout {
     private String geospatialRegionName;
-    public GeospatialRegionCorrelationInfoChart(String geospatialRegionName){
+    public GeospatialScaleEntityMapInfoChart(String geospatialRegionName){
         //https://www.amcharts.com/demos/rectangular-voronoi-tree-map/
         this.setPadding(false);
         this.setSpacing(false);

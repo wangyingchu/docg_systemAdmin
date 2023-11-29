@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.Map;
 
 public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
+
     private String geospatialRegionName;
-    public enum RenderType {Single,List_SameLevel,List_SubLevel}
     private int viewHeight;
     private int viewWidth;
     private Grid<AttributeValue> entityAttributesInfoGrid;
@@ -63,6 +63,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     private Button _VILLAGEButton;
     private Icon divIcon6;
     private Map<String,GeospatialScaleEntity> navagationBarEntitieesMap;
+    private GeospatialScaleEntityMapInfoChart geospatialScaleEntityMapInfoChart;
 
     public GeospatialRegionCorrelationExploreView(String geospatialRegionName){
         this.geospatialRegionName = geospatialRegionName;
@@ -278,6 +279,9 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
             }
         });
         summaryInfoContainer.add(displayCurrentEntityDetailButton);
+
+        this.geospatialScaleEntityMapInfoChart = new GeospatialScaleEntityMapInfoChart(this.geospatialRegionName);
+        this.entityInfoContainerLayout.add(this.geospatialScaleEntityMapInfoChart);
 
         VerticalLayout gridContainer = new VerticalLayout();
         gridContainer.setSpacing(false);
@@ -515,31 +519,6 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     public void setViewHeight(int value){
         this.viewHeight = value;
         this.entityAttributesInfoGrid.setHeight(this.viewHeight-100,Unit.PIXELS);
-    }
-
-    public void renderGeospatialRegionData(RenderType renderType,List<GeospatialScaleEntity> geospatialScaleEntityList){
-        if(geospatialScaleEntityList != null & geospatialScaleEntityList.size() > 0){
-            GeospatialScaleEntity currGeospatialScaleEntity = geospatialScaleEntityList.get(0);
-            switch(renderType){
-                case Single -> renderSingleGeospatialRegionEntity(currGeospatialScaleEntity);
-                case List_SameLevel -> renderSameLevelGeospatialRegionEntityList(geospatialScaleEntityList);
-                case List_SubLevel -> renderSubLevelGeospatialRegionEntityList(geospatialScaleEntityList);
-            }
-        }
-    }
-
-    private void renderSameLevelGeospatialRegionEntityList(List<GeospatialScaleEntity> geospatialScaleEntityList){
-        //this.geospatialChartContainer.removeAll();
-        //GeospatialRegionCorrelationInfoChart geospatialRegionCorrelationInfoChart = new GeospatialRegionCorrelationInfoChart(this.geospatialRegionName);
-        //this.geospatialChartContainer.add(geospatialRegionCorrelationInfoChart);
-        //geospatialRegionCorrelationInfoChart.renderEntitiesSpatialInfo(geospatialScaleEntityList);
-    }
-
-    private void renderSubLevelGeospatialRegionEntityList(List<GeospatialScaleEntity> geospatialScaleEntityList){
-        //this.geospatialChartContainer.removeAll();
-        //GeospatialRegionCorrelationInfoChart geospatialRegionCorrelationInfoChart = new GeospatialRegionCorrelationInfoChart(this.geospatialRegionName);
-       // this.geospatialChartContainer.add(geospatialRegionCorrelationInfoChart);
-        //geospatialRegionCorrelationInfoChart.renderEntitiesSpatialInfo(geospatialScaleEntityList);
     }
 
     private void renderGeospatialScaleEntityDetailUI(GeospatialScaleEntity geospatialScaleEntity){
