@@ -43,6 +43,27 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     private MenuItem childrenEntitiesDataMenu;
     private MenuItem sameLevelEntitiesDataMenu;
     private GeospatialScaleEntity currentDisplayingGeospatialScaleEntity;
+
+    private MenuBar sameLevelEntitiesMenuBar;
+    private MenuBar childrenLvelMenuBar;
+    private Button displayCurrentEntityDetailButton;
+
+
+    private Button _CONTINENTButton;
+    private Icon divIcon0;
+    private Button _COUNTRY_REGIONButton;
+    private Icon divIcon1;
+    private Button _PROVINCEButton;
+    private Icon divIcon2;
+    private Button _PREFECTUREButton;
+    private Icon divIcon3;
+    private Button _COUNTYButton;
+    private Icon divIcon4;
+    private Button _TOWNSHIPButton;
+    private Icon divIcon5;
+    private Button _VillageButton;
+    private Icon divIcon6;
+
     public GeospatialRegionCorrelationExploreView(String geospatialRegionName){
         this.geospatialRegionName = geospatialRegionName;
         this.numberFormat = NumberFormat.getInstance();
@@ -65,74 +86,82 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
         singleGeospatialRegionElementsFootprintMessageLayout.add(footPrintStartIcon);
 
-        Button _CONTINENTButton = new Button("亚洲");
+        _CONTINENTButton = new Button("亚洲");
         _CONTINENTButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        _CONTINENTButton.getStyle().set("font-size","0.8rem");
         singleGeospatialRegionElementsFootprintMessageLayout.add(_CONTINENTButton);
 
-        Icon divIcon0 = VaadinIcon.ITALIC.create();
+        divIcon0 = VaadinIcon.ITALIC.create();
         divIcon0.setSize("12px");
         divIcon0.getStyle().set("padding-left","5px");
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon0);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon0);
 
-        Button _COUNTRY_REGIONButton = new Button("中国");
+        _COUNTRY_REGIONButton = new Button("中国");
         _COUNTRY_REGIONButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        _COUNTRY_REGIONButton.getStyle().set("font-size","0.8rem");
         singleGeospatialRegionElementsFootprintMessageLayout.add(_COUNTRY_REGIONButton);
 
-        Icon divIcon1 = VaadinIcon.ITALIC.create();
+        divIcon1 = VaadinIcon.ITALIC.create();
         divIcon1.setSize("12px");
         divIcon1.getStyle().set("padding-left","5px");
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon1);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon1);
 
-        Button _PROVINCEButton = new Button("新疆维吾尔自治区");
+        _PROVINCEButton = new Button("新疆维吾尔自治区");
         _PROVINCEButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        _PROVINCEButton.getStyle().set("font-size","0.8rem");
         singleGeospatialRegionElementsFootprintMessageLayout.add(_PROVINCEButton);
 
-        Icon divIcon2 = VaadinIcon.ITALIC.create();
+        divIcon2 = VaadinIcon.ITALIC.create();
         divIcon2.setSize("12px");
         divIcon2.getStyle().set("padding-left","5px");
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon2);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon2);
 
-        Button _PREFECTUREButton = new Button("克孜勒苏柯尔克孜自治州");
+        _PREFECTUREButton = new Button("克孜勒苏柯尔克孜自治州");
         _PREFECTUREButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        _PREFECTUREButton.getStyle().set("font-size","0.8rem");
         singleGeospatialRegionElementsFootprintMessageLayout.add(_PREFECTUREButton);
 
-        Icon divIcon3 = VaadinIcon.ITALIC.create();
+        divIcon3 = VaadinIcon.ITALIC.create();
         divIcon3.setSize("12px");
         divIcon3.getStyle().set("padding-left","5px");
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon3);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon3);
 
-        Button _COUNTYButton = new Button("阿合奇县");
+        _COUNTYButton = new Button("阿合奇县");
         _COUNTYButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        _COUNTYButton.getStyle().set("font-size","0.8rem");
         singleGeospatialRegionElementsFootprintMessageLayout.add(_COUNTYButton);
 
-        Icon divIcon4 = VaadinIcon.ITALIC.create();
+        divIcon4 = VaadinIcon.ITALIC.create();
         divIcon4.setSize("12px");
         divIcon4.getStyle().set("padding-left","5px");
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon4);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon4);
 
-        Button _TOWNSHIPButton = new Button("库兰萨日克乡");
+        _TOWNSHIPButton = new Button("库兰萨日克乡");
         _TOWNSHIPButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        _TOWNSHIPButton.getStyle().set("font-size","0.8rem");
         singleGeospatialRegionElementsFootprintMessageLayout.add(_TOWNSHIPButton);
 
-        Icon divIcon5 = VaadinIcon.ITALIC.create();
+        divIcon5 = VaadinIcon.ITALIC.create();
         divIcon5.setSize("12px");
         divIcon5.getStyle().set("padding-left","5px");
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon5);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon5);
 
-        NativeLabel villaggeName = new NativeLabel("阿克特克提尔村委会");
-        singleGeospatialRegionElementsFootprintMessageLayout.add(villaggeName);
-        singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,villaggeName);
+        _VillageButton = new Button("阿克特克提尔村委会");
+        _VillageButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        _VillageButton.getStyle().set("font-size","0.8rem");
+        singleGeospatialRegionElementsFootprintMessageLayout.add(_VillageButton);
 
-        Icon divIcon6 = VaadinIcon.KEY_O.create();
+        divIcon6 = VaadinIcon.KEY_O.create();
         divIcon6.setSize("10px");
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon6);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon6);
+
         entityUIDLabel = new NativeLabel("-");
         singleGeospatialRegionElementsFootprintMessageLayout.add(entityUIDLabel);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER, entityUIDLabel);
@@ -171,33 +200,33 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         divIcon7.setSize("8px");
         summaryInfoContainer.add(divIcon7);
 
-        MenuBar importMenuBar0 = new MenuBar();
-        importMenuBar0.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
-        sameLevelEntitiesDataMenu = createIconItem(importMenuBar0, VaadinIcon.ARROWS_LONG_H, "同级地理空间区域实体", null);
+        sameLevelEntitiesMenuBar = new MenuBar();
+        sameLevelEntitiesMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+        sameLevelEntitiesDataMenu = createIconItem(sameLevelEntitiesMenuBar, VaadinIcon.ARROWS_LONG_H, "同级地理空间区域实体", null);
         sameLevelEntitiesDataMenu.getStyle().set("font-size","0.75rem");
         Icon downArrowIcon2 = new Icon(VaadinIcon.CHEVRON_DOWN);
         downArrowIcon2.setSize("10px");
         sameLevelEntitiesDataMenu.add(downArrowIcon2);
-        summaryInfoContainer.add(importMenuBar0);
+        summaryInfoContainer.add(sameLevelEntitiesMenuBar);
 
-        MenuBar importMenuBar1 = new MenuBar();
-        importMenuBar1.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
-        childrenEntitiesDataMenu = createIconItem(importMenuBar1, VaadinIcon.ARROW_LONG_DOWN, "下级地理空间区域实体", null);
+        childrenLvelMenuBar = new MenuBar();
+        childrenLvelMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+        childrenEntitiesDataMenu = createIconItem(childrenLvelMenuBar, VaadinIcon.ARROW_LONG_DOWN, "下级地理空间区域实体", null);
         childrenEntitiesDataMenu.getStyle().set("font-size","0.75rem");
         Icon downArrowIcon1 = new Icon(VaadinIcon.CHEVRON_DOWN);
         downArrowIcon1.setSize("10px");
         childrenEntitiesDataMenu.add(downArrowIcon1);
-        summaryInfoContainer.add(importMenuBar1);
+        summaryInfoContainer.add(childrenLvelMenuBar);
 
         Icon divIcon8 = VaadinIcon.LINE_V.create();
         divIcon8.setSize("8px");
         summaryInfoContainer.add(divIcon8);
 
-        Button displayCurrentEntityDetail = new Button("显示实体详情");
-        displayCurrentEntityDetail.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
-        displayCurrentEntityDetail.setIcon(VaadinIcon.EYE.create());
-        displayCurrentEntityDetail.getStyle().set("font-size","0.75rem");
-        displayCurrentEntityDetail.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        displayCurrentEntityDetailButton = new Button("显示实体详情");
+        displayCurrentEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        displayCurrentEntityDetailButton.setIcon(VaadinIcon.EYE.create());
+        displayCurrentEntityDetailButton.getStyle().set("font-size","0.75rem");
+        displayCurrentEntityDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 if(currentDisplayingGeospatialScaleEntity != null){
@@ -205,7 +234,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
                 }
             }
         });
-        summaryInfoContainer.add(displayCurrentEntityDetail);
+        summaryInfoContainer.add(displayCurrentEntityDetailButton);
 
         VerticalLayout gridContainer = new VerticalLayout();
         gridContainer.setSpacing(false);
@@ -239,10 +268,19 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
 
         gridContainer.add(entityAttributesInfoGrid);
         gridContainer.setHorizontalComponentAlignment(Alignment.START,entityAttributesInfoGrid);
+
+        sameLevelEntitiesMenuBar.setEnabled(false);
+        childrenLvelMenuBar.setEnabled(false);
+        displayCurrentEntityDetailButton.setEnabled(false);
     }
 
     private void renderSingleGeospatialRegionEntity(GeospatialScaleEntity targetGeospatialScaleEntity){
         this.currentDisplayingGeospatialScaleEntity = targetGeospatialScaleEntity;
+
+        this.sameLevelEntitiesMenuBar.setEnabled(true);
+        this.childrenLvelMenuBar.setEnabled(true);
+        this.displayCurrentEntityDetailButton.setEnabled(true);
+
         String currentGeospatialScaleEntityUID = targetGeospatialScaleEntity.getGeospatialScaleEntityUID();
         GeospatialRegion.GeospatialScaleGrade currentGeospatialScaleGrade = targetGeospatialScaleEntity.getGeospatialScaleGrade();
         String geospatialScaleEntityKindName = null;
