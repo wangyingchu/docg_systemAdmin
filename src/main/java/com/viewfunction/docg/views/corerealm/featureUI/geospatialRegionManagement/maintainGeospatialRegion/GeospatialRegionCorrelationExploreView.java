@@ -1,6 +1,8 @@
 package com.viewfunction.docg.views.corerealm.featureUI.geospatialRegionManagement.maintainGeospatialRegion;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
@@ -9,6 +11,7 @@ import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -42,6 +45,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     private NumberFormat numberFormat;
     private VerticalLayout entityInfoContainerLayout;
     private MenuItem childrenEntitiesDataMenu;
+    private MenuItem sameLevelEntitiesDataMenu;
     public GeospatialRegionCorrelationExploreView(String geospatialRegionName){
         this.geospatialRegionName = geospatialRegionName;
         this.numberFormat = NumberFormat.getInstance();
@@ -172,7 +176,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
 
         MenuBar importMenuBar0 = new MenuBar();
         importMenuBar0.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
-        MenuItem sameLevelEntitiesDataMenu = createIconItem(importMenuBar0, VaadinIcon.ARROWS_LONG_H, "同级地理空间区域实体", null);
+        sameLevelEntitiesDataMenu = createIconItem(importMenuBar0, VaadinIcon.ARROWS_LONG_H, "同级地理空间区域实体", null);
         sameLevelEntitiesDataMenu.getStyle().set("font-size","0.75rem");
         Icon downArrowIcon2 = new Icon(VaadinIcon.CHEVRON_DOWN);
         downArrowIcon2.setSize("10px");
@@ -265,11 +269,64 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
             childrenEntitiesSubItems.removeAll();
             for(GeospatialScaleEntity currentGeospatialScaleEntity : childEntitiesList){
                 String entityName = currentGeospatialScaleEntity.getChineseName();
-                MenuItem childEntityItem = childrenEntitiesSubItems.addItem(entityName);
+                String entityCode = currentGeospatialScaleEntity.getGeospatialCode();
+
+                HorizontalLayout actionLayout = new HorizontalLayout();
+                actionLayout.setPadding(false);
+                actionLayout.setSpacing(false);
+                actionLayout.setMargin(false);
+                actionLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                Icon action0Icon = FontAwesome.Solid.MAP.create();
+                action0Icon.setSize("10px");
+                Span action0Space = new Span();
+                action0Space.setWidth(6,Unit.PIXELS);
+                NativeLabel action0Label = new NativeLabel(entityName+"("+entityCode+")");
+                action0Label.addClassNames("text-xs","text-secondary");
+                actionLayout.add(action0Icon,action0Space,action0Label);
+
+                MenuItem childEntityItem = childrenEntitiesSubItems.addItem(actionLayout);
+                childEntityItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                        renderSingleGeospatialRegionEntity(currentGeospatialScaleEntity);
+                    }
+                });
             }
         }
 
-        targetGeospatialScaleEntity.getFellowEntities();
+        List<GeospatialScaleEntity> fellowEntitiesList = targetGeospatialScaleEntity.getFellowEntities();
+        if(fellowEntitiesList != null){
+            SubMenu fellowEntitiesSubItems = sameLevelEntitiesDataMenu.getSubMenu();
+            fellowEntitiesSubItems.removeAll();
+            for(GeospatialScaleEntity currentGeospatialScaleEntity : fellowEntitiesList){
+                if(!currentGeospatialScaleEntity.getGeospatialCode().equals(targetGeospatialScaleEntity.getGeospatialCode())){
+                    String entityName = currentGeospatialScaleEntity.getChineseName();
+                    String entityCode = currentGeospatialScaleEntity.getGeospatialCode();
+
+                    HorizontalLayout actionLayout = new HorizontalLayout();
+                    actionLayout.setPadding(false);
+                    actionLayout.setSpacing(false);
+                    actionLayout.setMargin(false);
+                    actionLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                    Icon action0Icon = FontAwesome.Solid.MAP.create();
+                    action0Icon.setSize("10px");
+                    Span action0Space = new Span();
+                    action0Space.setWidth(6,Unit.PIXELS);
+                    NativeLabel action0Label = new NativeLabel(entityName+"("+entityCode+")");
+                    action0Label.addClassNames("text-xs","text-secondary");
+                    actionLayout.add(action0Icon,action0Space,action0Label);
+
+                    MenuItem fellowEntityItem = fellowEntitiesSubItems.addItem(actionLayout);
+                    fellowEntityItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                        @Override
+                        public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                            renderSingleGeospatialRegionEntity(currentGeospatialScaleEntity);;
+                        }
+                    });
+                }
+            }
+        }
+
         targetGeospatialScaleEntity.getParentEntity();
 
         relatedConceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(relatedConceptionEntitiesCount));
