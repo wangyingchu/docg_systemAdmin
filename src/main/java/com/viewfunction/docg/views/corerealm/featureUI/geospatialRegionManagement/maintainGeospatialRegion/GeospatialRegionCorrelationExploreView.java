@@ -323,11 +323,13 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
-        setupEntityNavigationBar(geospatialRegion,targetGeospatialScaleEntity);
+        targetGeospatialScaleEntity = geospatialRegion.getEntityByGeospatialCode(targetGeospatialScaleEntity.getGeospatialCode());
+
+        setupEntityNavigationBar(targetGeospatialScaleEntity);
         divIcon6.setVisible(true);
 
-        targetGeospatialScaleEntity = geospatialRegion.getEntityByGeospatialCode(targetGeospatialScaleEntity.getGeospatialCode());
         Long relatedConceptionEntitiesCount = targetGeospatialScaleEntity.countAttachedConceptionEntities(GeospatialScaleEntity.GeospatialScaleLevel.SELF);
+        relatedConceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(relatedConceptionEntitiesCount));
 
         List<GeospatialScaleEntity> childEntitiesList = targetGeospatialScaleEntity.getChildEntities();
         if(childEntitiesList != null){
@@ -393,10 +395,6 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
             }
         }
 
-        targetGeospatialScaleEntity.getParentEntity();
-
-        relatedConceptionEntitiesCountDisplayItem.updateDisplayValue(this.numberFormat.format(relatedConceptionEntitiesCount));
-
         ConceptionKind targetGeoConceptionKind = coreRealm.getConceptionKind(geospatialScaleEntityKindName);
         ConceptionEntity targetConceptionEntity = targetGeoConceptionKind.getEntityByUID(currentGeospatialScaleEntityUID);
         List<AttributeValue> allAttributesList = targetConceptionEntity.getAttributes();
@@ -405,10 +403,9 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         coreRealm.closeGlobalSession();
     }
 
-    private void setupEntityNavigationBar(GeospatialRegion geospatialRegion,GeospatialScaleEntity targetGeospatialScaleEntity){
+    private void setupEntityNavigationBar(GeospatialScaleEntity targetGeospatialScaleEntity){
         String entityChineseName = targetGeospatialScaleEntity.getChineseName();
         GeospatialRegion.GeospatialScaleGrade entityGeospatialScaleGrade =  targetGeospatialScaleEntity.getGeospatialScaleGrade();
-        GeospatialScaleEntity workingGeospatialScaleEntity = geospatialRegion.getEntityByGeospatialCode(targetGeospatialScaleEntity.getGeospatialCode());
         switch(entityGeospatialScaleGrade){
             case CONTINENT :
                 _CONTINENTButton.setText(entityChineseName);
@@ -445,9 +442,9 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
                 _VillageButton.setVisible(true);
                 break;
         }
-        GeospatialScaleEntity parentGeospatialScaleEntity = workingGeospatialScaleEntity.getParentEntity();
+        GeospatialScaleEntity parentGeospatialScaleEntity = targetGeospatialScaleEntity.getParentEntity();
         if(parentGeospatialScaleEntity != null){
-            setupEntityNavigationBar(geospatialRegion,parentGeospatialScaleEntity);
+            setupEntityNavigationBar(parentGeospatialScaleEntity);
         }
     }
 
