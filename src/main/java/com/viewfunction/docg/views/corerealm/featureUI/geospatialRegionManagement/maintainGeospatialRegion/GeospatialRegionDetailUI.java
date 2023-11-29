@@ -26,6 +26,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
@@ -1076,6 +1078,19 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         geospatialScaleEntitiesGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         geospatialScaleEntitiesGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_1_idx4).setSortable(false);
+
+        geospatialScaleEntitiesGrid.addSelectionListener(new SelectionListener<Grid<GeospatialScaleEntity>, GeospatialScaleEntity>() {
+            @Override
+            public void selectionChange(SelectionEvent<Grid<GeospatialScaleEntity>, GeospatialScaleEntity> selectionEvent) {
+               Set<GeospatialScaleEntity> selectedItemSet = selectionEvent.getAllSelectedItems();
+                if(selectedItemSet.size() == 0){
+                    // don't allow to unselect item, just do nothing
+                }else{
+                    GeospatialScaleEntity selectedGeospatialScaleEntity = selectedItemSet.iterator().next();
+                    geospatialRegionCorrelationExploreView.renderSingleGeospatialRegionEntity(selectedGeospatialScaleEntity);
+                }
+            }
+        });
 
         middleContainerLayout.add(geospatialScaleEntitiesGrid);
 

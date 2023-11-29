@@ -27,7 +27,9 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     private String geospatialRegionName;
@@ -43,12 +45,9 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     private MenuItem childrenEntitiesDataMenu;
     private MenuItem sameLevelEntitiesDataMenu;
     private GeospatialScaleEntity currentDisplayingGeospatialScaleEntity;
-
     private MenuBar sameLevelEntitiesMenuBar;
     private MenuBar childrenLvelMenuBar;
     private Button displayCurrentEntityDetailButton;
-
-
     private Button _CONTINENTButton;
     private Icon divIcon0;
     private Button _COUNTRY_REGIONButton;
@@ -61,12 +60,14 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     private Icon divIcon4;
     private Button _TOWNSHIPButton;
     private Icon divIcon5;
-    private Button _VillageButton;
+    private Button _VILLAGEButton;
     private Icon divIcon6;
+    private Map<String,GeospatialScaleEntity> navagationBarEntitieesMap;
 
     public GeospatialRegionCorrelationExploreView(String geospatialRegionName){
         this.geospatialRegionName = geospatialRegionName;
         this.numberFormat = NumberFormat.getInstance();
+        this.navagationBarEntitieesMap = new HashMap<>();
 
         HorizontalLayout singleGeospatialRegionElementsContainerLayout = new HorizontalLayout();
         singleGeospatialRegionElementsContainerLayout.setSpacing(false);
@@ -86,9 +87,15 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         footPrintStartIcon.getStyle().set("padding-right","8px").set("color","var(--lumo-contrast-50pct)");
         singleGeospatialRegionElementsFootprintMessageLayout.add(footPrintStartIcon);
 
-        _CONTINENTButton = new Button("亚洲");
+        _CONTINENTButton = new Button("");
         _CONTINENTButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         _CONTINENTButton.getStyle().set("font-size","0.8rem");
+        _CONTINENTButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderSingleGeospatialRegionEntity(buttonClickEvent.getSource().getText());
+            }
+        });
         singleGeospatialRegionElementsFootprintMessageLayout.add(_CONTINENTButton);
 
         divIcon0 = VaadinIcon.ITALIC.create();
@@ -97,9 +104,15 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon0);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon0);
 
-        _COUNTRY_REGIONButton = new Button("中国");
+        _COUNTRY_REGIONButton = new Button("");
         _COUNTRY_REGIONButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         _COUNTRY_REGIONButton.getStyle().set("font-size","0.8rem");
+        _COUNTRY_REGIONButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderSingleGeospatialRegionEntity(buttonClickEvent.getSource().getText());
+            }
+        });
         singleGeospatialRegionElementsFootprintMessageLayout.add(_COUNTRY_REGIONButton);
 
         divIcon1 = VaadinIcon.ITALIC.create();
@@ -108,9 +121,15 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon1);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon1);
 
-        _PROVINCEButton = new Button("新疆维吾尔自治区");
+        _PROVINCEButton = new Button("");
         _PROVINCEButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         _PROVINCEButton.getStyle().set("font-size","0.8rem");
+        _PROVINCEButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderSingleGeospatialRegionEntity(buttonClickEvent.getSource().getText());
+            }
+        });
         singleGeospatialRegionElementsFootprintMessageLayout.add(_PROVINCEButton);
 
         divIcon2 = VaadinIcon.ITALIC.create();
@@ -119,9 +138,15 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon2);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon2);
 
-        _PREFECTUREButton = new Button("克孜勒苏柯尔克孜自治州");
+        _PREFECTUREButton = new Button("");
         _PREFECTUREButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         _PREFECTUREButton.getStyle().set("font-size","0.8rem");
+        _PREFECTUREButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderSingleGeospatialRegionEntity(buttonClickEvent.getSource().getText());
+            }
+        });
         singleGeospatialRegionElementsFootprintMessageLayout.add(_PREFECTUREButton);
 
         divIcon3 = VaadinIcon.ITALIC.create();
@@ -130,9 +155,15 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon3);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon3);
 
-        _COUNTYButton = new Button("阿合奇县");
+        _COUNTYButton = new Button("");
         _COUNTYButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         _COUNTYButton.getStyle().set("font-size","0.8rem");
+        _COUNTYButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderSingleGeospatialRegionEntity(buttonClickEvent.getSource().getText());
+            }
+        });
         singleGeospatialRegionElementsFootprintMessageLayout.add(_COUNTYButton);
 
         divIcon4 = VaadinIcon.ITALIC.create();
@@ -141,9 +172,15 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon4);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon4);
 
-        _TOWNSHIPButton = new Button("库兰萨日克乡");
+        _TOWNSHIPButton = new Button("");
         _TOWNSHIPButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         _TOWNSHIPButton.getStyle().set("font-size","0.8rem");
+        _TOWNSHIPButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderSingleGeospatialRegionEntity(buttonClickEvent.getSource().getText());
+            }
+        });
         singleGeospatialRegionElementsFootprintMessageLayout.add(_TOWNSHIPButton);
 
         divIcon5 = VaadinIcon.ITALIC.create();
@@ -152,10 +189,16 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         singleGeospatialRegionElementsFootprintMessageLayout.add(divIcon5);
         singleGeospatialRegionElementsFootprintMessageLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon5);
 
-        _VillageButton = new Button("阿克特克提尔村委会");
-        _VillageButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-        _VillageButton.getStyle().set("font-size","0.8rem");
-        singleGeospatialRegionElementsFootprintMessageLayout.add(_VillageButton);
+        _VILLAGEButton = new Button("");
+        _VILLAGEButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        _VILLAGEButton.getStyle().set("font-size","0.8rem");
+        _VILLAGEButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderSingleGeospatialRegionEntity(buttonClickEvent.getSource().getText());
+            }
+        });
+        singleGeospatialRegionElementsFootprintMessageLayout.add(_VILLAGEButton);
 
         divIcon6 = VaadinIcon.KEY_O.create();
         divIcon6.setSize("10px");
@@ -289,12 +332,19 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         divIcon4.setVisible(false);
         _TOWNSHIPButton.setVisible(false);
         divIcon5.setVisible(false);
-        _VillageButton.setVisible(false);
+        _VILLAGEButton.setVisible(false);
         divIcon6.setVisible(false);
     }
 
-    private void renderSingleGeospatialRegionEntity(GeospatialScaleEntity targetGeospatialScaleEntity){
+    private void renderSingleGeospatialRegionEntity(String targetGeospatialScaleEntityChineseName){
+        if(this.navagationBarEntitieesMap.containsKey(targetGeospatialScaleEntityChineseName)){
+            renderSingleGeospatialRegionEntity(this.navagationBarEntitieesMap.get(targetGeospatialScaleEntityChineseName));
+        }
+    }
+
+    public void renderSingleGeospatialRegionEntity(GeospatialScaleEntity targetGeospatialScaleEntity){
         this.currentDisplayingGeospatialScaleEntity = targetGeospatialScaleEntity;
+        this.navagationBarEntitieesMap.clear();
 
         hideEntityNavigationBarElements();
         this.sameLevelEntitiesMenuBar.setEnabled(true);
@@ -405,6 +455,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
 
     private void setupEntityNavigationBar(GeospatialScaleEntity targetGeospatialScaleEntity){
         String entityChineseName = targetGeospatialScaleEntity.getChineseName();
+        this.navagationBarEntitieesMap.put(entityChineseName,targetGeospatialScaleEntity);
         GeospatialRegion.GeospatialScaleGrade entityGeospatialScaleGrade =  targetGeospatialScaleEntity.getGeospatialScaleGrade();
         switch(entityGeospatialScaleGrade){
             case CONTINENT :
@@ -438,8 +489,8 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
                 break;
             case VILLAGE:
                 divIcon5.setVisible(true);
-                _VillageButton.setText(entityChineseName);
-                _VillageButton.setVisible(true);
+                _VILLAGEButton.setText(entityChineseName);
+                _VILLAGEButton.setVisible(true);
                 break;
         }
         GeospatialScaleEntity parentGeospatialScaleEntity = targetGeospatialScaleEntity.getParentEntity();
