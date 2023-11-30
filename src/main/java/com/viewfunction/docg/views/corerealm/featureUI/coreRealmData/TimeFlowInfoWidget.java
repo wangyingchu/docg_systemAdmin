@@ -100,6 +100,7 @@ public class TimeFlowInfoWidget extends VerticalLayout {
                     horizontalLayout3.setDefaultVerticalComponentAlignment(Alignment.CENTER);
                     NativeLabel label3 = new NativeLabel("Year Entities:");
                     label3.getElement().getThemeList().add("badge success small");
+                    label3.setWidth(90,Unit.PIXELS );
                     horizontalLayout3.add(label3);
                     new SecondaryKeyValueDisplayItem(horizontalLayout3,FontAwesome.Solid.CLOCK.create(),"",
                             this.numberFormat.format(timeFlowRuntimeStatistics.getContainsYearScaleTimeScaleEntityCount()));
@@ -111,6 +112,7 @@ public class TimeFlowInfoWidget extends VerticalLayout {
                     horizontalLayout4.setDefaultVerticalComponentAlignment(Alignment.CENTER);
                     NativeLabel label4 = new NativeLabel("Month Entities:");
                     label4.getElement().getThemeList().add("badge success small");
+                    label4.setWidth(90,Unit.PIXELS );
                     horizontalLayout4.add(label4);
                     new SecondaryKeyValueDisplayItem(horizontalLayout4,FontAwesome.Solid.CLOCK.create(),"",
                             this.numberFormat.format(timeFlowRuntimeStatistics.getContainsMonthScaleTimeScaleEntityCount()));
@@ -122,6 +124,7 @@ public class TimeFlowInfoWidget extends VerticalLayout {
                     horizontalLayout5.setDefaultVerticalComponentAlignment(Alignment.CENTER);
                     NativeLabel label5 = new NativeLabel("Day Entities:");
                     label5.getElement().getThemeList().add("badge success small");
+                    label5.setWidth(90,Unit.PIXELS );
                     horizontalLayout5.add(label5);
                     new SecondaryKeyValueDisplayItem(horizontalLayout5,FontAwesome.Solid.CLOCK.create(),"",
                             this.numberFormat.format(timeFlowRuntimeStatistics.getContainsDayScaleTimeScaleEntityCount()));
@@ -133,6 +136,7 @@ public class TimeFlowInfoWidget extends VerticalLayout {
                     horizontalLayout6.setDefaultVerticalComponentAlignment(Alignment.CENTER);
                     NativeLabel label6 = new NativeLabel("Hour Entities:");
                     label6.getElement().getThemeList().add("badge success small");
+                    label6.setWidth(90,Unit.PIXELS );
                     horizontalLayout6.add(label6);
                     new SecondaryKeyValueDisplayItem(horizontalLayout6,FontAwesome.Solid.CLOCK.create(),"",
                             this.numberFormat.format(timeFlowRuntimeStatistics.getContainsHourScaleTimeScaleEntityCount()));
@@ -144,6 +148,7 @@ public class TimeFlowInfoWidget extends VerticalLayout {
                     horizontalLayout7.setDefaultVerticalComponentAlignment(Alignment.CENTER);
                     NativeLabel label7 = new NativeLabel("Minute Entities:");
                     label7.getElement().getThemeList().add("badge success small");
+                    label7.setWidth(90,Unit.PIXELS );
                     horizontalLayout7.add(label7);
                     new SecondaryKeyValueDisplayItem(horizontalLayout7,FontAwesome.Solid.CLOCK.create(),"",
                             this.numberFormat.format(timeFlowRuntimeStatistics.getContainsMinuteScaleTimeScaleEntityCount()));
