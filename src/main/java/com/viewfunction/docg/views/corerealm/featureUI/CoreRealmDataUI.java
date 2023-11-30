@@ -194,7 +194,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         timeFlowInSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
-
+                timeFlowInfoWidget.loadWidgetContent();
             }
         });
 
