@@ -7,7 +7,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
-import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
 
 import java.io.Serializable;
 
@@ -18,9 +17,6 @@ public class GeospatialScaleEntityMapInfoChart extends VerticalLayout {
     private String interiorPointGeoJson;
     private String envelopeGeoJson;
     private String entityContentGeoJson;
-    private String conceptionKindName;
-    private String conceptionEntityUID;
-
     public GeospatialScaleEntityMapInfoChart(){
         this.setPadding(false);
         this.setSpacing(false);
@@ -40,9 +36,7 @@ public class GeospatialScaleEntityMapInfoChart extends VerticalLayout {
                 .beforeClientResponse(this, context -> command.accept(ui)));
     }
 
-    public void renderMapAndSpatialInfo(String conceptionKindName,String conceptionEntityUID){
-        this.conceptionKindName = conceptionKindName;
-        this.conceptionEntityUID = conceptionEntityUID;
+    public void renderMapAndSpatialInfo(){
         initConnector();
     }
 
