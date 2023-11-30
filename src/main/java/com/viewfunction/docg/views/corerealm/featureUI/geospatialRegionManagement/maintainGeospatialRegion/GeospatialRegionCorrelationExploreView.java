@@ -467,11 +467,11 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         entityAttributesInfoGrid.setItems(allAttributesList);
 
         this.geospatialScaleEntityMapInfoChart.renderMapAndSpatialInfo(geospatialScaleEntityKindName,currentGeospatialScaleEntityUID);
-        renderEntityMapInfo(targetConceptionEntity,currentGeospatialScaleGrade);
+        renderEntityMapInfo(targetConceptionEntity,currentGeospatialScaleGrade,targetGeospatialScaleEntity.getChineseName(),targetGeospatialScaleEntity.getGeospatialCode());
         coreRealm.closeGlobalSession();
     }
 
-    private void renderEntityMapInfo(ConceptionEntity targetConceptionEntity,GeospatialRegion.GeospatialScaleGrade geospatialScaleGrade){
+    private void renderEntityMapInfo(ConceptionEntity targetConceptionEntity,GeospatialRegion.GeospatialScaleGrade geospatialScaleGrade,String entityChineseName,String entityGeospatialCode){
         int zoomLevel = 17;
         switch(geospatialScaleGrade){
             case CONTINENT -> zoomLevel = 1;
@@ -493,11 +493,10 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
             if(envelopeAreaWKT != null){
                 this.geospatialScaleEntityMapInfoChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
             }
-            this.geospatialScaleEntityMapInfoChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT));
+            this.geospatialScaleEntityMapInfoChart.renderEntityContent(getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT),geospatialScaleGrade.toString(),entityChineseName,entityGeospatialCode);
             if(centroidPointWKT != null){
                 this.geospatialScaleEntityMapInfoChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT),zoomLevel);
             }
-
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
         }

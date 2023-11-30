@@ -17,29 +17,17 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                 return geoJsonObject;
             },
 
-            renderPointEntityContent : function(geoJsonStr,conceptionKindName,conceptionEntityUID) {
+            renderPolygonEntityContent: function(geoJsonStr,entityChineseName,entityCode,entityType) {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
-                c.$connector.renderEntityContent(geoJsonObject,conceptionKindName,conceptionEntityUID);
-                const pointLocation = geoJsonObject.features[0].geometry.coordinates;
-                map.setView([pointLocation[1],pointLocation[0]], 17);
+                c.$connector.renderEntityContent(geoJsonObject,entityChineseName,entityCode,entityType);
             },
 
-            renderPolygonEntityContent: function(geoJsonStr,conceptionKindName,conceptionEntityUID) {
-                const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
-                c.$connector.renderEntityContent(geoJsonObject,conceptionKindName,conceptionEntityUID);
-            },
-
-            renderLineEntityContent: function(geoJsonStr,conceptionKindName,conceptionEntityUID) {
-                const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
-                c.$connector.renderEntityContent(geoJsonObject,conceptionKindName,conceptionEntityUID);
-            },
-
-            renderEntityContent: function(geoJsonObject,conceptionKindName,conceptionEntityUID) {
+            renderEntityContent: function(geoJsonObject,entityChineseName,entityCode,entityType) {
                 const geoStyle = {
-                    "color": '#0074D9',
+                    "color": '#001F3F',
                     "weight": 2,
-                    "opacity": 0.9,
-                    "fillColor": '#7FDBFF',
+                    "opacity": 0.8,
+                    "fillColor": '#0079D4',
                     "fillOpacity": 0.65
                 };
 
@@ -47,11 +35,11 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                     pointToLayer: function (feature, latlng) {
                         return L.circleMarker(latlng, {
                             radius: 6,
-                            fillColor: '#7FDBFF',
-                            color: "#0074D9",
+                            fillColor: '#0079D4',
+                            color: "#001F3F",
                             weight: 1,
-                            opacity: 0.9,
-                            fillOpacity: 0.65
+                            opacity: 0.8,
+                            fillOpacity: 0.5
                         });
                     },
                     style:geoStyle,
@@ -60,7 +48,7 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                 assetsLayersArray.push(contentLayer);
 
                 function onEachFeature(feature, layer) {
-                    let popupContent = '<p> '+ conceptionKindName+' - '+conceptionEntityUID+' ('+feature.geometry.type +')</p>';
+                    let popupContent = '<p> '+ entityChineseName+' - '+entityCode+' ('+entityType +')</p>';
                     if (feature.properties && feature.properties.popupContent) {
                         popupContent += feature.properties.popupContent;
                     }
@@ -75,8 +63,8 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                         return L.circleMarker(latlng, {
                             dashArray: 5,
                             radius: 3,
-                            fillColor: '#AAAAAA',
-                            color: "#666666",
+                            fillColor: '#CCCCCC',
+                            color: "#444444",
                             weight: 1,
                             opacity: 0.8,
                             fillOpacity: 0.5
@@ -122,8 +110,8 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                     pointToLayer: function (feature, latlng) {
                         return L.circleMarker(latlng, {
                             radius: 6,
-                            fillColor: '#7FDBFF',
-                            color: "#0074D9",
+                            fillColor: '#0079D4',
+                            color: "#001F3F",
                             weight: 1,
                             opacity: 0.9,
                             fillOpacity: 0.65

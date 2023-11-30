@@ -82,90 +82,20 @@ public class GeospatialScaleEntityMapInfoChart extends VerticalLayout {
         });
     }
 
-    public void renderEntityContent(GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType, String entityContentGeoJson){
+    public void renderEntityContent(String entityContentGeoJson,String entityType,String entityChineseName,String entityCode){
         this.entityContentGeoJson = entityContentGeoJson;
-        switch (_WKTGeometryType){
-            case POINT:
-                runBeforeClientResponse(ui -> {
-                    try {
-                        getElement().callJsFunction("$connector.renderPointEntityContent", new Serializable[]{
-                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
-                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
-                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
-                        });
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.renderPolygonEntityContent", new Serializable[]{
+                        (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
+                        (new ObjectMapper()).writeValueAsString(entityChineseName),
+                        (new ObjectMapper()).writeValueAsString(entityCode),
+                        (new ObjectMapper()).writeValueAsString(entityType)
                 });
-                break;
-            case POLYGON:
-                runBeforeClientResponse(ui -> {
-                    try {
-                        getElement().callJsFunction("$connector.renderPolygonEntityContent", new Serializable[]{
-                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
-                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
-                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
-                        });
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                break;
-            case LINESTRING:
-                runBeforeClientResponse(ui -> {
-                    try {
-                        getElement().callJsFunction("$connector.renderLineEntityContent", new Serializable[]{
-                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
-                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
-                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
-                        });
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                break;
-            case MULTIPOINT:
-                runBeforeClientResponse(ui -> {
-                    try {
-                        getElement().callJsFunction("$connector.renderPointEntityContent", new Serializable[]{
-                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
-                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
-                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
-                        });
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                break;
-            case MULTIPOLYGON:
-                runBeforeClientResponse(ui -> {
-                    try {
-                        getElement().callJsFunction("$connector.renderPolygonEntityContent", new Serializable[]{
-                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
-                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
-                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
-                        });
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                break;
-            case MULTILINESTRING:
-                runBeforeClientResponse(ui -> {
-                    try {
-                        getElement().callJsFunction("$connector.renderLineEntityContent", new Serializable[]{
-                                (new ObjectMapper()).writeValueAsString(entityContentGeoJson),
-                                (new ObjectMapper()).writeValueAsString(this.conceptionKindName),
-                                (new ObjectMapper()).writeValueAsString(this.conceptionEntityUID)
-                        });
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                break;
-            case GEOMETRYCOLLECTION:
-                break;
-        }
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public void clearMap(){
