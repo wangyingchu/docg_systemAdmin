@@ -17,7 +17,7 @@ import elemental.json.JsonObject;
 import java.io.Serializable;
 import java.util.List;
 
-@JavaScript("./visualization/feature/conceptionEntitySpatialChart-connector.js")
+@JavaScript("./visualization/feature/geospatialScaleEntitySpatialChart-connector.js")
 public class GeospatialScaleEntityMapInfoChart extends VerticalLayout {
     private String geospatialRegionName;
     private String centroidPointGeoJson;
@@ -38,7 +38,7 @@ public class GeospatialScaleEntityMapInfoChart extends VerticalLayout {
 
     private void initConnector() {
         runBeforeClientResponse(ui -> ui.getPage().executeJs(
-                "window.Vaadin.Flow.feature_ConceptionEntitySpatialChart.initLazy($0)", getElement()));
+                "window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart.initLazy($0)", getElement()));
     }
 
     private void runBeforeClientResponse(SerializableConsumer<UI> command) {
