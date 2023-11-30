@@ -27,6 +27,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.geospatial.GeospatialCalculateUtil;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.text.NumberFormat;
@@ -81,7 +82,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         singleGeospatialRegionElementsContainerLayout.setHeight("17px");
         add(singleGeospatialRegionElementsContainerLayout);
 
-        SecondaryIconTitle geospatialScaleEntityTitle = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"地理空间区域尺度实体概览");
+        SecondaryIconTitle geospatialScaleEntityTitle = new SecondaryIconTitle(LineAwesomeIconsSvg.MAP_MARKED_ALT_SOLID.create(),"地理空间区域实体探索");
         singleGeospatialRegionElementsContainerLayout.add(geospatialScaleEntityTitle);
 
         HorizontalLayout singleGeospatialRegionElementsFootprintMessageLayout = new HorizontalLayout();
