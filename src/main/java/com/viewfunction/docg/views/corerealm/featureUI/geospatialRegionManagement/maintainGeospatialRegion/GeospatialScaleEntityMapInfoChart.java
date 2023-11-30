@@ -167,4 +167,14 @@ public class GeospatialScaleEntityMapInfoChart extends VerticalLayout {
                 break;
         }
     }
+
+    public void clearMap(){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.clearMap", new Serializable[]{(new ObjectMapper()).writeValueAsString("-")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 }

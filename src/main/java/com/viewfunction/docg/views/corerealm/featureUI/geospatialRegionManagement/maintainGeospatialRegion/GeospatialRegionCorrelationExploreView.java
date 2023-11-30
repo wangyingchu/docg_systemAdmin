@@ -488,13 +488,16 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
             String envelopeAreaWKT = targetConceptionEntity.getEntitySpatialEnvelopeWKTGeometryContent(GeospatialScaleCalculable.SpatialScaleLevel.Global);
             String geometryCRSAID = targetConceptionEntity.getGlobalCRSAID();
             String geometryContentWKT = targetConceptionEntity.getGLGeometryContent();
+
+            this.geospatialScaleEntityMapInfoChart.clearMap();
             if(envelopeAreaWKT != null){
                 this.geospatialScaleEntityMapInfoChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
             }
+            this.geospatialScaleEntityMapInfoChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT));
             if(centroidPointWKT != null){
                 this.geospatialScaleEntityMapInfoChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT),zoomLevel);
             }
-            this.geospatialScaleEntityMapInfoChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT));
+
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
         }
