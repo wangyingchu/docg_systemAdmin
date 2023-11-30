@@ -97,4 +97,9 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
             barChart.setDate(attributeKindNameArray,containerAttributesViewKindCountArray);
         }
     }
+
+    public void reloadWidgetContent(){
+        this.contentAlreadyLoaded = false;
+        loadWidgetContent();
+    }
 }

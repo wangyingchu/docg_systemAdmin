@@ -109,4 +109,9 @@ public class RelationKindInfoWidget extends HorizontalLayout {
             barChart.setDate(relationKindNameArray,kindEntitiesCountArray);
         }
     }
+
+    public void reloadWidgetContent(){
+        this.contentAlreadyLoaded = false;
+        loadWidgetContent();
+    }
 }

@@ -150,4 +150,9 @@ public class ClassificationInfoWidget extends HorizontalLayout {
             treeChart.setDate(vRootClassificationPayload);
         }
     }
+
+    public void reloadWidgetContent(){
+        this.contentAlreadyLoaded = false;
+        loadWidgetContent();
+    }
 }

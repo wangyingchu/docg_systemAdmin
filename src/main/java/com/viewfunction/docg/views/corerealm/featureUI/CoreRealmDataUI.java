@@ -41,6 +41,13 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
     private DataRelationDistributionWidget dataRelationDistributionWidget;
     private SystemRuntimeInfoWidget systemRuntimeInfoWidget;
     private RelationAndConceptionKindAttachInfoWidget relationAndConceptionKindAttachInfoWidget;
+    private ConceptionKindInfoWidget conceptionKindInfoWidget;
+    private RelationKindInfoWidget relationKindInfoWidget;
+    private ClassificationInfoWidget classificationInfoWidget;
+    private GeospatialRegionInfoWidget geospatialRegionInfoWidget;
+    private TimeFlowInfoWidget timeFlowInfoWidget;
+    private AttributeViewKindInfoWidget attributeViewKindInfoWidget;
+    private AttributeKindInfoWidget attributeKindInfoWidget;
 
     public CoreRealmDataUI(){
 
@@ -123,7 +130,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         NativeLabel conceptionKindInfoTitleLabel = new NativeLabel("ConceptionKind-概念类型");
         conceptionKindInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle conceptionKindInfoSectionWallTitle = new SectionWallTitle(conceptionKindInfoTitleIcon,conceptionKindInfoTitleLabel);
-        ConceptionKindInfoWidget conceptionKindInfoWidget = new ConceptionKindInfoWidget();
+        conceptionKindInfoWidget = new ConceptionKindInfoWidget();
         SectionWallContainer conceptionKindInfoSectionWallContainer = new SectionWallContainer(conceptionKindInfoSectionWallTitle,conceptionKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(conceptionKindInfoSectionWallContainer);
         conceptionKindInfoSectionWallContainer.setOpened(false);
@@ -139,7 +146,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         NativeLabel relationKindInfoTitleLabel = new NativeLabel("RelationKind-关系类型");
         relationKindInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle relationKindInfoSectionWallTitle = new SectionWallTitle(relationKindInfoTitleIcon,relationKindInfoTitleLabel);
-        RelationKindInfoWidget relationKindInfoWidget = new RelationKindInfoWidget();
+        relationKindInfoWidget = new RelationKindInfoWidget();
         SectionWallContainer relationKindInfoSectionWallContainer = new SectionWallContainer(relationKindInfoSectionWallTitle,relationKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(relationKindInfoSectionWallContainer);
         relationKindInfoSectionWallContainer.setOpened(false);
@@ -155,7 +162,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         NativeLabel classificationInfoTitleLabel = new NativeLabel("Classification-分类");
         classificationInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle classificationInfoSectionWallTitle = new SectionWallTitle(classificationInfoTitleIcon,classificationInfoTitleLabel);
-        ClassificationInfoWidget classificationInfoWidget = new ClassificationInfoWidget();
+        classificationInfoWidget = new ClassificationInfoWidget();
         SectionWallContainer classificationInSectionWallContainer = new SectionWallContainer(classificationInfoSectionWallTitle,classificationInfoWidget);
         leftSideSectionContainerScrollLayout.add(classificationInSectionWallContainer);
         classificationInSectionWallContainer.setOpened(false);
@@ -171,7 +178,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         NativeLabel geospatialRegionInfoTitleLabel = new NativeLabel("GeospatialRegion-地理空间区域");
         geospatialRegionInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle geospatialRegionInfoSectionWallTitle = new SectionWallTitle(geospatialRegionInfoTitleIcon,geospatialRegionInfoTitleLabel);
-        GeospatialRegionInfoWidget geospatialRegionInfoWidget = new GeospatialRegionInfoWidget();
+        geospatialRegionInfoWidget = new GeospatialRegionInfoWidget();
         SectionWallContainer geospatialRegionInSectionWallContainer = new SectionWallContainer(geospatialRegionInfoSectionWallTitle,geospatialRegionInfoWidget);
         leftSideSectionContainerScrollLayout.add(geospatialRegionInSectionWallContainer);
         geospatialRegionInSectionWallContainer.setOpened(false);
@@ -187,7 +194,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         NativeLabel timeFlowInfoTitleLabel = new NativeLabel("TimeFlow-时间流");
         timeFlowInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle timeFlowInfoSectionWallTitle = new SectionWallTitle(timeFlowInfoTitleIcon,timeFlowInfoTitleLabel);
-        TimeFlowInfoWidget timeFlowInfoWidget = new TimeFlowInfoWidget();
+        timeFlowInfoWidget = new TimeFlowInfoWidget();
         SectionWallContainer timeFlowInSectionWallContainer = new SectionWallContainer(timeFlowInfoSectionWallTitle,timeFlowInfoWidget);
         leftSideSectionContainerScrollLayout.add(timeFlowInSectionWallContainer);
         timeFlowInSectionWallContainer.setOpened(false);
@@ -203,7 +210,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         NativeLabel attributesViewKindInfoTitleLabel = new NativeLabel("AttributesViewKind-属性视图类型");
         attributesViewKindInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle attributesViewKindInfoSectionWallTitle = new SectionWallTitle(attributesViewKindInfoTitleIcon,attributesViewKindInfoTitleLabel);
-        AttributeViewKindInfoWidget attributeViewKindInfoWidget = new AttributeViewKindInfoWidget();
+        attributeViewKindInfoWidget = new AttributeViewKindInfoWidget();
         SectionWallContainer attributesViewKindInSectionWallContainer = new SectionWallContainer(attributesViewKindInfoSectionWallTitle, attributeViewKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(attributesViewKindInSectionWallContainer);
         attributesViewKindInSectionWallContainer.setOpened(false);
@@ -219,7 +226,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         NativeLabel attributesKindInfoTitleLabel = new NativeLabel("AttributesKind-属性类型");
         attributesKindInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle attributesKindInfoSectionWallTitle = new SectionWallTitle(attributesKindInfoTitleIcon,attributesKindInfoTitleLabel);
-        AttributeKindInfoWidget attributeKindInfoWidget = new AttributeKindInfoWidget();
+        attributeKindInfoWidget = new AttributeKindInfoWidget();
         SectionWallContainer attributesKindInSectionWallContainer = new SectionWallContainer(attributesKindInfoSectionWallTitle, attributeKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(attributesKindInSectionWallContainer);
         attributesKindInSectionWallContainer.setOpened(false);
@@ -306,6 +313,13 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         systemRuntimeInfoWidget.refreshSystemRuntimeInfo();
         dataRelationDistributionWidget.refreshDataRelationDistributionData();
         relationAndConceptionKindAttachInfoWidget.renderRelationAndConceptionKindAttachInfo();
+        conceptionKindInfoWidget.reloadWidgetContent();
+        relationKindInfoWidget.reloadWidgetContent();
+        classificationInfoWidget.reloadWidgetContent();
+        geospatialRegionInfoWidget.reloadWidgetContent();
+        timeFlowInfoWidget.reloadWidgetContent();
+        attributeViewKindInfoWidget.reloadWidgetContent();
+        attributeKindInfoWidget.reloadWidgetContent();
     }
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {

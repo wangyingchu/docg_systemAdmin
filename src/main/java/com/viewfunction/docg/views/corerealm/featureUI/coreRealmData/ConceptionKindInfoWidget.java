@@ -2,6 +2,8 @@ package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -14,6 +16,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.chart.PieChart;
+import com.viewfunction.docg.element.eventHandling.CheckSystemRuntimeInfoEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.text.NumberFormat;
 import java.util.*;
@@ -37,7 +41,6 @@ public class ConceptionKindInfoWidget extends HorizontalLayout {
     public void loadWidgetContent(){
         if(!this.contentAlreadyLoaded){
             this.contentAlreadyLoaded = true;
-
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             List<EntityStatisticsInfo> entityStatisticsInfoList = null;
             long totalEntitiesCount = 0;
@@ -116,5 +119,11 @@ public class ConceptionKindInfoWidget extends HorizontalLayout {
             pieChart.enableBottomLegend();
             pieChart.setDate(conceptionKindNameArray,kindEntitiesCountArray);
         }
+    }
+
+    public void reloadWidgetContent(){
+        this.widgetComponentContainer.removeAll();
+        this.contentAlreadyLoaded = false;
+        loadWidgetContent();
     }
 }

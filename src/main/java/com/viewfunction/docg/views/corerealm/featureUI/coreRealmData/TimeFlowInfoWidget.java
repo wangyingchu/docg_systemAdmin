@@ -163,4 +163,9 @@ public class TimeFlowInfoWidget extends VerticalLayout {
             coreRealm.closeGlobalSession();
         }
     }
+
+    public void reloadWidgetContent(){
+        this.contentAlreadyLoaded = false;
+        loadWidgetContent();
+    }
 }

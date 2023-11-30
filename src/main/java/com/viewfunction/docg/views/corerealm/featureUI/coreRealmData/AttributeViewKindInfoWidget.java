@@ -107,4 +107,9 @@ public class AttributeViewKindInfoWidget  extends HorizontalLayout {
             stackedBarChart.renderChart();
         }
     }
+
+    public void reloadWidgetContent(){
+        this.contentAlreadyLoaded = false;
+        loadWidgetContent();
+    }
 }

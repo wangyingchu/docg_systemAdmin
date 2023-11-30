@@ -154,4 +154,9 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
             coreRealm.closeGlobalSession();
         }
     }
+
+    public void reloadWidgetContent(){
+        this.contentAlreadyLoaded = false;
+        loadWidgetContent();
+    }
 }
