@@ -110,4 +110,6 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         add(accordion);
     }
 
+    public void loadWidgetContent(){}
+
 }

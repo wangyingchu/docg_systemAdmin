@@ -9,6 +9,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -126,6 +127,12 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         SectionWallContainer conceptionKindInfoSectionWallContainer = new SectionWallContainer(conceptionKindInfoSectionWallTitle,conceptionKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(conceptionKindInfoSectionWallContainer);
         conceptionKindInfoSectionWallContainer.setOpened(false);
+        conceptionKindInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+
+            }
+        });
 
         Icon relationKindInfoTitleIcon = new Icon(VaadinIcon.CONNECT_O);
         relationKindInfoTitleIcon.setSize("18px");
@@ -136,6 +143,12 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         SectionWallContainer relationKindInfoSectionWallContainer = new SectionWallContainer(relationKindInfoSectionWallTitle,relationKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(relationKindInfoSectionWallContainer);
         relationKindInfoSectionWallContainer.setOpened(false);
+        relationKindInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+
+            }
+        });
 
         Icon classificationInfoTitleIcon = new Icon(VaadinIcon.TAGS);
         classificationInfoTitleIcon.setSize("18px");
@@ -146,6 +159,12 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         SectionWallContainer classificationInSectionWallContainer = new SectionWallContainer(classificationInfoSectionWallTitle,classificationInfoWidget);
         leftSideSectionContainerScrollLayout.add(classificationInSectionWallContainer);
         classificationInSectionWallContainer.setOpened(false);
+        classificationInSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+
+            }
+        });
 
         Icon geospatialRegionInfoTitleIcon = new Icon(VaadinIcon.GLOBE_WIRE);
         geospatialRegionInfoTitleIcon.setSize("18px");
@@ -156,6 +175,12 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         SectionWallContainer geospatialRegionInSectionWallContainer = new SectionWallContainer(geospatialRegionInfoSectionWallTitle,geospatialRegionInfoWidget);
         leftSideSectionContainerScrollLayout.add(geospatialRegionInSectionWallContainer);
         geospatialRegionInSectionWallContainer.setOpened(false);
+        geospatialRegionInSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+                geospatialRegionInfoWidget.loadWidgetContent();
+            }
+        });
 
         Icon timeFlowInfoTitleIcon = new Icon(VaadinIcon.TIMER);
         timeFlowInfoTitleIcon.setSize("18px");
@@ -166,6 +191,12 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         SectionWallContainer timeFlowInSectionWallContainer = new SectionWallContainer(timeFlowInfoSectionWallTitle,timeFlowInfoWidget);
         leftSideSectionContainerScrollLayout.add(timeFlowInSectionWallContainer);
         timeFlowInSectionWallContainer.setOpened(false);
+        timeFlowInSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+
+            }
+        });
 
         Icon attributesViewKindInfoTitleIcon = new Icon(VaadinIcon.TASKS);
         attributesViewKindInfoTitleIcon.setSize("18px");
@@ -176,6 +207,12 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         SectionWallContainer attributesViewKindInSectionWallContainer = new SectionWallContainer(attributesViewKindInfoSectionWallTitle, attributeViewKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(attributesViewKindInSectionWallContainer);
         attributesViewKindInSectionWallContainer.setOpened(false);
+        attributesViewKindInSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+
+            }
+        });
 
         Icon attributesKindInfoTitleIcon = new Icon(VaadinIcon.INPUT);
         attributesKindInfoTitleIcon.setSize("18px");
@@ -186,6 +223,12 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         SectionWallContainer attributesKindInSectionWallContainer = new SectionWallContainer(attributesKindInfoSectionWallTitle, attributeKindInfoWidget);
         leftSideSectionContainerScrollLayout.add(attributesKindInSectionWallContainer);
         attributesKindInSectionWallContainer.setOpened(false);
+        attributesKindInSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+            @Override
+            public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+
+            }
+        });
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setHeight(10,Unit.PIXELS);
