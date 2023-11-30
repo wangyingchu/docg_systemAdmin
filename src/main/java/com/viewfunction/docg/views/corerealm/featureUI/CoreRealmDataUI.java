@@ -130,7 +130,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         conceptionKindInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
-
+                conceptionKindInfoWidget.loadWidgetContent();
             }
         });
 
@@ -146,7 +146,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         relationKindInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
-
+                relationKindInfoWidget.loadWidgetContent();
             }
         });
 
@@ -162,7 +162,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         classificationInSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
-
+                classificationInfoWidget.loadWidgetContent();
             }
         });
 
@@ -210,7 +210,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         attributesViewKindInSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
-
+                attributeViewKindInfoWidget.loadWidgetContent();
             }
         });
 
@@ -226,7 +226,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         attributesKindInSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
-
+                attributeKindInfoWidget.loadWidgetContent();
             }
         });
 

@@ -346,7 +346,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         messageLogo.getStyle()
                 .set("color","#2e4e7e").set("padding-right", "5px");
         messageLogo.setSize("30px");
-        NativeLabel messageLabel = new NativeLabel(" 当前地理空间区域尺度实体中不包含地理空间信息");
+        NativeLabel messageLabel = new NativeLabel(" 当前地理空间区域实体中不包含地理空间信息");
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
         this.doesNotContainsSpatialInfoMessage.add(messageLogo,messageLabel);
         this.entityInfoContainerLayout.add(this.doesNotContainsSpatialInfoMessage);

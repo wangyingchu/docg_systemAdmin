@@ -20,83 +20,91 @@ import java.util.List;
 
 public class AttributeViewKindInfoWidget  extends HorizontalLayout {
 
+    private boolean contentAlreadyLoaded = false;
+    private VerticalLayout widgetComponentContainer;
+
     public AttributeViewKindInfoWidget(){
         this.setSpacing(false);
         this.setMargin(false);
         this.addClassNames("bg-base");
 
-        VerticalLayout leftComponentContainer = new VerticalLayout();
-        leftComponentContainer.setWidth(260,Unit.PIXELS);
-        leftComponentContainer.setSpacing(false);
-        leftComponentContainer.setMargin(false);
-        add(leftComponentContainer);
+        widgetComponentContainer = new VerticalLayout();
+        widgetComponentContainer.setWidth(260,Unit.PIXELS);
+        widgetComponentContainer.setSpacing(false);
+        widgetComponentContainer.setMargin(false);
+        add(widgetComponentContainer);
+    }
 
-        String[] attributeKindNameArray = new String[0];
-        Double[] containsAttributeKindCountArray = new Double[0];
-        Double[] containerConceptionKindCountArray = new Double[0];
+    public void loadWidgetContent(){
+        if(!this.contentAlreadyLoaded){
+            this.contentAlreadyLoaded = true;
+            String[] attributeKindNameArray = new String[0];
+            Double[] containsAttributeKindCountArray = new Double[0];
+            Double[] containerConceptionKindCountArray = new Double[0];
 
-        int attributesViewKindCount = 0;
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        try {
-            List<AttributesViewKindMetaInfo> attributeKindMetaInfoList = coreRealm.getAttributesViewKindsMetaInfo();
-            attributesViewKindCount = attributeKindMetaInfoList.size();
-            Collections.sort(attributeKindMetaInfoList, new Comparator<AttributesViewKindMetaInfo>() {
-                public int compare(AttributesViewKindMetaInfo o1, AttributesViewKindMetaInfo o2) {
-                    if(o2.getContainerConceptionKindCount()+o2.getContainsAttributeKindCount() > o1.getContainerConceptionKindCount()+o1.getContainsAttributeKindCount()){
-                        return 1;
-                    }else{
-                        return -1;
+            int attributesViewKindCount = 0;
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            try {
+                List<AttributesViewKindMetaInfo> attributeKindMetaInfoList = coreRealm.getAttributesViewKindsMetaInfo();
+                attributesViewKindCount = attributeKindMetaInfoList.size();
+                Collections.sort(attributeKindMetaInfoList, new Comparator<AttributesViewKindMetaInfo>() {
+                    public int compare(AttributesViewKindMetaInfo o1, AttributesViewKindMetaInfo o2) {
+                        if(o2.getContainerConceptionKindCount()+o2.getContainsAttributeKindCount() > o1.getContainerConceptionKindCount()+o1.getContainsAttributeKindCount()){
+                            return 1;
+                        }else{
+                            return -1;
+                        }
                     }
+                });
+
+                int topAttributesViewKindNameArraySize = attributesViewKindCount >= 10 ? 10 : attributesViewKindCount;
+                attributeKindNameArray = new String[topAttributesViewKindNameArraySize];
+                containsAttributeKindCountArray = new Double[topAttributesViewKindNameArraySize];
+                containerConceptionKindCountArray = new Double[topAttributesViewKindNameArraySize];
+
+                for(int i=0;i <topAttributesViewKindNameArraySize;i++){
+                    AttributesViewKindMetaInfo currentAttributeKindMetaInfo = attributeKindMetaInfoList.get(i);
+                    attributeKindNameArray[i] = currentAttributeKindMetaInfo.getKindName();
+                    containsAttributeKindCountArray[i] = Double.valueOf(currentAttributeKindMetaInfo.getContainsAttributeKindCount());
+                    containerConceptionKindCountArray[i] = Double.valueOf(currentAttributeKindMetaInfo.getContainerConceptionKindCount());
                 }
-            });
 
-            int topAttributesViewKindNameArraySize = attributesViewKindCount >= 10 ? 10 : attributesViewKindCount;
-            attributeKindNameArray = new String[topAttributesViewKindNameArraySize];
-            containsAttributeKindCountArray = new Double[topAttributesViewKindNameArraySize];
-            containerConceptionKindCountArray = new Double[topAttributesViewKindNameArraySize];
-
-            for(int i=0;i <topAttributesViewKindNameArraySize;i++){
-                AttributesViewKindMetaInfo currentAttributeKindMetaInfo = attributeKindMetaInfoList.get(i);
-                attributeKindNameArray[i] = currentAttributeKindMetaInfo.getKindName();
-                containsAttributeKindCountArray[i] = Double.valueOf(currentAttributeKindMetaInfo.getContainsAttributeKindCount());
-                containerConceptionKindCountArray[i] = Double.valueOf(currentAttributeKindMetaInfo.getContainerConceptionKindCount());
+            } catch (CoreRealmServiceEntityExploreException e) {
+                throw new RuntimeException(e);
             }
+            new PrimaryKeyValueDisplayItem(widgetComponentContainer, FontAwesome.Regular.CIRCLE.create(),"属性视图类型数量:",""+attributesViewKindCount);
 
-        } catch (CoreRealmServiceEntityExploreException e) {
-            throw new RuntimeException(e);
+            HorizontalLayout spaceDivLayout = new HorizontalLayout();
+            spaceDivLayout.setHeight(15,Unit.PIXELS);
+            widgetComponentContainer.add(spaceDivLayout);
+
+            NativeLabel messageText = new NativeLabel("Top 10 AttributeViewKinds used by more container ConceptionKinds and contains AttributeKinds ->");
+            widgetComponentContainer.add(messageText);
+            messageText.addClassNames("text-xs","text-tertiary");
+
+            VerticalLayout rightComponentContainer = new VerticalLayout();
+            rightComponentContainer.setSpacing(false);
+            rightComponentContainer.setMargin(false);
+            add(rightComponentContainer);
+            this.setFlexGrow(1,rightComponentContainer);
+
+            StackedBarChart stackedBarChart = new StackedBarChart(330,250);
+            rightComponentContainer.add(stackedBarChart);
+
+            stackedBarChart.setBottomMargin(1);
+            stackedBarChart.setLeftMargin(1);
+            stackedBarChart.setRightMargin(2);
+            String[] barColorArray = new String[]{"#39CCCC","#F012BE"};
+            stackedBarChart.setColor(barColorArray);
+
+            stackedBarChart.setYAxisCategory(attributeKindNameArray);
+            String[] dataCategoryArray = new String[]{"By AttributeKind","By ConceptionKind"};
+            stackedBarChart.setDataCategory(dataCategoryArray);
+
+            stackedBarChart.setDate(containsAttributeKindCountArray);
+            stackedBarChart.setDate(containerConceptionKindCountArray);
+
+            stackedBarChart.renderChart();
         }
-        new PrimaryKeyValueDisplayItem(leftComponentContainer, FontAwesome.Regular.CIRCLE.create(),"属性视图类型数量:",""+attributesViewKindCount);
-
-        HorizontalLayout spaceDivLayout = new HorizontalLayout();
-        spaceDivLayout.setHeight(15,Unit.PIXELS);
-        leftComponentContainer.add(spaceDivLayout);
-
-        NativeLabel messageText = new NativeLabel("Top 10 AttributeViewKinds used by more container ConceptionKinds and contains AttributeKinds ->");
-        leftComponentContainer.add(messageText);
-        messageText.addClassNames("text-xs","text-tertiary");
-
-        VerticalLayout rightComponentContainer = new VerticalLayout();
-        rightComponentContainer.setSpacing(false);
-        rightComponentContainer.setMargin(false);
-        add(rightComponentContainer);
-        this.setFlexGrow(1,rightComponentContainer);
-
-        StackedBarChart stackedBarChart = new StackedBarChart(330,250);
-        rightComponentContainer.add(stackedBarChart);
-
-        stackedBarChart.setBottomMargin(1);
-        stackedBarChart.setLeftMargin(1);
-        stackedBarChart.setRightMargin(2);
-        String[] barColorArray = new String[]{"#39CCCC","#F012BE"};
-        stackedBarChart.setColor(barColorArray);
-
-        stackedBarChart.setYAxisCategory(attributeKindNameArray);
-        String[] dataCategoryArray = new String[]{"By AttributeKind","By ConceptionKind"};
-        stackedBarChart.setDataCategory(dataCategoryArray);
-
-        stackedBarChart.setDate(containsAttributeKindCountArray);
-        stackedBarChart.setDate(containerConceptionKindCountArray);
-
-        stackedBarChart.renderChart();
     }
 }
