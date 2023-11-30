@@ -2,20 +2,14 @@ package com.viewfunction.docg.views.corerealm.featureUI.geospatialRegionManageme
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vaadin.flow.component.JsonSerializable;
+
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.GeospatialScaleEntity;
-import elemental.json.Json;
-import elemental.json.JsonArray;
-import elemental.json.JsonObject;
 
 import java.io.Serializable;
-import java.util.List;
 
 @JavaScript("./visualization/feature/geospatialScaleEntitySpatialChart-connector.js")
 public class GeospatialScaleEntityMapInfoChart extends VerticalLayout {
@@ -52,11 +46,14 @@ public class GeospatialScaleEntityMapInfoChart extends VerticalLayout {
         initConnector();
     }
 
-    public void renderCentroidPoint(String centroidPointGeoJson){
+    public void renderCentroidPoint(String centroidPointGeoJson,int zoomLevel){
         this.centroidPointGeoJson = centroidPointGeoJson;
         runBeforeClientResponse(ui -> {
             try {
-                getElement().callJsFunction("$connector.renderCentroidPoint", new Serializable[]{(new ObjectMapper()).writeValueAsString(centroidPointGeoJson)});
+                getElement().callJsFunction("$connector.renderCentroidPoint", new Serializable[]{
+                        (new ObjectMapper()).writeValueAsString(centroidPointGeoJson),
+                        (new ObjectMapper()).writeValueAsString(zoomLevel)
+                });
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }

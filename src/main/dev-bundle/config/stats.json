@@ -328,7 +328,7 @@
   "visualization/feature/conceptionEntityRelationsChart-connector.js": "3a46ad97d5fa3b36d387958901c6657b33aa7be833137a1bb5a81b3524b956c6",
   "visualization/feature/relatedConceptionEntitiesDandelionGraphChart-connector.js": "3a27e01a9178bc7a480a067e07f2b96e2d5bf73a77f3fea2e079491b4d0d11f4",
   "visualization/feature/dataRelationDistributionChart-connector.js": "0d25b181f78a4c9b7aa45ecbbf5ca66ec1cd521cba445efdb36b7dd726341899",
-  "visualization/feature/geospatialScaleEntitySpatialChart-connector.js": "3d3c1de489322209cca2b7ccbbda645ed051643db132415bcbf9d208ae9031f3",
+  "visualization/feature/geospatialScaleEntitySpatialChart-connector.js": "f6557f929d60ff0000abc829507673eadc04080f5a333d00c219545c2056144a",
   "visualization/feature/relationKindCorrelationInfoChart-connector.js": "d15d4f28c994d1cfbae257a366979f9b46aa287cf4fde215e05176d7b52924ec",
   "visualization/feature/relationConceptionEntitiesPairChart-connector.js": "6d483bf7bfbaa2b0bd4052a55e397731c319f5cc68b51fc7e95f53299a0cc8cf",
   "visualization/feature/timeFlowCorrelationInfoChart-connector.js": "82bf02956d666b06a795822eadb92b72721668f1384f57c674c63275456ea261",
@@ -365,7 +365,7 @@
   "docg-pac": "{\n  \"lumoImports\" : [ \"typography\", \"color\", \"spacing\", \"badge\", \"utility\" ]\n}"
  },
  "entryScripts": [
-  "VAADIN/build/indexhtml-365a81e4.js"
+  "VAADIN/build/indexhtml-747c3a5c.js"
  ],
  "webComponents": [],
  "cvdlModules": {
@@ -400,6 +400,6 @@
  },
  "packageJsonHash": "e69b516857ff781542b4ce78601ea1e9b30dbdc39b684d78297f65a4288b34a2",
  "indexHtmlGenerated": [
-  "  <script type=\"module\" crossorigin src=\"./VAADIN/build/indexhtml-365a81e4.js\"></script>"
+  "  <script type=\"module\" crossorigin src=\"./VAADIN/build/indexhtml-747c3a5c.js\"></script>"
  ]
 }

@@ -66,7 +66,7 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                 }
             },
 
-            renderCentroidPoint : function(geoJsonStr) {
+            renderCentroidPoint : function(geoJsonStr,zoomLevel) {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
                 L.geoJSON(geoJsonObject, {
                     pointToLayer: function (feature, latlng) {
@@ -82,7 +82,8 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                     }
                 }).addTo(map);
                 const pointLocation = geoJsonObject.features[0].geometry.coordinates;
-                map.setView([pointLocation[1],pointLocation[0]], 3); //.......
+                //map.setView([pointLocation[1],pointLocation[0]], 3); //.......
+                map.setView([pointLocation[1],pointLocation[0]], zoomLevel); //.......
             },
 
             renderInteriorPoint : function(geoJsonStr) {

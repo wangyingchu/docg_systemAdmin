@@ -467,11 +467,21 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         entityAttributesInfoGrid.setItems(allAttributesList);
 
         this.geospatialScaleEntityMapInfoChart.renderMapAndSpatialInfo(geospatialScaleEntityKindName,currentGeospatialScaleEntityUID);
-        renderEntityMapInfo(targetConceptionEntity);
+        renderEntityMapInfo(targetConceptionEntity,currentGeospatialScaleGrade);
         coreRealm.closeGlobalSession();
     }
 
-    private void renderEntityMapInfo(ConceptionEntity targetConceptionEntity){
+    private void renderEntityMapInfo(ConceptionEntity targetConceptionEntity,GeospatialRegion.GeospatialScaleGrade geospatialScaleGrade){
+        int zoomLevel = 17;
+        switch(geospatialScaleGrade){
+            case CONTINENT -> zoomLevel = 1;
+            case COUNTRY_REGION -> zoomLevel = 3;
+            case PROVINCE -> zoomLevel = 5;
+            case PREFECTURE -> zoomLevel = 7;
+            case COUNTY -> zoomLevel = 9;
+            case TOWNSHIP -> zoomLevel = 11;
+            case VILLAGE -> zoomLevel = 13;
+        }
         GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = targetConceptionEntity.getGeometryType();
         try {
             String centroidPointWKT = targetConceptionEntity.getEntitySpatialCentroidPointWKTGeometryContent(GeospatialScaleCalculable.SpatialScaleLevel.Global);
@@ -482,7 +492,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
                 this.geospatialScaleEntityMapInfoChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
             }
             if(centroidPointWKT != null){
-                this.geospatialScaleEntityMapInfoChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                this.geospatialScaleEntityMapInfoChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT),zoomLevel);
             }
             this.geospatialScaleEntityMapInfoChart.renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT));
         } catch (CoreRealmServiceRuntimeException e) {
