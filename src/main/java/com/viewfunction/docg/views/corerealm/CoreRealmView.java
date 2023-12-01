@@ -2,6 +2,7 @@ package com.viewfunction.docg.views.corerealm;
 
 import ch.carnet.kasparscherrer.VerticalScrollLayout;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.Div;
@@ -9,19 +10,24 @@ import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.login.AbstractLogin;
+import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.shared.Registration;
+
+import com.viewfunction.docg.element.eventHandling.UserApplicationLogoutEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.MainLayout;
 import com.viewfunction.docg.views.corerealm.featureUI.*;
 
 @PageTitle("数海云图 - 核心领域模型 [ Core Realm ]")
 @Route(value = "core-realm", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
-public class CoreRealmView extends Div {
+public class CoreRealmView extends Div implements UserApplicationLogoutEvent.UserApplicationLogoutListener{
 
     //https://vaadin.com/directory/component/scrolllayout
     //https://vaadin.com/forum/thread/17192835/scrollable-layout
@@ -37,8 +43,10 @@ public class CoreRealmView extends Div {
     private ClassificationManagementUI classificationManagementUI;
     private GeospatialRegionManagementUI geospatialRegionManagementUI;
     private TimeFlowManagementUI timeFlowManagementUI;
+    private LoginOverlay loginOverlay;
+    public CoreRealmView(){
 
-    public CoreRealmView() {
+        showLoginUI();
 
         this.setWidth(100, Unit.PERCENTAGE);
 
@@ -141,6 +149,7 @@ public class CoreRealmView extends Div {
 
         }));
         switchFeatureUI("coreRealmTab");
+        ResourceHolder.getApplicationBlackboard().addListener(this);
     }
 
     @Override
@@ -148,6 +157,7 @@ public class CoreRealmView extends Div {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     private void switchFeatureUI(String activeFeatureID){
@@ -239,5 +249,25 @@ public class CoreRealmView extends Div {
                 this.timeFlowManagementUI.setVisible(true);
             }
         }
+    }
+
+    private void showLoginUI(){
+        loginOverlay = new LoginOverlay();
+        add(loginOverlay);
+        loginOverlay.setOpened(true);
+        loginOverlay.addLoginListener(new ComponentEventListener<AbstractLogin.LoginEvent>() {
+            @Override
+            public void onComponentEvent(AbstractLogin.LoginEvent loginEvent) {
+                System.out.println(loginEvent.getUsername());
+                System.out.println(loginEvent.getPassword());
+
+                loginOverlay.close();
+            }
+        });
+    }
+
+    @Override
+    public void receivedUserApplicationLogoutEvent(UserApplicationLogoutEvent event) {
+        loginOverlay.setOpened(true);
     }
 }

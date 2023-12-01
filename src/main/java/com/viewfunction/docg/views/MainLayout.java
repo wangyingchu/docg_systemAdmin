@@ -122,7 +122,8 @@ public class MainLayout extends AppLayout {
         exitSystemActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-
+                UserApplicationLogoutEvent userApplicationLogoutEvent = new UserApplicationLogoutEvent();
+                ResourceHolder.getApplicationBlackboard().fire(userApplicationLogoutEvent);
             }
         });
         layout.add(menuBar);
@@ -337,6 +338,8 @@ public class MainLayout extends AppLayout {
                 TimeFlowRefreshEvent.class);
         _BLACKBOARD.register(GeospatialRegionRefreshEvent.GeospatialRegionRefreshEventListener.class,
                 GeospatialRegionRefreshEvent.class);
+        _BLACKBOARD.register(UserApplicationLogoutEvent.UserApplicationLogoutListener.class,
+                UserApplicationLogoutEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }
