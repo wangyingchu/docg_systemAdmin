@@ -19,7 +19,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.shared.Registration;
 
-import com.viewfunction.docg.element.eventHandling.UserApplicationLogoutEvent;
+import com.viewfunction.docg.element.eventHandling.UserLockApplicationEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.MainLayout;
 import com.viewfunction.docg.views.corerealm.featureUI.*;
@@ -27,7 +27,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.*;
 @PageTitle("数海云图 - 核心领域模型 [ Core Realm ]")
 @Route(value = "core-realm", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
-public class CoreRealmView extends Div implements UserApplicationLogoutEvent.UserApplicationLogoutListener{
+public class CoreRealmView extends Div implements UserLockApplicationEvent.UserApplicationLogoutListener{
 
     //https://vaadin.com/directory/component/scrolllayout
     //https://vaadin.com/forum/thread/17192835/scrollable-layout
@@ -253,6 +253,10 @@ public class CoreRealmView extends Div implements UserApplicationLogoutEvent.Use
 
     private void showLoginUI(){
         loginOverlay = new LoginOverlay();
+        loginOverlay.setTitle("DOCG 数海云图");
+        loginOverlay.setDescription("Data Ocean & Cloud Graph 数据分析");
+        loginOverlay.setForgotPasswordButtonVisible(false);
+        //loginOverlay.getElement().getThemeList().add("dark");
         add(loginOverlay);
         loginOverlay.setOpened(true);
         loginOverlay.addLoginListener(new ComponentEventListener<AbstractLogin.LoginEvent>() {
@@ -267,7 +271,7 @@ public class CoreRealmView extends Div implements UserApplicationLogoutEvent.Use
     }
 
     @Override
-    public void receivedUserApplicationLogoutEvent(UserApplicationLogoutEvent event) {
+    public void receivedUserLockApplicationEvent(UserLockApplicationEvent event) {
         loginOverlay.setOpened(true);
     }
 }

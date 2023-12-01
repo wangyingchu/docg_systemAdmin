@@ -111,19 +111,19 @@ public class MainLayout extends AppLayout {
         actionLayout.setSpacing(false);
         actionLayout.setMargin(false);
         actionLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-        Icon action1Icon = VaadinIcon.EXIT_O.create();
+        Icon action1Icon = VaadinIcon.LOCK.create();
         action1Icon.setSize("10px");
         Span action1Space = new Span();
         action1Space.setWidth(6,Unit.PIXELS);
-        NativeLabel action1Label = new NativeLabel("退出登录");
+        NativeLabel action1Label = new NativeLabel("锁定系统");
         action1Label.addClassNames("text-xs","font-semibold","text-secondary");
         actionLayout.add(action1Icon,action1Space,action1Label);
         MenuItem exitSystemActionItem = subMenu.addItem(actionLayout);
         exitSystemActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                UserApplicationLogoutEvent userApplicationLogoutEvent = new UserApplicationLogoutEvent();
-                ResourceHolder.getApplicationBlackboard().fire(userApplicationLogoutEvent);
+                UserLockApplicationEvent userLockApplicationEvent = new UserLockApplicationEvent();
+                ResourceHolder.getApplicationBlackboard().fire(userLockApplicationEvent);
             }
         });
         layout.add(menuBar);
@@ -338,8 +338,8 @@ public class MainLayout extends AppLayout {
                 TimeFlowRefreshEvent.class);
         _BLACKBOARD.register(GeospatialRegionRefreshEvent.GeospatialRegionRefreshEventListener.class,
                 GeospatialRegionRefreshEvent.class);
-        _BLACKBOARD.register(UserApplicationLogoutEvent.UserApplicationLogoutListener.class,
-                UserApplicationLogoutEvent.class);
+        _BLACKBOARD.register(UserLockApplicationEvent.UserApplicationLogoutListener.class,
+                UserLockApplicationEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }
