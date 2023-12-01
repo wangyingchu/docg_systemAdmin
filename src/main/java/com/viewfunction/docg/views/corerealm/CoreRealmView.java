@@ -5,13 +5,13 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.NativeLabel;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.login.AbstractLogin;
 import com.vaadin.flow.component.login.LoginOverlay;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
@@ -19,6 +19,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.shared.Registration;
 
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.viewfunction.docg.element.eventHandling.UserLockApplicationEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.MainLayout;
@@ -253,10 +254,22 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
 
     private void showLoginUI(){
         loginOverlay = new LoginOverlay();
-        loginOverlay.setTitle("DOCG 数海云图");
-        loginOverlay.setDescription("Data Ocean & Cloud Graph 数据分析");
+
+        HorizontalLayout logoLayout = new HorizontalLayout();
+        logoLayout.setId("logo");
+        logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        Image image = new Image("images/logo.png","DOCG-SAC logo");
+        image.setHeight(39, Unit.PIXELS);
+        image.setWidth(128, Unit.PIXELS);
+        logoLayout.add(image);
+
+        loginOverlay.setTitle(logoLayout);
+        loginOverlay.setDescription("D.O.C.G 数据分析平台");
         loginOverlay.setForgotPasswordButtonVisible(false);
-        //loginOverlay.getElement().getThemeList().add("dark");
+
+        Paragraph text = new Paragraph("Never tell your password to anyone");
+        text.addClassName(LumoUtility.TextAlignment.CENTER);
+        loginOverlay.getFooter().add(text);
         add(loginOverlay);
         loginOverlay.setOpened(true);
         loginOverlay.addLoginListener(new ComponentEventListener<AbstractLogin.LoginEvent>() {
