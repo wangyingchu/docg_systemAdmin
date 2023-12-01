@@ -269,6 +269,8 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
         //i18n.setAdditionalInformation("Jos tarvitset lisätietoja käyttäjälle.");
 
         loginOverlay = new LoginOverlay();
+        //<theme-editor-local-classname>
+        loginOverlay.addClassName("core-realm-view-login-overlay-1");
         loginOverlay.setI18n(i18n);
 
         HorizontalLayout logoLayout = new HorizontalLayout();
@@ -283,7 +285,7 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
         loginOverlay.setDescription("D.O.C.G 领域模型数据分析平台");
         loginOverlay.setForgotPasswordButtonVisible(false);
 
-        Paragraph text = new Paragraph("Create your own style.");
+        Paragraph text = new Paragraph("You grab my soda can, and you hold my sweating hand, I long to see the boring band, because I'm your super fan.");
         text.addClassName(LumoUtility.TextAlignment.CENTER);
         loginOverlay.getFooter().add(text);
         add(loginOverlay);
