@@ -97,8 +97,9 @@ public class MainLayout extends AppLayout {
         viewTitle = new HorizontalLayout();
         layout.add(viewTitle);
 
-        Avatar avatar = new Avatar("系统管理员");
-        avatar.setAbbreviation("AD");
+        Avatar avatar = new Avatar("系统用户");
+        avatar.setAbbreviation("USR");
+
         MenuBar menuBar = new MenuBar();
         menuBar.addClassNames("ms-auto", "me-m");
         menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);

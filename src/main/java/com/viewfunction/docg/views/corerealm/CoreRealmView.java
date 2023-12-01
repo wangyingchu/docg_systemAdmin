@@ -9,6 +9,7 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.login.AbstractLogin;
+import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -253,7 +254,22 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
     }
 
     private void showLoginUI(){
+        LoginI18n i18n = LoginI18n.createDefault();
+        LoginI18n.Form i18nForm = i18n.getForm();
+        i18nForm.setTitle("应用登录");
+        i18nForm.setUsername("用户名称");
+        i18nForm.setPassword("用户密码");
+        i18nForm.setSubmit("确认登录");
+        i18n.setForm(i18nForm);
+
+        LoginI18n.ErrorMessage i18nErrorMessage = i18n.getErrorMessage();
+        i18nErrorMessage.setTitle("用户名称或密码错误");
+        i18nErrorMessage.setMessage("请输入正确的 用户名称 与 用户密码组合.");
+        i18n.setErrorMessage(i18nErrorMessage);
+        //i18n.setAdditionalInformation("Jos tarvitset lisätietoja käyttäjälle.");
+
         loginOverlay = new LoginOverlay();
+        loginOverlay.setI18n(i18n);
 
         HorizontalLayout logoLayout = new HorizontalLayout();
         logoLayout.setId("logo");
@@ -264,10 +280,10 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
         logoLayout.add(image);
 
         loginOverlay.setTitle(logoLayout);
-        loginOverlay.setDescription("D.O.C.G 数据分析平台");
+        loginOverlay.setDescription("D.O.C.G 领域模型数据分析平台");
         loginOverlay.setForgotPasswordButtonVisible(false);
 
-        Paragraph text = new Paragraph("Never tell your password to anyone");
+        Paragraph text = new Paragraph("Create your own style.");
         text.addClassName(LumoUtility.TextAlignment.CENTER);
         loginOverlay.getFooter().add(text);
         add(loginOverlay);
