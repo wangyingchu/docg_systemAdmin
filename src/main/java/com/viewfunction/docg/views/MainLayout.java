@@ -8,10 +8,16 @@ import com.github.wolfie.blackboard.Blackboard;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -91,9 +97,35 @@ public class MainLayout extends AppLayout {
         viewTitle = new HorizontalLayout();
         layout.add(viewTitle);
 
-        Avatar avatar = new Avatar();
-        avatar.addClassNames("ms-auto", "me-m");
-        layout.add(avatar);
+        Avatar avatar = new Avatar("系统管理员");
+        avatar.setAbbreviation("AD");
+        MenuBar menuBar = new MenuBar();
+        menuBar.addClassNames("ms-auto", "me-m");
+        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
+
+        MenuItem menuItem = menuBar.addItem(avatar);
+        SubMenu subMenu = menuItem.getSubMenu();
+
+        HorizontalLayout actionLayout = new HorizontalLayout();
+        actionLayout.setPadding(false);
+        actionLayout.setSpacing(false);
+        actionLayout.setMargin(false);
+        actionLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        Icon action1Icon = VaadinIcon.EXIT_O.create();
+        action1Icon.setSize("10px");
+        Span action1Space = new Span();
+        action1Space.setWidth(6,Unit.PIXELS);
+        NativeLabel action1Label = new NativeLabel("退出登录");
+        action1Label.addClassNames("text-xs","font-semibold","text-secondary");
+        actionLayout.add(action1Icon,action1Space,action1Label);
+        MenuItem exitSystemActionItem = subMenu.addItem(actionLayout);
+        exitSystemActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+
+            }
+        });
+        layout.add(menuBar);
 
         return layout;
     }
