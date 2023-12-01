@@ -17,6 +17,7 @@ import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GeospatialRegionInfoWidget extends VerticalLayout {
@@ -24,6 +25,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
     private boolean contentAlreadyLoaded = false;
     private NumberFormat numberFormat;
     private Accordion accordion;
+    private List<AccordionPanel> loadedAccordionPanelList;
 
     public GeospatialRegionInfoWidget(){
         this.setSpacing(false);
@@ -31,6 +33,7 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
         this.addClassNames("bg-base");
         this.setWidth(100, Unit.PERCENTAGE);
         this.numberFormat = NumberFormat.getInstance();
+        this.loadedAccordionPanelList = new ArrayList<>();
 
         accordion = new Accordion();
         accordion.setWidth(100, Unit.PERCENTAGE);
@@ -147,8 +150,9 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
                             this.numberFormat.format(geospatialRegionRuntimeStatistics.getRefersVillageScaleTimeScaleEventCount()));
                     geoSpatialInformationLayout.add(horizontalLayout9);
 
-                    AccordionPanel geoSpatialRegionInfoPanel1 =accordion.add(geospatialRegionName, geoSpatialInformationLayout);
+                    AccordionPanel geoSpatialRegionInfoPanel1 = accordion.add(geospatialRegionName, geoSpatialInformationLayout);
                     geoSpatialRegionInfoPanel1.addThemeVariants(DetailsVariant.SMALL,DetailsVariant.REVERSE);
+                    this.loadedAccordionPanelList.add(geoSpatialRegionInfoPanel1);
                 }
             }
             coreRealm.closeGlobalSession();
@@ -157,6 +161,9 @@ public class GeospatialRegionInfoWidget extends VerticalLayout {
 
     public void reloadWidgetContent(){
         this.contentAlreadyLoaded = false;
+        for(AccordionPanel currentAccordionPanel : this.loadedAccordionPanelList){
+            accordion.remove(currentAccordionPanel);
+        }
         loadWidgetContent();
     }
 }

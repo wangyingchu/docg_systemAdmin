@@ -18,6 +18,7 @@ import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TimeFlowInfoWidget extends VerticalLayout {
@@ -25,6 +26,7 @@ public class TimeFlowInfoWidget extends VerticalLayout {
     private boolean contentAlreadyLoaded = false;
     private NumberFormat numberFormat;
     private Accordion accordion;
+    private List<AccordionPanel> loadedAccordionPanelList;
 
     public TimeFlowInfoWidget(){
         this.setSpacing(false);
@@ -32,6 +34,7 @@ public class TimeFlowInfoWidget extends VerticalLayout {
         this.addClassNames("bg-base");
         this.setWidth(100, Unit.PERCENTAGE);
         this.numberFormat = NumberFormat.getInstance();
+        this.loadedAccordionPanelList = new ArrayList<>();
 
         this.accordion = new Accordion();
         this.accordion.setWidth(100, Unit.PERCENTAGE);
@@ -158,6 +161,7 @@ public class TimeFlowInfoWidget extends VerticalLayout {
 
                     AccordionPanel timeFlowInfoPanel1 = accordion.add(timeFlowName, timeFlowInformationLayout);
                     timeFlowInfoPanel1.addThemeVariants(DetailsVariant.SMALL,DetailsVariant.REVERSE);
+                    this.loadedAccordionPanelList.add(timeFlowInfoPanel1);
                 }
             }
             coreRealm.closeGlobalSession();
@@ -166,6 +170,9 @@ public class TimeFlowInfoWidget extends VerticalLayout {
 
     public void reloadWidgetContent(){
         this.contentAlreadyLoaded = false;
+        for(AccordionPanel currentAccordionPanel : this.loadedAccordionPanelList){
+            accordion.remove(currentAccordionPanel);
+        }
         loadWidgetContent();
     }
 }

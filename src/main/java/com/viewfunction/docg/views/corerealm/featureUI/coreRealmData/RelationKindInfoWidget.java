@@ -17,7 +17,7 @@ import java.util.*;
 public class RelationKindInfoWidget extends HorizontalLayout {
     private boolean contentAlreadyLoaded = false;
     private VerticalLayout widgetComponentContainer;
-
+    private VerticalLayout chartComponentContainer;
     public RelationKindInfoWidget(){
         this.setSpacing(false);
         this.setMargin(false);
@@ -28,6 +28,12 @@ public class RelationKindInfoWidget extends HorizontalLayout {
         widgetComponentContainer.setSpacing(false);
         widgetComponentContainer.setMargin(false);
         add(widgetComponentContainer);
+
+        chartComponentContainer = new VerticalLayout();
+        chartComponentContainer.setSpacing(false);
+        chartComponentContainer.setMargin(false);
+        add(chartComponentContainer);
+        this.setFlexGrow(1, chartComponentContainer);
     }
 
     public void loadWidgetContent(){
@@ -92,14 +98,8 @@ public class RelationKindInfoWidget extends HorizontalLayout {
             widgetComponentContainer.add(messageText);
             messageText.addClassNames("text-xs","text-tertiary");
 
-            VerticalLayout rightComponentContainer = new VerticalLayout();
-            rightComponentContainer.setSpacing(false);
-            rightComponentContainer.setMargin(false);
-            add(rightComponentContainer);
-            this.setFlexGrow(1,rightComponentContainer);
-
             BarChart barChart = new BarChart(330,250);
-            rightComponentContainer.add(barChart);
+            chartComponentContainer.add(barChart);
 
             String[] barColorArray = new String[]{"#76b852"};
             barChart.setColor(barColorArray);
@@ -111,6 +111,8 @@ public class RelationKindInfoWidget extends HorizontalLayout {
     }
 
     public void reloadWidgetContent(){
+        this.widgetComponentContainer.removeAll();
+        this.chartComponentContainer.removeAll();
         this.contentAlreadyLoaded = false;
         loadWidgetContent();
     }

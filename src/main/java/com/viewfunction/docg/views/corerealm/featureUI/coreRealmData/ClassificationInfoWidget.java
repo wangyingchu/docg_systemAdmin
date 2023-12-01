@@ -24,6 +24,7 @@ public class ClassificationInfoWidget extends HorizontalLayout {
     private boolean contentAlreadyLoaded = false;
     private NumberFormat numberFormat;
     private VerticalLayout widgetComponentContainer;
+    private VerticalLayout chartComponentContainer;
 
     public ClassificationInfoWidget(){
         this.setSpacing(false);
@@ -34,6 +35,12 @@ public class ClassificationInfoWidget extends HorizontalLayout {
         widgetComponentContainer.setSpacing(false);
         widgetComponentContainer.setMargin(false);
         add(widgetComponentContainer);
+
+        chartComponentContainer = new VerticalLayout();
+        chartComponentContainer.setSpacing(false);
+        chartComponentContainer.setMargin(false);
+        add(chartComponentContainer);
+        this.setFlexGrow(1, chartComponentContainer);
     }
 
     public void loadWidgetContent(){
@@ -102,12 +109,6 @@ public class ClassificationInfoWidget extends HorizontalLayout {
             widgetComponentContainer.add(messageText);
             messageText.addClassNames("text-xs","text-tertiary");
 
-            VerticalLayout rightComponentContainer = new VerticalLayout();
-            rightComponentContainer.setSpacing(false);
-            rightComponentContainer.setMargin(false);
-            add(rightComponentContainer);
-            this.setFlexGrow(1,rightComponentContainer);
-
             TreeChart treeChart = new TreeChart(330,400);
             treeChart.setLayout(TreeChart.TreeLayout.radial);
             treeChart.setLeftMargin(1);
@@ -115,8 +116,8 @@ public class ClassificationInfoWidget extends HorizontalLayout {
             treeChart.setTopMargin(1);
             treeChart.setBottomMargin(1);
             treeChart.setColor("#CE0000");
-            rightComponentContainer.add(treeChart);
-            rightComponentContainer.setHorizontalComponentAlignment(Alignment.START, treeChart);
+            chartComponentContainer.add(treeChart);
+            chartComponentContainer.setHorizontalComponentAlignment(Alignment.START, treeChart);
 
             EchartsTreeChartPayload vRootClassificationPayload = new EchartsTreeChartPayload("Root");
 
@@ -152,6 +153,8 @@ public class ClassificationInfoWidget extends HorizontalLayout {
     }
 
     public void reloadWidgetContent(){
+        this.widgetComponentContainer.removeAll();
+        this.chartComponentContainer.removeAll();
         this.contentAlreadyLoaded = false;
         loadWidgetContent();
     }

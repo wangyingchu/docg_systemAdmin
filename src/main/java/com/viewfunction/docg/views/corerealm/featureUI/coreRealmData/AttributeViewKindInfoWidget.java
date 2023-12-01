@@ -22,6 +22,7 @@ public class AttributeViewKindInfoWidget  extends HorizontalLayout {
 
     private boolean contentAlreadyLoaded = false;
     private VerticalLayout widgetComponentContainer;
+    private VerticalLayout chartComponentContainer;
 
     public AttributeViewKindInfoWidget(){
         this.setSpacing(false);
@@ -33,6 +34,12 @@ public class AttributeViewKindInfoWidget  extends HorizontalLayout {
         widgetComponentContainer.setSpacing(false);
         widgetComponentContainer.setMargin(false);
         add(widgetComponentContainer);
+
+        chartComponentContainer = new VerticalLayout();
+        chartComponentContainer.setSpacing(false);
+        chartComponentContainer.setMargin(false);
+        add(chartComponentContainer);
+        this.setFlexGrow(1, chartComponentContainer);
     }
 
     public void loadWidgetContent(){
@@ -82,14 +89,8 @@ public class AttributeViewKindInfoWidget  extends HorizontalLayout {
             widgetComponentContainer.add(messageText);
             messageText.addClassNames("text-xs","text-tertiary");
 
-            VerticalLayout rightComponentContainer = new VerticalLayout();
-            rightComponentContainer.setSpacing(false);
-            rightComponentContainer.setMargin(false);
-            add(rightComponentContainer);
-            this.setFlexGrow(1,rightComponentContainer);
-
             StackedBarChart stackedBarChart = new StackedBarChart(330,250);
-            rightComponentContainer.add(stackedBarChart);
+            chartComponentContainer.add(stackedBarChart);
 
             stackedBarChart.setBottomMargin(1);
             stackedBarChart.setLeftMargin(1);
@@ -109,6 +110,8 @@ public class AttributeViewKindInfoWidget  extends HorizontalLayout {
     }
 
     public void reloadWidgetContent(){
+        this.widgetComponentContainer.removeAll();
+        this.chartComponentContainer.removeAll();
         this.contentAlreadyLoaded = false;
         loadWidgetContent();
     }

@@ -22,6 +22,7 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
 
     private boolean contentAlreadyLoaded = false;
     private VerticalLayout widgetComponentContainer;
+    private VerticalLayout chartComponentContainer;
 
     public AttributeKindInfoWidget(){
         this.setSpacing(false);
@@ -33,6 +34,12 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
         widgetComponentContainer.setSpacing(false);
         widgetComponentContainer.setMargin(false);
         add(widgetComponentContainer);
+
+        chartComponentContainer = new VerticalLayout();
+        chartComponentContainer.setSpacing(false);
+        chartComponentContainer.setMargin(false);
+        add(chartComponentContainer);
+        this.setFlexGrow(1, chartComponentContainer);
     }
 
     public void loadWidgetContent(){
@@ -79,14 +86,8 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
             widgetComponentContainer.add(messageText);
             messageText.addClassNames("text-xs","text-tertiary");
 
-            VerticalLayout rightComponentContainer = new VerticalLayout();
-            rightComponentContainer.setSpacing(false);
-            rightComponentContainer.setMargin(false);
-            add(rightComponentContainer);
-            this.setFlexGrow(1,rightComponentContainer);
-
             BarChart barChart = new BarChart(330,250);
-            rightComponentContainer.add(barChart);
+            chartComponentContainer.add(barChart);
 
             String[] barColorArray = new String[]{"#FF4136"};
             barChart.setColor(barColorArray);
@@ -99,6 +100,8 @@ public class AttributeKindInfoWidget extends HorizontalLayout {
     }
 
     public void reloadWidgetContent(){
+        this.widgetComponentContainer.removeAll();
+        this.chartComponentContainer.removeAll();
         this.contentAlreadyLoaded = false;
         loadWidgetContent();
     }

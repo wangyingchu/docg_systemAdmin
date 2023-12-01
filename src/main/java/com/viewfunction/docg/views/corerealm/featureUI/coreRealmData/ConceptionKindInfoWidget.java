@@ -2,8 +2,6 @@ package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -16,8 +14,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.chart.PieChart;
-import com.viewfunction.docg.element.eventHandling.CheckSystemRuntimeInfoEvent;
-import com.viewfunction.docg.util.ResourceHolder;
 
 import java.text.NumberFormat;
 import java.util.*;
@@ -25,6 +21,7 @@ import java.util.*;
 public class ConceptionKindInfoWidget extends HorizontalLayout {
     private boolean contentAlreadyLoaded = false;
     private VerticalLayout widgetComponentContainer;
+    private VerticalLayout chartComponentContainer;
 
     public ConceptionKindInfoWidget(){
         this.setSpacing(false);
@@ -36,6 +33,12 @@ public class ConceptionKindInfoWidget extends HorizontalLayout {
         widgetComponentContainer.setSpacing(false);
         widgetComponentContainer.setMargin(false);
         add(widgetComponentContainer);
+
+        chartComponentContainer = new VerticalLayout();
+        chartComponentContainer.setSpacing(false);
+        chartComponentContainer.setMargin(false);
+        add(chartComponentContainer);
+        this.setFlexGrow(1, chartComponentContainer);
     }
 
     public void loadWidgetContent(){
@@ -102,15 +105,9 @@ public class ConceptionKindInfoWidget extends HorizontalLayout {
             widgetComponentContainer.add(messageText);
             messageText.addClassNames("text-xs","text-tertiary");
 
-            VerticalLayout rightComponentContainer = new VerticalLayout();
-            rightComponentContainer.setSpacing(false);
-            rightComponentContainer.setMargin(false);
-            add(rightComponentContainer);
-            this.setFlexGrow(1,rightComponentContainer);
-
             PieChart pieChart = new PieChart(330,260);
-            rightComponentContainer.add(pieChart);
-            rightComponentContainer.setHorizontalComponentAlignment(Alignment.START,pieChart);
+            chartComponentContainer.add(pieChart);
+            chartComponentContainer.setHorizontalComponentAlignment(Alignment.START,pieChart);
 
             String[] pieColorArray = new String[]{"#03a9f4","#76b852","#00d1b2","#ced7df","#ee4f4f","#0288d1","#ffc107","#d32f2f","#168eea","#323b43","#59626a"};
             pieChart.setColor(pieColorArray);
@@ -123,6 +120,7 @@ public class ConceptionKindInfoWidget extends HorizontalLayout {
 
     public void reloadWidgetContent(){
         this.widgetComponentContainer.removeAll();
+        this.chartComponentContainer.removeAll();
         this.contentAlreadyLoaded = false;
         loadWidgetContent();
     }
