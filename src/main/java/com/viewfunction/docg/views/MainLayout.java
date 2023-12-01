@@ -44,6 +44,7 @@ import com.vaadin.flow.component.avatar.Avatar;
 public class MainLayout extends AppLayout {
     private final String SESSION_MAX_INACTIVE_INTERVAL_IN_SECOND =
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.SESSION_MAX_INACTIVE_INTERVAL_IN_SECOND);
+    private final String ENABLE_USER_LOCK_APPLICATION = SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ENABLE_USER_LOCK_APPLICATION);
 
     public static class MenuItemInfo {
 
@@ -119,14 +120,18 @@ public class MainLayout extends AppLayout {
         NativeLabel action1Label = new NativeLabel("锁定系统");
         action1Label.addClassNames("text-xs","font-semibold","text-secondary");
         actionLayout.add(action1Icon,action1Space,action1Label);
-        MenuItem exitSystemActionItem = subMenu.addItem(actionLayout);
-        exitSystemActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                UserLockApplicationEvent userLockApplicationEvent = new UserLockApplicationEvent();
-                ResourceHolder.getApplicationBlackboard().fire(userLockApplicationEvent);
-            }
-        });
+
+        if(ENABLE_USER_LOCK_APPLICATION != null & Boolean.parseBoolean(ENABLE_USER_LOCK_APPLICATION)){
+            MenuItem exitSystemActionItem = subMenu.addItem(actionLayout);
+            exitSystemActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    UserLockApplicationEvent userLockApplicationEvent = new UserLockApplicationEvent();
+                    ResourceHolder.getApplicationBlackboard().fire(userLockApplicationEvent);
+                }
+            });
+        }
+
         layout.add(menuBar);
 
         return layout;

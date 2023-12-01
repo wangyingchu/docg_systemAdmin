@@ -23,6 +23,7 @@ import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.viewfunction.docg.element.eventHandling.UserLockApplicationEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 import com.viewfunction.docg.views.MainLayout;
 import com.viewfunction.docg.views.corerealm.featureUI.*;
 
@@ -47,8 +48,10 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
     private TimeFlowManagementUI timeFlowManagementUI;
     private LoginOverlay loginOverlay;
     public CoreRealmView(){
-
-        showLoginUI();
+        String enableUserLockApplicationStr = SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ENABLE_USER_LOCK_APPLICATION);
+        if(enableUserLockApplicationStr != null & Boolean.parseBoolean(enableUserLockApplicationStr)){
+            showLoginUI();
+        }
 
         this.setWidth(100, Unit.PERCENTAGE);
 
