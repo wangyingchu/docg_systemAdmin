@@ -267,7 +267,7 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
 
         LoginI18n.ErrorMessage i18nErrorMessage = i18n.getErrorMessage();
         i18nErrorMessage.setTitle("用户名称或密码错误");
-        i18nErrorMessage.setMessage("请输入正确的 用户名称 与 用户密码组合.");
+        i18nErrorMessage.setMessage("请输入正确的 用户名称 与 用户密码 组合.");
         i18n.setErrorMessage(i18nErrorMessage);
         //i18n.setAdditionalInformation("Jos tarvitset lisätietoja käyttäjälle.");
 
@@ -296,10 +296,15 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
         loginOverlay.addLoginListener(new ComponentEventListener<AbstractLogin.LoginEvent>() {
             @Override
             public void onComponentEvent(AbstractLogin.LoginEvent loginEvent) {
-                System.out.println(loginEvent.getUsername());
-                System.out.println(loginEvent.getPassword());
-
-                loginOverlay.close();
+                String inputUserName = loginEvent.getUsername();
+                String inputUserPWD = loginEvent.getPassword();
+                String _USER_NAME = SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.USER_NAME);
+                String _USER_PWD = SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.USER_PWD);
+                if(inputUserName.equals(_USER_NAME) & inputUserPWD.equals(_USER_PWD)){
+                    loginOverlay.close();
+                }else{
+                    loginOverlay.setError(true);
+                }
             }
         });
     }
