@@ -3,6 +3,8 @@ package com.viewfunction.docg.views.computegrid.featureUI;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -15,6 +17,8 @@ import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.GridComputeUnitVO;
+import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.GridRuntimeInfoWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +28,8 @@ public class DataComputeGridManagementUI extends VerticalLayout {
     private Registration listener;
     private VerticalLayout leftSideContentContainerLayout;
     private VerticalLayout rightSideContentContainerLayout;
-
+    private GridRuntimeInfoWidget gridRuntimeInfoWidget;
+    private Grid<GridComputeUnitVO> computeUnitGrid;
     public DataComputeGridManagementUI(){
 
         Button refreshDataButton = new Button("刷新计算网格统计信息",new Icon(VaadinIcon.REFRESH));
@@ -69,6 +74,18 @@ public class DataComputeGridManagementUI extends VerticalLayout {
         SecondaryTitleActionBar gridUnitsActionBar = new SecondaryTitleActionBar(gridUnitsIcon,"网格计算单元",null,null);
         leftSideContentContainerLayout.add(gridUnitsActionBar);
 
+        computeUnitGrid = new Grid<>();
+        computeUnitGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        computeUnitGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        computeUnitGrid.addColumn(GridComputeUnitVO::getUnitID).setHeader("单元ID").setId("idx_0");
+        computeUnitGrid.addColumn(GridComputeUnitVO::getHostName).setHeader("主机地址").setId("idx_1");
+        computeUnitGrid.addColumn(GridComputeUnitVO::getIP).setHeader("主机端口").setId("idx_2");
+        computeUnitGrid.addColumn(GridComputeUnitVO::getUnitType).setHeader("单元类型").setId("idx_3");
+        computeUnitGrid.setHeight(250,Unit.PIXELS);
+
+
+        leftSideContentContainerLayout.add(computeUnitGrid);
+
         VerticalLayout spaceDivLayout1 = new VerticalLayout();
         leftSideContentContainerLayout.add(spaceDivLayout1);
 
@@ -76,6 +93,8 @@ public class DataComputeGridManagementUI extends VerticalLayout {
         SecondaryTitleActionBar gridRuntimeStatusActionBar = new SecondaryTitleActionBar(gridRuntimeStatusIcon,"网格运行信息",null,null);
         leftSideContentContainerLayout.add(gridRuntimeStatusActionBar);
 
+        gridRuntimeInfoWidget = new GridRuntimeInfoWidget();
+        leftSideContentContainerLayout.add(gridRuntimeInfoWidget);
 
         TabSheet gridConfigurationTabSheet = new TabSheet();
         gridConfigurationTabSheet.setWidthFull();
