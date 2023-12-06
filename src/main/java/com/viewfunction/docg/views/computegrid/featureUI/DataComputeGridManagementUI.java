@@ -12,16 +12,27 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.component.tabs.TabSheet;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
+import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeGrid.ComputeGridOperator;
+import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeGrid.ComputeGridRealtimeMetrics;
+import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataComputeUnitMetaInfo;
+import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataServiceObserver;
+import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataSliceMetaInfo;
+import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.exception.ComputeGridNotActiveException;
+import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.GridComputeUnitVO;
 import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.GridRuntimeInfoWidget;
+import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class DataComputeGridManagementUI extends VerticalLayout {
 
@@ -29,7 +40,7 @@ public class DataComputeGridManagementUI extends VerticalLayout {
     private VerticalLayout leftSideContentContainerLayout;
     private VerticalLayout rightSideContentContainerLayout;
     private GridRuntimeInfoWidget gridRuntimeInfoWidget;
-    private Grid<GridComputeUnitVO> computeUnitGrid;
+    private Grid<DataComputeUnitMetaInfo> computeUnitGrid;
     public DataComputeGridManagementUI(){
 
         Button refreshDataButton = new Button("刷新计算网格统计信息",new Icon(VaadinIcon.REFRESH));
@@ -58,7 +69,7 @@ public class DataComputeGridManagementUI extends VerticalLayout {
 
         leftSideContentContainerLayout = new VerticalLayout();
         leftSideContentContainerLayout.setSpacing(false);
-        leftSideContentContainerLayout.setWidth(550, Unit.PIXELS);
+        leftSideContentContainerLayout.setWidth(700, Unit.PIXELS);
         leftSideContentContainerLayout.getStyle()
                 .set("border-right", "1px solid var(--lumo-contrast-20pct)");
         contentContainerLayout.add(leftSideContentContainerLayout);
@@ -74,15 +85,65 @@ public class DataComputeGridManagementUI extends VerticalLayout {
         SecondaryTitleActionBar gridUnitsActionBar = new SecondaryTitleActionBar(gridUnitsIcon,"网格计算单元",null,null);
         leftSideContentContainerLayout.add(gridUnitsActionBar);
 
-        computeUnitGrid = new Grid<>();
-        computeUnitGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-        computeUnitGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        computeUnitGrid.addColumn(GridComputeUnitVO::getUnitID).setHeader("单元ID").setId("idx_0");
-        computeUnitGrid.addColumn(GridComputeUnitVO::getHostName).setHeader("主机地址").setId("idx_1");
-        computeUnitGrid.addColumn(GridComputeUnitVO::getIP).setHeader("主机端口").setId("idx_2");
-        computeUnitGrid.addColumn(GridComputeUnitVO::getUnitType).setHeader("单元类型").setId("idx_3");
-        computeUnitGrid.setHeight(250,Unit.PIXELS);
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
 
+            Icon queryIcon = new Icon(VaadinIcon.RECORDS);
+            queryIcon.setSize("20px");
+            Button queryConceptionKind = new Button(queryIcon, event -> {
+                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                    //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
+                }
+            });
+            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(queryConceptionKind, "查询概念类型实体");
+
+            Icon configIcon = new Icon(VaadinIcon.COG);
+            configIcon.setSize("21px");
+            Button configConceptionKind = new Button(configIcon, event -> {
+                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
+                    //renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
+                }
+            });
+            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            Tooltips.getCurrent().setTooltip(configConceptionKind, "配置概念类型定义");
+
+            HorizontalLayout buttons = new HorizontalLayout(configConceptionKind);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(15,Unit.PIXELS);
+            buttons.setWidth(50,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
+
+        computeUnitGrid = new Grid<>();
+
+        computeUnitGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER);
+        computeUnitGrid.setSelectionMode(Grid.SelectionMode.SINGLE);computeUnitGrid.setPageSize(5);
+        computeUnitGrid.addColumn(DataComputeUnitMetaInfo::getUnitID).setHeader("单元ID").setKey("idx_0");
+        computeUnitGrid.addColumn(DataComputeUnitMetaInfo::getUnitHostNames).setHeader("单元主机名").setKey("idx_1");
+        computeUnitGrid.addColumn(DataComputeUnitMetaInfo::getUnitIPAddresses).setHeader("单元IP地址").setKey("idx_2");
+        computeUnitGrid.addColumn(DataComputeUnitMetaInfo::getUnitType).setHeader("单元类型").setKey("idx_3");
+        computeUnitGrid.addColumn(DataComputeUnitMetaInfo::getIsClientUnit).setHeader("客户端单元").setKey("idx_4");
+        computeUnitGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_5")
+                .setFlexGrow(0).setWidth("60px").setResizable(false);
+        computeUnitGrid.setHeight(300,Unit.PIXELS);
+
+        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"单元ID");
+        computeUnitGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"单元主机名");
+        computeUnitGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"单元IP地址");
+        computeUnitGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"单元类型");
+        computeUnitGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.STOCK,"客户端单元");
+        computeUnitGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
+        computeUnitGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5);
 
         leftSideContentContainerLayout.add(computeUnitGrid);
 
@@ -94,6 +155,7 @@ public class DataComputeGridManagementUI extends VerticalLayout {
         leftSideContentContainerLayout.add(gridRuntimeStatusActionBar);
 
         gridRuntimeInfoWidget = new GridRuntimeInfoWidget();
+        gridRuntimeInfoWidget.setHeight(500,Unit.PIXELS);
         leftSideContentContainerLayout.add(gridRuntimeInfoWidget);
 
         TabSheet gridConfigurationTabSheet = new TabSheet();
@@ -121,6 +183,7 @@ public class DataComputeGridManagementUI extends VerticalLayout {
             this.rightSideContentContainerLayout.setWidth(browserWidth-580,Unit.PIXELS);
         }));
         //ResourceHolder.getApplicationBlackboard().addListener(this);
+        checkComputeGridStatusInfo();
     }
 
     @Override
@@ -143,5 +206,24 @@ public class DataComputeGridManagementUI extends VerticalLayout {
                 .set("font-weight", "bold");
         kindConfigTabLayout.add(tabIcon,configTabLabel);
         return kindConfigTabLayout;
+    }
+
+    private void checkComputeGridStatusInfo(){
+        try (DataServiceObserver dataServiceObserver = DataServiceObserver.getObserverInstance()){
+            Set<DataComputeUnitMetaInfo> dataComputeUnitMetaInfoSet = dataServiceObserver.listDataComputeUnit();
+            this.computeUnitGrid.setItems(dataComputeUnitMetaInfoSet);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        try (ComputeGridOperator computeGridOperator = ComputeGridOperator.getComputeGridOperator()) {
+            ComputeGridRealtimeMetrics targetComputeGridRealtimeMetrics = computeGridOperator.getComputeGridRealtimeMetrics();
+            this.gridRuntimeInfoWidget.refreshRuntimeInfo(targetComputeGridRealtimeMetrics);
+
+        } catch (ComputeGridNotActiveException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
