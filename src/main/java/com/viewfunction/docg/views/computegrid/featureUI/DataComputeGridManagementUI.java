@@ -123,9 +123,24 @@ public class DataComputeGridManagementUI extends VerticalLayout {
 
         computeUnitGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER);
         computeUnitGrid.setSelectionMode(Grid.SelectionMode.SINGLE);computeUnitGrid.setPageSize(5);
-        computeUnitGrid.addColumn(DataComputeUnitMetaInfo::getUnitID).setHeader("单元ID").setKey("idx_0");
-        computeUnitGrid.addColumn(DataComputeUnitMetaInfo::getUnitHostNames).setHeader("单元主机名").setKey("idx_1");
-        computeUnitGrid.addColumn(DataComputeUnitMetaInfo::getUnitIPAddresses).setHeader("单元IP地址").setKey("idx_2");
+        computeUnitGrid.addColumn(DataComputeUnitMetaInfo::getUnitID).setHeader("单元ID").setKey("idx_0").setTooltipGenerator(new ItemLabelGenerator<DataComputeUnitMetaInfo>() {
+            @Override
+            public String apply(DataComputeUnitMetaInfo dataComputeUnitMetaInfo) {
+                return dataComputeUnitMetaInfo.getUnitID();
+            }
+        });
+        computeUnitGrid.addColumn(DataComputeUnitMetaInfo::getUnitHostNames).setHeader("单元主机名").setKey("idx_1").setTooltipGenerator(new ItemLabelGenerator<DataComputeUnitMetaInfo>() {
+            @Override
+            public String apply(DataComputeUnitMetaInfo dataComputeUnitMetaInfo) {
+                return dataComputeUnitMetaInfo.getUnitHostNames().toString();
+            }
+        });
+        computeUnitGrid.addColumn(DataComputeUnitMetaInfo::getUnitIPAddresses).setHeader("单元IP地址").setKey("idx_2").setTooltipGenerator(new ItemLabelGenerator<DataComputeUnitMetaInfo>() {
+            @Override
+            public String apply(DataComputeUnitMetaInfo dataComputeUnitMetaInfo) {
+                return dataComputeUnitMetaInfo.getUnitIPAddresses().toString();
+            }
+        });
         computeUnitGrid.addColumn(DataComputeUnitMetaInfo::getUnitType).setHeader("单元类型").setKey("idx_3");
         computeUnitGrid.addColumn(DataComputeUnitMetaInfo::getIsClientUnit).setHeader("客户端单元").setKey("idx_4");
         computeUnitGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_5")
@@ -164,7 +179,7 @@ public class DataComputeGridManagementUI extends VerticalLayout {
         rightSideContentContainerLayout.setFlexGrow(1,gridConfigurationTabSheet);
 
         gridConfigurationTabSheet.add(generateKindConfigurationTabTitle(LineAwesomeIconsSvg.BUFFER.create(),"网格数据切片配置"),new HorizontalLayout());
-        gridConfigurationTabSheet.add(generateKindConfigurationTabTitle(LineAwesomeIconsSvg.BOLT_SOLID.create(),"网格计算服务配置"),new HorizontalLayout());
+        gridConfigurationTabSheet.add(generateKindConfigurationTabTitle(LineAwesomeIconsSvg.COGS_SOLID.create(),"网格计算服务配置"),new HorizontalLayout());
     }
 
     @Override
