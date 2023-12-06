@@ -18,3 +18,4 @@ webpack.generated.js
 /vite.generated.ts
 /frontend/generated/
 /tempFilesStorage/
+/ignite/
