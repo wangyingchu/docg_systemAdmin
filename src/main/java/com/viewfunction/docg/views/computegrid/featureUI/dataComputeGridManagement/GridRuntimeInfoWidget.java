@@ -1,11 +1,11 @@
 package com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement;
 
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeGrid.ComputeGridRealtimeMetrics;
+
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.ComputeGridRealtimeStatisticsInfo;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.chart.BulletChart;
@@ -132,13 +132,13 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
 
     }
 
-    public void refreshRuntimeInfo(ComputeGridRealtimeMetrics targetComputeGridRealtimeMetrics){
-        if(targetComputeGridRealtimeMetrics != null) {
-            if(targetComputeGridRealtimeMetrics.getGridStartTime() != null){
-                gridStartDatetimeDisplayItem.updateDisplayValue(targetComputeGridRealtimeMetrics.getGridStartTime().format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
-                gridUpTimeInSecondDisplayItem.updateDisplayValue(""+targetComputeGridRealtimeMetrics.getGridUpTimeInMinute());
-                totalAvailableCPUCoresDisplayItem.updateDisplayValue(""+targetComputeGridRealtimeMetrics.getAvailableCPUCores());
-                totalComputeUnitCountDisplayItem.updateDisplayValue(""+targetComputeGridRealtimeMetrics.getDataComputeUnitsAmount());
+    public void refreshRuntimeInfo(ComputeGridRealtimeStatisticsInfo computeGridRealtimeStatisticsInfo){
+        if(computeGridRealtimeStatisticsInfo != null) {
+            if(computeGridRealtimeStatisticsInfo.getGridStartTime() != null){
+                gridStartDatetimeDisplayItem.updateDisplayValue(computeGridRealtimeStatisticsInfo.getGridStartTime().format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
+                gridUpTimeInSecondDisplayItem.updateDisplayValue(""+computeGridRealtimeStatisticsInfo.getGridUpTimeInMinute());
+                totalAvailableCPUCoresDisplayItem.updateDisplayValue(""+computeGridRealtimeStatisticsInfo.getTotalAvailableCPUCores());
+                totalComputeUnitCountDisplayItem.updateDisplayValue(""+computeGridRealtimeStatisticsInfo.getDataComputeUnitsAmount());
             }
             infoSampleDateDisplayItem.updateDisplayValue(new Date().toInstant().atZone(id).format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
         }

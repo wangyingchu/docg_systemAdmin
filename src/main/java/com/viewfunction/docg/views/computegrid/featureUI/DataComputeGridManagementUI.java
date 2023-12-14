@@ -15,12 +15,13 @@ import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
-import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeGrid.ComputeGridOperator;
-import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeGrid.ComputeGridRealtimeMetrics;
-import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataComputeUnitMetaInfo;
-import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataServiceObserver;
-import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataSliceMetaInfo;
-import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.exception.ComputeGridNotActiveException;
+
+import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.ComputeGridRealtimeStatisticsInfo;
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.ComputeUnitRealtimeStatisticsInfo;
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataComputeUnitMetaInfo;
+import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
+import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
@@ -224,21 +225,15 @@ public class DataComputeGridManagementUI extends VerticalLayout {
     }
 
     private void checkComputeGridStatusInfo(){
-        try (DataServiceObserver dataServiceObserver = DataServiceObserver.getObserverInstance()){
-            Set<DataComputeUnitMetaInfo> dataComputeUnitMetaInfoSet = dataServiceObserver.listDataComputeUnit();
+        ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
+        try {
+            Set<DataComputeUnitMetaInfo> dataComputeUnitMetaInfoSet = targetComputeGrid.listDataComputeUnit();
             this.computeUnitGrid.setItems(dataComputeUnitMetaInfoSet);
-        } catch (Exception e) {
+
+            ComputeGridRealtimeStatisticsInfo computeGridRealtimeStatisticsInfo = targetComputeGrid.getGridRealtimeStatisticsInfo();
+            this.gridRuntimeInfoWidget.refreshRuntimeInfo(computeGridRealtimeStatisticsInfo);
+        } catch (ComputeGridException e) {
             throw new RuntimeException(e);
         }
-        try (ComputeGridOperator computeGridOperator = ComputeGridOperator.getComputeGridOperator()) {
-            ComputeGridRealtimeMetrics targetComputeGridRealtimeMetrics = computeGridOperator.getComputeGridRealtimeMetrics();
-            this.gridRuntimeInfoWidget.refreshRuntimeInfo(targetComputeGridRealtimeMetrics);
-
-        } catch (ComputeGridNotActiveException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
     }
 }
