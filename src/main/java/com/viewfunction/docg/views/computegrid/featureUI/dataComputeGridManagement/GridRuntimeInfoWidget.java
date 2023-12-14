@@ -29,7 +29,7 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
     private SecondaryKeyValueDisplayItem currentRequestDisplayItem;
     private SecondaryKeyValueDisplayItem totalAllocatedMemoryCountDisplayItem;
     private SecondaryKeyValueDisplayItem totalUsedMemoryCountDisplayItemDisplayItem;
-    private SecondaryKeyValueDisplayItem freeDiskPercentDisplayItem;
+    private SecondaryKeyValueDisplayItem freeMemoryPercentDisplayItem;
     private SecondaryKeyValueDisplayItem usableDiskDisplayItem;
     private NumberFormat nt;
     private PieChart pieChart;
@@ -137,12 +137,9 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
         HorizontalLayout statusInfoContainer10 = new HorizontalLayout();
         statusInfoContainer10.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         heapMemoryInfoLeftLayout.add(statusInfoContainer10);
-        freeDiskPercentDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer10, VaadinIcon.PIE_CHART.create(),"系统未用磁盘空间占比:","59%");
+        freeMemoryPercentDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer10, VaadinIcon.PIE_CHART.create(),"网格未用内存空间占比:","-");
 
-        HorizontalLayout statusInfoContainer11 = new HorizontalLayout();
-        statusInfoContainer11.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        heapMemoryInfoLeftLayout.add(statusInfoContainer11);
-        usableDiskDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer11, VaadinIcon.HARDDRIVE_O.create(),"领域可用磁盘空间总量:","77%");
+
 
         BulletChart bulletChart1 = new BulletChart();
         heapMemorySpaceInfoLayout.add(bulletChart1);
@@ -170,17 +167,12 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
                 totalComputeUnitCountDisplayItem.updateDisplayValue(""+computeGridRealtimeStatisticsInfo.getDataComputeUnitsAmount());
                 firstComputeUnitDisplayItem.updateDisplayValue(computeGridRealtimeStatisticsInfo.getOldestUnitId());
                 lastComputeUnitDisplayItem.updateDisplayValue(computeGridRealtimeStatisticsInfo.getYoungestUnitId());
-
                 totalAllocatedMemoryCountDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getAssignedMemoryInMB()/1024)+"GB");
                 totalUsedMemoryCountDisplayItemDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getUsedMemoryInMB()/1024)+"GB");
                 maxAvailableMemoryCountDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getMaxAvailableMemoryInMB()/1024)+"GB");
-
-
-
+                freeMemoryPercentDisplayItem.updateDisplayValue((1-(computeGridRealtimeStatisticsInfo.getUsedMemoryInMB()/computeGridRealtimeStatisticsInfo.getMaxAvailableMemoryInMB()))*100+"%");
             }
             infoSampleDateDisplayItem.updateDisplayValue(new Date().toInstant().atZone(id).format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
         }
-
-
     }
 }
