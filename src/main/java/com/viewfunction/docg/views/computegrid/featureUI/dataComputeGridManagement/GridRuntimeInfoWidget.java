@@ -1,6 +1,8 @@
 package com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement;
 
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -25,20 +27,24 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
     private SecondaryKeyValueDisplayItem totalAvailableCPUCoresDisplayItem;
     private SecondaryKeyValueDisplayItem totalComputeUnitCountDisplayItem;
     private SecondaryKeyValueDisplayItem currentRequestDisplayItem;
-    private SecondaryKeyValueDisplayItem totalDiskDisplayItem;
-    private SecondaryKeyValueDisplayItem freeDiskDisplayItem;
+    private SecondaryKeyValueDisplayItem totalAllocatedMemoryCountDisplayItem;
+    private SecondaryKeyValueDisplayItem totalUsedMemoryCountDisplayItemDisplayItem;
     private SecondaryKeyValueDisplayItem freeDiskPercentDisplayItem;
     private SecondaryKeyValueDisplayItem usableDiskDisplayItem;
     private NumberFormat nt;
     private PieChart pieChart;
     final ZoneId id = ZoneId.systemDefault();
     private SecondaryKeyValueDisplayItem gridStartDatetimeDisplayItem;
+    private SecondaryKeyValueDisplayItem firstComputeUnitDisplayItem;
+    private SecondaryKeyValueDisplayItem lastComputeUnitDisplayItem;
+    private SecondaryKeyValueDisplayItem maxAvailableMemoryCountDisplayItem;
     public GridRuntimeInfoWidget(){
         this.setWidthFull();
 
-        nt = NumberFormat.getPercentInstance();
-        nt.setMinimumFractionDigits(1);
+        nt = NumberFormat.getIntegerInstance();
+        nt.setMinimumFractionDigits(0);
 
+        //NumberFormat.getIntegerInstance()
 
         HorizontalLayout statusInfoContainer1 = new HorizontalLayout();
         statusInfoContainer1.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -73,8 +79,31 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
         totalComputeUnitCountDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer2, LineAwesomeIconsSvg.SERVER_SOLID.create(),"数据计算单元总数:",
                 "-");
 
+        HorizontalLayout statusInfoContainer3 = new HorizontalLayout();
+        statusInfoContainer3.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        add(statusInfoContainer3);
+
+        firstComputeUnitDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer3,VaadinIcon.SERVER.create(),"最早启动计算单元:",
+                "-");
+
+        Button showFirstStartedUnitInfoButton = new Button();
+        showFirstStartedUnitInfoButton.setIcon(VaadinIcon.EYE.create());
+        showFirstStartedUnitInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_ICON);
+        statusInfoContainer3.add(showFirstStartedUnitInfoButton);
+
+        HorizontalLayout statusInfoContainer4 = new HorizontalLayout();
+        statusInfoContainer4.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        add(statusInfoContainer4);
+        lastComputeUnitDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer4,VaadinIcon.SERVER.create(),"最后启动计算单元:",
+                "-");
+
+        Button showLastStartedUnitInfoButton = new Button();
+        showLastStartedUnitInfoButton.setIcon(VaadinIcon.EYE.create());
+        showLastStartedUnitInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_ICON);
+        statusInfoContainer4.add(showLastStartedUnitInfoButton);
+
         HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
-        spaceDivLayout1.setHeight(6, Unit.PIXELS);
+        spaceDivLayout1.setHeight(3, Unit.PIXELS);
         add(spaceDivLayout1);
 
         ThirdLevelIconTitle memoryStatusInfoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.MEMORY_SOLID.create(), "网格内存资源概览");
@@ -93,17 +122,17 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
         HorizontalLayout statusInfoContainer7 = new HorizontalLayout();
         statusInfoContainer7.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         heapMemoryInfoLeftLayout.add(statusInfoContainer7);
-        totalDiskDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer7, VaadinIcon.DATABASE.create(),"可用HEAP内存总量:",""+"1,000,000"+" GB");
+        totalAllocatedMemoryCountDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer7, VaadinIcon.HARDDRIVE_O.create(),"已分配内存总量:","-");
 
         HorizontalLayout statusInfoContainer8 = new HorizontalLayout();
         statusInfoContainer8.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         heapMemoryInfoLeftLayout.add(statusInfoContainer8);
-        freeDiskDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer8, VaadinIcon.HARDDRIVE.create(),"已用HEAP内存总量:","1,000,000"+" GB");
+        totalUsedMemoryCountDisplayItemDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer8, VaadinIcon.HARDDRIVE.create(),"已用内存总量:","-");
 
         HorizontalLayout statusInfoContainer9 = new HorizontalLayout();
         statusInfoContainer9.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         heapMemoryInfoLeftLayout.add(statusInfoContainer9);
-        SecondaryKeyValueDisplayItem freeDiskDisplayItem2 = new SecondaryKeyValueDisplayItem(statusInfoContainer9, VaadinIcon.HARDDRIVE.create(),"HEAP内存最大使用量:","1,000,000"+" GB");
+        maxAvailableMemoryCountDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer9, VaadinIcon.STORAGE.create(),"网格最大可用内存总量:","-");
 
         HorizontalLayout statusInfoContainer10 = new HorizontalLayout();
         statusInfoContainer10.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -139,6 +168,15 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
                 gridUpTimeInSecondDisplayItem.updateDisplayValue(""+computeGridRealtimeStatisticsInfo.getGridUpTimeInMinute());
                 totalAvailableCPUCoresDisplayItem.updateDisplayValue(""+computeGridRealtimeStatisticsInfo.getTotalAvailableCPUCores());
                 totalComputeUnitCountDisplayItem.updateDisplayValue(""+computeGridRealtimeStatisticsInfo.getDataComputeUnitsAmount());
+                firstComputeUnitDisplayItem.updateDisplayValue(computeGridRealtimeStatisticsInfo.getOldestUnitId());
+                lastComputeUnitDisplayItem.updateDisplayValue(computeGridRealtimeStatisticsInfo.getYoungestUnitId());
+
+                totalAllocatedMemoryCountDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getAssignedMemoryInMB()/1024)+"GB");
+                totalUsedMemoryCountDisplayItemDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getUsedMemoryInMB()/1024)+"GB");
+                maxAvailableMemoryCountDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getMaxAvailableMemoryInMB()/1024)+"GB");
+
+
+
             }
             infoSampleDateDisplayItem.updateDisplayValue(new Date().toInstant().atZone(id).format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
         }

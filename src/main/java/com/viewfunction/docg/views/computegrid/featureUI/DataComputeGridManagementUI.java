@@ -27,7 +27,6 @@ import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.GridComputeUnitVO;
 import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.GridRuntimeInfoWidget;
 import dev.mett.vaadin.tooltip.Tooltips;
 
@@ -148,15 +147,15 @@ public class DataComputeGridManagementUI extends VerticalLayout {
                 .setFlexGrow(0).setWidth("60px").setResizable(false);
         computeUnitGrid.setHeight(300,Unit.PIXELS);
 
-        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"单元ID");
+        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.KEY_O,"单元ID");
         computeUnitGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"单元主机名");
+        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.LAPTOP,"单元主机名");
         computeUnitGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"单元IP地址");
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.MAILBOX,"单元地址");
         computeUnitGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"单元类型");
+        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"单元类型");
         computeUnitGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.STOCK,"客户端单元");
+        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.SPECIALIST,"客户端单元");
         computeUnitGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
         GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
         computeUnitGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5);
