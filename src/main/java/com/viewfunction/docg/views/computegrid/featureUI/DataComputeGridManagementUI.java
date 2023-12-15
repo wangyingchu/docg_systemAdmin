@@ -78,7 +78,6 @@ public class DataComputeGridManagementUI extends VerticalLayout {
         rightSideContentContainerLayout.setSpacing(false);
         rightSideContentContainerLayout.setPadding(false);
         rightSideContentContainerLayout.setMargin(false);
-
         contentContainerLayout.add(rightSideContentContainerLayout);
 
         Icon gridUnitsIcon = LineAwesomeIconsSvg.SERVER_SOLID.create();
@@ -165,8 +164,18 @@ public class DataComputeGridManagementUI extends VerticalLayout {
         VerticalLayout spaceDivLayout1 = new VerticalLayout();
         leftSideContentContainerLayout.add(spaceDivLayout1);
 
+        List<Component> actionComponentsList = new ArrayList<>();
+        Button refreshSystemRuntimeInfoButton = new Button("获取网格运行信息",new Icon(VaadinIcon.REFRESH));
+        refreshSystemRuntimeInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        refreshSystemRuntimeInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        refreshSystemRuntimeInfoButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        refreshSystemRuntimeInfoButton.addClickListener((ClickEvent<Button> click) ->{
+            checkComputeGridStatusInfo();
+        });
+        actionComponentsList.add(refreshSystemRuntimeInfoButton);
+
         Icon gridRuntimeStatusIcon = new Icon(VaadinIcon.SPARK_LINE);
-        SecondaryTitleActionBar gridRuntimeStatusActionBar = new SecondaryTitleActionBar(gridRuntimeStatusIcon,"网格运行信息",null,null);
+        SecondaryTitleActionBar gridRuntimeStatusActionBar = new SecondaryTitleActionBar(gridRuntimeStatusIcon,"网格运行信息",null,actionComponentsList);
         leftSideContentContainerLayout.add(gridRuntimeStatusActionBar);
 
         gridRuntimeInfoWidget = new GridRuntimeInfoWidget();

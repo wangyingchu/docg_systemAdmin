@@ -11,7 +11,6 @@ import com.viewfunction.docg.dataCompute.computeServiceCore.payload.ComputeGridR
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.chart.BulletChart;
-import com.viewfunction.docg.element.commonComponent.chart.PieChart;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
 import java.text.NumberFormat;
@@ -26,25 +25,27 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
     private SecondaryKeyValueDisplayItem infoSampleDateDisplayItem;
     private SecondaryKeyValueDisplayItem totalAvailableCPUCoresDisplayItem;
     private SecondaryKeyValueDisplayItem totalComputeUnitCountDisplayItem;
-    private SecondaryKeyValueDisplayItem currentRequestDisplayItem;
     private SecondaryKeyValueDisplayItem totalAllocatedMemoryCountDisplayItem;
     private SecondaryKeyValueDisplayItem totalUsedMemoryCountDisplayItemDisplayItem;
     private SecondaryKeyValueDisplayItem freeMemoryPercentDisplayItem;
-    private SecondaryKeyValueDisplayItem usableDiskDisplayItem;
     private NumberFormat nt;
-    private PieChart pieChart;
+    private NumberFormat nt2;
     final ZoneId id = ZoneId.systemDefault();
     private SecondaryKeyValueDisplayItem gridStartDatetimeDisplayItem;
     private SecondaryKeyValueDisplayItem firstComputeUnitDisplayItem;
     private SecondaryKeyValueDisplayItem lastComputeUnitDisplayItem;
     private SecondaryKeyValueDisplayItem maxAvailableMemoryCountDisplayItem;
+    private SecondaryKeyValueDisplayItem totalBusyTimeInMinuteDisplayItem;
+    private SecondaryKeyValueDisplayItem totalIdelTimeInMinuteDisplayItem;
+    private BulletChart bulletChart;
     public GridRuntimeInfoWidget(){
         this.setWidthFull();
 
         nt = NumberFormat.getIntegerInstance();
         nt.setMinimumFractionDigits(0);
 
-        //NumberFormat.getIntegerInstance()
+        nt2 = NumberFormat.getPercentInstance();
+        nt2.setMinimumFractionDigits(2);
 
         HorizontalLayout statusInfoContainer1 = new HorizontalLayout();
         statusInfoContainer1.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -79,6 +80,20 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
         totalComputeUnitCountDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer2, LineAwesomeIconsSvg.SERVER_SOLID.create(),"数据计算单元总数:",
                 "-");
 
+        HorizontalLayout statusInfoContainer2_A = new HorizontalLayout();
+        statusInfoContainer2_A.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        add(statusInfoContainer2_A);
+
+        totalBusyTimeInMinuteDisplayItem =  new SecondaryKeyValueDisplayItem(statusInfoContainer2_A, VaadinIcon.FLIGHT_TAKEOFF.create(),"网格当前运算总耗时(秒):",
+                "-");
+
+        HorizontalLayout horizSpaceDivLayout02_A = new HorizontalLayout();
+        horizSpaceDivLayout02_A.setWidth(20, Unit.PIXELS);
+        statusInfoContainer2_A.add(horizSpaceDivLayout02_A);
+
+        totalIdelTimeInMinuteDisplayItem =  new SecondaryKeyValueDisplayItem(statusInfoContainer2_A, VaadinIcon.FLIGHT_LANDING.create(),"网格总空闲时间(秒):",
+                "-");
+
         HorizontalLayout statusInfoContainer3 = new HorizontalLayout();
         statusInfoContainer3.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         add(statusInfoContainer3);
@@ -109,15 +124,14 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
         ThirdLevelIconTitle memoryStatusInfoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.MEMORY_SOLID.create(), "网格内存资源概览");
         add(memoryStatusInfoTitle);
 
-
-        HorizontalLayout heapMemorySpaceInfoLayout = new HorizontalLayout();
-        heapMemorySpaceInfoLayout.setDefaultVerticalComponentAlignment(Alignment.START);
-        add(heapMemorySpaceInfoLayout);
+        HorizontalLayout memorySpaceInfoLayout = new HorizontalLayout();
+        memorySpaceInfoLayout.setDefaultVerticalComponentAlignment(Alignment.START);
+        add(memorySpaceInfoLayout);
 
         VerticalLayout heapMemoryInfoLeftLayout = new VerticalLayout();
         heapMemoryInfoLeftLayout.setPadding(false);
         heapMemoryInfoLeftLayout.setDefaultHorizontalComponentAlignment(Alignment.START);
-        heapMemorySpaceInfoLayout.add(heapMemoryInfoLeftLayout);
+        memorySpaceInfoLayout.add(heapMemoryInfoLeftLayout);
 
         HorizontalLayout statusInfoContainer7 = new HorizontalLayout();
         statusInfoContainer7.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -139,23 +153,11 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
         heapMemoryInfoLeftLayout.add(statusInfoContainer10);
         freeMemoryPercentDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer10, VaadinIcon.PIE_CHART.create(),"网格未用内存空间占比:","-");
 
-
-
-        BulletChart bulletChart1 = new BulletChart();
-        heapMemorySpaceInfoLayout.add(bulletChart1);
-
-
-
-
-
-
-
-
-
-
-
-
-
+        bulletChart = new BulletChart();
+        bulletChart.setHeight(120,Unit.PIXELS);
+        bulletChart.setWidth(780,Unit.PIXELS);
+        memorySpaceInfoLayout.add(bulletChart);
+        bulletChart.getStyle().set("left","-220px").set("top","-20px").set("position","relative");
     }
 
     public void refreshRuntimeInfo(ComputeGridRealtimeStatisticsInfo computeGridRealtimeStatisticsInfo){
@@ -170,7 +172,12 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
                 totalAllocatedMemoryCountDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getAssignedMemoryInMB()/1024)+"GB");
                 totalUsedMemoryCountDisplayItemDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getUsedMemoryInMB()/1024)+"GB");
                 maxAvailableMemoryCountDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getMaxAvailableMemoryInMB()/1024)+"GB");
-                freeMemoryPercentDisplayItem.updateDisplayValue((1-(computeGridRealtimeStatisticsInfo.getUsedMemoryInMB()/computeGridRealtimeStatisticsInfo.getMaxAvailableMemoryInMB()))*100+"%");
+                long maxMemory = computeGridRealtimeStatisticsInfo.getMaxAvailableMemoryInMB();
+                long usedMemory = computeGridRealtimeStatisticsInfo.getUsedMemoryInMB();
+                double freePercent = (double)(maxMemory-usedMemory)/(double)maxMemory;
+                freeMemoryPercentDisplayItem.updateDisplayValue(nt2.format(freePercent));
+                totalBusyTimeInMinuteDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getTotalBusyTimeInSecond()));
+                totalIdelTimeInMinuteDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getTotalIdleTimeInSecond()));
             }
             infoSampleDateDisplayItem.updateDisplayValue(new Date().toInstant().atZone(id).format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
         }
