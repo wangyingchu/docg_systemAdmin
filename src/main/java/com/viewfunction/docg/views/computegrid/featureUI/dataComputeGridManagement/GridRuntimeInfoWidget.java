@@ -195,7 +195,7 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
                 bulletChart.setHeight(100,Unit.PIXELS);
                 bulletChart.setWidth(360,Unit.PIXELS);
                 bulletChartContainer.add(bulletChart);
-                bulletChart.getStyle().set("left","40px").set("top","-10px").set("position","relative");
+                bulletChart.getStyle().set("left","40px").set("top","-5px").set("position","relative");
                 bulletChart.setData("Mem Consumption",Double.valueOf(nt2.format(usedPercent).replace("%","")),Double.valueOf(nt2.format(waterMarkPercent).replace("%","")));
             }
             infoSampleDateDisplayItem.updateDisplayValue(new Date().toInstant().atZone(id).format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
