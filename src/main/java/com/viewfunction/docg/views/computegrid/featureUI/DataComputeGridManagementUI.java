@@ -18,7 +18,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatistics
 
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.ComputeGridRealtimeStatisticsInfo;
-import com.viewfunction.docg.dataCompute.computeServiceCore.payload.ComputeUnitRealtimeStatisticsInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataComputeUnitMetaInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
@@ -28,6 +27,7 @@ import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.GridRuntimeInfoWidget;
+import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.maintainDataSlice.ComputeGridDataSliceConfigurationView;
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
@@ -41,6 +41,8 @@ public class DataComputeGridManagementUI extends VerticalLayout {
     private VerticalLayout rightSideContentContainerLayout;
     private GridRuntimeInfoWidget gridRuntimeInfoWidget;
     private Grid<DataComputeUnitMetaInfo> computeUnitGrid;
+    private ComputeGridDataSliceConfigurationView computeGridDataSliceConfigurationView;
+
     public DataComputeGridManagementUI(){
 
         Button refreshDataButton = new Button("刷新计算网格统计信息",new Icon(VaadinIcon.REFRESH));
@@ -187,7 +189,8 @@ public class DataComputeGridManagementUI extends VerticalLayout {
         rightSideContentContainerLayout.add(gridConfigurationTabSheet);
         rightSideContentContainerLayout.setFlexGrow(1,gridConfigurationTabSheet);
 
-        gridConfigurationTabSheet.add(generateKindConfigurationTabTitle(LineAwesomeIconsSvg.BUFFER.create(),"网格数据切片配置"),new HorizontalLayout());
+        computeGridDataSliceConfigurationView = new ComputeGridDataSliceConfigurationView();
+        gridConfigurationTabSheet.add(generateKindConfigurationTabTitle(LineAwesomeIconsSvg.BUFFER.create(),"网格数据切片配置"), computeGridDataSliceConfigurationView);
         gridConfigurationTabSheet.add(generateKindConfigurationTabTitle(LineAwesomeIconsSvg.COGS_SOLID.create(),"网格计算服务配置"),new HorizontalLayout());
     }
 
