@@ -10,13 +10,15 @@ import com.vaadin.flow.function.SerializableConsumer;
 public class BulletChart extends Div {
 
     public BulletChart(){
-
         UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/index.js");
         UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/hierarchy.js");
         UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/xy.js");
         UI.getCurrent().getPage().addJavaScript("js/amcharts/5.4.5/themes/Animated.js");
-
         initConnector(getElement());
+    }
+
+    public void setData(String chartLabel,double currentPercentValue,double currentWaterMarkPercentValue){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", chartLabel,currentPercentValue,currentWaterMarkPercentValue));
     }
 
     private void initConnector(Element layout) {

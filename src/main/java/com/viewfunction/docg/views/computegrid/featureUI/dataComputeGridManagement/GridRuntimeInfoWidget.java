@@ -178,6 +178,10 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
                 freeMemoryPercentDisplayItem.updateDisplayValue(nt2.format(freePercent));
                 totalBusyTimeInMinuteDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getTotalBusyTimeInSecond()));
                 totalIdelTimeInMinuteDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getTotalIdleTimeInSecond()));
+                long assignedMemory = computeGridRealtimeStatisticsInfo.getAssignedMemoryInMB();
+                double usedPercent = (double)(usedMemory)/(double)maxMemory;
+                double waterMarkPercent = (double)(assignedMemory)/(double)maxMemory;
+                bulletChart.setData("Memory Consume",Double.valueOf(nt2.format(usedPercent).replace("%","")),Double.valueOf(nt2.format(waterMarkPercent).replace("%","")));
             }
             infoSampleDateDisplayItem.updateDisplayValue(new Date().toInstant().atZone(id).format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
         }
