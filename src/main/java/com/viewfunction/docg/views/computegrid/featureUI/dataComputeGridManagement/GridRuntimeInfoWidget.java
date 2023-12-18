@@ -38,6 +38,7 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
     private SecondaryKeyValueDisplayItem totalBusyTimeInMinuteDisplayItem;
     private SecondaryKeyValueDisplayItem totalIdelTimeInMinuteDisplayItem;
     private BulletChart bulletChart;
+    private HorizontalLayout bulletChartContainer;
     public GridRuntimeInfoWidget(){
         this.setWidthFull();
 
@@ -153,11 +154,12 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
         heapMemoryInfoLeftLayout.add(statusInfoContainer10);
         freeMemoryPercentDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer10, VaadinIcon.PIE_CHART.create(),"网格未用内存空间占比:","-");
 
-        bulletChart = new BulletChart();
-        bulletChart.setHeight(120,Unit.PIXELS);
-        bulletChart.setWidth(780,Unit.PIXELS);
-        memorySpaceInfoLayout.add(bulletChart);
-        bulletChart.getStyle().set("left","-220px").set("top","-20px").set("position","relative");
+        bulletChartContainer = new HorizontalLayout();
+        bulletChartContainer.setSpacing(false);
+        bulletChartContainer.setPadding(false);
+        bulletChartContainer.setMargin(false);
+
+        memorySpaceInfoLayout.add(bulletChartContainer);
     }
 
     public void refreshRuntimeInfo(ComputeGridRealtimeStatisticsInfo computeGridRealtimeStatisticsInfo){
@@ -169,19 +171,32 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
                 totalComputeUnitCountDisplayItem.updateDisplayValue(""+computeGridRealtimeStatisticsInfo.getDataComputeUnitsAmount());
                 firstComputeUnitDisplayItem.updateDisplayValue(computeGridRealtimeStatisticsInfo.getOldestUnitId());
                 lastComputeUnitDisplayItem.updateDisplayValue(computeGridRealtimeStatisticsInfo.getYoungestUnitId());
-                totalAllocatedMemoryCountDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getAssignedMemoryInMB()/1024)+"GB");
-                totalUsedMemoryCountDisplayItemDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getUsedMemoryInMB()/1024)+"GB");
-                maxAvailableMemoryCountDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getMaxAvailableMemoryInMB()/1024)+"GB");
+
                 long maxMemory = computeGridRealtimeStatisticsInfo.getMaxAvailableMemoryInMB();
                 long usedMemory = computeGridRealtimeStatisticsInfo.getUsedMemoryInMB();
                 double freePercent = (double)(maxMemory-usedMemory)/(double)maxMemory;
-                freeMemoryPercentDisplayItem.updateDisplayValue(nt2.format(freePercent));
-                totalBusyTimeInMinuteDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getTotalBusyTimeInSecond()));
-                totalIdelTimeInMinuteDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getTotalIdleTimeInSecond()));
                 long assignedMemory = computeGridRealtimeStatisticsInfo.getAssignedMemoryInMB();
                 double usedPercent = (double)(usedMemory)/(double)maxMemory;
                 double waterMarkPercent = (double)(assignedMemory)/(double)maxMemory;
-                bulletChart.setData("Memory Consume",Double.valueOf(nt2.format(usedPercent).replace("%","")),Double.valueOf(nt2.format(waterMarkPercent).replace("%","")));
+
+                totalAllocatedMemoryCountDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getAssignedMemoryInMB()/1024)+"GB"+" ("+nt2.format(usedPercent)+")");
+                totalUsedMemoryCountDisplayItemDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getUsedMemoryInMB()/1024)+"GB"+" ("+nt2.format(waterMarkPercent)+")");
+                maxAvailableMemoryCountDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getMaxAvailableMemoryInMB()/1024)+"GB");
+                freeMemoryPercentDisplayItem.updateDisplayValue(nt2.format(freePercent));
+                totalBusyTimeInMinuteDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getTotalBusyTimeInSecond()));
+                totalIdelTimeInMinuteDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getTotalIdleTimeInSecond()));
+
+                if(bulletChart != null){
+                    bulletChartContainer.removeAll();
+                    bulletChart = null;
+                }
+
+                bulletChart = new BulletChart();
+                bulletChart.setHeight(100,Unit.PIXELS);
+                bulletChart.setWidth(360,Unit.PIXELS);
+                bulletChartContainer.add(bulletChart);
+                bulletChart.getStyle().set("left","40px").set("top","-10px").set("position","relative");
+                bulletChart.setData("Mem Consumption",Double.valueOf(nt2.format(usedPercent).replace("%","")),Double.valueOf(nt2.format(waterMarkPercent).replace("%","")));
             }
             infoSampleDateDisplayItem.updateDisplayValue(new Date().toInstant().atZone(id).format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
         }
