@@ -110,7 +110,7 @@ window.Vaadin.Flow.common_BulletChart_amcharts = {
                         fill: am5.color(0x222222),
                         stroke: am5.color(0x222222),
                         tooltip: am5.Tooltip.new(c.$connector.root, {
-                            pointerOrientation: "left",
+                            pointerOrientation: "right",
                             labelText: "{valueX}%"
                         })
                     })
