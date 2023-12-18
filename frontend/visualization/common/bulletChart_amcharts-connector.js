@@ -8,24 +8,16 @@ window.Vaadin.Flow.common_BulletChart_amcharts = {
             // functions
         };
 
-
-
-
-
-
-
+        let bulletType="Memory Consume";
+        let currentPercentValue = 15;
+        let waterMarkPercentValue = 37.5;
 
         let colors = [
-            am5.color(0x19d228),
-            am5.color(0xb4dd1e),
-            am5.color(0xf4fb16),
-            am5.color(0xf6d32b),
-            am5.color(0xfb7116)
+            am5.color(0x0074d9),
+            am5.color(0x7fdbff),
+            am5.color(0xff851b),
+            am5.color(0xff4136)
         ];
-
-
-
-
 
         // Create root element
         // https://www.amcharts.com/docs/v5/getting-started/#Root_element
@@ -58,7 +50,7 @@ window.Vaadin.Flow.common_BulletChart_amcharts = {
             })
         );
 
-        yAxis.data.setAll([{ category: "Evaluation" }]);
+        yAxis.data.setAll([{ category: bulletType }]);
 
         let xRenderer = am5xy.AxisRendererX.new(root, {});
         xRenderer.grid.template.set("forceHidden", true);
@@ -71,9 +63,6 @@ window.Vaadin.Flow.common_BulletChart_amcharts = {
                 numberFormat: "#.'%'"
             })
         );
-
-
-
 
         let rangeDataItem = xAxis.makeDataItem({ value: 0, endValue: 100 });
         let range = xAxis.createAxisRange(rangeDataItem);
@@ -95,13 +84,7 @@ window.Vaadin.Flow.common_BulletChart_amcharts = {
 
         rangeDataItem.get("axisFill").set("fillGradient", linearGradient);
 
-
-
-
-
-
-
-/*
+        /*
         let count = colors.length;
         for (var i = 0; i < count; i++) {
             let rangeDataItem = xAxis.makeDataItem({
@@ -117,10 +100,7 @@ window.Vaadin.Flow.common_BulletChart_amcharts = {
                 fillOpacity:1
             });
         }
-*/
-
-
-
+        */
 
         let series = chart.series.push(
             am5xy.ColumnSeries.new(root, {
@@ -128,8 +108,8 @@ window.Vaadin.Flow.common_BulletChart_amcharts = {
                 yAxis: yAxis,
                 valueXField: "value",
                 categoryYField: "category",
-                fill: am5.color(0x000000),
-                stroke: am5.color(0x000000),
+                fill: am5.color(0x222222),
+                stroke: am5.color(0x222222),
                 tooltip: am5.Tooltip.new(root, {
                     pointerOrientation: "left",
                     labelText: "{valueX}%"
@@ -141,7 +121,7 @@ window.Vaadin.Flow.common_BulletChart_amcharts = {
             height: am5.p50
         });
 
-        series.data.setAll([{ category: "Evaluation", value: 65 }]);
+        series.data.setAll([{ category: bulletType, value: currentPercentValue }]);
 
         let stepSeries = chart.series.push(
             am5xy.StepLineSeries.new(root, {
@@ -149,8 +129,8 @@ window.Vaadin.Flow.common_BulletChart_amcharts = {
                 yAxis: yAxis,
                 valueXField: "value",
                 categoryYField: "category",
-                stroke: am5.color(0x000000),
-                fill: am5.color(0x000000),
+                stroke: am5.color(0x666666),
+                fill: am5.color(0x666666),
                 noRisers: true,
                 stepWidth: am5.p50,
                 tooltip: am5.Tooltip.new(root, {
@@ -161,7 +141,7 @@ window.Vaadin.Flow.common_BulletChart_amcharts = {
         );
 
         stepSeries.strokes.template.set("strokeWidth", 3);
-        stepSeries.data.setAll([{ category: "Evaluation", value: 83 }]);
+        stepSeries.data.setAll([{ category: bulletType, value: waterMarkPercentValue }]);
 
         // Add cursor
         // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
@@ -178,23 +158,5 @@ window.Vaadin.Flow.common_BulletChart_amcharts = {
 
         series.appear();
         stepSeries.appear();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
