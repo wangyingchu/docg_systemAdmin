@@ -136,8 +136,17 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         });
 
         dataSliceMetaInfoGrid = new Grid<>();
-        dataSliceMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER);
+        dataSliceMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         leftSideLayout.add(dataSliceMetaInfoGrid);
+
+        dataSliceMetaInfoGrid.addColumn(DataSliceMetaInfo::getDataSliceName).setHeader("切片名称").setKey("idx_0");
+        dataSliceMetaInfoGrid.addColumn(DataSliceMetaInfo::getSliceGroupName).setHeader("切片分组").setKey("idx_1");
+        dataSliceMetaInfoGrid.addColumn(DataSliceMetaInfo::getDataStoreMode).setHeader("存储模式").setKey("idx_2");
+        dataSliceMetaInfoGrid.addColumn(DataSliceMetaInfo::getStoreBackupNumber).setHeader("备份数量").setKey("idx_3");
+        dataSliceMetaInfoGrid.addColumn(DataSliceMetaInfo::getPrimaryDataCount).setHeader("数据量").setKey("idx_4");
+
+        LightGridColumnHeader gridColumnHeader_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"切片名称");
+        dataSliceMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
 
         VerticalLayout rightSideLayout = new VerticalLayout();
         rightSideLayout.setSpacing(true);
@@ -162,12 +171,12 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            dataSliceMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
+            dataSliceMetaInfoGrid.setHeight(event.getHeight()-375,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            dataSliceMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
+            dataSliceMetaInfoGrid.setHeight(browserHeight-375,Unit.PIXELS);
         }));
     }
 
