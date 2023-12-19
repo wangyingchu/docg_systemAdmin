@@ -39,6 +39,7 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
     private SecondaryKeyValueDisplayItem totalIdelTimeInMinuteDisplayItem;
     private BulletChart bulletChart;
     private HorizontalLayout bulletChartContainer;
+
     public GridRuntimeInfoWidget(){
         this.setWidthFull();
 

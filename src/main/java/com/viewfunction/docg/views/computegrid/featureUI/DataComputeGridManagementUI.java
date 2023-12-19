@@ -123,7 +123,8 @@ public class DataComputeGridManagementUI extends VerticalLayout {
         computeUnitGrid = new Grid<>();
 
         computeUnitGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER);
-        computeUnitGrid.setSelectionMode(Grid.SelectionMode.SINGLE);computeUnitGrid.setPageSize(5);
+        computeUnitGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        computeUnitGrid.setPageSize(5);
         computeUnitGrid.addColumn(DataComputeUnitMetaInfo::getUnitID).setHeader("单元ID").setKey("idx_0").setTooltipGenerator(new ItemLabelGenerator<DataComputeUnitMetaInfo>() {
             @Override
             public String apply(DataComputeUnitMetaInfo dataComputeUnitMetaInfo) {

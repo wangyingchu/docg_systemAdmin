@@ -2,12 +2,11 @@ package com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagem
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -15,19 +14,25 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 
+import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 
 import java.text.NumberFormat;
 
 public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
 
     private NumberFormat numberFormat;
+    private PrimaryKeyValueDisplayItem gridDataSlicesCountDisplayItem;
+    private SecondaryTitleActionBar dataSliceInfoActionBar;
+    private Registration listener;
+    private Grid<DataSliceMetaInfo> dataSliceMetaInfoGrid;
 
     public ComputeGridDataSliceConfigurationView(){
-
-        SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.CUBES),"概念类型实体配置");
-        add(filterTitle1);
+        SecondaryIconTitle sectionTitle = new SecondaryIconTitle(LineAwesomeIconsSvg.CLONE.create(),"数据切片配置");
+        add(sectionTitle);
 
         HorizontalLayout infoContainer = new HorizontalLayout();
         infoContainer.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -38,8 +43,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         add(infoContainer);
 
         this.numberFormat = NumberFormat.getInstance();
-
-        PrimaryKeyValueDisplayItem conceptionEntitiesCountDisplayItem =
+        this.gridDataSlicesCountDisplayItem =
                 new PrimaryKeyValueDisplayItem(infoContainer, FontAwesome.Solid.CIRCLE.create()," 网格数据切片数量:",this.numberFormat.format(100000));
 
         HorizontalLayout horSpaceDiv = new HorizontalLayout();
@@ -62,54 +66,51 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         add(sectionActionBar);
 
         HorizontalLayout dataSlicesInfoContainerLayout = new HorizontalLayout();
-        //dataSlicesInfoContainerLayout.setSpacing(false);
         dataSlicesInfoContainerLayout.setPadding(false);
         dataSlicesInfoContainerLayout.setMargin(false);
         add(dataSlicesInfoContainerLayout);
 
         VerticalLayout leftSideLayout = new VerticalLayout();
-        //leftSideLayout.setSpacing(false);
         leftSideLayout.setPadding(false);
         leftSideLayout.setMargin(false);
-
         dataSlicesInfoContainerLayout.add(leftSideLayout);
 
-        HorizontalLayout conceptionKindsSearchElementsContainerLayout = new HorizontalLayout();
-        conceptionKindsSearchElementsContainerLayout.setSpacing(false);
-        conceptionKindsSearchElementsContainerLayout.setMargin(false);
-        leftSideLayout.add(conceptionKindsSearchElementsContainerLayout);
+        HorizontalLayout dataSlicesSearchElementsContainerLayout = new HorizontalLayout();
+        dataSlicesSearchElementsContainerLayout.setSpacing(false);
+        dataSlicesSearchElementsContainerLayout.setMargin(false);
+        leftSideLayout.add(dataSlicesSearchElementsContainerLayout);
 
         SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
-        conceptionKindsSearchElementsContainerLayout.add(filterTitle);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
+        dataSlicesSearchElementsContainerLayout.add(filterTitle);
+        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
         filterTitle.setWidth(80,Unit.PIXELS);
 
-        TextField conceptionKindNameFilterField = new TextField();
-        conceptionKindNameFilterField.setPlaceholder("概念类型名称");
-        conceptionKindNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        conceptionKindNameFilterField.setWidth(150,Unit.PIXELS);
-        conceptionKindsSearchElementsContainerLayout.add(conceptionKindNameFilterField);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindNameFilterField);
+        TextField dataSliceNameFilterField = new TextField();
+        dataSliceNameFilterField.setPlaceholder("数据切片名称");
+        dataSliceNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        dataSliceNameFilterField.setWidth(150,Unit.PIXELS);
+        dataSlicesSearchElementsContainerLayout.add(dataSliceNameFilterField);
+        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,dataSliceNameFilterField);
 
         Icon plusIcon = new Icon(VaadinIcon.PLUS);
         plusIcon.setSize("12px");
-        conceptionKindsSearchElementsContainerLayout.add(plusIcon);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
+        dataSlicesSearchElementsContainerLayout.add(plusIcon);
+        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
 
-        TextField conceptionKindDescFilterField = new TextField();
-        conceptionKindDescFilterField.setPlaceholder("概念类型显示名称");
-        conceptionKindDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        conceptionKindDescFilterField.setWidth(150,Unit.PIXELS);
-        conceptionKindsSearchElementsContainerLayout.add(conceptionKindDescFilterField);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindDescFilterField);
+        TextField dataSliceGroupFilterField = new TextField();
+        dataSliceGroupFilterField.setPlaceholder("数据切片分组");
+        dataSliceGroupFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        dataSliceGroupFilterField.setWidth(150,Unit.PIXELS);
+        dataSlicesSearchElementsContainerLayout.add(dataSliceGroupFilterField);
+        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,dataSliceGroupFilterField);
 
-        Button searchConceptionKindsButton = new Button("查找概念类型",new Icon(VaadinIcon.SEARCH));
-        searchConceptionKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        searchConceptionKindsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        conceptionKindsSearchElementsContainerLayout.add(searchConceptionKindsButton);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchConceptionKindsButton);
-        searchConceptionKindsButton.setWidth(115,Unit.PIXELS);
-        searchConceptionKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button searchDataSlicesButton = new Button("查找数据切片",new Icon(VaadinIcon.SEARCH));
+        searchDataSlicesButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        searchDataSlicesButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        dataSlicesSearchElementsContainerLayout.add(searchDataSlicesButton);
+        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchDataSlicesButton);
+        searchDataSlicesButton.setWidth(115,Unit.PIXELS);
+        searchDataSlicesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 //filterConceptionKinds();
@@ -118,14 +119,14 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
 
         Icon divIcon = new Icon(VaadinIcon.LINE_V);
         divIcon.setSize("8px");
-        conceptionKindsSearchElementsContainerLayout.add(divIcon);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+        dataSlicesSearchElementsContainerLayout.add(divIcon);
+        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
 
         Button clearSearchCriteriaButton = new Button("清除查询条件",new Icon(VaadinIcon.ERASER));
         clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        conceptionKindsSearchElementsContainerLayout.add(clearSearchCriteriaButton);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
+        dataSlicesSearchElementsContainerLayout.add(clearSearchCriteriaButton);
+        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
         clearSearchCriteriaButton.setWidth(120,Unit.PIXELS);
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -134,28 +135,46 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
             }
         });
 
-        Grid<DataSliceMetaInfo> dataSliceMetaInfoGrid = new Grid<>();
+        dataSliceMetaInfoGrid = new Grid<>();
+        dataSliceMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER);
         leftSideLayout.add(dataSliceMetaInfoGrid);
-
 
         VerticalLayout rightSideLayout = new VerticalLayout();
         rightSideLayout.setSpacing(true);
         rightSideLayout.setMargin(true);
         rightSideLayout.setWidth(545,Unit.PIXELS);
-        //rightSideLayout.setPadding(false);
         dataSlicesInfoContainerLayout.add(rightSideLayout);
-        //dataSlicesInfoContainerLayout.setFlexGrow(1,rightSideLayout);
-
         rightSideLayout.getStyle().set("left","0px").set("top","-8px").set("position","relative");
 
-        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"概念类型概览");
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"数据切片概览");
         rightSideLayout.add(filterTitle2);
 
-        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null);
-        secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
-        rightSideLayout.add(secondaryTitleActionBar);
+        dataSliceInfoActionBar = new SecondaryTitleActionBar(LineAwesomeIconsSvg.CLONE.create(),"-",null,null);
+        dataSliceInfoActionBar.setWidth(100,Unit.PERCENTAGE);
+        rightSideLayout.add(dataSliceInfoActionBar);
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体概略采样数 "+5000+")");
         rightSideLayout.add(infoTitle1);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        // Add browser window listener to observe size change
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            dataSliceMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            int browserHeight = receiver.getBodyClientHeight();
+            dataSliceMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
+        }));
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
+        super.onDetach(detachEvent);
     }
 }
