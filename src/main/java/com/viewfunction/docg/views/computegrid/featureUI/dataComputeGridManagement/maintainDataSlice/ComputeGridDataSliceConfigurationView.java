@@ -72,9 +72,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         leftSideLayout.setPadding(false);
         leftSideLayout.setMargin(false);
 
-
         dataSlicesInfoContainerLayout.add(leftSideLayout);
-
 
         HorizontalLayout conceptionKindsSearchElementsContainerLayout = new HorizontalLayout();
         conceptionKindsSearchElementsContainerLayout.setSpacing(false);
@@ -136,7 +134,6 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
             }
         });
 
-
         Grid<DataSliceMetaInfo> dataSliceMetaInfoGrid = new Grid<>();
         leftSideLayout.add(dataSliceMetaInfoGrid);
 
@@ -144,7 +141,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         VerticalLayout rightSideLayout = new VerticalLayout();
         rightSideLayout.setSpacing(true);
         rightSideLayout.setMargin(true);
-        rightSideLayout.setWidth(560,Unit.PIXELS);
+        rightSideLayout.setWidth(545,Unit.PIXELS);
         //rightSideLayout.setPadding(false);
         dataSlicesInfoContainerLayout.add(rightSideLayout);
         //dataSlicesInfoContainerLayout.setFlexGrow(1,rightSideLayout);
@@ -160,7 +157,5 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
 
         ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体概略采样数 "+5000+")");
         rightSideLayout.add(infoTitle1);
-
-
     }
 }
