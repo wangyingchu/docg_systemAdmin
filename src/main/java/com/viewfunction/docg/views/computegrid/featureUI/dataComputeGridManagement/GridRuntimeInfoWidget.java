@@ -179,8 +179,8 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
                 double usedPercent = (double)(usedMemory)/(double)maxMemory;
                 double waterMarkPercent = (double)(assignedMemory)/(double)maxMemory;
 
-                totalAllocatedMemoryCountDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getAssignedMemoryInMB()/1024)+"GB"+" ("+nt2.format(usedPercent)+")");
-                totalUsedMemoryCountDisplayItemDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getUsedMemoryInMB()/1024)+"GB"+" ("+nt2.format(waterMarkPercent)+")");
+                totalAllocatedMemoryCountDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getAssignedMemoryInMB()/1024)+"GB"+" ("+nt2.format(waterMarkPercent)+")");
+                totalUsedMemoryCountDisplayItemDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getUsedMemoryInMB()/1024)+"GB"+" ("+nt2.format(usedPercent)+")");
                 maxAvailableMemoryCountDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getMaxAvailableMemoryInMB()/1024)+"GB");
                 freeMemoryPercentDisplayItem.updateDisplayValue(nt2.format(freePercent));
                 totalBusyTimeInMinuteDisplayItem.updateDisplayValue(nt.format(computeGridRealtimeStatisticsInfo.getTotalBusyTimeInSecond()));
