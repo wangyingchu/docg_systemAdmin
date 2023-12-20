@@ -15,7 +15,7 @@ window.Vaadin.Flow.common_BulletChart_amcharts = {
                     am5.color(0x3d9970),
                     am5.color(0x2ecc40),
                     am5.color(0xff851b),
-                    am5.color(0xff4136)
+                    am5.color(0xce0000)
                 ];
 
                 // Create root element
