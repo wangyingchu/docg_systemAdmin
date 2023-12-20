@@ -155,7 +155,7 @@ public class DataComputeGridManagementUI extends VerticalLayout {
         computeUnitGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
         GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.MAILBOX,"单元地址");
         computeUnitGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"单元类型");
+        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.OPTIONS,"单元类型");
         computeUnitGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
         GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.SPECIALIST,"客户端单元");
         computeUnitGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);

@@ -15,12 +15,19 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 
 import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.ComputeGridRealtimeStatisticsInfo;
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataComputeUnitMetaInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
+import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
+import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataService;
+import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 
 import java.text.NumberFormat;
+import java.util.Set;
 
 public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
 
@@ -185,5 +192,16 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
+    }
+
+    private void renderGridDateSlicesInfo(){
+        ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
+        try {
+            Set<DataSliceMetaInfo> dataSliceMetaInfoSet = targetComputeGrid.listDataSlice();
+
+            dataSliceMetaInfoGrid.setItems(dataSliceMetaInfoSet);
+        } catch (ComputeGridException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
