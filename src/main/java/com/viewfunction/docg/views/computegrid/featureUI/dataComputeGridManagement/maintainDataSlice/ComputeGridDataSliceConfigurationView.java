@@ -15,6 +15,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
@@ -34,7 +36,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
     private SecondaryTitleActionBar dataSliceInfoActionBar;
     private Registration listener;
     private Grid<DataSliceMetaInfo> dataSliceMetaInfoGrid;
-
+    private DataSliceMetaInfo lastSelectedDataSliceMetaInfo;
     public ComputeGridDataSliceConfigurationView(){
         SecondaryIconTitle sectionTitle = new SecondaryIconTitle(LineAwesomeIconsSvg.CLONE.create(),"数据切片配置");
         add(sectionTitle);
@@ -218,6 +220,22 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         LightGridColumnHeader gridColumnHeader_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         dataSliceMetaInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
 
+        dataSliceMetaInfoGrid.addSelectionListener(new SelectionListener<Grid<DataSliceMetaInfo>, DataSliceMetaInfo>() {
+            @Override
+            public void selectionChange(SelectionEvent<Grid<DataSliceMetaInfo>, DataSliceMetaInfo> selectionEvent) {
+                Set<DataSliceMetaInfo> selectedItemSet = selectionEvent.getAllSelectedItems();
+                if(selectedItemSet.size() == 0){
+                    // don't allow to unselect item, just reselect last selected item
+                    dataSliceMetaInfoGrid.select(lastSelectedDataSliceMetaInfo);
+                }else{
+                    //singleConceptionKindSummaryInfoContainerLayout.setVisible(true);
+                    DataSliceMetaInfo selectedDataSliceMetaInfo = selectedItemSet.iterator().next();
+                    renderDataSliceOverview(selectedDataSliceMetaInfo);
+                    lastSelectedDataSliceMetaInfo = selectedDataSliceMetaInfo;
+                }
+            }
+        });
+
         VerticalLayout rightSideLayout = new VerticalLayout();
         rightSideLayout.setSpacing(true);
         rightSideLayout.setMargin(true);
@@ -267,5 +285,9 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         } catch (ComputeGridException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void renderDataSliceOverview(DataSliceMetaInfo dataSliceMetaInfo){
+        dataSliceInfoActionBar.updateTitleContent(dataSliceMetaInfo.getDataSliceName());
     }
 }

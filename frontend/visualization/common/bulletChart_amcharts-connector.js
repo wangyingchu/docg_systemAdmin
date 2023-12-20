@@ -12,8 +12,8 @@ window.Vaadin.Flow.common_BulletChart_amcharts = {
                 c.$connector.waterMarkPercentValue = currentWaterMarkPercentValue;
 
                 let colors = [
-                    am5.color(0x0074d9),
-                    am5.color(0x7fdbff),
+                    am5.color(0x3d9970),
+                    am5.color(0x2ecc40),
                     am5.color(0xff851b),
                     am5.color(0xff4136)
                 ];
