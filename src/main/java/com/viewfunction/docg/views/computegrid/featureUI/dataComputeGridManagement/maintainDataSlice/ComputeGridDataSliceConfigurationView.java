@@ -20,13 +20,18 @@ import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
+import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
@@ -37,6 +42,28 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
     private Registration listener;
     private Grid<DataSliceMetaInfo> dataSliceMetaInfoGrid;
     private DataSliceMetaInfo lastSelectedDataSliceMetaInfo;
+    private Grid<DataSlicePropertyDefinitionVO> dataSlicePropertyDefinitionsGrid;
+    private class DataSlicePropertyDefinitionVO{
+        private String propertyName;
+        private DataSlicePropertyType dataSlicePropertyType;
+
+        public String getPropertyName() {
+            return propertyName;
+        }
+
+        public void setPropertyName(String propertyName) {
+            this.propertyName = propertyName;
+        }
+
+        public DataSlicePropertyType getDataSlicePropertyType() {
+            return dataSlicePropertyType;
+        }
+
+        public void setDataSlicePropertyType(DataSlicePropertyType dataSlicePropertyType) {
+            this.dataSlicePropertyType = dataSlicePropertyType;
+        }
+    }
+
     public ComputeGridDataSliceConfigurationView(){
         SecondaryIconTitle sectionTitle = new SecondaryIconTitle(LineAwesomeIconsSvg.CLONE.create(),"数据切片配置");
         add(sectionTitle);
@@ -206,7 +233,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
             }
         });
         dataSliceMetaInfoGrid.addColumn(DataSliceMetaInfo::getStoreBackupNumber).setHeader("备份数量").setKey("idx_2").setWidth("100px").setFlexGrow(0).setResizable(false);
-        dataSliceMetaInfoGrid.addColumn(new NumberRenderer<>(DataSliceMetaInfo::getPrimaryDataCount,NumberFormat.getIntegerInstance())).setHeader("数据量").setKey("idx_3").setWidth("110px").setFlexGrow(0);
+        dataSliceMetaInfoGrid.addColumn(new NumberRenderer<>(DataSliceMetaInfo::getPrimaryDataCount,NumberFormat.getIntegerInstance())).setHeader("数据量").setKey("idx_3").setWidth("130px").setFlexGrow(0);
         dataSliceMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("140px").setResizable(false);
 
         LightGridColumnHeader gridColumnHeader_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"切片名称");
@@ -215,7 +242,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         dataSliceMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader_idx2 = new LightGridColumnHeader(VaadinIcon.FLIP_H,"备份数量");
         dataSliceMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
-        LightGridColumnHeader gridColumnHeader_idx3 = new LightGridColumnHeader(VaadinIcon.STOCK,"数据量");
+        LightGridColumnHeader gridColumnHeader_idx3 = new LightGridColumnHeader(VaadinIcon.STOCK,"Primary 数据量");
         dataSliceMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
         LightGridColumnHeader gridColumnHeader_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         dataSliceMetaInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
@@ -250,8 +277,41 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         dataSliceInfoActionBar.setWidth(100,Unit.PERCENTAGE);
         rightSideLayout.add(dataSliceInfoActionBar);
 
-        ThirdLevelIconTitle infoTitle1 = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"概念类型属性分布 (实体概略采样数 "+5000+")");
-        rightSideLayout.add(infoTitle1);
+        ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.DASHBOARD),"数据切片指标");
+        rightSideLayout.add(infoTitle2);
+
+        HorizontalLayout displayItemContainer1 = new HorizontalLayout();
+        displayItemContainer1.getStyle().set("padding-left","5px");
+        rightSideLayout.add(displayItemContainer1);
+        SecondaryKeyValueDisplayItem childClassificationCount1 = new SecondaryKeyValueDisplayItem(displayItemContainer1, VaadinIcon.TAG.create(),"Child Classification-子分类数量:","-");
+
+        HorizontalLayout displayItemContainer2 = new HorizontalLayout();
+        displayItemContainer2.getStyle().set("padding-left","5px");
+        rightSideLayout.add(displayItemContainer2);
+        SecondaryKeyValueDisplayItem childClassificationCount2 = new SecondaryKeyValueDisplayItem(displayItemContainer2, VaadinIcon.TAG.create(),"Child Classification-子分类数量:","-");
+
+        HorizontalLayout displayItemContainer3 = new HorizontalLayout();
+        displayItemContainer3.getStyle().set("padding-left","5px");
+        rightSideLayout.add(displayItemContainer3);
+        SecondaryKeyValueDisplayItem childClassificationCount3 = new SecondaryKeyValueDisplayItem(displayItemContainer3, VaadinIcon.TAG.create(),"Child Classification-子分类数量:","-");
+
+        ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"数据切片属性定义");
+        rightSideLayout.add(infoTitle);
+
+        dataSlicePropertyDefinitionsGrid = new Grid<>();
+        dataSlicePropertyDefinitionsGrid.setWidth(100,Unit.PERCENTAGE);
+        dataSlicePropertyDefinitionsGrid.setHeight(400,Unit.PIXELS);
+        dataSlicePropertyDefinitionsGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        dataSlicePropertyDefinitionsGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
+        dataSlicePropertyDefinitionsGrid.addColumn(DataSlicePropertyDefinitionVO::getPropertyName).setHeader("属性名称").setKey("idx_0");
+        dataSlicePropertyDefinitionsGrid.addColumn(DataSlicePropertyDefinitionVO::getDataSlicePropertyType).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("100px").setResizable(false);
+
+        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
+        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.PASSWORD,"属性数据类型");
+        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+
+        rightSideLayout.add(dataSlicePropertyDefinitionsGrid);
     }
 
     @Override
@@ -288,6 +348,33 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
     }
 
     private void renderDataSliceOverview(DataSliceMetaInfo dataSliceMetaInfo){
-        dataSliceInfoActionBar.updateTitleContent(dataSliceMetaInfo.getDataSliceName());
+        String dataSliceName = dataSliceMetaInfo.getDataSliceName();
+        dataSliceInfoActionBar.updateTitleContent(dataSliceName);
+        ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
+        try {
+            DataSliceDetailInfo dataSliceDetailInfo = targetComputeGrid.getDataSliceDetail(dataSliceName);
+            if(dataSliceDetailInfo != null){
+                dataSliceDetailInfo.getPrimaryDataCount();
+                dataSliceDetailInfo.getBackupDataCount();
+                dataSliceDetailInfo.getTotalDataCount();
+                dataSliceDetailInfo.getSliceGroupName();
+                dataSliceDetailInfo.getAtomicityMode();
+                dataSliceDetailInfo.getDataStoreMode();
+                dataSliceDetailInfo.getStoreBackupNumber();
+
+                Map<String,DataSlicePropertyType> dataSlicePropertiesMap = dataSliceDetailInfo.getPropertiesDefinition();
+                List<DataSlicePropertyDefinitionVO> dataSlicePropertyDefinitionVOList = new ArrayList<>();
+                Set<String> propertyNameSet = dataSlicePropertiesMap.keySet();
+                for(String currentName : propertyNameSet){
+                    DataSlicePropertyDefinitionVO currentDataSlicePropertyDefinitionVO = new DataSlicePropertyDefinitionVO();
+                    currentDataSlicePropertyDefinitionVO.setPropertyName(currentName);
+                    currentDataSlicePropertyDefinitionVO.setDataSlicePropertyType(dataSlicePropertiesMap.get(currentName));
+                    dataSlicePropertyDefinitionVOList.add(currentDataSlicePropertyDefinitionVO);
+                }
+                this.dataSlicePropertyDefinitionsGrid.setItems(dataSlicePropertyDefinitionVOList);
+            }
+        } catch (ComputeGridException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
