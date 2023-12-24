@@ -292,38 +292,38 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         HorizontalLayout displayItemContainer4 = new HorizontalLayout();
         displayItemContainer4.getStyle().set("padding-left","5px");
         rightSideLayout.add(displayItemContainer4);
-        groupNameDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer4, VaadinIcon.TAG.create(),"切片组名称:","-");
+        groupNameDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer4, VaadinIcon.ARCHIVES.create(),"切片组名称:","-");
 
         HorizontalLayout displayItemContainer1 = new HorizontalLayout();
         displayItemContainer1.getStyle().set("padding-left","5px");
         rightSideLayout.add(displayItemContainer1);
-        primaryDataCountDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer1, VaadinIcon.TAG.create(),"主数据量:","-");
+        primaryDataCountDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer1, VaadinIcon.STOCK.create(),"主数据量:","-");
 
         HorizontalLayout spaceDivLayout01 = new HorizontalLayout();
         spaceDivLayout01.setWidth(5,Unit.PIXELS);
         displayItemContainer1.add(spaceDivLayout01);
-        backupDataCountDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer1, VaadinIcon.TAG.create(),"备份数据量:","-");
+        backupDataCountDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer1, VaadinIcon.STOCK.create(),"备份数据量:","-");
 
         HorizontalLayout displayItemContainer3 = new HorizontalLayout();
         displayItemContainer3.getStyle().set("padding-left","5px");
         rightSideLayout.add(displayItemContainer3);
-        totalDataCountDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer3, VaadinIcon.TAG.create(),"总数据量:","-");
+        totalDataCountDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer3, VaadinIcon.STOCK.create(),"总数据量:","-");
 
         HorizontalLayout spaceDivLayout02 = new HorizontalLayout();
         spaceDivLayout02.setWidth(5,Unit.PIXELS);
         displayItemContainer3.add(spaceDivLayout02);
-        backupNumberDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer3, VaadinIcon.TAG.create(),"切片备份数:","-");
+        backupNumberDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer3, VaadinIcon.FLIP_H.create(),"切片备份数:","-");
 
         HorizontalLayout displayItemContainer5 = new HorizontalLayout();
         displayItemContainer5.getStyle().set("padding-left","5px");
         rightSideLayout.add(displayItemContainer5);
-        sliceAtomicityDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer5, VaadinIcon.TAG.create(),"原子类型:","-");
+        sliceAtomicityDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer5, VaadinIcon.RHOMBUS.create(),"原子类型模式:","-");
 
         HorizontalLayout spaceDivLayout03 = new HorizontalLayout();
         spaceDivLayout03.setWidth(5,Unit.PIXELS);
         displayItemContainer5.add(spaceDivLayout03);
 
-        sliceStorageModeDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer5, VaadinIcon.TAG.create(),"存储类型:","-");
+        sliceStorageModeDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer5, VaadinIcon.SERVER.create(),"数据存储类型:","-");
 
         ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"数据切片属性定义");
         rightSideLayout.add(infoTitle);
