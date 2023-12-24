@@ -273,11 +273,10 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         });
 
         VerticalLayout rightSideLayout = new VerticalLayout();
-        rightSideLayout.setSpacing(true);
-        rightSideLayout.setMargin(true);
+        rightSideLayout.setMargin(false);
         rightSideLayout.setWidth(545,Unit.PIXELS);
         dataSlicesInfoContainerLayout.add(rightSideLayout);
-        rightSideLayout.getStyle().set("left","0px").set("top","-8px").set("position","relative");
+        rightSideLayout.getStyle().set("left","0px").set("top","-2px").set("position","relative");
 
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"数据切片概览");
         rightSideLayout.add(filterTitle2);
