@@ -7,8 +7,10 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -27,6 +29,7 @@ import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSliceProper
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -41,6 +44,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
     private SecondaryTitleActionBar dataSliceInfoActionBar;
     private Registration listener;
     private Grid<DataSliceMetaInfo> dataSliceMetaInfoGrid;
+    private GridListDataView<DataSliceMetaInfo> dataSliceMetaInfoView;
     private DataSliceMetaInfo lastSelectedDataSliceMetaInfo;
     private Grid<DataSlicePropertyDefinitionVO> dataSlicePropertyDefinitionsGrid;
     private SecondaryKeyValueDisplayItem groupNameDisplayItem;
@@ -50,6 +54,8 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
     private SecondaryKeyValueDisplayItem sliceAtomicityDisplayItem;
     private SecondaryKeyValueDisplayItem backupNumberDisplayItem;
     private SecondaryKeyValueDisplayItem sliceStorageModeDisplayItem;
+    private TextField dataSliceNameFilterField;
+    private TextField dataSliceGroupFilterField;
 
     private class DataSlicePropertyDefinitionVO{
         private String propertyName;
@@ -128,7 +134,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
         filterTitle.setWidth(80,Unit.PIXELS);
 
-        TextField dataSliceNameFilterField = new TextField();
+        dataSliceNameFilterField = new TextField();
         dataSliceNameFilterField.setPlaceholder("数据切片名称");
         dataSliceNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         dataSliceNameFilterField.setWidth(150,Unit.PIXELS);
@@ -140,7 +146,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         dataSlicesSearchElementsContainerLayout.add(plusIcon);
         dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
 
-        TextField dataSliceGroupFilterField = new TextField();
+        dataSliceGroupFilterField = new TextField();
         dataSliceGroupFilterField.setPlaceholder("数据切片分组");
         dataSliceGroupFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         dataSliceGroupFilterField.setWidth(150,Unit.PIXELS);
@@ -156,7 +162,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         searchDataSlicesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //filterConceptionKinds();
+                filterDataSlices();
             }
         });
 
@@ -174,7 +180,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //cancelFilterConceptionKinds();
+                cancelFilterDataSlices();
             }
         });
 
@@ -373,7 +379,30 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
         try {
             Set<DataSliceMetaInfo> dataSliceMetaInfoSet = targetComputeGrid.listDataSlice();
-            this.dataSliceMetaInfoGrid.setItems(dataSliceMetaInfoSet);
+            this.dataSliceMetaInfoView = this.dataSliceMetaInfoGrid.setItems(dataSliceMetaInfoSet);
+            this.dataSliceMetaInfoView.addFilter(item->{
+                String dataSliceName = item.getDataSliceName();
+                String dataSliceGroup = item.getSliceGroupName();
+
+                boolean dataSliceNameFilterResult = true;
+                if(!dataSliceNameFilterField.getValue().trim().equals("")){
+                    if(dataSliceName.contains(dataSliceNameFilterField.getValue().trim())){
+                        dataSliceNameFilterResult = true;
+                    }else{
+                        dataSliceNameFilterResult = false;
+                    }
+                }
+
+                boolean dataSliceGroupFilterResult = true;
+                if(!dataSliceGroupFilterField.getValue().trim().equals("")){
+                    if(dataSliceGroup.contains(dataSliceGroupFilterField.getValue().trim())){
+                        dataSliceGroupFilterResult = true;
+                    }else{
+                        dataSliceGroupFilterResult = false;
+                    }
+                }
+                return dataSliceNameFilterResult & dataSliceGroupFilterResult;
+            });
             this.gridDataSlicesCountDisplayItem.updateDisplayValue(this.numberFormat.format(dataSliceMetaInfoSet.size()));
         } catch (ComputeGridException e) {
             throw new RuntimeException(e);
@@ -409,5 +438,21 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         } catch (ComputeGridException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void filterDataSlices(){
+        String dataSliceNameFilterValue = dataSliceNameFilterField.getValue().trim();
+        String dataSliceGroupFilterValue = dataSliceGroupFilterField.getValue().trim();
+        if(dataSliceNameFilterValue.equals("")&dataSliceGroupFilterValue.equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入数据切片名称 和/或 数据切片分组", NotificationVariant.LUMO_ERROR);
+        }else{
+            this.dataSliceMetaInfoView.refreshAll();
+        }
+    }
+
+    private void cancelFilterDataSlices(){
+        dataSliceNameFilterField.setValue("");
+        dataSliceGroupFilterField.setValue("");
+        this.dataSliceMetaInfoView.refreshAll();
     }
 }
