@@ -30,6 +30,7 @@ import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.Compute
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.CreateDataSliceView;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -99,14 +100,14 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         horSpaceDiv.setWidth(30, Unit.PIXELS);
         infoContainer.add(horSpaceDiv);
 
-        Button addGridDataSliceButton= new Button("添加网格数据切片");
-        addGridDataSliceButton.setIcon(VaadinIcon.PLUS_CIRCLE.create());
+        Button addGridDataSliceButton= new Button("创建网格数据切片");
+        addGridDataSliceButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
         addGridDataSliceButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         infoContainer.add(addGridDataSliceButton);
         addGridDataSliceButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAddConceptionEntityView();
+                renderCreateDataSliceView();
             }
         });
 
@@ -454,5 +455,14 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         dataSliceNameFilterField.setValue("");
         dataSliceGroupFilterField.setValue("");
         this.dataSliceMetaInfoView.refreshAll();
+    }
+
+    private void renderCreateDataSliceView(){
+        CreateDataSliceView createDataSliceView = new CreateDataSliceView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建数据切片",null,true,630,290,false);
+        fixSizeWindow.setWindowContent(createDataSliceView);
+        fixSizeWindow.setModel(true);
+        createDataSliceView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }
