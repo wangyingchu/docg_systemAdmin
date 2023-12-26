@@ -13,7 +13,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
@@ -23,37 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataSlicePropertiesConfigView extends VerticalLayout {
-
-    private class DataSlicePropertyValueObject{
-        private String propertyName;
-        private DataSlicePropertyType dataSlicePropertyType;
-        private boolean isPrimaryKey;
-
-        public String getPropertyName() {
-            return propertyName;
-        }
-
-        public void setPropertyName(String propertyName) {
-            this.propertyName = propertyName;
-        }
-
-        public DataSlicePropertyType getDataSlicePropertyType() {
-            return dataSlicePropertyType;
-        }
-
-        public void setDataSlicePropertyType(DataSlicePropertyType dataSlicePropertyType) {
-            this.dataSlicePropertyType = dataSlicePropertyType;
-        }
-
-        public boolean isPrimaryKey() {
-            return isPrimaryKey;
-        }
-
-        public void setPrimaryKey(boolean primaryKey) {
-            isPrimaryKey = primaryKey;
-        }
-    }
-
     private Grid<DataSlicePropertyValueObject> dataSlicePropertyGrid;
 
     public DataSlicePropertiesConfigView(){
@@ -113,7 +81,7 @@ public class DataSlicePropertiesConfigView extends VerticalLayout {
         dataSlicePropertyGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.PASSWORD,"属性数据类型");
         dataSlicePropertyGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
-        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"是否主键");
+        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(LineAwesomeIconsSvg.KEY_SOLID.create(),"是否主键");
         dataSlicePropertyGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         LightGridColumnHeader gridColumnHeader_idx3 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         dataSlicePropertyGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
@@ -123,6 +91,12 @@ public class DataSlicePropertiesConfigView extends VerticalLayout {
 
     private void renderAddNewPropertyUI(){
         AddDataSlicePropertyView addDataSlicePropertyView = new AddDataSlicePropertyView();
+        addDataSlicePropertyView.setDataSlicePropertyOperateHandler(new DataSlicePropertyOperateHandler() {
+            @Override
+            public void handleDataSlicePropertyValue(DataSlicePropertyValueObject dataSlicePropertyValueObject) {
+
+            }
+        });
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加属性",null,true,480,180,false);
         fixSizeWindow.setWindowContent(addDataSlicePropertyView);
         fixSizeWindow.setModel(true);
