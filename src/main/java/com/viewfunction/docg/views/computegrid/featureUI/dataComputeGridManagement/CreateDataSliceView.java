@@ -16,8 +16,11 @@ import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.textfield.TextField;
 
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
+import com.viewfunction.docg.dataCompute.computeServiceCore.internal.ignite.ComputeGridObserver;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
+import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlice;
+import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
@@ -134,12 +137,22 @@ public class CreateDataSliceView extends VerticalLayout {
                 throw new RuntimeException(e);
             }
 
+            try {
+                ComputeGridObserver computeGridObserver = ComputeGridObserver.getObserverInstance();
+                Map<String, DataSlicePropertyType> dataSlicePropertyMap = new HashMap<>();
+                List<String> pkList = new ArrayList<>();
+                for(DataSlicePropertyValueObject currentDataSlicePropertyValueObject:dataSlicePropertyValueObjectsCollection){
+                    dataSlicePropertyMap.put(currentDataSlicePropertyValueObject.getPropertyName(),currentDataSlicePropertyValueObject.getDataSlicePropertyType());
+                    if(currentDataSlicePropertyValueObject.isPrimaryKey()){
+                        pkList.add(currentDataSlicePropertyValueObject.getPropertyName());
+                    }
+                }
 
-
-
-
-
-
+                DataSlice targetDataSlice = computeGridObserver.createGridDataSlice(dataSliceName, dataSliceGroup,dataSlicePropertyMap,pkList);
+                computeGridObserver.close();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             /*
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(dataSliceName);
