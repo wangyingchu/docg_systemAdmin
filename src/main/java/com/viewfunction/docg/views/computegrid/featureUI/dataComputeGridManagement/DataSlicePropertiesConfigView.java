@@ -14,11 +14,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,54 +64,31 @@ public class DataSlicePropertiesConfigView extends VerticalLayout {
         List<Component> secTitleElementsList = new ArrayList<>();
         List<Component> buttonList = new ArrayList<>();
 
-        Button createMetaConfigItemButton= new Button("添加元属性");
+        Button createMetaConfigItemButton= new Button("添加切片属性");
         createMetaConfigItemButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
         createMetaConfigItemButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         createMetaConfigItemButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAddNewConfigItemUI();
+                renderAddNewPropertyUI();
             }
         });
         buttonList.add(createMetaConfigItemButton);
 
-        Button refreshMetaConfigItemsInfoButton = new Button("刷新元属性信息",new Icon(VaadinIcon.REFRESH));
-        refreshMetaConfigItemsInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        refreshMetaConfigItemsInfoButton.addClickListener((ClickEvent<Button> click) ->{
-            //refreshMetaConfigItemsInfo();
-        });
-        buttonList.add(refreshMetaConfigItemsInfoButton);
-
-        SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.BOOKMARK),"元属性配置管理 ",secTitleElementsList,buttonList);
+        SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.INPUT),"数据切片属性配置管理 ",secTitleElementsList,buttonList);
         add(metaConfigItemConfigActionBar);
 
-
-        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(metaConfigItemValueObjectInfo -> {
-            /*
-            Icon editIcon = new Icon(VaadinIcon.EDIT);
-            editIcon.setSize("20px");
-            Button addItemButton = new Button(editIcon, event -> {
-                if(entityStatisticsInfo instanceof MetaConfigItemValueObject){
-
-                }
-            });
-            addItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            addItemButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(addItemButton, "更新元属性值");
-            */
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(dataSlicePropertyValueObject -> {
             Icon removeIcon = new Icon(VaadinIcon.ERASER);
             removeIcon.setSize("20px");
             Button removeItemButton = new Button(removeIcon, event -> {
-                //if(metaConfigItemValueObjectInfo instanceof MetaConfigItemsConfigView.MetaConfigItemValueObject){
-                //    renderDeleteConfigItemUI((MetaConfigItemsConfigView.MetaConfigItemValueObject)metaConfigItemValueObjectInfo);
-                //}
+
             });
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeItemButton, "删除元属性");
+            removeItemButton.setTooltipText("删除切片属性");
 
-            //HorizontalLayout buttons = new HorizontalLayout(addItemButton,removeItemButton);
             HorizontalLayout buttons = new HorizontalLayout(removeItemButton);
             buttons.setPadding(false);
             buttons.setSpacing(false);
@@ -141,11 +117,16 @@ public class DataSlicePropertiesConfigView extends VerticalLayout {
         dataSlicePropertyGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         LightGridColumnHeader gridColumnHeader_idx3 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         dataSlicePropertyGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
-        dataSlicePropertyGrid.setHeight(150,Unit.PIXELS);
+        dataSlicePropertyGrid.setHeight(200,Unit.PIXELS);
         add(dataSlicePropertyGrid);
+    }
 
-
-
-
+    private void renderAddNewPropertyUI(){
+        AddDataSlicePropertyView addDataSlicePropertyView = new AddDataSlicePropertyView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加属性",null,true,480,190,false);
+        fixSizeWindow.setWindowContent(addDataSlicePropertyView);
+        fixSizeWindow.setModel(true);
+        addDataSlicePropertyView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }
