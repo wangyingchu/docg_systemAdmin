@@ -8,6 +8,8 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -25,6 +27,7 @@ import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.GridRuntimeInfoWidget;
 import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.maintainDataSlice.ComputeGridDataSliceConfigurationView;
@@ -245,7 +248,7 @@ public class DataComputeGridManagementUI extends VerticalLayout {
             ComputeGridRealtimeStatisticsInfo computeGridRealtimeStatisticsInfo = targetComputeGrid.getGridRealtimeStatisticsInfo();
             this.gridRuntimeInfoWidget.refreshRuntimeInfo(computeGridRealtimeStatisticsInfo);
         } catch (ComputeGridException e) {
-            throw new RuntimeException(e);
+            CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据计算网格", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
         }
     }
 }

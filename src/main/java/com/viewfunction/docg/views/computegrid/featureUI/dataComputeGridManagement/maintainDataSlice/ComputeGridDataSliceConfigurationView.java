@@ -406,7 +406,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
             });
             this.gridDataSlicesCountDisplayItem.updateDisplayValue(this.numberFormat.format(dataSliceMetaInfoSet.size()));
         } catch (ComputeGridException e) {
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
         }
     }
 
