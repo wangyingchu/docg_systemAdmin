@@ -10,18 +10,24 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class DataSlicePropertiesConfigView extends VerticalLayout {
+
     private Grid<DataSlicePropertyValueObject> dataSlicePropertyGrid;
 
     public DataSlicePropertiesConfigView(){
@@ -94,7 +100,23 @@ public class DataSlicePropertiesConfigView extends VerticalLayout {
         addDataSlicePropertyView.setDataSlicePropertyOperateHandler(new DataSlicePropertyOperateHandler() {
             @Override
             public void handleDataSlicePropertyValue(DataSlicePropertyValueObject dataSlicePropertyValueObject) {
-
+                ListDataProvider dataProvider=(ListDataProvider)dataSlicePropertyGrid.getDataProvider();
+                Collection<DataSlicePropertyValueObject> currentDataSlicePropertyValueObjectCollection = dataProvider.getItems();
+                boolean hasSameNameProperty = false;
+                for(DataSlicePropertyValueObject currentDataSlicePropertyValueObject : currentDataSlicePropertyValueObjectCollection){
+                    if(currentDataSlicePropertyValueObject.getPropertyName().toUpperCase().equals(dataSlicePropertyValueObject.getPropertyName().toUpperCase())){
+                        hasSameNameProperty = true;
+                        break;
+                    }
+                }
+                if(hasSameNameProperty){
+                    CommonUIOperationUtil.showPopupNotification("已存在同名属性", NotificationVariant.LUMO_ERROR,3000, Notification.Position.MIDDLE);
+                }else{
+                    dataProvider.getItems().add(dataSlicePropertyValueObject);
+                    dataProvider.refreshAll();
+                    addDataSlicePropertyView.clearInputFields();
+                    CommonUIOperationUtil.showPopupNotification("添加属性 "+dataSlicePropertyValueObject.getPropertyName()+ " 成功", NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
+                }
             }
         });
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加属性",null,true,480,180,false);
@@ -102,5 +124,11 @@ public class DataSlicePropertiesConfigView extends VerticalLayout {
         fixSizeWindow.setModel(true);
         addDataSlicePropertyView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    public Collection<DataSlicePropertyValueObject> getDataSlicePropertyValueObjects(){
+        ListDataProvider dataProvider=(ListDataProvider)dataSlicePropertyGrid.getDataProvider();
+        Collection<DataSlicePropertyValueObject> currentDataSlicePropertyValueObjectCollection = dataProvider.getItems();
+        return currentDataSlicePropertyValueObjectCollection;
     }
 }

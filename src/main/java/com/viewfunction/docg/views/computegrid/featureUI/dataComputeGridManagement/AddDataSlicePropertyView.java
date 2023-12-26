@@ -133,4 +133,10 @@ public class AddDataSlicePropertyView extends VerticalLayout {
     public void setDataSlicePropertyOperateHandler(DataSlicePropertyOperateHandler dataSlicePropertyOperateHandler) {
         this.dataSlicePropertyOperateHandler = dataSlicePropertyOperateHandler;
     }
+
+    public void clearInputFields(){
+        propertyNameField.setValue("");
+        propertyDataTypeFilterSelect.setValue(null);
+        isPrimaryKeyCheckbox.setValue(false);
+    }
 }

@@ -15,21 +15,20 @@ import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.textfield.TextField;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindCreatedEvent;
+import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
+import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
+import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CreateDataSliceView extends VerticalLayout {
     private Dialog containerDialog;
     private H6 errorMessage;
-    private TextField conceptionKindNameField;
-    private TextField conceptionKindDescField;
+    private TextField dataSliceNameField;
+    private TextField dataSliceGroupField;
     private DataSlicePropertiesConfigView dataSlicePropertiesConfigView;
 
     public CreateDataSliceView(){
@@ -40,19 +39,24 @@ public class CreateDataSliceView extends VerticalLayout {
         H6 viewTitle1 = new H6("数据切片信息");
         messageContainerLayout.add(viewTitle1);
 
-        this.conceptionKindNameField = new TextField("数据切片名称 - Data Slice Name");
-        this.conceptionKindNameField.setWidthFull();
-        this.conceptionKindNameField.setRequired(true);
-        this.conceptionKindNameField.setRequiredIndicatorVisible(true);
-        this.conceptionKindNameField.setTitle("请输入数据切片名称");
-        add(conceptionKindNameField);
+        errorMessage = new H6("-");
+        errorMessage.getStyle().set("color","var(--lumo-error-text-color)").set("font-size","0.8rem");
+        errorMessage.setVisible(false);
+        messageContainerLayout.add(errorMessage);
 
-        this.conceptionKindDescField = new TextField("数据切片分组 - Data Slice Group");
-        this.conceptionKindDescField.setWidthFull();
-        this.conceptionKindDescField.setRequired(true);
-        this.conceptionKindDescField.setRequiredIndicatorVisible(true);
-        this.conceptionKindDescField.setTitle("请输入数据切片分组");
-        add(conceptionKindDescField);
+        this.dataSliceNameField = new TextField("数据切片名称 - Data Slice Name");
+        this.dataSliceNameField.setWidthFull();
+        this.dataSliceNameField.setRequired(true);
+        this.dataSliceNameField.setRequiredIndicatorVisible(true);
+        this.dataSliceNameField.setTitle("请输入数据切片名称");
+        add(dataSliceNameField);
+
+        this.dataSliceGroupField = new TextField("数据切片分组 - Data Slice Group");
+        this.dataSliceGroupField.setWidthFull();
+        this.dataSliceGroupField.setRequired(true);
+        this.dataSliceGroupField.setRequiredIndicatorVisible(true);
+        this.dataSliceGroupField.setTitle("请输入数据切片分组");
+        add(dataSliceGroupField);
 
         HorizontalLayout storageModeLayout = new HorizontalLayout();
         storageModeLayout.setMargin(false);
@@ -73,7 +77,7 @@ public class CreateDataSliceView extends VerticalLayout {
         add(viewTitle2);
 
         this.dataSlicePropertiesConfigView = new DataSlicePropertiesConfigView();
-        add(dataSlicePropertiesConfigView);
+        add(this.dataSlicePropertiesConfigView);
 
         HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
         spaceDivLayout1.setWidthFull();
@@ -89,32 +93,61 @@ public class CreateDataSliceView extends VerticalLayout {
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                doCreateNewConceptionKind();
+                doCreateDataSlice();
             }
         });
     }
 
-    private void doCreateNewConceptionKind(){
-        String conceptionKindName = this.conceptionKindNameField.getValue();
-        String conceptionKindDesc = this.conceptionKindDescField.getValue();
+    private void doCreateDataSlice(){
+        String dataSliceName = this.dataSliceNameField.getValue();
+        String dataSliceGroup = this.dataSliceGroupField.getValue();
         boolean inputValidateResult = true;
-        if(conceptionKindName.equals("")){
+        if(dataSliceName.equals("")){
             inputValidateResult = false;
-            this.conceptionKindNameField.setInvalid(true);
+            this.dataSliceNameField.setInvalid(true);
         }
-        if(conceptionKindDesc.equals("")){
+        if(dataSliceGroup.equals("")){
             inputValidateResult = false;
-            this.conceptionKindDescField.setInvalid(true);
+            this.dataSliceGroupField.setInvalid(true);
         }
+        Collection<DataSlicePropertyValueObject> dataSlicePropertyValueObjectsCollection = this.dataSlicePropertiesConfigView.getDataSlicePropertyValueObjects();
+        if(dataSlicePropertyValueObjectsCollection == null || dataSlicePropertyValueObjectsCollection.size() == 0){
+            inputValidateResult = false;
+        }
+
+
         if(inputValidateResult){
             hideErrorMessage();
+
+            ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
+            try {
+                Set<DataSliceMetaInfo> dataSliceMetaInfoSet = targetComputeGrid.listDataSlice();
+                if(dataSliceMetaInfoSet != null){
+                    for(DataSliceMetaInfo currentDataSliceMetaInfo : dataSliceMetaInfoSet){
+                        if(dataSliceName.toUpperCase().equals(currentDataSliceMetaInfo.getDataSliceName().toUpperCase())){
+                            showErrorMessage("数据切片 "+dataSliceName+" 已经存在");
+                            return;
+                        }
+                    }
+                }
+            } catch (ComputeGridException e) {
+                throw new RuntimeException(e);
+            }
+
+
+
+
+
+
+
+            /*
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKindName);
+            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(dataSliceName);
             if(targetConceptionKind != null){
-                this.conceptionKindNameField.setInvalid(true);
-                showErrorMessage("概念类型 "+conceptionKindName+" 已经存在");
+                this.dataSliceNameField.setInvalid(true);
+                showErrorMessage("概念类型 "+dataSliceName+" 已经存在");
             }else{
-                targetConceptionKind = coreRealm.createConceptionKind(conceptionKindName,conceptionKindDesc);
+                targetConceptionKind = coreRealm.createConceptionKind(dataSliceName,dataSliceGroup);
                 if(targetConceptionKind != null){
                     ConceptionKindCreatedEvent conceptionKindCreatedEvent = new ConceptionKindCreatedEvent();
                     conceptionKindCreatedEvent.setConceptionKindName(targetConceptionKind.getConceptionKindName());
@@ -127,12 +160,16 @@ public class CreateDataSliceView extends VerticalLayout {
                     if(this.containerDialog != null){
                         this.containerDialog.close();
                     }
-                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKindName+" 创建成功", NotificationVariant.LUMO_SUCCESS);
+                    CommonUIOperationUtil.showPopupNotification("概念类型 "+dataSliceName+" 创建成功", NotificationVariant.LUMO_SUCCESS);
                 }
             }
+            */
+
+
+
         }else{
-            showErrorMessage("请输入概念类型名称和概念类型描述");
-            CommonUIOperationUtil.showPopupNotification("概念类型信息输入错误",NotificationVariant.LUMO_ERROR);
+            showErrorMessage("请输入数据切片名称，数据切片分组和至少一项数据切片属性");
+            CommonUIOperationUtil.showPopupNotification("数据切片信息输入错误",NotificationVariant.LUMO_ERROR);
         }
     }
 
