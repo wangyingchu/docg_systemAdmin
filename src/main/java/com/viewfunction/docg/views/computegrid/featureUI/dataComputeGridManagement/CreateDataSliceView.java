@@ -66,6 +66,7 @@ public class CreateDataSliceView extends VerticalLayout {
         dataStorageModeList.add("Grid");
         dataStorageModeList.add("PerUnit");
         dataStorageModeRadioButtonGroup.setItems(dataStorageModeList);
+        dataStorageModeRadioButtonGroup.setValue("Grid");
         storageModeLayout.add(dataStorageModeRadioButtonGroup);
 
         H6 viewTitle2 = new H6("数据切片属性");
