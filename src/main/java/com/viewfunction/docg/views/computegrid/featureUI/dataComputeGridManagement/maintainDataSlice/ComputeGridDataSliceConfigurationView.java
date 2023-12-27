@@ -195,11 +195,11 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
             }
         });
 
-        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(dataSliceMetaInfo -> {
             Icon queryIcon = new Icon(VaadinIcon.RECORDS);
             queryIcon.setSize("20px");
             Button queryDataSliceButton = new Button(queryIcon, event -> {
-
+                renderQueryDataSliceUI((DataSliceMetaInfo)dataSliceMetaInfo);
             });
             queryDataSliceButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             queryDataSliceButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -213,7 +213,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
             cleanDataSliceButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-
+                    renderEmptyDataSliceUI((DataSliceMetaInfo)dataSliceMetaInfo);
                 }
             });
             cleanDataSliceButton.setTooltipText("清除数据切片所有数据");
@@ -227,7 +227,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
             removeDataSliceButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-
+                    renderRemoveDataSliceUI((DataSliceMetaInfo)dataSliceMetaInfo);
                 }
             });
             removeDataSliceButton.setTooltipText("删除数据切片");
@@ -486,6 +486,12 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
         createDataSliceView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
+
+    private void renderQueryDataSliceUI(DataSliceMetaInfo dataSliceMetaInfo){}
+
+    private void renderEmptyDataSliceUI(DataSliceMetaInfo dataSliceMetaInfo){}
+
+    private void renderRemoveDataSliceUI(DataSliceMetaInfo dataSliceMetaInfo){}
 
     @Override
     public void receivedDataSliceCreatedEvent(DataSliceCreatedEvent event) {

@@ -16,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
@@ -56,7 +57,7 @@ public class DataSlicePropertiesConfigView extends VerticalLayout {
             Icon removeIcon = new Icon(VaadinIcon.ERASER);
             removeIcon.setSize("20px");
             Button removeItemButton = new Button(removeIcon, event -> {
-
+                removeProperty((DataSlicePropertyValueObject)dataSlicePropertyValueObject);
             });
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -127,8 +128,15 @@ public class DataSlicePropertiesConfigView extends VerticalLayout {
     }
 
     public Collection<DataSlicePropertyValueObject> getDataSlicePropertyValueObjects(){
-        ListDataProvider dataProvider=(ListDataProvider)dataSlicePropertyGrid.getDataProvider();
+        ListDataProvider dataProvider = (ListDataProvider)dataSlicePropertyGrid.getDataProvider();
         Collection<DataSlicePropertyValueObject> currentDataSlicePropertyValueObjectCollection = dataProvider.getItems();
         return currentDataSlicePropertyValueObjectCollection;
+    }
+
+    private void removeProperty(DataSlicePropertyValueObject dataSlicePropertyValueObject){
+        ListDataProvider dataProvider = (ListDataProvider)dataSlicePropertyGrid.getDataProvider();
+        dataProvider.getItems().remove(dataSlicePropertyValueObject);
+        dataProvider.refreshAll();
+        CommonUIOperationUtil.showPopupNotification("删除属性 "+dataSlicePropertyValueObject.getPropertyName()+ " 成功", NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
     }
 }
