@@ -23,6 +23,7 @@ import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
+import com.viewfunction.docg.dataCompute.computeServiceCore.internal.ignite.ComputeGridObserver;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
@@ -489,9 +490,71 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
 
     private void renderQueryDataSliceUI(DataSliceMetaInfo dataSliceMetaInfo){}
 
-    private void renderEmptyDataSliceUI(DataSliceMetaInfo dataSliceMetaInfo){}
+    private void renderEmptyDataSliceUI(DataSliceMetaInfo dataSliceMetaInfo){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认清除数据",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
 
-    private void renderRemoveDataSliceUI(DataSliceMetaInfo dataSliceMetaInfo){}
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"清除数据切片数据",
+                "请确认清除数据切片 "+ dataSliceMetaInfo.getDataSliceName()+" 中的所有数据",actionButtonList,550,175);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                try(ComputeGridObserver computeGridObserver = ComputeGridObserver.getObserverInstance()) {
+                    computeGridObserver.emptyDataSlice(dataSliceMetaInfo.getDataSliceName());
+                    CommonUIOperationUtil.showPopupNotification("清除数据切片 "+dataSliceMetaInfo.getDataSliceName()+" 中的所有数据成功", NotificationVariant.LUMO_SUCCESS);
+                    confirmWindow.closeConfirmWindow();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void renderRemoveDataSliceUI(DataSliceMetaInfo dataSliceMetaInfo){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认删除数据切片",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"删除数据切片",
+                "请确认删除数据切片 "+ dataSliceMetaInfo.getDataSliceName(),actionButtonList,550,175);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                try(ComputeGridObserver computeGridObserver = ComputeGridObserver.getObserverInstance()) {
+                    computeGridObserver.eraseDataSlice(dataSliceMetaInfo.getDataSliceName());
+                    CommonUIOperationUtil.showPopupNotification("删除数据切片 "+dataSliceMetaInfo.getDataSliceName()+" 成功", NotificationVariant.LUMO_SUCCESS);
+                    confirmWindow.closeConfirmWindow();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
 
     @Override
     public void receivedDataSliceCreatedEvent(DataSliceCreatedEvent event) {
