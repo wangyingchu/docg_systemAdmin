@@ -346,6 +346,8 @@ public class MainLayout extends AppLayout {
                 GeospatialRegionRefreshEvent.class);
         _BLACKBOARD.register(UserLockApplicationEvent.UserApplicationLogoutListener.class,
                 UserLockApplicationEvent.class);
+        _BLACKBOARD.register(DataSliceCreatedEvent.DataSliceCreatedListener.class,
+                DataSliceCreatedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

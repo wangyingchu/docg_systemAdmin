@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
@@ -29,16 +30,16 @@ import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSliceProper
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.eventHandling.DataSliceCreatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.CreateDataSliceView;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
+public class ComputeGridDataSliceConfigurationView extends VerticalLayout implements
+        DataSliceCreatedEvent.DataSliceCreatedListener {
 
     private NumberFormat numberFormat;
     private PrimaryKeyValueDisplayItem gridDataSlicesCountDisplayItem;
@@ -355,6 +356,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             dataSliceMetaInfoGrid.setHeight(event.getHeight()-385,Unit.PIXELS);
@@ -373,6 +375,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
     protected void onDetach(DetachEvent detachEvent) {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
         super.onDetach(detachEvent);
     }
 
@@ -464,5 +467,14 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout {
         fixSizeWindow.setModel(true);
         createDataSliceView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    @Override
+    public void receivedDataSliceCreatedEvent(DataSliceCreatedEvent event) {
+        if(event.getDataSliceMetaInfo() != null){
+            ListDataProvider dataProvider = (ListDataProvider)dataSliceMetaInfoGrid.getDataProvider();
+            dataProvider.getItems().add(event.getDataSliceMetaInfo());
+            dataProvider.refreshAll();
+        }
     }
 }

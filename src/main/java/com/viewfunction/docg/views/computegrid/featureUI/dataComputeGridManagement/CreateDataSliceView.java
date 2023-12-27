@@ -19,9 +19,9 @@ import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGri
 import com.viewfunction.docg.dataCompute.computeServiceCore.internal.ignite.ComputeGridObserver;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
-import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlice;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
+import com.viewfunction.docg.element.eventHandling.DataSliceCreatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 
@@ -33,6 +33,7 @@ public class CreateDataSliceView extends VerticalLayout {
     private TextField dataSliceNameField;
     private TextField dataSliceGroupField;
     private DataSlicePropertiesConfigView dataSlicePropertiesConfigView;
+    private RadioButtonGroup<String> dataStorageModeRadioButtonGroup;
 
     public CreateDataSliceView(){
         this.setWidthFull();
@@ -67,7 +68,7 @@ public class CreateDataSliceView extends VerticalLayout {
 
         RadioButtonGroup<String> dataStorageModeRadioButtonGroupLabel = new RadioButtonGroup<>("数据存储类型");
         storageModeLayout.add(dataStorageModeRadioButtonGroupLabel);
-        RadioButtonGroup<String> dataStorageModeRadioButtonGroup = new RadioButtonGroup<>();
+        dataStorageModeRadioButtonGroup = new RadioButtonGroup<>();
         dataStorageModeRadioButtonGroup.addThemeVariants(RadioGroupVariant.LUMO_HELPER_ABOVE_FIELD);
         List<String> dataStorageModeList = new ArrayList<>();
         dataStorageModeList.add("Grid");
@@ -104,6 +105,7 @@ public class CreateDataSliceView extends VerticalLayout {
     private void doCreateDataSlice(){
         String dataSliceName = this.dataSliceNameField.getValue();
         String dataSliceGroup = this.dataSliceGroupField.getValue();
+        String storageMode = dataStorageModeRadioButtonGroup.getValue();
         boolean inputValidateResult = true;
         if(dataSliceName.equals("")){
             inputValidateResult = false;
@@ -118,10 +120,8 @@ public class CreateDataSliceView extends VerticalLayout {
             inputValidateResult = false;
         }
 
-
         if(inputValidateResult){
             hideErrorMessage();
-
             ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
             try {
                 Set<DataSliceMetaInfo> dataSliceMetaInfoSet = targetComputeGrid.listDataSlice();
@@ -136,9 +136,7 @@ public class CreateDataSliceView extends VerticalLayout {
             } catch (ComputeGridException e) {
                 throw new RuntimeException(e);
             }
-
-            try {
-                ComputeGridObserver computeGridObserver = ComputeGridObserver.getObserverInstance();
+            try(ComputeGridObserver computeGridObserver = ComputeGridObserver.getObserverInstance()) {
                 Map<String, DataSlicePropertyType> dataSlicePropertyMap = new HashMap<>();
                 List<String> pkList = new ArrayList<>();
                 for(DataSlicePropertyValueObject currentDataSlicePropertyValueObject:dataSlicePropertyValueObjectsCollection){
@@ -148,38 +146,27 @@ public class CreateDataSliceView extends VerticalLayout {
                     }
                 }
 
-                DataSlice targetDataSlice = computeGridObserver.createGridDataSlice(dataSliceName, dataSliceGroup,dataSlicePropertyMap,pkList);
-                computeGridObserver.close();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            /*
-            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(dataSliceName);
-            if(targetConceptionKind != null){
-                this.dataSliceNameField.setInvalid(true);
-                showErrorMessage("概念类型 "+dataSliceName+" 已经存在");
-            }else{
-                targetConceptionKind = coreRealm.createConceptionKind(dataSliceName,dataSliceGroup);
-                if(targetConceptionKind != null){
-                    ConceptionKindCreatedEvent conceptionKindCreatedEvent = new ConceptionKindCreatedEvent();
-                    conceptionKindCreatedEvent.setConceptionKindName(targetConceptionKind.getConceptionKindName());
-                    conceptionKindCreatedEvent.setConceptionKindDesc(targetConceptionKind.getConceptionKindDesc());
-                    conceptionKindCreatedEvent.setCreateDateTime(targetConceptionKind.getCreateDateTime());
-                    conceptionKindCreatedEvent.setLastModifyDateTime(targetConceptionKind.getLastModifyDateTime());
-                    conceptionKindCreatedEvent.setCreatorId(targetConceptionKind.getCreatorId());
-                    conceptionKindCreatedEvent.setDataOrigin(targetConceptionKind.getDataOrigin());
-                    ResourceHolder.getApplicationBlackboard().fire(conceptionKindCreatedEvent);
+                DataSliceMetaInfo targetDataSlice = null;
+                if(storageMode.equals("Grid")){
+                    targetDataSlice = computeGridObserver.createGridDataSlice(dataSliceName, dataSliceGroup,dataSlicePropertyMap,pkList);
+                }else if(storageMode.equals("PerUnit")){
+                    targetDataSlice = computeGridObserver.createPerUnitDataSlice(dataSliceName, dataSliceGroup,dataSlicePropertyMap,pkList);
+                }
+
+                if(targetDataSlice != null & targetDataSlice.getDataSliceName().equals(dataSliceName)){
+                    DataSliceCreatedEvent dataSliceCreatedEvent = new DataSliceCreatedEvent();
+                    dataSliceCreatedEvent.setDataSliceName(targetDataSlice.getDataSliceName());
+                    dataSliceCreatedEvent.setDataSliceGroup(targetDataSlice.getSliceGroupName());
+                    dataSliceCreatedEvent.setDataSliceMetaInfo(targetDataSlice);
+                    ResourceHolder.getApplicationBlackboard().fire(dataSliceCreatedEvent);
                     if(this.containerDialog != null){
                         this.containerDialog.close();
                     }
-                    CommonUIOperationUtil.showPopupNotification("概念类型 "+dataSliceName+" 创建成功", NotificationVariant.LUMO_SUCCESS);
+                    CommonUIOperationUtil.showPopupNotification("数据切片 "+dataSliceName+" 创建成功", NotificationVariant.LUMO_SUCCESS);
                 }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-            */
-
-
-
         }else{
             showErrorMessage("请输入数据切片名称，数据切片分组和至少一项数据切片属性");
             CommonUIOperationUtil.showPopupNotification("数据切片信息输入错误",NotificationVariant.LUMO_ERROR);
