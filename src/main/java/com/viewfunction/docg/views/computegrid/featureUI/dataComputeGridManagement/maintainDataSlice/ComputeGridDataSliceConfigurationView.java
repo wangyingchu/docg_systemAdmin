@@ -59,6 +59,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
     private SecondaryKeyValueDisplayItem sliceStorageModeDisplayItem;
     private TextField dataSliceNameFilterField;
     private TextField dataSliceGroupFilterField;
+    private int currentDataSliceCount;
 
     private class DataSlicePropertyDefinitionVO{
         private String propertyName;
@@ -419,47 +420,60 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
                 }
                 return dataSliceNameFilterResult & dataSliceGroupFilterResult;
             });
-            this.gridDataSlicesCountDisplayItem.updateDisplayValue(this.numberFormat.format(dataSliceMetaInfoSet.size()));
+            this.currentDataSliceCount = dataSliceMetaInfoSet.size();
+            this.gridDataSlicesCountDisplayItem.updateDisplayValue(this.numberFormat.format(this.currentDataSliceCount));
         } catch (ComputeGridException e) {
             //throw new RuntimeException(e);
         }
     }
 
     private void renderDataSliceOverview(DataSliceMetaInfo dataSliceMetaInfo){
-        String dataSliceName = dataSliceMetaInfo.getDataSliceName();
-        dataSliceInfoActionBar.updateTitleContent(dataSliceName);
-        ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
-        try {
-            DataSliceDetailInfo dataSliceDetailInfo = targetComputeGrid.getDataSliceDetail(dataSliceName);
-            if(dataSliceDetailInfo != null){
-                groupNameDisplayItem.updateDisplayValue(dataSliceDetailInfo.getSliceGroupName());
-                primaryDataCountDisplayItem.updateDisplayValue(numberFormat.format(dataSliceDetailInfo.getPrimaryDataCount()));
-                backupDataCountDisplayItem.updateDisplayValue(numberFormat.format(dataSliceDetailInfo.getBackupDataCount()));
-                totalDataCountDisplayItem.updateDisplayValue(numberFormat.format(dataSliceDetailInfo.getTotalDataCount()));
-                sliceAtomicityDisplayItem.updateDisplayValue(dataSliceDetailInfo.getAtomicityMode().toString());
-                backupNumberDisplayItem.updateDisplayValue(""+dataSliceDetailInfo.getStoreBackupNumber());
-                sliceStorageModeDisplayItem.updateDisplayValue(dataSliceDetailInfo.getDataStoreMode().toString());
+        if(dataSliceMetaInfo != null){
+            String dataSliceName = dataSliceMetaInfo.getDataSliceName();
+            dataSliceInfoActionBar.updateTitleContent(dataSliceName);
+            ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
+            try {
+                DataSliceDetailInfo dataSliceDetailInfo = targetComputeGrid.getDataSliceDetail(dataSliceName);
+                if(dataSliceDetailInfo != null){
+                    groupNameDisplayItem.updateDisplayValue(dataSliceDetailInfo.getSliceGroupName());
+                    primaryDataCountDisplayItem.updateDisplayValue(numberFormat.format(dataSliceDetailInfo.getPrimaryDataCount()));
+                    backupDataCountDisplayItem.updateDisplayValue(numberFormat.format(dataSliceDetailInfo.getBackupDataCount()));
+                    totalDataCountDisplayItem.updateDisplayValue(numberFormat.format(dataSliceDetailInfo.getTotalDataCount()));
+                    sliceAtomicityDisplayItem.updateDisplayValue(dataSliceDetailInfo.getAtomicityMode().toString());
+                    backupNumberDisplayItem.updateDisplayValue(""+dataSliceDetailInfo.getStoreBackupNumber());
+                    sliceStorageModeDisplayItem.updateDisplayValue(dataSliceDetailInfo.getDataStoreMode().toString());
 
-                Set<String> primaryKeyPropertiesNames = dataSliceDetailInfo.getPrimaryKeyPropertiesNames();
+                    Set<String> primaryKeyPropertiesNames = dataSliceDetailInfo.getPrimaryKeyPropertiesNames();
 
-                Map<String,DataSlicePropertyType> dataSlicePropertiesMap = dataSliceDetailInfo.getPropertiesDefinition();
-                List<DataSlicePropertyDefinitionVO> dataSlicePropertyDefinitionVOList = new ArrayList<>();
-                Set<String> propertyNameSet = dataSlicePropertiesMap.keySet();
-                for(String currentName : propertyNameSet){
-                    DataSlicePropertyDefinitionVO currentDataSlicePropertyDefinitionVO = new DataSlicePropertyDefinitionVO();
-                    currentDataSlicePropertyDefinitionVO.setPropertyName(currentName);
-                    currentDataSlicePropertyDefinitionVO.setDataSlicePropertyType(dataSlicePropertiesMap.get(currentName));
-                    if(primaryKeyPropertiesNames.contains(currentName)){
-                        currentDataSlicePropertyDefinitionVO.setPrimaryKey(true);
-                    }else{
-                        currentDataSlicePropertyDefinitionVO.setPrimaryKey(false);
+                    Map<String,DataSlicePropertyType> dataSlicePropertiesMap = dataSliceDetailInfo.getPropertiesDefinition();
+                    List<DataSlicePropertyDefinitionVO> dataSlicePropertyDefinitionVOList = new ArrayList<>();
+                    Set<String> propertyNameSet = dataSlicePropertiesMap.keySet();
+                    for(String currentName : propertyNameSet){
+                        DataSlicePropertyDefinitionVO currentDataSlicePropertyDefinitionVO = new DataSlicePropertyDefinitionVO();
+                        currentDataSlicePropertyDefinitionVO.setPropertyName(currentName);
+                        currentDataSlicePropertyDefinitionVO.setDataSlicePropertyType(dataSlicePropertiesMap.get(currentName));
+                        if(primaryKeyPropertiesNames.contains(currentName)){
+                            currentDataSlicePropertyDefinitionVO.setPrimaryKey(true);
+                        }else{
+                            currentDataSlicePropertyDefinitionVO.setPrimaryKey(false);
+                        }
+                        dataSlicePropertyDefinitionVOList.add(currentDataSlicePropertyDefinitionVO);
                     }
-                    dataSlicePropertyDefinitionVOList.add(currentDataSlicePropertyDefinitionVO);
+                    this.dataSlicePropertyDefinitionsGrid.setItems(dataSlicePropertyDefinitionVOList);
                 }
-                this.dataSlicePropertyDefinitionsGrid.setItems(dataSlicePropertyDefinitionVOList);
+            } catch (ComputeGridException e) {
+                throw new RuntimeException(e);
             }
-        } catch (ComputeGridException e) {
-            throw new RuntimeException(e);
+        }else{
+            dataSliceInfoActionBar.updateTitleContent("-");
+            groupNameDisplayItem.updateDisplayValue("-");
+            primaryDataCountDisplayItem.updateDisplayValue("-");
+            backupDataCountDisplayItem.updateDisplayValue("-");
+            totalDataCountDisplayItem.updateDisplayValue("-");
+            sliceAtomicityDisplayItem.updateDisplayValue("-");
+            backupNumberDisplayItem.updateDisplayValue("-");
+            sliceStorageModeDisplayItem.updateDisplayValue("-");
+            this.dataSlicePropertyDefinitionsGrid.setItems(new ArrayList<>());
         }
     }
 
@@ -508,6 +522,13 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 try(ComputeGridObserver computeGridObserver = ComputeGridObserver.getObserverInstance()) {
                     computeGridObserver.emptyDataSlice(dataSliceMetaInfo.getDataSliceName());
+
+                    if(lastSelectedDataSliceMetaInfo != null &&
+                            lastSelectedDataSliceMetaInfo.getDataSliceName().equals(dataSliceMetaInfo.getDataSliceName())){
+                        renderDataSliceOverview(dataSliceMetaInfo);
+                        //lastSelectedDataSliceMetaInfo = dataSliceMetaInfo;
+                    }
+
                     CommonUIOperationUtil.showPopupNotification("清除数据切片 "+dataSliceMetaInfo.getDataSliceName()+" 中的所有数据成功", NotificationVariant.LUMO_SUCCESS);
                     confirmWindow.closeConfirmWindow();
                 } catch (Exception e) {
@@ -541,6 +562,19 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 try(ComputeGridObserver computeGridObserver = ComputeGridObserver.getObserverInstance()) {
                     computeGridObserver.eraseDataSlice(dataSliceMetaInfo.getDataSliceName());
+
+                    currentDataSliceCount--;
+                    gridDataSlicesCountDisplayItem.updateDisplayValue(numberFormat.format(currentDataSliceCount));
+                    ListDataProvider dataProvider = (ListDataProvider)dataSliceMetaInfoGrid.getDataProvider();
+                    dataProvider.getItems().remove(dataSliceMetaInfo);
+                    dataProvider.refreshAll();
+
+                    if(lastSelectedDataSliceMetaInfo != null &&
+                            lastSelectedDataSliceMetaInfo.getDataSliceName().equals(dataSliceMetaInfo.getDataSliceName())){
+                        renderDataSliceOverview(null);
+                        lastSelectedDataSliceMetaInfo = null;
+                    }
+
                     CommonUIOperationUtil.showPopupNotification("删除数据切片 "+dataSliceMetaInfo.getDataSliceName()+" 成功", NotificationVariant.LUMO_SUCCESS);
                     confirmWindow.closeConfirmWindow();
                 } catch (Exception e) {
@@ -562,6 +596,8 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
             ListDataProvider dataProvider = (ListDataProvider)dataSliceMetaInfoGrid.getDataProvider();
             dataProvider.getItems().add(event.getDataSliceMetaInfo());
             dataProvider.refreshAll();
+            this.currentDataSliceCount++;
+            this.gridDataSlicesCountDisplayItem.updateDisplayValue(this.numberFormat.format(this.currentDataSliceCount));
         }
     }
 }
