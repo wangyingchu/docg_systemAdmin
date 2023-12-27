@@ -62,6 +62,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
     private class DataSlicePropertyDefinitionVO{
         private String propertyName;
         private DataSlicePropertyType dataSlicePropertyType;
+        private boolean isPrimaryKey;
 
         public String getPropertyName() {
             return propertyName;
@@ -77,6 +78,14 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
 
         public void setDataSlicePropertyType(DataSlicePropertyType dataSlicePropertyType) {
             this.dataSlicePropertyType = dataSlicePropertyType;
+        }
+
+        public boolean isPrimaryKey() {
+            return isPrimaryKey;
+        }
+
+        public void setPrimaryKey(boolean primaryKey) {
+            isPrimaryKey = primaryKey;
         }
     }
 
@@ -341,12 +350,14 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
         dataSlicePropertyDefinitionsGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         dataSlicePropertyDefinitionsGrid.addColumn(DataSlicePropertyDefinitionVO::getPropertyName).setHeader("属性名称").setKey("idx_0");
         dataSlicePropertyDefinitionsGrid.addColumn(DataSlicePropertyDefinitionVO::getDataSlicePropertyType).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("100px").setResizable(false);
+        dataSlicePropertyDefinitionsGrid.addColumn(DataSlicePropertyDefinitionVO::isPrimaryKey).setHeader("切片主键").setKey("idx_2").setFlexGrow(0).setWidth("80px").setResizable(false);
 
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
         dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.PASSWORD,"属性数据类型");
         dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
-
+        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(LineAwesomeIconsSvg.KEY_SOLID.create(),"切片主键");
+        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         rightSideLayout.add(dataSlicePropertyDefinitionsGrid);
 
         VerticalLayout spaceHolderLayout = new VerticalLayout();
@@ -428,6 +439,8 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
                 backupNumberDisplayItem.updateDisplayValue(""+dataSliceDetailInfo.getStoreBackupNumber());
                 sliceStorageModeDisplayItem.updateDisplayValue(dataSliceDetailInfo.getDataStoreMode().toString());
 
+                Set<String> primaryKeyPropertiesNames = dataSliceDetailInfo.getPrimaryKeyPropertiesNames();
+
                 Map<String,DataSlicePropertyType> dataSlicePropertiesMap = dataSliceDetailInfo.getPropertiesDefinition();
                 List<DataSlicePropertyDefinitionVO> dataSlicePropertyDefinitionVOList = new ArrayList<>();
                 Set<String> propertyNameSet = dataSlicePropertiesMap.keySet();
@@ -435,6 +448,11 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
                     DataSlicePropertyDefinitionVO currentDataSlicePropertyDefinitionVO = new DataSlicePropertyDefinitionVO();
                     currentDataSlicePropertyDefinitionVO.setPropertyName(currentName);
                     currentDataSlicePropertyDefinitionVO.setDataSlicePropertyType(dataSlicePropertiesMap.get(currentName));
+                    if(primaryKeyPropertiesNames.contains(currentName)){
+                        currentDataSlicePropertyDefinitionVO.setPrimaryKey(true);
+                    }else{
+                        currentDataSlicePropertyDefinitionVO.setPrimaryKey(false);
+                    }
                     dataSlicePropertyDefinitionVOList.add(currentDataSlicePropertyDefinitionVO);
                 }
                 this.dataSlicePropertyDefinitionsGrid.setItems(dataSlicePropertyDefinitionVOList);
