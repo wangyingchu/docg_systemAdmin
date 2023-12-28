@@ -116,7 +116,7 @@ public class CreateDataSliceView extends VerticalLayout {
             this.dataSliceGroupField.setInvalid(true);
         }
         Collection<DataSlicePropertyValueObject> dataSlicePropertyValueObjectsCollection = this.dataSlicePropertiesConfigView.getDataSlicePropertyValueObjects();
-        if(dataSlicePropertyValueObjectsCollection == null || dataSlicePropertyValueObjectsCollection.size() == 0){
+        if(dataSlicePropertyValueObjectsCollection == null || dataSlicePropertyValueObjectsCollection.size() < 2){
             inputValidateResult = false;
         }
 
@@ -147,6 +147,7 @@ public class CreateDataSliceView extends VerticalLayout {
                 }
 
                 DataSliceMetaInfo targetDataSlice = null;
+
                 if(storageMode.equals("Grid")){
                     targetDataSlice = computeGridObserver.createGridDataSlice(dataSliceName, dataSliceGroup,dataSlicePropertyMap,pkList);
                 }else if(storageMode.equals("PerUnit")){
@@ -165,10 +166,11 @@ public class CreateDataSliceView extends VerticalLayout {
                     CommonUIOperationUtil.showPopupNotification("数据切片 "+dataSliceName+" 创建成功", NotificationVariant.LUMO_SUCCESS);
                 }
             } catch (Exception e) {
+                CommonUIOperationUtil.showPopupNotification("创建数据切片异常: "+e.getMessage(), NotificationVariant.LUMO_ERROR);
                 throw new RuntimeException(e);
             }
         }else{
-            showErrorMessage("请输入数据切片名称，数据切片分组和至少一项数据切片属性");
+            showErrorMessage("请输入数据切片名称，数据切片分组和至少两项数据切片属性(必须包含一项非主键属性)");
             CommonUIOperationUtil.showPopupNotification("数据切片信息输入错误",NotificationVariant.LUMO_ERROR);
         }
     }
