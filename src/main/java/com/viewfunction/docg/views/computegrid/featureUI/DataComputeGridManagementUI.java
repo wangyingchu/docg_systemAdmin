@@ -27,6 +27,7 @@ import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.eventHandling.ComputeGridRefreshEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.GridRuntimeInfoWidget;
@@ -37,7 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class DataComputeGridManagementUI extends VerticalLayout {
+public class DataComputeGridManagementUI extends VerticalLayout implements
+        ComputeGridRefreshEvent.ComputeGridRefreshEventListener{
 
     private Registration listener;
     private VerticalLayout leftSideContentContainerLayout;
@@ -54,6 +56,8 @@ public class DataComputeGridManagementUI extends VerticalLayout {
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
+            ComputeGridRefreshEvent computeGridRefreshEvent = new ComputeGridRefreshEvent();
+            ResourceHolder.getApplicationBlackboard().fire(computeGridRefreshEvent);
         });
 
         List<Component> buttonList = new ArrayList<>();
@@ -201,6 +205,7 @@ public class DataComputeGridManagementUI extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             this.leftSideContentContainerLayout.setHeight(event.getHeight()-170,Unit.PIXELS);
@@ -222,7 +227,7 @@ public class DataComputeGridManagementUI extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     private HorizontalLayout generateKindConfigurationTabTitle(Icon tabIcon, String tabTitleTxt){
@@ -250,5 +255,10 @@ public class DataComputeGridManagementUI extends VerticalLayout {
         } catch (ComputeGridException e) {
             CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据计算网格", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
         }
+    }
+
+    @Override
+    public void receivedComputeGridRefreshEvent(ComputeGridRefreshEvent event) {
+        checkComputeGridStatusInfo();
     }
 }

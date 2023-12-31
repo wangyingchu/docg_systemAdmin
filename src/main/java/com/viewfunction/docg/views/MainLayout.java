@@ -348,6 +348,8 @@ public class MainLayout extends AppLayout {
                 UserLockApplicationEvent.class);
         _BLACKBOARD.register(DataSliceCreatedEvent.DataSliceCreatedListener.class,
                 DataSliceCreatedEvent.class);
+        _BLACKBOARD.register(ComputeGridRefreshEvent.ComputeGridRefreshEventListener.class,
+                ComputeGridRefreshEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

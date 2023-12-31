@@ -31,6 +31,7 @@ import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSliceProper
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.eventHandling.ComputeGridRefreshEvent;
 import com.viewfunction.docg.element.eventHandling.DataSliceCreatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
@@ -40,7 +41,8 @@ import java.text.NumberFormat;
 import java.util.*;
 
 public class ComputeGridDataSliceConfigurationView extends VerticalLayout implements
-        DataSliceCreatedEvent.DataSliceCreatedListener {
+        DataSliceCreatedEvent.DataSliceCreatedListener,
+        ComputeGridRefreshEvent.ComputeGridRefreshEventListener {
 
     private NumberFormat numberFormat;
     private PrimaryKeyValueDisplayItem gridDataSlicesCountDisplayItem;
@@ -599,5 +601,11 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
             this.currentDataSliceCount++;
             this.gridDataSlicesCountDisplayItem.updateDisplayValue(this.numberFormat.format(this.currentDataSliceCount));
         }
+    }
+
+    @Override
+    public void receivedComputeGridRefreshEvent(ComputeGridRefreshEvent event) {
+        renderGridDateSlicesInfo();
+        renderDataSliceOverview(null);
     }
 }
