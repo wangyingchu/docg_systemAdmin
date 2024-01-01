@@ -106,6 +106,7 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
         Button showFirstStartedUnitInfoButton = new Button();
         showFirstStartedUnitInfoButton.setIcon(VaadinIcon.EYE.create());
         showFirstStartedUnitInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_ICON);
+        showFirstStartedUnitInfoButton.setTooltipText("显示计算单元详情");
         statusInfoContainer3.add(showFirstStartedUnitInfoButton);
 
         HorizontalLayout statusInfoContainer4 = new HorizontalLayout();
@@ -117,6 +118,7 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
         Button showLastStartedUnitInfoButton = new Button();
         showLastStartedUnitInfoButton.setIcon(VaadinIcon.EYE.create());
         showLastStartedUnitInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_ICON);
+        showLastStartedUnitInfoButton.setTooltipText("显示计算单元详情");
         statusInfoContainer4.add(showLastStartedUnitInfoButton);
 
         HorizontalLayout spaceDivLayout1 = new HorizontalLayout();

@@ -95,29 +95,18 @@ public class DataComputeGridManagementUI extends VerticalLayout implements
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
 
-            Icon queryIcon = new Icon(VaadinIcon.RECORDS);
-            queryIcon.setSize("20px");
-            Button queryConceptionKind = new Button(queryIcon, event -> {
-                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                    //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
-                }
-            });
-            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(queryConceptionKind, "查询概念类型实体");
-
-            Icon configIcon = new Icon(VaadinIcon.COG);
+            Icon configIcon = new Icon(VaadinIcon.EYE);
             configIcon.setSize("21px");
-            Button configConceptionKind = new Button(configIcon, event -> {
+            Button showComputeUnitDetail = new Button(configIcon, event -> {
                 if(entityStatisticsInfo instanceof EntityStatisticsInfo){
                     //renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
                 }
             });
-            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(configConceptionKind, "配置概念类型定义");
+            showComputeUnitDetail.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            showComputeUnitDetail.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            showComputeUnitDetail.setTooltipText("显示计算单元详情");
 
-            HorizontalLayout buttons = new HorizontalLayout(configConceptionKind);
+            HorizontalLayout buttons = new HorizontalLayout(showComputeUnitDetail);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
