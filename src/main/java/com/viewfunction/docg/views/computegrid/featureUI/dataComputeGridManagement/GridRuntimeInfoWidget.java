@@ -3,6 +3,7 @@ package com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagem
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -39,6 +40,7 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
     private SecondaryKeyValueDisplayItem totalIdelTimeInMinuteDisplayItem;
     private BulletChart bulletChart;
     private HorizontalLayout bulletChartContainer;
+    private ComputeGridRealtimeStatisticsInfo currentComputeGridRealtimeStatisticsInfo;
 
     public GridRuntimeInfoWidget(){
         this.setWidthFull();
@@ -103,7 +105,12 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
         firstComputeUnitDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer3,VaadinIcon.SERVER.create(),"最早启动计算单元:",
                 "-");
 
-        Button showFirstStartedUnitInfoButton = new Button();
+        Icon configIcon1 = new Icon(VaadinIcon.EYE);
+        Button showFirstStartedUnitInfoButton = new Button(configIcon1, event -> {
+            if(currentComputeGridRealtimeStatisticsInfo != null){
+                renderComputeUnitDetailUI(currentComputeGridRealtimeStatisticsInfo.getYoungestUnitId());
+            }
+        });
         showFirstStartedUnitInfoButton.setIcon(VaadinIcon.EYE.create());
         showFirstStartedUnitInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_ICON);
         showFirstStartedUnitInfoButton.setTooltipText("显示计算单元详情");
@@ -115,7 +122,13 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
         lastComputeUnitDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer4,VaadinIcon.SERVER.create(),"最后启动计算单元:",
                 "-");
 
-        Button showLastStartedUnitInfoButton = new Button();
+
+        Icon configIcon2 = new Icon(VaadinIcon.EYE);
+        Button showLastStartedUnitInfoButton = new Button(configIcon2, event -> {
+            if(currentComputeGridRealtimeStatisticsInfo != null){
+                renderComputeUnitDetailUI(currentComputeGridRealtimeStatisticsInfo.getOldestUnitId());
+            }
+        });
         showLastStartedUnitInfoButton.setIcon(VaadinIcon.EYE.create());
         showLastStartedUnitInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_ICON);
         showLastStartedUnitInfoButton.setTooltipText("显示计算单元详情");
@@ -168,6 +181,7 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
     public void refreshRuntimeInfo(ComputeGridRealtimeStatisticsInfo computeGridRealtimeStatisticsInfo){
         if(computeGridRealtimeStatisticsInfo != null) {
             if(computeGridRealtimeStatisticsInfo.getGridStartTime() != null){
+                this.currentComputeGridRealtimeStatisticsInfo = computeGridRealtimeStatisticsInfo;
                 gridStartDatetimeDisplayItem.updateDisplayValue(computeGridRealtimeStatisticsInfo.getGridStartTime().format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
                 gridUpTimeInSecondDisplayItem.updateDisplayValue(""+computeGridRealtimeStatisticsInfo.getGridUpTimeInMinute());
                 totalAvailableCPUCoresDisplayItem.updateDisplayValue(""+computeGridRealtimeStatisticsInfo.getTotalAvailableCPUCores());
@@ -203,5 +217,8 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
             }
             infoSampleDateDisplayItem.updateDisplayValue(new Date().toInstant().atZone(id).format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
         }
+    }
+
+    private void renderComputeUnitDetailUI(String dataComputeUnitID){
     }
 }

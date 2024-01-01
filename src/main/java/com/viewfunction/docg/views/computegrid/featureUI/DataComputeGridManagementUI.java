@@ -16,13 +16,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.shared.Registration;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.ComputeGridRealtimeStatisticsInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataComputeUnitMetaInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
+import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
@@ -32,7 +32,6 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.GridRuntimeInfoWidget;
 import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.maintainDataSlice.ComputeGridDataSliceConfigurationView;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,14 +92,12 @@ public class DataComputeGridManagementUI extends VerticalLayout implements
         SecondaryTitleActionBar gridUnitsActionBar = new SecondaryTitleActionBar(gridUnitsIcon,"网格计算单元",null,null);
         leftSideContentContainerLayout.add(gridUnitsActionBar);
 
-        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(dataComputeUnitMetaInfo -> {
 
             Icon configIcon = new Icon(VaadinIcon.EYE);
             configIcon.setSize("21px");
             Button showComputeUnitDetail = new Button(configIcon, event -> {
-                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                    //renderConceptionKindConfigurationUI((EntityStatisticsInfo)entityStatisticsInfo);
-                }
+                renderComputeUnitDetailUI((DataComputeUnitMetaInfo)dataComputeUnitMetaInfo);
             });
             showComputeUnitDetail.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             showComputeUnitDetail.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -187,8 +184,8 @@ public class DataComputeGridManagementUI extends VerticalLayout implements
         rightSideContentContainerLayout.setFlexGrow(1,gridConfigurationTabSheet);
 
         computeGridDataSliceConfigurationView = new ComputeGridDataSliceConfigurationView();
-        gridConfigurationTabSheet.add(generateKindConfigurationTabTitle(LineAwesomeIconsSvg.BUFFER.create(),"网格数据切片配置"), computeGridDataSliceConfigurationView);
-        gridConfigurationTabSheet.add(generateKindConfigurationTabTitle(LineAwesomeIconsSvg.COGS_SOLID.create(),"网格计算服务配置"),new HorizontalLayout());
+        gridConfigurationTabSheet.add(generateConfigurationTabTitle(LineAwesomeIconsSvg.BUFFER.create(),"网格数据切片配置"), computeGridDataSliceConfigurationView);
+        gridConfigurationTabSheet.add(generateConfigurationTabTitle(LineAwesomeIconsSvg.COGS_SOLID.create(),"网格计算服务配置"),new HorizontalLayout());
     }
 
     @Override
@@ -219,11 +216,10 @@ public class DataComputeGridManagementUI extends VerticalLayout implements
         ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
-    private HorizontalLayout generateKindConfigurationTabTitle(Icon tabIcon, String tabTitleTxt){
+    private HorizontalLayout generateConfigurationTabTitle(Icon tabIcon, String tabTitleTxt){
         HorizontalLayout  kindConfigTabLayout = new HorizontalLayout();
         kindConfigTabLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         kindConfigTabLayout.setHeight(26,Unit.PIXELS);
-        //Icon configTabIcon = new Icon(tabIcon);
         tabIcon.setSize("12px");
         NativeLabel configTabLabel = new NativeLabel(" "+tabTitleTxt);
         configTabLabel.getStyle()
@@ -244,6 +240,12 @@ public class DataComputeGridManagementUI extends VerticalLayout implements
         } catch (ComputeGridException e) {
             CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据计算网格", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
         }
+    }
+
+    private void renderComputeUnitDetailUI(DataComputeUnitMetaInfo dataComputeUnitMetaInfo){
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念类型实体数据查询",null,null,true);
+        //fullScreenWindow.setWindowContent(conceptionKindQueryUI);
+        fullScreenWindow.show();
     }
 
     @Override
