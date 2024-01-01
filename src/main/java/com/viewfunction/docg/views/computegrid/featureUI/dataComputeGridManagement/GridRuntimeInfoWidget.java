@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.ComputeGridRealtimeStatisticsInfo;
+import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.chart.BulletChart;
@@ -220,5 +221,8 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
     }
 
     private void renderComputeUnitDetailUI(String dataComputeUnitID){
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念类型实体数据查询",null,null,true);
+        //fullScreenWindow.setWindowContent(conceptionKindQueryUI);
+        fullScreenWindow.show();
     }
 }
