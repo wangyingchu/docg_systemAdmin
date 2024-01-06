@@ -53,7 +53,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout {
         List<Component> secTitleElementsList = new ArrayList<>();
         List<Component> buttonList = new ArrayList<>();
 
-        Button attachAttributesViewKindButton= new Button("创建新的关联关系附着规则类型");
+        Button attachAttributesViewKindButton= new Button("创建关联关系附着规则类型");
         attachAttributesViewKindButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
         attachAttributesViewKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         attachAttributesViewKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -64,7 +64,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout {
         });
         buttonList.add(attachAttributesViewKindButton);
 
-        Button refreshAttributesViewKindsButton = new Button("刷新关联的关系附着规则类型信息",new Icon(VaadinIcon.REFRESH));
+        Button refreshAttributesViewKindsButton = new Button("刷新关联关系附着规则信息",new Icon(VaadinIcon.REFRESH));
         refreshAttributesViewKindsButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         refreshAttributesViewKindsButton.addClickListener((ClickEvent<Button> click) ->{
             //refreshAttributesViewKindsInfo();
@@ -161,11 +161,10 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout {
 
     private void renderCreateRelationAttachKindViewUI(){
         CreateRelationAttachKindView createRelationAttachKindView = new CreateRelationAttachKindView();
-
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加属性视图类型",null,true,490,200,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建关系附着规则类型",null,true,490,520,false);
         fixSizeWindow.setWindowContent(createRelationAttachKindView);
         fixSizeWindow.setModel(true);
-        //attachNewAttributesViewKindView.setContainerDialog(fixSizeWindow);
+        createRelationAttachKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 }
