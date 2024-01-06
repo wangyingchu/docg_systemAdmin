@@ -109,6 +109,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             this.conceptionKindEntitiesConfigurationView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -100);
             this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -75);
             this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewWidth(event.getWidth()-820);
+            this.relationAttachKindsConfigurationView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -75);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -117,6 +118,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             this.conceptionKindEntitiesConfigurationView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -100);
             this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -75);
             this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewWidth(receiver.getBodyClientWidth()-820);
+            this.relationAttachKindsConfigurationView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -75);
         }));
         renderKindCorrelationInfoTabContent();
         ResourceHolder.getApplicationBlackboard().addListener(this);

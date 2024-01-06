@@ -6,20 +6,30 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationAttachKind;
+import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class RelationAttachKindsConfigurationView extends VerticalLayout {
 
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout rightSideContainerLayout;
+    private Grid<RelationAttachKind> relationAttachKindGrid;
+    private RelationAttachKind lastSelectedRelationAttachKind;
 
     public RelationAttachKindsConfigurationView(){
         this.setWidth(100, Unit.PERCENTAGE);
@@ -40,15 +50,6 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout {
         leftSideContainerLayout.setWidth(800,Unit.PIXELS);
 
         mainContainerLayout.add(leftSideContainerLayout);
-
-
-
-
-
-
-
-
-
 
         List<Component> secTitleElementsList = new ArrayList<>();
         List<Component> buttonList = new ArrayList<>();
@@ -74,12 +75,45 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout {
         SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TREE_TABLE),"关系附着规则类型配置管理 ",secTitleElementsList,buttonList);
         leftSideContainerLayout.add(metaConfigItemConfigActionBar);
 
+        relationAttachKindGrid = new Grid<>();
+        relationAttachKindGrid.setWidth(100,Unit.PERCENTAGE);
+        relationAttachKindGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        relationAttachKindGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
+        relationAttachKindGrid.addColumn(RelationAttachKind::getRelationAttachKindName).setHeader("规则类型名称").setKey("idx_0").setFlexGrow(1)
+                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getRelationAttachKindName());
+        relationAttachKindGrid.addColumn(RelationAttachKind::getSourceConceptionKindName).setHeader("源概念类型名称").setKey("idx_1").setFlexGrow(1)
+                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getSourceConceptionKindName());
+        relationAttachKindGrid.addColumn(RelationAttachKind::getRelationKindName).setHeader("关系类型名称").setKey("idx_2").setFlexGrow(1)
+                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getRelationKindName());
+        relationAttachKindGrid.addColumn(RelationAttachKind::getTargetConceptionKindName).setHeader("目标概念类型名称").setKey("idx_3").setFlexGrow(1)
+                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getTargetConceptionKindName());
 
+        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"规则类型名称");
+        relationAttachKindGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.LEVEL_LEFT,"源概念类型名称");
+        relationAttachKindGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.CONNECT_O.create(),"关系类型名称");
+        relationAttachKindGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.LEVEL_RIGHT,"目标概念类型名称");
+        relationAttachKindGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
 
+        relationAttachKindGrid.appendFooterRow();
+        leftSideContainerLayout.add(relationAttachKindGrid);
 
-
-
+        relationAttachKindGrid.addSelectionListener(new SelectionListener<Grid<RelationAttachKind>, RelationAttachKind>() {
+            @Override
+            public void selectionChange(SelectionEvent<Grid<RelationAttachKind>, RelationAttachKind> selectionEvent) {
+                Set<RelationAttachKind> selectedItemSet = selectionEvent.getAllSelectedItems();
+                if(selectedItemSet.size() == 0){
+                    // don't allow to unselect item, just reselect last selected item
+                    relationAttachKindGrid.select(lastSelectedRelationAttachKind);
+                }else{
+                    RelationAttachKind selectedRelationAttachKind = selectedItemSet.iterator().next();
+                    lastSelectedRelationAttachKind = selectedRelationAttachKind;
+                }
+            }
+        });
 
         rightSideContainerLayout = new VerticalLayout();
         rightSideContainerLayout.setWidth(400, Unit.PIXELS);
@@ -101,6 +135,9 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout {
         SecondaryTitleActionBar selectedAttributesViewKindTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TREE_TABLE),"-",null,null,false);
         selectedAttributesViewKindTitleActionBar.setWidth(100,Unit.PERCENTAGE);
         rightSideContainerLayout.add(selectedAttributesViewKindTitleActionBar);
+    }
 
+    public void setViewHeight(int viewHeight){
+        relationAttachKindGrid.setHeight(viewHeight-60,Unit.PIXELS);
     }
 }
