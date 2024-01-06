@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
@@ -15,10 +12,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationAttachKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,6 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout {
 
         leftSideContainerLayout = new VerticalLayout();
         leftSideContainerLayout.setWidth(800,Unit.PIXELS);
-
         mainContainerLayout.add(leftSideContainerLayout);
 
         List<Component> secTitleElementsList = new ArrayList<>();
@@ -60,7 +59,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout {
         attachAttributesViewKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAttachNewAttributesViewKindUI();
+                renderCreateRelationAttachKindViewUI();
             }
         });
         buttonList.add(attachAttributesViewKindButton);
@@ -137,7 +136,36 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout {
         rightSideContainerLayout.add(selectedAttributesViewKindTitleActionBar);
     }
 
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        //ResourceHolder.getApplicationBlackboard().addListener(this);
+        renderRelationAttachKindsInfo();
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
+
     public void setViewHeight(int viewHeight){
         relationAttachKindGrid.setHeight(viewHeight-60,Unit.PIXELS);
+    }
+
+    private void renderRelationAttachKindsInfo(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        List<RelationAttachKind>  relationAttachKindList = coreRealm.getRelationAttachKinds(null,null,null,null,null,null);
+        relationAttachKindGrid.setItems(relationAttachKindList);
+    }
+
+    private void renderCreateRelationAttachKindViewUI(){
+        CreateRelationAttachKindView createRelationAttachKindView = new CreateRelationAttachKindView();
+
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加属性视图类型",null,true,490,200,false);
+        fixSizeWindow.setWindowContent(createRelationAttachKindView);
+        fixSizeWindow.setModel(true);
+        //attachNewAttributesViewKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }
