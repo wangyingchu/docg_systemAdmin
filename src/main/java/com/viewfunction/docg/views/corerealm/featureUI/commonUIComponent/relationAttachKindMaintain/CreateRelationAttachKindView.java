@@ -18,13 +18,12 @@ import com.vaadin.flow.component.textfield.TextField;
 public class CreateRelationAttachKindView extends VerticalLayout {
     private Dialog containerDialog;
     private NativeLabel errorMessage;
-
-    private TextField conceptionKindNameField;
-    private TextField conceptionKindDescField;
-
-    private ComboBox<String> attributeKindFilterSelect;
-    private ComboBox<String> attributeKindFilterSelect2;
-    private ComboBox<String> attributeKindFilterSelect3;
+    private TextField relationAttachKindNameField;
+    private TextField relationAttachKindDescField;
+    private ComboBox<String> sourceConceptionKindFilterSelect;
+    private ComboBox<String> relationKindFilterSelect;
+    private ComboBox<String> targetConceptionKindFilterSelect;
+    private Checkbox allowRepeatableRelationKindCheckbox;
 
     public CreateRelationAttachKindView(){
 
@@ -43,43 +42,41 @@ public class CreateRelationAttachKindView extends VerticalLayout {
         errorMessageContainer.add(errorMessage);
         add(errorMessageContainer);
 
-        this.conceptionKindNameField = new TextField("关系附着规则类型名称 - RelationAttachKind Name");
-        this.conceptionKindNameField.setWidthFull();
-        this.conceptionKindNameField.setRequired(true);
-        this.conceptionKindNameField.setRequiredIndicatorVisible(true);
-        this.conceptionKindNameField.setTitle("请输入关系附着规则类型名称");
-        add(conceptionKindNameField);
+        this.relationAttachKindNameField = new TextField("关系附着规则类型名称 - RelationAttachKind Name");
+        this.relationAttachKindNameField.setWidthFull();
+        this.relationAttachKindNameField.setRequired(true);
+        this.relationAttachKindNameField.setRequiredIndicatorVisible(true);
+        this.relationAttachKindNameField.setTitle("请输入关系附着规则类型名称");
+        add(relationAttachKindNameField);
 
-        this.conceptionKindDescField = new TextField("关系附着规则类型描述 - RelationAttachKind Description");
-        this.conceptionKindDescField.setWidthFull();
-        this.conceptionKindDescField.setRequired(true);
-        this.conceptionKindDescField.setRequiredIndicatorVisible(true);
-        this.conceptionKindDescField.setTitle("请输入关系附着规则类型描述");
-        add(conceptionKindDescField);
+        this.relationAttachKindDescField = new TextField("关系附着规则类型描述 - RelationAttachKind Description");
+        this.relationAttachKindDescField.setWidthFull();
+        this.relationAttachKindDescField.setRequired(true);
+        this.relationAttachKindDescField.setRequiredIndicatorVisible(true);
+        this.relationAttachKindDescField.setTitle("请输入关系附着规则类型描述");
+        add(relationAttachKindDescField);
 
-        this.attributeKindFilterSelect = new ComboBox("关系附着规则类型描述 - RelationAttachKind Description");
-        this.attributeKindFilterSelect.setPageSize(30);
-        //this.attributeKindFilterSelect.setPlaceholder("选择要附加的属性类型");
-        this.attributeKindFilterSelect.setWidth(100, Unit.PERCENTAGE);
-        this.attributeKindFilterSelect.setRequiredIndicatorVisible(true);
-        add(this.attributeKindFilterSelect);
+        this.sourceConceptionKindFilterSelect = new ComboBox("源概念类型名称 - Source ConceptionKind Name");
+        this.sourceConceptionKindFilterSelect.setPageSize(30);
+        this.sourceConceptionKindFilterSelect.setWidth(100, Unit.PERCENTAGE);
+        this.sourceConceptionKindFilterSelect.setRequiredIndicatorVisible(true);
+        add(this.sourceConceptionKindFilterSelect);
 
-        this.attributeKindFilterSelect2 = new ComboBox("关系附着规则类型描述 - RelationAttachKind Description");
-        this.attributeKindFilterSelect2.setPageSize(30);
-        //this.attributeKindFilterSelect2.setPlaceholder("选择要附加的属性类型");
-        this.attributeKindFilterSelect2.setWidth(100, Unit.PERCENTAGE);
-        this.attributeKindFilterSelect2.setRequiredIndicatorVisible(true);
-        add(this.attributeKindFilterSelect2);
+        this.relationKindFilterSelect = new ComboBox("关系类型名称 - RelationKind Name");
+        this.relationKindFilterSelect.setPageSize(30);
+        this.relationKindFilterSelect.setWidth(100, Unit.PERCENTAGE);
+        this.relationKindFilterSelect.setRequiredIndicatorVisible(true);
+        add(this.relationKindFilterSelect);
 
-        this.attributeKindFilterSelect3 = new ComboBox("关系附着规则类型描述 - RelationAttachKind Description");
-        this.attributeKindFilterSelect3.setPageSize(30);
-        //this.attributeKindFilterSelect3.setPlaceholder("选择要附加的属性类型");
-        this.attributeKindFilterSelect3.setWidth(100, Unit.PERCENTAGE);
-        this.attributeKindFilterSelect3.setRequiredIndicatorVisible(true);
-        add(this.attributeKindFilterSelect3);
+        this.targetConceptionKindFilterSelect = new ComboBox("目标概念类型名称 - Target ConceptionKind Name");
+        this.targetConceptionKindFilterSelect.setPageSize(30);
+        this.targetConceptionKindFilterSelect.setWidth(100, Unit.PERCENTAGE);
+        this.targetConceptionKindFilterSelect.setRequiredIndicatorVisible(true);
+        add(this.targetConceptionKindFilterSelect);
 
-        Checkbox allowRepeatableRelationKind = new Checkbox("Allow repeat");
-        add(allowRepeatableRelationKind);
+        this.allowRepeatableRelationKindCheckbox = new Checkbox("允许重复创建相同类型的关系实例");
+        this.allowRepeatableRelationKindCheckbox.getStyle().set("font-size","0.75rem").set("color","var(--lumo-contrast-80pct)");
+        add(this.allowRepeatableRelationKindCheckbox);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setWidthFull();
@@ -95,7 +92,7 @@ public class CreateRelationAttachKindView extends VerticalLayout {
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
 
                 errorMessage.setVisible(false);
-                if(attributeKindFilterSelect.getValue()==null){
+                if(sourceConceptionKindFilterSelect.getValue()==null){
                     errorMessage.setText("请选择属性类型");
                     errorMessage.setVisible(true);
                 }else{
