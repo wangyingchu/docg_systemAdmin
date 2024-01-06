@@ -100,7 +100,7 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
         spaceDiv01Layout1.setHeight(10,Unit.PIXELS);
         rightSideContainerLayout.add(spaceDiv01Layout1);
 
-        SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"被选择属性视图类型概览");
+        SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"选中属性视图类型概览");
         rightSideContainerLayout.add(filterTitle);
 
         HorizontalLayout spaceDiv01Layout2 = new HorizontalLayout();
