@@ -163,6 +163,16 @@ public class CreateRelationAttachKindView extends VerticalLayout {
             this.targetConceptionKindFilterSelect.setItems(runtimeConceptionKindMetaInfoList);
             List<KindMetaInfo> runtimeRelationKindMetaInfoList = coreRealm.getRelationKindsMetaInfo();
             this.relationKindFilterSelect.setItems(runtimeRelationKindMetaInfoList);
+
+            if(this.relatedKindType.equals(RelatedKindType.RelationKind)){
+                for(KindMetaInfo currentKindMetaInfo:runtimeRelationKindMetaInfoList){
+                    if(currentKindMetaInfo.getKindName().equals(this.relatedKindName)){
+                        this.relationKindFilterSelect.setValue(currentKindMetaInfo);
+                        break;
+                    }
+                }
+                this.relationKindFilterSelect.setReadOnly(true);
+            }
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         } finally {
@@ -189,6 +199,26 @@ public class CreateRelationAttachKindView extends VerticalLayout {
     }
 
     private void doCreateRelationAttachKind(){
+        boolean isInValidInput = false;
+        errorMessage.setVisible(false);
+        switch(this.relatedKindType){
+            case RelationKind :
+                if(!this.relationKindFilterSelect.getValue().getKindName().equals(this.relatedKindName)){
+                    isInValidInput = true;
+                    errorMessage.setText("关系类型必须为: "+this.relatedKindName);
+                    errorMessage.setVisible(true);
+                }
+                break;
+            case ConceptionKind :
+                if(!this.sourceConceptionKindFilterSelect.getValue().getKindName().equals(this.relatedKindName) &
+                        !this.targetConceptionKindFilterSelect.getValue().getKindName().equals(this.relatedKindName)){
+                    isInValidInput = true;
+                    errorMessage.setText("源概念类型与目标概念类型至少一项必须为: "+this.relatedKindName);
+                    errorMessage.setVisible(true);
+                }
+        }
+        if(!isInValidInput){
 
+        }
     }
 }
