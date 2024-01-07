@@ -2,6 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relati
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -14,15 +15,24 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.LitRenderer;
+import com.vaadin.flow.data.renderer.Renderer;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+
+import java.util.List;
 
 public class CreateRelationAttachKindView extends VerticalLayout {
+
     private Dialog containerDialog;
     private NativeLabel errorMessage;
     private TextField relationAttachKindNameField;
     private TextField relationAttachKindDescField;
-    private ComboBox<String> sourceConceptionKindFilterSelect;
-    private ComboBox<String> relationKindFilterSelect;
-    private ComboBox<String> targetConceptionKindFilterSelect;
+    private ComboBox<KindMetaInfo> sourceConceptionKindFilterSelect;
+    private ComboBox<KindMetaInfo> relationKindFilterSelect;
+    private ComboBox<KindMetaInfo> targetConceptionKindFilterSelect;
     private Checkbox allowRepeatableRelationKindCheckbox;
 
     public CreateRelationAttachKindView(){
@@ -60,18 +70,48 @@ public class CreateRelationAttachKindView extends VerticalLayout {
         this.sourceConceptionKindFilterSelect.setPageSize(30);
         this.sourceConceptionKindFilterSelect.setWidth(100, Unit.PERCENTAGE);
         this.sourceConceptionKindFilterSelect.setRequiredIndicatorVisible(true);
+        this.sourceConceptionKindFilterSelect.setItemLabelGenerator(new ItemLabelGenerator<KindMetaInfo>() {
+            @Override
+            public String apply(KindMetaInfo attributeKindMetaInfo) {
+
+                String itemLabelValue = attributeKindMetaInfo.getKindName()+ " ("+
+                        attributeKindMetaInfo.getKindDesc()+")";
+                return itemLabelValue;
+            }
+        });
+        this.sourceConceptionKindFilterSelect.setRenderer(createRenderer());
         add(this.sourceConceptionKindFilterSelect);
 
         this.relationKindFilterSelect = new ComboBox("关系类型名称 - RelationKind Name");
         this.relationKindFilterSelect.setPageSize(30);
         this.relationKindFilterSelect.setWidth(100, Unit.PERCENTAGE);
         this.relationKindFilterSelect.setRequiredIndicatorVisible(true);
+        this.relationKindFilterSelect.setItemLabelGenerator(new ItemLabelGenerator<KindMetaInfo>() {
+            @Override
+            public String apply(KindMetaInfo attributeKindMetaInfo) {
+
+                String itemLabelValue = attributeKindMetaInfo.getKindName()+ " ("+
+                        attributeKindMetaInfo.getKindDesc()+")";
+                return itemLabelValue;
+            }
+        });
+        this.relationKindFilterSelect.setRenderer(createRenderer());
         add(this.relationKindFilterSelect);
 
         this.targetConceptionKindFilterSelect = new ComboBox("目标概念类型名称 - Target ConceptionKind Name");
         this.targetConceptionKindFilterSelect.setPageSize(30);
         this.targetConceptionKindFilterSelect.setWidth(100, Unit.PERCENTAGE);
         this.targetConceptionKindFilterSelect.setRequiredIndicatorVisible(true);
+        this.targetConceptionKindFilterSelect.setItemLabelGenerator(new ItemLabelGenerator<KindMetaInfo>() {
+            @Override
+            public String apply(KindMetaInfo attributeKindMetaInfo) {
+
+                String itemLabelValue = attributeKindMetaInfo.getKindName()+ " ("+
+                        attributeKindMetaInfo.getKindDesc()+")";
+                return itemLabelValue;
+            }
+        });
+        this.targetConceptionKindFilterSelect.setRenderer(createRenderer());
         add(this.targetConceptionKindFilterSelect);
 
         this.allowRepeatableRelationKindCheckbox = new Checkbox("允许重复创建相同类型的关系实例");
@@ -103,9 +143,36 @@ public class CreateRelationAttachKindView extends VerticalLayout {
         add(confirmButton);
         setHorizontalComponentAlignment(Alignment.END,confirmButton);
 
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        try {
+            coreRealm.openGlobalSession();
+            List<KindMetaInfo> runtimeConceptionKindMetaInfoList = coreRealm.getConceptionKindsMetaInfo();
+            this.sourceConceptionKindFilterSelect.setItems(runtimeConceptionKindMetaInfoList);
+            this.targetConceptionKindFilterSelect.setItems(runtimeConceptionKindMetaInfoList);
+            List<KindMetaInfo> runtimeRelationKindMetaInfoList = coreRealm.getRelationKindsMetaInfo();
+            this.relationKindFilterSelect.setItems(runtimeRelationKindMetaInfoList);
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        } finally {
+            coreRealm.closeGlobalSession();
+        }
     }
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
+    }
+
+    private Renderer<KindMetaInfo> createRenderer() {
+        StringBuilder tpl = new StringBuilder();
+        tpl.append("<div style=\"display: flex;\">");
+        tpl.append("  <div>");
+        tpl.append("    <span style=\"font-size: var(--lumo-font-size-xl); color: var(--lumo-primary-text-color);\">${item.attributeKindName}</span>");
+        tpl.append("    <div style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">${item.attributeKindDesc}</div>");
+        tpl.append("  </div>");
+        tpl.append("</div>");
+
+        return LitRenderer.<KindMetaInfo>of(tpl.toString())
+                .withProperty("attributeKindName", KindMetaInfo::getKindName)
+                .withProperty("attributeKindDesc", KindMetaInfo::getKindDesc);
     }
 }
