@@ -477,7 +477,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         conceptionKindEntitiesConfigurationView = new ConceptionKindEntitiesConfigurationView(this.conceptionKind);
         relatedAttributesViewKindRuntimeConfigurationInfoView = new RelatedAttributesViewKindRuntimeConfigurationInfoView(
                 RelatedAttributesViewKindRuntimeConfigurationInfoView.KindTypeOfRelatedPair.ConceptionKind,this.conceptionKind);
-        relationAttachKindsConfigurationView = new RelationAttachKindsConfigurationView();
+        relationAttachKindsConfigurationView = new RelationAttachKindsConfigurationView(RelationAttachKindsConfigurationView.RelatedKindType.ConceptionKind,this.conceptionKind);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"概念类型运行时配置"),conceptionKindEntitiesConfigurationView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),relatedAttributesViewKindRuntimeConfigurationInfoView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),relationAttachKindsConfigurationView);

@@ -21,7 +21,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServi
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.RelationAttachKindsConfigurationView.RelatedKindType;
 import java.util.List;
 
 public class CreateRelationAttachKindView extends VerticalLayout {
@@ -34,8 +34,12 @@ public class CreateRelationAttachKindView extends VerticalLayout {
     private ComboBox<KindMetaInfo> relationKindFilterSelect;
     private ComboBox<KindMetaInfo> targetConceptionKindFilterSelect;
     private Checkbox allowRepeatableRelationKindCheckbox;
+    private RelatedKindType relatedKindType;
+    private String relatedKindName;
 
-    public CreateRelationAttachKindView(){
+    public CreateRelationAttachKindView(RelatedKindType relatedKindType,String relatedKindName){
+        this.relatedKindType = relatedKindType;
+        this.relatedKindName = relatedKindName;
 
         HorizontalLayout errorMessageContainer = new HorizontalLayout();
         errorMessageContainer.setSpacing(false);
@@ -73,7 +77,6 @@ public class CreateRelationAttachKindView extends VerticalLayout {
         this.sourceConceptionKindFilterSelect.setItemLabelGenerator(new ItemLabelGenerator<KindMetaInfo>() {
             @Override
             public String apply(KindMetaInfo attributeKindMetaInfo) {
-
                 String itemLabelValue = attributeKindMetaInfo.getKindName()+ " ("+
                         attributeKindMetaInfo.getKindDesc()+")";
                 return itemLabelValue;
@@ -89,7 +92,6 @@ public class CreateRelationAttachKindView extends VerticalLayout {
         this.relationKindFilterSelect.setItemLabelGenerator(new ItemLabelGenerator<KindMetaInfo>() {
             @Override
             public String apply(KindMetaInfo attributeKindMetaInfo) {
-
                 String itemLabelValue = attributeKindMetaInfo.getKindName()+ " ("+
                         attributeKindMetaInfo.getKindDesc()+")";
                 return itemLabelValue;
@@ -105,7 +107,6 @@ public class CreateRelationAttachKindView extends VerticalLayout {
         this.targetConceptionKindFilterSelect.setItemLabelGenerator(new ItemLabelGenerator<KindMetaInfo>() {
             @Override
             public String apply(KindMetaInfo attributeKindMetaInfo) {
-
                 String itemLabelValue = attributeKindMetaInfo.getKindName()+ " ("+
                         attributeKindMetaInfo.getKindDesc()+")";
                 return itemLabelValue;
@@ -130,13 +131,24 @@ public class CreateRelationAttachKindView extends VerticalLayout {
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-
                 errorMessage.setVisible(false);
-                if(sourceConceptionKindFilterSelect.getValue()==null){
-                    errorMessage.setText("请选择属性类型");
+                if(relationAttachKindNameField.getValue().equals("")){
+                    errorMessage.setText("请输入关系附着规则类型名称");
+                    errorMessage.setVisible(true);
+                }else if(relationAttachKindDescField.getValue().equals("")){
+                    errorMessage.setText("请输入关系附着规则类型描述");
+                    errorMessage.setVisible(true);
+                }else if(sourceConceptionKindFilterSelect.getValue()==null){
+                    errorMessage.setText("请选择源概念类型名称");
+                    errorMessage.setVisible(true);
+                }else if(relationKindFilterSelect.getValue()==null){
+                    errorMessage.setText("请选择关系类型名称");
+                    errorMessage.setVisible(true);
+                }else if(targetConceptionKindFilterSelect.getValue()==null){
+                    errorMessage.setText("请选择目标概念类型名称");
                     errorMessage.setVisible(true);
                 }else{
-                    //doAttachAttributesViewKind(attributeKindFilterSelect.getValue());
+                    doCreateRelationAttachKind();
                 }
             }
         });
@@ -174,5 +186,9 @@ public class CreateRelationAttachKindView extends VerticalLayout {
         return LitRenderer.<KindMetaInfo>of(tpl.toString())
                 .withProperty("attributeKindName", KindMetaInfo::getKindName)
                 .withProperty("attributeKindDesc", KindMetaInfo::getKindDesc);
+    }
+
+    private void doCreateRelationAttachKind(){
+
     }
 }

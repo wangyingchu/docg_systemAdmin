@@ -25,13 +25,16 @@ import java.util.List;
 import java.util.Set;
 
 public class RelationAttachKindsConfigurationView extends VerticalLayout {
-
+    public enum RelatedKindType { ConceptionKind, RelationKind }
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout rightSideContainerLayout;
     private Grid<RelationAttachKind> relationAttachKindGrid;
     private RelationAttachKind lastSelectedRelationAttachKind;
-
-    public RelationAttachKindsConfigurationView(){
+    private RelatedKindType relatedKindType;
+    private String relatedKindName;
+    public RelationAttachKindsConfigurationView(RelatedKindType relatedKindType,String relatedKindName){
+        this.relatedKindName = relatedKindName;
+        this.relatedKindType = relatedKindType;
         this.setWidth(100, Unit.PERCENTAGE);
 
         setSpacing(false);
@@ -160,7 +163,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout {
     }
 
     private void renderCreateRelationAttachKindViewUI(){
-        CreateRelationAttachKindView createRelationAttachKindView = new CreateRelationAttachKindView();
+        CreateRelationAttachKindView createRelationAttachKindView = new CreateRelationAttachKindView(this.relatedKindType,this.relatedKindName);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建关系附着规则类型",null,true,490,520,false);
         fixSizeWindow.setWindowContent(createRelationAttachKindView);
         fixSizeWindow.setModel(true);
