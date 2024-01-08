@@ -12,15 +12,19 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmFunctionNotSupportedException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationAttachKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.RelationAttachKindsConfigurationView.RelatedKindType;
 import java.util.List;
 
@@ -218,7 +222,28 @@ public class CreateRelationAttachKindView extends VerticalLayout {
                 }
         }
         if(!isInValidInput){
+            String relationAttachKindName = relationAttachKindNameField.getValue();
+            String relationAttachKindDesc = relationAttachKindDescField.getValue();
+            String sourceConceptionKind  = sourceConceptionKindFilterSelect.getValue().getKindName();
+            String targetConceptionName = targetConceptionKindFilterSelect.getValue().getKindName();
+            String relationKind = relationKindFilterSelect.getValue().getKindName();
+            boolean allowRepeatRelationKind = allowRepeatableRelationKindCheckbox.getValue();
 
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            try {
+                RelationAttachKind targetRelationAttachKind = coreRealm.createRelationAttachKind(relationAttachKindName,
+                        relationAttachKindDesc,sourceConceptionKind,targetConceptionName,relationKind,allowRepeatRelationKind);
+                if(targetRelationAttachKind != null){
+                    CommonUIOperationUtil.showPopupNotification("新建关系附着规则类型 "+relationAttachKindName+ " : "+ relationAttachKindDesc +" 成功", NotificationVariant.LUMO_SUCCESS);
+                    if(containerDialog != null){
+                        containerDialog.close();
+                    }
+                }else{
+                    CommonUIOperationUtil.showPopupNotification("新建关系附着规则类型 "+relationAttachKindName+ " : "+ relationAttachKindDesc +" 失败", NotificationVariant.LUMO_ERROR);
+                }
+            } catch (CoreRealmFunctionNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
