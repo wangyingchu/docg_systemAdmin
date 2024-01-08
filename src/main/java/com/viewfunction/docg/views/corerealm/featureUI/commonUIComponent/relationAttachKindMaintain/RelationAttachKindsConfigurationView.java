@@ -9,6 +9,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 
@@ -18,13 +19,15 @@ import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.element.eventHandling.RelationAttachKindCreatedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class RelationAttachKindsConfigurationView extends VerticalLayout {
+public class RelationAttachKindsConfigurationView extends VerticalLayout implements
+        RelationAttachKindCreatedEvent.RelationAttachKindCreatedListener {
     public enum RelatedKindType { ConceptionKind, RelationKind }
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout rightSideContainerLayout;
@@ -142,14 +145,14 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        //ResourceHolder.getApplicationBlackboard().addListener(this);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         renderRelationAttachKindsInfo();
     }
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     public void setViewHeight(int viewHeight){
@@ -169,5 +172,31 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout {
         fixSizeWindow.setModel(true);
         createRelationAttachKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    @Override
+    public void receivedRelationAttachKindCreatedEvent(RelationAttachKindCreatedEvent event) {
+        if(event.getRelationAttachKind() != null){
+            boolean needAddRelationAttachKind = false;
+            String relationKind = event.getRelationAttachKind().getRelationKindName();
+            String sourceConceptionKind = event.getRelationAttachKind().getSourceConceptionKindName();
+            String targetConceptionKind = event.getRelationAttachKind().getTargetConceptionKindName();
+            switch(this.relatedKindType){
+                case ConceptionKind :
+                    if(this.relatedKindName.equals(sourceConceptionKind)||this.relatedKindName.equals(targetConceptionKind)){
+                        needAddRelationAttachKind = true;
+                    }
+                    break;
+                case RelationKind:
+                    if(this.relatedKindName.equals(relationKind)){
+                        needAddRelationAttachKind = true;
+                    }
+            }
+            if(needAddRelationAttachKind){
+                ListDataProvider dtaProvider=(ListDataProvider)relationAttachKindGrid.getDataProvider();
+                dtaProvider.getItems().add(event.getRelationAttachKind());
+                dtaProvider.refreshAll();
+            }
+        }
     }
 }

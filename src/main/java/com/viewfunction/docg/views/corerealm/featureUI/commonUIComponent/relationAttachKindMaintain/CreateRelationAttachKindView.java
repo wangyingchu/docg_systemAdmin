@@ -24,7 +24,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationAttachKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.eventHandling.RelationAttachKindCreatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.RelationAttachKindsConfigurationView.RelatedKindType;
 import java.util.List;
 
@@ -238,6 +240,11 @@ public class CreateRelationAttachKindView extends VerticalLayout {
                     if(containerDialog != null){
                         containerDialog.close();
                     }
+                    RelationAttachKindCreatedEvent relationAttachKindCreatedEvent = new RelationAttachKindCreatedEvent();
+                    relationAttachKindCreatedEvent.setRelationAttachKind(targetRelationAttachKind);
+                    relationAttachKindCreatedEvent.setRelationAttachKindName(targetRelationAttachKind.getRelationAttachKindName());
+                    relationAttachKindCreatedEvent.setRelationAttachKindUID(targetRelationAttachKind.getRelationAttachKindUID());
+                    ResourceHolder.getApplicationBlackboard().fire(relationAttachKindCreatedEvent);
                 }else{
                     CommonUIOperationUtil.showPopupNotification("新建关系附着规则类型 "+relationAttachKindName+ " : "+ relationAttachKindDesc +" 失败", NotificationVariant.LUMO_ERROR);
                 }
