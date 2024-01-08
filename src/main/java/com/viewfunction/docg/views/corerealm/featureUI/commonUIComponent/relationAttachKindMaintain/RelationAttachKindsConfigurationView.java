@@ -116,6 +116,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
                 }else{
                     RelationAttachKind selectedRelationAttachKind = selectedItemSet.iterator().next();
                     lastSelectedRelationAttachKind = selectedRelationAttachKind;
+                    renderRelationAttachKindDetailInfo(selectedRelationAttachKind);
                 }
             }
         });
@@ -193,10 +194,14 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
                     }
             }
             if(needAddRelationAttachKind){
-                ListDataProvider dtaProvider=(ListDataProvider)relationAttachKindGrid.getDataProvider();
-                dtaProvider.getItems().add(event.getRelationAttachKind());
-                dtaProvider.refreshAll();
+                ListDataProvider dataProvider=(ListDataProvider)relationAttachKindGrid.getDataProvider();
+                dataProvider.getItems().add(event.getRelationAttachKind());
+                dataProvider.refreshAll();
             }
         }
+    }
+
+    private void renderRelationAttachKindDetailInfo(RelationAttachKind selectedRelationAttachKind){
+
     }
 }
