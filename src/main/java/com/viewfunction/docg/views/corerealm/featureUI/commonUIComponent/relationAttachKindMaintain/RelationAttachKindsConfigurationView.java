@@ -35,6 +35,10 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
     private RelationAttachKind lastSelectedRelationAttachKind;
     private RelatedKindType relatedKindType;
     private String relatedKindName;
+    private SecondaryTitleActionBar selectedRelationAttachKindTitleActionBar;
+    private SecondaryTitleActionBar selectedRelationAttachKindUIDActionBar;
+    private SecondaryTitleActionBar allRepeatRelationKindEntitiesActionBar;
+
     public RelationAttachKindsConfigurationView(RelatedKindType relatedKindType,String relatedKindName){
         this.relatedKindName = relatedKindName;
         this.relatedKindType = relatedKindType;
@@ -138,9 +142,22 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         spaceDiv01Layout2.setHeight(2,Unit.PIXELS);
         rightSideContainerLayout.add(spaceDiv01Layout2);
 
-        SecondaryTitleActionBar selectedAttributesViewKindTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TREE_TABLE),"-",null,null,false);
-        selectedAttributesViewKindTitleActionBar.setWidth(100,Unit.PERCENTAGE);
-        rightSideContainerLayout.add(selectedAttributesViewKindTitleActionBar);
+        selectedRelationAttachKindTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TREE_TABLE),"-",null,null,false);
+        selectedRelationAttachKindTitleActionBar.setWidth(100,Unit.PERCENTAGE);
+        rightSideContainerLayout.add(selectedRelationAttachKindTitleActionBar);
+
+        HorizontalLayout horizontalContainer01 = new HorizontalLayout();
+        horizontalContainer01.setSpacing(false);
+        horizontalContainer01.setWidthFull();
+        rightSideContainerLayout.add(horizontalContainer01);
+
+        selectedRelationAttachKindUIDActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.KEY_O),"-",null,null);
+        selectedRelationAttachKindUIDActionBar.setWidth(100,Unit.PERCENTAGE);
+        horizontalContainer01.add(selectedRelationAttachKindUIDActionBar);
+
+        allRepeatRelationKindEntitiesActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.RASTER),"-",null,null);
+        allRepeatRelationKindEntitiesActionBar.setWidth(100,Unit.PERCENTAGE);
+        horizontalContainer01.add(allRepeatRelationKindEntitiesActionBar);
     }
 
     @Override
@@ -158,6 +175,10 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
 
     public void setViewHeight(int viewHeight){
         relationAttachKindGrid.setHeight(viewHeight-60,Unit.PIXELS);
+    }
+
+    public void setViewWidth(int viewWidth){
+        rightSideContainerLayout.setWidth(viewWidth-600,Unit.PIXELS);
     }
 
     private void renderRelationAttachKindsInfo(){
@@ -202,6 +223,10 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
     }
 
     private void renderRelationAttachKindDetailInfo(RelationAttachKind selectedRelationAttachKind){
-
+        selectedRelationAttachKindTitleActionBar.updateTitleContent(
+                selectedRelationAttachKind.getRelationAttachKindName()+"("+selectedRelationAttachKind.getRelationAttachKindDesc()+")");
+        selectedRelationAttachKindUIDActionBar.updateTitleContent(selectedRelationAttachKind.getRelationAttachKindUID());
+        String allowRepeatRelationMessage = selectedRelationAttachKind.isRepeatableRelationKindAllow() ? "允许重复创建相同类型的关系":"不允许重复创建相同类型的关系";
+        allRepeatRelationKindEntitiesActionBar.updateTitleContent(allowRepeatRelationMessage);
     }
 }
