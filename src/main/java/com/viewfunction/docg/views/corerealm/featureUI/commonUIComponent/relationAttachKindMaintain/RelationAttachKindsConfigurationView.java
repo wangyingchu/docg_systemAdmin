@@ -38,7 +38,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
     private SecondaryTitleActionBar relationKindActionBar;
     private NativeLabel allowRepeatLabel;
     private SecondaryTitleActionBar sourceConceptionKindActionBar;
-
+    private SecondaryTitleActionBar targetConceptionKindActionBar;
 
     public RelationAttachKindsConfigurationView(RelatedKindType relatedKindType,String relatedKindName){
         this.relatedKindName = relatedKindName;
@@ -143,7 +143,12 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         spaceDiv01Layout2.setHeight(2,Unit.PIXELS);
         rightSideContainerLayout.add(spaceDiv01Layout2);
 
-        selectedRelationAttachKindTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TREE_TABLE),"-",null,null,false);
+        List<Component> actionComponentsList = new ArrayList<>();
+        Button executeRelationAttachKindButton = new Button("执行关系附着规则",VaadinIcon.PLAY.create());
+        executeRelationAttachKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
+        actionComponentsList.add(executeRelationAttachKindButton);
+
+        selectedRelationAttachKindTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TREE_TABLE),"-",null,actionComponentsList,false);
         selectedRelationAttachKindTitleActionBar.setWidth(100,Unit.PERCENTAGE);
         rightSideContainerLayout.add(selectedRelationAttachKindTitleActionBar);
 
@@ -186,11 +191,26 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         targetConceptionKindIcon.setSize("16px");
         targetConceptionKindIcon.getStyle().set("color","#2e4e7e").set("padding-right", "5px");
         horizontalContainer03.add(targetConceptionKindIcon);
-        SecondaryTitleActionBar targetConceptionKindActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null,false);
+        targetConceptionKindActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null,false);
         horizontalContainer03.add(targetConceptionKindActionBar);
 
         relationKindActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONNECT_O),"-",null,null);
         rightSideContainerLayout.add(relationKindActionBar);
+
+        List<Component> actionComponentsList2 = new ArrayList<>();
+        Button refreshSystemRuntimeInfoButton = new Button("获取系统运行信息",new Icon(VaadinIcon.REFRESH));
+        refreshSystemRuntimeInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        refreshSystemRuntimeInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        refreshSystemRuntimeInfoButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        refreshSystemRuntimeInfoButton.addClickListener((ClickEvent<Button> click) ->{
+            //systemRuntimeInfoWidget.refreshSystemRuntimeInfo();
+        });
+        actionComponentsList2.add(refreshSystemRuntimeInfoButton);
+
+        Icon relationAttachLinkLogicInfoIcon = new Icon(VaadinIcon.WRENCH);
+        SecondaryTitleActionBar relationAttachLinkLogicInfoSectionActionBar = new SecondaryTitleActionBar(relationAttachLinkLogicInfoIcon,"关系附着逻辑规则",null,actionComponentsList2,false);
+        rightSideContainerLayout.add(relationAttachLinkLogicInfoSectionActionBar);
+
     }
 
     @Override
@@ -263,5 +283,6 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         allowRepeatLabel.setText(allowRepeatRelationMessage);
         relationKindActionBar.updateTitleContent(selectedRelationAttachKind.getRelationKindName());
         sourceConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getSourceConceptionKindName());
+        targetConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getTargetConceptionKindName());
     }
 }
