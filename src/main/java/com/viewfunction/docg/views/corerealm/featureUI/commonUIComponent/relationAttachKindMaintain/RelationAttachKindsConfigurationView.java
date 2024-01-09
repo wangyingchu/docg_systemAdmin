@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -15,10 +16,7 @@ import com.vaadin.flow.data.selection.SelectionListener;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
-import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
-import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
-import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.RelationAttachKindCreatedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
@@ -37,7 +35,10 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
     private String relatedKindName;
     private SecondaryTitleActionBar selectedRelationAttachKindTitleActionBar;
     private SecondaryTitleActionBar selectedRelationAttachKindUIDActionBar;
-    private SecondaryTitleActionBar allRepeatRelationKindEntitiesActionBar;
+    private SecondaryTitleActionBar relationKindActionBar;
+    private NativeLabel allowRepeatLabel;
+    private SecondaryTitleActionBar sourceConceptionKindActionBar;
+
 
     public RelationAttachKindsConfigurationView(RelatedKindType relatedKindType,String relatedKindName){
         this.relatedKindName = relatedKindName;
@@ -148,16 +149,48 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
 
         HorizontalLayout horizontalContainer01 = new HorizontalLayout();
         horizontalContainer01.setSpacing(false);
-        horizontalContainer01.setWidthFull();
+        horizontalContainer01.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         rightSideContainerLayout.add(horizontalContainer01);
 
-        selectedRelationAttachKindUIDActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.KEY_O),"-",null,null);
-        selectedRelationAttachKindUIDActionBar.setWidth(100,Unit.PERCENTAGE);
+        selectedRelationAttachKindUIDActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.KEY_O),"-",null,null,false);
+        selectedRelationAttachKindUIDActionBar.setWidth(90,Unit.PIXELS);
         horizontalContainer01.add(selectedRelationAttachKindUIDActionBar);
 
-        allRepeatRelationKindEntitiesActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.RASTER),"-",null,null);
-        allRepeatRelationKindEntitiesActionBar.setWidth(100,Unit.PERCENTAGE);
-        horizontalContainer01.add(allRepeatRelationKindEntitiesActionBar);
+        Icon allowRepeatIcon = new Icon(VaadinIcon.RANDOM);
+        allowRepeatIcon.setSize("14px");
+        allowRepeatIcon.getStyle().set("color","#2e4e7e").set("padding-right", "5px");
+        horizontalContainer01.add(allowRepeatIcon);
+        allowRepeatLabel = new NativeLabel("-");
+        allowRepeatLabel.getStyle().set("color","#2e4e7e");
+        allowRepeatLabel.addClassNames("text-xs");
+        horizontalContainer01.add(allowRepeatLabel);
+
+        HorizontalLayout horizontalContainer02 = new HorizontalLayout();
+        horizontalContainer02.setSpacing(false);
+        horizontalContainer02.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        rightSideContainerLayout.add(horizontalContainer02);
+
+        Icon sourceConceptionKindIcon = new Icon(VaadinIcon.LEVEL_LEFT);
+        sourceConceptionKindIcon.setSize("16px");
+        sourceConceptionKindIcon.getStyle().set("color","#2e4e7e").set("padding-right", "5px");
+        horizontalContainer02.add(sourceConceptionKindIcon);
+        sourceConceptionKindActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null,false);
+        horizontalContainer02.add(sourceConceptionKindActionBar);
+
+        HorizontalLayout horizontalContainer03 = new HorizontalLayout();
+        horizontalContainer03.setSpacing(false);
+        horizontalContainer03.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        rightSideContainerLayout.add(horizontalContainer03);
+
+        Icon targetConceptionKindIcon = new Icon(VaadinIcon.LEVEL_RIGHT);
+        targetConceptionKindIcon.setSize("16px");
+        targetConceptionKindIcon.getStyle().set("color","#2e4e7e").set("padding-right", "5px");
+        horizontalContainer03.add(targetConceptionKindIcon);
+        SecondaryTitleActionBar targetConceptionKindActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null,false);
+        horizontalContainer03.add(targetConceptionKindActionBar);
+
+        relationKindActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONNECT_O),"-",null,null);
+        rightSideContainerLayout.add(relationKindActionBar);
     }
 
     @Override
@@ -227,6 +260,8 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
                 selectedRelationAttachKind.getRelationAttachKindName()+"("+selectedRelationAttachKind.getRelationAttachKindDesc()+")");
         selectedRelationAttachKindUIDActionBar.updateTitleContent(selectedRelationAttachKind.getRelationAttachKindUID());
         String allowRepeatRelationMessage = selectedRelationAttachKind.isRepeatableRelationKindAllow() ? "允许重复创建相同类型的关系":"不允许重复创建相同类型的关系";
-        allRepeatRelationKindEntitiesActionBar.updateTitleContent(allowRepeatRelationMessage);
+        allowRepeatLabel.setText(allowRepeatRelationMessage);
+        relationKindActionBar.updateTitleContent(selectedRelationAttachKind.getRelationKindName());
+        sourceConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getSourceConceptionKindName());
     }
 }
