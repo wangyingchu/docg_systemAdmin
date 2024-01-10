@@ -14,9 +14,11 @@ import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachLinkLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.RelationAttachKindCreatedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
@@ -39,6 +41,8 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
     private NativeLabel allowRepeatLabel;
     private SecondaryTitleActionBar sourceConceptionKindActionBar;
     private SecondaryTitleActionBar targetConceptionKindActionBar;
+
+    private Grid<RelationAttachLinkLogic> relationAttachLinkLogicGrid;
 
     public RelationAttachKindsConfigurationView(RelatedKindType relatedKindType,String relatedKindName){
         this.relatedKindName = relatedKindName;
@@ -198,19 +202,40 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         rightSideContainerLayout.add(relationKindActionBar);
 
         List<Component> actionComponentsList2 = new ArrayList<>();
-        Button refreshSystemRuntimeInfoButton = new Button("获取系统运行信息",new Icon(VaadinIcon.REFRESH));
-        refreshSystemRuntimeInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        refreshSystemRuntimeInfoButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        refreshSystemRuntimeInfoButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-        refreshSystemRuntimeInfoButton.addClickListener((ClickEvent<Button> click) ->{
+        //Button refreshSystemRuntimeInfoButton = new Button("获取系统运行信息",new Icon(VaadinIcon.REFRESH));
+
+        Button addRelationAttachLinkLogicButton= new Button("添加关系附着逻辑规则");
+        addRelationAttachLinkLogicButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
+        addRelationAttachLinkLogicButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        addRelationAttachLinkLogicButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addRelationAttachLinkLogicButton.addClickListener((ClickEvent<Button> click) ->{
             //systemRuntimeInfoWidget.refreshSystemRuntimeInfo();
         });
-        actionComponentsList2.add(refreshSystemRuntimeInfoButton);
+        actionComponentsList2.add(addRelationAttachLinkLogicButton);
 
         Icon relationAttachLinkLogicInfoIcon = new Icon(VaadinIcon.WRENCH);
         SecondaryTitleActionBar relationAttachLinkLogicInfoSectionActionBar = new SecondaryTitleActionBar(relationAttachLinkLogicInfoIcon,"关系附着逻辑规则",null,actionComponentsList2,false);
         rightSideContainerLayout.add(relationAttachLinkLogicInfoSectionActionBar);
 
+        relationAttachLinkLogicGrid = new Grid<>();
+        rightSideContainerLayout.add(relationAttachLinkLogicGrid);
+        relationAttachLinkLogicGrid.addColumn(RelationAttachLinkLogic::getLinkLogicType).setHeader("逻辑类别").setKey("idx_0").setFlexGrow(1)
+                .setTooltipGenerator(relationAttachLinkLogic -> relationAttachLinkLogic.getLinkLogicType().toString());
+        relationAttachLinkLogicGrid.addColumn(RelationAttachLinkLogic::getSourceEntityLinkAttributeName).setHeader("源属性名称").setKey("idx_1").setFlexGrow(1)
+                .setTooltipGenerator(RelationAttachLinkLogic::getSourceEntityLinkAttributeName);
+        relationAttachLinkLogicGrid.addColumn(RelationAttachLinkLogic::getLinkLogicCondition).setHeader("逻辑条件").setKey("idx_2").setFlexGrow(1)
+                .setTooltipGenerator(relationAttachLinkLogic -> relationAttachLinkLogic.getLinkLogicCondition().toString());
+        relationAttachLinkLogicGrid.addColumn(RelationAttachLinkLogic::getTargetEntitiesLinkAttributeName).setHeader("目标属性名称").setKey("idx_3").setFlexGrow(1)
+                .setTooltipGenerator(RelationAttachLinkLogic::getTargetEntitiesLinkAttributeName);
+
+        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.CALC,"逻辑类别");
+        relationAttachLinkLogicGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.LEVEL_LEFT,"源属性名称");
+        relationAttachLinkLogicGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(LineAwesomeIconsSvg.CREATIVE_COMMONS_ND.create(),"逻辑条件");
+        relationAttachLinkLogicGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(VaadinIcon.LEVEL_RIGHT.create(),"目标属性名称");
+        relationAttachLinkLogicGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
     }
 
     @Override
