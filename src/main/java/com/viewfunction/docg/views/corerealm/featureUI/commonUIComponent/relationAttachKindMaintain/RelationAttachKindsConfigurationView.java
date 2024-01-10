@@ -317,7 +317,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
 
     private void addNewRelationAttachLinkLogic(){
         CreateNewRelationAttachLinkLogicView createNewRelationAttachLinkLogicView = new CreateNewRelationAttachLinkLogicView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加关系附着逻辑规则",null,true,300,450,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加关系附着逻辑规则",null,true,350,430,false);
         fixSizeWindow.setWindowContent(createNewRelationAttachLinkLogicView);
         fixSizeWindow.setModel(true);
         createNewRelationAttachLinkLogicView.setContainerDialog(fixSizeWindow);
