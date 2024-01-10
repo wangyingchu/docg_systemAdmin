@@ -218,7 +218,6 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         rightSideContainerLayout.add(relationAttachLinkLogicInfoSectionActionBar);
 
         relationAttachLinkLogicGrid = new Grid<>();
-        rightSideContainerLayout.add(relationAttachLinkLogicGrid);
         relationAttachLinkLogicGrid.addColumn(RelationAttachLinkLogic::getLinkLogicType).setHeader("逻辑类别").setKey("idx_0").setFlexGrow(1)
                 .setTooltipGenerator(relationAttachLinkLogic -> relationAttachLinkLogic.getLinkLogicType().toString());
         relationAttachLinkLogicGrid.addColumn(RelationAttachLinkLogic::getSourceEntityLinkAttributeName).setHeader("源属性名称").setKey("idx_1").setFlexGrow(1)
@@ -236,6 +235,13 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         relationAttachLinkLogicGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(VaadinIcon.LEVEL_RIGHT.create(),"目标属性名称");
         relationAttachLinkLogicGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
+
+        rightSideContainerLayout.add(relationAttachLinkLogicGrid);
+
+        HorizontalLayout horizontalContainer04 = new HorizontalLayout();
+        horizontalContainer04.setSpacing(false);
+        horizontalContainer04.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        rightSideContainerLayout.add(horizontalContainer04);
     }
 
     @Override
