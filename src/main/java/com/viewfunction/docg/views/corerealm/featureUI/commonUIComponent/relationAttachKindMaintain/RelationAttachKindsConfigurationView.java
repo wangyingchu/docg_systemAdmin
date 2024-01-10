@@ -207,7 +207,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         addRelationAttachLinkLogicButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         addRelationAttachLinkLogicButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addRelationAttachLinkLogicButton.addClickListener((ClickEvent<Button> click) ->{
-            addNewRelationAttachLinkLogic();
+            renderAddNewRelationAttachLinkLogic();
         });
         actionComponentsList2.add(addRelationAttachLinkLogicButton);
 
@@ -315,12 +315,14 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         targetConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getTargetConceptionKindName());
     }
 
-    private void addNewRelationAttachLinkLogic(){
-        CreateNewRelationAttachLinkLogicView createNewRelationAttachLinkLogicView = new CreateNewRelationAttachLinkLogicView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加关系附着逻辑规则",null,true,350,430,false);
-        fixSizeWindow.setWindowContent(createNewRelationAttachLinkLogicView);
-        fixSizeWindow.setModel(true);
-        createNewRelationAttachLinkLogicView.setContainerDialog(fixSizeWindow);
-        fixSizeWindow.show();
+    private void renderAddNewRelationAttachLinkLogic(){
+        if(lastSelectedRelationAttachKind != null){
+            CreateNewRelationAttachLinkLogicView createNewRelationAttachLinkLogicView = new CreateNewRelationAttachLinkLogicView(lastSelectedRelationAttachKind);
+            FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加关系附着逻辑规则",null,true,350,450,false);
+            fixSizeWindow.setWindowContent(createNewRelationAttachLinkLogicView);
+            fixSizeWindow.setModel(true);
+            createNewRelationAttachLinkLogicView.setContainerDialog(fixSizeWindow);
+            fixSizeWindow.show();
+        }
     }
 }

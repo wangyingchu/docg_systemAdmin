@@ -28,10 +28,11 @@ public class CreateNewRelationAttachLinkLogicView extends VerticalLayout {
     private NativeLabel errorMessage;
 
     private ComboBox<KindEntityAttributeRuntimeStatistics> sourceConceptionKindPropertyFilterSelect;
-
     private ComboBox<KindEntityAttributeRuntimeStatistics> targetConceptionKindPropertyFilterSelect;
+    private RelationAttachKind relationAttachKind;
 
-    public CreateNewRelationAttachLinkLogicView(){
+    public CreateNewRelationAttachLinkLogicView(RelationAttachKind relationAttachKind){
+        this.relationAttachKind = relationAttachKind;
         HorizontalLayout errorMessageContainer = new HorizontalLayout();
         errorMessageContainer.setSpacing(false);
         errorMessageContainer.setPadding(false);
@@ -116,8 +117,9 @@ public class CreateNewRelationAttachLinkLogicView extends VerticalLayout {
         Button confirmButton = new Button("确定添加关系附着逻辑规则",new Icon(VaadinIcon.CHECK));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         add(confirmButton);
+        setHorizontalComponentAlignment(Alignment.END,confirmButton);
 
-        loadPropertySelectorComboBox("EnterpriseMember","Firm");
+        loadPropertySelectorComboBox();
     }
 
     public void setContainerDialog(Dialog containerDialog) {
@@ -138,14 +140,16 @@ public class CreateNewRelationAttachLinkLogicView extends VerticalLayout {
                 .withProperty("attributeDataType", KindEntityAttributeRuntimeStatistics::getAttributeDataType);
     }
 
-    private void loadPropertySelectorComboBox(String sourceConceptionKindName, String targetConceptionKindName){
-        int entityAttributesDistributionStatisticSampleRatio = 20000;
+    private void loadPropertySelectorComboBox(){
+        sourceConceptionKindPropertyFilterSelect.setHelperText(relationAttachKind.getSourceConceptionKindName());
+        targetConceptionKindPropertyFilterSelect.setHelperText(relationAttachKind.getTargetConceptionKindName());
+        int entityAttributesDistributionStatisticSampleRatio = 100000;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
-        ConceptionKind sourceConceptionKind = coreRealm.getConceptionKind(sourceConceptionKindName);
+        ConceptionKind sourceConceptionKind = coreRealm.getConceptionKind(relationAttachKind.getSourceConceptionKindName());
         List<KindEntityAttributeRuntimeStatistics> sourceKindEntityAttributeRuntimeStatisticsList =
                 sourceConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
-        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(targetConceptionKindName);
+        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(relationAttachKind.getTargetConceptionKindName());
         List<KindEntityAttributeRuntimeStatistics> targetKindEntityAttributeRuntimeStatisticsList =
                 targetConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
         coreRealm.closeGlobalSession();
