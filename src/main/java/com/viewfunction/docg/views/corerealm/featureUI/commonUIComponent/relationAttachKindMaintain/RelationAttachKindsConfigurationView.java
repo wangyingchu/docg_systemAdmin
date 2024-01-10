@@ -202,14 +202,12 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         rightSideContainerLayout.add(relationKindActionBar);
 
         List<Component> actionComponentsList2 = new ArrayList<>();
-        //Button refreshSystemRuntimeInfoButton = new Button("获取系统运行信息",new Icon(VaadinIcon.REFRESH));
-
         Button addRelationAttachLinkLogicButton= new Button("添加关系附着逻辑规则");
         addRelationAttachLinkLogicButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
         addRelationAttachLinkLogicButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         addRelationAttachLinkLogicButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addRelationAttachLinkLogicButton.addClickListener((ClickEvent<Button> click) ->{
-            //systemRuntimeInfoWidget.refreshSystemRuntimeInfo();
+            addNewRelationAttachLinkLogic();
         });
         actionComponentsList2.add(addRelationAttachLinkLogicButton);
 
@@ -315,5 +313,14 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         relationKindActionBar.updateTitleContent(selectedRelationAttachKind.getRelationKindName());
         sourceConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getSourceConceptionKindName());
         targetConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getTargetConceptionKindName());
+    }
+
+    private void addNewRelationAttachLinkLogic(){
+        CreateNewRelationAttachLinkLogicView createNewRelationAttachLinkLogicView = new CreateNewRelationAttachLinkLogicView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加关系附着逻辑规则",null,true,300,450,false);
+        fixSizeWindow.setWindowContent(createNewRelationAttachLinkLogicView);
+        fixSizeWindow.setModel(true);
+        createNewRelationAttachLinkLogicView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }
