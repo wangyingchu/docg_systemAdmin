@@ -216,6 +216,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         rightSideContainerLayout.add(relationAttachLinkLogicInfoSectionActionBar);
 
         relationAttachLinkLogicGrid = new Grid<>();
+        relationAttachLinkLogicGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER);
         relationAttachLinkLogicGrid.addColumn(RelationAttachLinkLogic::getLinkLogicType).setHeader("逻辑类别").setKey("idx_0").setFlexGrow(1)
                 .setTooltipGenerator(relationAttachLinkLogic -> relationAttachLinkLogic.getLinkLogicType().toString());
         relationAttachLinkLogicGrid.addColumn(RelationAttachLinkLogic::getSourceEntityLinkAttributeName).setHeader("源属性名称").setKey("idx_1").setFlexGrow(1)
@@ -313,11 +314,22 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         relationKindActionBar.updateTitleContent(selectedRelationAttachKind.getRelationKindName());
         sourceConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getSourceConceptionKindName());
         targetConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getTargetConceptionKindName());
+        List<RelationAttachLinkLogic> relationAttachLinkLogicList = selectedRelationAttachKind.getRelationAttachLinkLogic();
+        relationAttachLinkLogicGrid.setItems(relationAttachLinkLogicList);
     }
 
     private void renderAddNewRelationAttachLinkLogic(){
         if(lastSelectedRelationAttachKind != null){
             CreateNewRelationAttachLinkLogicView createNewRelationAttachLinkLogicView = new CreateNewRelationAttachLinkLogicView(lastSelectedRelationAttachKind);
+            createNewRelationAttachLinkLogicView.setCreateRelationAttachLinkLogicCallback(new CreateNewRelationAttachLinkLogicView.CreateRelationAttachLinkLogicCallback() {
+                @Override
+                public void onSuccess(RelationAttachLinkLogic resultRelationAttachLinkLogic) {
+                    ListDataProvider<RelationAttachLinkLogic> dataProvider=(ListDataProvider<RelationAttachLinkLogic>)relationAttachLinkLogicGrid.getDataProvider();
+                    dataProvider.getItems().add(resultRelationAttachLinkLogic);
+                    dataProvider.refreshAll();
+                }
+            });
+
             FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加关系附着逻辑规则",null,true,350,450,false);
             fixSizeWindow.setWindowContent(createNewRelationAttachLinkLogicView);
             fixSizeWindow.setModel(true);
