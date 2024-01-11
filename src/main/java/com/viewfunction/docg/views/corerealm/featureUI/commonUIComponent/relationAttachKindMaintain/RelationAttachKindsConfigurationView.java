@@ -293,7 +293,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         relationAttachLinkLogicGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(VaadinIcon.LEVEL_RIGHT.create(),"目标属性名称");
         relationAttachLinkLogicGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
-        GridColumnHeader gridColumnHeader_1_idx4 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
+        LightGridColumnHeader gridColumnHeader_1_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         relationAttachLinkLogicGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_1_idx4);
 
         rightSideContainerLayout.add(relationAttachLinkLogicGrid);
