@@ -185,6 +185,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 conceptionKindConfigurationInfoRefreshEvent.setConceptionKindName(conceptionKind);
                 ResourceHolder.getApplicationBlackboard().fire(conceptionKindConfigurationInfoRefreshEvent);
                 relatedAttributesViewKindRuntimeConfigurationInfoView.refreshRelatedAttributesViewKindRuntimeConfigurationInfo();
+                relationAttachKindsConfigurationView.refreshRelationAttachKindsInfo();
             }
         });
         buttonList.add(refreshConceptionKindConfigInfoButton);

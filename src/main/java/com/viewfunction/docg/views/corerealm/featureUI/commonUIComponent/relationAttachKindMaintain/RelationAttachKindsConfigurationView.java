@@ -45,8 +45,9 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
     private NativeLabel allowRepeatLabel;
     private SecondaryTitleActionBar sourceConceptionKindActionBar;
     private SecondaryTitleActionBar targetConceptionKindActionBar;
-
     private Grid<RelationAttachLinkLogic> relationAttachLinkLogicGrid;
+    private Button addRelationAttachLinkLogicButton;
+    private Button executeRelationAttachKindButton;
 
     public RelationAttachKindsConfigurationView(RelatedKindType relatedKindType,String relatedKindName){
         this.relatedKindName = relatedKindName;
@@ -86,7 +87,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         Button refreshAttributesViewKindsButton = new Button("刷新关联关系附着规则信息",new Icon(VaadinIcon.REFRESH));
         refreshAttributesViewKindsButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         refreshAttributesViewKindsButton.addClickListener((ClickEvent<Button> click) ->{
-            //refreshAttributesViewKindsInfo();
+            refreshRelationAttachKindsInfo();
         });
         buttonList.add(refreshAttributesViewKindsButton);
 
@@ -180,7 +181,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         rightSideContainerLayout.add(spaceDiv01Layout2);
 
         List<Component> actionComponentsList = new ArrayList<>();
-        Button executeRelationAttachKindButton = new Button("执行关系附着规则",VaadinIcon.PLAY.create());
+        executeRelationAttachKindButton = new Button("执行关系附着规则",VaadinIcon.PLAY.create());
         executeRelationAttachKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
         actionComponentsList.add(executeRelationAttachKindButton);
 
@@ -234,7 +235,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         rightSideContainerLayout.add(relationKindActionBar);
 
         List<Component> actionComponentsList2 = new ArrayList<>();
-        Button addRelationAttachLinkLogicButton= new Button("添加关系附着逻辑规则");
+        addRelationAttachLinkLogicButton = new Button("添加关系附着逻辑规则");
         addRelationAttachLinkLogicButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
         addRelationAttachLinkLogicButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         addRelationAttachLinkLogicButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -301,6 +302,9 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         horizontalContainer04.setSpacing(false);
         horizontalContainer04.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         rightSideContainerLayout.add(horizontalContainer04);
+
+        addRelationAttachLinkLogicButton.setEnabled(false);
+        executeRelationAttachKindButton.setEnabled(false);
     }
 
     @Override
@@ -328,6 +332,11 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         List<RelationAttachKind>  relationAttachKindList = coreRealm.getRelationAttachKinds(null,null,null,null,null,null);
         relationAttachKindGrid.setItems(relationAttachKindList);
+    }
+
+    public void refreshRelationAttachKindsInfo(){
+        renderRelationAttachKindsInfo();
+        clearRelationAttachKindDetailInfo();
     }
 
     private void renderCreateRelationAttachKindViewUI(){
@@ -376,6 +385,21 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         targetConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getTargetConceptionKindName());
         List<RelationAttachLinkLogic> relationAttachLinkLogicList = selectedRelationAttachKind.getRelationAttachLinkLogic();
         relationAttachLinkLogicGrid.setItems(relationAttachLinkLogicList);
+        addRelationAttachLinkLogicButton.setEnabled(true);
+        executeRelationAttachKindButton.setEnabled(true);
+    }
+
+    private void clearRelationAttachKindDetailInfo(){
+        selectedRelationAttachKindTitleActionBar.updateTitleContent("-");
+        selectedRelationAttachKindUIDActionBar.updateTitleContent("-");
+        allowRepeatLabel.setText("-");
+        relationKindActionBar.updateTitleContent("-");
+        sourceConceptionKindActionBar.updateTitleContent("-");
+        targetConceptionKindActionBar.updateTitleContent("-");
+        List<RelationAttachLinkLogic> relationAttachLinkLogicList = new ArrayList<>();
+        relationAttachLinkLogicGrid.setItems(relationAttachLinkLogicList);
+        addRelationAttachLinkLogicButton.setEnabled(false);
+        executeRelationAttachKindButton.setEnabled(false);
     }
 
     private void renderAddNewRelationAttachLinkLogic(){
@@ -470,6 +494,10 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
                         dataProvider.refreshAll();
                         CommonUIOperationUtil.showPopupNotification("删除关系附着规则成功", NotificationVariant.LUMO_SUCCESS);
                         confirmWindow.closeConfirmWindow();
+                        if(lastSelectedRelationAttachKind != null &&
+                                lastSelectedRelationAttachKind.getRelationAttachKindUID().equals(relationAttachKind.getRelationAttachKindUID())){
+                            clearRelationAttachKindDetailInfo();
+                        }
                     }else{
                         CommonUIOperationUtil.showPopupNotification("删除关系附着规则失败", NotificationVariant.LUMO_ERROR);
                     }
