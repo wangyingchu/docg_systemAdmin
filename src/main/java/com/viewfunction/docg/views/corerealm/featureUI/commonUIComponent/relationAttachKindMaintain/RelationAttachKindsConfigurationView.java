@@ -331,7 +331,23 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
     private void renderRelationAttachKindsInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         List<RelationAttachKind>  relationAttachKindList = coreRealm.getRelationAttachKinds(null,null,null,null,null,null);
-        relationAttachKindGrid.setItems(relationAttachKindList);
+        List<RelationAttachKind> filteredRelationAttachKindList = new ArrayList<>();
+        for(RelationAttachKind currentRelationAttachKind:relationAttachKindList){
+            String sourceConceptionKindName = currentRelationAttachKind.getSourceConceptionKindName();
+            String targetConceptionKindName = currentRelationAttachKind.getTargetConceptionKindName();
+            String relationKindName = currentRelationAttachKind.getRelationKindName();
+            switch(this.relatedKindType){
+                case ConceptionKind :
+                    if(this.relatedKindName.equals(sourceConceptionKindName) || this.relatedKindName.equals(targetConceptionKindName)){
+                        filteredRelationAttachKindList.add(currentRelationAttachKind);
+                    }
+                case RelationKind:
+                    if(this.relatedKindName.equals(relationKindName)){
+                        filteredRelationAttachKindList.add(currentRelationAttachKind);
+                    }
+            }
+        }
+        relationAttachKindGrid.setItems(filteredRelationAttachKindList);
     }
 
     public void refreshRelationAttachKindsInfo(){
