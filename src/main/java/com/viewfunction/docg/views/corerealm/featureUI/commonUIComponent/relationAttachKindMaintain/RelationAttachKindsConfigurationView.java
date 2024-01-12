@@ -5,9 +5,11 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -17,6 +19,7 @@ import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachLinkLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -184,6 +187,12 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         executeRelationAttachKindButton = new Button("执行关系附着规则",VaadinIcon.PLAY.create());
         executeRelationAttachKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
         actionComponentsList.add(executeRelationAttachKindButton);
+        executeRelationAttachKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderExecuteRelationAttachKindUI();
+            }
+        });
 
         selectedRelationAttachKindTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TREE_TABLE),"-",null,actionComponentsList,false);
         selectedRelationAttachKindTitleActionBar.setWidth(100,Unit.PERCENTAGE);
@@ -530,5 +539,81 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
                 confirmWindow.closeConfirmWindow();
             }
         });
+    }
+
+    private void renderExecuteRelationAttachKindUI(){
+        boolean hasDefaultLogic = false;
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        RelationAttachKind targetRelationAttachKind = coreRealm.getRelationAttachKind(lastSelectedRelationAttachKind.getRelationAttachKindUID());
+        List<RelationAttachLinkLogic> relationAttachLinkLogicList = targetRelationAttachKind.getRelationAttachLinkLogic();
+        if(relationAttachLinkLogicList != null){
+            for(RelationAttachLinkLogic currentRelationAttachLinkLogic : relationAttachLinkLogicList){
+                RelationAttachKind.LinkLogicType currentLogicLinkLogicType =currentRelationAttachLinkLogic.getLinkLogicType();
+                if(currentLogicLinkLogicType.equals(RelationAttachKind.LinkLogicType.DEFAULT)){
+                    hasDefaultLogic = true;
+                    break;
+                }
+            }
+        }
+        if(!hasDefaultLogic){
+            CommonUIOperationUtil.showPopupNotification("执行关系附着规则要求必须包含 "+RelationAttachKind.LinkLogicType.DEFAULT +" 类型的关系实体匹配逻辑", NotificationVariant.LUMO_ERROR,5000, Notification.Position.MIDDLE);
+            return;
+        }
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认执行关系附着规则",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"删除关系附着规则",
+                "请确认执行关系附着规则 "+ lastSelectedRelationAttachKind.getRelationAttachKindName()+" 创建新的关系实体",actionButtonList,500,175);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                coreRealm.openGlobalSession();
+                try {
+                    RelationAttachKind targetRelationAttachKind = coreRealm.getRelationAttachKind(lastSelectedRelationAttachKind.getRelationAttachKindUID());
+                    EntitiesOperationResult entitiesOperationResult = targetRelationAttachKind.newUniversalRelationEntities(null);
+                    showPopupNotification(targetRelationAttachKind.getRelationAttachKindName(),entitiesOperationResult,NotificationVariant.LUMO_SUCCESS);
+                    confirmWindow.closeConfirmWindow();
+                } finally {
+                    coreRealm.closeGlobalSession();
+                }
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void showPopupNotification(String relationAttachKindName,EntitiesOperationResult entitiesOperationResult, NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text("关系附着规则 "+relationAttachKindName+" 执行操作成功"));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
+
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        notificationMessageContainer.add(new Div(new Text("执行创建实体数: "+entitiesOperationResult.getOperationStatistics().getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("执行开始时间: "+entitiesOperationResult.getOperationStatistics().getStartTime())));
+        notificationMessageContainer.add(new Div(new Text("执行结束时间: "+entitiesOperationResult.getOperationStatistics().getFinishTime())));
+        notification.add(notificationMessageContainer);
+        notification.setDuration(3000);
+        notification.open();
     }
 }
