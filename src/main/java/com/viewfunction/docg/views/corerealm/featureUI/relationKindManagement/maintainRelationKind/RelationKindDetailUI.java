@@ -380,6 +380,8 @@ public class RelationKindDetailUI extends VerticalLayout implements
     @Override
     public void receivedRelationKindConfigurationInfoRefreshEvent(RelationKindConfigurationInfoRefreshEvent event) {
         relationAttachKindsConfigurationView.refreshRelationAttachKindsInfo();
+        loadRelationKindInfoData();
+        renderKindCorrelationInfoTabContent();
     }
 
     @Override
