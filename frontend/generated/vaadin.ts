@@ -7,14 +7,15 @@ if (import.meta.hot) {
   });
 }
 
-import '@vaadin/vertical-layout/src/vaadin-vertical-layout.js';
-import '@vaadin/context-menu/src/vaadin-context-menu.js';
+import '@vaadin/vertical-layout/theme/lumo/vaadin-vertical-layout.js';
+import '@vaadin/context-menu/theme/lumo/vaadin-context-menu.js';
+import '@vaadin/text-field/theme/lumo/vaadin-text-field.js';
+import '@vaadin/menu-bar/theme/lumo/vaadin-menu-bar.js';
+import '@vaadin/grid/theme/lumo/vaadin-grid.js';
+import '@vaadin/grid/theme/lumo/vaadin-grid-tree-column.js';
+import '@vaadin/details/theme/lumo/vaadin-details.js';
 import '@vaadin/icons/vaadin-iconset.js';
-import '@vaadin/menu-bar/src/vaadin-menu-bar.js';
 import '@vaadin/icon/vaadin-icon.js';
-import '@vaadin/text-field/src/vaadin-text-field.js';
-import '@vaadin/grid/src/vaadin-grid.js';
-import '@vaadin/grid/src/vaadin-grid-tree-column.js';
 import './vaadin-featureflags.js';
 
 import './index';
