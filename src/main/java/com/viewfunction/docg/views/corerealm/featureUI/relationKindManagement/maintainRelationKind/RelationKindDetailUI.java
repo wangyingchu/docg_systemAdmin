@@ -33,6 +33,7 @@ import com.viewfunction.docg.element.eventHandling.RelationKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.RelationAttachKindsConfigurationView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.queryRelationKind.RelationKindQueryUI;
 
@@ -70,6 +71,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
     private Grid<ConceptionKindCorrelationInfo> relationKindRelationRealtimeInfoGrid;
     private boolean conceptionRealTimeInfoGridFirstLoaded = false;
     private boolean conceptionRealTimeChartFirstLoaded = false;
+    private RelationAttachKindsConfigurationView relationAttachKindsConfigurationView;
 
     public RelationKindDetailUI(){}
 
@@ -92,13 +94,15 @@ public class RelationKindDetailUI extends VerticalLayout implements
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             currentBrowserHeight = event.getHeight();
             int chartHeight = currentBrowserHeight - relationKindDetailViewHeightOffset - 340;
-            //conceptionKindCorrelationInfoChart.setHeight(chartHeight, Unit.PIXELS);
             this.relationKindRelationRealtimeInfoGrid.setHeight(chartHeight,Unit.PIXELS);
+            this.relationAttachKindsConfigurationView.setViewWidth(event.getWidth()-820);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             currentBrowserHeight = receiver.getBodyClientHeight();
             kindCorrelationInfoTabSheet.setHeight(currentBrowserHeight-relationKindDetailViewHeightOffset-290,Unit.PIXELS);
+            relationAttachKindsConfigurationView.setViewHeight(currentBrowserHeight-relationKindDetailViewHeightOffset-70);
+            relationAttachKindsConfigurationView.setViewWidth(receiver.getBodyClientWidth()-820);
         }));
         renderKindCorrelationInfoTabContent();
         ResourceHolder.getApplicationBlackboard().addListener(this);
@@ -298,9 +302,10 @@ public class RelationKindDetailUI extends VerticalLayout implements
         rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
 
         RelationKindEntitiesConfigurationView relationKindEntitiesConfigurationView = new RelationKindEntitiesConfigurationView(this.relationKind);
+        relationAttachKindsConfigurationView = new RelationAttachKindsConfigurationView(RelationAttachKindsConfigurationView.RelatedKindType.RelationKind,this.relationKind);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"关系类型运行时配置"),relationKindEntitiesConfigurationView);
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),new HorizontalLayout());
-        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),relationAttachKindsConfigurationView);
+        //kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
     }
 
     private void loadRelationKindInfoData(){
@@ -374,7 +379,9 @@ public class RelationKindDetailUI extends VerticalLayout implements
 
     @Override
     public void receivedRelationKindConfigurationInfoRefreshEvent(RelationKindConfigurationInfoRefreshEvent event) {
-
+        relationAttachKindsConfigurationView.refreshRelationAttachKindsInfo();
+        loadRelationKindInfoData();
+        renderKindCorrelationInfoTabContent();
     }
 
     @Override
