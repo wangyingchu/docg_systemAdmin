@@ -8,6 +8,8 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -176,6 +178,63 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         Icon divIcon2 = VaadinIcon.LINE_V.create();
         divIcon2.setSize("8px");
         infoContainer.add(divIcon2);
+
+        MenuBar linkTimpalAndSpitalInfoMenuBar = new MenuBar();
+        linkTimpalAndSpitalInfoMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+        MenuItem linkDataMenu = createIconItem(linkTimpalAndSpitalInfoMenuBar, VaadinIcon.LINK, "链接时空信息", null);
+        Icon downArrowIcon3 = new Icon(VaadinIcon.CHEVRON_DOWN);
+        downArrowIcon3.setSize("14px");
+        linkDataMenu.add(downArrowIcon3);
+
+        SubMenu linkDataSubItems = linkDataMenu.getSubMenu();
+
+        HorizontalLayout action0Layout = new HorizontalLayout();
+        action0Layout.setPadding(false);
+        action0Layout.setSpacing(false);
+        action0Layout.setMargin(false);
+        action0Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon action0Icon = VaadinIcon.GLOBE_WIRE.create();
+        action0Icon.setSize("10px");
+        Span action0Space = new Span();
+        action0Space.setWidth(6,Unit.PIXELS);
+        NativeLabel action0Label = new NativeLabel("链接至地理空间区域");
+        //action0Label.addClassNames("text-xs","font-semibold","text-secondary");
+        action0Layout.add(action0Icon,action0Space,action0Label);
+
+        MenuItem linkTimeItem = linkDataSubItems.addItem(action0Layout);
+        linkTimeItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                renderAttachToGeospatialRegionView();
+            }
+        });
+
+        HorizontalLayout action1Layout = new HorizontalLayout();
+        action1Layout.setPadding(false);
+        action1Layout.setSpacing(false);
+        action1Layout.setMargin(false);
+        action1Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon action1Icon = VaadinIcon.TIMER.create();
+        action1Icon.setSize("10px");
+        Span action1Space = new Span();
+        action1Space.setWidth(6,Unit.PIXELS);
+        NativeLabel action1Label = new NativeLabel("链接至时间流");
+        //action1Label.addClassNames("text-xs","font-semibold","text-secondary");
+        action1Layout.add(action1Icon,action1Space,action1Label);
+
+        MenuItem linkGeoItem = linkDataSubItems.addItem(action1Layout);
+        linkGeoItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                renderAttachToTimeFlowView();
+            }
+        });
+
+        infoContainer.add(linkTimpalAndSpitalInfoMenuBar);
+
+        Icon divIcon3 = VaadinIcon.LINE_V.create();
+        divIcon3.setSize("8px");
+        infoContainer.add(divIcon3);
 
         Icon cleanKindIcon = new Icon(VaadinIcon.RECYCLE);
         cleanKindIcon.setSize("21px");
@@ -379,4 +438,13 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     public void setViewHeight(int viewHeight){
         classificationConfigView.setHeight(viewHeight-500,Unit.PIXELS);
     }
+
+    private void renderAttachToGeospatialRegionView(){
+
+    }
+
+    private void renderAttachToTimeFlowView(){
+
+    }
+
 }
