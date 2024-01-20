@@ -387,6 +387,94 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                     }
                 });
             }
+            if(!attributeDataType.equals(AttributeDataType.DATE)){
+                HorizontalLayout action6Layout = new HorizontalLayout();
+                action6Layout.setPadding(false);
+                action6Layout.setSpacing(false);
+                action6Layout.setMargin(false);
+                action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                action6Icon.setSize("10px");
+                Span action6Space = new Span();
+                action6Space.setWidth(6,Unit.PIXELS);
+                NativeLabel action6Label = new NativeLabel("转为 DATE 类型");
+                action6Label.addClassNames("text-xs","font-semibold","text-secondary");
+                action6Layout.add(action6Icon,action6Space,action6Label);
+                MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
+                action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                        //renderLoadCSVFormatConceptionEntitiesView();
+                        System.out.println(attributeInfo.getAttributeName());
+                    }
+                });
+            }
+            if(!attributeDataType.equals(AttributeDataType.TIME)){
+                HorizontalLayout action6Layout = new HorizontalLayout();
+                action6Layout.setPadding(false);
+                action6Layout.setSpacing(false);
+                action6Layout.setMargin(false);
+                action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                action6Icon.setSize("10px");
+                Span action6Space = new Span();
+                action6Space.setWidth(6,Unit.PIXELS);
+                NativeLabel action6Label = new NativeLabel("转为 TIME 类型");
+                action6Label.addClassNames("text-xs","font-semibold","text-secondary");
+                action6Layout.add(action6Icon,action6Space,action6Label);
+                MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
+                action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                        //renderLoadCSVFormatConceptionEntitiesView();
+                        System.out.println(attributeInfo.getAttributeName());
+                    }
+                });
+            }
+            if(!attributeDataType.equals(AttributeDataType.DATETIME)){
+                HorizontalLayout action6Layout = new HorizontalLayout();
+                action6Layout.setPadding(false);
+                action6Layout.setSpacing(false);
+                action6Layout.setMargin(false);
+                action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                action6Icon.setSize("10px");
+                Span action6Space = new Span();
+                action6Space.setWidth(6,Unit.PIXELS);
+                NativeLabel action6Label = new NativeLabel("转为 DATETIME 类型");
+                action6Label.addClassNames("text-xs","font-semibold","text-secondary");
+                action6Layout.add(action6Icon,action6Space,action6Label);
+                MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
+                action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                        //renderLoadCSVFormatConceptionEntitiesView();
+                        System.out.println(attributeInfo.getAttributeName());
+                    }
+                });
+            }
+            if(!attributeDataType.equals(AttributeDataType.TIMESTAMP)){
+                HorizontalLayout action6Layout = new HorizontalLayout();
+                action6Layout.setPadding(false);
+                action6Layout.setSpacing(false);
+                action6Layout.setMargin(false);
+                action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                action6Icon.setSize("10px");
+                Span action6Space = new Span();
+                action6Space.setWidth(6,Unit.PIXELS);
+                NativeLabel action6Label = new NativeLabel("转为 TIMESTAMP 类型");
+                action6Label.addClassNames("text-xs","font-semibold","text-secondary");
+                action6Layout.add(action6Icon,action6Space,action6Label);
+                MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
+                action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                        //renderLoadCSVFormatConceptionEntitiesView();
+                        System.out.println(attributeInfo.getAttributeName());
+                    }
+                });
+            }
             return actionsMenuBar;
         });
 
