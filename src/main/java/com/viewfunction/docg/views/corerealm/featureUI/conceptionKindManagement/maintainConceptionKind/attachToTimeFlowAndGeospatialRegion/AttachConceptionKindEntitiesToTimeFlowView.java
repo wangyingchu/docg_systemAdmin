@@ -62,6 +62,17 @@ public class AttachConceptionKindEntitiesToTimeFlowView extends VerticalLayout {
         add(timeEventAttributeSelect);
 
         dateTimeFormatterSelect = new ComboBox<>("时间日期定义格式");
+        dateTimeFormatterSelect.setItems(
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy/mm/dd hh:mm:ss",
+                "yyyy/m/d h:mm:ss",
+                "yyyy/m/dd h:mm:ss",
+                "yyyyMMdd",
+                "yyyy-MM-dd",
+                "yyyymmdd",
+                "yyyy/mm/dd",
+                "yyyy/m/d");
         dateTimeFormatterSelect.setPageSize(30);
         dateTimeFormatterSelect.setPlaceholder("选择或输入时间日期定义格式");
         dateTimeFormatterSelect.setWidthFull();
@@ -76,12 +87,9 @@ public class AttachConceptionKindEntitiesToTimeFlowView extends VerticalLayout {
         timeScaleGradeSelect.setWidthFull();
         add(timeScaleGradeSelect);
 
-
         eventCommentField = new TextField("时间事件备注");
         eventCommentField.setWidthFull();
         add(eventCommentField);
-
-
 
         HorizontalLayout addEventAttributesUIContainerLayout = new HorizontalLayout();
         addEventAttributesUIContainerLayout.setSpacing(false);
@@ -121,8 +129,6 @@ public class AttachConceptionKindEntitiesToTimeFlowView extends VerticalLayout {
         });
         addEventAttributesUIContainerLayout.add(clearAttributeButton);
 
-
-
         VerticalLayout relationEntityAttributesContainer = new VerticalLayout();
         relationEntityAttributesContainer.setMargin(false);
         relationEntityAttributesContainer.setSpacing(false);
@@ -133,15 +139,6 @@ public class AttachConceptionKindEntitiesToTimeFlowView extends VerticalLayout {
         relationEntityAttributesScroller.setHeight(150,Unit.PIXELS);
         relationEntityAttributesScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         add(relationEntityAttributesScroller);
-
-
-
-
-
-
-
-
-
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setWidthFull();
@@ -160,31 +157,19 @@ public class AttachConceptionKindEntitiesToTimeFlowView extends VerticalLayout {
                 //doCreateNewConceptionKind();
             }
         });
-
     }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-
-        loadQueryCriteriaComboBox();
+        loadAttributeNamesComboBox();
     }
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
     }
 
-
-
-
-
-
-
-
-
-
-
-    private void loadQueryCriteriaComboBox(){
+    private void loadAttributeNamesComboBox(){
         int entityAttributesDistributionStatisticSampleRatio = 20000;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
