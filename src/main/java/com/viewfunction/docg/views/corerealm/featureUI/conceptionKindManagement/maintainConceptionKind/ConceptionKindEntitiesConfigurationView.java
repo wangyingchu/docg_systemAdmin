@@ -26,7 +26,6 @@ import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefreshEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCreatedEvent;
-
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
@@ -34,9 +33,10 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classif
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndexMaintain.KindIndexConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
-
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.attachToTimeFlowAndGeospatialRegion.AttachConceptionKindEntitiesToTimeFlowView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.exchangeConceptionEntities.*;
+
 import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
@@ -444,7 +444,12 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     }
 
     private void renderAttachToTimeFlowView(){
-
+        AttachConceptionKindEntitiesToTimeFlowView attachConceptionKindEntitiesToTimeFlowView =
+                new AttachConceptionKindEntitiesToTimeFlowView(this.conceptionKindName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.TIMER.create(),"链接概念类型实体至时间流",null,true,500,630,false);
+        fixSizeWindow.setWindowContent(attachConceptionKindEntitiesToTimeFlowView);
+        attachConceptionKindEntitiesToTimeFlowView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
-
 }
