@@ -347,7 +347,7 @@ public class AttachConceptionKindEntitiesToTimeFlowView extends VerticalLayout {
             Set<String> commentPropertiesNameSet = eventAttributeEditorsMap.keySet();
             for(String currentPropertyName:commentPropertiesNameSet){
                 AttributeEditorItemWidget attributeEditorItemWidget = eventAttributeEditorsMap.get(currentPropertyName);
-                eventData.put(attributeEditorItemWidget.getAttributeName(),attributeEditorItemWidget.getAttributeValue());
+                eventData.put(attributeEditorItemWidget.getAttributeName(),attributeEditorItemWidget.getAttributeValue().getAttributeValue());
             }
         }
 
