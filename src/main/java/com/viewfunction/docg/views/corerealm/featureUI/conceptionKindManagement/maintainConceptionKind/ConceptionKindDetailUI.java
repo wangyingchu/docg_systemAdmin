@@ -7,12 +7,15 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -27,7 +30,9 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -50,6 +55,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -257,7 +263,6 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             action1Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                    //renderLoadCSVFormatConceptionEntitiesView();
                     renderAddAttributeKindView(attributeInfo);
                 }
             });
@@ -278,8 +283,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             action2Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                    //renderLoadCSVFormatConceptionEntitiesView();
-                    System.out.println(attributeInfo.getAttributeName());
+                    renderDeleteConceptionKindAttributeView(attributeInfo.getAttributeName());
                 }
             });
 
@@ -795,5 +799,71 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         createAttributeKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+    private void renderDeleteConceptionKindAttributeView(String attributeName){
+        List<Button> actionButtonList = new ArrayList<>();
+
+        Button confirmButton = new Button("确认删除属性",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行删除属性操作，该操作将从概念类型 "+this.conceptionKind+" 的所有实体中删除属性 "+attributeName,actionButtonList,500,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doDeleteConceptionKindAttribute(attributeName);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doDeleteConceptionKindAttribute(String attributeName){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        Set<String> attributeForRemoveSet = new HashSet<>();
+        attributeForRemoveSet.add(attributeName);
+        try {
+            EntitiesOperationStatistics resultEntitiesOperationStatistics = targetConceptionKind.removeEntityAttributes(attributeForRemoveSet);
+            showDeleteConceptionKindAttributePopupNotification(attributeName,resultEntitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+            refreshConceptionKindAttributesInfoGrid();
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showDeleteConceptionKindAttributePopupNotification(String attributeName,EntitiesOperationStatistics conceptionEntitiesAttributesRetrieveResult, NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text("从概念类型 "+this.conceptionKind+" 中删除实体属性 "+attributeName+" 操作成功"));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
+
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        notificationMessageContainer.add(new Div(new Text("删除属性成功实体数: "+conceptionEntitiesAttributesRetrieveResult.getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("删除属性失败实体数: "+conceptionEntitiesAttributesRetrieveResult.getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("操作开始时间: "+conceptionEntitiesAttributesRetrieveResult.getStartTime())));
+        notificationMessageContainer.add(new Div(new Text("操作结束时间: "+conceptionEntitiesAttributesRetrieveResult.getFinishTime())));
+        notification.add(notificationMessageContainer);
+        notification.setDuration(10000);
+        notification.open();
     }
 }
