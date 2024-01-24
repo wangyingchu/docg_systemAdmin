@@ -31,6 +31,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.TemporalScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
@@ -320,8 +321,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 action3Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                     @Override
                     public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                        //renderLoadCSVFormatConceptionEntitiesView();
-                        System.out.println(attributeInfo.getAttributeName());
+                        renderConvertAttributeToIntView(attributeInfo.getAttributeName());
                     }
                 });
             }
@@ -342,8 +342,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 action4Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                     @Override
                     public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                        //renderLoadCSVFormatConceptionEntitiesView();
-                        System.out.println(attributeInfo.getAttributeName());
+                        renderConvertAttributeToFloatView(attributeInfo.getAttributeName());
                     }
                 });
             }
@@ -364,8 +363,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 action5Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                     @Override
                     public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                        //renderLoadCSVFormatConceptionEntitiesView();
-                        System.out.println(attributeInfo.getAttributeName());
+                        renderConvertAttributeToBooleanView(attributeInfo.getAttributeName());
                     }
                 });
             }
@@ -386,8 +384,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                     @Override
                     public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                        //renderLoadCSVFormatConceptionEntitiesView();
-                        System.out.println(attributeInfo.getAttributeName());
+                        renderConvertAttributeToStringView(attributeInfo.getAttributeName());
                     }
                 });
             }
@@ -408,8 +405,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                     @Override
                     public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                        //renderLoadCSVFormatConceptionEntitiesView();
-                        System.out.println(attributeInfo.getAttributeName());
+                        renderConvertAttributeToDateView(attributeInfo.getAttributeName());
                     }
                 });
             }
@@ -430,8 +426,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                     @Override
                     public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                        //renderLoadCSVFormatConceptionEntitiesView();
-                        System.out.println(attributeInfo.getAttributeName());
+                        renderConvertAttributeToTimeView(attributeInfo.getAttributeName());
                     }
                 });
             }
@@ -452,8 +447,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                     @Override
                     public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                        //renderLoadCSVFormatConceptionEntitiesView();
-                        System.out.println(attributeInfo.getAttributeName());
+                        renderConvertAttributeToDateTimeView(attributeInfo.getAttributeName());
                     }
                 });
             }
@@ -474,8 +468,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                     @Override
                     public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                        //renderLoadCSVFormatConceptionEntitiesView();
-                        System.out.println(attributeInfo.getAttributeName());
+                        renderConvertAttributeToTimeStampView(attributeInfo.getAttributeName());
                     }
                 });
             }
@@ -836,17 +829,18 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         attributeForRemoveSet.add(attributeName);
         try {
             EntitiesOperationStatistics resultEntitiesOperationStatistics = targetConceptionKind.removeEntityAttributes(attributeForRemoveSet);
-            showDeleteConceptionKindAttributePopupNotification(attributeName,resultEntitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+            String notificationMessage = "从概念类型 "+this.conceptionKind+" 中删除实体属性 "+attributeName+" 操作成功";
+            showPopupNotification(notificationMessage,resultEntitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
             refreshConceptionKindAttributesInfoGrid();
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void showDeleteConceptionKindAttributePopupNotification(String attributeName,EntitiesOperationStatistics conceptionEntitiesAttributesRetrieveResult, NotificationVariant notificationVariant){
+    private void showPopupNotification(String notificationMessage,EntitiesOperationStatistics conceptionEntitiesAttributesRetrieveResult, NotificationVariant notificationVariant){
         Notification notification = new Notification();
         notification.addThemeVariants(notificationVariant);
-        Div text = new Div(new Text("从概念类型 "+this.conceptionKind+" 中删除实体属性 "+attributeName+" 操作成功"));
+        Div text = new Div(new Text(notificationMessage));
         Button closeButton = new Button(new Icon("lumo", "cross"));
         closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         closeButton.addClickListener(event -> {
@@ -858,12 +852,324 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         notification.add(layout);
 
         VerticalLayout notificationMessageContainer = new VerticalLayout();
-        notificationMessageContainer.add(new Div(new Text("删除属性成功实体数: "+conceptionEntitiesAttributesRetrieveResult.getSuccessItemsCount())));
-        notificationMessageContainer.add(new Div(new Text("删除属性失败实体数: "+conceptionEntitiesAttributesRetrieveResult.getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("操作成功实体数: "+conceptionEntitiesAttributesRetrieveResult.getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("操作失败实体数: "+conceptionEntitiesAttributesRetrieveResult.getSuccessItemsCount())));
         notificationMessageContainer.add(new Div(new Text("操作开始时间: "+conceptionEntitiesAttributesRetrieveResult.getStartTime())));
         notificationMessageContainer.add(new Div(new Text("操作结束时间: "+conceptionEntitiesAttributesRetrieveResult.getFinishTime())));
         notification.add(notificationMessageContainer);
         notification.setDuration(10000);
         notification.open();
+    }
+
+    private void renderConvertAttributeToIntView(String attributeName){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 INT 类型",actionButtonList,500,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doConvertAttributeToInt(attributeName);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doConvertAttributeToInt(String attributeName){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        EntitiesOperationStatistics entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToIntType(attributeName);
+        String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 INT 类型操作成功";
+        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+        refreshConceptionKindAttributesInfoGrid();
+    }
+
+    private void renderConvertAttributeToFloatView(String attributeName){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 FLOAT 类型",actionButtonList,500,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doConvertAttributeToFloat(attributeName);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doConvertAttributeToFloat(String attributeName){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        EntitiesOperationStatistics entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToFloatType(attributeName);
+        String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 FLOAT 类型操作成功";
+        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+        refreshConceptionKindAttributesInfoGrid();
+    }
+
+    private void renderConvertAttributeToBooleanView(String attributeName){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 BOOLEAN 类型",actionButtonList,500,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doConvertAttributeToBoolean(attributeName);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doConvertAttributeToBoolean(String attributeName){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        EntitiesOperationStatistics entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToBooleanType(attributeName);
+        String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 BOOLEAN 类型操作成功";
+        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+        refreshConceptionKindAttributesInfoGrid();
+    }
+
+    private void renderConvertAttributeToStringView(String attributeName){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 STRING 类型",actionButtonList,500,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doConvertAttributeToString(attributeName);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doConvertAttributeToString(String attributeName){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        EntitiesOperationStatistics entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToStringType(attributeName);
+        String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 STRING 类型操作成功";
+        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+        refreshConceptionKindAttributesInfoGrid();
+    }
+
+    private void renderConvertAttributeToDateView(String attributeName){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 DATE 类型",actionButtonList,500,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doConvertAttributeToDate(attributeName);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doConvertAttributeToDate(String attributeName){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        EntitiesOperationStatistics entitiesOperationStatistics = null;
+        try {
+            entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,
+                    TemporalScaleCalculable.TemporalValueFormat.Format1, TemporalScaleCalculable.TemporalScaleLevel.Date);
+            String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 DATE 类型操作成功";
+            showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+            refreshConceptionKindAttributesInfoGrid();
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void renderConvertAttributeToTimeView(String attributeName){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 TIME 类型",actionButtonList,500,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doConvertAttributeToTime(attributeName);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doConvertAttributeToTime(String attributeName){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        EntitiesOperationStatistics entitiesOperationStatistics = null;
+        try {
+            entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,
+                    TemporalScaleCalculable.TemporalValueFormat.Format1, TemporalScaleCalculable.TemporalScaleLevel.Time);
+            String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 TIME 类型操作成功";
+            showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+            refreshConceptionKindAttributesInfoGrid();
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void renderConvertAttributeToDateTimeView(String attributeName){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 DATETIME 类型",actionButtonList,500,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doConvertAttributeToDateTime(attributeName);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doConvertAttributeToDateTime(String attributeName){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        EntitiesOperationStatistics entitiesOperationStatistics = null;
+        try {
+            entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,
+                    TemporalScaleCalculable.TemporalValueFormat.Format1, TemporalScaleCalculable.TemporalScaleLevel.Datetime);
+            String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 DATETIME 类型操作成功";
+            showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+            refreshConceptionKindAttributesInfoGrid();
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void renderConvertAttributeToTimeStampView(String attributeName){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 TIMESTAMP 类型",actionButtonList,500,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doConvertAttributeToTimeStamp(attributeName);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doConvertAttributeToTimeStamp(String attributeName){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        EntitiesOperationStatistics entitiesOperationStatistics = null;
+        try {
+            entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,
+                    TemporalScaleCalculable.TemporalValueFormat.Format1, TemporalScaleCalculable.TemporalScaleLevel.Timestamp);
+            String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 TIMESTAMP 类型操作成功";
+            showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+            refreshConceptionKindAttributesInfoGrid();
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
