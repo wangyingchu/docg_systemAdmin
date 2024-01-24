@@ -94,7 +94,9 @@ public class MainLayout extends AppLayout {
         layout.setWidthFull();
         layout.setSpacing(false);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
-        layout.add(new DrawerToggle());
+        DrawerToggle drawerToggle = new DrawerToggle();
+        //drawerToggle.setEnabled(false);
+        layout.add(drawerToggle);
         viewTitle = new HorizontalLayout();
         layout.add(viewTitle);
 
