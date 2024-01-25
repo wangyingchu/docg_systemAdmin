@@ -870,7 +870,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 LONG 类型",actionButtonList,500,180);
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 LONG 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -906,7 +906,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 DOUBLE 类型",actionButtonList,500,180);
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 DOUBLE 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -942,7 +942,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 BOOLEAN 类型",actionButtonList,500,180);
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 BOOLEAN 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -978,7 +978,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 STRING 类型",actionButtonList,500,180);
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 STRING 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -1014,7 +1014,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 DATE 类型",actionButtonList,500,180);
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 DATE 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -1056,7 +1056,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 TIME 类型",actionButtonList,500,180);
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 TIME 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -1098,7 +1098,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 DATETIME 类型",actionButtonList,500,180);
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 DATETIME 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -1140,7 +1140,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 TIMESTAMP 类型",actionButtonList,500,180);
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 TIMESTAMP 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
