@@ -314,7 +314,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 action3Icon.setSize("10px");
                 Span action3Space = new Span();
                 action3Space.setWidth(6,Unit.PIXELS);
-                NativeLabel action3Label = new NativeLabel("转为 INT 类型");
+                NativeLabel action3Label = new NativeLabel("转为 LONG 类型");
                 action3Label.addClassNames("text-xs","font-semibold","text-secondary");
                 action3Layout.add(action3Icon,action3Space,action3Label);
                 MenuItem action3Item = containerAction3Item.getSubMenu().addItem(action3Layout);
@@ -335,7 +335,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 action4Icon.setSize("10px");
                 Span action4Space = new Span();
                 action4Space.setWidth(6,Unit.PIXELS);
-                NativeLabel action4Label = new NativeLabel("转为 FLOAT 类型");
+                NativeLabel action4Label = new NativeLabel("转为 DOUBLE 类型");
                 action4Label.addClassNames("text-xs","font-semibold","text-secondary");
                 action4Layout.add(action4Icon,action4Space,action4Label);
                 MenuItem action4Item = containerAction3Item.getSubMenu().addItem(action4Layout);
@@ -853,7 +853,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
         VerticalLayout notificationMessageContainer = new VerticalLayout();
         notificationMessageContainer.add(new Div(new Text("操作成功实体数: "+conceptionEntitiesAttributesRetrieveResult.getSuccessItemsCount())));
-        notificationMessageContainer.add(new Div(new Text("操作失败实体数: "+conceptionEntitiesAttributesRetrieveResult.getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("操作失败实体数: "+conceptionEntitiesAttributesRetrieveResult.getFailItemsCount())));
         notificationMessageContainer.add(new Div(new Text("操作开始时间: "+conceptionEntitiesAttributesRetrieveResult.getStartTime())));
         notificationMessageContainer.add(new Div(new Text("操作结束时间: "+conceptionEntitiesAttributesRetrieveResult.getFinishTime())));
         notification.add(notificationMessageContainer);
@@ -870,7 +870,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 INT 类型",actionButtonList,500,180);
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 LONG 类型",actionButtonList,500,180);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -892,7 +892,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
         EntitiesOperationStatistics entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToIntType(attributeName);
-        String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 INT 类型操作成功";
+        String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 LONG 类型操作成功";
         showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
         refreshConceptionKindAttributesInfoGrid();
     }
@@ -906,7 +906,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 FLOAT 类型",actionButtonList,500,180);
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 DOUBLE 类型",actionButtonList,500,180);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -928,7 +928,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
         EntitiesOperationStatistics entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToFloatType(attributeName);
-        String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 FLOAT 类型操作成功";
+        String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 DOUBLE 类型操作成功";
         showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
         refreshConceptionKindAttributesInfoGrid();
     }
