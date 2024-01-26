@@ -1141,8 +1141,10 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             continentValueTextField.setItems(continentEntityENameList);
         }
 
-        continentValueTextField.setValue("亚洲");
-        countryRegionTextField.setValue("中国");
+        if(allContinentEntityList.size() != 0){
+            continentValueTextField.setValue("亚洲");
+            countryRegionTextField.setValue("中国");
+        }
     }
 
     private void switchGeospatialRegionSearchElementsInfo(String propertyName){
