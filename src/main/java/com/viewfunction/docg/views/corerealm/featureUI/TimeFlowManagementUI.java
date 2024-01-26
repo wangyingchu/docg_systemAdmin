@@ -17,10 +17,12 @@ import com.vaadin.flow.component.tabs.TabSheetVariant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 import com.viewfunction.docg.element.eventHandling.TimeFlowRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.timeFlowManagement.CreateTimeFlowView;
 import com.viewfunction.docg.views.corerealm.featureUI.timeFlowManagement.maintainTimeFlow.TimeFlowDetailUI;
 
 import java.util.ArrayList;
@@ -70,7 +72,7 @@ public class TimeFlowManagementUI extends VerticalLayout {
         createTimeFlowButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderCreateClassificationUI();
+                renderCreateTimeFlowUI();
             }
         });
 
@@ -103,5 +105,14 @@ public class TimeFlowManagementUI extends VerticalLayout {
                 .set("font-weight", "bold");
         tabTitleLayout.add(tabTitleIcon,tabTitleLabel);
         return tabTitleLayout;
+    }
+
+    private void renderCreateTimeFlowUI(){
+        CreateTimeFlowView createTimeFlowView = new CreateTimeFlowView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建时间流",null,true,530,220,false);
+        fixSizeWindow.setWindowContent(createTimeFlowView);
+        fixSizeWindow.setModel(true);
+        createTimeFlowView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 }
