@@ -354,6 +354,8 @@ public class MainLayout extends AppLayout {
                 ComputeGridRefreshEvent.class);
         _BLACKBOARD.register(RelationAttachKindCreatedEvent.RelationAttachKindCreatedListener.class,
                 RelationAttachKindCreatedEvent.class);
+        _BLACKBOARD.register(GeospatialRegionCreatedEvent.GeospatialRegionCreatedListener.class,
+                GeospatialRegionCreatedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

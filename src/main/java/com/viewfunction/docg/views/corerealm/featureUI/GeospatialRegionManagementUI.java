@@ -1,8 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.NativeLabel;
@@ -17,10 +15,13 @@ import com.vaadin.flow.component.tabs.TabSheetVariant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.GeospatialRegion;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import com.viewfunction.docg.element.eventHandling.GeospatialRegionCreatedEvent;
 import com.viewfunction.docg.element.eventHandling.GeospatialRegionRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.geospatialRegionManagement.CreateGeospatialRegionView;
 import com.viewfunction.docg.views.corerealm.featureUI.geospatialRegionManagement.maintainGeospatialRegion.GeospatialRegionDetailUI;
 
 import java.util.ArrayList;
@@ -28,9 +29,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GeospatialRegionManagementUI extends VerticalLayout {
+public class GeospatialRegionManagementUI extends VerticalLayout implements
+        GeospatialRegionCreatedEvent.GeospatialRegionCreatedListener {
 
     private Map<String, GeospatialRegionDetailUI> geospatialRegionDetailUIMap;
+    private TabSheet timeFlowInfoTabSheet;
 
     public GeospatialRegionManagementUI(){
         this.geospatialRegionDetailUIMap = new HashMap<>();
@@ -71,7 +74,7 @@ public class GeospatialRegionManagementUI extends VerticalLayout {
         createTimeFlowButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderCreateClassificationUI();
+                renderCreateGeospatialRegionUI();
             }
         });
 
@@ -79,7 +82,7 @@ public class GeospatialRegionManagementUI extends VerticalLayout {
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"地理空间区域数据:",timeFlowManagementOperationButtonList);
         add(sectionActionBar);
 
-        TabSheet timeFlowInfoTabSheet = new TabSheet();
+        timeFlowInfoTabSheet = new TabSheet();
         timeFlowInfoTabSheet.addThemeVariants(TabSheetVariant.LUMO_TABS_SMALL);
         timeFlowInfoTabSheet.setWidthFull();
         add(timeFlowInfoTabSheet);
@@ -104,5 +107,34 @@ public class GeospatialRegionManagementUI extends VerticalLayout {
                 .set("font-weight", "bold");
         tabTitleLayout.add(tabTitleIcon,tabTitleLabel);
         return tabTitleLayout;
+    }
+
+    private void renderCreateGeospatialRegionUI(){
+        CreateGeospatialRegionView createGeospatialRegionView = new CreateGeospatialRegionView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建地理空间区域",null,true,530,220,false);
+        fixSizeWindow.setWindowContent(createGeospatialRegionView);
+        fixSizeWindow.setModel(true);
+        createGeospatialRegionView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
+
+    @Override
+    public void receivedGeospatialRegionCreatedEvent(GeospatialRegionCreatedEvent event) {
+        String geospatialRegionName = event.getGeospatialRegionName();
+        GeospatialRegionDetailUI geospatialRegionDetailUI = new GeospatialRegionDetailUI(geospatialRegionName);
+        this.geospatialRegionDetailUIMap.put(geospatialRegionName,geospatialRegionDetailUI);
+        timeFlowInfoTabSheet.add(generateTabTitle(VaadinIcon.GLOBE,geospatialRegionName),geospatialRegionDetailUI);
     }
 }
