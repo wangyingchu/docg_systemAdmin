@@ -445,7 +445,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
                 if(continentValueTextField.getValue() != null){
                     querySelectedContinentEntitiesButton.setEnabled(true);
-                    setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.CONTINENT);
+                    setupGeospatialScaleQueryElements(GeospatialRegion.GeospatialScaleGrade.CONTINENT);
 
                     countryRegionTextField.clear();
                     provinceValueTextField.clear();
@@ -535,7 +535,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
                 if(countryRegionTextField.getValue() != null){
                     querySelectedCountryRegionEntitiesButton.setEnabled(true);
-                    setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.COUNTRY_REGION);
+                    setupGeospatialScaleQueryElements(GeospatialRegion.GeospatialScaleGrade.COUNTRY_REGION);
 
                     provinceValueTextField.clear();
                     prefectureValueTextField.clear();
@@ -622,7 +622,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
 
                 if(provinceValueTextField.getValue() != null){
                     querySelectedProvinceEntitiesButton.setEnabled(true);
-                    setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.PROVINCE);
+                    setupGeospatialScaleQueryElements(GeospatialRegion.GeospatialScaleGrade.PROVINCE);
 
                     prefectureValueTextField.clear();
                     countyValueTextField.clear();
@@ -706,7 +706,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
                 if(prefectureValueTextField.getValue() != null){
                     querySelectedPrefectureEntitiesButton.setEnabled(true);
-                    setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.PREFECTURE);
+                    setupGeospatialScaleQueryElements(GeospatialRegion.GeospatialScaleGrade.PREFECTURE);
 
                     countyValueTextField.clear();
                     townshipValueTextField.clear();
@@ -784,7 +784,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
                 if(countyValueTextField.getValue() != null){
                     querySelectedCountyEntitiesButton.setEnabled(true);
-                    setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.COUNTY);
+                    setupGeospatialScaleQueryElements(GeospatialRegion.GeospatialScaleGrade.COUNTY);
 
                     townshipValueTextField.clear();
                     villageValueTextField.clear();
@@ -858,7 +858,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
                 if(townshipValueTextField.getValue() != null){
                     querySelectedTownshipEntitiesButton.setEnabled(true);
-                    setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.TOWNSHIP);
+                    setupGeospatialScaleQueryElements(GeospatialRegion.GeospatialScaleGrade.TOWNSHIP);
 
                     villageValueTextField.clear();
 
@@ -928,7 +928,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<String>, String> comboBoxStringComponentValueChangeEvent) {
                 if(villageValueTextField.getValue() != null){
                     querySelectedVillageEntitiesButton.setEnabled(true);
-                    setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade.VILLAGE);
+                    setupGeospatialScaleQueryElements(GeospatialRegion.GeospatialScaleGrade.VILLAGE);
                     executeQueryButton.setEnabled(false);
                 }else{
                     querySelectedVillageEntitiesButton.setEnabled(false);
@@ -1168,7 +1168,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         }
     }
 
-    private void setupGeospatialScaleQueryWElements(GeospatialRegion.GeospatialScaleGrade geospatialScaleGrade){
+    private void setupGeospatialScaleQueryElements(GeospatialRegion.GeospatialScaleGrade geospatialScaleGrade){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
         String currentContinentValue;

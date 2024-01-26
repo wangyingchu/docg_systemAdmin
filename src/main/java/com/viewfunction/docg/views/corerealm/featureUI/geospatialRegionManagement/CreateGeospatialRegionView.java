@@ -14,6 +14,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.GeospatialRegion;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -100,8 +101,40 @@ public class CreateGeospatialRegionView extends VerticalLayout {
                 CommonUIOperationUtil.showPopupNotification("默认地理空间区域创建失败", NotificationVariant.LUMO_ERROR);
             }
         }else{
-
-
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            String targetGeospatialRegionName = this.geospatialRegionNameField.getValue();
+            boolean inputValid = true;
+            if(targetGeospatialRegionName.equals("")){
+                showErrorMessage("请输入地理空间区域名称");
+                CommonUIOperationUtil.showPopupNotification("地理空间区域名称输入错误",NotificationVariant.LUMO_ERROR);
+                inputValid = false;
+            }else{
+                List<GeospatialRegion> geospatialRegionList = coreRealm.getGeospatialRegions();
+                for(GeospatialRegion currentGeospatialRegion : geospatialRegionList){
+                    String currentTimeFlowName = currentGeospatialRegion.getGeospatialRegionName();
+                    if(targetGeospatialRegionName.equalsIgnoreCase(currentTimeFlowName)){
+                        showErrorMessage("名称为 "+targetGeospatialRegionName+" 的地理空间区域已经存在");
+                        CommonUIOperationUtil.showPopupNotification("名称为 "+targetGeospatialRegionName+" 的地理空间区域已经存在",NotificationVariant.LUMO_ERROR);
+                        inputValid = false;
+                        break;
+                    }
+                }
+            }
+            if(inputValid){
+                hideErrorMessage();
+                GeospatialRegion targetGeospatialRegion = coreRealm.getOrCreateGeospatialRegion(targetGeospatialRegionName);
+                if(targetGeospatialRegion != null){
+                    GeospatialRegionCreatedEvent geospatialRegionCreatedEvent = new GeospatialRegionCreatedEvent();
+                    geospatialRegionCreatedEvent.setGeospatialRegionName(targetGeospatialRegion.getGeospatialRegionName());
+                    ResourceHolder.getApplicationBlackboard().fire(geospatialRegionCreatedEvent);
+                    if(this.containerDialog != null){
+                        this.containerDialog.close();
+                    }
+                    CommonUIOperationUtil.showPopupNotification("地理空间区域 "+targetGeospatialRegionName+" 创建成功", NotificationVariant.LUMO_SUCCESS);
+                }else{
+                    CommonUIOperationUtil.showPopupNotification("地理空间区域 "+targetGeospatialRegionName+" 创建失败", NotificationVariant.LUMO_ERROR);
+                }
+            }
         }
     }
 
