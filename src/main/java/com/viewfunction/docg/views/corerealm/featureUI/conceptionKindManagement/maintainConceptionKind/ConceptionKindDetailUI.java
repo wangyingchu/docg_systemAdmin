@@ -1036,15 +1036,18 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
         EntitiesOperationStatistics entitiesOperationStatistics = null;
+        /*
         try {
-            entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,
-                    TemporalScaleCalculable.TemporalValueFormat.Format1, TemporalScaleCalculable.TemporalScaleLevel.Date);
+            //entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,
+            //        TemporalScaleCalculable.TemporalValueFormat.Format1, TemporalScaleCalculable.TemporalScaleLevel.Date);
             String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 DATE 类型操作成功";
             showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
             refreshConceptionKindAttributesInfoGrid();
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
         }
+
+         */
     }
 
     private void renderConvertAttributeToTimeView(String attributeName){
@@ -1080,7 +1083,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         EntitiesOperationStatistics entitiesOperationStatistics = null;
         try {
             entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,
-                    TemporalScaleCalculable.TemporalValueFormat.Format1, TemporalScaleCalculable.TemporalScaleLevel.Time);
+                    null, TemporalScaleCalculable.TemporalScaleLevel.Time);
             String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 TIME 类型操作成功";
             showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
             refreshConceptionKindAttributesInfoGrid();
@@ -1122,7 +1125,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         EntitiesOperationStatistics entitiesOperationStatistics = null;
         try {
             entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,
-                    TemporalScaleCalculable.TemporalValueFormat.Format1, TemporalScaleCalculable.TemporalScaleLevel.Datetime);
+                    null, TemporalScaleCalculable.TemporalScaleLevel.Datetime);
             String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 DATETIME 类型操作成功";
             showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
             refreshConceptionKindAttributesInfoGrid();
@@ -1164,7 +1167,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         EntitiesOperationStatistics entitiesOperationStatistics = null;
         try {
             entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,
-                    TemporalScaleCalculable.TemporalValueFormat.Format1, TemporalScaleCalculable.TemporalScaleLevel.Timestamp);
+                    null, TemporalScaleCalculable.TemporalScaleLevel.Timestamp);
             String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 TIMESTAMP 类型操作成功";
             showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
             refreshConceptionKindAttributesInfoGrid();

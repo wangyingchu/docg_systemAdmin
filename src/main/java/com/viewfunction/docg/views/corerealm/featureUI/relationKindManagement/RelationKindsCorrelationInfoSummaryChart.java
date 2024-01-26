@@ -122,9 +122,11 @@ public class RelationKindsCorrelationInfoSummaryChart extends VerticalLayout {
 
         inDegreeCartesianHeatmapChart.setXAxisLabel(conceptionKindsLabel_x);
         inDegreeCartesianHeatmapChart.setYAxisLabel(relationKindsLabel_y);
-        int maxValue = (int)(inDegreeMaxRelationCount - median(totalCountList))/3;
-        inDegreeCartesianHeatmapChart.setMaxMapValue(maxValue);
-        inDegreeCartesianHeatmapChart.setMinMapValue((int)min(totalCountList));
+        if(totalCountList.size()>0){
+            int maxValue = (int)(inDegreeMaxRelationCount - median(totalCountList))/3;
+            inDegreeCartesianHeatmapChart.setMaxMapValue(maxValue);
+            inDegreeCartesianHeatmapChart.setMinMapValue((int)min(totalCountList));
+        }
         inDegreeCartesianHeatmapChart.setData(inDegreeDataArray);
     }
 
@@ -191,9 +193,11 @@ public class RelationKindsCorrelationInfoSummaryChart extends VerticalLayout {
 
         outDegreeCartesianHeatmapChart.setXAxisLabel(conceptionKindsLabel_x);
         outDegreeCartesianHeatmapChart.setYAxisLabel(relationKindsLabel_y);
-        int maxValue = (int)(outDegreeMaxRelationCount - median(totalCountList))/3;
-        outDegreeCartesianHeatmapChart.setMaxMapValue(maxValue);
-        outDegreeCartesianHeatmapChart.setMinMapValue((int)min(totalCountList));
+        if(totalCountList.size()>0){
+            int maxValue = (int)(outDegreeMaxRelationCount - median(totalCountList))/3;
+            outDegreeCartesianHeatmapChart.setMaxMapValue(maxValue);
+            outDegreeCartesianHeatmapChart.setMinMapValue((int)min(totalCountList));
+        }
         outDegreeCartesianHeatmapChart.setData(outDegreeDataArray);
     }
 

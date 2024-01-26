@@ -104,7 +104,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
         classificationRelationGuideButton.setDisableOnClick(true);
         classificationRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         classificationRelationGuideButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        classificationManagementOperationButtonList.add(classificationRelationGuideButton);
+        //classificationManagementOperationButtonList.add(classificationRelationGuideButton);
         classificationRelationGuideButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
