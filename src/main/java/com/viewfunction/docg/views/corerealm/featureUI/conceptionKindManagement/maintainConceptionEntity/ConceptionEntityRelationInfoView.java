@@ -36,8 +36,8 @@ import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.AddConceptionEntityToProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.relation.EntityAttachedRelationKindsCountChart;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CreateRelationEntityView;
-import dev.mett.vaadin.tooltip.Tooltips;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.DeleteRelationEntityView;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
 
 import java.util.*;
 
@@ -143,15 +143,15 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         relationEntitiesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_COLUMN_BORDERS);
         relationEntitiesGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         relationEntitiesGrid.addComponentColumn(new RelationDirectionIconValueProvider()).setHeader("").setKey("idx_0").setFlexGrow(0).setWidth("35px").setResizable(false);
-        relationEntitiesGrid.addColumn(RelationEntity::getRelationEntityUID).setHeader("关系实体 UID").setKey("idx_2").setFlexGrow(0).setWidth("130px").setResizable(false);
+        relationEntitiesGrid.addComponentColumn(new RelationEntityValueProvider()).setHeader("关系实体信息").setKey("idx_2").setFlexGrow(0).setWidth("140px").setResizable(false);
         relationEntitiesGrid.addColumn(RelationEntity::getRelationKindName).setHeader("关系实体类型名称").setKey("idx_3").setResizable(true);
         relationEntitiesGrid.addComponentColumn(new RelatedConceptionEntityValueProvider()).setHeader("相关概念实体").setKey("idx_4").setFlexGrow(1).setResizable(true);
         relationEntitiesGrid.addComponentColumn(new RelationEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_1").setFlexGrow(0).setWidth("120px").setResizable(false);
 
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
         relationEntitiesGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(false);
-        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.KEY_O,"关系实体 UID");
-        relationEntitiesGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.LINK,"关系实体信息");
+        relationEntitiesGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(false);
         GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.CONNECT_O,"关系实体类型名称");
         relationEntitiesGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
         GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(FontAwesome.Solid.STETHOSCOPE.create(),"相关概念实体");
@@ -233,7 +233,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
 
                 Icon filterIcon = new Icon(VaadinIcon.FILTER);
                 filterIcon.setSize("8px");
-                Tooltips.getCurrent().setTooltip(filterIcon, "按类型过滤关系实体");
+                filterIcon.setTooltipText("按类型过滤关系实体");
                 relationKindsInfoLayout.add(filterIcon);
 
                 Set<String> relationKindsSet = attachedRelationKindCountInfo.keySet();
@@ -392,7 +392,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
             Button showDetailButton = new Button();
             showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             showDetailButton.setIcon(VaadinIcon.EYE.create());
-            Tooltips.getCurrent().setTooltip(showDetailButton, "显示关联概念实体详情");
+            showDetailButton.setTooltipText("显示关联概念实体详情");
             actionButtonContainerLayout.add(showDetailButton);
             showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
@@ -406,7 +406,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
             Button addToProcessListButton = new Button();
             addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             addToProcessListButton.setIcon(VaadinIcon.INBOX.create());
-            Tooltips.getCurrent().setTooltip(addToProcessListButton, "将关联概念实体加入待处理数据列表");
+            addToProcessListButton.setTooltipText("将关联概念实体加入待处理数据列表");
             actionButtonContainerLayout.add(addToProcessListButton);
             addToProcessListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
@@ -430,7 +430,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
             deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
             deleteButton.setIcon(VaadinIcon.UNLINK.create());
-            Tooltips.getCurrent().setTooltip(deleteButton, "删除实体关联");
+            deleteButton.setTooltipText("删除实体关联");
             actionButtonContainerLayout.add(deleteButton);
             deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
@@ -491,6 +491,43 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
             FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList,true);
 
             return entityInfoFootprintMessageBar;
+        }
+    }
+
+    private class RelationEntityValueProvider implements ValueProvider<RelationEntity,HorizontalLayout>{
+        @Override
+        public HorizontalLayout apply(RelationEntity relationEntity) {
+            HorizontalLayout relationEntityInfoLayout = new HorizontalLayout();
+            relationEntityInfoLayout.setMargin(false);
+            relationEntityInfoLayout.setSpacing(false);
+            Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+            conceptionEntityIcon.setSize("14px");
+            conceptionEntityIcon.getStyle().set("padding-right","3px");
+            relationEntityInfoLayout.add(conceptionEntityIcon);
+            relationEntityInfoLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionEntityIcon);
+
+            String relationEntityUID = relationEntity.getRelationEntityUID();
+
+            NativeLabel relationEntityUIDLabel = new NativeLabel(relationEntityUID);
+            relationEntityUIDLabel.getStyle().set("padding-right","3px");
+            relationEntityInfoLayout.add(relationEntityUIDLabel);
+            relationEntityInfoLayout.setVerticalComponentAlignment(Alignment.CENTER,relationEntityUIDLabel);
+
+            Button showDetailButton = new Button();
+            showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            showDetailButton.setIcon(VaadinIcon.EYE.create());
+            showDetailButton.setTooltipText("显示关系实体详情");
+            relationEntityInfoLayout.add(showDetailButton);
+            relationEntityInfoLayout.setVerticalComponentAlignment(Alignment.CENTER,showDetailButton);
+            showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(relationEntity != null){
+                        renderRelatedRelationEntityUI(relationEntity.getRelationKindName(),relationEntityUID);
+                    }
+                }
+            });
+            return relationEntityInfoLayout;
         }
     }
 
@@ -606,5 +643,60 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         fixSizeWindow.setModel(true);
         addConceptionEntityToProcessingListView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    private void renderRelatedRelationEntityUI(String relationKindName,String relationEntityUID){
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+        relationKindIcon.setSize("10px");
+        titleDetailLayout.add(relationKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(relationKindName);
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon relationEntityIcon = VaadinIcon.KEY_O.create();
+        relationEntityIcon.setSize("10px");
+        titleDetailLayout.add(relationEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel relationEntityUIDLabel = new NativeLabel(relationEntityUID);
+        titleDetailLayout.add(relationEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        RelationEntityDetailUI relationEntityDetailUI = new RelationEntityDetailUI(relationKindName,relationEntityUID);
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"关系实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(relationEntityDetailUI);
+        relationEntityDetailUI.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
     }
 }
