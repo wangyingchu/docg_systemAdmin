@@ -33,7 +33,6 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQue
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.AddCustomQueryCriteriaUI;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.QueryConditionItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.QueryResultSetConfigView;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +110,7 @@ public class RelationKindQueryCriteriaView extends VerticalLayout implements Kin
         buttonSpaceDivLayout.setFlexGrow(1,queryCriteriaFilterSelect);
 
         Button addCustomQueryCriteriaButton = new Button();
-        Tooltips.getCurrent().setTooltip(addCustomQueryCriteriaButton, "添加自定义查询条件/显示属性");
+        addCustomQueryCriteriaButton.setTooltipText("添加自定义查询条件/显示属性");
         addCustomQueryCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         addCustomQueryCriteriaButton.addThemeVariants(ButtonVariant.LUMO_LARGE);
         addCustomQueryCriteriaButton.setIcon(VaadinIcon.KEYBOARD_O.create());

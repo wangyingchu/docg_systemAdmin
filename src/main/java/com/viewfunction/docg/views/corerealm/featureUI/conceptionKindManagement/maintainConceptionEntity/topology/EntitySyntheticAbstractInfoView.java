@@ -23,7 +23,6 @@ import com.viewfunction.docg.element.commonComponent.*;
 
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +107,7 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
         showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
         showDetailButton.getStyle().set("font-size","12px");
         showDetailButton.setIcon(VaadinIcon.EYE.create());
-        Tooltips.getCurrent().setTooltip(showDetailButton, "显示概念实体详情");
+        showDetailButton.setTooltipText("显示概念实体详情");
         showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -152,7 +151,7 @@ public class EntitySyntheticAbstractInfoView extends VerticalLayout{
         showDetailButton2.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
         showDetailButton2.getStyle().set("font-size","12px");
         showDetailButton2.setIcon(VaadinIcon.EYE.create());
-        Tooltips.getCurrent().setTooltip(showDetailButton2, "显示关系实体详情");
+        showDetailButton2.setTooltipText("显示关系实体详情");
         showDetailButton2.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

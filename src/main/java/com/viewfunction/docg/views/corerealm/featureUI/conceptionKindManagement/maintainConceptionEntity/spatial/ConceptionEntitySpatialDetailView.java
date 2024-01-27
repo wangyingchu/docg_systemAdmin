@@ -20,7 +20,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.geospatial.Geospati
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +65,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
 
         contentWKTButton = new Button();
         contentWKTButton.setIcon(VaadinIcon.ELASTIC.create());
-        Tooltips.getCurrent().setTooltip(contentWKTButton, "显示实体空间信息数据");
+        contentWKTButton.setTooltipText("显示实体空间信息数据");
         contentWKTButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -78,7 +77,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
 
         centroidPointWKTButton = new Button();
         centroidPointWKTButton.setIcon(VaadinIcon.BULLSEYE.create());
-        Tooltips.getCurrent().setTooltip(centroidPointWKTButton, "显示实体质心空间信息数据");
+        centroidPointWKTButton.setTooltipText("显示实体质心空间信息数据");
         centroidPointWKTButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -90,7 +89,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
 
         interiorPointWKTButton = new Button();
         interiorPointWKTButton.setIcon(VaadinIcon.DOT_CIRCLE.create());
-        Tooltips.getCurrent().setTooltip(interiorPointWKTButton, "显示实体中心点空间信息数据");
+        interiorPointWKTButton.setTooltipText("显示实体中心点空间信息数据");
         interiorPointWKTButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -102,7 +101,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
 
         envelopeWKTButton = new Button();
         envelopeWKTButton.setIcon(VaadinIcon.ABSOLUTE_POSITION.create());
-        Tooltips.getCurrent().setTooltip(envelopeWKTButton, "显示实体包围盒空间信息数据");
+        envelopeWKTButton.setTooltipText("显示实体包围盒空间信息数据");
         envelopeWKTButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

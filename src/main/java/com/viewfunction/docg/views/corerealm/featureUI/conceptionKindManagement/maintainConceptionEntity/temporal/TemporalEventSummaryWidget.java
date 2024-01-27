@@ -16,7 +16,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEvent;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -86,7 +85,7 @@ public class TemporalEventSummaryWidget extends HorizontalLayout {
         showEventButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
         showEventButton.getStyle().set("font-size","12px");
         showEventButton.setIcon(VaadinIcon.EYE.create());
-        Tooltips.getCurrent().setTooltip(showEventButton, "显示关联时间序列事件详情");
+        showEventButton.setTooltipText("显示关联时间序列事件详情");
         showEventButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

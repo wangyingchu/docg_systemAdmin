@@ -23,8 +23,6 @@ import com.viewfunction.docg.util.ConceptionEntityResourceHolderVO;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
-import dev.mett.vaadin.tooltip.Tooltips;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -133,7 +131,7 @@ public class ProcessingConceptionEntityListView extends VerticalLayout {
             showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             showDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             showDetailButton.setIcon(VaadinIcon.EYE.create());
-            Tooltips.getCurrent().setTooltip(showDetailButton, "显示概念实体详情");
+            showDetailButton.setTooltipText("显示概念实体详情");
             actionButtonContainerLayout.add(showDetailButton);
             showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override

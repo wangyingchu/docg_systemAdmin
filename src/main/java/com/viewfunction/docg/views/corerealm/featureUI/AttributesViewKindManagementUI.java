@@ -40,8 +40,6 @@ import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagem
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.RemoveAttributesViewKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.AttributesViewKindDetailUI;
 
-import dev.mett.vaadin.tooltip.Tooltips;
-
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -138,7 +136,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
             });
             configAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(configAttributeKind, "配置属性视图类型定义");
+            configAttributeKind.setTooltipText("配置属性视图类型定义");
 
             Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
             deleteKindIcon.setSize("21px");
@@ -146,7 +144,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
             removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeAttributeKind, "删除属性视图类型定义");
+            removeAttributeKind.setTooltipText("删除属性视图类型定义");
             removeAttributeKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

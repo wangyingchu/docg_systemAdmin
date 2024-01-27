@@ -17,7 +17,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.util.ResourceHolder;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 public class KindDescriptionEditorItemWidget extends HorizontalLayout {
 
@@ -51,7 +50,7 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
         Icon plusIcon = VaadinIcon.EDIT.create();
         plusIcon.setSize("18px");
         updateAttributeValueButton.setIcon(plusIcon);
-        Tooltips.getCurrent().setTooltip(updateAttributeValueButton, "更新属性值");
+        updateAttributeValueButton.setTooltipText("更新属性值");
         updateAttributeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -65,7 +64,7 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
         Icon multiIcon = VaadinIcon.CHECK_CIRCLE_O.create();
         multiIcon.setSize("20px");
         confirmUpdateAttributeValueButton.setIcon(multiIcon);
-        Tooltips.getCurrent().setTooltip(confirmUpdateAttributeValueButton, "确认更新");
+        confirmUpdateAttributeValueButton.setTooltipText("确认更新");
         confirmUpdateAttributeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -80,7 +79,7 @@ public class KindDescriptionEditorItemWidget extends HorizontalLayout {
         Icon notIcon = VaadinIcon.ARROW_BACKWARD.create();
         notIcon.setSize("20px");
         cancelUpdateValueButton.setIcon(notIcon);
-        Tooltips.getCurrent().setTooltip(cancelUpdateValueButton, "取消更新");
+        cancelUpdateValueButton.setTooltipText("取消更新");
         cancelUpdateValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

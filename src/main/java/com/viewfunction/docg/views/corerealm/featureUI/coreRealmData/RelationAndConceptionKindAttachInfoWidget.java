@@ -25,7 +25,6 @@ import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.chart.CartesianHeatmapChart;
 
-import dev.mett.vaadin.tooltip.Tooltips;
 import elemental.json.Json;
 import elemental.json.JsonArray;
 
@@ -45,7 +44,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         outDegreeInfoButton.addClickListener((ClickEvent<Button> click) ->{
             renderRelationAndConceptionKindOutDegreeHeatMapUI();
         });
-        Tooltips.getCurrent().setTooltip(outDegreeInfoButton,"概念与关系实体出度统计 HeatMap");
+        outDegreeInfoButton.setTooltipText("概念与关系实体出度统计 HeatMap");
         actionComponentsList.add(outDegreeInfoButton);
 
         Button inDegreeInfoButton = new Button("入度统计",new Icon(VaadinIcon.COMPRESS_SQUARE));
@@ -55,7 +54,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         inDegreeInfoButton.addClickListener((ClickEvent<Button> click) ->{
             renderRelationAndConceptionKindInDegreeHeatMapUI();
         });
-        Tooltips.getCurrent().setTooltip(inDegreeInfoButton,"概念与关系实体入度统计 HeatMap");
+        inDegreeInfoButton.setTooltipText("概念与关系实体入度统计 HeatMap");
         actionComponentsList.add(inDegreeInfoButton);
 
         SecondaryTitleActionBar sectionActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.GRID),"概念与关系实体统计",null,actionComponentsList);

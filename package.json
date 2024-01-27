@@ -77,9 +77,7 @@
     "date-fns": "2.29.3",
     "echarts": "5.1.2",
     "lit": "3.1.0",
-    "proj4": "2.9.2",
-    "retry": "0.12.0",
-    "tippy.js": "6.3.1"
+    "proj4": "2.9.2"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "5.0.4",
@@ -174,10 +172,8 @@
     "@polymer/polymer": "$@polymer/polymer",
     "proj4": "$proj4",
     "echarts": "$echarts",
-    "tippy.js": "$tippy.js",
     "@flowingcode/font-awesome-iron-iconset": "$@flowingcode/font-awesome-iron-iconset",
     "date-fns": "$date-fns",
-    "retry": "$retry",
     "@vaadin/overlay": "$@vaadin/overlay",
     "@vaadin/a11y-base": "$@vaadin/a11y-base",
     "@vaadin/side-nav": "$@vaadin/side-nav",
@@ -262,9 +258,7 @@
       "date-fns": "2.29.3",
       "echarts": "5.1.2",
       "lit": "3.1.0",
-      "proj4": "2.9.2",
-      "retry": "0.12.0",
-      "tippy.js": "6.3.1"
+      "proj4": "2.9.2"
     },
     "devDependencies": {
       "@rollup/plugin-replace": "5.0.4",
@@ -284,6 +278,6 @@
       "workbox-core": "7.0.0",
       "workbox-precaching": "7.0.0"
     },
-    "hash": "96d30eb878c6ccf9c2a3f3a5772e6b5bdf44e65c3c4fd43c2c6659e2342357d7"
+    "hash": "16faae12f2616002a988ca77dd34feaa8e266a5ff867ee187103d57507d0b104"
   }
 }

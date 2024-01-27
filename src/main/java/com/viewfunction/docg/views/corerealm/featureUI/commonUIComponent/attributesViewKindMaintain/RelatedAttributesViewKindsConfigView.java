@@ -28,8 +28,6 @@ import com.viewfunction.docg.element.eventHandling.AttributesViewKindAttachedToC
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindDetachedFromConceptionKindEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
-import dev.mett.vaadin.tooltip.Tooltips;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -91,7 +89,7 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
             removeAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeAttributeKindButton, "移除属性视图类型");
+            removeAttributeKindButton.setTooltipText("移除属性视图类型");
             removeAttributeKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

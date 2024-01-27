@@ -32,8 +32,6 @@ import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
-import dev.mett.vaadin.tooltip.Tooltips;
-
 import java.util.*;
 
 public class ClassificationConfigView extends VerticalLayout {
@@ -150,7 +148,7 @@ public class ClassificationConfigView extends VerticalLayout {
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeItemButton, "删除分类关联");
+            removeItemButton.setTooltipText("删除分类关联");
 
             HorizontalLayout buttons = new HorizontalLayout(removeItemButton);
             buttons.setPadding(false);

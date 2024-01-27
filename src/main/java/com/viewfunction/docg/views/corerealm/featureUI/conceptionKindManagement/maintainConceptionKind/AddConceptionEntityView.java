@@ -30,8 +30,6 @@ import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddCustomEntityAttributeUI;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeCreatorItemWidget;
 
-import dev.mett.vaadin.tooltip.Tooltips;
-
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Consumer;
@@ -113,7 +111,7 @@ public class AddConceptionEntityView extends VerticalLayout {
         kindExistingAttributeFilterSelect.getStyle().set("--vaadin-combo-box-overlay-width", "270px");
 
         Button addCustomQueryCriteriaButton = new Button();
-        Tooltips.getCurrent().setTooltip(addCustomQueryCriteriaButton, "输入要添加的实体属性");
+        addCustomQueryCriteriaButton.setTooltipText("输入要添加的实体属性");
         addCustomQueryCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         addCustomQueryCriteriaButton.addThemeVariants(ButtonVariant.LUMO_LARGE);
         addCustomQueryCriteriaButton.setIcon(VaadinIcon.KEYBOARD_O.create());

@@ -37,8 +37,6 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.attachToTimeFlowAndGeospatialRegion.AttachConceptionKindEntitiesToTimeFlowView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.exchangeConceptionEntities.*;
 
-import dev.mett.vaadin.tooltip.Tooltips;
-
 import java.text.NumberFormat;
 
 import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView.KindType.ConceptionKind;
@@ -241,7 +239,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         Button cleanConceptionKindButton = new Button("清除概念类型实例",cleanKindIcon, event -> {});
         cleanConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         cleanConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        Tooltips.getCurrent().setTooltip(cleanConceptionKindButton, "清除概念类型所有实例");
+        cleanConceptionKindButton.setTooltipText("清除概念类型所有实例");
         cleanConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

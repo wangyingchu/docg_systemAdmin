@@ -27,7 +27,6 @@ import com.viewfunction.docg.element.eventHandling.CheckSystemRuntimeInfoEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.*;
 import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.exchangeCoreRealmEntities.DownloadARROWFormatCoreRealmEntitiesView;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +62,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         });
 
         MenuBar advancedConfigItemsMenuBar = new MenuBar();
-        Tooltips.getCurrent().setTooltip(advancedConfigItemsMenuBar, "高级配置管理");
+        //advancedConfigItemsMenuBar.setTooltipText(null, "高级配置管理");
         advancedConfigItemsMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL,MenuBarVariant.LUMO_CONTRAST);
         MenuItem advancedConfigMenu = createIconItem(advancedConfigItemsMenuBar, VaadinIcon.AUTOMATION, null, null);
         SubMenu advancedConfigMenuItems = advancedConfigMenu.getSubMenu();

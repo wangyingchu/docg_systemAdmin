@@ -40,7 +40,6 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationKind.RelationKindDetailUI;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -445,7 +444,7 @@ public class RelatedRelationKindsView extends VerticalLayout {
         showClassificationLinkDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
         showClassificationLinkDetailButton.getStyle().set("font-size","12px");
         showClassificationLinkDetailButton.setIcon(VaadinIcon.EYE.create());
-        Tooltips.getCurrent().setTooltip(showClassificationLinkDetailButton, "显示关系实体详情");
+        showClassificationLinkDetailButton.setTooltipText("显示关系实体详情");
         showClassificationLinkDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

@@ -15,7 +15,6 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.EntitySyntheticAbstractInfoView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.RelatedConceptionEntitiesDandelionGraphInfoView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.RelatedConceptionEntitiesKindStaticInfoView;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +56,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         Button reloadConceptionEntitiesInfoButton = new Button();
         reloadConceptionEntitiesInfoButton.setIcon(VaadinIcon.REFRESH.create());
-        Tooltips.getCurrent().setTooltip(reloadConceptionEntitiesInfoButton, "重新加载关系图");
+        reloadConceptionEntitiesInfoButton.setTooltipText("重新加载关系图");
         reloadConceptionEntitiesInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -71,7 +70,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         deleteSingleEntityButton = new Button();
         deleteSingleEntityButton.setIcon(VaadinIcon.DEL_A.create());
-        Tooltips.getCurrent().setTooltip(deleteSingleEntityButton, "隐藏选中的概念实体");
+        deleteSingleEntityButton.setTooltipText("隐藏选中的概念实体");
         deleteSingleEntityButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -86,7 +85,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         deleteEntitiesButton = new Button();
         deleteEntitiesButton.setIcon(VaadinIcon.DEL.create());
-        Tooltips.getCurrent().setTooltip(deleteEntitiesButton, "隐藏选中的以及与其一度关联的所有概念实体");
+        deleteEntitiesButton.setTooltipText("隐藏选中的以及与其一度关联的所有概念实体");
         deleteEntitiesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -101,7 +100,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         expendEntityRelationButton = new Button();
         expendEntityRelationButton.setIcon(VaadinIcon.EXPAND_SQUARE.create());
-        Tooltips.getCurrent().setTooltip(expendEntityRelationButton, "一度展开与选中概念实体关联的部分概念实体");
+        expendEntityRelationButton.setTooltipText("一度展开与选中概念实体关联的部分概念实体");
         expendEntityRelationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -114,7 +113,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         compressEntityRelationButton = new Button();
         compressEntityRelationButton.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
-        Tooltips.getCurrent().setTooltip(compressEntityRelationButton, "隐藏与选中概念实体一度关联的所有其他概念实体");
+        compressEntityRelationButton.setTooltipText("隐藏与选中概念实体一度关联的所有其他概念实体");
         compressEntityRelationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -133,7 +132,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         resetPageIndexButton = new Button();
         resetPageIndexButton.setIcon(VaadinIcon.ARROW_BACKWARD.create());
-        Tooltips.getCurrent().setTooltip(resetPageIndexButton, "将选中概念实体的关联查询分页重置为第一页");
+        resetPageIndexButton.setTooltipText("将选中概念实体的关联查询分页重置为第一页");
         resetPageIndexButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -147,7 +146,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         goBackOnePageIndexButton = new Button();
         goBackOnePageIndexButton.setIcon(VaadinIcon.ARROW_CIRCLE_LEFT_O.create());
-        Tooltips.getCurrent().setTooltip(goBackOnePageIndexButton, "将选中概念实体的关联查询分页减小一页");
+        goBackOnePageIndexButton.setTooltipText("将选中概念实体的关联查询分页减小一页");
         goBackOnePageIndexButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -166,7 +165,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         goForwardOnePageIndexButton = new Button();
         goForwardOnePageIndexButton.setIcon(VaadinIcon.ARROW_CIRCLE_RIGHT_O.create());
-        Tooltips.getCurrent().setTooltip(goForwardOnePageIndexButton, "将选中概念实体的关联查询分页增加一页");
+        goForwardOnePageIndexButton.setTooltipText("将选中概念实体的关联查询分页增加一页");
         goForwardOnePageIndexButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -189,7 +188,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         currentPageIndexIcon.addClassNames("text-tertiary");
         titleLayout.add(currentPageIndexIcon);
         titleLayout.setVerticalComponentAlignment(Alignment.CENTER,currentPageIndexIcon);
-        Tooltips.getCurrent().setTooltip(currentPageIndexIcon, "选中概念实体的当前关联查询分页");
+        currentPageIndexIcon.setTooltipText("选中概念实体的当前关联查询分页");
 
         currentPageIndexValue = new NativeLabel("-");
         currentPageIndexValue.getStyle().set("font-size","10px").set("padding-right","30px");

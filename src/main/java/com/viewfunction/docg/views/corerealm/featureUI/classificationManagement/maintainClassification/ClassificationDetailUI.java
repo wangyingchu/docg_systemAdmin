@@ -39,8 +39,6 @@ import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.RemoveClassificationView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 
-import dev.mett.vaadin.tooltip.Tooltips;
-
 import java.util.*;
 
 import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.Classification;
@@ -306,14 +304,14 @@ public class ClassificationDetailUI extends VerticalLayout implements
             });
             configClassification.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configClassification.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(configClassification, "显示子分类配置定义");
+            configClassification.setTooltipText("显示子分类配置定义");
 
             Icon detachClassificationIcon = new Icon(VaadinIcon.UNLINK);
             detachClassificationIcon.setSize("18px");
             Button detachClassification = new Button(detachClassificationIcon, event -> {});
             detachClassification.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             detachClassification.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(detachClassification, "移除子分类");
+            detachClassification.setTooltipText("移除子分类");
             detachClassification.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -329,7 +327,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
             removeClassification.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeClassification.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeClassification.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeClassification, "删除分类");
+            removeClassification.setTooltipText("删除分类");
             removeClassification.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

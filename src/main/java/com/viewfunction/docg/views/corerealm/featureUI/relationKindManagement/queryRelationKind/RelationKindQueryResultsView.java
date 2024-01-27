@@ -35,7 +35,6 @@ import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.AddRelationEntityToProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.DeleteRelationEntityView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
 import java.time.ZoneId;
@@ -234,7 +233,7 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
             Button showDetailButton = new Button();
             showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             showDetailButton.setIcon(VaadinIcon.EYE.create());
-            Tooltips.getCurrent().setTooltip(showDetailButton, "显示关系实体详情");
+            showDetailButton.setTooltipText("显示关系实体详情");
             actionButtonContainerLayout.add(showDetailButton);
             showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
@@ -248,7 +247,7 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
             Button addToProcessListButton = new Button();
             addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             addToProcessListButton.setIcon(VaadinIcon.INBOX.create());
-            Tooltips.getCurrent().setTooltip(addToProcessListButton, "加入待处理数据列表");
+            addToProcessListButton.setTooltipText("加入待处理数据列表");
             actionButtonContainerLayout.add(addToProcessListButton);
             addToProcessListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
@@ -263,7 +262,7 @@ public class RelationKindQueryResultsView extends VerticalLayout implements
             deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
             deleteButton.setIcon(VaadinIcon.UNLINK.create());
-            Tooltips.getCurrent().setTooltip(deleteButton, "删除关系实体");
+            deleteButton.setTooltipText("删除关系实体");
             actionButtonContainerLayout.add(deleteButton);
             deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override

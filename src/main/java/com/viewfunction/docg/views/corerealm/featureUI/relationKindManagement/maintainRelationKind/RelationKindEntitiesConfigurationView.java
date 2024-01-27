@@ -26,7 +26,6 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindInd
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.exchangeConceptionEntities.*;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.CleanRelationKindEntitiesView;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
 
@@ -151,7 +150,7 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
         Button cleanConceptionKindButton = new Button("清除关系类型实例",cleanKindIcon, event -> {});
         cleanConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         cleanConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        Tooltips.getCurrent().setTooltip(cleanConceptionKindButton, "清除关系类型所有实例");
+        cleanConceptionKindButton.setTooltipText("清除关系类型所有实例");
         cleanConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

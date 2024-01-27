@@ -27,7 +27,6 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -143,7 +142,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeItemButton, "删除元属性");
+            removeItemButton.setTooltipText("删除元属性");
 
             //HorizontalLayout buttons = new HorizontalLayout(addItemButton,removeItemButton);
             HorizontalLayout buttons = new HorizontalLayout(removeItemButton);

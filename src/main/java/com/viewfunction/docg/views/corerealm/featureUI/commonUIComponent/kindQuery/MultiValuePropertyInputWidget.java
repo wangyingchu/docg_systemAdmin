@@ -21,8 +21,6 @@ import com.vaadin.flow.component.timepicker.TimePicker;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.QueryConditionItemWidget;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +41,7 @@ public class MultiValuePropertyInputWidget extends HorizontalLayout {
         Button addNewValueButton = new Button();
         addNewValueButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
         addNewValueButton.setIcon(VaadinIcon.PLUS_CIRCLE.create());
-        Tooltips.getCurrent().setTooltip(addNewValueButton, "添加查询值");
+        addNewValueButton.setTooltipText("添加查询值");
         addNewValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -170,7 +168,7 @@ public class MultiValuePropertyInputWidget extends HorizontalLayout {
         Icon removeIcon = VaadinIcon.DEL_A.create();
         removeIcon.setSize("18px");
         removeValueButton.setIcon(removeIcon);
-        Tooltips.getCurrent().setTooltip(removeValueButton, "撤销该值");
+        removeValueButton.setTooltipText("撤销该值");
         removeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

@@ -37,7 +37,6 @@ import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.*;
 
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationKind.RelationKindDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.queryRelationKind.RelationKindQueryUI;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
 import java.time.ZoneId;
@@ -219,7 +218,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
             });
             queryRelationKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             queryRelationKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(queryRelationKind, "查询关系类型实体");
+            queryRelationKind.setTooltipText("查询关系类型实体");
 
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
@@ -230,14 +229,14 @@ public class RelationKindManagementUI extends VerticalLayout implements
             });
             configRelationKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configRelationKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(configRelationKind, "配置关系类型定义");
+            configRelationKind.setTooltipText("配置关系类型定义");
 
             Icon cleanKindIcon = new Icon(VaadinIcon.RECYCLE);
             cleanKindIcon.setSize("21px");
             Button cleanRelationKind = new Button(cleanKindIcon, event -> {});
             cleanRelationKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             cleanRelationKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(cleanRelationKind, "清除关系类型所有实例");
+            cleanRelationKind.setTooltipText("清除关系类型所有实例");
             cleanRelationKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -253,7 +252,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
             removeRelationKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeRelationKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeRelationKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeRelationKind, "删除关系类型");
+            removeRelationKind.setTooltipText("删除关系类型");
             removeRelationKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

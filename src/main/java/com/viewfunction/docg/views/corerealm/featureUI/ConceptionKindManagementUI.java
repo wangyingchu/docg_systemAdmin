@@ -39,8 +39,6 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.ConceptionKindDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
 
-import dev.mett.vaadin.tooltip.Tooltips;
-
 import java.text.NumberFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -150,7 +148,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
             });
             queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(queryConceptionKind, "查询概念类型实体");
+            queryConceptionKind.setTooltipText("查询概念类型实体");
 
             Icon configIcon = new Icon(VaadinIcon.COG);
             configIcon.setSize("21px");
@@ -161,14 +159,14 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
             });
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             configConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(configConceptionKind, "配置概念类型定义");
+            configConceptionKind.setTooltipText("配置概念类型定义");
 
             Icon cleanKindIcon = new Icon(VaadinIcon.RECYCLE);
             cleanKindIcon.setSize("21px");
             Button cleanConceptionKind = new Button(cleanKindIcon, event -> {});
             cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(cleanConceptionKind, "清除概念类型所有实例");
+            cleanConceptionKind.setTooltipText("清除概念类型所有实例");
             cleanConceptionKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -184,7 +182,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
             removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeConceptionKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeConceptionKind, "删除概念类型");
+            removeConceptionKind.setTooltipText("删除概念类型");
             removeConceptionKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

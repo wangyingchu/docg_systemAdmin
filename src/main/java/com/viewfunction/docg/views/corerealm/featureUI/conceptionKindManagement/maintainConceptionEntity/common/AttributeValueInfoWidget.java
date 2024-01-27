@@ -11,7 +11,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 public class AttributeValueInfoWidget extends HorizontalLayout {
 
@@ -59,7 +58,7 @@ public class AttributeValueInfoWidget extends HorizontalLayout {
         showAttributeKindInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
         showAttributeKindInfoButton.getStyle().set("font-size","12px");
         showAttributeKindInfoButton.setIcon(VaadinIcon.EYE.create());
-        Tooltips.getCurrent().setTooltip(showAttributeKindInfoButton, "显示属性类型详情");
+        showAttributeKindInfoButton.setTooltipText("显示属性类型详情");
         showAttributeKindInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

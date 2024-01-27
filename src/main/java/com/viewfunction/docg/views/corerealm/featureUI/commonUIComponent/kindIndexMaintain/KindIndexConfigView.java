@@ -26,8 +26,6 @@ import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
-import dev.mett.vaadin.tooltip.Tooltips;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -95,7 +93,7 @@ public class KindIndexConfigView extends VerticalLayout {
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeItemButton, "删除类型索引");
+            removeItemButton.setTooltipText("删除类型索引");
 
             HorizontalLayout buttons = new HorizontalLayout(removeItemButton);
             buttons.setPadding(false);

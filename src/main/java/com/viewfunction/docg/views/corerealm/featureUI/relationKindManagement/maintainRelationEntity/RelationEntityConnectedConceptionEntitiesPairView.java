@@ -25,7 +25,6 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.EntitySyntheticAbstractInfoView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.AddRelationEntityToProcessingListView;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -202,7 +201,7 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
                 showFromEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
                 showFromEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
                 showFromEntityDetailButton.setIcon(VaadinIcon.EYE.create());
-                Tooltips.getCurrent().setTooltip(showFromEntityDetailButton, "显示 FROM 概念实体详情");
+                showFromEntityDetailButton.setTooltipText( "显示 FROM 概念实体详情");
                 showFromEntityDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                     @Override
                     public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -239,7 +238,7 @@ public class RelationEntityConnectedConceptionEntitiesPairView extends VerticalL
                 showToEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
                 showToEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
                 showToEntityDetailButton.setIcon(VaadinIcon.EYE.create());
-                Tooltips.getCurrent().setTooltip(showToEntityDetailButton, "显示 TO 概念实体详情");
+                showToEntityDetailButton.setTooltipText("显示 TO 概念实体详情");
                 showToEntityDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                     @Override
                     public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

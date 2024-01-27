@@ -32,7 +32,6 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attribu
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.AddConceptionEntityToProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
 import java.time.ZoneId;
@@ -553,7 +552,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
             Button showDetailButton = new Button();
             showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             showDetailButton.setIcon(VaadinIcon.EYE.create());
-            Tooltips.getCurrent().setTooltip(showDetailButton, "显示概念实体详情");
+            showDetailButton.setTooltipText("显示概念实体详情");
             actionButtonContainerLayout.add(showDetailButton);
             showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
@@ -567,7 +566,7 @@ public class RelatedConceptionEntitiesView extends VerticalLayout {
             Button addToProcessListButton = new Button();
             addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             addToProcessListButton.setIcon(VaadinIcon.INBOX.create());
-            Tooltips.getCurrent().setTooltip(addToProcessListButton, "加入待处理数据列表");
+            addToProcessListButton.setTooltipText("加入待处理数据列表");
             actionButtonContainerLayout.add(addToProcessListButton);
             addToProcessListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override

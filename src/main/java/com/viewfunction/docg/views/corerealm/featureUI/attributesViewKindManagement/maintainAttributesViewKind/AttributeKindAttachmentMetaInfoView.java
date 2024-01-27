@@ -25,8 +25,6 @@ import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHand
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 
-import dev.mett.vaadin.tooltip.Tooltips;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -130,7 +128,7 @@ public class AttributeKindAttachmentMetaInfoView extends VerticalLayout {
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeItemButton, "删除元属性");
+            removeItemButton.setTooltipText("删除元属性");
 
             HorizontalLayout buttons = new HorizontalLayout(removeItemButton);
             buttons.setPadding(false);

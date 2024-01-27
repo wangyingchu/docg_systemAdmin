@@ -31,7 +31,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filtering
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.math.BigDecimal;
 
@@ -174,7 +173,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
         plusIcon = VaadinIcon.PLUS.create();
         plusIcon.setSize("24px");
         filteringLogicAndButton.setIcon(plusIcon);
-        Tooltips.getCurrent().setTooltip(filteringLogicAndButton, "与逻辑过滤");
+        filteringLogicAndButton.setTooltipText("与逻辑过滤");
         filteringLogicAndButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -188,7 +187,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
         multiIcon = VaadinIcon.CLOSE.create();
         multiIcon.setSize("16px");
         filteringLogicOrButton.setIcon(multiIcon);
-        Tooltips.getCurrent().setTooltip(filteringLogicOrButton, "或逻辑过滤");
+        filteringLogicOrButton.setTooltipText("或逻辑过滤");
         filteringLogicOrButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -204,7 +203,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
         notIcon = VaadinIcon.BAN.create();
         notIcon.setSize("20px");
         filteringLogicNotButton.setIcon(notIcon);
-        Tooltips.getCurrent().setTooltip(filteringLogicNotButton, "非逻辑过滤");
+        filteringLogicNotButton.setTooltipText("非逻辑过滤");
         filteringLogicNotButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -216,7 +215,7 @@ public class QueryConditionItemWidget extends VerticalLayout {
         clearFilteringLogicButton = new Button();
         clearFilteringLogicButton.addThemeVariants(ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL);
         clearFilteringLogicButton.setIcon(VaadinIcon.ERASER.create());
-        Tooltips.getCurrent().setTooltip(clearFilteringLogicButton, "撤销此过滤（显示）条件");
+        clearFilteringLogicButton.setTooltipText("撤销此过滤（显示）条件");
         clearFilteringLogicButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

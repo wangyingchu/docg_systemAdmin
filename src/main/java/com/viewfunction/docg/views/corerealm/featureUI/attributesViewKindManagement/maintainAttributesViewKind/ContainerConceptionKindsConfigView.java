@@ -26,7 +26,6 @@ import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindAttachedToConceptionKindEvent;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindDetachedFromConceptionKindEvent;
 import com.viewfunction.docg.util.ResourceHolder;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -108,7 +107,7 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout implement
             removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
             removeAttributeKind.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            Tooltips.getCurrent().setTooltip(removeAttributeKind, "移除与概念类型的关联");
+            removeAttributeKind.setTooltipText("移除与概念类型的关联");
             removeAttributeKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {

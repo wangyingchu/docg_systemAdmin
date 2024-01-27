@@ -167,12 +167,6 @@
              <version>1.0.0</version>
          </dependency>
          -->
-        <!-- https://vaadin.com/directory/component/tooltips4vaadin -->
-        <dependency>
-            <groupId>dev.mett.vaadin</groupId>
-            <artifactId>tooltip</artifactId>
-            <version>3.0.2</version>
-        </dependency>
         <!-- https://vaadin.com/directory/component/blackboard -->
         <!-- https://mvnrepository.com/artifact/org.vaadin.addons/blackboard -->
         <dependency>

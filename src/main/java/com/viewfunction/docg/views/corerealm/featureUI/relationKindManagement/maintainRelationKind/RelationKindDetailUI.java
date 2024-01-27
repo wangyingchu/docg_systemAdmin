@@ -37,8 +37,6 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relatio
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.queryRelationKind.RelationKindQueryUI;
 
-import dev.mett.vaadin.tooltip.Tooltips;
-
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -202,7 +200,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
             });
             addAsAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             addAsAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(addAsAttributeKind, "添加为属性类型");
+            addAsAttributeKind.setTooltipText("添加为属性类型");
 
             HorizontalLayout buttons = new HorizontalLayout(addAsAttributeKind);
             buttons.setPadding(false);

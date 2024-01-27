@@ -16,7 +16,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 public class QueryResultSetConfigView extends VerticalLayout {
 
@@ -48,7 +47,7 @@ public class QueryResultSetConfigView extends VerticalLayout {
                 resultNumberField.setValue(queryParameters.getResultNumber());
             }
         });
-        Tooltips.getCurrent().setTooltip(resetToDefaultButton0, "重置当前输入");
+        resetToDefaultButton0.setTooltipText("重置当前输入");
         resetToDefaultButton0.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         resetToDefaultButton0.addThemeVariants(ButtonVariant.LUMO_SMALL);
         Icon buttonIcon0 = VaadinIcon.ROTATE_LEFT.create();
@@ -93,7 +92,7 @@ public class QueryResultSetConfigView extends VerticalLayout {
                 startPageField.setValue(initStartPage);
             }
         });
-        Tooltips.getCurrent().setTooltip(resetToDefaultButton2, "重置当前输入");
+        resetToDefaultButton2.setTooltipText("重置当前输入");
         resetToDefaultButton2.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         resetToDefaultButton2.addThemeVariants(ButtonVariant.LUMO_SMALL);
         Icon buttonIcon2 = VaadinIcon.ROTATE_LEFT.create();
@@ -115,7 +114,7 @@ public class QueryResultSetConfigView extends VerticalLayout {
                 endPageField.setValue(initEndPage);
             }
         });
-        Tooltips.getCurrent().setTooltip(resetToDefaultButton3, "重置当前输入");
+        resetToDefaultButton3.setTooltipText("重置当前输入");
         resetToDefaultButton3.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         resetToDefaultButton3.addThemeVariants(ButtonVariant.LUMO_SMALL);
         Icon buttonIcon3 = VaadinIcon.ROTATE_LEFT.create();
@@ -137,7 +136,7 @@ public class QueryResultSetConfigView extends VerticalLayout {
                 pageSizeField.setValue(initPageSize);
             }
         });
-        Tooltips.getCurrent().setTooltip(resetToDefaultButton1, "重置当前输入");
+        resetToDefaultButton1.setTooltipText("重置当前输入");
         resetToDefaultButton1.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         resetToDefaultButton1.addThemeVariants(ButtonVariant.LUMO_SMALL);
         Icon buttonIcon = VaadinIcon.ROTATE_LEFT.create();

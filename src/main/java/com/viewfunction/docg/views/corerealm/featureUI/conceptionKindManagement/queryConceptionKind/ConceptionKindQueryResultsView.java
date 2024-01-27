@@ -41,8 +41,6 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.DeleteConceptionEntityView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
-import dev.mett.vaadin.tooltip.Tooltips;
-
 import java.text.NumberFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -301,7 +299,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             Button showDetailButton = new Button();
             showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             showDetailButton.setIcon(VaadinIcon.EYE.create());
-            Tooltips.getCurrent().setTooltip(showDetailButton, "显示概念实体详情");
+            showDetailButton.setTooltipText("显示概念实体详情");
             actionButtonContainerLayout.add(showDetailButton);
             showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
@@ -315,7 +313,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             Button addToProcessListButton = new Button();
             addToProcessListButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             addToProcessListButton.setIcon(VaadinIcon.INBOX.create());
-            Tooltips.getCurrent().setTooltip(addToProcessListButton, "加入待处理数据列表");
+            addToProcessListButton.setTooltipText("加入待处理数据列表");
             actionButtonContainerLayout.add(addToProcessListButton);
             addToProcessListButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
@@ -330,7 +328,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
             deleteButton.setIcon(VaadinIcon.TRASH.create());
-            Tooltips.getCurrent().setTooltip(deleteButton, "删除概念实体");
+            deleteButton.setTooltipText("删除概念实体");
             actionButtonContainerLayout.add(deleteButton);
             deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override

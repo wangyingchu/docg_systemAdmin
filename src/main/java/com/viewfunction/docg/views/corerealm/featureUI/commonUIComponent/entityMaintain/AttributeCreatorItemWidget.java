@@ -30,8 +30,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.AddConceptionEntityView;
 
-import dev.mett.vaadin.tooltip.Tooltips;
-
 import java.math.BigDecimal;
 
 public class AttributeCreatorItemWidget extends VerticalLayout {
@@ -105,7 +103,7 @@ public class AttributeCreatorItemWidget extends VerticalLayout {
         Button clearAttributeButton = new Button();
         clearAttributeButton.addThemeVariants(ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY);
         clearAttributeButton.setIcon(VaadinIcon.ERASER.create());
-        Tooltips.getCurrent().setTooltip(clearAttributeButton, "撤销此属性");
+        clearAttributeButton.setTooltipText("撤销此属性");
         attributeMetaLayout.add(clearAttributeButton);
         attributeMetaLayout.setVerticalComponentAlignment(Alignment.CENTER,clearAttributeButton);
 

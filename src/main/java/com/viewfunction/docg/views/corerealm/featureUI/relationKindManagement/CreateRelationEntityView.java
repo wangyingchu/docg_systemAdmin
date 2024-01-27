@@ -39,7 +39,6 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.process
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.util.*;
 
@@ -120,7 +119,7 @@ public class CreateRelationEntityView extends VerticalLayout {
         addRelationAttributesUIContainerLayout.add(infoTitle3);
 
         Button addAttributeButton = new Button();
-        Tooltips.getCurrent().setTooltip(addAttributeButton, "添加关系实体属性");
+        addAttributeButton.setTooltipText("添加关系实体属性");
         addAttributeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         addAttributeButton.addThemeVariants(ButtonVariant.LUMO_LARGE);
         addAttributeButton.setIcon(VaadinIcon.KEYBOARD_O.create());
@@ -134,7 +133,7 @@ public class CreateRelationEntityView extends VerticalLayout {
 
         clearAttributeButton = new Button();
         clearAttributeButton.setEnabled(false);
-        Tooltips.getCurrent().setTooltip(clearAttributeButton, "清除已设置关系实体属性");
+        clearAttributeButton.setTooltipText("清除已设置关系实体属性");
         clearAttributeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         clearAttributeButton.addThemeVariants(ButtonVariant.LUMO_LARGE);
         clearAttributeButton.setIcon(VaadinIcon.RECYCLE.create());

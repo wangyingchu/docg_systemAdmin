@@ -40,7 +40,6 @@ import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.classificationManagement.maintainClassification.DeleteClassificationAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.DeleteConceptionEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.DeleteRelationEntityAttributeView;
-import dev.mett.vaadin.tooltip.Tooltips;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -143,7 +142,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         Icon plusIcon = VaadinIcon.EDIT.create();
         plusIcon.setSize("18px");
         updateAttributeValueButton.setIcon(plusIcon);
-        Tooltips.getCurrent().setTooltip(updateAttributeValueButton, "更新属性值");
+        updateAttributeValueButton.setTooltipText("更新属性值");
         updateAttributeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -157,7 +156,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         Icon multiIcon = VaadinIcon.CHECK_CIRCLE_O.create();
         multiIcon.setSize("20px");
         confirmUpdateAttributeValueButton.setIcon(multiIcon);
-        Tooltips.getCurrent().setTooltip(confirmUpdateAttributeValueButton, "确认更新");
+        confirmUpdateAttributeValueButton.setTooltipText("确认更新");
         confirmUpdateAttributeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -172,7 +171,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         Icon notIcon = VaadinIcon.ARROW_BACKWARD.create();
         notIcon.setSize("20px");
         cancelUpdateValueButton.setIcon(notIcon);
-        Tooltips.getCurrent().setTooltip(cancelUpdateValueButton, "取消更新");
+        cancelUpdateValueButton.setTooltipText("取消更新");
         cancelUpdateValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -185,7 +184,7 @@ public class AttributeEditorItemWidget extends VerticalLayout {
         deleteAttributeButton = new Button();
         deleteAttributeButton.addThemeVariants(ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL);
         deleteAttributeButton.setIcon(VaadinIcon.ERASER.create());
-        Tooltips.getCurrent().setTooltip(deleteAttributeButton, "删除属性值");
+        deleteAttributeButton.setTooltipText("删除属性值");
         deleteAttributeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
