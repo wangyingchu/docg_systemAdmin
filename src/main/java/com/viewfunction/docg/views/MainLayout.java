@@ -356,6 +356,8 @@ public class MainLayout extends AppLayout {
                 RelationAttachKindCreatedEvent.class);
         _BLACKBOARD.register(GeospatialRegionCreatedEvent.GeospatialRegionCreatedListener.class,
                 GeospatialRegionCreatedEvent.class);
+        _BLACKBOARD.register(TimeFlowCreatedEvent.TimeFlowCreatedListener.class,
+                TimeFlowCreatedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }
