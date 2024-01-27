@@ -143,15 +143,15 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         relationEntitiesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_COLUMN_BORDERS);
         relationEntitiesGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         relationEntitiesGrid.addComponentColumn(new RelationDirectionIconValueProvider()).setHeader("").setKey("idx_0").setFlexGrow(0).setWidth("35px").setResizable(false);
-        relationEntitiesGrid.addComponentColumn(new RelationEntityValueProvider()).setHeader("关系实体信息").setKey("idx_2").setFlexGrow(0).setWidth("140px").setResizable(false);
+        relationEntitiesGrid.addColumn(RelationEntity::getRelationEntityUID).setHeader("关系实体 UID").setKey("idx_2").setFlexGrow(0).setWidth("125px").setResizable(false);
         relationEntitiesGrid.addColumn(RelationEntity::getRelationKindName).setHeader("关系实体类型名称").setKey("idx_3").setResizable(true);
         relationEntitiesGrid.addComponentColumn(new RelatedConceptionEntityValueProvider()).setHeader("相关概念实体").setKey("idx_4").setFlexGrow(1).setResizable(true);
-        relationEntitiesGrid.addComponentColumn(new RelationEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_1").setFlexGrow(0).setWidth("120px").setResizable(false);
+        relationEntitiesGrid.addComponentColumn(new RelationEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_1").setFlexGrow(0).setWidth("155px").setResizable(false);
 
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
         relationEntitiesGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(false);
-        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.LINK,"关系实体信息");
-        relationEntitiesGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(false);
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.KEY_O,"关系实体 UID");
+        relationEntitiesGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
         GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.CONNECT_O,"关系实体类型名称");
         relationEntitiesGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
         GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(FontAwesome.Solid.STETHOSCOPE.create(),"相关概念实体");
@@ -426,6 +426,25 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
                 }
             });
 
+            Icon divIcon = VaadinIcon.LINE_V.create();
+            divIcon.setSize("12px");
+            actionButtonContainerLayout.add(divIcon);
+            actionButtonContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+
+            Button showRelationDetailButton = new Button();
+            showRelationDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            showRelationDetailButton.setIcon(VaadinIcon.LINK.create());
+            showRelationDetailButton.setTooltipText("显示关系实体详情");
+            actionButtonContainerLayout.add(showRelationDetailButton);
+            showRelationDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(relationEntity != null){
+                        renderRelatedRelationEntityUI(relationEntity.getRelationKindName(),relationEntity.getRelationEntityUID());
+                    }
+                }
+            });
+
             Button deleteButton = new Button();
             deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
@@ -491,43 +510,6 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
             FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList,true);
 
             return entityInfoFootprintMessageBar;
-        }
-    }
-
-    private class RelationEntityValueProvider implements ValueProvider<RelationEntity,HorizontalLayout>{
-        @Override
-        public HorizontalLayout apply(RelationEntity relationEntity) {
-            HorizontalLayout relationEntityInfoLayout = new HorizontalLayout();
-            relationEntityInfoLayout.setMargin(false);
-            relationEntityInfoLayout.setSpacing(false);
-            Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
-            conceptionEntityIcon.setSize("14px");
-            conceptionEntityIcon.getStyle().set("padding-right","3px");
-            relationEntityInfoLayout.add(conceptionEntityIcon);
-            relationEntityInfoLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionEntityIcon);
-
-            String relationEntityUID = relationEntity.getRelationEntityUID();
-
-            NativeLabel relationEntityUIDLabel = new NativeLabel(relationEntityUID);
-            relationEntityUIDLabel.getStyle().set("padding-right","3px");
-            relationEntityInfoLayout.add(relationEntityUIDLabel);
-            relationEntityInfoLayout.setVerticalComponentAlignment(Alignment.CENTER,relationEntityUIDLabel);
-
-            Button showDetailButton = new Button();
-            showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            showDetailButton.setIcon(VaadinIcon.EYE.create());
-            showDetailButton.setTooltipText("显示关系实体详情");
-            relationEntityInfoLayout.add(showDetailButton);
-            relationEntityInfoLayout.setVerticalComponentAlignment(Alignment.CENTER,showDetailButton);
-            showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-                @Override
-                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(relationEntity != null){
-                        renderRelatedRelationEntityUI(relationEntity.getRelationKindName(),relationEntityUID);
-                    }
-                }
-            });
-            return relationEntityInfoLayout;
         }
     }
 
