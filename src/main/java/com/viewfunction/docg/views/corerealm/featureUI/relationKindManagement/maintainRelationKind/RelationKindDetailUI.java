@@ -33,6 +33,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServi
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
@@ -250,31 +251,191 @@ public class RelationKindDetailUI extends VerticalLayout implements
                 }
             });
 
+            HorizontalLayout containerAction3Layout = new HorizontalLayout();
+            containerAction3Layout.setPadding(false);
+            containerAction3Layout.setSpacing(false);
+            containerAction3Layout.setMargin(false);
+            containerAction3Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon containerAction3Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+            containerAction3Icon.setSize("10px");
+            Span containerAction3Space = new Span();
+            containerAction3Space.setWidth(6,Unit.PIXELS);
+            NativeLabel containerAction3Label = new NativeLabel("属性数据类型转换");
+            containerAction3Label.addClassNames("text-xs","font-semibold","text-secondary");
+            containerAction3Layout.add(containerAction3Icon,containerAction3Space,containerAction3Label);
+            MenuItem containerAction3Item = actionOptionsSubItems.addItem(containerAction3Layout);
+
+            AttributeDataType attributeDataType = attributeInfo.getAttributeDataType();
+
+            if(!attributeDataType.equals(AttributeDataType.INT)){
+                HorizontalLayout action3Layout = new HorizontalLayout();
+                action3Layout.setPadding(false);
+                action3Layout.setSpacing(false);
+                action3Layout.setMargin(false);
+                action3Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                Icon action3Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                action3Icon.setSize("10px");
+                Span action3Space = new Span();
+                action3Space.setWidth(6,Unit.PIXELS);
+                NativeLabel action3Label = new NativeLabel("转为 LONG 类型");
+                action3Label.addClassNames("text-xs","font-semibold","text-secondary");
+                action3Layout.add(action3Icon,action3Space,action3Label);
+                MenuItem action3Item = containerAction3Item.getSubMenu().addItem(action3Layout);
+                action3Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                        renderConvertAttributeToIntView(attributeInfo.getAttributeName());
+                    }
+                });
+            }
+            if(!attributeDataType.equals(AttributeDataType.FLOAT)){
+                HorizontalLayout action4Layout = new HorizontalLayout();
+                action4Layout.setPadding(false);
+                action4Layout.setSpacing(false);
+                action4Layout.setMargin(false);
+                action4Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                Icon action4Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                action4Icon.setSize("10px");
+                Span action4Space = new Span();
+                action4Space.setWidth(6,Unit.PIXELS);
+                NativeLabel action4Label = new NativeLabel("转为 DOUBLE 类型");
+                action4Label.addClassNames("text-xs","font-semibold","text-secondary");
+                action4Layout.add(action4Icon,action4Space,action4Label);
+                MenuItem action4Item = containerAction3Item.getSubMenu().addItem(action4Layout);
+                action4Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                        renderConvertAttributeToFloatView(attributeInfo.getAttributeName());
+                    }
+                });
+            }
+            if(!attributeDataType.equals(AttributeDataType.BOOLEAN)){
+                HorizontalLayout action5Layout = new HorizontalLayout();
+                action5Layout.setPadding(false);
+                action5Layout.setSpacing(false);
+                action5Layout.setMargin(false);
+                action5Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                Icon action5Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                action5Icon.setSize("10px");
+                Span action5Space = new Span();
+                action5Space.setWidth(6,Unit.PIXELS);
+                NativeLabel action5Label = new NativeLabel("转为 BOOLEAN 类型");
+                action5Label.addClassNames("text-xs","font-semibold","text-secondary");
+                action5Layout.add(action5Icon,action5Space,action5Label);
+                MenuItem action5Item = containerAction3Item.getSubMenu().addItem(action5Layout);
+                action5Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                        renderConvertAttributeToBooleanView(attributeInfo.getAttributeName());
+                    }
+                });
+            }
+            if(!attributeDataType.equals(AttributeDataType.STRING)){
+                HorizontalLayout action6Layout = new HorizontalLayout();
+                action6Layout.setPadding(false);
+                action6Layout.setSpacing(false);
+                action6Layout.setMargin(false);
+                action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                action6Icon.setSize("10px");
+                Span action6Space = new Span();
+                action6Space.setWidth(6,Unit.PIXELS);
+                NativeLabel action6Label = new NativeLabel("转为 STRING 类型");
+                action6Label.addClassNames("text-xs","font-semibold","text-secondary");
+                action6Layout.add(action6Icon,action6Space,action6Label);
+                MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
+                action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                        renderConvertAttributeToStringView(attributeInfo.getAttributeName());
+                    }
+                });
+            }
+            if(!attributeDataType.equals(AttributeDataType.DATE)){
+                HorizontalLayout action6Layout = new HorizontalLayout();
+                action6Layout.setPadding(false);
+                action6Layout.setSpacing(false);
+                action6Layout.setMargin(false);
+                action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                action6Icon.setSize("10px");
+                Span action6Space = new Span();
+                action6Space.setWidth(6,Unit.PIXELS);
+                NativeLabel action6Label = new NativeLabel("转为 DATE 类型");
+                action6Label.addClassNames("text-xs","font-semibold","text-secondary");
+                action6Layout.add(action6Icon,action6Space,action6Label);
+                MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
+                action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                        //renderConvertAttributeToDateView(attributeInfo.getAttributeName());
+                    }
+                });
+            }
+            if(!attributeDataType.equals(AttributeDataType.TIME)){
+                HorizontalLayout action6Layout = new HorizontalLayout();
+                action6Layout.setPadding(false);
+                action6Layout.setSpacing(false);
+                action6Layout.setMargin(false);
+                action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                action6Icon.setSize("10px");
+                Span action6Space = new Span();
+                action6Space.setWidth(6,Unit.PIXELS);
+                NativeLabel action6Label = new NativeLabel("转为 TIME 类型");
+                action6Label.addClassNames("text-xs","font-semibold","text-secondary");
+                action6Layout.add(action6Icon,action6Space,action6Label);
+                MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
+                action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                        //renderConvertAttributeToTimeView(attributeInfo.getAttributeName());
+                    }
+                });
+            }
+            if(!attributeDataType.equals(AttributeDataType.DATETIME)){
+                HorizontalLayout action6Layout = new HorizontalLayout();
+                action6Layout.setPadding(false);
+                action6Layout.setSpacing(false);
+                action6Layout.setMargin(false);
+                action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                action6Icon.setSize("10px");
+                Span action6Space = new Span();
+                action6Space.setWidth(6,Unit.PIXELS);
+                NativeLabel action6Label = new NativeLabel("转为 DATETIME 类型");
+                action6Label.addClassNames("text-xs","font-semibold","text-secondary");
+                action6Layout.add(action6Icon,action6Space,action6Label);
+                MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
+                action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                        //renderConvertAttributeToDateTimeView(attributeInfo.getAttributeName());
+                    }
+                });
+            }
+            if(!attributeDataType.equals(AttributeDataType.TIMESTAMP)){
+                HorizontalLayout action6Layout = new HorizontalLayout();
+                action6Layout.setPadding(false);
+                action6Layout.setSpacing(false);
+                action6Layout.setMargin(false);
+                action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                action6Icon.setSize("10px");
+                Span action6Space = new Span();
+                action6Space.setWidth(6,Unit.PIXELS);
+                NativeLabel action6Label = new NativeLabel("转为 TIMESTAMP 类型");
+                action6Label.addClassNames("text-xs","font-semibold","text-secondary");
+                action6Layout.add(action6Icon,action6Space,action6Label);
+                MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
+                action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                        //renderConvertAttributeToTimeStampView(attributeInfo.getAttributeName());
+                    }
+                });
+            }
             return actionsMenuBar;
-
-
-            /*
-            Icon queryIcon = new Icon(VaadinIcon.INPUT);
-            queryIcon.setSize("20px");
-            Button addAsAttributeKind = new Button(queryIcon, event -> {
-                if(entityStatisticsInfo instanceof EntityStatisticsInfo){
-                    //renderConceptionKindQueryUI((EntityStatisticsInfo)entityStatisticsInfo);
-                }
-            });
-            addAsAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            addAsAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            addAsAttributeKind.setTooltipText("添加为属性类型");
-
-            HorizontalLayout buttons = new HorizontalLayout(addAsAttributeKind);
-            buttons.setPadding(false);
-            buttons.setSpacing(false);
-            buttons.setMargin(false);
-            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-            buttons.setHeight(10,Unit.PIXELS);
-            buttons.setWidth(80,Unit.PIXELS);
-            return new VerticalLayout(buttons);
-
-             */
         });
 
         relationKindAttributesInfoGrid = new Grid<>();
@@ -593,5 +754,149 @@ public class RelationKindDetailUI extends VerticalLayout implements
         notification.add(notificationMessageContainer);
         notification.setDuration(10000);
         notification.open();
+    }
+
+    private void renderConvertAttributeToIntView(String attributeName){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行转换属性数据类型操作，该操作将关系类型 "+this.relationKind+" 所有实体的属性 "+attributeName +" 转换为 LONG 类型,类型无法转换的属性将被删除",actionButtonList,550,200);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doConvertAttributeToInt(attributeName);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doConvertAttributeToInt(String attributeName){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind targetRelationKind = coreRealm.getRelationKind(this.relationKind);
+        EntitiesOperationStatistics entitiesOperationStatistics = targetRelationKind.convertEntityAttributeToIntType(attributeName);
+        String notificationMessage = "将关系类型 "+this.relationKind+" 的实体属性 "+attributeName+" 转换为 LONG 类型操作成功";
+        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+        loadRelationKindInfoData();
+    }
+
+    private void renderConvertAttributeToFloatView(String attributeName){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行转换属性数据类型操作，该操作将关系类型 "+this.relationKind+" 所有实体的属性 "+attributeName +" 转换为 DOUBLE 类型,类型无法转换的属性将被删除",actionButtonList,550,200);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doConvertAttributeToFloat(attributeName);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doConvertAttributeToFloat(String attributeName){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind targetRelationKind = coreRealm.getRelationKind(this.relationKind);
+        EntitiesOperationStatistics entitiesOperationStatistics = targetRelationKind.convertEntityAttributeToFloatType(attributeName);
+        String notificationMessage = "将关系类型 "+this.relationKind+" 的实体属性 "+attributeName+" 转换为 DOUBLE 类型操作成功";
+        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+        loadRelationKindInfoData();
+    }
+
+    private void renderConvertAttributeToBooleanView(String attributeName){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行转换属性数据类型操作，该操作将关系类型 "+this.relationKind+" 所有实体的属性 "+attributeName +" 转换为 BOOLEAN 类型,类型无法转换的属性将被删除",actionButtonList,550,200);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doConvertAttributeToBoolean(attributeName);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doConvertAttributeToBoolean(String attributeName){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind targetRelationKind = coreRealm.getRelationKind(this.relationKind);
+        EntitiesOperationStatistics entitiesOperationStatistics = targetRelationKind.convertEntityAttributeToBooleanType(attributeName);
+        String notificationMessage = "将关系类型 "+this.relationKind+" 的实体属性 "+attributeName+" 转换为 BOOLEAN 类型操作成功";
+        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+        loadRelationKindInfoData();
+    }
+
+    private void renderConvertAttributeToStringView(String attributeName){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行转换属性数据类型操作，该操作将关系类型 "+this.relationKind+" 所有实体的属性 "+attributeName +" 转换为 STRING 类型,类型无法转换的属性将被删除",actionButtonList,550,200);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doConvertAttributeToString(attributeName);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doConvertAttributeToString(String attributeName){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind targetRelationKind = coreRealm.getRelationKind(this.relationKind);
+        EntitiesOperationStatistics entitiesOperationStatistics = targetRelationKind.convertEntityAttributeToStringType(attributeName);
+        String notificationMessage = "将关系类型 "+this.relationKind+" 的实体属性 "+attributeName+" 转换为 STRING 类型操作成功";
+        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+        loadRelationKindInfoData();
     }
 }
