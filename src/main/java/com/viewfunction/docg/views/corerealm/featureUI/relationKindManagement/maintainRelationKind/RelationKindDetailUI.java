@@ -3,12 +3,19 @@ package com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.m
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -22,16 +29,19 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.RelationEntitiesCountRefreshEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.RelationAttachKindsConfigurationView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
@@ -39,6 +49,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.qu
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -191,6 +202,58 @@ public class RelationKindDetailUI extends VerticalLayout implements
         leftSideContainerLayout.add(infoTitle1);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+            KindEntityAttributeRuntimeStatistics attributeInfo = (KindEntityAttributeRuntimeStatistics)entityStatisticsInfo;
+            MenuBar actionsMenuBar = new MenuBar();
+            actionsMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+            Icon icon = new Icon(VaadinIcon.CHEVRON_DOWN);
+            icon.setSize("14px");
+            MenuItem dropdownIconMenu = actionsMenuBar.addItem(icon, e -> {});
+            SubMenu actionOptionsSubItems = dropdownIconMenu.getSubMenu();
+
+            HorizontalLayout action0Layout = new HorizontalLayout();
+            action0Layout.setPadding(false);
+            action0Layout.setSpacing(false);
+            action0Layout.setMargin(false);
+            action0Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action0Icon = LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create();
+            action0Icon.setSize("10px");
+            Span action0Space = new Span();
+            action0Space.setWidth(6,Unit.PIXELS);
+            NativeLabel action0Label = new NativeLabel("属性随机采样(100)");
+            action0Label.addClassNames("text-xs","font-semibold","text-secondary");
+            action0Layout.add(action0Icon,action0Space,action0Label);
+            MenuItem action0Item = actionOptionsSubItems.addItem(action0Layout);
+            action0Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    renderSampleRandomAttributesView(attributeInfo.getAttributeName());
+                }
+            });
+
+            HorizontalLayout action2Layout = new HorizontalLayout();
+            action2Layout.setPadding(false);
+            action2Layout.setSpacing(false);
+            action2Layout.setMargin(false);
+            action2Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action2Icon = new Icon((VaadinIcon.ERASER));
+            action2Icon.setSize("10px");
+            Span action2Space = new Span();
+            action2Space.setWidth(6,Unit.PIXELS);
+            NativeLabel action2Label = new NativeLabel("删除属性");
+            action2Label.addClassNames("text-xs","font-semibold","text-secondary");
+            action2Layout.add(action2Icon,action2Space,action2Label);
+            MenuItem action2Item = actionOptionsSubItems.addItem(action2Layout);
+            action2Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    renderDeleteRelationKindAttributeView(attributeInfo.getAttributeName());
+                }
+            });
+
+            return actionsMenuBar;
+
+
+            /*
             Icon queryIcon = new Icon(VaadinIcon.INPUT);
             queryIcon.setSize("20px");
             Button addAsAttributeKind = new Button(queryIcon, event -> {
@@ -210,6 +273,8 @@ public class RelationKindDetailUI extends VerticalLayout implements
             buttons.setHeight(10,Unit.PIXELS);
             buttons.setWidth(80,Unit.PIXELS);
             return new VerticalLayout(buttons);
+
+             */
         });
 
         relationKindAttributesInfoGrid = new Grid<>();
@@ -453,5 +518,80 @@ public class RelationKindDetailUI extends VerticalLayout implements
         fixSizeWindow.setWindowContent(relationKindMetaInfoView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+    private void renderSampleRandomAttributesView(String attributeName){
+        AttributesValueListView attributesValueListView = new AttributesValueListView(AttributesValueListView.AttributeKindType.RelationKind,this.relationKind,attributeName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create(),"属性值随机采样 (100项)",null,true,500,510,false);
+        fixSizeWindow.setWindowContent(attributesValueListView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderDeleteRelationKindAttributeView(String attributeName){
+        List<Button> actionButtonList = new ArrayList<>();
+
+        Button confirmButton = new Button("确认删除属性",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+                "请确认执行删除属性操作，该操作将从关系类型 "+this.relationKind+" 的所有实体中删除属性 "+attributeName,actionButtonList,500,200);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doDeleteRelationKindAttribute(attributeName);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doDeleteRelationKindAttribute(String attributeName){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind targetRelationKind = coreRealm.getRelationKind(this.relationKind);
+        Set<String> attributeForRemoveSet = new HashSet<>();
+        attributeForRemoveSet.add(attributeName);
+        try {
+            EntitiesOperationStatistics resultEntitiesOperationStatistics = targetRelationKind.removeEntityAttributes(attributeForRemoveSet);
+            String notificationMessage = "从关系类型 "+this.relationKind+" 中删除实体属性 "+attributeName+" 操作成功";
+            showPopupNotification(notificationMessage,resultEntitiesOperationStatistics, NotificationVariant.LUMO_SUCCESS);
+            loadRelationKindInfoData();
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showPopupNotification(String notificationMessage,EntitiesOperationStatistics conceptionEntitiesAttributesRetrieveResult, NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text(notificationMessage));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
+
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        notificationMessageContainer.add(new Div(new Text("操作成功实体数: "+conceptionEntitiesAttributesRetrieveResult.getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("操作失败实体数: "+conceptionEntitiesAttributesRetrieveResult.getFailItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("操作开始时间: "+conceptionEntitiesAttributesRetrieveResult.getStartTime())));
+        notificationMessageContainer.add(new Div(new Text("操作结束时间: "+conceptionEntitiesAttributesRetrieveResult.getFinishTime())));
+        notification.add(notificationMessageContainer);
+        notification.setDuration(10000);
+        notification.open();
     }
 }
