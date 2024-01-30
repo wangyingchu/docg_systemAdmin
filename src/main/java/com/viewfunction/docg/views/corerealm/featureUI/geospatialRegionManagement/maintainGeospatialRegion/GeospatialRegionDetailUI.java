@@ -84,7 +84,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
     private ComboBox<String> countyValueTextField;
     private ComboBox<String> townshipValueTextField;
     private ComboBox<String> villageValueTextField;
-    private boolean timeFlowRuntimeStatisticsQueried;
+    private boolean geospatialRegionRuntimeStatisticsQueried;
     private NumberFormat numberFormat;
     private Grid<GeospatialScaleEntity> geospatialScaleEntitiesGrid;
     private NativeLabel resultNumberValue;
@@ -1249,11 +1249,11 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
     }
 
     private GeospatialRegionRuntimeStatistics setupGeospatialRegionRuntimeStatisticInfo(){
-        if(!timeFlowRuntimeStatisticsQueried){
+        if(!geospatialRegionRuntimeStatisticsQueried){
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
             GeospatialRegionRuntimeStatistics geospatialRegionRuntimeStatistics = geospatialRegion.getGeospatialRegionRuntimeStatistics();
-            timeFlowRuntimeStatisticsQueried = true;
+            geospatialRegionRuntimeStatisticsQueried = true;
 
             continentEntityCountItem.updateDisplayValue(this.numberFormat.format(geospatialRegionRuntimeStatistics.getContainsContinentScaleTimeScaleEntityCount()));
             continentEventCountItem.updateDisplayValue(this.numberFormat.format(geospatialRegionRuntimeStatistics.getRefersContinentScaleTimeScaleEventCount()));
@@ -1541,6 +1541,14 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
         boolean createResult = geospatialRegion.createGeospatialScaleEntities();
         if(createResult){
+            geospatialRegionRuntimeStatisticsQueried = false;
+            GeospatialRegionRuntimeStatistics geospatialRegionRuntimeStatistics = setupGeospatialRegionRuntimeStatisticInfo();
+            if(geospatialRegionRuntimeStatistics != null){
+                totalGeospatialScaleEntityCountDisplayItem.updateDisplayValue(this.numberFormat.format(geospatialRegionRuntimeStatistics.getContainsTotalGeospatialScaleEntityCount()));
+                totalGeospatialScaleEventCountDisplayItem.updateDisplayValue(this.numberFormat.format(geospatialRegionRuntimeStatistics.getRefersTotalGeospatialScaleEventCount()));
+            }
+            renderGeospatialRegionBasicInfo();
+
             CommonUIOperationUtil.showPopupNotification("初始化创建地理空间区域数据成功", NotificationVariant.LUMO_SUCCESS);
         }else{
             CommonUIOperationUtil.showPopupNotification("初始化创建地理空间区域数据错误", NotificationVariant.LUMO_ERROR);
@@ -1598,7 +1606,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
     public void receivedGeospatialRegionRefreshEvent(GeospatialRegionRefreshEvent event) {
         if(event != null ){
             if(this.geospatialRegionName.equals(event.getGeospatialRegionName()) || event.getGeospatialRegionName() == null){
-                timeFlowRuntimeStatisticsQueried = false;
+                geospatialRegionRuntimeStatisticsQueried = false;
                 GeospatialRegionRuntimeStatistics geospatialRegionRuntimeStatistics = setupGeospatialRegionRuntimeStatisticInfo();
                 if(geospatialRegionRuntimeStatistics != null){
                     totalGeospatialScaleEntityCountDisplayItem.updateDisplayValue(this.numberFormat.format(geospatialRegionRuntimeStatistics.getContainsTotalGeospatialScaleEntityCount()));
