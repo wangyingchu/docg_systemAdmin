@@ -32,12 +32,11 @@ import java.text.NumberFormat;
 import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView.KindType.RelationKind;
 
 public class RelationKindEntitiesConfigurationView extends VerticalLayout {
-    private String relationKindName;
 
     private String conceptionKindName;
     private long conceptionEntitiesCount;
     private NumberFormat numberFormat;
-    private PrimaryKeyValueDisplayItem conceptionEntitiesCountDisplayItem;
+    private PrimaryKeyValueDisplayItem relationEntitiesCountDisplayItem;
     private MetaConfigItemsConfigView metaConfigItemsConfigView;
     private KindIndexConfigView kindIndexConfigView;
     private ClassificationConfigView classificationConfigView;
@@ -65,7 +64,7 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
         }
 
         this.numberFormat = NumberFormat.getInstance();
-        this.conceptionEntitiesCountDisplayItem =
+        this.relationEntitiesCountDisplayItem =
                 new PrimaryKeyValueDisplayItem(infoContainer, FontAwesome.Solid.CIRCLE.create(),"关系实体数量:",this.numberFormat.format(conceptionEntitiesCount));
 
         HorizontalLayout horSpaceDiv = new HorizontalLayout();

@@ -38,11 +38,13 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.eventHandling.KindScopeAttributeAddedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationEntitiesCountRefreshEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.RelationAttachKindsConfigurationView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
@@ -61,7 +63,8 @@ public class RelationKindDetailUI extends VerticalLayout implements
         BeforeEnterObserver,
         RelationKindConfigurationInfoRefreshEvent.RelationKindConfigurationInfoRefreshListener,
         RelationKindCleanedEvent.RelationKindCleanedListener,
-        RelationEntitiesCountRefreshEvent.RelationEntitiesCountRefreshListener{
+        RelationEntitiesCountRefreshEvent.RelationEntitiesCountRefreshListener,
+        KindScopeAttributeAddedEvent.KindScopeAttributeAddedListener {
 
     private String relationKind;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
@@ -616,6 +619,13 @@ public class RelationKindDetailUI extends VerticalLayout implements
     @Override
     public void receivedRelationEntitiesCountRefreshEvent(RelationEntitiesCountRefreshEvent event) {
 
+    }
+
+    @Override
+    public void receivedKindScopeAttributeAddedEvent(KindScopeAttributeAddedEvent event) {
+        if(this.relationKind.equals(event.getKindName()) && AddEntityAttributeView.KindType.RelationKind.equals(event.getKindType())){
+            loadRelationKindInfoData();
+        }
     }
 
     private class RelationDirectionIconValueProvider implements ValueProvider<ConceptionKindCorrelationInfo,Icon> {

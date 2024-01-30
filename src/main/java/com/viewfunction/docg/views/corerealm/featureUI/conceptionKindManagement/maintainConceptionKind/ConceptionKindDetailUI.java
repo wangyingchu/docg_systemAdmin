@@ -45,10 +45,12 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefreshEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
+import com.viewfunction.docg.element.eventHandling.KindScopeAttributeAddedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributesViewKindMaintain.RelatedAttributesViewKindRuntimeConfigurationInfoView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.RelationAttachKindsConfigurationView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
@@ -67,7 +69,8 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         BeforeEnterObserver,
         ConceptionEntitiesCountRefreshEvent.ConceptionEntitiesCountRefreshListener,
         ConceptionKindCleanedEvent.ConceptionKindCleanedListener,
-        ConceptionKindConfigurationInfoRefreshEvent.ConceptionKindConfigurationInfoRefreshListener{
+        ConceptionKindConfigurationInfoRefreshEvent.ConceptionKindConfigurationInfoRefreshListener,
+        KindScopeAttributeAddedEvent.KindScopeAttributeAddedListener {
     private String conceptionKind;
     private KindDescriptionEditorItemWidget kindDescriptionEditorItemWidget;
     private int conceptionKindDetailViewHeightOffset = 110;
@@ -696,6 +699,13 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         dataProvider.getItems().clear();
         dataProvider.refreshAll();
         conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
+    }
+
+    @Override
+    public void receivedKindScopeAttributeAddedEvent(KindScopeAttributeAddedEvent event) {
+        if(this.conceptionKind.equals(event.getKindName()) && AddEntityAttributeView.KindType.ConceptionKind.equals(event.getKindType())){
+            refreshConceptionKindAttributesInfoGrid();
+        }
     }
 
     private class RelationDirectionIconValueProvider implements ValueProvider<ConceptionKindCorrelationInfo,Icon> {

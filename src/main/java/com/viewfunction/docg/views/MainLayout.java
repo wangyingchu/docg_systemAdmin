@@ -358,6 +358,8 @@ public class MainLayout extends AppLayout {
                 GeospatialRegionCreatedEvent.class);
         _BLACKBOARD.register(TimeFlowCreatedEvent.TimeFlowCreatedListener.class,
                 TimeFlowCreatedEvent.class);
+        _BLACKBOARD.register(KindScopeAttributeAddedEvent.KindScopeAttributeAddedListener.class,
+                KindScopeAttributeAddedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

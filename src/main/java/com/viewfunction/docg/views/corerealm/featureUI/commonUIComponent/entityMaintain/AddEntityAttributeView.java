@@ -32,6 +32,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.eventHandling.ClassificationAttributeAddedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityAttributeAddedEvent;
+import com.viewfunction.docg.element.eventHandling.KindScopeAttributeAddedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationEntityAttributeAddedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -784,6 +785,10 @@ public class AddEntityAttributeView extends VerticalLayout {
                     attributeMap.put(attributeName,newEntityAttributeValue);
                     addedEntitiesCount = targetConceptionKind.setKindScopeAttributes(attributeMap).getSuccessItemsCount();
                     if(addedEntitiesCount > 0 ){
+                        KindScopeAttributeAddedEvent kindScopeAttributeAddedEvent = new KindScopeAttributeAddedEvent();
+                        kindScopeAttributeAddedEvent.setKindName(this.kindName);
+                        kindScopeAttributeAddedEvent.setKindType(this.entityKindType);
+                        ResourceHolder.getApplicationBlackboard().fire(kindScopeAttributeAddedEvent);
                         CommonUIOperationUtil.showPopupNotification("向概念类型 "+this.kindName+ " 添加全局属性 "+ attributeName +" : "+newEntityAttributeValue +" 成功,成功添加属性实体数: "+addedEntitiesCount, NotificationVariant.LUMO_SUCCESS);
                         if(containerDialog != null){
                             containerDialog.close();
@@ -802,6 +807,10 @@ public class AddEntityAttributeView extends VerticalLayout {
                     attributeMap.put(attributeName,newEntityAttributeValue);
                     addedEntitiesCount = targetRelationKind.setKindScopeAttributes(attributeMap).getSuccessItemsCount();
                     if(addedEntitiesCount > 0 ){
+                        KindScopeAttributeAddedEvent kindScopeAttributeAddedEvent = new KindScopeAttributeAddedEvent();
+                        kindScopeAttributeAddedEvent.setKindName(this.kindName);
+                        kindScopeAttributeAddedEvent.setKindType(this.entityKindType);
+                        ResourceHolder.getApplicationBlackboard().fire(kindScopeAttributeAddedEvent);
                         CommonUIOperationUtil.showPopupNotification("向关系类型 "+this.kindName+ " 添加全局属性 "+ attributeName +" : "+newEntityAttributeValue +" 成功,成功添加属性实体数: "+addedEntitiesCount, NotificationVariant.LUMO_SUCCESS);
                         if(containerDialog != null){
                             containerDialog.close();
