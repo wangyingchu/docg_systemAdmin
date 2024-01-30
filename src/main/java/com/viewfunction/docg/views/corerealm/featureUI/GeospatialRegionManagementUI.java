@@ -33,7 +33,7 @@ public class GeospatialRegionManagementUI extends VerticalLayout implements
         GeospatialRegionCreatedEvent.GeospatialRegionCreatedListener {
 
     private Map<String, GeospatialRegionDetailUI> geospatialRegionDetailUIMap;
-    private TabSheet timeFlowInfoTabSheet;
+    private TabSheet geospatialRegionInfoTabSheet;
 
     public GeospatialRegionManagementUI(){
         this.geospatialRegionDetailUIMap = new HashMap<>();
@@ -82,17 +82,17 @@ public class GeospatialRegionManagementUI extends VerticalLayout implements
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"地理空间区域数据:",timeFlowManagementOperationButtonList);
         add(sectionActionBar);
 
-        timeFlowInfoTabSheet = new TabSheet();
-        timeFlowInfoTabSheet.addThemeVariants(TabSheetVariant.LUMO_TABS_SMALL);
-        timeFlowInfoTabSheet.setWidthFull();
-        add(timeFlowInfoTabSheet);
+        geospatialRegionInfoTabSheet = new TabSheet();
+        geospatialRegionInfoTabSheet.addThemeVariants(TabSheetVariant.LUMO_TABS_SMALL);
+        geospatialRegionInfoTabSheet.setWidthFull();
+        add(geospatialRegionInfoTabSheet);
 
         List<GeospatialRegion> geospatialRegionList = coreRealm.getGeospatialRegions();
         for(GeospatialRegion currentGeospatialRegion : geospatialRegionList){
             String currentTimeFlowName = currentGeospatialRegion.getGeospatialRegionName();
             GeospatialRegionDetailUI geospatialRegionDetailUI = new GeospatialRegionDetailUI(currentTimeFlowName);
             this.geospatialRegionDetailUIMap.put(currentTimeFlowName,geospatialRegionDetailUI);
-            timeFlowInfoTabSheet.add(generateTabTitle(VaadinIcon.GLOBE,currentTimeFlowName),geospatialRegionDetailUI);
+            geospatialRegionInfoTabSheet.add(generateTabTitle(VaadinIcon.GLOBE,currentTimeFlowName),geospatialRegionDetailUI);
         }
     }
 
@@ -135,6 +135,6 @@ public class GeospatialRegionManagementUI extends VerticalLayout implements
         String geospatialRegionName = event.getGeospatialRegionName();
         GeospatialRegionDetailUI geospatialRegionDetailUI = new GeospatialRegionDetailUI(geospatialRegionName);
         this.geospatialRegionDetailUIMap.put(geospatialRegionName,geospatialRegionDetailUI);
-        timeFlowInfoTabSheet.add(generateTabTitle(VaadinIcon.GLOBE,geospatialRegionName),geospatialRegionDetailUI);
+        geospatialRegionInfoTabSheet.add(generateTabTitle(VaadinIcon.GLOBE,geospatialRegionName),geospatialRegionDetailUI);
     }
 }

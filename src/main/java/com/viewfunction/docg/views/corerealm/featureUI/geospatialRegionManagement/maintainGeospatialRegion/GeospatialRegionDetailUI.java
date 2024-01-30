@@ -267,7 +267,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         continentInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
-                setupTimeFlowRuntimeStatisticInfo();
+                setupGeospatialRegionRuntimeStatisticInfo();
             }
         });
         geospatialRegionInfoWallContainerLayout.add(continentInfoSectionWallContainer);
@@ -285,7 +285,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         countryRegionInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
-                setupTimeFlowRuntimeStatisticInfo();
+                setupGeospatialRegionRuntimeStatisticInfo();
             }
         });
         geospatialRegionInfoWallContainerLayout.add(countryRegionInfoSectionWallContainer);
@@ -303,7 +303,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         provinceInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
-                setupTimeFlowRuntimeStatisticInfo();
+                setupGeospatialRegionRuntimeStatisticInfo();
             }
         });
         geospatialRegionInfoWallContainerLayout.add(provinceInfoSectionWallContainer);
@@ -321,7 +321,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         prefectureInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
-                setupTimeFlowRuntimeStatisticInfo();
+                setupGeospatialRegionRuntimeStatisticInfo();
             }
         });
         geospatialRegionInfoWallContainerLayout.add(prefectureInfoSectionWallContainer);
@@ -339,7 +339,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         countyInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
-                setupTimeFlowRuntimeStatisticInfo();
+                setupGeospatialRegionRuntimeStatisticInfo();
             }
         });
         geospatialRegionInfoWallContainerLayout.add(countyInfoSectionWallContainer);
@@ -357,7 +357,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         townshipInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
-                setupTimeFlowRuntimeStatisticInfo();
+                setupGeospatialRegionRuntimeStatisticInfo();
             }
         });
         geospatialRegionInfoWallContainerLayout.add(townshipInfoSectionWallContainer);
@@ -375,7 +375,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         villageInfoSectionWallContainer.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
             @Override
             public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
-                setupTimeFlowRuntimeStatisticInfo();
+                setupGeospatialRegionRuntimeStatisticInfo();
             }
         });
         geospatialRegionInfoWallContainerLayout.add(villageInfoSectionWallContainer);
@@ -1248,7 +1248,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         return resultValueList;
     }
 
-    private GeospatialRegionRuntimeStatistics setupTimeFlowRuntimeStatisticInfo(){
+    private GeospatialRegionRuntimeStatistics setupGeospatialRegionRuntimeStatisticInfo(){
         if(!timeFlowRuntimeStatisticsQueried){
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             GeospatialRegion geospatialRegion = coreRealm.getOrCreateGeospatialRegion(this.geospatialRegionName);
@@ -1599,7 +1599,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         if(event != null ){
             if(this.geospatialRegionName.equals(event.getGeospatialRegionName()) || event.getGeospatialRegionName() == null){
                 timeFlowRuntimeStatisticsQueried = false;
-                GeospatialRegionRuntimeStatistics geospatialRegionRuntimeStatistics = setupTimeFlowRuntimeStatisticInfo();
+                GeospatialRegionRuntimeStatistics geospatialRegionRuntimeStatistics = setupGeospatialRegionRuntimeStatisticInfo();
                 if(geospatialRegionRuntimeStatistics != null){
                     totalGeospatialScaleEntityCountDisplayItem.updateDisplayValue(this.numberFormat.format(geospatialRegionRuntimeStatistics.getContainsTotalGeospatialScaleEntityCount()));
                     totalGeospatialScaleEventCountDisplayItem.updateDisplayValue(this.numberFormat.format(geospatialRegionRuntimeStatistics.getRefersTotalGeospatialScaleEventCount()));
