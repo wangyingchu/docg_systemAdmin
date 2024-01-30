@@ -43,6 +43,7 @@ public class ExpendTimeFlowYearsView extends VerticalLayout {
     private Checkbox createMinuteScaleEntity;
     private int currentStartYear;
     private int currentEndYear;
+    private boolean isInInitMode = false;
 
     public ExpendTimeFlowYearsView(String timeFlowName){
         this.timeFlowName = timeFlowName;
@@ -141,7 +142,6 @@ public class ExpendTimeFlowYearsView extends VerticalLayout {
                 doExpandTimeFlow();
             }
         });
-
     }
 
     @Override
@@ -172,6 +172,11 @@ public class ExpendTimeFlowYearsView extends VerticalLayout {
                 endYearTextField.setMin(lastYear+1);
             }
         }
+
+        if(currentStartYear <= 0){
+            endYearTextField.setEnabled(false);
+            isInInitMode = true ;
+        }
     }
 
     public void setContainerDialog(Dialog containerDialog) {
@@ -196,30 +201,45 @@ public class ExpendTimeFlowYearsView extends VerticalLayout {
         try {
             TimeFlow targetTimeFlow = coreRealm.getOrCreateTimeFlow(this.timeFlowName);
             boolean createResult = true;
-            if(startYearTextField.getValue() != null){
-                if(startYearTextField.getValue() == currentStartYear -1){
-                    createResult = targetTimeFlow.createTimeSpanEntities(startYearTextField.getValue(),createMinuteEntities);
+            if(isInInitMode){
+                createResult = targetTimeFlow.createTimeSpanEntities(startYearTextField.getValue(),createMinuteEntities);
+                if(createResult){
+                    if(this.containerDialog != null){
+                        this.containerDialog.close();
+                    }
+                    CommonUIOperationUtil.showPopupNotification("初始化时间流年度数据操作成功", NotificationVariant.LUMO_SUCCESS);
+                    TimeFlowRefreshEvent timeFlowRefreshEvent = new TimeFlowRefreshEvent();
+                    timeFlowRefreshEvent.setTimeFlowName(this.timeFlowName);
+                    ResourceHolder.getApplicationBlackboard().fire(timeFlowRefreshEvent);
                 }else{
-                    createResult = targetTimeFlow.createTimeSpanEntities(startYearTextField.getValue(),currentStartYear -1,createMinuteEntities);
+                    CommonUIOperationUtil.showPopupNotification("初始化时间流年度数据操作错误", NotificationVariant.LUMO_SUCCESS);
                 }
-            }
-            if(endYearTextField.getValue() != null){
-                if(endYearTextField.getValue() == currentEndYear +1){
-                    createResult = createResult & targetTimeFlow.createTimeSpanEntities(endYearTextField.getValue(),createMinuteEntities);
-                }else{
-                    createResult = createResult & targetTimeFlow.createTimeSpanEntities(currentEndYear +1,endYearTextField.getValue(),createMinuteEntities);
-                }
-            }
-            if(createResult){
-                if(this.containerDialog != null){
-                    this.containerDialog.close();
-                }
-                CommonUIOperationUtil.showPopupNotification("扩展时间流年跨度操作成功", NotificationVariant.LUMO_SUCCESS);
-                TimeFlowRefreshEvent timeFlowRefreshEvent = new TimeFlowRefreshEvent();
-                timeFlowRefreshEvent.setTimeFlowName(this.timeFlowName);
-                ResourceHolder.getApplicationBlackboard().fire(timeFlowRefreshEvent);
             }else{
-                CommonUIOperationUtil.showPopupNotification("扩展时间流年跨度操作错误", NotificationVariant.LUMO_SUCCESS);
+                if(startYearTextField.getValue() != null){
+                    if(startYearTextField.getValue() == currentStartYear -1){
+                        createResult = targetTimeFlow.createTimeSpanEntities(startYearTextField.getValue(),createMinuteEntities);
+                    }else{
+                        createResult = targetTimeFlow.createTimeSpanEntities(startYearTextField.getValue(),currentStartYear -1,createMinuteEntities);
+                    }
+                }
+                if(endYearTextField.getValue() != null){
+                    if(endYearTextField.getValue() == currentEndYear +1){
+                        createResult = createResult & targetTimeFlow.createTimeSpanEntities(endYearTextField.getValue(),createMinuteEntities);
+                    }else{
+                        createResult = createResult & targetTimeFlow.createTimeSpanEntities(currentEndYear +1,endYearTextField.getValue(),createMinuteEntities);
+                    }
+                }
+                if(createResult){
+                    if(this.containerDialog != null){
+                        this.containerDialog.close();
+                    }
+                    CommonUIOperationUtil.showPopupNotification("扩展时间流年跨度操作成功", NotificationVariant.LUMO_SUCCESS);
+                    TimeFlowRefreshEvent timeFlowRefreshEvent = new TimeFlowRefreshEvent();
+                    timeFlowRefreshEvent.setTimeFlowName(this.timeFlowName);
+                    ResourceHolder.getApplicationBlackboard().fire(timeFlowRefreshEvent);
+                }else{
+                    CommonUIOperationUtil.showPopupNotification("扩展时间流年跨度操作错误", NotificationVariant.LUMO_SUCCESS);
+                }
             }
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
