@@ -57,6 +57,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
 
 import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -391,90 +392,94 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                     }
                 });
             }
-            if(!attributeDataType.equals(AttributeDataType.DATE)){
-                HorizontalLayout action6Layout = new HorizontalLayout();
-                action6Layout.setPadding(false);
-                action6Layout.setSpacing(false);
-                action6Layout.setMargin(false);
-                action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-                Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
-                action6Icon.setSize("10px");
-                Span action6Space = new Span();
-                action6Space.setWidth(6,Unit.PIXELS);
-                NativeLabel action6Label = new NativeLabel("转为 DATE 类型");
-                action6Label.addClassNames("text-xs","font-semibold","text-secondary");
-                action6Layout.add(action6Icon,action6Space,action6Label);
-                MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
-                action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
-                    @Override
-                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                        renderConvertAttributeToDateView(attributeInfo.getAttributeName());
-                    }
-                });
+
+            if(attributeDataType.equals(AttributeDataType.STRING)){
+                if(!attributeDataType.equals(AttributeDataType.DATE)){
+                    HorizontalLayout action6Layout = new HorizontalLayout();
+                    action6Layout.setPadding(false);
+                    action6Layout.setSpacing(false);
+                    action6Layout.setMargin(false);
+                    action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                    Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                    action6Icon.setSize("10px");
+                    Span action6Space = new Span();
+                    action6Space.setWidth(6,Unit.PIXELS);
+                    NativeLabel action6Label = new NativeLabel("转为 DATE 类型");
+                    action6Label.addClassNames("text-xs","font-semibold","text-secondary");
+                    action6Layout.add(action6Icon,action6Space,action6Label);
+                    MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
+                    action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                        @Override
+                        public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                            renderConvertAttributeToDateView(attributeInfo.getAttributeName());
+                        }
+                    });
+                }
+                if(!attributeDataType.equals(AttributeDataType.TIME)){
+                    HorizontalLayout action6Layout = new HorizontalLayout();
+                    action6Layout.setPadding(false);
+                    action6Layout.setSpacing(false);
+                    action6Layout.setMargin(false);
+                    action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                    Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                    action6Icon.setSize("10px");
+                    Span action6Space = new Span();
+                    action6Space.setWidth(6,Unit.PIXELS);
+                    NativeLabel action6Label = new NativeLabel("转为 TIME 类型");
+                    action6Label.addClassNames("text-xs","font-semibold","text-secondary");
+                    action6Layout.add(action6Icon,action6Space,action6Label);
+                    MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
+                    action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                        @Override
+                        public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                            renderConvertAttributeToTimeView(attributeInfo.getAttributeName());
+                        }
+                    });
+                }
+                if(!attributeDataType.equals(AttributeDataType.DATETIME)){
+                    HorizontalLayout action6Layout = new HorizontalLayout();
+                    action6Layout.setPadding(false);
+                    action6Layout.setSpacing(false);
+                    action6Layout.setMargin(false);
+                    action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                    Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                    action6Icon.setSize("10px");
+                    Span action6Space = new Span();
+                    action6Space.setWidth(6,Unit.PIXELS);
+                    NativeLabel action6Label = new NativeLabel("转为 DATETIME 类型");
+                    action6Label.addClassNames("text-xs","font-semibold","text-secondary");
+                    action6Layout.add(action6Icon,action6Space,action6Label);
+                    MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
+                    action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                        @Override
+                        public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                            renderConvertAttributeToDateTimeView(attributeInfo.getAttributeName());
+                        }
+                    });
+                }
+                if(!attributeDataType.equals(AttributeDataType.TIMESTAMP)){
+                    HorizontalLayout action6Layout = new HorizontalLayout();
+                    action6Layout.setPadding(false);
+                    action6Layout.setSpacing(false);
+                    action6Layout.setMargin(false);
+                    action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                    Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
+                    action6Icon.setSize("10px");
+                    Span action6Space = new Span();
+                    action6Space.setWidth(6,Unit.PIXELS);
+                    NativeLabel action6Label = new NativeLabel("转为 TIMESTAMP 类型");
+                    action6Label.addClassNames("text-xs","font-semibold","text-secondary");
+                    action6Layout.add(action6Icon,action6Space,action6Label);
+                    MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
+                    action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                        @Override
+                        public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                            renderConvertAttributeToTimeStampView(attributeInfo.getAttributeName());
+                        }
+                    });
+                }
             }
-            if(!attributeDataType.equals(AttributeDataType.TIME)){
-                HorizontalLayout action6Layout = new HorizontalLayout();
-                action6Layout.setPadding(false);
-                action6Layout.setSpacing(false);
-                action6Layout.setMargin(false);
-                action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-                Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
-                action6Icon.setSize("10px");
-                Span action6Space = new Span();
-                action6Space.setWidth(6,Unit.PIXELS);
-                NativeLabel action6Label = new NativeLabel("转为 TIME 类型");
-                action6Label.addClassNames("text-xs","font-semibold","text-secondary");
-                action6Layout.add(action6Icon,action6Space,action6Label);
-                MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
-                action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
-                    @Override
-                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                        renderConvertAttributeToTimeView(attributeInfo.getAttributeName());
-                    }
-                });
-            }
-            if(!attributeDataType.equals(AttributeDataType.DATETIME)){
-                HorizontalLayout action6Layout = new HorizontalLayout();
-                action6Layout.setPadding(false);
-                action6Layout.setSpacing(false);
-                action6Layout.setMargin(false);
-                action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-                Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
-                action6Icon.setSize("10px");
-                Span action6Space = new Span();
-                action6Space.setWidth(6,Unit.PIXELS);
-                NativeLabel action6Label = new NativeLabel("转为 DATETIME 类型");
-                action6Label.addClassNames("text-xs","font-semibold","text-secondary");
-                action6Layout.add(action6Icon,action6Space,action6Label);
-                MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
-                action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
-                    @Override
-                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                        renderConvertAttributeToDateTimeView(attributeInfo.getAttributeName());
-                    }
-                });
-            }
-            if(!attributeDataType.equals(AttributeDataType.TIMESTAMP)){
-                HorizontalLayout action6Layout = new HorizontalLayout();
-                action6Layout.setPadding(false);
-                action6Layout.setSpacing(false);
-                action6Layout.setMargin(false);
-                action6Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-                Icon action6Icon = LineAwesomeIconsSvg.FIRSTDRAFT.create();
-                action6Icon.setSize("10px");
-                Span action6Space = new Span();
-                action6Space.setWidth(6,Unit.PIXELS);
-                NativeLabel action6Label = new NativeLabel("转为 TIMESTAMP 类型");
-                action6Label.addClassNames("text-xs","font-semibold","text-secondary");
-                action6Layout.add(action6Icon,action6Space,action6Label);
-                MenuItem action6Item = containerAction3Item.getSubMenu().addItem(action6Layout);
-                action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
-                    @Override
-                    public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                        renderConvertAttributeToTimeStampView(attributeInfo.getAttributeName());
-                    }
-                });
-            }
+
             return actionsMenuBar;
         });
 
@@ -1046,18 +1051,15 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
         EntitiesOperationStatistics entitiesOperationStatistics = null;
-        /*
         try {
-            //entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,
-            //        TemporalScaleCalculable.TemporalValueFormat.Format1, TemporalScaleCalculable.TemporalScaleLevel.Date);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm:ss");
+            entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,dtf,TemporalScaleCalculable.TemporalScaleLevel.Date);
             String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 DATE 类型操作成功";
             showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
             refreshConceptionKindAttributesInfoGrid();
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
         }
-
-         */
     }
 
     private void renderConvertAttributeToTimeView(String attributeName){
