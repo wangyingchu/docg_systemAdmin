@@ -48,6 +48,7 @@ import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationIn
 import com.viewfunction.docg.element.eventHandling.KindScopeAttributeAddedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeTypeConvert.ConvertEntityAttributeToTemporalTypeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributesViewKindMaintain.RelatedAttributesViewKindRuntimeConfigurationInfoView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
@@ -1021,6 +1022,16 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
     }
 
     private void renderConvertAttributeToDateView(String attributeName){
+        ConvertEntityAttributeToTemporalTypeView convertEntityAttributeToTemporalTypeView = new ConvertEntityAttributeToTemporalTypeView(
+                ConvertEntityAttributeToTemporalTypeView.KindType.ConceptionKind,this.conceptionKind,attributeName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换",null,true,500,230,false);
+        fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
+        convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+
+/*
+
         List<Button> actionButtonList = new ArrayList<>();
         Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
         Button cancelButton = new Button("取消操作");
@@ -1045,6 +1056,8 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 confirmWindow.closeConfirmWindow();
             }
         });
+
+        */
     }
 
     private void doConvertAttributeToDate(String attributeName){
