@@ -21,6 +21,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -118,7 +119,11 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
         if(temporalFormat == null || temporalFormat.isEmpty()){
             CommonUIOperationUtil.showPopupNotification("请确定时间日期定义格式", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
         }else{
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern(temporalFormat);
+            DateTimeFormatter dtf = null;
+            switch(temporalScaleLevel){
+                case Date,Datetime,Time -> dtf = DateTimeFormatter.ofPattern(temporalFormat);
+                case Timestamp -> dtf = DateTimeFormatter.ofPattern(temporalFormat).withZone(ZoneId.systemDefault());
+            }
             EntitiesOperationStatistics entitiesOperationStatistics = null;
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             switch (kindType){

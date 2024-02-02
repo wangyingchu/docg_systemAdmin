@@ -1035,151 +1035,73 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             }
         };
         convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换",null,true,500,230,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> DATE",null,true,500,230,false);
         fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
         convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
 
-    private void doConvertAttributeToDate(String attributeName){
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
-        EntitiesOperationStatistics entitiesOperationStatistics = null;
-        try {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,dtf,TemporalScaleCalculable.TemporalScaleLevel.Date);
-            String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 DATE 类型操作成功";
-            showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
-            refreshConceptionKindAttributesInfoGrid();
-        } catch (CoreRealmServiceRuntimeException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private void renderConvertAttributeToTimeView(String attributeName){
-        List<Button> actionButtonList = new ArrayList<>();
-        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
-        Button cancelButton = new Button("取消操作");
-        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
-        actionButtonList.add(confirmButton);
-        actionButtonList.add(cancelButton);
+        ConvertEntityAttributeToTemporalTypeView convertEntityAttributeToTemporalTypeView = new ConvertEntityAttributeToTemporalTypeView(
+                ConvertEntityAttributeToTemporalTypeView.KindType.ConceptionKind,this.conceptionKind,attributeName,TemporalScaleCalculable.TemporalScaleLevel.Time);
 
-        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 TIME 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
-        confirmWindow.open();
-
-        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                doConvertAttributeToTime(attributeName);
-                confirmWindow.closeConfirmWindow();
-            }
-        });
-        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                confirmWindow.closeConfirmWindow();
-            }
-        });
-    }
-
-    private void doConvertAttributeToTime(String attributeName){
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
-        EntitiesOperationStatistics entitiesOperationStatistics = null;
-        try {
-            entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,
-                    null, TemporalScaleCalculable.TemporalScaleLevel.Time);
-            String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 TIME 类型操作成功";
-            showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
-            refreshConceptionKindAttributesInfoGrid();
-        } catch (CoreRealmServiceRuntimeException e) {
-            throw new RuntimeException(e);
-        }
+        ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback convertEntityAttributeToTemporalTypeCallback =
+                new ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback() {
+                    @Override
+                    public void onSuccess(EntitiesOperationStatistics entitiesOperationStatistics) {
+                        String notificationMessage = "将概念类型 "+ conceptionKind+ " 的实体属性 "+attributeName+" 转换为 TIME 类型操作成功";
+                        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+                        refreshConceptionKindAttributesInfoGrid();
+                    }
+                };
+        convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> TIME",null,true,500,230,false);
+        fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
+        convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 
     private void renderConvertAttributeToDateTimeView(String attributeName){
-        List<Button> actionButtonList = new ArrayList<>();
-        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
-        Button cancelButton = new Button("取消操作");
-        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
-        actionButtonList.add(confirmButton);
-        actionButtonList.add(cancelButton);
+        ConvertEntityAttributeToTemporalTypeView convertEntityAttributeToTemporalTypeView = new ConvertEntityAttributeToTemporalTypeView(
+                ConvertEntityAttributeToTemporalTypeView.KindType.ConceptionKind,this.conceptionKind,attributeName,TemporalScaleCalculable.TemporalScaleLevel.Datetime);
 
-        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 DATETIME 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
-        confirmWindow.open();
-
-        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                doConvertAttributeToDateTime(attributeName);
-                confirmWindow.closeConfirmWindow();
-            }
-        });
-        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                confirmWindow.closeConfirmWindow();
-            }
-        });
-    }
-
-    private void doConvertAttributeToDateTime(String attributeName){
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
-        EntitiesOperationStatistics entitiesOperationStatistics = null;
-        try {
-            entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,
-                    null, TemporalScaleCalculable.TemporalScaleLevel.Datetime);
-            String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 DATETIME 类型操作成功";
-            showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
-            refreshConceptionKindAttributesInfoGrid();
-        } catch (CoreRealmServiceRuntimeException e) {
-            throw new RuntimeException(e);
-        }
+        ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback convertEntityAttributeToTemporalTypeCallback =
+                new ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback() {
+                    @Override
+                    public void onSuccess(EntitiesOperationStatistics entitiesOperationStatistics) {
+                        String notificationMessage = "将概念类型 "+ conceptionKind+ " 的实体属性 "+attributeName+" 转换为 DATETIME 类型操作成功";
+                        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+                        refreshConceptionKindAttributesInfoGrid();
+                    }
+                };
+        convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> DATETIME",null,true,500,230,false);
+        fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
+        convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 
     private void renderConvertAttributeToTimeStampView(String attributeName){
-        List<Button> actionButtonList = new ArrayList<>();
-        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
-        Button cancelButton = new Button("取消操作");
-        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
-        actionButtonList.add(confirmButton);
-        actionButtonList.add(cancelButton);
+        ConvertEntityAttributeToTemporalTypeView convertEntityAttributeToTemporalTypeView = new ConvertEntityAttributeToTemporalTypeView(
+                ConvertEntityAttributeToTemporalTypeView.KindType.ConceptionKind,this.conceptionKind,attributeName,TemporalScaleCalculable.TemporalScaleLevel.Timestamp);
 
-        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 TIMESTAMP 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
-        confirmWindow.open();
-
-        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                doConvertAttributeToTimeStamp(attributeName);
-                confirmWindow.closeConfirmWindow();
-            }
-        });
-        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                confirmWindow.closeConfirmWindow();
-            }
-        });
-    }
-
-    private void doConvertAttributeToTimeStamp(String attributeName){
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
-        EntitiesOperationStatistics entitiesOperationStatistics = null;
-        try {
-            entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,
-                    null, TemporalScaleCalculable.TemporalScaleLevel.Timestamp);
-            String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 TIMESTAMP 类型操作成功";
-            showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
-            refreshConceptionKindAttributesInfoGrid();
-        } catch (CoreRealmServiceRuntimeException e) {
-            throw new RuntimeException(e);
-        }
+        ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback convertEntityAttributeToTemporalTypeCallback =
+                new ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback() {
+                    @Override
+                    public void onSuccess(EntitiesOperationStatistics entitiesOperationStatistics) {
+                        String notificationMessage = "将概念类型 "+ conceptionKind+ " 的实体属性 "+attributeName+" 转换为 TIMESTAMP 类型操作成功";
+                        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+                        refreshConceptionKindAttributesInfoGrid();
+                    }
+                };
+        convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> TIMESTAMP",null,true,500,230,false);
+        fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
+        convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }
