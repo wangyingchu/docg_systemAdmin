@@ -12,6 +12,8 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.LitRenderer;
+import com.vaadin.flow.data.renderer.Renderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.TemporalScaleCalculable;
@@ -19,6 +21,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperatio
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.time.ZoneId;
@@ -33,7 +36,7 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
     private String attributeName;
     private KindType kindType;
     private Dialog containerDialog;
-    private ComboBox<String> dateTimeFormatterSelect;
+    private ComboBox<DateTimeFormatterInfo> dateTimeFormatterSelect;
     private TemporalScaleCalculable.TemporalScaleLevel temporalScaleLevel;
     private ConvertEntityAttributeToTemporalTypeCallback convertEntityAttributeToTemporalTypeCallback;
 
@@ -43,6 +46,34 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
 
     public void setConvertEntityAttributeToTemporalTypeCallback(ConvertEntityAttributeToTemporalTypeCallback convertEntityAttributeToTemporalTypeCallback) {
         this.convertEntityAttributeToTemporalTypeCallback = convertEntityAttributeToTemporalTypeCallback;
+    }
+
+    private class DateTimeFormatterInfo {
+        private String dateTimeFormatter;
+        private String dateTimeValueExample;
+
+        private DateTimeFormatterInfo(){}
+
+        private DateTimeFormatterInfo(String dateTimeFormatter,String dateTimeValueExample){
+            this.setDateTimeFormatter(dateTimeFormatter);
+            this.setDateTimeValueExample(dateTimeValueExample);
+        }
+
+        public String getDateTimeFormatter() {
+            return dateTimeFormatter;
+        }
+
+        public void setDateTimeFormatter(String dateTimeFormatter) {
+            this.dateTimeFormatter = dateTimeFormatter;
+        }
+
+        public String getDateTimeValueExample() {
+            return dateTimeValueExample;
+        }
+
+        public void setDateTimeValueExample(String dateTimeValueExample) {
+            this.dateTimeValueExample = dateTimeValueExample;
+        }
     }
 
     public ConvertEntityAttributeToTemporalTypeView(KindType kindType,String kindName,String attributeName,TemporalScaleCalculable.TemporalScaleLevel temporalScaleLevel){
@@ -71,21 +102,25 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
 
+        ThirdLevelIconTitle noticeTitle = new ThirdLevelIconTitle(VaadinIcon.INFO_CIRCLE_O.create(),"类型无法转换的属性将被删除");
+        add(noticeTitle);
+
         dateTimeFormatterSelect = new ComboBox<>("时间日期定义格式");
         dateTimeFormatterSelect.setAllowCustomValue(true);
         dateTimeFormatterSelect.setItems(
-                "yyyy-MM-dd HH:mm:ss",
-                "yyyy/mm/dd hh:mm:ss",
-                "MM/dd/yyyy HH:mm:ss a",
-                "MM/dd/yyyy hh:mm:ss a",
-                "yyyy/m/d h:mm:ss",
-                "yyyy/m/dd h:mm:ss",
-                "yyyyMMdd",
-                "yyyy-MM-dd",
-                "yyyymmdd",
-                "yyyy/mm/dd",
-                "yyyy/m/d"
+                new DateTimeFormatterInfo("yyyy-MM-dd HH:mm:ss","示例: 2015-07-03 14:57:41"),
+                new DateTimeFormatterInfo("yyyy/mm/dd hh:mm:ss","-"),
+                new DateTimeFormatterInfo("MM/dd/yyyy HH:mm:ss a","-"),
+                new DateTimeFormatterInfo("MM/dd/yyyy hh:mm:ss a","-"),
+                new DateTimeFormatterInfo("yyyy/m/d h:mm:ss","-"),
+                new DateTimeFormatterInfo("yyyy/m/dd h:mm:ss","-"),
+                new DateTimeFormatterInfo("yyyyMMdd","-"),
+                new DateTimeFormatterInfo("yyyy-MM-dd","-"),
+                new DateTimeFormatterInfo("yyyymmdd","-"),
+                new DateTimeFormatterInfo("yyyy/mm/dd","-"),
+                new DateTimeFormatterInfo("yyyy/m/d","-")
         );
+        dateTimeFormatterSelect.setRenderer(createRenderer());
         dateTimeFormatterSelect.setPageSize(30);
         dateTimeFormatterSelect.setPlaceholder("选择或输入时间日期定义格式");
         dateTimeFormatterSelect.setWidthFull();
@@ -115,10 +150,11 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
     }
 
     private void convertEntityAttributeToTemporalTypeView(){
-        String temporalFormat = dateTimeFormatterSelect.getValue();
-        if(temporalFormat == null || temporalFormat.isEmpty()){
+        DateTimeFormatterInfo dateTimeFormatterInfo = dateTimeFormatterSelect.getValue();
+        if(dateTimeFormatterInfo == null){
             CommonUIOperationUtil.showPopupNotification("请确定时间日期定义格式", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
         }else{
+            String temporalFormat = dateTimeFormatterSelect.getValue().getDateTimeFormatter();
             DateTimeFormatter dtf = null;
             switch(temporalScaleLevel){
                 case Date,Datetime,Time -> dtf = DateTimeFormatter.ofPattern(temporalFormat);
@@ -156,5 +192,19 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
                     ;
             }
         }
+    }
+
+    private Renderer<DateTimeFormatterInfo> createRenderer() {
+        StringBuilder tpl = new StringBuilder();
+        tpl.append("<div style=\"display: flex;\">");
+        tpl.append("  <div>");
+        tpl.append("    <span style=\"font-size: var(--lumo-font-size-l); color: var(--lumo-primary-text-color);\">${item.dateTimeFormatter}</span>");
+        tpl.append("    <div style=\"font-size: var(--lumo-font-size-m); color: var(--lumo-secondary-text-color);\">${item.dateTimeValueExample}</div>");
+        tpl.append("  </div>");
+        tpl.append("</div>");
+
+        return LitRenderer.<DateTimeFormatterInfo>of(tpl.toString())
+                .withProperty("dateTimeFormatter", DateTimeFormatterInfo::getDateTimeFormatter)
+                .withProperty("dateTimeValueExample", DateTimeFormatterInfo::getDateTimeValueExample);
     }
 }

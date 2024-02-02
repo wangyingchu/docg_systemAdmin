@@ -1035,7 +1035,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             }
         };
         convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> DATE",null,true,500,230,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> DATE",null,true,500,255,false);
         fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
         convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
@@ -1056,7 +1056,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                     }
                 };
         convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> TIME",null,true,500,230,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> TIME",null,true,500,255,false);
         fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
         convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
@@ -1077,7 +1077,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                     }
                 };
         convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> DATETIME",null,true,500,230,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> DATETIME",null,true,500,255,false);
         fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
         convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
@@ -1098,7 +1098,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                     }
                 };
         convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> TIMESTAMP",null,true,500,230,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> TIMESTAMP",null,true,500,255,false);
         fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
         convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
