@@ -1023,41 +1023,23 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
     private void renderConvertAttributeToDateView(String attributeName){
         ConvertEntityAttributeToTemporalTypeView convertEntityAttributeToTemporalTypeView = new ConvertEntityAttributeToTemporalTypeView(
-                ConvertEntityAttributeToTemporalTypeView.KindType.ConceptionKind,this.conceptionKind,attributeName);
+                ConvertEntityAttributeToTemporalTypeView.KindType.ConceptionKind,this.conceptionKind,attributeName,TemporalScaleCalculable.TemporalScaleLevel.Date);
+
+        ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback convertEntityAttributeToTemporalTypeCallback =
+                new ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback() {
+            @Override
+            public void onSuccess(EntitiesOperationStatistics entitiesOperationStatistics) {
+                String notificationMessage = "将概念类型 "+ conceptionKind+ " 的实体属性 "+attributeName+" 转换为 DATE 类型操作成功";
+                showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+                refreshConceptionKindAttributesInfoGrid();
+            }
+        };
+        convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换",null,true,500,230,false);
         fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
         convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
-
-/*
-
-        List<Button> actionButtonList = new ArrayList<>();
-        Button confirmButton = new Button("确认转换数据类型",new Icon(VaadinIcon.CHECK_CIRCLE));
-        Button cancelButton = new Button("取消操作");
-        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
-        actionButtonList.add(confirmButton);
-        actionButtonList.add(cancelButton);
-
-        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 DATE 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
-        confirmWindow.open();
-
-        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                doConvertAttributeToDate(attributeName);
-                confirmWindow.closeConfirmWindow();
-            }
-        });
-        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                confirmWindow.closeConfirmWindow();
-            }
-        });
-
-        */
     }
 
     private void doConvertAttributeToDate(String attributeName){

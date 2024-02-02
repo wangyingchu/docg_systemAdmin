@@ -8,29 +8,54 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.TemporalScaleCalculable;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
+
     public enum KindType {ConceptionKind,RelationKind}
     private String kindName;
     private String attributeName;
     private KindType kindType;
     private Dialog containerDialog;
     private ComboBox<String> dateTimeFormatterSelect;
+    private TemporalScaleCalculable.TemporalScaleLevel temporalScaleLevel;
+    private ConvertEntityAttributeToTemporalTypeCallback convertEntityAttributeToTemporalTypeCallback;
 
-    public ConvertEntityAttributeToTemporalTypeView(KindType kindType,String kindName,String attributeName){
+    public interface ConvertEntityAttributeToTemporalTypeCallback {
+        public void onSuccess(EntitiesOperationStatistics entitiesOperationStatistics);
+    }
+
+    public void setConvertEntityAttributeToTemporalTypeCallback(ConvertEntityAttributeToTemporalTypeCallback convertEntityAttributeToTemporalTypeCallback) {
+        this.convertEntityAttributeToTemporalTypeCallback = convertEntityAttributeToTemporalTypeCallback;
+    }
+
+    public ConvertEntityAttributeToTemporalTypeView(KindType kindType,String kindName,String attributeName,TemporalScaleCalculable.TemporalScaleLevel temporalScaleLevel){
         this.kindName = kindName;
         this.attributeName = attributeName;
         this.kindType = kindType;
+        this.temporalScaleLevel = temporalScaleLevel;
         this.setWidthFull();
 
         Icon kindIcon = VaadinIcon.CUBE.create();
+        switch (kindType){
+            case ConceptionKind -> kindIcon = VaadinIcon.CUBE.create();
+            case RelationKind ->  kindIcon = VaadinIcon.CONNECT_O.create();
+        }
         kindIcon.setSize("12px");
         kindIcon.getStyle().set("padding-right","3px");
 
@@ -79,7 +104,7 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //attachConceptionKindEntitiesToTimeFlow();
+                convertEntityAttributeToTemporalTypeView();
             }
         });
     }
@@ -88,5 +113,43 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
         this.containerDialog = containerDialog;
     }
 
-
+    private void convertEntityAttributeToTemporalTypeView(){
+        String temporalFormat = dateTimeFormatterSelect.getValue();
+        if(temporalFormat == null || temporalFormat.isEmpty()){
+            CommonUIOperationUtil.showPopupNotification("请确定时间日期定义格式", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+        }else{
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern(temporalFormat);
+            EntitiesOperationStatistics entitiesOperationStatistics = null;
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            switch (kindType){
+                case ConceptionKind :
+                    com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.kindName);
+                    try {
+                        entitiesOperationStatistics = targetConceptionKind.convertEntityAttributeToTemporalType(attributeName,dtf, temporalScaleLevel);
+                        if(this.containerDialog != null){
+                            this.containerDialog.close();
+                        }
+                        if(this.convertEntityAttributeToTemporalTypeCallback != null){
+                            this.convertEntityAttributeToTemporalTypeCallback.onSuccess(entitiesOperationStatistics);
+                        }
+                    } catch (CoreRealmServiceRuntimeException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                case RelationKind :
+                    /*
+                    com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind targetRelationKind = coreRealm.getRelationKind(this.kindName);
+                    try {
+                        entitiesOperationStatistics = targetRelationKind.convertEntityAttributeToTemporalType(attributeName,dtf, TemporalScaleCalculable.TemporalScaleLevel.Date);
+                        String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 DATE 类型操作成功";
+                        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+                        refreshConceptionKindAttributesInfoGrid();
+                    } catch (CoreRealmServiceRuntimeException e) {
+                        throw new RuntimeException(e);
+                    }
+                    */
+                    ;
+            }
+        }
+    }
 }
