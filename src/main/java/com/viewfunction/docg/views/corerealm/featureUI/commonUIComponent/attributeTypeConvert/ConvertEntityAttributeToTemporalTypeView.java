@@ -108,12 +108,33 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
         dateTimeFormatterSelect = new ComboBox<>("时间日期定义格式");
         dateTimeFormatterSelect.setAllowCustomValue(true);
         dateTimeFormatterSelect.setItems(
-                new DateTimeFormatterInfo("yyyy-MM-dd HH:mm:ss","示例: 2015-07-03 14:57:41"),
-                new DateTimeFormatterInfo("yyyy/mm/dd hh:mm:ss","-"),
+                new DateTimeFormatterInfo("yyyy-MM-dd HH:mm:ss","24小时制 示例: 2015-07-03 14:57:41"),
+                new DateTimeFormatterInfo("yyyy-MM-dd hh:mm:ss","12小时制 示例: 2015-07-03 2:57:41"),
+                new DateTimeFormatterInfo("yyyy-MM-dd HH:mm:ss SSS","24小时制 示例: 2015-07-03 14:57:41 000"),
+                new DateTimeFormatterInfo("yyyy-MM-dd hh:mm:ss SSS","12小时制 示例: 2015-07-03 2:57:41 000"),
+                new DateTimeFormatterInfo("yyyy-MM-dd hh:mm:ss a","12小时制 示例: 2015-07-03 2:57:41 AM"),
+                new DateTimeFormatterInfo("yyyy-MM-dd hh:mm:ss SSS a","12小时制 示例: 2015-07-03 2:57:41 000 AM"),
+
+                new DateTimeFormatterInfo("yyyy-MM-ddTHH:mm:ssZ","24小时制 示例: 2014-11-11T12:00:00Z"),
+                new DateTimeFormatterInfo("yyyy-MM-dd'T'HH:mm:ss.SSSZ","24小时制 示例: 2018-05-14T03:51:50.153Z"),
+            
+
+
+                //ISO 8601
+                //RFC 3339
+                //ANSI
+                //ISO 8601 简化
+
+
+                new DateTimeFormatterInfo("yyyy/MM/dd hh:mm:ss","-"),
+
+
                 new DateTimeFormatterInfo("MM/dd/yyyy HH:mm:ss a","-"),
                 new DateTimeFormatterInfo("MM/dd/yyyy hh:mm:ss a","-"),
                 new DateTimeFormatterInfo("yyyy/m/d h:mm:ss","-"),
                 new DateTimeFormatterInfo("yyyy/m/dd h:mm:ss","-"),
+
+
                 new DateTimeFormatterInfo("yyyyMMdd","-"),
                 new DateTimeFormatterInfo("yyyy-MM-dd","-"),
                 new DateTimeFormatterInfo("yyyymmdd","-"),
