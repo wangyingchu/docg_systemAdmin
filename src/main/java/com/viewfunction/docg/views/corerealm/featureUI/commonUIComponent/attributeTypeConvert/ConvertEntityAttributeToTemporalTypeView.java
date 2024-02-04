@@ -12,8 +12,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.renderer.LitRenderer;
-import com.vaadin.flow.data.renderer.Renderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.TemporalScaleCalculable;
@@ -37,7 +35,7 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
     private String attributeName;
     private KindType kindType;
     private Dialog containerDialog;
-    private ComboBox<DateTimeFormatterInfo> dateTimeFormatterSelect;
+    private ComboBox<String> dateTimeFormatterSelect;
     private TemporalScaleCalculable.TemporalScaleLevel temporalScaleLevel;
     private ConvertEntityAttributeToTemporalTypeCallback convertEntityAttributeToTemporalTypeCallback;
 
@@ -47,34 +45,6 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
 
     public void setConvertEntityAttributeToTemporalTypeCallback(ConvertEntityAttributeToTemporalTypeCallback convertEntityAttributeToTemporalTypeCallback) {
         this.convertEntityAttributeToTemporalTypeCallback = convertEntityAttributeToTemporalTypeCallback;
-    }
-
-    private class DateTimeFormatterInfo {
-        private String dateTimeFormatter;
-        private String dateTimeValueExample;
-
-        private DateTimeFormatterInfo(){}
-
-        private DateTimeFormatterInfo(String dateTimeFormatter,String dateTimeValueExample){
-            this.setDateTimeFormatter(dateTimeFormatter);
-            this.setDateTimeValueExample(dateTimeValueExample);
-        }
-
-        public String getDateTimeFormatter() {
-            return dateTimeFormatter;
-        }
-
-        public void setDateTimeFormatter(String dateTimeFormatter) {
-            this.dateTimeFormatter = dateTimeFormatter;
-        }
-
-        public String getDateTimeValueExample() {
-            return dateTimeValueExample;
-        }
-
-        public void setDateTimeValueExample(String dateTimeValueExample) {
-            this.dateTimeValueExample = dateTimeValueExample;
-        }
     }
 
     public ConvertEntityAttributeToTemporalTypeView(KindType kindType,String kindName,String attributeName,TemporalScaleCalculable.TemporalScaleLevel temporalScaleLevel){
@@ -126,40 +96,41 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
 
         dateTimeFormatterSelect = new ComboBox<>("时间日期定义格式");
         dateTimeFormatterSelect.setAllowCustomValue(true);
+
         dateTimeFormatterSelect.setItems(
-                new DateTimeFormatterInfo("yyyy-MM-dd hh:mm:ss","12小时制 示例: 2015-07-03 2:57:41"),
-                new DateTimeFormatterInfo("yyyy-MM-dd hh:mm:ss a","12小时制 示例: 2015-07-03 2:57:41 AM"),
+                "yyyy-MM-dd hh:mm:ss",
+                "yyyy-MM-dd hh:mm:ss a",
 
-                new DateTimeFormatterInfo("yyyy-MM-dd HH:mm:ss","24小时制 示例: 2015-07-03 14:57:41"),
-                new DateTimeFormatterInfo("yyyy-MM-dd HH:mm:ss SSS","24小时制 示例: 2015-07-03 14:57:41 000"),
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-dd HH:mm:ss SSS",
 
-                new DateTimeFormatterInfo("yyyy-MM-dd HH:mm:ssZ","24小时制 示例: 2014-11-11 12:00:00Z"),
-                new DateTimeFormatterInfo("yyyy-MM-dd'T'HH:mm:ssZ","24小时制 示例: 2014-11-11T12:00:00Z"),
-                new DateTimeFormatterInfo("yyyy-MM-dd'T'HH:mm:ssXXX","24小时制 示例: 2014-11-11T12:00:00+08:00"),
-                new DateTimeFormatterInfo("yyyy-MM-dd'T'HH:mm:ss.SSSZ","24小时制 示例: 2018-05-14T03:51:50.153Z"),
-                new DateTimeFormatterInfo("yyyy-MM-dd'T'HH:mm:ss.SSSXXX","24小时制 示例: 2021-06-01T12:23:00.235+08:00"),
+                "yyyy-MM-dd HH:mm:ssZ",
+                "yyyy-MM-dd'T'HH:mm:ssZ",
+               "yyyy-MM-dd'T'HH:mm:ssXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
 
-                new DateTimeFormatterInfo("yyyy/MM/dd hh:mm:ss","12小时制 示例: 2015/07/03 2:57:41"),
-                new DateTimeFormatterInfo("yyyy/MM/dd hh:mm:ss a","12小时制 示例: 2015/07/03 2:57:41 PM"),
-                new DateTimeFormatterInfo("yyyy/M/d hh:mm:ss","12小时制 示例: 2015/7/3 2:57:41"),
-                new DateTimeFormatterInfo("yyyy/M/d hh:mm:ss a","12小时制 示例: 2015/7/3 2:57:41 PM"),
-                new DateTimeFormatterInfo("yyyy/MM/dd HH:mm:ss","24小时制 示例: 2015/07/03 14:57:41"),
-                new DateTimeFormatterInfo("yyyy/MM/dd HH:mm:ss SSS","24小时制 示例: 2015/07/03 14:57:41 000"),
+                "yyyy/MM/dd hh:mm:ss",
+                "yyyy/MM/dd hh:mm:ss a",
+                "yyyy/M/d hh:mm:ss",
+                "yyyy/M/d hh:mm:ss a",
+                "yyyy/MM/dd HH:mm:ss",
+                "yyyy/MM/dd HH:mm:ss SSS",
 
-                new DateTimeFormatterInfo("MM/dd/yyyy hh:mm:ss","12小时制 示例: 07/03/2015 2:57:41"),
-                new DateTimeFormatterInfo("MM/dd/yyyy hh:mm:ss a","12小时制 示例: 07/03/2015 2:57:41 AM"),
-                new DateTimeFormatterInfo("M/d/yyyy hh:mm:ss","12小时制 示例: 7/3/2015 2:57:41"),
-                new DateTimeFormatterInfo("M/d/yyyy hh:mm:ss a","12小时制 示例: 7/3/2015 2:57:41 AM"),
-                new DateTimeFormatterInfo("MM/dd/yyyy HH:mm:ss","24小时制 示例: 07/03/2015 14:57:41"),
-                new DateTimeFormatterInfo("MM/dd/yyyy HH:mm:ss SSS","24小时制 示例: 07/03/2015 14:57:41 000"),
+                "MM/dd/yyyy hh:mm:ss",
+                "MM/dd/yyyy hh:mm:ss a",
+                "M/d/yyyy hh:mm:ss",
+                "M/d/yyyy hh:mm:ss a",
+                "MM/dd/yyyy HH:mm:ss",
+                "MM/dd/yyyy HH:mm:ss SSS",
 
-                new DateTimeFormatterInfo("yyyyMMdd","示例: 20150703"),
-                new DateTimeFormatterInfo("yyyy-MM-dd","示例: 2015-07-03"),
-                new DateTimeFormatterInfo("yyyy-M-d","示例: 2015-7-3"),
-                new DateTimeFormatterInfo("yyyy/MM/dd","示例: 2015/07/03"),
-                new DateTimeFormatterInfo("yyyy/M/d","示例: 2015/7/3")
+                "yyyyMMdd",
+                "yyyy-MM-dd",
+                "yyyy-M-d",
+                "yyyy/MM/dd",
+                "yyyy/M/d"
         );
-        dateTimeFormatterSelect.setRenderer(createRenderer());
+
         dateTimeFormatterSelect.setPageSize(30);
         dateTimeFormatterSelect.setPlaceholder("选择或输入时间日期定义格式");
         dateTimeFormatterSelect.setWidthFull();
@@ -189,11 +160,10 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
     }
 
     private void convertEntityAttributeToTemporalTypeView(){
-        DateTimeFormatterInfo dateTimeFormatterInfo = dateTimeFormatterSelect.getValue();
-        if(dateTimeFormatterInfo == null){
+        String temporalFormat = dateTimeFormatterSelect.getValue();
+        if(temporalFormat == null || temporalFormat.isEmpty()){
             CommonUIOperationUtil.showPopupNotification("请确定时间日期定义格式", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
         }else{
-            String temporalFormat = dateTimeFormatterSelect.getValue().getDateTimeFormatter();
             DateTimeFormatter dtf = null;
             switch(temporalScaleLevel){
                 case Date,Datetime,Time -> dtf = DateTimeFormatter.ofPattern(temporalFormat);
@@ -231,20 +201,6 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
                     ;
             }
         }
-    }
-
-    private Renderer<DateTimeFormatterInfo> createRenderer() {
-        StringBuilder tpl = new StringBuilder();
-        tpl.append("<div style=\"display: flex;\">");
-        tpl.append("  <div>");
-        tpl.append("    <span style=\"font-size: var(--lumo-font-size-l); \">${item.dateTimeFormatter}</span>");
-        tpl.append("    <div style=\"font-size: var(--lumo-font-size-m); color: var(--lumo-secondary-text-color);\">${item.dateTimeValueExample}</div>");
-        tpl.append("  </div>");
-        tpl.append("</div>");
-
-        return LitRenderer.<DateTimeFormatterInfo>of(tpl.toString())
-                .withProperty("dateTimeFormatter", DateTimeFormatterInfo::getDateTimeFormatter)
-                .withProperty("dateTimeValueExample", DateTimeFormatterInfo::getDateTimeValueExample);
     }
 
     private void showFormatDescIntroView(){
