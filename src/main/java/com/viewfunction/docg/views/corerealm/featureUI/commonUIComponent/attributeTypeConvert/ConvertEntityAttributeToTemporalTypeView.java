@@ -20,6 +20,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.feature.TemporalScaleCal
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -102,8 +103,26 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
 
+        HorizontalLayout infoLayout = new HorizontalLayout();
+        infoLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        add(infoLayout);
+
         ThirdLevelIconTitle noticeTitle = new ThirdLevelIconTitle(VaadinIcon.INFO_CIRCLE_O.create(),"类型无法转换的属性将被删除");
-        add(noticeTitle);
+        infoLayout.add(noticeTitle);
+
+        Button formatDescIntroButtonLaunchButton = new Button();
+        formatDescIntroButtonLaunchButton.setTooltipText("时间日期定义格式说明");
+        Icon infoIcon = VaadinIcon.QUESTION_CIRCLE.create();
+        infoIcon.setSize("14px");
+        formatDescIntroButtonLaunchButton.setIcon(infoIcon);
+        formatDescIntroButtonLaunchButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_CONTRAST);
+        infoLayout.add(formatDescIntroButtonLaunchButton);
+        formatDescIntroButtonLaunchButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                showFormatDescIntroView();
+            }
+        });
 
         dateTimeFormatterSelect = new ComboBox<>("时间日期定义格式");
         dateTimeFormatterSelect.setAllowCustomValue(true);
@@ -134,11 +153,11 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
                 new DateTimeFormatterInfo("MM/dd/yyyy HH:mm:ss","24小时制 示例: 07/03/2015 14:57:41"),
                 new DateTimeFormatterInfo("MM/dd/yyyy HH:mm:ss SSS","24小时制 示例: 07/03/2015 14:57:41 000"),
 
-                new DateTimeFormatterInfo("yyyyMMdd","20150703"),
-                new DateTimeFormatterInfo("yyyy-MM-dd","2015-07-03"),
-                new DateTimeFormatterInfo("yyyy-M-d","2015-7-3"),
-                new DateTimeFormatterInfo("yyyy/MM/dd","2015/07/03"),
-                new DateTimeFormatterInfo("yyyy/M/d","2015/7/3")
+                new DateTimeFormatterInfo("yyyyMMdd","示例: 20150703"),
+                new DateTimeFormatterInfo("yyyy-MM-dd","示例: 2015-07-03"),
+                new DateTimeFormatterInfo("yyyy-M-d","示例: 2015-7-3"),
+                new DateTimeFormatterInfo("yyyy/MM/dd","示例: 2015/07/03"),
+                new DateTimeFormatterInfo("yyyy/M/d","示例: 2015/7/3")
         );
         dateTimeFormatterSelect.setRenderer(createRenderer());
         dateTimeFormatterSelect.setPageSize(30);
@@ -226,5 +245,13 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
         return LitRenderer.<DateTimeFormatterInfo>of(tpl.toString())
                 .withProperty("dateTimeFormatter", DateTimeFormatterInfo::getDateTimeFormatter)
                 .withProperty("dateTimeValueExample", DateTimeFormatterInfo::getDateTimeValueExample);
+    }
+
+    private void showFormatDescIntroView(){
+        DateTimeFormatDescIntroView dateTimeFormatDescIntroView = new DateTimeFormatDescIntroView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.QUESTION_CIRCLE),"时间日期定义格式说明",null,true,700,490,false);
+        fixSizeWindow.setWindowContent(dateTimeFormatDescIntroView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }
