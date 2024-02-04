@@ -30,6 +30,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.TemporalScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
@@ -44,6 +45,7 @@ import com.viewfunction.docg.element.eventHandling.RelationKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeTypeConvert.ConvertEntityAttributeToTemporalTypeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.RelationAttachKindsConfigurationView;
@@ -373,7 +375,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
                     action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                         @Override
                         public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                            //renderConvertAttributeToDateView(attributeInfo.getAttributeName());
+                            renderConvertAttributeToDateView(attributeInfo.getAttributeName());
                         }
                     });
                 }
@@ -394,7 +396,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
                     action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                         @Override
                         public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                            //renderConvertAttributeToTimeView(attributeInfo.getAttributeName());
+                            renderConvertAttributeToTimeView(attributeInfo.getAttributeName());
                         }
                     });
                 }
@@ -415,7 +417,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
                     action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                         @Override
                         public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                            //renderConvertAttributeToDateTimeView(attributeInfo.getAttributeName());
+                            renderConvertAttributeToDateTimeView(attributeInfo.getAttributeName());
                         }
                     });
                 }
@@ -436,7 +438,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
                     action6Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                         @Override
                         public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                            //renderConvertAttributeToTimeStampView(attributeInfo.getAttributeName());
+                            renderConvertAttributeToTimeStampView(attributeInfo.getAttributeName());
                         }
                     });
                 }
@@ -911,5 +913,89 @@ public class RelationKindDetailUI extends VerticalLayout implements
         String notificationMessage = "将关系类型 "+this.relationKind+" 的实体属性 "+attributeName+" 转换为 STRING 类型操作成功";
         showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
         loadRelationKindInfoData();
+    }
+
+    private void renderConvertAttributeToDateView(String attributeName){
+        ConvertEntityAttributeToTemporalTypeView convertEntityAttributeToTemporalTypeView = new ConvertEntityAttributeToTemporalTypeView(
+                ConvertEntityAttributeToTemporalTypeView.KindType.RelationKind,this.relationKind,attributeName, TemporalScaleCalculable.TemporalScaleLevel.Date);
+
+        ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback convertEntityAttributeToTemporalTypeCallback =
+                new ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback() {
+                    @Override
+                    public void onSuccess(EntitiesOperationStatistics entitiesOperationStatistics) {
+                        String notificationMessage = "将关系类型 "+ relationKind+ " 的实体属性 "+attributeName+" 转换为 DATE 类型操作成功";
+                        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+                        loadRelationKindInfoData();
+                    }
+                };
+        convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"关系类型实体属性类型转换 String -> DATE",null,true,500,255,false);
+        fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
+        convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderConvertAttributeToTimeView(String attributeName){
+        ConvertEntityAttributeToTemporalTypeView convertEntityAttributeToTemporalTypeView = new ConvertEntityAttributeToTemporalTypeView(
+                ConvertEntityAttributeToTemporalTypeView.KindType.RelationKind,this.relationKind,attributeName,TemporalScaleCalculable.TemporalScaleLevel.Time);
+
+        ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback convertEntityAttributeToTemporalTypeCallback =
+                new ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback() {
+                    @Override
+                    public void onSuccess(EntitiesOperationStatistics entitiesOperationStatistics) {
+                        String notificationMessage = "将关系类型 "+ relationKind+ " 的实体属性 "+attributeName+" 转换为 TIME 类型操作成功";
+                        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+                        loadRelationKindInfoData();
+                    }
+                };
+        convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"关系类型实体属性类型转换 String -> TIME",null,true,500,255,false);
+        fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
+        convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderConvertAttributeToDateTimeView(String attributeName){
+        ConvertEntityAttributeToTemporalTypeView convertEntityAttributeToTemporalTypeView = new ConvertEntityAttributeToTemporalTypeView(
+                ConvertEntityAttributeToTemporalTypeView.KindType.RelationKind,this.relationKind,attributeName,TemporalScaleCalculable.TemporalScaleLevel.Datetime);
+
+        ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback convertEntityAttributeToTemporalTypeCallback =
+                new ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback() {
+                    @Override
+                    public void onSuccess(EntitiesOperationStatistics entitiesOperationStatistics) {
+                        String notificationMessage = "将关系类型 "+ relationKind+ " 的实体属性 "+attributeName+" 转换为 DATETIME 类型操作成功";
+                        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+                        loadRelationKindInfoData();
+                    }
+                };
+        convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"关系类型实体属性类型转换 String -> DATETIME",null,true,500,255,false);
+        fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
+        convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderConvertAttributeToTimeStampView(String attributeName){
+        ConvertEntityAttributeToTemporalTypeView convertEntityAttributeToTemporalTypeView = new ConvertEntityAttributeToTemporalTypeView(
+                ConvertEntityAttributeToTemporalTypeView.KindType.RelationKind,this.relationKind,attributeName,TemporalScaleCalculable.TemporalScaleLevel.Timestamp);
+
+        ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback convertEntityAttributeToTemporalTypeCallback =
+                new ConvertEntityAttributeToTemporalTypeView.ConvertEntityAttributeToTemporalTypeCallback() {
+                    @Override
+                    public void onSuccess(EntitiesOperationStatistics entitiesOperationStatistics) {
+                        String notificationMessage = "将关系类型 "+ relationKind+ " 的实体属性 "+attributeName+" 转换为 TIMESTAMP 类型操作成功";
+                        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+                        loadRelationKindInfoData();
+                    }
+                };
+        convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"关系类型实体属性类型转换 String -> TIMESTAMP",null,true,500,255,false);
+        fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
+        convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }
