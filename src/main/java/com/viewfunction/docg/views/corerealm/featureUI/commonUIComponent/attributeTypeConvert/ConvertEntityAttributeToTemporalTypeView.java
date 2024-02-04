@@ -196,18 +196,18 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
                     }
                     break;
                 case RelationKind :
-                    /*
                     com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind targetRelationKind = coreRealm.getRelationKind(this.kindName);
                     try {
-                        entitiesOperationStatistics = targetRelationKind.convertEntityAttributeToTemporalType(attributeName,dtf, TemporalScaleCalculable.TemporalScaleLevel.Date);
-                        String notificationMessage = "将概念类型 "+this.conceptionKind+" 的实体属性 "+attributeName+" 转换为 DATE 类型操作成功";
-                        showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
-                        refreshConceptionKindAttributesInfoGrid();
+                        entitiesOperationStatistics = targetRelationKind.convertEntityAttributeToTemporalType(attributeName,dtf, temporalScaleLevel);
+                        if(this.containerDialog != null){
+                            this.containerDialog.close();
+                        }
+                        if(this.convertEntityAttributeToTemporalTypeCallback != null){
+                            this.convertEntityAttributeToTemporalTypeCallback.onSuccess(entitiesOperationStatistics);
+                        }
                     } catch (CoreRealmServiceRuntimeException e) {
                         throw new RuntimeException(e);
                     }
-                    */
-                    ;
             }
         }
     }
