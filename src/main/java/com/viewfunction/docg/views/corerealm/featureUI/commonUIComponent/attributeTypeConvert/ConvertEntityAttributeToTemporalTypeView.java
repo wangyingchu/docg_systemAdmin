@@ -95,41 +95,50 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
         });
 
         dateTimeFormatterSelect = new ComboBox<>("时间日期定义格式");
+
+        List<String> formaterList = new ArrayList<>();
+        formaterList.add("yyyy-MM-dd hh:mm:ss");
+        formaterList.add("yyyy-MM-dd hh:mm:ss a");
+
+        formaterList.add("yyyy-MM-dd HH:mm:ss");
+        formaterList.add("yyyy-MM-dd HH:mm:ss SSS");
+
+        formaterList.add("yyyy-MM-dd HH:mm:ssZ");
+        formaterList.add("yyyy-MM-dd'T'HH:mm:ssZ");
+        formaterList.add("yyyy-MM-dd'T'HH:mm:ssXXX");
+        formaterList.add("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        formaterList.add("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
+        formaterList.add("yyyy/MM/dd hh:mm:ss");
+        formaterList.add("yyyy/MM/dd hh:mm:ss a");
+        formaterList.add("yyyy/M/d hh:mm:ss");
+        formaterList.add("yyyy/M/d hh:mm:ss a");
+        formaterList.add("yyyy/MM/dd HH:mm:ss");
+        formaterList.add("yyyy/MM/dd HH:mm:ss SSS");
+
+        formaterList.add("MM/dd/yyyy hh:mm:ss");
+        formaterList.add("MM/dd/yyyy hh:mm:ss a");
+        formaterList.add("M/d/yyyy hh:mm:ss");
+        formaterList.add("M/d/yyyy hh:mm:ss a");
+        formaterList.add("MM/dd/yyyy HH:mm:ss");
+        formaterList.add("MM/dd/yyyy HH:mm:ss SSS");
+
+        formaterList.add("yyyyMMdd");
+        formaterList.add("yyyy-MM-dd");
+        formaterList.add("yyyy-M-d");
+        formaterList.add("yyyy/MM/dd");
+        formaterList.add("yyyy/M/d");
+
+        dateTimeFormatterSelect.setItems(formaterList);
+
         dateTimeFormatterSelect.setAllowCustomValue(true);
+        dateTimeFormatterSelect.addCustomValueSetListener(e -> {
+            String customValue = e.getDetail();
 
-        dateTimeFormatterSelect.setItems(
-                "yyyy-MM-dd hh:mm:ss",
-                "yyyy-MM-dd hh:mm:ss a",
-
-                "yyyy-MM-dd HH:mm:ss",
-                "yyyy-MM-dd HH:mm:ss SSS",
-
-                "yyyy-MM-dd HH:mm:ssZ",
-                "yyyy-MM-dd'T'HH:mm:ssZ",
-               "yyyy-MM-dd'T'HH:mm:ssXXX",
-                "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
-                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
-
-                "yyyy/MM/dd hh:mm:ss",
-                "yyyy/MM/dd hh:mm:ss a",
-                "yyyy/M/d hh:mm:ss",
-                "yyyy/M/d hh:mm:ss a",
-                "yyyy/MM/dd HH:mm:ss",
-                "yyyy/MM/dd HH:mm:ss SSS",
-
-                "MM/dd/yyyy hh:mm:ss",
-                "MM/dd/yyyy hh:mm:ss a",
-                "M/d/yyyy hh:mm:ss",
-                "M/d/yyyy hh:mm:ss a",
-                "MM/dd/yyyy HH:mm:ss",
-                "MM/dd/yyyy HH:mm:ss SSS",
-
-                "yyyyMMdd",
-                "yyyy-MM-dd",
-                "yyyy-M-d",
-                "yyyy/MM/dd",
-                "yyyy/M/d"
-        );
+            formaterList.add(customValue);
+            dateTimeFormatterSelect.setItems(formaterList);
+            dateTimeFormatterSelect.setValue(customValue);
+        });
 
         dateTimeFormatterSelect.setPageSize(30);
         dateTimeFormatterSelect.setPlaceholder("选择或输入时间日期定义格式");
