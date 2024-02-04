@@ -108,38 +108,37 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
         dateTimeFormatterSelect = new ComboBox<>("时间日期定义格式");
         dateTimeFormatterSelect.setAllowCustomValue(true);
         dateTimeFormatterSelect.setItems(
-                new DateTimeFormatterInfo("yyyy-MM-dd HH:mm:ss","24小时制 示例: 2015-07-03 14:57:41"),
                 new DateTimeFormatterInfo("yyyy-MM-dd hh:mm:ss","12小时制 示例: 2015-07-03 2:57:41"),
-                new DateTimeFormatterInfo("yyyy-MM-dd HH:mm:ss SSS","24小时制 示例: 2015-07-03 14:57:41 000"),
-                new DateTimeFormatterInfo("yyyy-MM-dd hh:mm:ss SSS","12小时制 示例: 2015-07-03 2:57:41 000"),
                 new DateTimeFormatterInfo("yyyy-MM-dd hh:mm:ss a","12小时制 示例: 2015-07-03 2:57:41 AM"),
-                new DateTimeFormatterInfo("yyyy-MM-dd hh:mm:ss SSS a","12小时制 示例: 2015-07-03 2:57:41 000 AM"),
 
-                new DateTimeFormatterInfo("yyyy-MM-ddTHH:mm:ssZ","24小时制 示例: 2014-11-11T12:00:00Z"),
+                new DateTimeFormatterInfo("yyyy-MM-dd HH:mm:ss","24小时制 示例: 2015-07-03 14:57:41"),
+                new DateTimeFormatterInfo("yyyy-MM-dd HH:mm:ss SSS","24小时制 示例: 2015-07-03 14:57:41 000"),
+
+                new DateTimeFormatterInfo("yyyy-MM-dd HH:mm:ssZ","24小时制 示例: 2014-11-11 12:00:00Z"),
+                new DateTimeFormatterInfo("yyyy-MM-dd'T'HH:mm:ssZ","24小时制 示例: 2014-11-11T12:00:00Z"),
+                new DateTimeFormatterInfo("yyyy-MM-dd'T'HH:mm:ssXXX","24小时制 示例: 2014-11-11T12:00:00+08:00"),
                 new DateTimeFormatterInfo("yyyy-MM-dd'T'HH:mm:ss.SSSZ","24小时制 示例: 2018-05-14T03:51:50.153Z"),
-            
+                new DateTimeFormatterInfo("yyyy-MM-dd'T'HH:mm:ss.SSSXXX","24小时制 示例: 2021-06-01T12:23:00.235+08:00"),
 
+                new DateTimeFormatterInfo("yyyy/MM/dd hh:mm:ss","12小时制 示例: 2015/07/03 2:57:41"),
+                new DateTimeFormatterInfo("yyyy/MM/dd hh:mm:ss a","12小时制 示例: 2015/07/03 2:57:41 PM"),
+                new DateTimeFormatterInfo("yyyy/M/d hh:mm:ss","12小时制 示例: 2015/7/3 2:57:41"),
+                new DateTimeFormatterInfo("yyyy/M/d hh:mm:ss a","12小时制 示例: 2015/7/3 2:57:41 PM"),
+                new DateTimeFormatterInfo("yyyy/MM/dd HH:mm:ss","24小时制 示例: 2015/07/03 14:57:41"),
+                new DateTimeFormatterInfo("yyyy/MM/dd HH:mm:ss SSS","24小时制 示例: 2015/07/03 14:57:41 000"),
 
-                //ISO 8601
-                //RFC 3339
-                //ANSI
-                //ISO 8601 简化
+                new DateTimeFormatterInfo("MM/dd/yyyy hh:mm:ss","12小时制 示例: 07/03/2015 2:57:41"),
+                new DateTimeFormatterInfo("MM/dd/yyyy hh:mm:ss a","12小时制 示例: 07/03/2015 2:57:41 AM"),
+                new DateTimeFormatterInfo("M/d/yyyy hh:mm:ss","12小时制 示例: 7/3/2015 2:57:41"),
+                new DateTimeFormatterInfo("M/d/yyyy hh:mm:ss a","12小时制 示例: 7/3/2015 2:57:41 AM"),
+                new DateTimeFormatterInfo("MM/dd/yyyy HH:mm:ss","24小时制 示例: 07/03/2015 14:57:41"),
+                new DateTimeFormatterInfo("MM/dd/yyyy HH:mm:ss SSS","24小时制 示例: 07/03/2015 14:57:41 000"),
 
-
-                new DateTimeFormatterInfo("yyyy/MM/dd hh:mm:ss","-"),
-
-
-                new DateTimeFormatterInfo("MM/dd/yyyy HH:mm:ss a","-"),
-                new DateTimeFormatterInfo("MM/dd/yyyy hh:mm:ss a","-"),
-                new DateTimeFormatterInfo("yyyy/m/d h:mm:ss","-"),
-                new DateTimeFormatterInfo("yyyy/m/dd h:mm:ss","-"),
-
-
-                new DateTimeFormatterInfo("yyyyMMdd","-"),
-                new DateTimeFormatterInfo("yyyy-MM-dd","-"),
-                new DateTimeFormatterInfo("yyyymmdd","-"),
-                new DateTimeFormatterInfo("yyyy/mm/dd","-"),
-                new DateTimeFormatterInfo("yyyy/m/d","-")
+                new DateTimeFormatterInfo("yyyyMMdd","20150703"),
+                new DateTimeFormatterInfo("yyyy-MM-dd","2015-07-03"),
+                new DateTimeFormatterInfo("yyyy-M-d","2015-7-3"),
+                new DateTimeFormatterInfo("yyyy/MM/dd","2015/07/03"),
+                new DateTimeFormatterInfo("yyyy/M/d","2015/7/3")
         );
         dateTimeFormatterSelect.setRenderer(createRenderer());
         dateTimeFormatterSelect.setPageSize(30);
@@ -219,7 +218,7 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
         StringBuilder tpl = new StringBuilder();
         tpl.append("<div style=\"display: flex;\">");
         tpl.append("  <div>");
-        tpl.append("    <span style=\"font-size: var(--lumo-font-size-l); color: var(--lumo-primary-text-color);\">${item.dateTimeFormatter}</span>");
+        tpl.append("    <span style=\"font-size: var(--lumo-font-size-l); \">${item.dateTimeFormatter}</span>");
         tpl.append("    <div style=\"font-size: var(--lumo-font-size-m); color: var(--lumo-secondary-text-color);\">${item.dateTimeValueExample}</div>");
         tpl.append("  </div>");
         tpl.append("</div>");
