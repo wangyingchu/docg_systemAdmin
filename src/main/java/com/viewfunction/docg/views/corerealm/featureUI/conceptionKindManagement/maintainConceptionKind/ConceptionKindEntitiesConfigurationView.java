@@ -440,7 +440,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     private void renderAttachToGeospatialRegionView(){
         AttachConceptionKindEntitiesToGeospatialRegionView attachConceptionKindEntitiesToGeospatialRegionView =
                 new AttachConceptionKindEntitiesToGeospatialRegionView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.GLOBE_WIRE.create(),"链接概念类型实体至地理空间区域",null,true,500,565,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.GLOBE_WIRE.create(),"链接概念类型实体至地理空间区域",null,true,500,630,false);
         fixSizeWindow.setWindowContent(attachConceptionKindEntitiesToGeospatialRegionView);
         attachConceptionKindEntitiesToGeospatialRegionView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);

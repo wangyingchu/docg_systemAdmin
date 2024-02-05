@@ -5,8 +5,10 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -15,13 +17,14 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
@@ -30,19 +33,16 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AttachConceptionKindEntitiesToGeospatialRegionView extends VerticalLayout {
 
     private String conceptionKindName;
     private Dialog containerDialog;
-    private ComboBox<KindEntityAttributeRuntimeStatistics> timeEventAttributeSelect;
-    private ComboBox<String> dateTimeFormatterSelect;
+    private ComboBox<KindEntityAttributeRuntimeStatistics> geospatialEventAttributeSelect;
     private TextField eventCommentField;
-    private ComboBox<TimeFlow.TimeScaleGrade> timeScaleGradeSelect;
+    private ComboBox<GeospatialRegion.GeospatialScaleGrade> geospatialScaleGradeSelect;
+    private ComboBox<GeospatialRegion.GeospatialProperty> eventPropertyGeospatialPropertySelect;
     private VerticalLayout eventEntityAttributesContainer;
     private Map<String, AttributeEditorItemWidget> eventAttributeEditorsMap;
     private Button clearAttributeButton;
@@ -60,14 +60,14 @@ public class AttachConceptionKindEntitiesToGeospatialRegionView extends Vertical
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
 
-        timeEventAttributeSelect = new ComboBox<>("时间事件属性");
-        timeEventAttributeSelect.setRequired(true);
-        timeEventAttributeSelect.setRequiredIndicatorVisible(true);
-        timeEventAttributeSelect.setAllowCustomValue(true);
-        timeEventAttributeSelect.setPageSize(30);
-        timeEventAttributeSelect.setPlaceholder("选择时间事件属性");
-        timeEventAttributeSelect.setWidthFull();
-        timeEventAttributeSelect.setItemLabelGenerator(new ItemLabelGenerator<KindEntityAttributeRuntimeStatistics>() {
+        geospatialEventAttributeSelect = new ComboBox<>("地理空间事件属性");
+        geospatialEventAttributeSelect.setRequired(true);
+        geospatialEventAttributeSelect.setRequiredIndicatorVisible(true);
+        geospatialEventAttributeSelect.setAllowCustomValue(true);
+        geospatialEventAttributeSelect.setPageSize(30);
+        geospatialEventAttributeSelect.setPlaceholder("选择地理空间事件属性");
+        geospatialEventAttributeSelect.setWidthFull();
+        geospatialEventAttributeSelect.setItemLabelGenerator(new ItemLabelGenerator<KindEntityAttributeRuntimeStatistics>() {
             @Override
             public String apply(KindEntityAttributeRuntimeStatistics kindEntityAttributeRuntimeStatistics) {
                 String itemLabelValue = kindEntityAttributeRuntimeStatistics.getAttributeName()+ " ("+
@@ -75,36 +75,36 @@ public class AttachConceptionKindEntitiesToGeospatialRegionView extends Vertical
                 return itemLabelValue;
             }
         });
-        timeEventAttributeSelect.setRenderer(createRenderer());
-        timeEventAttributeSelect.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<ComboBox<KindEntityAttributeRuntimeStatistics>, KindEntityAttributeRuntimeStatistics>>() {
-            @Override
-            public void valueChanged(AbstractField.ComponentValueChangeEvent<ComboBox<KindEntityAttributeRuntimeStatistics>,
-                    KindEntityAttributeRuntimeStatistics> comboBoxKindEntityAttributeRuntimeStatisticsComponentValueChangeEvent) {
-                KindEntityAttributeRuntimeStatistics newValue = comboBoxKindEntityAttributeRuntimeStatisticsComponentValueChangeEvent.getValue();
-                AttributeDataType attributeDataType = newValue.getAttributeDataType();
-                if(attributeDataType.equals(AttributeDataType.STRING)){
-                    dateTimeFormatterSelect.setEnabled(true);
-                }else{
-                    dateTimeFormatterSelect.setEnabled(false);
-                    dateTimeFormatterSelect.setValue(null);
-                }
-            }
-        });
-        add(timeEventAttributeSelect);
+        geospatialEventAttributeSelect.setRenderer(createRenderer());
+        add(geospatialEventAttributeSelect);
 
+        eventPropertyGeospatialPropertySelect = new ComboBox<>("地理空间属性类型");
+        eventPropertyGeospatialPropertySelect.setRequired(true);
+        eventPropertyGeospatialPropertySelect.setRequiredIndicatorVisible(true);
+        eventPropertyGeospatialPropertySelect.setItems(
+                GeospatialRegion.GeospatialProperty.GeospatialCode,
+                GeospatialRegion.GeospatialProperty.ChineseName);
+        eventPropertyGeospatialPropertySelect.setAllowCustomValue(false);
+        eventPropertyGeospatialPropertySelect.setPageSize(3);
+        eventPropertyGeospatialPropertySelect.setPlaceholder("选择地理空间属性类型");
+        eventPropertyGeospatialPropertySelect.setWidthFull();
+        add(eventPropertyGeospatialPropertySelect);
 
-        timeScaleGradeSelect = new ComboBox<>("事件时间刻度");
-        timeScaleGradeSelect.setRequired(true);
-        timeScaleGradeSelect.setRequiredIndicatorVisible(true);
-        timeScaleGradeSelect.setItems(TimeFlow.TimeScaleGrade.YEAR,TimeFlow.TimeScaleGrade.MONTH,
-                TimeFlow.TimeScaleGrade.DAY,TimeFlow.TimeScaleGrade.HOUR,TimeFlow.TimeScaleGrade.MINUTE);
-        timeScaleGradeSelect.setAllowCustomValue(false);
-        timeScaleGradeSelect.setPageSize(30);
-        timeScaleGradeSelect.setPlaceholder("选择事件时间刻度");
-        timeScaleGradeSelect.setWidthFull();
-        add(timeScaleGradeSelect);
+        geospatialScaleGradeSelect = new ComboBox<>("事件地理空间刻度");
+        geospatialScaleGradeSelect.setRequired(true);
+        geospatialScaleGradeSelect.setRequiredIndicatorVisible(true);
+        geospatialScaleGradeSelect.setItems(
+                GeospatialRegion.GeospatialScaleGrade.CONTINENT,GeospatialRegion.GeospatialScaleGrade.COUNTRY_REGION,
+                GeospatialRegion.GeospatialScaleGrade.PROVINCE,GeospatialRegion.GeospatialScaleGrade.PREFECTURE,
+                GeospatialRegion.GeospatialScaleGrade.COUNTY,GeospatialRegion.GeospatialScaleGrade.TOWNSHIP,
+                GeospatialRegion.GeospatialScaleGrade.VILLAGE);
+        geospatialScaleGradeSelect.setAllowCustomValue(false);
+        geospatialScaleGradeSelect.setPageSize(30);
+        geospatialScaleGradeSelect.setPlaceholder("选择事件地理空间刻度");
+        geospatialScaleGradeSelect.setWidthFull();
+        add(geospatialScaleGradeSelect);
 
-        eventCommentField = new TextField("时间事件备注");
+        eventCommentField = new TextField("地理空间事件备注");
         eventCommentField.setRequired(true);
         eventCommentField.setRequiredIndicatorVisible(true);
         eventCommentField.setWidthFull();
@@ -118,11 +118,11 @@ public class AttachConceptionKindEntitiesToGeospatialRegionView extends Vertical
 
         addEventAttributesUIContainerLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
 
-        ThirdLevelIconTitle infoTitle3 = new ThirdLevelIconTitle(new Icon(VaadinIcon.COMBOBOX),"设定时间事件属性");
+        ThirdLevelIconTitle infoTitle3 = new ThirdLevelIconTitle(new Icon(VaadinIcon.COMBOBOX),"设定地理空间事件属性");
         addEventAttributesUIContainerLayout.add(infoTitle3);
 
         Button addAttributeButton = new Button();
-        addAttributeButton.setTooltipText("添加时间事件属性");
+        addAttributeButton.setTooltipText("添加地理空间事件属性");
         addAttributeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         addAttributeButton.addThemeVariants(ButtonVariant.LUMO_LARGE);
         addAttributeButton.setIcon(VaadinIcon.KEYBOARD_O.create());
@@ -135,7 +135,7 @@ public class AttachConceptionKindEntitiesToGeospatialRegionView extends Vertical
         addEventAttributesUIContainerLayout.add(addAttributeButton);
 
         clearAttributeButton = new Button();
-        clearAttributeButton.setTooltipText("清除已设置时间事件属性");
+        clearAttributeButton.setTooltipText("清除已设置地理空间事件属性");
         clearAttributeButton.setEnabled(false);
         clearAttributeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         clearAttributeButton.addThemeVariants(ButtonVariant.LUMO_LARGE);
@@ -166,18 +166,17 @@ public class AttachConceptionKindEntitiesToGeospatialRegionView extends Vertical
                 .set("padding-bottom", "var(--lumo-space-m)");
         add(spaceDivLayout);
 
-        Button confirmButton = new Button("链接概念类型实体至时间流",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button confirmButton = new Button("链接概念类型实体至地理空间区域",new Icon(VaadinIcon.CHECK_CIRCLE));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         add(confirmButton);
         setHorizontalComponentAlignment(Alignment.END,confirmButton);
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //attachConceptionKindEntitiesToTimeFlow();
+                attachConceptionKindEntitiesToGeospatialRegion();
             }
         });
         this.eventAttributeEditorsMap = new HashMap<>();
-
     }
 
     @Override
@@ -225,7 +224,7 @@ public class AttachConceptionKindEntitiesToGeospatialRegionView extends Vertical
         };
         addEntityAttributeView.setAttributeValueOperateHandler(attributeValueOperateHandlerForAdd);
 
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加时间事件属性",null,true,480,190,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"添加地理空间事件属性",null,true,480,190,false);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
@@ -254,7 +253,7 @@ public class AttachConceptionKindEntitiesToGeospatialRegionView extends Vertical
                 case STRING -> dataTypeMatchedAttributeList.add(currentKindEntityAttributeRuntimeStatistics);
             }
         }
-        timeEventAttributeSelect.setItems(dataTypeMatchedAttributeList);
+        geospatialEventAttributeSelect.setItems(dataTypeMatchedAttributeList);
     }
 
     private Renderer<KindEntityAttributeRuntimeStatistics> createRenderer() {
@@ -269,5 +268,109 @@ public class AttachConceptionKindEntitiesToGeospatialRegionView extends Vertical
         return LitRenderer.<KindEntityAttributeRuntimeStatistics>of(tpl.toString())
                 .withProperty("attributeName", KindEntityAttributeRuntimeStatistics::getAttributeName)
                 .withProperty("attributeDataType", KindEntityAttributeRuntimeStatistics::getAttributeDataType);
+    }
+
+    private void attachConceptionKindEntitiesToGeospatialRegion(){
+        KindEntityAttributeRuntimeStatistics selectedAttribute = geospatialEventAttributeSelect.getValue();
+        GeospatialRegion.GeospatialProperty selectedGeospatialProperty = eventPropertyGeospatialPropertySelect.getValue();
+        GeospatialRegion.GeospatialScaleGrade selectedGeospatialScaleGrade = geospatialScaleGradeSelect.getValue();
+        String eventComment = eventCommentField.getValue();
+
+        if(selectedAttribute == null){
+            CommonUIOperationUtil.showPopupNotification("请选择地理空间事件属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
+        if(selectedGeospatialProperty == null){
+            CommonUIOperationUtil.showPopupNotification("请选择地理空间属性类型", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
+        if(selectedGeospatialScaleGrade == null){
+            CommonUIOperationUtil.showPopupNotification("请选择事件地理空间刻度", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
+        if(eventComment.equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入地理空间事件备注", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
+
+        List<Button> actionButtonList = new ArrayList<>();
+
+        Button confirmButton = new Button("确认链接概念类型实体至地理空间区域",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行链接概念类型实体至地理空间区域操作",actionButtonList,400,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doAttachConceptionKindEntitiesToGeospatialRegion();
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doAttachConceptionKindEntitiesToGeospatialRegion(){
+        Map<String, Object> eventData = eventAttributeEditorsMap.isEmpty() ? null : new HashMap<>();
+        if(!eventAttributeEditorsMap.isEmpty()){
+            Set<String> commentPropertiesNameSet = eventAttributeEditorsMap.keySet();
+            for(String currentPropertyName:commentPropertiesNameSet){
+                AttributeEditorItemWidget attributeEditorItemWidget = eventAttributeEditorsMap.get(currentPropertyName);
+                eventData.put(attributeEditorItemWidget.getAttributeName(),attributeEditorItemWidget.getAttributeValue().getAttributeValue());
+            }
+        }
+
+        KindEntityAttributeRuntimeStatistics selectedAttribute = geospatialEventAttributeSelect.getValue();
+        String attributeName = selectedAttribute.getAttributeName();
+        GeospatialRegion.GeospatialProperty selectedGeospatialProperty = eventPropertyGeospatialPropertySelect.getValue();
+        GeospatialRegion.GeospatialScaleGrade selectedGeospatialScaleGrade = geospatialScaleGradeSelect.getValue();
+        String eventComment = eventCommentField.getValue();
+
+        try {
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+            EntitiesOperationStatistics attachResult = targetConceptionKind.attachGeospatialScaleEvents(null,
+                    attributeName,selectedGeospatialProperty,null,eventComment,eventData,selectedGeospatialScaleGrade);
+            showPopupNotification(attachResult,NotificationVariant.LUMO_SUCCESS);
+            if(this.containerDialog != null){
+                this.containerDialog.close();
+            }
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showPopupNotification(EntitiesOperationStatistics conceptionEntitiesAttributesRetrieveResult, NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text("概念类型 "+conceptionKindName+" 链接概念类型实体至地理空间区域操作成功"));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
+
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        notificationMessageContainer.add(new Div(new Text("链接实体数: "+conceptionEntitiesAttributesRetrieveResult.getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("操作开始时间: "+conceptionEntitiesAttributesRetrieveResult.getStartTime())));
+        notificationMessageContainer.add(new Div(new Text("操作结束时间: "+conceptionEntitiesAttributesRetrieveResult.getFinishTime())));
+        notification.add(notificationMessageContainer);
+        notification.setDuration(3000);
+        notification.open();
     }
 }
