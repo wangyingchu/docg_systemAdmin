@@ -48,6 +48,7 @@ import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationIn
 import com.viewfunction.docg.element.eventHandling.KindScopeAttributeAddedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.DuplicateAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeTypeConvert.ConvertEntityAttributeToTemporalTypeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributesViewKindMaintain.RelatedAttributesViewKindRuntimeConfigurationInfoView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
@@ -58,13 +59,10 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
 
 import java.text.NumberFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget.KindType.ConceptionKind;
 
 @Route("conceptionKindDetailInfo/:conceptionKind")
 public class ConceptionKindDetailUI extends VerticalLayout implements
@@ -156,7 +154,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 .set("fount-weight","bold");
         secTitleElementsList.add(conceptionKindNameLabel);
 
-        this.kindDescriptionEditorItemWidget = new KindDescriptionEditorItemWidget(this.conceptionKind,ConceptionKind);
+        this.kindDescriptionEditorItemWidget = new KindDescriptionEditorItemWidget(this.conceptionKind, KindDescriptionEditorItemWidget.KindType.ConceptionKind);
         secTitleElementsList.add(this.kindDescriptionEditorItemWidget);
 
         List<Component> buttonList = new ArrayList<>();
@@ -290,6 +288,26 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 @Override
                 public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
                     renderDeleteConceptionKindAttributeView(attributeInfo.getAttributeName());
+                }
+            });
+
+            HorizontalLayout action2_1Layout = new HorizontalLayout();
+            action2_1Layout.setPadding(false);
+            action2_1Layout.setSpacing(false);
+            action2_1Layout.setMargin(false);
+            action2_1Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action2_1Icon = new Icon((VaadinIcon.COPY));
+            action2_1Icon.setSize("10px");
+            Span action2_Space = new Span();
+            action2_Space.setWidth(6,Unit.PIXELS);
+            NativeLabel action2_1Label = new NativeLabel("复制属性");
+            action2_1Label.addClassNames("text-xs","font-semibold","text-secondary");
+            action2_1Layout.add(action2_1Icon,action2_Space,action2_1Label);
+            MenuItem action2_1Item = actionOptionsSubItems.addItem(action2_1Layout);
+            action2_1Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    renderDuplicateConceptionKindAttributeView(attributeInfo.getAttributeName());
                 }
             });
 
@@ -1101,6 +1119,27 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> TIMESTAMP",null,true,500,255,false);
         fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
         convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderDuplicateConceptionKindAttributeView(String attributeName){
+        DuplicateAttributeView duplicateAttributeView = new DuplicateAttributeView(
+                com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.DuplicateAttributeView.KindType.ConceptionKind,
+                this.conceptionKind,attributeName);
+        DuplicateAttributeView.DuplicateAttributeCallback duplicateAttributeCallback = new DuplicateAttributeView.DuplicateAttributeCallback() {
+            @Override
+            public void onSuccess(EntitiesOperationStatistics entitiesOperationStatistics) {
+                String notificationMessage = "复制概念类型 "+ conceptionKind+ " 的实体属性 "+attributeName+" 操作成功";
+                showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+                refreshConceptionKindAttributesInfoGrid();
+            }
+        };
+        duplicateAttributeView.setDuplicateAttributeCallback(duplicateAttributeCallback);
+
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"复制概念类型实体属性",null,true,550,210,false);
+        fixSizeWindow.setWindowContent(duplicateAttributeView);
+        duplicateAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }

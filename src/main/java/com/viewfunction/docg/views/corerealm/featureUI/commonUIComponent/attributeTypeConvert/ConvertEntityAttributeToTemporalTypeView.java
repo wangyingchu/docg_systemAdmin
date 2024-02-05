@@ -159,7 +159,7 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                convertEntityAttributeToTemporalTypeView();
+                convertEntityAttributeToTemporalType();
             }
         });
     }
@@ -168,7 +168,7 @@ public class ConvertEntityAttributeToTemporalTypeView extends VerticalLayout {
         this.containerDialog = containerDialog;
     }
 
-    private void convertEntityAttributeToTemporalTypeView(){
+    private void convertEntityAttributeToTemporalType(){
         String temporalFormat = dateTimeFormatterSelect.getValue();
         if(temporalFormat == null || temporalFormat.isEmpty()){
             CommonUIOperationUtil.showPopupNotification("请确定时间日期定义格式", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
