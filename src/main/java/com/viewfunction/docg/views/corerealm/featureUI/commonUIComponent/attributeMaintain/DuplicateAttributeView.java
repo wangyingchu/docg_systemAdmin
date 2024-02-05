@@ -113,6 +113,18 @@ public class DuplicateAttributeView extends VerticalLayout {
                     }
                     break;
                 case RelationKind:
+                    com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind targetRelationKind = coreRealm.getRelationKind(this.kindName);
+                    try {
+                        entitiesOperationStatistics = targetRelationKind.duplicateEntityAttribute(this.originalAttributeName,newAttributeName);
+                        if(this.containerDialog != null){
+                            this.containerDialog.close();
+                        }
+                        if(this.duplicateAttributeCallback != null){
+                            this.duplicateAttributeCallback.onSuccess(entitiesOperationStatistics);
+                        }
+                    } catch (CoreRealmServiceRuntimeException e) {
+                        throw new RuntimeException(e);
+                    }
             }
         }
     }

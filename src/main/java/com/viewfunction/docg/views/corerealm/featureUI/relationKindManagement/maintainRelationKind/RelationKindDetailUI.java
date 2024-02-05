@@ -45,6 +45,7 @@ import com.viewfunction.docg.element.eventHandling.RelationKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.RelationKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.DuplicateAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeTypeConvert.ConvertEntityAttributeToTemporalTypeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
@@ -236,6 +237,8 @@ public class RelationKindDetailUI extends VerticalLayout implements
                 }
             });
 
+            actionOptionsSubItems.addSeparator();
+
             HorizontalLayout action2Layout = new HorizontalLayout();
             action2Layout.setPadding(false);
             action2Layout.setSpacing(false);
@@ -255,6 +258,28 @@ public class RelationKindDetailUI extends VerticalLayout implements
                     renderDeleteRelationKindAttributeView(attributeInfo.getAttributeName());
                 }
             });
+
+            HorizontalLayout action2_1Layout = new HorizontalLayout();
+            action2_1Layout.setPadding(false);
+            action2_1Layout.setSpacing(false);
+            action2_1Layout.setMargin(false);
+            action2_1Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action2_1Icon = new Icon((VaadinIcon.COPY));
+            action2_1Icon.setSize("10px");
+            Span action2_Space = new Span();
+            action2_Space.setWidth(6,Unit.PIXELS);
+            NativeLabel action2_1Label = new NativeLabel("复制属性");
+            action2_1Label.addClassNames("text-xs","font-semibold","text-secondary");
+            action2_1Layout.add(action2_1Icon,action2_Space,action2_1Label);
+            MenuItem action2_1Item = actionOptionsSubItems.addItem(action2_1Layout);
+            action2_1Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    renderDuplicateRelationKindAttributeView(attributeInfo.getAttributeName());
+                }
+            });
+
+            actionOptionsSubItems.addSeparator();
 
             HorizontalLayout containerAction3Layout = new HorizontalLayout();
             containerAction3Layout.setPadding(false);
@@ -995,6 +1020,27 @@ public class RelationKindDetailUI extends VerticalLayout implements
         FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"关系类型实体属性类型转换 String -> TIMESTAMP",null,true,500,255,false);
         fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
         convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderDuplicateRelationKindAttributeView(String attributeName){
+        DuplicateAttributeView duplicateAttributeView = new DuplicateAttributeView(
+                DuplicateAttributeView.KindType.RelationKind,
+                this.relationKind,attributeName);
+        DuplicateAttributeView.DuplicateAttributeCallback duplicateAttributeCallback = new DuplicateAttributeView.DuplicateAttributeCallback() {
+            @Override
+            public void onSuccess(EntitiesOperationStatistics entitiesOperationStatistics) {
+                String notificationMessage = "复制关系类型 "+ relationKind+ " 的实体属性 "+attributeName+" 操作成功";
+                showPopupNotification(notificationMessage,entitiesOperationStatistics,NotificationVariant.LUMO_SUCCESS);
+                loadRelationKindInfoData();
+            }
+        };
+        duplicateAttributeView.setDuplicateAttributeCallback(duplicateAttributeCallback);
+
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"复制关系类型实体属性",null,true,550,210,false);
+        fixSizeWindow.setWindowContent(duplicateAttributeView);
+        duplicateAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }

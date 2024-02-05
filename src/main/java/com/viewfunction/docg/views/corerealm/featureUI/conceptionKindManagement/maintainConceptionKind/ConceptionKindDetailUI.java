@@ -271,6 +271,8 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 }
             });
 
+            actionOptionsSubItems.addSeparator();
+
             HorizontalLayout action2Layout = new HorizontalLayout();
             action2Layout.setPadding(false);
             action2Layout.setSpacing(false);
@@ -310,6 +312,8 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                     renderDuplicateConceptionKindAttributeView(attributeInfo.getAttributeName());
                 }
             });
+
+            actionOptionsSubItems.addSeparator();
 
             HorizontalLayout containerAction3Layout = new HorizontalLayout();
             containerAction3Layout.setPadding(false);
