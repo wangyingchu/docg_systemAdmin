@@ -18,6 +18,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.spatial.ConceptionEntitySpatialDataView;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
     private int conceptionEntitySpatialInfoViewHeightOffset;
     private HorizontalLayout doesNotContainsSpatialInfoMessage;
     private Registration listener;
+    private ConceptionEntitySpatialDataView conceptionEntitySpatialDataView;
 
     public ConceptionEntitySpatialInfoView(String conceptionKind,String conceptionEntityUID,int conceptionEntitySpatialInfoViewHeightOffset){
 
@@ -54,6 +56,9 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
         doesNotContainsSpatialInfoMessage.add(messageLogo,messageLabel);
         add(doesNotContainsSpatialInfoMessage);
+
+        conceptionEntitySpatialDataView = new ConceptionEntitySpatialDataView();
+        add(conceptionEntitySpatialDataView);
     }
 
     @Override
@@ -89,6 +94,7 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
                         CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中不包含地理空间相关信息", NotificationVariant.LUMO_CONTRAST,5000, Notification.Position.BOTTOM_START);
                     }else{
                         doesNotContainsSpatialInfoMessage.setVisible(false);
+                        conceptionEntitySpatialDataView.renderSpatialDataInfo(geospatialScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
                     }
                 }else{
                     CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
