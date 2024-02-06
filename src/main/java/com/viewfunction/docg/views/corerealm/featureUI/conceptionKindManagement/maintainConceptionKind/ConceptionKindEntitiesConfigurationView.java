@@ -420,7 +420,6 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
             if(this.conceptionKindName.equals(event.getConceptionKindName())){
                 metaConfigItemsConfigView.refreshMetaConfigItemsInfo();
                 kindIndexConfigView.refreshKindIndex();
-                //classificationConfigView;
                 CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
                 com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
                 try {
