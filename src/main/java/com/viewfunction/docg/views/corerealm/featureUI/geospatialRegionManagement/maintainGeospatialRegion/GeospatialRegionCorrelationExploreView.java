@@ -485,8 +485,6 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         List<AttributeValue> allAttributesList = targetConceptionEntity.getAttributes();
         this.entityAttributesInfoGrid.setItems(allAttributesList);
 
-
-
         renderEntityMapInfo(targetConceptionEntity,currentGeospatialScaleGrade,targetGeospatialScaleEntity.getChineseName(),targetGeospatialScaleEntity.getGeospatialCode());
         coreRealm.closeGlobalSession();
     }
