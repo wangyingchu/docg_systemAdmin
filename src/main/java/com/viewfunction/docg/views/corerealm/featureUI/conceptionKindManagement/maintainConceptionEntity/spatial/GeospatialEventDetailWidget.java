@@ -26,10 +26,44 @@ public class GeospatialEventDetailWidget extends VerticalLayout {
     private GeospatialScaleEvent geospatialScaleEvent;
     private GeospatialScaleEntity geospatialScaleEntity;
     private GeospatialScaleEntityMapInfoChart geospatialScaleEntityMapInfoChart;
-private HorizontalLayout doesNotContainsSpatialInfoMessage;
+    private HorizontalLayout doesNotContainsSpatialInfoMessage;
+
+    private VerticalLayout mapContainerLayout;
+    private VerticalLayout attributeContainerLayout;
+
     public GeospatialEventDetailWidget(GeospatialScaleEvent geospatialScaleEvent, GeospatialScaleEntity geospatialScaleEntity){
         this.geospatialScaleEvent = geospatialScaleEvent;
         this.geospatialScaleEntity = geospatialScaleEntity;
+
+
+
+
+
+
+
+        HorizontalLayout geospatialEventDetailElementsContainerLayout = new HorizontalLayout();
+        geospatialEventDetailElementsContainerLayout.setWidthFull();
+        //singleGeospatialRegionElementsContainerLayout.setSpacing(false);
+        //singleGeospatialRegionElementsContainerLayout.setMargin(false);
+        //singleGeospatialRegionElementsContainerLayout.setPadding(false);
+        add(geospatialEventDetailElementsContainerLayout);
+
+
+
+        mapContainerLayout = new VerticalLayout();
+        mapContainerLayout.setSpacing(false);
+        mapContainerLayout.setMargin(false);
+        mapContainerLayout.setPadding(false);
+        mapContainerLayout.setWidth(300,Unit.PIXELS);
+
+        geospatialEventDetailElementsContainerLayout.add(mapContainerLayout);
+
+
+        attributeContainerLayout = new VerticalLayout();
+        attributeContainerLayout.setWidthFull();
+        geospatialEventDetailElementsContainerLayout.add(attributeContainerLayout);
+
+
 
         //this.geospatialScaleEntityMapInfoChart = new GeospatialScaleEntityMapInfoChart();
        // add(this.geospatialScaleEntityMapInfoChart);
@@ -56,7 +90,7 @@ private HorizontalLayout doesNotContainsSpatialInfoMessage;
         if(attributeValueList != null){
             for(AttributeValue currentAttributeValue:attributeValueList){
                 AttributeValueInfoWidget attributeValueInfoWidget = new AttributeValueInfoWidget(currentAttributeValue);
-                add(attributeValueInfoWidget);
+                attributeContainerLayout.add(attributeValueInfoWidget);
             }
         }
         //renderEntityMapInfo();
@@ -157,7 +191,7 @@ private HorizontalLayout doesNotContainsSpatialInfoMessage;
         this.geospatialScaleEntityMapInfoChart.setWidth(100,Unit.PERCENTAGE);
 
         this.geospatialScaleEntityMapInfoChart.setHeight(400,Unit.PIXELS);
-        add(this.geospatialScaleEntityMapInfoChart);
+        mapContainerLayout.add(this.geospatialScaleEntityMapInfoChart);
         this.geospatialScaleEntityMapInfoChart.renderMapAndSpatialInfo();
         renderEntityMapInfo();
     }
