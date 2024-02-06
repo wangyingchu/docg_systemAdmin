@@ -65,12 +65,13 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-
+            //conceptionEntitySpatialDataView.setWidth(event.getWidth() - 820,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             int browserWidth = receiver.getBodyClientWidth();
+            //conceptionEntitySpatialDataView.setWidth(browserWidth - 820,Unit.PIXELS);
         }));
     }
 
@@ -92,6 +93,7 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
                     List<GeospatialScaleDataPair> geospatialScaleDataPairList = targetEntity.getAttachedGeospatialScaleDataPairs();
                     if(geospatialScaleDataPairList == null || geospatialScaleDataPairList.size() == 0){
                         CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中不包含地理空间相关信息", NotificationVariant.LUMO_CONTRAST,5000, Notification.Position.BOTTOM_START);
+                        conceptionEntitySpatialDataView.setVisible(false);
                     }else{
                         doesNotContainsSpatialInfoMessage.setVisible(false);
                         conceptionEntitySpatialDataView.renderSpatialDataInfo(geospatialScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
