@@ -54,6 +54,7 @@ public class AttributeValueInfoWidget extends HorizontalLayout {
         add(attributeValueLabel);
         setVerticalComponentAlignment(Alignment.CENTER,attributeValueLabel);
 
+        /*
         Button showAttributeKindInfoButton = new Button("属性类型详情");
         showAttributeKindInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
         showAttributeKindInfoButton.getStyle().set("font-size","12px");
@@ -67,5 +68,6 @@ public class AttributeValueInfoWidget extends HorizontalLayout {
         });
         add(showAttributeKindInfoButton);
         setVerticalComponentAlignment(Alignment.CENTER,showAttributeKindInfoButton);
+        */
     }
 }

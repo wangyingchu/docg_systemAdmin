@@ -79,7 +79,7 @@ public class GeospatialEventSummaryWidget extends HorizontalLayout {
         showEventButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
         showEventButton.getStyle().set("font-size","12px");
         showEventButton.setIcon(VaadinIcon.EYE.create());
-        showEventButton.setTooltipText("显示关联时间序列事件详情");
+        showEventButton.setTooltipText("显示关联地理空间事件详情");
         showEventButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
