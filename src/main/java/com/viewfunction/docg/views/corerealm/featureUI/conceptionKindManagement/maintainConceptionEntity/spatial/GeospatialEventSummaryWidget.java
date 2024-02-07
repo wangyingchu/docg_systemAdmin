@@ -87,6 +87,26 @@ public class GeospatialEventSummaryWidget extends HorizontalLayout {
             }
         });
         add(showEventButton);
+
+        Icon divIcon2 = VaadinIcon.LINE_V.create();
+        divIcon2.setSize("6px");
+        add(divIcon2);
+
+        Button showGeospatialEntityButton = new Button("相关地理空间区域实体");
+        showGeospatialEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
+        showGeospatialEntityButton.getStyle().set("font-size","12px");
+        Icon buttonIcon = VaadinIcon.GLOBE_WIRE.create();
+        buttonIcon.setSize("16px");
+        showGeospatialEntityButton.setIcon(buttonIcon);
+        showGeospatialEntityButton.setTooltipText("显示关联地理空间区域实体");
+        showGeospatialEntityButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderRelatedGeospatialScaleEntityUI();
+            }
+        });
+        add(showGeospatialEntityButton);
+
         setDefaultVerticalComponentAlignment(Alignment.CENTER);
     }
 
@@ -143,6 +163,64 @@ public class GeospatialEventSummaryWidget extends HorizontalLayout {
 
         ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(targetConceptionKind,targetConceptionEntityUID);
         FullScreenWindow fullScreenWindow = new FullScreenWindow(LineAwesomeIconsSvg.MAP_MARKED_ALT_SOLID.create(),"地理空间关联事件详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
+    }
+
+    private void renderRelatedGeospatialScaleEntityUI(){
+        String targetConceptionKind = RealmConstant.GeospatialScaleEntityClass;
+        String targetConceptionEntityUID = this.geospatialScaleEntity.getGeospatialScaleEntityUID();
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8, Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("10px");
+        titleDetailLayout.add(conceptionKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(targetConceptionKind);
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+        conceptionEntityIcon.setSize("10px");
+        titleDetailLayout.add(conceptionEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel conceptionEntityUIDLabel = new NativeLabel(targetConceptionEntityUID);
+        titleDetailLayout.add(conceptionEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(targetConceptionKind,targetConceptionEntityUID);
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(VaadinIcon.GLOBE_WIRE.create(),"地理空间区域实体详情",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
         conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
