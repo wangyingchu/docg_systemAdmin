@@ -1,18 +1,25 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.temporal;
 
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.accordion.AccordionPanel;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleDataPair;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEntity;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEvent;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ConceptionEntityTemporalDataView extends VerticalLayout {
     private String conceptionKindName;
@@ -22,7 +29,22 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
 
     public ConceptionEntityTemporalDataView(){
         this.getStyle().set("padding-left","100px");
-        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.LIST_SELECT.create(), "关联时间序列事件信息");
+
+        Button refreshTemporalEventAttributesInfoButton = new Button();
+        refreshTemporalEventAttributesInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
+        refreshTemporalEventAttributesInfoButton.getStyle().set("font-size","12px");
+        Icon buttonIcon = VaadinIcon.REFRESH.create();
+        buttonIcon.setSize("16px");
+        refreshTemporalEventAttributesInfoButton.setIcon(buttonIcon);
+        refreshTemporalEventAttributesInfoButton.setTooltipText("刷新关联时间序列事件信息");
+        refreshTemporalEventAttributesInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                refreshTemporalEventAttributesInfo();
+            }
+        });
+
+        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.LIST_SELECT.create(), "关联时间序列事件信息",refreshTemporalEventAttributesInfoButton);
         add(secondaryIconTitle);
 
         accordion = new Accordion();
@@ -47,5 +69,32 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
                 accordion.add(accordionPanel);
             }
         }
+    }
+
+    private void refreshTemporalEventAttributesInfo(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+        ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+
+        this.timeScaleDataPairList = targetConceptionEntity.getAttachedTimeScaleDataPairs();
+        accordion.getChildren().forEach(new Consumer<Component>() {
+            @Override
+            public void accept(Component component) {
+                accordion.remove(component);
+            }
+        });
+
+        if(this.timeScaleDataPairList != null && this.timeScaleDataPairList.size() >0){
+            for(TimeScaleDataPair currentTimeScaleDataPair :this.timeScaleDataPairList){
+                TimeScaleEvent currentTimeScaleEvent = currentTimeScaleDataPair.getTimeScaleEvent();
+                TimeScaleEntity currentTimeScaleEntity = currentTimeScaleDataPair.getTimeScaleEntity();
+                TemporalEventSummaryWidget currentTemporalEventSummaryWidget = new TemporalEventSummaryWidget(currentTimeScaleEvent, currentTimeScaleEntity);
+                TemporalEventDetailWidget currentTemporalEventDetailWidget = new TemporalEventDetailWidget(currentTimeScaleEvent, currentTimeScaleEntity);
+                AccordionPanel accordionPanel = new AccordionPanel(currentTemporalEventSummaryWidget,currentTemporalEventDetailWidget);
+                accordion.add(accordionPanel);
+            }
+        }
+        coreRealm.closeGlobalSession();
     }
 }
