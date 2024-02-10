@@ -2,12 +2,14 @@ package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
 import java.text.NumberFormat;
 import java.util.*;
 
+@JavaScript("./visualization/feature/dataRelationDistribution3DChart-connector.js")
 public class DataRelationDistribution3DChart extends VerticalLayout {
 
     private Map<String,String> conceptionKindColorMap;
@@ -15,6 +17,7 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
     private NumberFormat numberFormat;
 
     public DataRelationDistribution3DChart(){
+
         this.setWidthFull();
         this.setSpacing(false);
         this.setMargin(false);
