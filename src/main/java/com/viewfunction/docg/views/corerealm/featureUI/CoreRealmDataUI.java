@@ -112,6 +112,8 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
 
         rightSideContentContainerLayout = new VerticalLayout();
         rightSideContentContainerLayout.setSpacing(false);
+        rightSideContentContainerLayout.setPadding(false);
+
         contentContainerLayout.add(rightSideContentContainerLayout);
 
         HorizontalLayout coreRealmInfoContainerLayout = new HorizontalLayout();
@@ -257,7 +259,20 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         systemRuntimeInfoWidget = new SystemRuntimeInfoWidget();
         leftSideSectionContainerScrollLayout.add(systemRuntimeInfoWidget);
 
-        SectionActionBar sectionActionBar2 = new SectionActionBar(FontAwesome.Solid.CODE_FORK.create(),"全域数据关联分布",null);
+        List<Component> sectionAction2ComponentsList = new ArrayList<>();
+        Button show3DChartButton = new Button();
+        Icon _3DSwitchIcon = new Icon(VaadinIcon.REFRESH);
+        _3DSwitchIcon.setSize("15px");
+
+        show3DChartButton.setHeight(19,Unit.PIXELS);
+        show3DChartButton.setIcon(_3DSwitchIcon);
+        show3DChartButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
+        show3DChartButton.addClickListener((ClickEvent<Button> click) -> {
+            //systemRuntimeInfoWidget.refreshSystemRuntimeInfo();
+        });
+        sectionAction2ComponentsList.add(show3DChartButton);
+
+        SectionActionBar sectionActionBar2 = new SectionActionBar(FontAwesome.Solid.CODE_FORK.create(),"全域数据关联分布",sectionAction2ComponentsList);
         rightSideContentContainerLayout.add(sectionActionBar2);
 
         HorizontalLayout widgetDivLayout = new HorizontalLayout();
