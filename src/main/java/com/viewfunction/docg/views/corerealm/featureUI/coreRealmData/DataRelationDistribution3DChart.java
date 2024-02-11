@@ -3,12 +3,16 @@ package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 
 import java.text.NumberFormat;
 import java.util.*;
 
+@StyleSheet("webApps/timeFlowCorrelationInfoChart/style.css")
 @JavaScript("./visualization/feature/dataRelationDistribution3DChart-connector.js")
 public class DataRelationDistribution3DChart extends VerticalLayout {
 
@@ -17,7 +21,11 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
     private NumberFormat numberFormat;
 
     public DataRelationDistribution3DChart(){
-
+        //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/three.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/three-spritetext.min.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/CSS2DRenderer.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/3d-force-graph.min.js");
         this.setWidthFull();
         this.setSpacing(false);
         this.setMargin(false);
@@ -25,16 +33,21 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
         this.conceptionKindColorMap = new HashMap<>();
         this.setHeight(100, Unit.PERCENTAGE);
         this.numberFormat = NumberFormat.getInstance();
+        initConnector();
     }
 
+    public void setData(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet, Map<String, Long> conceptionKindsDataCount, Map<String, Long> relationKindsDataCount){
+        if(conceptionKindsDataCount != null){
+            Set<String> conceptionKindNameSet = conceptionKindsDataCount.keySet();
+            generateConceptionKindColorMap(conceptionKindNameSet);
 
 
+        }
+        if(conceptionKindCorrelationInfoSet != null){
 
 
-
-
-
-
+        }
+    }
 
     private Map<String,String> generateConceptionKindColorMap(Set<String> attachedConceptionKindsSet){
         List<String> attachedConceptionKinds = new ArrayList<String>();
@@ -56,6 +69,11 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
             colorIndex++;
         }
         return conceptionKindColorMap;
+    }
+
+    private void initConnector() {
+        runBeforeClientResponse(ui -> ui.getPage().executeJs(
+                "window.Vaadin.Flow.feature_DataRelationDistribution3DChart.initLazy($0)", getElement()));
     }
 
     private void runBeforeClientResponse(SerializableConsumer<UI> command) {
