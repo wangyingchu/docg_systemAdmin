@@ -14,6 +14,8 @@ import java.util.Set;
 public class DataRelationDistributionWidget extends HorizontalLayout {
 
     private DataRelationDistributionChart dataRelationDistributionChart;
+    private DataRelationDistribution3DChart dataRelationDistribution3DChart;
+    private boolean isIn2DMode = true;
 
     public DataRelationDistributionWidget(){
         this.setWidthFull();
@@ -27,9 +29,13 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
 
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
-        dataRelationDistributionChart = new DataRelationDistributionChart();
-        add(dataRelationDistributionChart);
-        dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
+        if(isIn2DMode){
+            dataRelationDistributionChart = new DataRelationDistributionChart();
+            add(dataRelationDistributionChart);
+            dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
+        }else{
+
+        }
     }
 
     @Override
@@ -43,7 +49,25 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
-        dataRelationDistributionChart.clearData();
-        dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
+        if(isIn2DMode){
+            dataRelationDistributionChart.clearData();
+            dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
+        }else{
+
+        }
+    }
+
+    public void show2DChart(){
+        isIn2DMode = true;
+        if(dataRelationDistributionChart != null){
+            dataRelationDistributionChart.setVisible(true);
+        }
+    }
+
+    public void show3DChart(){
+        isIn2DMode = false;
+        if(dataRelationDistributionChart != null){
+            dataRelationDistributionChart.setVisible(false);
+        }
     }
 }

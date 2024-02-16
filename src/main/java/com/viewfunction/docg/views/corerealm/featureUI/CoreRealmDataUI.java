@@ -23,6 +23,7 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.CheckSystemRuntimeInfoEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.*;
@@ -47,7 +48,8 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
     private TimeFlowInfoWidget timeFlowInfoWidget;
     private AttributeViewKindInfoWidget attributeViewKindInfoWidget;
     private AttributeKindInfoWidget attributeKindInfoWidget;
-
+    private Button show3DChartButton;
+    private Button show2DChartButton;
     public CoreRealmDataUI(){
 
         Button refreshDataButton = new Button("刷新领域数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -260,17 +262,35 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         leftSideSectionContainerScrollLayout.add(systemRuntimeInfoWidget);
 
         List<Component> sectionAction2ComponentsList = new ArrayList<>();
-        Button show3DChartButton = new Button();
-        Icon _3DSwitchIcon = new Icon(VaadinIcon.REFRESH);
-        _3DSwitchIcon.setSize("15px");
 
+        show3DChartButton = new Button();
+        show3DChartButton.setTooltipText("显示 3维 全域数据关联分布图");
+        Icon _3DSwitchIcon = LineAwesomeIconsSvg.CUBE_SOLID.create();
+        _3DSwitchIcon.setSize("15px");
         show3DChartButton.setHeight(19,Unit.PIXELS);
         show3DChartButton.setIcon(_3DSwitchIcon);
         show3DChartButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
         show3DChartButton.addClickListener((ClickEvent<Button> click) -> {
-            //systemRuntimeInfoWidget.refreshSystemRuntimeInfo();
+            dataRelationDistributionWidget.show3DChart();
+            show3DChartButton.setEnabled(false);
+            show2DChartButton.setEnabled(true);
         });
         sectionAction2ComponentsList.add(show3DChartButton);
+
+        show2DChartButton = new Button();
+        show2DChartButton.setTooltipText("显示 2维 全域数据关联分布图");
+        Icon _2DSwitchIcon = LineAwesomeIconsSvg.STOP_SOLID.create();;
+        _2DSwitchIcon.setSize("15px");
+        show2DChartButton.setHeight(19,Unit.PIXELS);
+        show2DChartButton.setIcon(_2DSwitchIcon);
+        show2DChartButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
+        show2DChartButton.addClickListener((ClickEvent<Button> click) -> {
+            dataRelationDistributionWidget.show2DChart();
+            show3DChartButton.setEnabled(true);
+            show2DChartButton.setEnabled(false);
+        });
+        sectionAction2ComponentsList.add(show2DChartButton);
+        show2DChartButton.setEnabled(false);
 
         SectionActionBar sectionActionBar2 = new SectionActionBar(FontAwesome.Solid.CODE_FORK.create(),"全域数据关联分布",sectionAction2ComponentsList);
         rightSideContentContainerLayout.add(sectionActionBar2);
