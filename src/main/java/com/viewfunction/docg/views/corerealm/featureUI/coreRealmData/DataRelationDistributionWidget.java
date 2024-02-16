@@ -34,7 +34,9 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
             add(dataRelationDistributionChart);
             dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
         }else{
-
+            dataRelationDistribution3DChart = new DataRelationDistribution3DChart();
+            add(dataRelationDistribution3DChart);
+            dataRelationDistribution3DChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
         }
     }
 
@@ -49,11 +51,13 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
-        if(isIn2DMode){
+        if(dataRelationDistributionChart != null){
             dataRelationDistributionChart.clearData();
             dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
-        }else{
-
+        }
+        if(dataRelationDistribution3DChart != null){
+            dataRelationDistribution3DChart.clearData();
+            dataRelationDistribution3DChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
         }
     }
 
@@ -61,6 +65,8 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         isIn2DMode = true;
         if(dataRelationDistributionChart != null){
             dataRelationDistributionChart.setVisible(true);
+        }else{
+            renderDataRelationDistributionInfo();
         }
     }
 
@@ -68,6 +74,8 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         isIn2DMode = false;
         if(dataRelationDistributionChart != null){
             dataRelationDistributionChart.setVisible(false);
+        }else{
+            renderDataRelationDistributionInfo();
         }
     }
 }
