@@ -10,6 +10,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 
 import java.io.Serializable;
 import java.text.NumberFormat;
@@ -43,12 +44,97 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
         if(conceptionKindsDataCount != null){
             Set<String> conceptionKindNameSet = conceptionKindsDataCount.keySet();
             generateConceptionKindColorMap(conceptionKindNameSet);
+            for(String currentConceptionKindName:conceptionKindNameSet){
+                if(!currentConceptionKindName.equals(RealmConstant.ConceptionKindClass)
+                        && !currentConceptionKindName.equals(RealmConstant.AttributesViewKindClass)
+                        && !currentConceptionKindName.equals(RealmConstant.AttributeKindClass)
+                        && !currentConceptionKindName.equals(RealmConstant.RelationKindClass)
+                        && !currentConceptionKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
+                        && !currentConceptionKindName.equals(RealmConstant.ClassificationClass)
+                        && !currentConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
+                        && !currentConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
+                ){
+                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionKindName)!=null){
 
+                    }
+                    if(currentConceptionKindName.startsWith("DOCG_TS_")){
 
+                    }
+
+                    if(currentConceptionKindName.startsWith("DOCG_GS_")){
+
+                    }
+
+                    if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEventClass)){
+
+                    }
+                    if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEntityClass)){
+
+                    }
+                    if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEventClass)){
+
+                    }
+                    if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEntityClass)){
+
+                    }
+                    /*
+                    runBeforeClientResponse(ui -> {
+                        try {
+                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                    */
+                }
+            }
         }
         if(conceptionKindCorrelationInfoSet != null){
+            for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
+                String sourceConceptionKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
+                String targetConceptionKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
+                String relationKindName = currentConceptionKindCorrelationInfo.getRelationKindName();
+                long relationEntityCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
+                if(!relationKindName.equals(RealmConstant.Kind_MetaConfigItemsStorageRelationClass)
+                        && !relationKindName.equals(RealmConstant.ConceptionKind_AttributesViewKindRelationClass)
+                        && !relationKindName.equals(RealmConstant.AttributesViewKind_AttributeKindRelationClass)
+                        && !relationKindName.equals(RealmConstant.Classification_ClassificationRelationClass)
+                        && !relationKindName.equals(RealmConstant.RelationAttachKind_RelationAttachLinkLogicRelationClass)){
+                    boolean linkToTGOrClassification = false;
+                    if(sourceConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
+                            ||sourceConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
+                            ||sourceConceptionKindName.equals(RealmConstant.ClassificationClass)
+                            ||targetConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
+                            ||targetConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
+                            ||targetConceptionKindName.equals(RealmConstant.ClassificationClass)){
+                        linkToTGOrClassification = true;
+                    }
+                    if(!linkToTGOrClassification){
+                        if(!relationKindName.startsWith("DOCG_TS_NextIs") &&
+                                !relationKindName.startsWith("DOCG_TS_FirstChildIs") &&
+                                !relationKindName.startsWith("DOCG_TS_LastChildIs")){
 
+                            if(relationKindName.startsWith("DOCG_TS")){
 
+                            }else if(relationKindName.startsWith("DOCG_GS")){
+
+                            }else{
+
+                            }
+                            /*
+                            runBeforeClientResponse(ui -> {
+                                try {
+                                    getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
+                                } catch (JsonProcessingException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            });
+
+                            */
+                        }
+                    }
+                }
+            }
         }
     }
 
