@@ -7,10 +7,13 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
         c.$connector = {
             // functions
             emptyGraph:function(data){
-                Graph.graphData({
-                    nodes:[],
-                    links:[]
-                }).refresh();
+                Graph
+                    .width(200)
+                    .height(200)
+                    .graphData({
+                        nodes:[],
+                        links:[]
+                    }).refresh();
             },
             generateGraph : function(data) {
                 let dataObj = eval("(" + data + ")");
@@ -43,22 +46,22 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                     extraRenderers: [new THREE.CSS2DRenderer()]
                 })(c).graphData(gData)
                     .backgroundColor('#FFFFFF')
-                    .nodeVal(node => {
-                        return node.size;
-                    })
+                    .width(200)
+                    .height(200)
+                    .nodeRelSize(6)
                     .nodeResolution(15)
                     .nodeOpacity(0.85)
-                    .linkOpacity(0.95)
-                    .linkDirectionalArrowLength(8)
-                    .linkCurvature(0.025)
-                    .linkDirectionalArrowRelPos(0.5)
-                    .linkWidth(1)
+                    .linkOpacity(0.7)
+                    .linkDirectionalArrowLength(4)
+                    .linkCurvature(0.06)
+                    .linkDirectionalArrowRelPos(0.9)
+                    .linkWidth(0.8)
                     .linkThreeObjectExtend(true)
                     .linkThreeObject(link => {
                         // extend link with text sprite
-                        const sprite = new SpriteText(`${link.entityKind}`);
+                        const sprite = new SpriteText(`${link.entityKind} : ${link.source} > ${link.target}`);
                         sprite.color = 'black';
-                        sprite.textHeight = 3;
+                        sprite.textHeight = 1.5;
                         return sprite;
                     })
                     .linkPositionUpdate((sprite, { start, end }) => {
@@ -70,7 +73,8 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                     })
                     .nodeThreeObject(node => {
                         const nodeEl = document.createElement('div');
-                        nodeEl.textContent = node.entityKind+' ('+node.entityDesc+')';
+                        nodeEl.textContent = node.entityKind+' '+node.id;
+                        //nodeEl.style.color = node.color;
                         nodeEl.className = 'node-label';
                         return new THREE.CSS2DObject(nodeEl);
                     })
@@ -81,7 +85,6 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                         node.fz = node.z;
                     })
                     .onNodeClick(node => {
-                        c.$server.showEntityDetail(node.entityKind,node.id);
                         // Aim at node from outside it
                         const distance = 40;
                         const distRatio = 1 + distance/Math.hypot(node.x, node.y, node.z);
@@ -93,11 +96,7 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                             node, // lookAt ({ x, y, z })
                             3000  // ms transition duration
                         );
-                    })
-                    .onNodeRightClick(node => {
-                        c.$server.expendTimeFlowEntity(node.entityKind,node.id);
                     });
-
                 Graph
                     .width(dataObj.graphWidth)
                     .height(dataObj.graphHeight)
@@ -105,20 +104,6 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                     .refresh();
                 // Spread nodes a little wider
                 Graph.d3Force('charge').strength(-2000);
-            },
-            insertGraph : function(data) {
-                let dataObj = eval("(" + data + ")");
-                const { nodes, links } = Graph.graphData();
-                for(var index1 in dataObj.nodesInfo){
-                    nodes.push(dataObj.nodesInfo[index1]);
-                }
-                for(var index2 in dataObj.edgesInfo){
-                    links.push(dataObj.edgesInfo[index2]);
-                }
-                Graph.graphData({
-                    nodes: [...nodes],
-                    links: [...links]
-                });
             }
         };
 

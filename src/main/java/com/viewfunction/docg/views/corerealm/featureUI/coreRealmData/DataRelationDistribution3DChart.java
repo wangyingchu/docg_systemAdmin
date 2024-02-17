@@ -2,6 +2,8 @@ package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
@@ -10,6 +12,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 
 import java.io.Serializable;
@@ -169,6 +173,90 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
         getElement().getNode().runWhenAttached(ui -> ui
                 .beforeClientResponse(this, context -> command.accept(ui)));
     }
+
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            generateGraph(receiver.getBodyClientHeight(),receiver.getBodyClientWidth());
+        }));
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+    }
+
+
+
+
+    private void generateGraph(int height,int width){
+        runBeforeClientResponse(ui -> {
+            try {
+                Map<String,Object> valueMap =new HashMap<>();
+                List<Map<String,String>> nodeInfoList = new ArrayList<>();
+                Map<String,String> centerNodeInfo = new HashMap<>();
+                //centerNodeInfo.put("id",this.mainConceptionEntityUID);
+                //centerNodeInfo.put("entityKind",this.mainConceptionKind);
+                centerNodeInfo.put("color","#888888");
+                nodeInfoList.add(centerNodeInfo);
+
+                List<String> attachedConceptionKinds = new ArrayList<>();
+                /*
+                for(ConceptionEntity currentConceptionEntity:this.conceptionEntityList){
+                    if(!attachedConceptionKinds.contains(currentConceptionEntity.getConceptionKindName())){
+                        attachedConceptionKinds.add(currentConceptionEntity.getConceptionKindName());
+                    }
+                }
+                */
+                //generateConceptionKindColorMap(attachedConceptionKinds);
+
+                /*
+                for(ConceptionEntity currentConceptionEntity:this.conceptionEntityList){
+                    Map<String,String> currentNodeInfo = new HashMap<>();
+                    currentNodeInfo.put("id",currentConceptionEntity.getConceptionEntityUID());
+                    currentNodeInfo.put("entityKind",currentConceptionEntity.getConceptionKindName());
+                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionEntity.getConceptionKindName())!=null){
+                        currentNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionEntity.getConceptionKindName()));
+                    }else{
+                        currentNodeInfo.put("color","#0099FF");
+                    }
+                    nodeInfoList.add(currentNodeInfo);
+                }
+                */
+                List<Map<String,String>> edgeInfoList = new ArrayList<>();
+
+                List<String> attachedRelationKinds = new ArrayList<>();
+                /*
+                for(RelationEntity currentRelationEntity:this.relationEntityList){
+                    if(!attachedRelationKinds.contains(currentRelationEntity.getRelationKindName())){
+                        attachedRelationKinds.add(currentRelationEntity.getRelationKindName());
+                    }
+                }
+                generateRelationKindColorMap(attachedRelationKinds);
+
+                for(RelationEntity currentRelationEntity:this.relationEntityList){
+                    Map<String,String> currentEdgeInfo = new HashMap<>();
+                    currentEdgeInfo.put("source",currentRelationEntity.getFromConceptionEntityUID());
+                    currentEdgeInfo.put("target",currentRelationEntity.getToConceptionEntityUID());
+                    currentEdgeInfo.put("entityKind",currentRelationEntity.getRelationKindName());
+                    currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
+                    edgeInfoList.add(currentEdgeInfo);
+                }
+                */
+
+                valueMap.put("graphHeight",height-120);
+                valueMap.put("graphWidth",width- 40);
+                valueMap.put("nodesInfo",nodeInfoList);
+                valueMap.put("edgesInfo",edgeInfoList);
+                getElement().callJsFunction("$connector.generateGraph",
+                        new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+
 
     public void clearData(){
         runBeforeClientResponse(ui -> {
