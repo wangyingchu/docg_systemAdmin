@@ -263,20 +263,6 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
 
         List<Component> sectionAction2ComponentsList = new ArrayList<>();
 
-        show3DChartButton = new Button();
-        show3DChartButton.setTooltipText("显示 3维 全域数据关联分布图");
-        Icon _3DSwitchIcon = LineAwesomeIconsSvg.CUBE_SOLID.create();
-        _3DSwitchIcon.setSize("15px");
-        show3DChartButton.setHeight(19,Unit.PIXELS);
-        show3DChartButton.setIcon(_3DSwitchIcon);
-        show3DChartButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
-        show3DChartButton.addClickListener((ClickEvent<Button> click) -> {
-            dataRelationDistributionWidget.show3DChart();
-            show3DChartButton.setEnabled(false);
-            show2DChartButton.setEnabled(true);
-        });
-        sectionAction2ComponentsList.add(show3DChartButton);
-
         show2DChartButton = new Button();
         show2DChartButton.setTooltipText("显示 2维 全域数据关联分布图");
         Icon _2DSwitchIcon = LineAwesomeIconsSvg.STOP_SOLID.create();;
@@ -291,6 +277,20 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         });
         sectionAction2ComponentsList.add(show2DChartButton);
         show2DChartButton.setEnabled(false);
+
+        show3DChartButton = new Button();
+        show3DChartButton.setTooltipText("显示 3维 全域数据关联分布图");
+        Icon _3DSwitchIcon = LineAwesomeIconsSvg.CUBE_SOLID.create();
+        _3DSwitchIcon.setSize("15px");
+        show3DChartButton.setHeight(19,Unit.PIXELS);
+        show3DChartButton.setIcon(_3DSwitchIcon);
+        show3DChartButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
+        show3DChartButton.addClickListener((ClickEvent<Button> click) -> {
+            dataRelationDistributionWidget.show3DChart();
+            show3DChartButton.setEnabled(false);
+            show2DChartButton.setEnabled(true);
+        });
+        sectionAction2ComponentsList.add(show3DChartButton);
 
         SectionActionBar sectionActionBar2 = new SectionActionBar(FontAwesome.Solid.CODE_FORK.create(),"全域数据关联分布",sectionAction2ComponentsList);
         rightSideContentContainerLayout.add(sectionActionBar2);
