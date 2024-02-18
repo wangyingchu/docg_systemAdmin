@@ -177,7 +177,7 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            generateGraph(receiver.getBodyClientHeight()-400,receiver.getBodyClientWidth()-1000);
+            generateGraph(receiver.getBodyClientHeight()-90,receiver.getBodyClientWidth()-1000);
         }));
     }
 

@@ -16,6 +16,8 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
     private DataRelationDistributionChart dataRelationDistributionChart;
     private DataRelationDistribution3DChart dataRelationDistribution3DChart;
     private boolean isIn2DMode = true;
+    private DataStatusSnapshotInfo dataStatusSnapshotInfo;
+    private Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet;
 
     public DataRelationDistributionWidget(){
         this.setWidthFull();
@@ -26,9 +28,13 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
     private void renderDataRelationDistributionInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
-        DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
+        if(dataStatusSnapshotInfo == null){
+            dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
+        }
+        if(conceptionKindCorrelationInfoSet == null){
+            conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
+        }
 
-        Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
         if(isIn2DMode){
             dataRelationDistributionChart = new DataRelationDistributionChart();
             add(dataRelationDistributionChart);
@@ -49,8 +55,8 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
     public void refreshDataRelationDistributionData(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
-        DataStatusSnapshotInfo dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
-        Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
+        dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
+        conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
         if(dataRelationDistributionChart != null){
             dataRelationDistributionChart.clearData();
             dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
