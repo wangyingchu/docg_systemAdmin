@@ -63,6 +63,9 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
 
     public void show2DChart(){
         isIn2DMode = true;
+        if(dataRelationDistribution3DChart != null){
+            dataRelationDistribution3DChart.setVisible(false);
+        }
         if(dataRelationDistributionChart != null){
             dataRelationDistributionChart.setVisible(true);
         }else{
@@ -74,6 +77,9 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         isIn2DMode = false;
         if(dataRelationDistributionChart != null){
             dataRelationDistributionChart.setVisible(false);
+        }
+        if(dataRelationDistribution3DChart != null){
+            dataRelationDistribution3DChart.setVisible(true);
         }else{
             renderDataRelationDistributionInfo();
         }

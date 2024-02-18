@@ -177,7 +177,7 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            generateGraph(receiver.getBodyClientHeight(),receiver.getBodyClientWidth());
+            generateGraph(receiver.getBodyClientHeight()-400,receiver.getBodyClientWidth()-1000);
         }));
     }
 
@@ -185,9 +185,6 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
     protected void onDetach(DetachEvent detachEvent) {
         super.onDetach(detachEvent);
     }
-
-
-
 
     private void generateGraph(int height,int width){
         runBeforeClientResponse(ui -> {
@@ -255,8 +252,6 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
             }
         });
     }
-
-
 
     public void clearData(){
         runBeforeClientResponse(ui -> {
