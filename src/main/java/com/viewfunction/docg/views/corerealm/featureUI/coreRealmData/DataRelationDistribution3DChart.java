@@ -2,8 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
+
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
@@ -12,8 +11,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 
 import java.io.Serializable;
@@ -25,8 +22,12 @@ import java.util.*;
 public class DataRelationDistribution3DChart extends VerticalLayout {
 
     private Map<String,String> conceptionKindColorMap;
+    private Map<String,String> relationKindColorMap;
     private int colorIndex = 0;
+    private int colorIndex2 = 0;
     private NumberFormat numberFormat;
+    private int graphWidth;
+    private int graphHeight;
 
     public DataRelationDistribution3DChart(){
         //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
@@ -39,12 +40,15 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
         this.setMargin(false);
         this.setPadding(false);
         this.conceptionKindColorMap = new HashMap<>();
+        this.relationKindColorMap = new HashMap<>();
         this.setHeight(100, Unit.PERCENTAGE);
         this.numberFormat = NumberFormat.getInstance();
         initConnector();
     }
 
     public void setData(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet, Map<String, Long> conceptionKindsDataCount, Map<String, Long> relationKindsDataCount){
+        List<Map<String,String>> nodeInfoList = new ArrayList<>();
+        List<Map<String,String>> edgeInfoList = new ArrayList<>();
         if(conceptionKindsDataCount != null){
             Set<String> conceptionKindNameSet = conceptionKindsDataCount.keySet();
             generateConceptionKindColorMap(conceptionKindNameSet);
@@ -57,9 +61,16 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                         && !currentConceptionKindName.equals(RealmConstant.ClassificationClass)
                         && !currentConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
                         && !currentConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
+                        && !currentConceptionKindName.equals(RealmConstant.RelationAttachKindClass)
+                        && !currentConceptionKindName.equals(RealmConstant.RelationAttachLinkLogicClass)
                 ){
-                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionKindName)!=null){
+                    Map<String,String> centerNodeInfo = new HashMap<>();
+                    centerNodeInfo.put("id",currentConceptionKindName);
+                    centerNodeInfo.put("entityKind",currentConceptionKindName);
+                    nodeInfoList.add(centerNodeInfo);
 
+                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionKindName)!=null){
+                        centerNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionKindName));
                     }
                     if(currentConceptionKindName.startsWith("DOCG_TS_")){
 
@@ -81,19 +92,20 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                     if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEntityClass)){
 
                     }
-                    /*
-                    runBeforeClientResponse(ui -> {
-                        try {
-                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                    */
                 }
             }
         }
+
         if(conceptionKindCorrelationInfoSet != null){
+            List<String> attachedRelationKinds = new ArrayList<>();
+            for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
+                String relationKindName = currentConceptionKindCorrelationInfo.getRelationKindName();
+                if(!attachedRelationKinds.contains(relationKindName)){
+                    attachedRelationKinds.add(relationKindName);
+                }
+            }
+            generateRelationKindColorMap(attachedRelationKinds);
+
             for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
                 String sourceConceptionKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
                 String targetConceptionKindName = currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
@@ -114,6 +126,13 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                         linkToTGOrClassification = true;
                     }
                     if(!linkToTGOrClassification){
+                        Map<String,String> currentEdgeInfo = new HashMap<>();
+                        currentEdgeInfo.put("source",sourceConceptionKindName);
+                        currentEdgeInfo.put("target",targetConceptionKindName);
+                        currentEdgeInfo.put("entityKind",relationKindName);
+                        currentEdgeInfo.put("color",this.relationKindColorMap.get(relationKindName));
+                        edgeInfoList.add(currentEdgeInfo);
+
                         if(!relationKindName.startsWith("DOCG_TS_NextIs") &&
                                 !relationKindName.startsWith("DOCG_TS_FirstChildIs") &&
                                 !relationKindName.startsWith("DOCG_TS_LastChildIs")){
@@ -125,21 +144,15 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                             }else{
 
                             }
-                            /*
-                            runBeforeClientResponse(ui -> {
-                                try {
-                                    getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
-                                } catch (JsonProcessingException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            });
-
-                            */
                         }
                     }
                 }
             }
         }
+
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            generateGraph(receiver.getBodyClientHeight()-90,receiver.getBodyClientWidth()-1000, nodeInfoList, edgeInfoList);
+        }));
     }
 
     private Map<String,String> generateConceptionKindColorMap(Set<String> attachedConceptionKindsSet){
@@ -164,6 +177,25 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
         return conceptionKindColorMap;
     }
 
+    private Map<String,String> generateRelationKindColorMap(List<String> attachedRelationKinds){
+        String[] colorList =new String[]{
+                "#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67",
+                "#EA2027","#006266","#1B1464","#5758BB","#6F1E51","#EE5A24","#009432","#0652DD","#9980FA","#833471"
+        };
+
+        for(int i=0;i<attachedRelationKinds.size();i++){
+            if(colorIndex2>=colorList.length){
+                colorIndex2 = 0;
+            }
+            String currentRelationKindName = attachedRelationKinds.get(i);
+            if(!relationKindColorMap.containsKey(currentRelationKindName)){
+                relationKindColorMap.put(currentRelationKindName,colorList[colorIndex2]);
+            }
+            colorIndex2++;
+        }
+        return relationKindColorMap;
+    }
+
     private void initConnector() {
         runBeforeClientResponse(ui -> ui.getPage().executeJs(
                 "window.Vaadin.Flow.feature_DataRelationDistribution3DChart.initLazy($0)", getElement()));
@@ -174,73 +206,10 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                 .beforeClientResponse(this, context -> command.accept(ui)));
     }
 
-    protected void onAttach(AttachEvent attachEvent) {
-        super.onAttach(attachEvent);
-        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            generateGraph(receiver.getBodyClientHeight()-90,receiver.getBodyClientWidth()-1000);
-        }));
-    }
-
-    @Override
-    protected void onDetach(DetachEvent detachEvent) {
-        super.onDetach(detachEvent);
-    }
-
-    private void generateGraph(int height,int width){
+    private void generateGraph(int height,int width,List<Map<String,String>> nodeInfoList, List<Map<String,String>> edgeInfoList){
         runBeforeClientResponse(ui -> {
             try {
                 Map<String,Object> valueMap =new HashMap<>();
-                List<Map<String,String>> nodeInfoList = new ArrayList<>();
-                Map<String,String> centerNodeInfo = new HashMap<>();
-                //centerNodeInfo.put("id",this.mainConceptionEntityUID);
-                //centerNodeInfo.put("entityKind",this.mainConceptionKind);
-                centerNodeInfo.put("color","#888888");
-                nodeInfoList.add(centerNodeInfo);
-
-                List<String> attachedConceptionKinds = new ArrayList<>();
-                /*
-                for(ConceptionEntity currentConceptionEntity:this.conceptionEntityList){
-                    if(!attachedConceptionKinds.contains(currentConceptionEntity.getConceptionKindName())){
-                        attachedConceptionKinds.add(currentConceptionEntity.getConceptionKindName());
-                    }
-                }
-                */
-                //generateConceptionKindColorMap(attachedConceptionKinds);
-
-                /*
-                for(ConceptionEntity currentConceptionEntity:this.conceptionEntityList){
-                    Map<String,String> currentNodeInfo = new HashMap<>();
-                    currentNodeInfo.put("id",currentConceptionEntity.getConceptionEntityUID());
-                    currentNodeInfo.put("entityKind",currentConceptionEntity.getConceptionKindName());
-                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionEntity.getConceptionKindName())!=null){
-                        currentNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionEntity.getConceptionKindName()));
-                    }else{
-                        currentNodeInfo.put("color","#0099FF");
-                    }
-                    nodeInfoList.add(currentNodeInfo);
-                }
-                */
-                List<Map<String,String>> edgeInfoList = new ArrayList<>();
-
-                List<String> attachedRelationKinds = new ArrayList<>();
-                /*
-                for(RelationEntity currentRelationEntity:this.relationEntityList){
-                    if(!attachedRelationKinds.contains(currentRelationEntity.getRelationKindName())){
-                        attachedRelationKinds.add(currentRelationEntity.getRelationKindName());
-                    }
-                }
-                generateRelationKindColorMap(attachedRelationKinds);
-
-                for(RelationEntity currentRelationEntity:this.relationEntityList){
-                    Map<String,String> currentEdgeInfo = new HashMap<>();
-                    currentEdgeInfo.put("source",currentRelationEntity.getFromConceptionEntityUID());
-                    currentEdgeInfo.put("target",currentRelationEntity.getToConceptionEntityUID());
-                    currentEdgeInfo.put("entityKind",currentRelationEntity.getRelationKindName());
-                    currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
-                    edgeInfoList.add(currentEdgeInfo);
-                }
-                */
-
                 valueMap.put("graphHeight",height-120);
                 valueMap.put("graphWidth",width- 40);
                 valueMap.put("nodesInfo",nodeInfoList);
@@ -256,7 +225,7 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
     public void clearData(){
         runBeforeClientResponse(ui -> {
             try {
-                getElement().callJsFunction("$connector.clearData", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+                getElement().callJsFunction("$connector.emptyGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
