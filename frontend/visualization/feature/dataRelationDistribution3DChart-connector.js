@@ -73,7 +73,7 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                     })
                     .nodeThreeObject(node => {
                         const nodeEl = document.createElement('div');
-                        nodeEl.textContent = node.entityKind+' '+node.id;
+                        nodeEl.textContent = node.entityKind+' ('+node.entityCount+")";
                         //nodeEl.style.color = node.color;
                         nodeEl.className = 'node-label';
                         return new THREE.CSS2DObject(nodeEl);

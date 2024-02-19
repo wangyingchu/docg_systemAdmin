@@ -67,27 +67,30 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                     Map<String,String> centerNodeInfo = new HashMap<>();
                     centerNodeInfo.put("id",currentConceptionKindName);
                     centerNodeInfo.put("entityKind",currentConceptionKindName);
+                    if(conceptionKindsDataCount.containsKey(currentConceptionKindName)){
+                        centerNodeInfo.put("entityCount",conceptionKindsDataCount.get(currentConceptionKindName).toString());
+                    }
                     nodeInfoList.add(centerNodeInfo);
 
                     if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionKindName)!=null){
                         centerNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionKindName));
                     }
                     if(currentConceptionKindName.startsWith("DOCG_TS_")){
-
+                        centerNodeInfo.put("color","40E0D0");
                     }
 
                     if(currentConceptionKindName.startsWith("DOCG_GS_")){
-
+                        centerNodeInfo.put("color","#C71585");
                     }
 
                     if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEventClass)){
-
+                        centerNodeInfo.put("color","40E0D0");
                     }
                     if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEntityClass)){
 
                     }
                     if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEventClass)){
-
+                        centerNodeInfo.put("color","#C71585");
                     }
                     if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEntityClass)){
 
@@ -130,7 +133,8 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                         currentEdgeInfo.put("source",sourceConceptionKindName);
                         currentEdgeInfo.put("target",targetConceptionKindName);
                         currentEdgeInfo.put("entityKind",relationKindName);
-                        currentEdgeInfo.put("color",this.relationKindColorMap.get(relationKindName));
+                        //currentEdgeInfo.put("color",this.relationKindColorMap.get(relationKindName));
+                        currentEdgeInfo.put("color","#888888");
                         edgeInfoList.add(currentEdgeInfo);
 
                         if(!relationKindName.startsWith("DOCG_TS_NextIs") &&
@@ -138,9 +142,9 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                                 !relationKindName.startsWith("DOCG_TS_LastChildIs")){
 
                             if(relationKindName.startsWith("DOCG_TS")){
-
+                                currentEdgeInfo.put("color","#40E0D0");
                             }else if(relationKindName.startsWith("DOCG_GS")){
-
+                                currentEdgeInfo.put("color","#C71585");
                             }else{
 
                             }
