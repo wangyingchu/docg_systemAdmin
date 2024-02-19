@@ -46,6 +46,9 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                     extraRenderers: [new THREE.CSS2DRenderer()]
                 })(c).graphData(gData)
                     .backgroundColor('#FFFFFF')
+                    //.nodeVal(node => {
+                    //    return node.size;
+                   // })
                     .width(200)
                     .height(200)
                     .nodeRelSize(6)
@@ -53,9 +56,9 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                     .nodeOpacity(0.85)
                     .linkOpacity(0.7)
                     .linkDirectionalArrowLength(4)
-                    .linkCurvature(0.06)
-                    .linkDirectionalArrowRelPos(0.9)
-                    .linkWidth(0.8)
+                    .linkCurvature(0.2)
+                    .linkDirectionalArrowRelPos(0.5)
+                    .linkWidth(0.3)
                     .linkThreeObjectExtend(true)
                     .linkThreeObject(link => {
                         // extend link with text sprite
@@ -86,7 +89,7 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                     })
                     .onNodeClick(node => {
                         // Aim at node from outside it
-                        const distance = 40;
+                        const distance = 400;
                         const distRatio = 1 + distance/Math.hypot(node.x, node.y, node.z);
                         const newPos = node.x || node.y || node.z
                             ? { x: node.x * distRatio, y: node.y * distRatio, z: node.z * distRatio }
@@ -103,7 +106,7 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                     .graphData(gData)
                     .refresh();
                 // Spread nodes a little wider
-                Graph.d3Force('charge').strength(-2000);
+                Graph.d3Force('charge').strength(-800);
             }
         };
 

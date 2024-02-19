@@ -64,33 +64,38 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                         && !currentConceptionKindName.equals(RealmConstant.TimeFlowClass)
                         && !currentConceptionKindName.equals(RealmConstant.GeospatialRegionClass)
                 ){
-                    Map<String,String> centerNodeInfo = new HashMap<>();
-                    centerNodeInfo.put("id",currentConceptionKindName);
-                    centerNodeInfo.put("entityKind",currentConceptionKindName);
+                    Map<String,String> currentNodeInfo = new HashMap<>();
+                    currentNodeInfo.put("id",currentConceptionKindName);
+                    currentNodeInfo.put("entityKind",currentConceptionKindName);
+                    currentNodeInfo.put("size","12");
+
+
                     if(conceptionKindsDataCount.containsKey(currentConceptionKindName)){
-                        centerNodeInfo.put("entityCount",this.numberFormat.format(conceptionKindsDataCount.get(currentConceptionKindName)));
+                        currentNodeInfo.put("entityCount",this.numberFormat.format(conceptionKindsDataCount.get(currentConceptionKindName)));
                     }
-                    nodeInfoList.add(centerNodeInfo);
+                    nodeInfoList.add(currentNodeInfo);
 
                     if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionKindName)!=null){
-                        centerNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionKindName));
+                        currentNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionKindName));
                     }
                     if(currentConceptionKindName.startsWith("DOCG_TS_")){
-                        centerNodeInfo.put("color","40E0D0");
+                        currentNodeInfo.put("color","40E0D0");
                     }
 
                     if(currentConceptionKindName.startsWith("DOCG_GS_")){
-                        centerNodeInfo.put("color","#C71585");
+                        currentNodeInfo.put("color","#C71585");
                     }
 
                     if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEventClass)){
-                        centerNodeInfo.put("color","40E0D0");
+                        currentNodeInfo.put("color","40E0D0");
+                        currentNodeInfo.put("size","6");
                     }
                     if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEntityClass)){
 
                     }
                     if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEventClass)){
-                        centerNodeInfo.put("color","#C71585");
+                        currentNodeInfo.put("color","#C71585");
+                        currentNodeInfo.put("size","6");
                     }
                     if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEntityClass)){
 
