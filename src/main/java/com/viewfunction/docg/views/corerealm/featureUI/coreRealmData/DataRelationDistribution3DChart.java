@@ -134,7 +134,7 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                         currentEdgeInfo.put("target",targetConceptionKindName);
                         currentEdgeInfo.put("entityKind",relationKindName);
                         //currentEdgeInfo.put("color",this.relationKindColorMap.get(relationKindName));
-                        currentEdgeInfo.put("color","#888888");
+                        currentEdgeInfo.put("color","#AAAAAA");
                         edgeInfoList.add(currentEdgeInfo);
 
                         if(!relationKindName.startsWith("DOCG_TS_NextIs") &&
