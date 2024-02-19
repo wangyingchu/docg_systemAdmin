@@ -26,8 +26,6 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
     private int colorIndex = 0;
     private int colorIndex2 = 0;
     private NumberFormat numberFormat;
-    private int graphWidth;
-    private int graphHeight;
 
     public DataRelationDistribution3DChart(){
         //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
@@ -63,12 +61,14 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                         && !currentConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
                         && !currentConceptionKindName.equals(RealmConstant.RelationAttachKindClass)
                         && !currentConceptionKindName.equals(RealmConstant.RelationAttachLinkLogicClass)
+                        && !currentConceptionKindName.equals(RealmConstant.TimeFlowClass)
+                        && !currentConceptionKindName.equals(RealmConstant.GeospatialRegionClass)
                 ){
                     Map<String,String> centerNodeInfo = new HashMap<>();
                     centerNodeInfo.put("id",currentConceptionKindName);
                     centerNodeInfo.put("entityKind",currentConceptionKindName);
                     if(conceptionKindsDataCount.containsKey(currentConceptionKindName)){
-                        centerNodeInfo.put("entityCount",conceptionKindsDataCount.get(currentConceptionKindName).toString());
+                        centerNodeInfo.put("entityCount",this.numberFormat.format(conceptionKindsDataCount.get(currentConceptionKindName)));
                     }
                     nodeInfoList.add(centerNodeInfo);
 
@@ -121,6 +121,8 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                         && !relationKindName.equals(RealmConstant.RelationAttachKind_RelationAttachLinkLogicRelationClass)){
                     boolean linkToTGOrClassification = false;
                     if(sourceConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
+                            ||sourceConceptionKindName.equals(RealmConstant.TimeFlowClass)
+                            ||sourceConceptionKindName.equals(RealmConstant.GeospatialRegionClass)
                             ||sourceConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
                             ||sourceConceptionKindName.equals(RealmConstant.ClassificationClass)
                             ||targetConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
@@ -129,17 +131,16 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                         linkToTGOrClassification = true;
                     }
                     if(!linkToTGOrClassification){
-                        Map<String,String> currentEdgeInfo = new HashMap<>();
-                        currentEdgeInfo.put("source",sourceConceptionKindName);
-                        currentEdgeInfo.put("target",targetConceptionKindName);
-                        currentEdgeInfo.put("entityKind",relationKindName);
-                        //currentEdgeInfo.put("color",this.relationKindColorMap.get(relationKindName));
-                        currentEdgeInfo.put("color","#AAAAAA");
-                        edgeInfoList.add(currentEdgeInfo);
-
                         if(!relationKindName.startsWith("DOCG_TS_NextIs") &&
                                 !relationKindName.startsWith("DOCG_TS_FirstChildIs") &&
                                 !relationKindName.startsWith("DOCG_TS_LastChildIs")){
+                            Map<String,String> currentEdgeInfo = new HashMap<>();
+                            currentEdgeInfo.put("source",sourceConceptionKindName);
+                            currentEdgeInfo.put("target",targetConceptionKindName);
+                            currentEdgeInfo.put("entityKind",relationKindName);
+                            //currentEdgeInfo.put("color",this.relationKindColorMap.get(relationKindName));
+                            currentEdgeInfo.put("color","#AAAAAA");
+                            edgeInfoList.add(currentEdgeInfo);
 
                             if(relationKindName.startsWith("DOCG_TS")){
                                 currentEdgeInfo.put("color","#40E0D0");
