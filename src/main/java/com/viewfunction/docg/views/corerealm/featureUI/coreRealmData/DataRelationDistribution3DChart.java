@@ -22,9 +22,9 @@ import java.util.*;
 public class DataRelationDistribution3DChart extends VerticalLayout {
 
     private Map<String,String> conceptionKindColorMap;
-    private Map<String,String> relationKindColorMap;
+    //private Map<String,String> relationKindColorMap;
     private int colorIndex = 0;
-    private int colorIndex2 = 0;
+    //private int colorIndex2 = 0;
     private NumberFormat numberFormat;
 
     public DataRelationDistribution3DChart(){
@@ -38,7 +38,7 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
         this.setMargin(false);
         this.setPadding(false);
         this.conceptionKindColorMap = new HashMap<>();
-        this.relationKindColorMap = new HashMap<>();
+        //this.relationKindColorMap = new HashMap<>();
         this.setHeight(100, Unit.PERCENTAGE);
         this.numberFormat = NumberFormat.getInstance();
         initConnector();
@@ -69,7 +69,6 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                     currentNodeInfo.put("entityKind",currentConceptionKindName);
                     currentNodeInfo.put("size","12");
 
-
                     if(conceptionKindsDataCount.containsKey(currentConceptionKindName)){
                         currentNodeInfo.put("entityCount",this.numberFormat.format(conceptionKindsDataCount.get(currentConceptionKindName)));
                     }
@@ -88,14 +87,14 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
 
                     if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEventClass)){
                         currentNodeInfo.put("color","40E0D0");
-                        currentNodeInfo.put("size","6");
+                        currentNodeInfo.put("size","3");
                     }
                     if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEntityClass)){
 
                     }
                     if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEventClass)){
                         currentNodeInfo.put("color","#C71585");
-                        currentNodeInfo.put("size","6");
+                        currentNodeInfo.put("size","3");
                     }
                     if(currentConceptionKindName.startsWith(RealmConstant.GeospatialScaleEntityClass)){
 
@@ -112,7 +111,7 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                     attachedRelationKinds.add(relationKindName);
                 }
             }
-            generateRelationKindColorMap(attachedRelationKinds);
+            //generateRelationKindColorMap(attachedRelationKinds);
 
             for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoSet){
                 String sourceConceptionKindName = currentConceptionKindCorrelationInfo.getSourceConceptionKindName();
@@ -170,7 +169,7 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
         attachedConceptionKinds.addAll(attachedConceptionKindsSet);
 
         String[] colorList =new String[]{
-                "#EA2027","#006266","#1B1464","#6F1E51","#EE5A24","#009432","##0652DD","#9980FA","#833471",
+                "#EA2027","#006266","#1B1464","#6F1E51","#EE5A24","#009432","#0652DD","#9980FA","#833471",
                 "#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67"
         };
 
@@ -187,6 +186,7 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
         return conceptionKindColorMap;
     }
 
+    /*
     private Map<String,String> generateRelationKindColorMap(List<String> attachedRelationKinds){
         String[] colorList =new String[]{
                 "#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67",
@@ -205,7 +205,7 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
         }
         return relationKindColorMap;
     }
-
+*/
     private void initConnector() {
         runBeforeClientResponse(ui -> ui.getPage().executeJs(
                 "window.Vaadin.Flow.feature_DataRelationDistribution3DChart.initLazy($0)", getElement()));
