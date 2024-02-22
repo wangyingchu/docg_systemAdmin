@@ -22,7 +22,7 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                     nodes:dataObj.nodesInfo,
                     links:dataObj.edgesInfo
                 }
-
+                /*
                 const nodeMapping = {};
                 gData.nodes.forEach(node =>{
                     nodeMapping[node.entityKind] = node;
@@ -52,7 +52,7 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                     a.links.push(link);
                     b.links.push(link);
                 });
-
+                */
                 Graph = ForceGraph3D({
                     extraRenderers: [new THREE.CSS2DRenderer()]
                 })(c).graphData(gData)
@@ -92,40 +92,45 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                         return new THREE.CSS2DObject(nodeEl);
                     })
                     .nodeThreeObjectExtend(true)
-                    .nodeColor(node => highlightNodes.has(node) ? node === hoverNode ? 'rgb(255,0,0,1)' : 'rgba(255,160,0,0.8)' : node.color)
-                    .linkWidth(link => highlightLinks.has(link) ? 2 : 1)
-                    .linkDirectionalParticles(link => highlightLinks.has(link) ? 2 : 0)
-                    .linkDirectionalParticleWidth(2)
-                    .onNodeHover(node => {
-                        // no state change
-                        if ((!node && !highlightNodes.size) || (node && hoverNode === node)) return;
-                        highlightNodes.clear();
-                        highlightLinks.clear();
-                        if (node) {
-                            highlightNodes.add(node);
-                            node.neighbors.forEach(neighbor => highlightNodes.add(neighbor));
-                            node.links.forEach(link => highlightLinks.add(link));
-                        }
-                        hoverNode = node || null;
-                        Graph
-                            .nodeColor(Graph.nodeColor())
-                            .linkWidth(Graph.linkWidth())
-                            .linkDirectionalParticles(Graph.linkDirectionalParticles());
+                    /*
+                            .nodeColor(node => highlightNodes.has(node) ? node === hoverNode ? 'rgb(255,0,0,1)' : 'rgba(255,160,0,0.8)' : node.color)
+                            .linkWidth(link => highlightLinks.has(link) ? 2 : 1)
+                            .linkDirectionalParticles(link => highlightLinks.has(link) ? 2 : 0)
+                            .linkDirectionalParticleWidth(2)
 
-                    })
-                    .onLinkHover(link => {
-                        highlightNodes.clear();
-                        highlightLinks.clear();
-                        if (link) {
-                            highlightLinks.add(link);
-                            highlightNodes.add(link.source);
-                            highlightNodes.add(link.target);
-                        }
-                        Graph
-                            .nodeColor(Graph.nodeColor())
-                            .linkWidth(Graph.linkWidth())
-                            .linkDirectionalParticles(Graph.linkDirectionalParticles());
-                    })
+                            .onNodeHover(node => {
+                                    // no state change
+                                    if ((!node && !highlightNodes.size) || (node && hoverNode === node)) return;
+                                    highlightNodes.clear();
+                                    highlightLinks.clear();
+                                    if (node) {
+                                        highlightNodes.add(node);
+                                        node.neighbors.forEach(neighbor => highlightNodes.add(neighbor));
+                                        node.links.forEach(link => highlightLinks.add(link));
+                                   }
+                                   hoverNode = node || null;
+                                   Graph
+                                        .nodeColor(Graph.nodeColor())
+                                        .linkWidth(Graph.linkWidth())
+                                        .linkDirectionalParticles(Graph.linkDirectionalParticles());
+
+                             })
+
+                            .onLinkHover(link => {
+                                highlightNodes.clear();
+                                highlightLinks.clear();
+                                    if (link) {
+                                        highlightLinks.add(link);
+                                        highlightNodes.add(link.source);
+                                       highlightNodes.add(link.target);
+                                    }
+                                        Graph
+                                            .nodeColor(Graph.nodeColor())
+                                            .linkWidth(Graph.linkWidth())
+                                           .linkDirectionalParticles(Graph.linkDirectionalParticles());
+                                       })
+                     */
+
                     .onNodeDragEnd(node => {
                         node.fx = node.x;
                         node.fy = node.y;
