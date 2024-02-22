@@ -15,6 +15,9 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                         links:[]
                     }).refresh();
             },
+
+
+
             generateGraph : function(data) {
                 let dataObj = eval("(" + data + ")");
                 // Random tree
@@ -41,6 +44,55 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                     nodes:dataObj.nodesInfo,
                     links:dataObj.edgesInfo
                 }
+
+                const nodeMapping = {};
+                gData.nodes.forEach(node =>{
+                   //page_info.set(node.entityKind,node);
+                    nodeMapping[node.entityKind] = node;
+
+                });
+
+                console.log(nodeMapping);
+
+                const linkMapping = {};
+                gData.links.forEach(link => {
+                    linkMapping[link.entityKind] = link;
+                });
+
+
+                const highlightNodes = new Set();
+                const highlightLinks = new Set();
+                let hoverNode = null;
+
+                // cross-link node objects
+                gData.links.forEach(link => {
+                    //const a = gData.nodes[link.source.entityKind];
+                    //const b = gData.nodes[link.target.entityKind];
+
+                    const a = nodeMapping[link.source];
+                    const b = nodeMapping[link.target];
+
+                    console.log(link);
+                    console.log(gData.nodes);
+                    console.log(link.source);
+                    //console.log(b);
+
+                    !a.neighbors && (a.neighbors = []);
+                    !b.neighbors && (b.neighbors = []);
+                    a.neighbors.push(b);
+                    b.neighbors.push(a);
+
+                    !a.links && (a.links = []);
+                    !b.links && (b.links = []);
+                    a.links.push(link);
+                    b.links.push(link);
+                });
+
+
+
+
+
+
 
                 Graph = ForceGraph3D({
                     extraRenderers: [new THREE.CSS2DRenderer()]
@@ -81,6 +133,66 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
                         return new THREE.CSS2DObject(nodeEl);
                     })
                     .nodeThreeObjectExtend(true)
+
+
+
+                    .nodeColor(node => highlightNodes.has(node) ? node === hoverNode ? 'rgb(255,0,0,1)' : 'rgba(255,160,0,0.8)' : 'rgba(0,255,255,0.6)')
+                    .linkWidth(link => highlightLinks.has(link) ? 4 : 1)
+                    .linkDirectionalParticles(link => highlightLinks.has(link) ? 4 : 0)
+                    .linkDirectionalParticleWidth(4)
+
+
+
+                    .onNodeHover(node => {
+
+                        console.log(node);
+
+                        // no state change
+                        if ((!node && !highlightNodes.size) || (node && hoverNode === node)) return;
+
+                        highlightNodes.clear();
+                        highlightLinks.clear();
+                        if (node) {
+                            highlightNodes.add(node);
+                            node.neighbors.forEach(neighbor => highlightNodes.add(neighbor));
+                            node.links.forEach(link => highlightLinks.add(link));
+                        }
+
+                        hoverNode = node || null;
+
+                        console.log("++++++++++++++++++");
+                        console.log("++++++++++++++++++");
+                        console.log("++++++++++++++++++");
+
+                        Graph
+                            .nodeColor(Graph.nodeColor())
+                            .linkWidth(Graph.linkWidth())
+                            .linkDirectionalParticles(Graph.linkDirectionalParticles());
+
+                    })
+                    .onLinkHover(link => {
+                        highlightNodes.clear();
+                        highlightLinks.clear();
+
+                        if (link) {
+                            highlightLinks.add(link);
+                            highlightNodes.add(link.source);
+                            highlightNodes.add(link.target);
+                        }
+
+                        Graph
+                            .nodeColor(Graph.nodeColor())
+                            .linkWidth(Graph.linkWidth())
+                            .linkDirectionalParticles(Graph.linkDirectionalParticles());
+                    })
+
+
+
+
+
+
+
+
                     .onNodeDragEnd(node => {
                         node.fx = node.x;
                         node.fy = node.y;
@@ -110,5 +222,8 @@ window.Vaadin.Flow.feature_DataRelationDistribution3DChart = {
         };
 
         let Graph;
+
+
+
     }
 }
