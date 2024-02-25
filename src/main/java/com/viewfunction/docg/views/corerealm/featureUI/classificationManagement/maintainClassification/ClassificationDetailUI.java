@@ -161,9 +161,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
         refreshClassificationConfigInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //containerConceptionKindsConfigView.refreshConceptionKindsInfo();
-                //containsAttributeKindsConfigView.refreshAttributeTypesInfo();
-                //refreshAttributesViewKindCorrelationInfoChart();
+                refreshClassificationInfo();
             }
         });
         buttonList.add(refreshClassificationConfigInfoButton);
@@ -587,6 +585,10 @@ public class ClassificationDetailUI extends VerticalLayout implements
         if(event.getParentClassificationName() != null){
             initLoadClassificationData();
         }
+    }
+
+    private void refreshClassificationInfo(){
+        initLoadClassificationData();
     }
 
     private HorizontalLayout generateTabTitle(VaadinIcon tabIcon, String tabTitleTxt){
