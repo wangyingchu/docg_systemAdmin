@@ -303,7 +303,7 @@ public class LoadSHPFormatConceptionEntitiesView extends VerticalLayout {
             notification.add(layout);
 
             VerticalLayout notificationMessageContainer = new VerticalLayout();
-            notificationMessageContainer.add(new Div(new Text("CSV数据文件: "+uploadedFileName)));
+            notificationMessageContainer.add(new Div(new Text("SHP数据文件: "+uploadedFileName)));
             notificationMessageContainer.add(new Div(new Text("当前概念实体总数: " + conceptionEntitiesCount)));
             notification.add(notificationMessageContainer);
             notification.open();
