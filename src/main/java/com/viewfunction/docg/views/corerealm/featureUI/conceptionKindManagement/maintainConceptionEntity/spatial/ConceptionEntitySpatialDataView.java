@@ -17,8 +17,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.GeospatialScaleDataPair;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -30,6 +32,20 @@ public class ConceptionEntitySpatialDataView extends VerticalLayout {
     private Accordion accordion;
 
     public ConceptionEntitySpatialDataView(){
+
+        Button attachGeoScalaEntityButton = new Button();
+        attachGeoScalaEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
+        attachGeoScalaEntityButton.getStyle().set("font-size","12px");
+        Icon buttonIcon0 = LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create();
+        buttonIcon0.setSize("16px");
+        attachGeoScalaEntityButton.setIcon(buttonIcon0);
+        attachGeoScalaEntityButton.setTooltipText("关联地理空间区域事件");
+        attachGeoScalaEntityButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //refreshTemporalEventAttributesInfo();
+            }
+        });
 
         Button refreshTemporalEventAttributesInfoButton = new Button();
         refreshTemporalEventAttributesInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
@@ -45,8 +61,11 @@ public class ConceptionEntitySpatialDataView extends VerticalLayout {
             }
         });
 
-        SecondaryIconTitle secondaryIconTitle = new SecondaryIconTitle(VaadinIcon.LIST_SELECT.create(), "关联地理空间区域事件信息",refreshTemporalEventAttributesInfoButton);
-        add(secondaryIconTitle);
+        List<Component> actionComponentList = new ArrayList<>();
+        actionComponentList.add(attachGeoScalaEntityButton);
+        actionComponentList.add(refreshTemporalEventAttributesInfoButton);
+        SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(VaadinIcon.LIST_SELECT.create(), "关联地理空间区域事件信息",null,actionComponentList);
+        add(secondaryTitleActionBar);
 
         accordion = new Accordion();
         accordion.setWidth(100, Unit.PERCENTAGE);
