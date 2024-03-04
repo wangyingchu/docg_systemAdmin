@@ -1,8 +1,8 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -17,6 +17,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.spatial.ConceptionEntitySpatialDataView;
 
@@ -54,7 +55,21 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
         messageLogo.setSize("30px");
         NativeLabel messageLabel = new NativeLabel(" 当前概念实体中不包含地理空间相关信息");
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
-        doesNotContainsSpatialInfoMessage.add(messageLogo,messageLabel);
+
+        Button attachGeoScalaEntityButton = new Button();
+        attachGeoScalaEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_LARGE);
+        Icon buttonIcon0 = LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create();
+        buttonIcon0.setSize("18px");
+        attachGeoScalaEntityButton.setIcon(buttonIcon0);
+        attachGeoScalaEntityButton.setTooltipText("关联地理空间区域事件");
+        attachGeoScalaEntityButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //refreshTemporalEventAttributesInfo();
+            }
+        });
+        attachGeoScalaEntityButton.getStyle().set("top","-10px").set("position","relative");
+        doesNotContainsSpatialInfoMessage.add(messageLogo,messageLabel,attachGeoScalaEntityButton);
         add(doesNotContainsSpatialInfoMessage);
 
         conceptionEntitySpatialDataView = new ConceptionEntitySpatialDataView();

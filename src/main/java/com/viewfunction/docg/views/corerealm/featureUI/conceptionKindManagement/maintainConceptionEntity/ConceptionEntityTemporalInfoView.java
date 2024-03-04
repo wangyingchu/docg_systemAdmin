@@ -1,8 +1,8 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -16,6 +16,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.temporal.ConceptionEntityTemporalDataView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.temporal.ConceptionEntityTemporalSunburstChart;
@@ -56,7 +57,21 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
         messageLogo.setSize("30px");
         NativeLabel messageLabel = new NativeLabel(" 当前概念实体中不包含时间序列相关信息");
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
-        doesNotContainsTemporalInfoMessage.add(messageLogo,messageLabel);
+
+        Button attachTimeScalaEntityButton = new Button();
+        attachTimeScalaEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_LARGE);
+        Icon buttonIcon0 = LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create();
+        buttonIcon0.setSize("18px");
+        attachTimeScalaEntityButton.setIcon(buttonIcon0);
+        attachTimeScalaEntityButton.setTooltipText("关联时间序列事件");
+        attachTimeScalaEntityButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //refreshTemporalEventAttributesInfo();
+            }
+        });
+        attachTimeScalaEntityButton.getStyle().set("top","-10px").set("position","relative");
+        doesNotContainsTemporalInfoMessage.add(messageLogo,messageLabel,attachTimeScalaEntityButton);
         add(doesNotContainsTemporalInfoMessage);
 
         temporalEntityAndChartContainer = new HorizontalLayout();
