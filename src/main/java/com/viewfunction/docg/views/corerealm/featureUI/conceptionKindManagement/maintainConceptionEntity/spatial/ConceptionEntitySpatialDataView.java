@@ -17,8 +17,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.GeospatialScaleDataPair;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialScaleEventsMaintain.AttachGeospatialScaleEventsOfConceptionEntityView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingDataListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +46,7 @@ public class ConceptionEntitySpatialDataView extends VerticalLayout {
         attachGeoScalaEntityButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //refreshTemporalEventAttributesInfo();
+                renderAttachGeospatialScaleEventsOfConceptionEntityView();
             }
         });
 
@@ -133,5 +136,13 @@ public class ConceptionEntitySpatialDataView extends VerticalLayout {
             }
         }
         coreRealm.closeGlobalSession();
+    }
+
+    private void renderAttachGeospatialScaleEventsOfConceptionEntityView(){
+        AttachGeospatialScaleEventsOfConceptionEntityView attachGeospatialScaleEventsOfConceptionEntityView = new AttachGeospatialScaleEventsOfConceptionEntityView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"关联地理空间区域事件",null,true,760,670,false);
+        fixSizeWindow.setWindowContent(attachGeospatialScaleEventsOfConceptionEntityView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }

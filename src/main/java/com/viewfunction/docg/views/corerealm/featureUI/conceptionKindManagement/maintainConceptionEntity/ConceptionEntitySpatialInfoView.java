@@ -17,8 +17,10 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialScaleEventsMaintain.AttachGeospatialScaleEventsOfConceptionEntityView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.spatial.ConceptionEntitySpatialDataView;
 
 import java.util.List;
@@ -65,7 +67,7 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
         attachGeoScalaEntityButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //refreshTemporalEventAttributesInfo();
+                renderAttachGeospatialScaleEventsOfConceptionEntityView();
             }
         });
         attachGeoScalaEntityButton.getStyle().set("top","-10px").set("position","relative");
@@ -122,5 +124,13 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
         }  finally {
             coreRealm.closeGlobalSession();
         }
+    }
+
+    private void renderAttachGeospatialScaleEventsOfConceptionEntityView(){
+        AttachGeospatialScaleEventsOfConceptionEntityView attachGeospatialScaleEventsOfConceptionEntityView = new AttachGeospatialScaleEventsOfConceptionEntityView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"关联地理空间区域事件",null,true,760,670,false);
+        fixSizeWindow.setWindowContent(attachGeospatialScaleEventsOfConceptionEntityView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }
