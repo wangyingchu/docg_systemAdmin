@@ -16,8 +16,10 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.timeScaleEventsMaintain.AttachTimeScaleEventsOfConceptionEntityView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.temporal.ConceptionEntityTemporalDataView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.temporal.ConceptionEntityTemporalSunburstChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.temporal.ConceptionEntityTemporalTimelineChart;
@@ -67,7 +69,7 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
         attachTimeScalaEntityButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //refreshTemporalEventAttributesInfo();
+                renderAttachTimeScaleEventsOfConceptionEntityView();
             }
         });
         attachTimeScalaEntityButton.getStyle().set("top","-10px").set("position","relative");
@@ -149,5 +151,13 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
         }   finally {
             coreRealm.closeGlobalSession();
         }
+    }
+
+    private void renderAttachTimeScaleEventsOfConceptionEntityView(){
+        AttachTimeScaleEventsOfConceptionEntityView attachTimeScaleEventsOfConceptionEntityView = new AttachTimeScaleEventsOfConceptionEntityView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"关联时间序列事件",null,true,760,670,false);
+        fixSizeWindow.setWindowContent(attachTimeScaleEventsOfConceptionEntityView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }

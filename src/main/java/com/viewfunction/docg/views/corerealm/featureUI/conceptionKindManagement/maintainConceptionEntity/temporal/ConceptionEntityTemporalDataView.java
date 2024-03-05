@@ -16,8 +16,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleDataPair;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.timeScaleEventsMaintain.AttachTimeScaleEventsOfConceptionEntityView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,7 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
         attachTimeScalaEntityButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //refreshTemporalEventAttributesInfo();
+                renderAttachTimeScaleEventsOfConceptionEntityView();
             }
         });
 
@@ -115,5 +117,13 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
             }
         }
         coreRealm.closeGlobalSession();
+    }
+
+    private void renderAttachTimeScaleEventsOfConceptionEntityView(){
+        AttachTimeScaleEventsOfConceptionEntityView attachTimeScaleEventsOfConceptionEntityView = new AttachTimeScaleEventsOfConceptionEntityView();
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"关联时间序列事件",null,true,760,670,false);
+        fixSizeWindow.setWindowContent(attachTimeScaleEventsOfConceptionEntityView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }
