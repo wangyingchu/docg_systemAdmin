@@ -196,11 +196,44 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         Span action0Space = new Span();
         action0Space.setWidth(6,Unit.PIXELS);
         NativeLabel action0Label = new NativeLabel("链接至地理空间区域");
-        //action0Label.addClassNames("text-xs","font-semibold","text-secondary");
         action0Layout.add(action0Icon,action0Space,action0Label);
 
-        MenuItem linkTimeItem = linkDataSubItems.addItem(action0Layout);
-        linkTimeItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+        MenuItem linkGeoItem = linkDataSubItems.addItem(action0Layout);
+
+        HorizontalLayout linkByGeoPropertyActionLayout = new HorizontalLayout();
+        linkByGeoPropertyActionLayout.setPadding(false);
+        linkByGeoPropertyActionLayout.setSpacing(false);
+        linkByGeoPropertyActionLayout.setMargin(false);
+        linkByGeoPropertyActionLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon actionAIcon = VaadinIcon.INPUT.create();
+        actionAIcon.setSize("10px");
+        Span action3Space = new Span();
+        action3Space.setWidth(6,Unit.PIXELS);
+        NativeLabel action3Label = new NativeLabel("根据地理空间属性编码链接");
+        action3Label.addClassNames("text-xs","font-semibold","text-secondary");
+        linkByGeoPropertyActionLayout.add(actionAIcon,action3Space,action3Label);
+        MenuItem linkByGeoPropertyActionItem = linkGeoItem.getSubMenu().addItem(linkByGeoPropertyActionLayout);
+        linkByGeoPropertyActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                renderAttachToGeospatialRegionView();
+            }
+        });
+
+        HorizontalLayout linkByGeoComputeActionLayout = new HorizontalLayout();
+        linkByGeoComputeActionLayout.setPadding(false);
+        linkByGeoComputeActionLayout.setSpacing(false);
+        linkByGeoComputeActionLayout.setMargin(false);
+        linkByGeoComputeActionLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon actionBIcon = VaadinIcon.CALC.create();
+        actionBIcon.setSize("10px");
+        Span actionBSpace = new Span();
+        actionBSpace.setWidth(6,Unit.PIXELS);
+        NativeLabel actionBLabel = new NativeLabel("根据概念实体地理空间计算链接");
+        actionBLabel.addClassNames("text-xs","font-semibold","text-secondary");
+        linkByGeoComputeActionLayout.add(actionBIcon,actionBSpace,actionBLabel);
+        MenuItem linkByGeoComputeActionItem = linkGeoItem.getSubMenu().addItem(linkByGeoComputeActionLayout);
+        linkByGeoComputeActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
                 renderAttachToGeospatialRegionView();
@@ -217,17 +250,49 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         Span action1Space = new Span();
         action1Space.setWidth(6,Unit.PIXELS);
         NativeLabel action1Label = new NativeLabel("链接至时间流");
-        //action1Label.addClassNames("text-xs","font-semibold","text-secondary");
         action1Layout.add(action1Icon,action1Space,action1Label);
 
-        MenuItem linkGeoItem = linkDataSubItems.addItem(action1Layout);
-        linkGeoItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+        MenuItem linkTimeFlowItem = linkDataSubItems.addItem(action1Layout);
+
+        HorizontalLayout linkBySingleTimePropertyActionLayout = new HorizontalLayout();
+        linkBySingleTimePropertyActionLayout.setPadding(false);
+        linkBySingleTimePropertyActionLayout.setSpacing(false);
+        linkBySingleTimePropertyActionLayout.setMargin(false);
+        linkBySingleTimePropertyActionLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon actionCIcon = VaadinIcon.INPUT.create();
+        actionCIcon.setSize("10px");
+        Span actionCSpace = new Span();
+        actionCSpace.setWidth(6,Unit.PIXELS);
+        NativeLabel actionCLabel = new NativeLabel("根据单一时间属性链接");
+        actionCLabel.addClassNames("text-xs","font-semibold","text-secondary");
+        linkBySingleTimePropertyActionLayout.add(actionCIcon,actionCSpace,actionCLabel);
+        MenuItem linkBySingleTimePropertyActionItem = linkTimeFlowItem.getSubMenu().addItem(linkBySingleTimePropertyActionLayout);
+        linkBySingleTimePropertyActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
                 renderAttachToTimeFlowView();
             }
         });
 
+        HorizontalLayout linkByMultiTimePropertyActionLayout = new HorizontalLayout();
+        linkByMultiTimePropertyActionLayout.setPadding(false);
+        linkByMultiTimePropertyActionLayout.setSpacing(false);
+        linkByMultiTimePropertyActionLayout.setMargin(false);
+        linkByMultiTimePropertyActionLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon actionDIcon = VaadinIcon.INPUT.create();
+        actionDIcon.setSize("10px");
+        Span actionDSpace = new Span();
+        actionDSpace.setWidth(6,Unit.PIXELS);
+        NativeLabel actionDLabel = new NativeLabel("根据复合时间属性链接");
+        actionDLabel.addClassNames("text-xs","font-semibold","text-secondary");
+        linkByMultiTimePropertyActionLayout.add(actionDIcon,actionDSpace,actionDLabel);
+        MenuItem linkByMultiTimePropertyActionItem = linkTimeFlowItem.getSubMenu().addItem(linkByMultiTimePropertyActionLayout);
+        linkByMultiTimePropertyActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                renderAttachToTimeFlowView();
+            }
+        });
         infoContainer.add(linkTimpalAndSpitalInfoMenuBar);
 
         Icon divIcon3 = VaadinIcon.LINE_V.create();
