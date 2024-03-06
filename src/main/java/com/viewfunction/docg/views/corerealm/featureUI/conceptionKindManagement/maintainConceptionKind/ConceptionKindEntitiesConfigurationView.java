@@ -35,7 +35,8 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaCon
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.attachToTimeFlowAndGeospatialRegion.AttachConceptionKindEntitiesToGeospatialRegionByGeoComputeView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.attachToTimeFlowAndGeospatialRegion.AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.attachToTimeFlowAndGeospatialRegion.AttachConceptionKindEntitiesToTimeFlowView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.attachToTimeFlowAndGeospatialRegion.AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.attachToTimeFlowAndGeospatialRegion.AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.exchangeConceptionEntities.*;
 
 import java.text.NumberFormat;
@@ -271,7 +272,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         linkBySingleTimePropertyActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                renderAttachToTimeFlowView();
+                renderAttachToTimeFlowBySingleTimePropertyView();
             }
         });
 
@@ -291,7 +292,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         linkByMultiTimePropertyActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                renderAttachToTimeFlowView();
+                renderAttachToTimeFlowByMultiTimePropertyView();
             }
         });
         infoContainer.add(linkTimpalAndSpitalInfoMenuBar);
@@ -522,12 +523,22 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         fixSizeWindow.show();
     }
 
-    private void renderAttachToTimeFlowView(){
-        AttachConceptionKindEntitiesToTimeFlowView attachConceptionKindEntitiesToTimeFlowView =
-                new AttachConceptionKindEntitiesToTimeFlowView(this.conceptionKindName);
+    private void renderAttachToTimeFlowBySingleTimePropertyView(){
+        AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView attachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView =
+                new AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView(this.conceptionKindName);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.TIMER.create(),"链接概念类型实体至时间流",null,true,500,630,false);
-        fixSizeWindow.setWindowContent(attachConceptionKindEntitiesToTimeFlowView);
-        attachConceptionKindEntitiesToTimeFlowView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setWindowContent(attachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView);
+        attachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderAttachToTimeFlowByMultiTimePropertyView(){
+        AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView attachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView =
+                new AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView(this.conceptionKindName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.TIMER.create(),"链接概念类型实体至时间流",null,true,500,825,false);
+        fixSizeWindow.setWindowContent(attachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView);
+        attachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }

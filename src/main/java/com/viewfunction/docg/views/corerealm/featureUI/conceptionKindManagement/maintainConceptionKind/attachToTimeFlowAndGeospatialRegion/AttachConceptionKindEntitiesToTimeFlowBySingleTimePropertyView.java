@@ -39,7 +39,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityM
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class AttachConceptionKindEntitiesToTimeFlowView extends VerticalLayout {
+public class AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView extends VerticalLayout {
     private String conceptionKindName;
     private Dialog containerDialog;
     private ComboBox<KindEntityAttributeRuntimeStatistics> timeEventAttributeSelect;
@@ -50,7 +50,7 @@ public class AttachConceptionKindEntitiesToTimeFlowView extends VerticalLayout {
     private Map<String,AttributeEditorItemWidget> eventAttributeEditorsMap;
     private Button clearAttributeButton;
 
-    public AttachConceptionKindEntitiesToTimeFlowView(String conceptionKindName){
+    public AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
         this.setWidthFull();
 
