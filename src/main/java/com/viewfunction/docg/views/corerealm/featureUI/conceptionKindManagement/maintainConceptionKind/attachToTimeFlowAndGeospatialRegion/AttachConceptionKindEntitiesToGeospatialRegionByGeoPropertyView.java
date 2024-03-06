@@ -35,7 +35,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityM
 
 import java.util.*;
 
-public class AttachConceptionKindEntitiesToGeospatialRegionView extends VerticalLayout {
+public class AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView extends VerticalLayout {
 
     private String conceptionKindName;
     private Dialog containerDialog;
@@ -47,7 +47,7 @@ public class AttachConceptionKindEntitiesToGeospatialRegionView extends Vertical
     private Map<String, AttributeEditorItemWidget> eventAttributeEditorsMap;
     private Button clearAttributeButton;
 
-    public AttachConceptionKindEntitiesToGeospatialRegionView(String conceptionKindName){
+    public AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
         this.setWidthFull();
 

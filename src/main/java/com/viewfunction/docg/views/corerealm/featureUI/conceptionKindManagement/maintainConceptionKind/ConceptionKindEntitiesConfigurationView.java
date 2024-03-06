@@ -33,7 +33,8 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityM
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndexMaintain.KindIndexConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.attachToTimeFlowAndGeospatialRegion.AttachConceptionKindEntitiesToGeospatialRegionView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.attachToTimeFlowAndGeospatialRegion.AttachConceptionKindEntitiesToGeospatialRegionByGeoComputeView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.attachToTimeFlowAndGeospatialRegion.AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.attachToTimeFlowAndGeospatialRegion.AttachConceptionKindEntitiesToTimeFlowView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.exchangeConceptionEntities.*;
 
@@ -216,7 +217,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         linkByGeoPropertyActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                renderAttachToGeospatialRegionView();
+                renderAttachToGeospatialRegionByGeoPropertyViewView();
             }
         });
 
@@ -236,7 +237,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         linkByGeoComputeActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                renderAttachToGeospatialRegionView();
+                renderAttachToGeospatialRegionByGeoComputeView();
             }
         });
 
@@ -501,12 +502,22 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         classificationConfigView.setHeight(viewHeight-500,Unit.PIXELS);
     }
 
-    private void renderAttachToGeospatialRegionView(){
-        AttachConceptionKindEntitiesToGeospatialRegionView attachConceptionKindEntitiesToGeospatialRegionView =
-                new AttachConceptionKindEntitiesToGeospatialRegionView(this.conceptionKindName);
+    private void renderAttachToGeospatialRegionByGeoPropertyViewView(){
+        AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView attachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView =
+                new AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView(this.conceptionKindName);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.GLOBE_WIRE.create(),"链接概念类型实体至地理空间区域",null,true,500,630,false);
-        fixSizeWindow.setWindowContent(attachConceptionKindEntitiesToGeospatialRegionView);
-        attachConceptionKindEntitiesToGeospatialRegionView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setWindowContent(attachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView);
+        attachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderAttachToGeospatialRegionByGeoComputeView(){
+        AttachConceptionKindEntitiesToGeospatialRegionByGeoComputeView attachConceptionKindEntitiesToGeospatialRegionByGeoComputeView =
+                new AttachConceptionKindEntitiesToGeospatialRegionByGeoComputeView(this.conceptionKindName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.GLOBE_WIRE.create(),"链接概念类型实体至地理空间区域",null,true,500,630,false);
+        fixSizeWindow.setWindowContent(attachConceptionKindEntitiesToGeospatialRegionByGeoComputeView);
+        attachConceptionKindEntitiesToGeospatialRegionByGeoComputeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
