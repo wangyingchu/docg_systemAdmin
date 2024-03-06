@@ -17,6 +17,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
@@ -338,7 +339,9 @@ public class AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView ext
         try {
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
-            EntitiesOperationStatistics attachResult = targetConceptionKind.attachGeospatialScaleEvents(null,
+            QueryParameters queryParameters = new QueryParameters();
+            queryParameters.setResultNumber(100000000);
+            EntitiesOperationStatistics attachResult = targetConceptionKind.attachGeospatialScaleEvents(queryParameters,
                     attributeName,selectedGeospatialProperty,null,eventComment,eventData,selectedGeospatialScaleGrade);
             showPopupNotification(attachResult,NotificationVariant.LUMO_SUCCESS);
             if(this.containerDialog != null){
