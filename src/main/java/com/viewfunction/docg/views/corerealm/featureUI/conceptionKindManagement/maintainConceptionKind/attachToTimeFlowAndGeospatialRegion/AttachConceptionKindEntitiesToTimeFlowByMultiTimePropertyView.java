@@ -5,8 +5,10 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -15,13 +17,18 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
@@ -30,10 +37,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView extends VerticalLayout {
     private String conceptionKindName;
@@ -232,7 +236,7 @@ public class AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView exten
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //attachConceptionKindEntitiesToTimeFlow();
+                attachConceptionKindEntitiesToTimeFlow();
             }
         });
         this.eventAttributeEditorsMap = new HashMap<>();
@@ -331,5 +335,167 @@ public class AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView exten
         timeEventAttribute_day_Select.setItems(dataTypeMatchedAttributeList);
         timeEventAttribute_hour_Select.setItems(dataTypeMatchedAttributeList);
         timeEventAttribute_minute_Select.setItems(dataTypeMatchedAttributeList);
+    }
+
+    private void attachConceptionKindEntitiesToTimeFlow(){
+        KindEntityAttributeRuntimeStatistics selectedAttribute_year = timeEventAttribute_year_Select.getValue();
+        KindEntityAttributeRuntimeStatistics selectedAttribute_month = timeEventAttribute_month_Select.getValue();
+        KindEntityAttributeRuntimeStatistics selectedAttribute_day = timeEventAttribute_day_Select.getValue();
+        KindEntityAttributeRuntimeStatistics selectedAttribute_hour = timeEventAttribute_hour_Select.getValue();
+        KindEntityAttributeRuntimeStatistics selectedAttribute_minute = timeEventAttribute_minute_Select.getValue();
+        TimeFlow.TimeScaleGrade selectedTimeScaleGrade = timeScaleGradeSelect.getValue();
+        String eventComment = eventCommentField.getValue();
+
+        if(selectedAttribute_year == null){
+            CommonUIOperationUtil.showPopupNotification("请选择时间事件年份属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
+        if(selectedTimeScaleGrade == null){
+            CommonUIOperationUtil.showPopupNotification("请选择事件时间刻度", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
+        if(eventComment.equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入时间事件备注", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
+
+        switch(selectedTimeScaleGrade){
+            case MONTH :
+                if(selectedAttribute_month == null){
+                    CommonUIOperationUtil.showPopupNotification("请选择时间事件月份属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                    return;
+                }
+                break;
+            case DAY:
+                if(selectedAttribute_month == null){
+                    CommonUIOperationUtil.showPopupNotification("请选择时间事件月份属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                    return;
+                }
+                if(selectedAttribute_day == null){
+                    CommonUIOperationUtil.showPopupNotification("请选择时间事件日属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                    return;
+                }
+                break;
+            case HOUR:
+                if(selectedAttribute_month == null){
+                    CommonUIOperationUtil.showPopupNotification("请选择时间事件月份属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                    return;
+                }
+                if(selectedAttribute_day == null){
+                    CommonUIOperationUtil.showPopupNotification("请选择时间事件日属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                    return;
+                }
+                if(selectedAttribute_hour == null){
+                    CommonUIOperationUtil.showPopupNotification("请选择时间事件小时属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                    return;
+                }
+                break;
+            case MINUTE:
+                if(selectedAttribute_month == null){
+                    CommonUIOperationUtil.showPopupNotification("请选择时间事件月份属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                    return;
+                }
+                if(selectedAttribute_day == null){
+                    CommonUIOperationUtil.showPopupNotification("请选择时间事件日属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                    return;
+                }
+                if(selectedAttribute_hour == null){
+                    CommonUIOperationUtil.showPopupNotification("请选择时间事件小时属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                    return;
+                }
+                if(selectedAttribute_minute == null){
+                    CommonUIOperationUtil.showPopupNotification("请选择时间事件分钟属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                    return;
+                }
+        }
+
+        List<Button> actionButtonList = new ArrayList<>();
+
+        Button confirmButton = new Button("确认链接概念类型实体至时间流",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行链接概念类型实体至时间流操作",actionButtonList,400,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doAttachConceptionKindEntitiesToTimeFlow();
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doAttachConceptionKindEntitiesToTimeFlow(){
+        Map<String, Object> eventData = eventAttributeEditorsMap.isEmpty() ? null : new HashMap<>();
+        if(!eventAttributeEditorsMap.isEmpty()){
+            Set<String> commentPropertiesNameSet = eventAttributeEditorsMap.keySet();
+            for(String currentPropertyName:commentPropertiesNameSet){
+                AttributeEditorItemWidget attributeEditorItemWidget = eventAttributeEditorsMap.get(currentPropertyName);
+                eventData.put(attributeEditorItemWidget.getAttributeName(),attributeEditorItemWidget.getAttributeValue().getAttributeValue());
+            }
+        }
+
+        KindEntityAttributeRuntimeStatistics selectedAttribute_year = timeEventAttribute_year_Select.getValue();
+        KindEntityAttributeRuntimeStatistics selectedAttribute_month = timeEventAttribute_month_Select.getValue();
+        KindEntityAttributeRuntimeStatistics selectedAttribute_day = timeEventAttribute_day_Select.getValue();
+        KindEntityAttributeRuntimeStatistics selectedAttribute_hour = timeEventAttribute_hour_Select.getValue();
+        KindEntityAttributeRuntimeStatistics selectedAttribute_minute = timeEventAttribute_minute_Select.getValue();
+        TimeFlow.TimeScaleGrade selectedTimeScaleGrade = timeScaleGradeSelect.getValue();
+        String eventComment = eventCommentField.getValue();
+
+        String attributeName_year = selectedAttribute_year.getAttributeName();
+        String attributeName_month = selectedAttribute_month != null ? selectedAttribute_month.getAttributeName() : null;
+        String attributeName_day = selectedAttribute_month != null ? selectedAttribute_day.getAttributeName() : null;
+        String attributeName_hour = selectedAttribute_month != null ? selectedAttribute_hour.getAttributeName() : null;
+        String attributeName_minute = selectedAttribute_month != null ? selectedAttribute_minute.getAttributeName() : null;
+
+        try {
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+            QueryParameters queryParameters = new QueryParameters();
+            queryParameters.setResultNumber(100000000);
+            EntitiesOperationStatistics attachResult = targetConceptionKind.attachTimeScaleEvents(queryParameters,attributeName_year,attributeName_month,attributeName_day,attributeName_hour,attributeName_minute,null,eventComment,eventData,selectedTimeScaleGrade);
+            showPopupNotification(attachResult,NotificationVariant.LUMO_SUCCESS);
+            if(this.containerDialog != null){
+                this.containerDialog.close();
+            }
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showPopupNotification(EntitiesOperationStatistics conceptionEntitiesAttributesRetrieveResult, NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text("概念类型 "+conceptionKindName+" 链接概念类型实体至时间流操作成功"));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
+
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        notificationMessageContainer.add(new Div(new Text("链接实体数: "+conceptionEntitiesAttributesRetrieveResult.getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("操作开始时间: "+conceptionEntitiesAttributesRetrieveResult.getStartTime())));
+        notificationMessageContainer.add(new Div(new Text("操作结束时间: "+conceptionEntitiesAttributesRetrieveResult.getFinishTime())));
+        notification.add(notificationMessageContainer);
+        notification.setDuration(3000);
+        notification.open();
     }
 }

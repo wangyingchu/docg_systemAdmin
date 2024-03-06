@@ -17,6 +17,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
@@ -363,7 +364,9 @@ public class AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView exte
         try {
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
-            EntitiesOperationStatistics attachResult = targetConceptionKind.attachTimeScaleEvents(null,attributeName,dateTimeFormatter,null,eventComment,eventData,selectedTimeScaleGrade);
+            QueryParameters queryParameters = new QueryParameters();
+            queryParameters.setResultNumber(100000000);
+            EntitiesOperationStatistics attachResult = targetConceptionKind.attachTimeScaleEvents(queryParameters,attributeName,dateTimeFormatter,null,eventComment,eventData,selectedTimeScaleGrade);
             showPopupNotification(attachResult,NotificationVariant.LUMO_SUCCESS);
             if(this.containerDialog != null){
                 this.containerDialog.close();
