@@ -47,6 +47,7 @@ public class AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView ext
     private VerticalLayout eventEntityAttributesContainer;
     private Map<String, AttributeEditorItemWidget> eventAttributeEditorsMap;
     private Button clearAttributeButton;
+    private ComboBox<String> geospatialRegionNameSelect;
 
     public AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
@@ -60,6 +61,15 @@ public class AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView ext
 
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
+
+        geospatialRegionNameSelect = new ComboBox<>("地理空间区域名称");
+        geospatialRegionNameSelect.setRequired(true);
+        geospatialRegionNameSelect.setRequiredIndicatorVisible(true);
+        geospatialRegionNameSelect.setAllowCustomValue(false);
+        geospatialRegionNameSelect.setPageSize(5);
+        geospatialRegionNameSelect.setPlaceholder("选择地理空间区域名称");
+        geospatialRegionNameSelect.setWidthFull();
+        add(geospatialRegionNameSelect);
 
         geospatialEventAttributeSelect = new ComboBox<>("地理空间事件属性");
         geospatialEventAttributeSelect.setRequired(true);
@@ -184,6 +194,7 @@ public class AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView ext
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         loadAttributeNamesComboBox();
+        loadGeospatialRegionNameSelect();
     }
 
     public void setContainerDialog(Dialog containerDialog) {
@@ -257,6 +268,21 @@ public class AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView ext
         geospatialEventAttributeSelect.setItems(dataTypeMatchedAttributeList);
     }
 
+    private void loadGeospatialRegionNameSelect(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        List<GeospatialRegion> geospatialRegionList = coreRealm.getGeospatialRegions();
+        if(geospatialRegionList != null){
+            List<String> geospatialRegionNameList = new ArrayList<>();
+            for(GeospatialRegion currentGeospatialRegion : geospatialRegionList){
+                geospatialRegionNameList.add(currentGeospatialRegion.getGeospatialRegionName());
+            }
+            geospatialRegionNameSelect.setItems(geospatialRegionNameList);
+            if(!geospatialRegionNameList.isEmpty()){
+                geospatialRegionNameSelect.setValue(geospatialRegionNameList.get(0));
+            }
+        }
+    }
+
     private Renderer<KindEntityAttributeRuntimeStatistics> createRenderer() {
         StringBuilder tpl = new StringBuilder();
         tpl.append("<div style=\"display: flex;\">");
@@ -272,11 +298,16 @@ public class AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView ext
     }
 
     private void attachConceptionKindEntitiesToGeospatialRegion(){
+        String geospatialRegionName = geospatialRegionNameSelect.getValue();
         KindEntityAttributeRuntimeStatistics selectedAttribute = geospatialEventAttributeSelect.getValue();
         GeospatialRegion.GeospatialProperty selectedGeospatialProperty = eventPropertyGeospatialPropertySelect.getValue();
         GeospatialRegion.GeospatialScaleGrade selectedGeospatialScaleGrade = geospatialScaleGradeSelect.getValue();
         String eventComment = eventCommentField.getValue();
 
+        if(geospatialRegionName == null){
+            CommonUIOperationUtil.showPopupNotification("请选择地理空间区域名称", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
         if(selectedAttribute == null){
             CommonUIOperationUtil.showPopupNotification("请选择地理空间事件属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
             return;
@@ -330,6 +361,7 @@ public class AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView ext
             }
         }
 
+        String geospatialRegionName = geospatialRegionNameSelect.getValue();
         KindEntityAttributeRuntimeStatistics selectedAttribute = geospatialEventAttributeSelect.getValue();
         String attributeName = selectedAttribute.getAttributeName();
         GeospatialRegion.GeospatialProperty selectedGeospatialProperty = eventPropertyGeospatialPropertySelect.getValue();
@@ -342,7 +374,7 @@ public class AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView ext
             QueryParameters queryParameters = new QueryParameters();
             queryParameters.setResultNumber(100000000);
             EntitiesOperationStatistics attachResult = targetConceptionKind.attachGeospatialScaleEvents(queryParameters,
-                    attributeName,selectedGeospatialProperty,null,eventComment,eventData,selectedGeospatialScaleGrade);
+                    attributeName,selectedGeospatialProperty,geospatialRegionName,eventComment,eventData,selectedGeospatialScaleGrade);
             showPopupNotification(attachResult,NotificationVariant.LUMO_SUCCESS);
             if(this.containerDialog != null){
                 this.containerDialog.close();
