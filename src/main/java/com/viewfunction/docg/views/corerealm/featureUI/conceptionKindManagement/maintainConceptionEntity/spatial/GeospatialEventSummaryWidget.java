@@ -41,7 +41,6 @@ public class GeospatialEventSummaryWidget extends HorizontalLayout {
         Icon summaryIcon = LineAwesomeIconsSvg.MAP_MARKED_ALT_SOLID.create();
         summaryIcon.setSize("16px");
         summaryIcon.getStyle().set("padding-right","5px");
-        summaryIcon.setTooltipText(geospatialRegionName);
         dateInfoContainer.add(summaryIcon);
 
         NativeLabel geospatialTextLabel1 = new NativeLabel(this.geospatialScaleEntity.getGeospatialCode());
@@ -70,9 +69,15 @@ public class GeospatialEventSummaryWidget extends HorizontalLayout {
         divIcon1_2.setSize("8px");
         dateInfoContainer.add(divIcon1_2);
 
-        NativeLabel timeScaleGradeLabel = new NativeLabel(timeScaleGrade.toString());
-        timeScaleGradeLabel.addClassNames("text-xs","font-semibold","text-secondary");
-        dateInfoContainer.add(timeScaleGradeLabel);
+        NativeLabel geospatialScaleGradeLabel = new NativeLabel(timeScaleGrade.toString());
+        geospatialScaleGradeLabel.addClassNames("text-xs","font-semibold","text-secondary");
+        dateInfoContainer.add(geospatialScaleGradeLabel);
+
+        Icon infoIcon = VaadinIcon.INFO_CIRCLE_O.create();
+        infoIcon.setSize("12px");
+        infoIcon.getStyle().set("padding-left","5px");
+        infoIcon.setTooltipText(geospatialRegionName);
+        dateInfoContainer.add(infoIcon);
 
         NativeLabel eventTitleLabel = new NativeLabel(this.geospatialScaleEvent.getEventComment());
         add(eventTitleLabel);

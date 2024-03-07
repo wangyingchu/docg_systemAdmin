@@ -64,7 +64,6 @@ public class TemporalEventSummaryWidget extends HorizontalLayout {
         Icon summaryIcon = VaadinIcon.CALENDAR.create();
         summaryIcon.setSize("14px");
         summaryIcon.getStyle().set("padding-right","5px");
-        summaryIcon.setTooltipText(timeFlowName);
         dateInfoContainer.add(summaryIcon);
 
         NativeLabel temporalTextLabel = new NativeLabel(referTimeString);
@@ -78,6 +77,12 @@ public class TemporalEventSummaryWidget extends HorizontalLayout {
         NativeLabel timeScaleGradeLabel = new NativeLabel(timeScaleGrade.toString());
         timeScaleGradeLabel.addClassNames("text-xs","font-semibold","text-secondary");
         dateInfoContainer.add(timeScaleGradeLabel);
+
+        Icon infoIcon = VaadinIcon.INFO_CIRCLE_O.create();
+        infoIcon.setSize("12px");
+        infoIcon.getStyle().set("padding-left","5px");
+        infoIcon.setTooltipText(timeFlowName);
+        dateInfoContainer.add(infoIcon);
 
         NativeLabel eventTitleLabel = new NativeLabel(this.timeScaleEvent.getEventComment());
         add(eventTitleLabel);
