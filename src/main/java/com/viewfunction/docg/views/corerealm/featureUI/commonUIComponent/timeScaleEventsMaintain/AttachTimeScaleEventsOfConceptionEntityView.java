@@ -1083,9 +1083,12 @@ public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout 
     }
 
     private void attachConceptionEntityToTimeFlow(){
-        TimeFlow.TimeScaleGrade selectedTimeScaleGrade = queryTimeScaleGrade;
+        Set<TimeScaleEntity> selectedTimeScaleEntitySet = timeScaleEntitiesGrid.getSelectedItems();
+        if(selectedTimeScaleEntitySet == null || selectedTimeScaleEntitySet.isEmpty()){
+            CommonUIOperationUtil.showPopupNotification("请选择至少一项时间尺度实体", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
         String eventComment = eventCommentField.getValue();
-
         if(eventComment.equals("")){
             CommonUIOperationUtil.showPopupNotification("请输入时间事件备注", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
             return;
@@ -1118,20 +1121,51 @@ public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout 
     }
 
     private void doAttachConceptionEntityToTimeFlow(){
-        Map<String, Object> eventData = eventAttributeEditorsMap.isEmpty() ? null : new HashMap<>();
-        if(!eventAttributeEditorsMap.isEmpty()){
-            Set<String> commentPropertiesNameSet = eventAttributeEditorsMap.keySet();
-            for(String currentPropertyName:commentPropertiesNameSet){
-                AttributeEditorItemWidget attributeEditorItemWidget = eventAttributeEditorsMap.get(currentPropertyName);
-                eventData.put(attributeEditorItemWidget.getAttributeName(),attributeEditorItemWidget.getAttributeValue().getAttributeValue());
+        Set<TimeScaleEntity> selectedTimeScaleEntitySet = timeScaleEntitiesGrid.getSelectedItems();
+        if(selectedTimeScaleEntitySet != null & !selectedTimeScaleEntitySet.isEmpty()){
+            Map<String, Object> eventData = eventAttributeEditorsMap.isEmpty() ? null : new HashMap<>();
+            if(!eventAttributeEditorsMap.isEmpty()){
+                Set<String> commentPropertiesNameSet = eventAttributeEditorsMap.keySet();
+                for(String currentPropertyName:commentPropertiesNameSet){
+                    AttributeEditorItemWidget attributeEditorItemWidget = eventAttributeEditorsMap.get(currentPropertyName);
+                    eventData.put(attributeEditorItemWidget.getAttributeName(),attributeEditorItemWidget.getAttributeValue().getAttributeValue());
+                }
             }
+
+            TimeFlow.TimeScaleGrade selectedTimeScaleGrade = queryTimeScaleGrade;
+            String eventComment = eventCommentField.getValue();
+            String timeFlowName = timeFlowNameSelect.getValue();
+
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            coreRealm.openGlobalSession();
+            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+            ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+
+
+            for(TimeScaleEntity currentTimeScaleEntity : selectedTimeScaleEntitySet){
+                try {
+                    targetConceptionEntity.attachTimeScaleEvent(timeFlowName,null,eventComment,eventData,selectedTimeScaleGrade);
+
+
+                } catch (CoreRealmServiceRuntimeException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+
+
+
+
+
+
         }
 
 
 
-        TimeFlow.TimeScaleGrade selectedTimeScaleGrade = queryTimeScaleGrade;
-        String eventComment = eventCommentField.getValue();
-        String timeFlowName = timeFlowNameSelect.getValue();
+
+
+
+
  /*
         try {
 
