@@ -50,6 +50,7 @@ public class AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView exte
     private VerticalLayout eventEntityAttributesContainer;
     private Map<String,AttributeEditorItemWidget> eventAttributeEditorsMap;
     private Button clearAttributeButton;
+    private ComboBox<String> timeFlowNameSelect;
 
     public AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
@@ -63,6 +64,15 @@ public class AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView exte
 
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
+
+        timeFlowNameSelect = new ComboBox<>("时间流名称");
+        timeFlowNameSelect.setRequired(true);
+        timeFlowNameSelect.setRequiredIndicatorVisible(true);
+        timeFlowNameSelect.setAllowCustomValue(false);
+        timeFlowNameSelect.setPageSize(5);
+        timeFlowNameSelect.setPlaceholder("选择时间流名称");
+        timeFlowNameSelect.setWidthFull();
+        add(timeFlowNameSelect);
 
         timeEventAttributeSelect = new ComboBox<>("时间事件属性");
         timeEventAttributeSelect.setRequired(true);
@@ -206,20 +216,22 @@ public class AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView exte
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        loadAttributeNamesComboBox();
+        loadAttributesInfoComboBox();
     }
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
     }
 
-    private void loadAttributeNamesComboBox(){
+    private void loadAttributesInfoComboBox(){
         int entityAttributesDistributionStatisticSampleRatio = 20000;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKindName);
         List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList =
                 targetConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
+
+        List<TimeFlow> timeFlowsList = coreRealm.getTimeFlows();
         coreRealm.closeGlobalSession();
 
         List<KindEntityAttributeRuntimeStatistics> dataTypeMatchedAttributeList = new ArrayList<>();
@@ -230,6 +242,17 @@ public class AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView exte
             }
         }
         timeEventAttributeSelect.setItems(dataTypeMatchedAttributeList);
+
+        if(timeFlowsList != null){
+            List<String> timeFlowNames = new ArrayList<>();
+            for(TimeFlow currentTimeFlow : timeFlowsList){
+                timeFlowNames.add(currentTimeFlow.getTimeFlowName());
+            }
+            timeFlowNameSelect.setItems(timeFlowNames);
+            if(!timeFlowNames.isEmpty()){
+                timeFlowNameSelect.setValue(timeFlowNames.get(0));
+            }
+        }
     }
 
     private Renderer<KindEntityAttributeRuntimeStatistics> createRenderer() {
@@ -299,6 +322,11 @@ public class AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView exte
         String inputDateTimeFormatter = dateTimeFormatterSelect.getValue();
         TimeFlow.TimeScaleGrade selectedTimeScaleGrade = timeScaleGradeSelect.getValue();
         String eventComment = eventCommentField.getValue();
+        String timeFlowName = timeFlowNameSelect.getValue();
+        if(timeFlowName == null){
+            CommonUIOperationUtil.showPopupNotification("请选择时间流名称", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
         if(selectedAttribute == null){
             CommonUIOperationUtil.showPopupNotification("请选择时间事件属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
             return;
@@ -360,13 +388,14 @@ public class AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView exte
         attributeType.equals(AttributeDataType.STRING) ? DateTimeFormatter.ofPattern(inputDateTimeFormatter) : null;
         TimeFlow.TimeScaleGrade selectedTimeScaleGrade = timeScaleGradeSelect.getValue();
         String eventComment = eventCommentField.getValue();
+        String timeFlowName = timeFlowNameSelect.getValue();
 
         try {
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
             QueryParameters queryParameters = new QueryParameters();
             queryParameters.setResultNumber(100000000);
-            EntitiesOperationStatistics attachResult = targetConceptionKind.attachTimeScaleEvents(queryParameters,attributeName,dateTimeFormatter,null,eventComment,eventData,selectedTimeScaleGrade);
+            EntitiesOperationStatistics attachResult = targetConceptionKind.attachTimeScaleEvents(queryParameters,attributeName,dateTimeFormatter,timeFlowName,eventComment,eventData,selectedTimeScaleGrade);
             showPopupNotification(attachResult,NotificationVariant.LUMO_SUCCESS);
             if(this.containerDialog != null){
                 this.containerDialog.close();

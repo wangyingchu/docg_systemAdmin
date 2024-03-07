@@ -526,7 +526,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     private void renderAttachToTimeFlowBySingleTimePropertyView(){
         AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView attachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView =
                 new AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.TIMER.create(),"链接概念类型实体至时间流",null,true,500,630,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.TIMER.create(),"链接概念类型实体至时间流",null,true,500,695,false);
         fixSizeWindow.setWindowContent(attachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView);
         attachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
@@ -536,7 +536,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     private void renderAttachToTimeFlowByMultiTimePropertyView(){
         AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView attachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView =
                 new AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.TIMER.create(),"链接概念类型实体至时间流",null,true,500,825,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.TIMER.create(),"链接概念类型实体至时间流",null,true,500,860,false);
         fixSizeWindow.setWindowContent(attachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView);
         attachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);

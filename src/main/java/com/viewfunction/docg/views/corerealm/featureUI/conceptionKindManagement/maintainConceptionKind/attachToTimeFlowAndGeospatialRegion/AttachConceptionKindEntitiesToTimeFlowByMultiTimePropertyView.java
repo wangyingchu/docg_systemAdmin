@@ -52,6 +52,7 @@ public class AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView exten
     private ComboBox<KindEntityAttributeRuntimeStatistics> timeEventAttribute_day_Select;
     private ComboBox<KindEntityAttributeRuntimeStatistics> timeEventAttribute_hour_Select;
     private ComboBox<KindEntityAttributeRuntimeStatistics> timeEventAttribute_minute_Select;
+    private ComboBox<String> timeFlowNameSelect;
 
     public AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
@@ -65,6 +66,15 @@ public class AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView exten
 
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
+
+        timeFlowNameSelect = new ComboBox<>("时间流名称");
+        timeFlowNameSelect.setRequired(true);
+        timeFlowNameSelect.setRequiredIndicatorVisible(true);
+        timeFlowNameSelect.setAllowCustomValue(false);
+        timeFlowNameSelect.setPageSize(5);
+        timeFlowNameSelect.setPlaceholder("选择时间流名称");
+        timeFlowNameSelect.setWidthFull();
+        add(timeFlowNameSelect);
 
         timeEventAttribute_year_Select = new ComboBox<>("时间事件年份属性");
         timeEventAttribute_year_Select.setRequired(true);
@@ -218,7 +228,7 @@ public class AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView exten
         eventEntityAttributesContainer.setWidth(100, Unit.PERCENTAGE);
 
         Scroller relationEntityAttributesScroller = new Scroller(eventEntityAttributesContainer);
-        relationEntityAttributesScroller.setHeight(150,Unit.PIXELS);
+        relationEntityAttributesScroller.setHeight(120,Unit.PIXELS);
         relationEntityAttributesScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         add(relationEntityAttributesScroller);
 
@@ -249,7 +259,7 @@ public class AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView exten
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        loadAttributeNamesComboBox();
+        loadAttributesInfoComboBox();
     }
 
     private void renderAddNewAttributeUI(){
@@ -314,13 +324,15 @@ public class AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView exten
         clearAttributeButton.setEnabled(false);
     }
 
-    private void loadAttributeNamesComboBox(){
+    private void loadAttributesInfoComboBox(){
         int entityAttributesDistributionStatisticSampleRatio = 20000;
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKindName);
         List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList =
                 targetConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
+
+        List<TimeFlow> timeFlowsList = coreRealm.getTimeFlows();
         coreRealm.closeGlobalSession();
 
         List<KindEntityAttributeRuntimeStatistics> dataTypeMatchedAttributeList = new ArrayList<>();
@@ -335,6 +347,17 @@ public class AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView exten
         timeEventAttribute_day_Select.setItems(dataTypeMatchedAttributeList);
         timeEventAttribute_hour_Select.setItems(dataTypeMatchedAttributeList);
         timeEventAttribute_minute_Select.setItems(dataTypeMatchedAttributeList);
+
+        if(timeFlowsList != null){
+            List<String> timeFlowNames = new ArrayList<>();
+            for(TimeFlow currentTimeFlow : timeFlowsList){
+                timeFlowNames.add(currentTimeFlow.getTimeFlowName());
+            }
+            timeFlowNameSelect.setItems(timeFlowNames);
+            if(!timeFlowNames.isEmpty()){
+                timeFlowNameSelect.setValue(timeFlowNames.get(0));
+            }
+        }
     }
 
     private void attachConceptionKindEntitiesToTimeFlow(){
@@ -345,7 +368,12 @@ public class AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView exten
         KindEntityAttributeRuntimeStatistics selectedAttribute_minute = timeEventAttribute_minute_Select.getValue();
         TimeFlow.TimeScaleGrade selectedTimeScaleGrade = timeScaleGradeSelect.getValue();
         String eventComment = eventCommentField.getValue();
+        String timeFlowName = timeFlowNameSelect.getValue();
 
+        if(timeFlowName == null){
+            CommonUIOperationUtil.showPopupNotification("请选择时间流名称", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
         if(selectedAttribute_year == null){
             CommonUIOperationUtil.showPopupNotification("请选择时间事件年份属性", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
             return;
@@ -452,6 +480,7 @@ public class AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView exten
         KindEntityAttributeRuntimeStatistics selectedAttribute_minute = timeEventAttribute_minute_Select.getValue();
         TimeFlow.TimeScaleGrade selectedTimeScaleGrade = timeScaleGradeSelect.getValue();
         String eventComment = eventCommentField.getValue();
+        String timeFlowName = timeFlowNameSelect.getValue();
 
         String attributeName_year = selectedAttribute_year.getAttributeName();
         String attributeName_month = selectedAttribute_month != null ? selectedAttribute_month.getAttributeName() : null;
@@ -464,7 +493,7 @@ public class AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView exten
             ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
             QueryParameters queryParameters = new QueryParameters();
             queryParameters.setResultNumber(100000000);
-            EntitiesOperationStatistics attachResult = targetConceptionKind.attachTimeScaleEvents(queryParameters,attributeName_year,attributeName_month,attributeName_day,attributeName_hour,attributeName_minute,null,eventComment,eventData,selectedTimeScaleGrade);
+            EntitiesOperationStatistics attachResult = targetConceptionKind.attachTimeScaleEvents(queryParameters,attributeName_year,attributeName_month,attributeName_day,attributeName_hour,attributeName_minute,timeFlowName,eventComment,eventData,selectedTimeScaleGrade);
             showPopupNotification(attachResult,NotificationVariant.LUMO_SUCCESS);
             if(this.containerDialog != null){
                 this.containerDialog.close();
