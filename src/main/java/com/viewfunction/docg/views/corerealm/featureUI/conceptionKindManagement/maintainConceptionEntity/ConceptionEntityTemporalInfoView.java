@@ -155,7 +155,7 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
 
     private void renderAttachTimeScaleEventsOfConceptionEntityView(){
         AttachTimeScaleEventsOfConceptionEntityView attachTimeScaleEventsOfConceptionEntityView = new AttachTimeScaleEventsOfConceptionEntityView(this.conceptionKind,this.conceptionEntityUID);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"关联时间序列事件",null,true,760,670,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"关联时间序列事件",null,true,1090,580,false);
         fixSizeWindow.setWindowContent(attachTimeScaleEventsOfConceptionEntityView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
