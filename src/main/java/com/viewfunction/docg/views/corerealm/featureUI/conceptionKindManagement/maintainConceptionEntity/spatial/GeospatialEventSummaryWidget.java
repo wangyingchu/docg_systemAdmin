@@ -29,6 +29,7 @@ public class GeospatialEventSummaryWidget extends HorizontalLayout {
     public GeospatialEventSummaryWidget(GeospatialScaleEvent geospatialScaleEvent, GeospatialScaleEntity geospatialScaleEntity){
         this.geospatialScaleEvent = geospatialScaleEvent;
         this.geospatialScaleEntity = geospatialScaleEntity;
+        String geospatialRegionName = geospatialScaleEvent.getGeospatialRegionName();
 
         GeospatialRegion.GeospatialScaleGrade timeScaleGrade = geospatialScaleEvent.getGeospatialScaleGrade();
 
@@ -40,6 +41,7 @@ public class GeospatialEventSummaryWidget extends HorizontalLayout {
         Icon summaryIcon = LineAwesomeIconsSvg.MAP_MARKED_ALT_SOLID.create();
         summaryIcon.setSize("16px");
         summaryIcon.getStyle().set("padding-right","5px");
+        summaryIcon.setTooltipText(geospatialRegionName);
         dateInfoContainer.add(summaryIcon);
 
         NativeLabel geospatialTextLabel1 = new NativeLabel(this.geospatialScaleEntity.getGeospatialCode());

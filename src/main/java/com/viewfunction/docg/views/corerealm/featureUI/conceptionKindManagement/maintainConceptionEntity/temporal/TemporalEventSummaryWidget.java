@@ -64,6 +64,7 @@ public class TemporalEventSummaryWidget extends HorizontalLayout {
         Icon summaryIcon = VaadinIcon.CALENDAR.create();
         summaryIcon.setSize("14px");
         summaryIcon.getStyle().set("padding-right","5px");
+        summaryIcon.setTooltipText(timeFlowName);
         dateInfoContainer.add(summaryIcon);
 
         NativeLabel temporalTextLabel = new NativeLabel(referTimeString);
