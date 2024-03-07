@@ -9,6 +9,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -24,6 +25,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleMoment;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
@@ -35,13 +37,9 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
-import com.viewfunction.docg.views.corerealm.featureUI.timeFlowManagement.maintainTimeFlow.TimeFlowDetailUI;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout {
     private String conceptionKind;
@@ -590,7 +588,7 @@ public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //attachConceptionKindEntitiesToTimeFlow();
+                attachConceptionEntityToTimeFlow();
             }
         });
         this.eventAttributeEditorsMap = new HashMap<>();
@@ -1082,5 +1080,97 @@ public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout 
         eventEntityAttributesContainer.removeAll();
         eventAttributeEditorsMap.clear();
         clearAttributeButton.setEnabled(false);
+    }
+
+    private void attachConceptionEntityToTimeFlow(){
+        TimeFlow.TimeScaleGrade selectedTimeScaleGrade = queryTimeScaleGrade;
+        String eventComment = eventCommentField.getValue();
+
+        if(eventComment.equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入时间事件备注", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
+
+        List<Button> actionButtonList = new ArrayList<>();
+
+        Button confirmButton = new Button("确认链接概念实体至时间流",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行链接概念实体至时间流操作",actionButtonList,400,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doAttachConceptionEntityToTimeFlow();
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doAttachConceptionEntityToTimeFlow(){
+        Map<String, Object> eventData = eventAttributeEditorsMap.isEmpty() ? null : new HashMap<>();
+        if(!eventAttributeEditorsMap.isEmpty()){
+            Set<String> commentPropertiesNameSet = eventAttributeEditorsMap.keySet();
+            for(String currentPropertyName:commentPropertiesNameSet){
+                AttributeEditorItemWidget attributeEditorItemWidget = eventAttributeEditorsMap.get(currentPropertyName);
+                eventData.put(attributeEditorItemWidget.getAttributeName(),attributeEditorItemWidget.getAttributeValue().getAttributeValue());
+            }
+        }
+
+
+
+        TimeFlow.TimeScaleGrade selectedTimeScaleGrade = queryTimeScaleGrade;
+        String eventComment = eventCommentField.getValue();
+        String timeFlowName = timeFlowNameSelect.getValue();
+ /*
+        try {
+
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+            QueryParameters queryParameters = new QueryParameters();
+            queryParameters.setResultNumber(100000000);
+            EntitiesOperationStatistics attachResult = targetConceptionKind.attachTimeScaleEvents(queryParameters,attributeName,dateTimeFormatter,timeFlowName,eventComment,eventData,selectedTimeScaleGrade);
+            showPopupNotification(attachResult,NotificationVariant.LUMO_SUCCESS);
+
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+
+  */
+    }
+
+    private void showPopupNotification(EntitiesOperationStatistics conceptionEntitiesAttributesRetrieveResult, NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text("概念实体 "+this.conceptionKind+"/"+this.conceptionEntityUID+ " 链接概念类型实体至时间流操作成功"));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
+
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        notificationMessageContainer.add(new Div(new Text("链接实体数: "+conceptionEntitiesAttributesRetrieveResult.getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("操作开始时间: "+conceptionEntitiesAttributesRetrieveResult.getStartTime())));
+        notificationMessageContainer.add(new Div(new Text("操作结束时间: "+conceptionEntitiesAttributesRetrieveResult.getFinishTime())));
+        notification.add(notificationMessageContainer);
+        notification.setDuration(3000);
+        notification.open();
     }
 }
