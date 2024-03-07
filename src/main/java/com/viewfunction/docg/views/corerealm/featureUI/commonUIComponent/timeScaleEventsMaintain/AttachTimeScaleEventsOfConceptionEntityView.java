@@ -12,6 +12,7 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -21,7 +22,9 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleMoment;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -32,7 +35,9 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
+import com.viewfunction.docg.views.corerealm.featureUI.timeFlowManagement.maintainTimeFlow.TimeFlowDetailUI;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,12 +65,15 @@ public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout 
     private VerticalLayout eventEntityAttributesContainer;
     private Map<String, AttributeEditorItemWidget> eventAttributeEditorsMap;
     private Button clearAttributeButton;
+    private NumberFormat numberFormat;
 
     public AttachTimeScaleEventsOfConceptionEntityView (String conceptionKind,String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
 
         this.setSpacing(false);
+
+        this.numberFormat = NumberFormat.getInstance();
 
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
         conceptionKindIcon.setSize("12px");
@@ -420,11 +428,10 @@ public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout 
 
         Button executeQueryButton = new Button("检索时间尺度实体");
         executeQueryButton.setIcon(new Icon(VaadinIcon.SEARCH));
-        executeQueryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //queryTimeScaleEntities();
+                queryTimeScaleEntities();
             }
         });
         leftSideSectionContainerLayout.add(executeQueryButton);
@@ -576,7 +583,7 @@ public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout 
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         rightSideContentLayout.add(spaceDivLayout);
 
-        Button confirmButton = new Button("链接概念类型实体至时间流",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button confirmButton = new Button("链接概念实体至时间流",new Icon(VaadinIcon.CHECK_CIRCLE));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         rightSideContentLayout.add(confirmButton);
         setHorizontalComponentAlignment(Alignment.END,confirmButton);
@@ -664,6 +671,304 @@ public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout 
             startMinuteComboBox.setEnabled(true);
             toMinuteComboBox.setEnabled(true);
         }
+    }
+
+    private void queryTimeScaleEntities(){
+        if(timeFlowNameSelect.getValue() == null){
+            CommonUIOperationUtil.showPopupNotification("请选择时间流名称 ",
+                    NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+            return;
+        }
+
+        if(startYearTextField.isInvalid() || toYearTextField.isInvalid()){
+            CommonUIOperationUtil.showPopupNotification("请输入正确的年时间数值 ",
+                    NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+            return;
+        }
+        timeScaleEntitiesGrid.setItems(new ArrayList<>());
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+
+        TimeFlow targetTimeFlow = coreRealm.getOrCreateTimeFlow(timeFlowNameSelect.getValue());
+
+        List<TimeScaleEntity> resultTimeScaleEntityList = new ArrayList<>();
+        boolean executedQuery = false;
+        DateTimeCheckResult yearDateTimeCheckResult;
+        DateTimeCheckResult monthDateTimeCheckResult;
+        DateTimeCheckResult dayDateTimeCheckResult;
+        DateTimeCheckResult hourDateTimeCheckResult;
+        DateTimeCheckResult minuteDateTimeCheckResult;
+        String queryTimeArea = "";
+        try {
+            switch(queryTimeScaleGrade){
+                case YEAR:
+                    yearDateTimeCheckResult = checkYearInputsData(false);
+                    switch(yearDateTimeCheckResult){
+                        case correct :
+                            resultTimeScaleEntityList.addAll(
+                                    targetTimeFlow.getYearEntities(Integer.parseInt(startYearTextField.getValue()),
+                                            Integer.parseInt(toYearTextField.getValue())));
+                            executedQuery = true;
+                            queryTimeArea = ""+startYearTextField.getValue() + " - "+toYearTextField.getValue();
+                            break;
+                        case singleEntity:
+                            int startYear0 = Integer.parseInt(startYearTextField.getValue());
+                            TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getYearEntity(startYear0);
+                            if(resultTimeScaleEntity != null){
+                                resultTimeScaleEntityList.add(resultTimeScaleEntity);
+                            }
+                            executedQuery = true;
+                            queryTimeArea = ""+startYearTextField.getValue();
+                            break;
+                    }
+                    break;
+                case MONTH:
+                    yearDateTimeCheckResult = checkYearInputsData(true);
+                    monthDateTimeCheckResult = checkDateInputsData(startMonthComboBox,toMonthComboBox,"请输入起始月时间值");
+                    if(!DateTimeCheckResult.inCorrect.equals(yearDateTimeCheckResult) &&
+                            !DateTimeCheckResult.inCorrect.equals(monthDateTimeCheckResult)){
+                        if(DateTimeCheckResult.correct.equals(yearDateTimeCheckResult) &
+                                DateTimeCheckResult.correct.equals(monthDateTimeCheckResult)){
+                            if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() <= startMonthComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束月时间值必须大于起始月时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else{
+                                TimeScaleMoment startTimeScaleMoment1 = new TimeScaleMoment(Integer.parseInt(startYearTextField.getValue()),startMonthComboBox.getValue());
+                                TimeScaleMoment toTimeScaleMoment1 = new TimeScaleMoment(Integer.parseInt(toYearTextField.getValue()),toMonthComboBox.getValue());
+                                resultTimeScaleEntityList.addAll(targetTimeFlow.getMonthEntities(startTimeScaleMoment1,toTimeScaleMoment1));
+                                executedQuery = true;
+                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+ " - "+toYearTextField.getValue()+"/"+toMonthComboBox.getValue();
+                            }
+                        }else{
+                            TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getMonthEntity(Integer.parseInt(startYearTextField.getValue()),startMonthComboBox.getValue());
+                            if(resultTimeScaleEntity != null){
+                                resultTimeScaleEntityList.add(resultTimeScaleEntity);
+                            }
+                            executedQuery = true;
+                            queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue();
+                            break;
+                        }
+                    }
+                    break;
+                case DAY:
+                    yearDateTimeCheckResult = checkYearInputsData(true);
+                    monthDateTimeCheckResult = checkDateInputsData(startMonthComboBox,toMonthComboBox,"请输入起始月时间值");
+                    dayDateTimeCheckResult = checkDateInputsData(startDayComboBox,toDayComboBox,"请输入起始日时间值");
+                    if(!DateTimeCheckResult.inCorrect.equals(yearDateTimeCheckResult) &&
+                            !DateTimeCheckResult.inCorrect.equals(monthDateTimeCheckResult) &&
+                            !DateTimeCheckResult.inCorrect.equals(dayDateTimeCheckResult)){
+                    }{
+                    if(DateTimeCheckResult.correct.equals(yearDateTimeCheckResult) &
+                            DateTimeCheckResult.correct.equals(monthDateTimeCheckResult) &
+                            DateTimeCheckResult.correct.equals(dayDateTimeCheckResult)){
+                        if(Integer.parseInt(toYearTextField.getValue()) < Integer.parseInt(startYearTextField.getValue())){
+                            CommonUIOperationUtil.showPopupNotification("结束年时间值必须大于等于起始年时间值",
+                                    NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                        }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                toMonthComboBox.getValue() < startMonthComboBox.getValue()){
+                            CommonUIOperationUtil.showPopupNotification("结束月时间值必须大于等于起始月时间值",
+                                    NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                        }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                toMonthComboBox.getValue() == startMonthComboBox.getValue() & toDayComboBox.getValue() <= startDayComboBox.getValue()){
+                            CommonUIOperationUtil.showPopupNotification("结束日时间值必须大于起始日时间值",
+                                    NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                        }else{
+                            int startYear2 = Integer.parseInt(startYearTextField.getValue());
+                            int toYear2 = Integer.parseInt(toYearTextField.getValue());
+                            int startMonth2 = startMonthComboBox.getValue();
+                            int toMonth2 = toMonthComboBox.getValue();
+                            int startDay2 = startDayComboBox.getValue();
+                            int toDay2 = toDayComboBox.getValue();
+                            TimeScaleMoment startTimeScaleMoment2 = new TimeScaleMoment(startYear2,startMonth2,startDay2);
+                            TimeScaleMoment toTimeScaleMoment2 = new TimeScaleMoment(toYear2,toMonth2,toDay2);
+                            resultTimeScaleEntityList.addAll(targetTimeFlow.getDayEntities(startTimeScaleMoment2,toTimeScaleMoment2));
+                            executedQuery = true;
+                            queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+ " - "+toYearTextField.getValue()+"/"+toMonthComboBox.getValue()+"/"+toDayComboBox.getValue();
+                        }
+                    }else{
+                        TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getDayEntity(Integer.parseInt(startYearTextField.getValue()),startMonthComboBox.getValue(),startDayComboBox.getValue());
+                        if(resultTimeScaleEntity != null){
+                            resultTimeScaleEntityList.add(resultTimeScaleEntity);
+                        }
+                        executedQuery = true;
+                        queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue();
+                    }
+                }
+                break;
+                case HOUR:
+                    yearDateTimeCheckResult = checkYearInputsData(true);
+                    monthDateTimeCheckResult = checkDateInputsData(startMonthComboBox,toMonthComboBox,"请输入起始月时间值");
+                    dayDateTimeCheckResult = checkDateInputsData(startDayComboBox,toDayComboBox,"请输入起始日时间值");
+                    hourDateTimeCheckResult = checkDateInputsData(startHourComboBox,toHourComboBox,"请输入起始小时时间值");
+                    if(!DateTimeCheckResult.inCorrect.equals(yearDateTimeCheckResult) &&
+                            !DateTimeCheckResult.inCorrect.equals(monthDateTimeCheckResult) &&
+                            !DateTimeCheckResult.inCorrect.equals(dayDateTimeCheckResult) &&
+                            !DateTimeCheckResult.inCorrect.equals(hourDateTimeCheckResult)){
+                        if(DateTimeCheckResult.correct.equals(yearDateTimeCheckResult) &
+                                DateTimeCheckResult.correct.equals(monthDateTimeCheckResult) &
+                                DateTimeCheckResult.correct.equals(dayDateTimeCheckResult) &
+                                DateTimeCheckResult.correct.equals(hourDateTimeCheckResult)){
+                            if(Integer.parseInt(toYearTextField.getValue()) < Integer.parseInt(startYearTextField.getValue())){
+                                CommonUIOperationUtil.showPopupNotification("结束年时间值必须大于等于起始年时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() < startMonthComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束月时间值必须大于等于起始月时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() == startMonthComboBox.getValue() & toDayComboBox.getValue() < startDayComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束日时间值必须大于等于起始日时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() == startMonthComboBox.getValue() & toDayComboBox.getValue() == startDayComboBox.getValue() &
+                                    toHourComboBox.getValue() <= startHourComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束小时时间值必须大于起始小时时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else{
+                                int startYear = Integer.parseInt(startYearTextField.getValue());
+                                int toYear = Integer.parseInt(toYearTextField.getValue());
+                                int startMonth = startMonthComboBox.getValue();
+                                int toMonth = toMonthComboBox.getValue();
+                                int startDay = startDayComboBox.getValue();
+                                int toDay = toDayComboBox.getValue();
+                                int startHour = startHourComboBox.getValue();
+                                int toHour = toHourComboBox.getValue();
+                                TimeScaleMoment startTimeScaleMoment2 = new TimeScaleMoment(startYear,startMonth,startDay,startHour);
+                                TimeScaleMoment toTimeScaleMoment2 = new TimeScaleMoment(toYear,toMonth,toDay,toHour);
+                                resultTimeScaleEntityList.addAll(targetTimeFlow.getHourEntities(startTimeScaleMoment2,toTimeScaleMoment2));
+                                executedQuery = true;
+                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+" "+startHourComboBox.getValue()+ " - "+toYearTextField.getValue()+"/"+toMonthComboBox.getValue()+"/"+toDayComboBox.getValue()+" "+toHourComboBox.getValue();
+                            }
+                        }else{
+                            TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getHourEntity(Integer.parseInt(startYearTextField.getValue()),
+                                    startMonthComboBox.getValue(),startDayComboBox.getValue(),startHourComboBox.getValue());
+                            if(resultTimeScaleEntity != null){
+                                resultTimeScaleEntityList.add(resultTimeScaleEntity);
+                            }
+                            executedQuery = true;
+                            queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+" "+startHourComboBox.getValue();
+                        }
+                    }
+                    break;
+                case MINUTE:
+                    yearDateTimeCheckResult = checkYearInputsData(true);
+                    monthDateTimeCheckResult = checkDateInputsData(startMonthComboBox,toMonthComboBox,"请输入起始月时间值");
+                    dayDateTimeCheckResult = checkDateInputsData(startDayComboBox,toDayComboBox,"请输入起始日时间值");
+                    hourDateTimeCheckResult = checkDateInputsData(startHourComboBox,toHourComboBox,"请输入起始小时时间值");
+                    minuteDateTimeCheckResult = checkDateInputsData(startMinuteComboBox,toMinuteComboBox,"请输入起始分钟时间值");
+                    if(!DateTimeCheckResult.inCorrect.equals(yearDateTimeCheckResult) &&
+                            !DateTimeCheckResult.inCorrect.equals(monthDateTimeCheckResult) &&
+                            !DateTimeCheckResult.inCorrect.equals(dayDateTimeCheckResult) &&
+                            !DateTimeCheckResult.inCorrect.equals(hourDateTimeCheckResult) &&
+                            !DateTimeCheckResult.inCorrect.equals(minuteDateTimeCheckResult)){
+                        if(DateTimeCheckResult.correct.equals(yearDateTimeCheckResult) &
+                                DateTimeCheckResult.correct.equals(monthDateTimeCheckResult) &
+                                DateTimeCheckResult.correct.equals(dayDateTimeCheckResult) &
+                                DateTimeCheckResult.correct.equals(hourDateTimeCheckResult) &
+                                DateTimeCheckResult.correct.equals(minuteDateTimeCheckResult)){
+                            if(Integer.parseInt(toYearTextField.getValue()) < Integer.parseInt(startYearTextField.getValue())){
+                                CommonUIOperationUtil.showPopupNotification("结束年时间值必须大于等于起始年时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() < startMonthComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束月时间值必须大于等于起始月时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() == startMonthComboBox.getValue() & toDayComboBox.getValue() < startDayComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束日时间值必须大于等于起始日时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() == startMonthComboBox.getValue() & toDayComboBox.getValue() == startDayComboBox.getValue() &
+                                    toHourComboBox.getValue() < startHourComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束小时时间值必须大于等于起始小时时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else if(Integer.parseInt(startYearTextField.getValue()) == Integer.parseInt(toYearTextField.getValue()) &
+                                    toMonthComboBox.getValue() == startMonthComboBox.getValue() & toDayComboBox.getValue() == startDayComboBox.getValue() &
+                                    toHourComboBox.getValue() == startHourComboBox.getValue() & toMinuteComboBox.getValue() <= startMinuteComboBox.getValue()){
+                                CommonUIOperationUtil.showPopupNotification("结束分钟时间值必须大于起始分钟时间值",
+                                        NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                            }else{
+                                int startYear = Integer.parseInt(startYearTextField.getValue());
+                                int toYear = Integer.parseInt(toYearTextField.getValue());
+                                int startMonth = startMonthComboBox.getValue();
+                                int toMonth = toMonthComboBox.getValue();
+                                int startDay = startDayComboBox.getValue();
+                                int toDay = toDayComboBox.getValue();
+                                int startHour = startHourComboBox.getValue();
+                                int toHour = toHourComboBox.getValue();
+                                int startMinute = startMinuteComboBox.getValue();
+                                int toMinute = toMinuteComboBox.getValue();
+                                TimeScaleMoment startTimeScaleMoment2 = new TimeScaleMoment(startYear,startMonth,startDay,startHour,startMinute);
+                                TimeScaleMoment toTimeScaleMoment2 = new TimeScaleMoment(toYear,toMonth,toDay,toHour,toMinute);
+                                resultTimeScaleEntityList.addAll(targetTimeFlow.getMinuteEntities(startTimeScaleMoment2,toTimeScaleMoment2));
+                                executedQuery = true;
+                                queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+" "+startHourComboBox.getValue()+":"+startMinuteComboBox.getValue()+ " - "+toYearTextField.getValue()+"/"+toMonthComboBox.getValue()+"/"+toDayComboBox.getValue()+" "+toHourComboBox.getValue()+":"+toMinuteComboBox.getValue();
+                            }
+                        }else{
+                            TimeScaleEntity resultTimeScaleEntity = targetTimeFlow.getMinuteEntity(Integer.parseInt(startYearTextField.getValue()),
+                                    startMonthComboBox.getValue(),startDayComboBox.getValue(),startHourComboBox.getValue(),startMinuteComboBox.getValue());
+                            if(resultTimeScaleEntity != null){
+                                resultTimeScaleEntityList.add(resultTimeScaleEntity);
+                            }
+                            executedQuery = true;
+                            queryTimeArea = ""+startYearTextField.getValue() +"/"+startMonthComboBox.getValue()+"/"+startDayComboBox.getValue()+" "+startHourComboBox.getValue()+":"+startMinuteComboBox.getValue();
+                        }
+                    }
+                    break;
+            }
+            if(executedQuery){
+                CommonUIOperationUtil.showPopupNotification("时间粒度实体查询操作成功，查询返回实体数: "+resultTimeScaleEntityList.size(),
+                        NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
+                timeScaleEntitiesGrid.setItems(resultTimeScaleEntityList);
+                resultNumberValue.setText("实体总量："+this.numberFormat.format(resultTimeScaleEntityList.size()));
+            }
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private enum DateTimeCheckResult { correct,singleEntity,inCorrect}
+
+    private DateTimeCheckResult checkYearInputsData(boolean allowEqual){
+        if(startYearTextField.getValue().equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入起始年时间值",
+                    NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+            return DateTimeCheckResult.inCorrect;
+        }else{
+            int startYear = Integer.parseInt(startYearTextField.getValue());
+            if(toYearTextField.getValue().equals("")){
+                return DateTimeCheckResult.singleEntity;
+            }else {
+                int toYear = Integer.parseInt(toYearTextField.getValue());
+                if(allowEqual){
+                    if(toYear < startYear){
+                        CommonUIOperationUtil.showPopupNotification("结束年时间值必须大于等于起始年时间值",
+                                NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                        return DateTimeCheckResult.inCorrect;
+                    }
+                }else{
+                    if(toYear <= startYear){
+                        CommonUIOperationUtil.showPopupNotification("结束年时间值必须大于起始年时间值",
+                                NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+                        return DateTimeCheckResult.inCorrect;
+                    }
+                }
+            }
+        }
+        return DateTimeCheckResult.correct;
+    }
+
+    private DateTimeCheckResult checkDateInputsData(ComboBox<Integer> startDate, ComboBox<Integer> toDate, String errorMessage){
+        if(startDate.getValue() == null){
+            CommonUIOperationUtil.showPopupNotification(errorMessage,
+                    NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+            return DateTimeCheckResult.inCorrect;
+        }else{
+            if(toDate.getValue() == null){
+                return DateTimeCheckResult.singleEntity;
+            }
+        }
+        return DateTimeCheckResult.correct;
     }
 
     private void renderTimeScaleEntityDetailUI(TimeScaleEntity timeScaleEntity){
