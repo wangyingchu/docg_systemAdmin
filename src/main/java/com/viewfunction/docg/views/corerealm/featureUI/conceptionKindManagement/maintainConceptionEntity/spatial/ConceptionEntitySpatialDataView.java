@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.spatial;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.accordion.AccordionPanel;
 import com.vaadin.flow.component.button.Button;
@@ -14,6 +11,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.GeospatialScaleDataPair;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -33,6 +31,8 @@ public class ConceptionEntitySpatialDataView extends VerticalLayout {
     private String conceptionEntityUID;
     private List<GeospatialScaleDataPair> geospatialScaleDataPairList;
     private Accordion accordion;
+    private Scroller scroller;
+    private Registration listener;
 
     public ConceptionEntitySpatialDataView(){
 
@@ -72,9 +72,29 @@ public class ConceptionEntitySpatialDataView extends VerticalLayout {
 
         accordion = new Accordion();
         accordion.setWidth(100, Unit.PERCENTAGE);
-        Scroller scroller = new Scroller(accordion);
+        scroller = new Scroller(accordion);
         scroller.setWidth(100,Unit.PERCENTAGE);
         add(scroller);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            scroller.setHeight(event.getHeight()-200, Unit.PIXELS);
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            int browserHeight = receiver.getBodyClientHeight();
+            scroller.setHeight(browserHeight-200,Unit.PIXELS);
+        }));
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
+        super.onDetach(detachEvent);
     }
 
     public void renderSpatialDataInfo(List<GeospatialScaleDataPair> geospatialScaleDataPairList, String conceptionKindName, String conceptionEntityUID){
