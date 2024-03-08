@@ -9,12 +9,16 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEntity;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEvent;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.time.LocalDateTime;
@@ -118,6 +122,23 @@ public class TemporalEventSummaryWidget extends HorizontalLayout {
             }
         });
         add(showGeospatialEntityButton);
+
+        Icon divIcon3 = VaadinIcon.LINE_V.create();
+        divIcon3.setSize("6px");
+        add(divIcon3);
+
+        Button deleteEventButton = new Button("删除事件");
+        deleteEventButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ERROR);
+        deleteEventButton.getStyle().set("font-size","10px");
+        deleteEventButton.setIcon(VaadinIcon.TRASH.create());
+        deleteEventButton.setTooltipText("删除此时间序列关联事件");
+        deleteEventButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderDeleteEventUI();
+            }
+        });
+        add(deleteEventButton);
 
         setDefaultVerticalComponentAlignment(Alignment.CENTER);
     }
@@ -236,5 +257,48 @@ public class TemporalEventSummaryWidget extends HorizontalLayout {
         fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
         conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
+    }
+
+    private void renderDeleteEventUI(){
+        List<Button> actionButtonList = new ArrayList<>();
+
+        Button confirmButton = new Button("确认删除时间序列关联事件",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行删除时间序列关联事件操作",actionButtonList,400,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doDeleteEvent();
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doDeleteEvent(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        String timeScaleEventUID = this.timeScaleEvent.getTimeScaleEventUID();
+        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(RealmConstant.TimeScaleEventClass);
+        try {
+            boolean deleteResult = targetConceptionKind.deleteEntity(timeScaleEventUID);
+            if(deleteResult){
+                CommonUIOperationUtil.showPopupNotification("删除时间序列关联事件 "+ timeScaleEventUID +" 成功", NotificationVariant.LUMO_SUCCESS);
+            }else{
+                CommonUIOperationUtil.showPopupNotification("删除时间序列关联事件 "+ timeScaleEventUID +" 失败", NotificationVariant.LUMO_ERROR);
+            }
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
