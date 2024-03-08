@@ -107,6 +107,7 @@ public class ConceptionEntitySpatialDataView extends VerticalLayout {
                 GeospatialScaleEvent currentGeospatialScaleEvent = currentGeospatialScaleDataPair.getGeospatialScaleEvent();
                 GeospatialScaleEntity currentGeospatialScaleEntity = currentGeospatialScaleDataPair.getGeospatialScaleEntity();
                 GeospatialEventSummaryWidget currentGeospatialEventSummaryWidget = new GeospatialEventSummaryWidget(currentGeospatialScaleEvent, currentGeospatialScaleEntity);
+                currentGeospatialEventSummaryWidget.setConceptionEntitySpatialDataView(this);
                 GeospatialEventDetailWidget currentGeospatialEventDetailWidget = new GeospatialEventDetailWidget(currentGeospatialScaleEvent, currentGeospatialScaleEntity);
                 AccordionPanel accordionPanel = new AccordionPanel(currentGeospatialEventSummaryWidget,currentGeospatialEventDetailWidget);
                 accordionPanel.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
@@ -123,7 +124,7 @@ public class ConceptionEntitySpatialDataView extends VerticalLayout {
         }
     }
 
-    private void refreshSpatialEventAttributesInfo(){
+    public void refreshSpatialEventAttributesInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
@@ -141,6 +142,7 @@ public class ConceptionEntitySpatialDataView extends VerticalLayout {
                 GeospatialScaleEvent currentGeospatialScaleEvent = currentGeospatialScaleDataPair.getGeospatialScaleEvent();
                 GeospatialScaleEntity currentGeospatialScaleEntity = currentGeospatialScaleDataPair.getGeospatialScaleEntity();
                 GeospatialEventSummaryWidget currentGeospatialEventSummaryWidget = new GeospatialEventSummaryWidget(currentGeospatialScaleEvent, currentGeospatialScaleEntity);
+                currentGeospatialEventSummaryWidget.setConceptionEntitySpatialDataView(this);
                 GeospatialEventDetailWidget currentGeospatialEventDetailWidget = new GeospatialEventDetailWidget(currentGeospatialScaleEvent, currentGeospatialScaleEntity);
                 AccordionPanel accordionPanel = new AccordionPanel(currentGeospatialEventSummaryWidget, currentGeospatialEventDetailWidget);
                 accordionPanel.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
