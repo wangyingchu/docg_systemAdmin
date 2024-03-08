@@ -11,10 +11,12 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleDataPair;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEvent;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
@@ -154,9 +156,17 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
     }
 
     private void renderAttachTimeScaleEventsOfConceptionEntityView(){
+        AttachTimeScaleEventsOfConceptionEntityView.AttachTimeScaleEventsOfConceptionEntityCallback attachTimeScaleEventsOfConceptionEntityCallback = new AttachTimeScaleEventsOfConceptionEntityView.AttachTimeScaleEventsOfConceptionEntityCallback() {
+            @Override
+            public void onSuccess(List<TimeScaleEvent> resultEventList) {
+                renderEntityTemporalInfo();
+            }
+        };
         AttachTimeScaleEventsOfConceptionEntityView attachTimeScaleEventsOfConceptionEntityView = new AttachTimeScaleEventsOfConceptionEntityView(this.conceptionKind,this.conceptionEntityUID);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"关联时间序列事件",null,true,1090,580,false);
         fixSizeWindow.setWindowContent(attachTimeScaleEventsOfConceptionEntityView);
+        attachTimeScaleEventsOfConceptionEntityView.setContainerDialog(fixSizeWindow);
+        attachTimeScaleEventsOfConceptionEntityView.setAttachTimeScaleEventsOfConceptionEntityCallback(attachTimeScaleEventsOfConceptionEntityCallback);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }

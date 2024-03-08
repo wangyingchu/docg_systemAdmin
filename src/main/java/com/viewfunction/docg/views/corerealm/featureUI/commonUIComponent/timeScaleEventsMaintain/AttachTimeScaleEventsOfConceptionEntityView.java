@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.ComboBoxVariant;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
@@ -25,7 +26,6 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleMoment;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
@@ -64,6 +64,16 @@ public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout 
     private Map<String, AttributeEditorItemWidget> eventAttributeEditorsMap;
     private Button clearAttributeButton;
     private NumberFormat numberFormat;
+    private Dialog containerDialog;
+    private AttachTimeScaleEventsOfConceptionEntityCallback attachTimeScaleEventsOfConceptionEntityCallback;
+
+    public void setAttachTimeScaleEventsOfConceptionEntityCallback(AttachTimeScaleEventsOfConceptionEntityCallback attachTimeScaleEventsOfConceptionEntityCallback) {
+        this.attachTimeScaleEventsOfConceptionEntityCallback = attachTimeScaleEventsOfConceptionEntityCallback;
+    }
+
+    public interface AttachTimeScaleEventsOfConceptionEntityCallback {
+        public void onSuccess(List<TimeScaleEvent> resultEventList);
+    }
 
     public AttachTimeScaleEventsOfConceptionEntityView (String conceptionKind,String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
@@ -602,6 +612,10 @@ public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout 
         loadAttributesInfoComboBox();
     }
 
+    public void setContainerDialog(Dialog containerDialog) {
+        this.containerDialog = containerDialog;
+    }
+
     private void loadAttributesInfoComboBox(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         List<TimeFlow> timeFlowsList = coreRealm.getTimeFlows();
@@ -1123,6 +1137,7 @@ public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout 
     private void doAttachConceptionEntityToTimeFlow(){
         Set<TimeScaleEntity> selectedTimeScaleEntitySet = timeScaleEntitiesGrid.getSelectedItems();
         if(selectedTimeScaleEntitySet != null & !selectedTimeScaleEntitySet.isEmpty()){
+            List<TimeScaleEvent> resultEventList = new ArrayList<>();
             Map<String, Object> eventData = eventAttributeEditorsMap.isEmpty() ? null : new HashMap<>();
             if(!eventAttributeEditorsMap.isEmpty()){
                 Set<String> commentPropertiesNameSet = eventAttributeEditorsMap.keySet();
@@ -1132,63 +1147,40 @@ public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout 
                 }
             }
 
-            TimeFlow.TimeScaleGrade selectedTimeScaleGrade = queryTimeScaleGrade;
             String eventComment = eventCommentField.getValue();
-            String timeFlowName = timeFlowNameSelect.getValue();
 
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             coreRealm.openGlobalSession();
             ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
             ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
 
-
             for(TimeScaleEntity currentTimeScaleEntity : selectedTimeScaleEntitySet){
                 try {
-                    targetConceptionEntity.attachTimeScaleEvent(timeFlowName,null,eventComment,eventData,selectedTimeScaleGrade);
-
-
+                    TimeScaleEvent resultEvent = targetConceptionEntity.attachTimeScaleEventByTimeScaleEntityUID(currentTimeScaleEntity.getTimeScaleEntityUID(),eventComment,eventData);
+                    if(resultEvent != null){
+                        resultEventList.add(resultEvent);
+                    }
                 } catch (CoreRealmServiceRuntimeException e) {
                     throw new RuntimeException(e);
                 }
-
             }
 
+            if(this.attachTimeScaleEventsOfConceptionEntityCallback != null){
+                this.attachTimeScaleEventsOfConceptionEntityCallback.onSuccess(resultEventList);
+            }
 
-
-
-
-
+            if(this.containerDialog != null){
+                this.containerDialog.close();
+            }
+            coreRealm.closeGlobalSession();
+            showPopupNotification(resultEventList.size(),NotificationVariant.LUMO_SUCCESS);
         }
-
-
-
-
-
-
-
- /*
-        try {
-
-            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
-            QueryParameters queryParameters = new QueryParameters();
-            queryParameters.setResultNumber(100000000);
-            EntitiesOperationStatistics attachResult = targetConceptionKind.attachTimeScaleEvents(queryParameters,attributeName,dateTimeFormatter,timeFlowName,eventComment,eventData,selectedTimeScaleGrade);
-            showPopupNotification(attachResult,NotificationVariant.LUMO_SUCCESS);
-
-        } catch (CoreRealmServiceRuntimeException e) {
-            throw new RuntimeException(e);
-        } catch (CoreRealmServiceEntityExploreException e) {
-            throw new RuntimeException(e);
-        }
-
-  */
     }
 
-    private void showPopupNotification(EntitiesOperationStatistics conceptionEntitiesAttributesRetrieveResult, NotificationVariant notificationVariant){
+    private void showPopupNotification(int resultNumber, NotificationVariant notificationVariant){
         Notification notification = new Notification();
         notification.addThemeVariants(notificationVariant);
-        Div text = new Div(new Text("概念实体 "+this.conceptionKind+"/"+this.conceptionEntityUID+ " 链接概念类型实体至时间流操作成功"));
+        Div text = new Div(new Text("链接概念实体 "+this.conceptionKind+"/"+this.conceptionEntityUID+ " 至时间流操作成功"));
         Button closeButton = new Button(new Icon("lumo", "cross"));
         closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         closeButton.addClickListener(event -> {
@@ -1200,10 +1192,7 @@ public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout 
         notification.add(layout);
 
         VerticalLayout notificationMessageContainer = new VerticalLayout();
-        notificationMessageContainer.add(new Div(new Text("链接实体数: "+conceptionEntitiesAttributesRetrieveResult.getSuccessItemsCount())));
-        notificationMessageContainer.add(new Div(new Text("操作开始时间: "+conceptionEntitiesAttributesRetrieveResult.getStartTime())));
-        notificationMessageContainer.add(new Div(new Text("操作结束时间: "+conceptionEntitiesAttributesRetrieveResult.getFinishTime())));
-        notification.add(notificationMessageContainer);
+        notificationMessageContainer.add(new Div(new Text("链接实体数: "+resultNumber)));
         notification.setDuration(3000);
         notification.open();
     }
