@@ -128,7 +128,7 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
 
     private void renderAttachGeospatialScaleEventsOfConceptionEntityView(){
         AttachGeospatialScaleEventsOfConceptionEntityView attachGeospatialScaleEventsOfConceptionEntityView = new AttachGeospatialScaleEventsOfConceptionEntityView(this.conceptionKind,this.conceptionEntityUID);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"关联地理空间区域事件",null,true,760,670,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"关联地理空间区域事件",null,true,1090,580,false);
         fixSizeWindow.setWindowContent(attachGeospatialScaleEventsOfConceptionEntityView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
