@@ -2,38 +2,40 @@ package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospa
 
 import ch.carnet.kasparscherrer.VerticalScrollLayout;
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabSheetVariant;
 import com.vaadin.flow.component.textfield.TextField;
 
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.GeospatialRegion;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
-import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
-import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
-import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
+import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -60,10 +62,10 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
     }
-
     private NumberFormat numberFormat;
     private Dialog containerDialog;
-
+    private String geospatialScaleEntitiesSearchType = "SearchByPropertyMatch";
+    private Grid<GeospatialScaleEntity> geospatialScaleEntitiesGrid;
     public AttachGeospatialScaleEventsOfConceptionEntityView(String conceptionKind,String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
@@ -119,9 +121,22 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
         searchByPropertyMatchContainerLayout.setPadding(false);
         searchBySpaceCalculateContainerLayout.setMargin(false);
         searchBySpaceCalculateContainerLayout.setPadding(false);
-        entitiesSearchQueryElementsTabSheet.add("属性匹配检索",searchByPropertyMatchContainerLayout);
-        entitiesSearchQueryElementsTabSheet.add("空间计算检索",searchBySpaceCalculateContainerLayout);
+        Tab searchByPropertyMatchTab = entitiesSearchQueryElementsTabSheet.add("属性匹配检索",searchByPropertyMatchContainerLayout);
+        Tab searchBySpaceCalculateTab = entitiesSearchQueryElementsTabSheet.add("空间计算检索",searchBySpaceCalculateContainerLayout);
+        entitiesSearchQueryElementsTabSheet.addSelectedChangeListener(new ComponentEventListener<TabSheet.SelectedChangeEvent>() {
+            @Override
+            public void onComponentEvent(TabSheet.SelectedChangeEvent selectedChangeEvent) {
+                Tab selectedTab = selectedChangeEvent.getSelectedTab();
+                if(selectedTab == searchByPropertyMatchTab){
+                    geospatialScaleEntitiesSearchType = "SearchByPropertyMatch";
+                }
+                if(selectedTab == searchBySpaceCalculateTab){
+                    geospatialScaleEntitiesSearchType = "SearchBySpaceCalculate";
+                }
+            }
+        });
 
+        //SearchByPropertyMatchContent
         geospatialRegionNameSelect = new ComboBox<>("地理空间区域名称");
         geospatialRegionNameSelect.setRequired(true);
         geospatialRegionNameSelect.setRequiredIndicatorVisible(true);
@@ -163,7 +178,7 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
         geospatialAttributeSearchField.setWidthFull();
         searchByPropertyMatchContainerLayout.add(geospatialAttributeSearchField);
 
-
+        //SearchBySpaceCalculateContent
         geospatialRegionNameSelect1 = new ComboBox<>("地理空间区域名称");
         geospatialRegionNameSelect1.setRequired(true);
         geospatialRegionNameSelect1.setRequiredIndicatorVisible(true);
@@ -239,7 +254,7 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //queryTimeScaleEntities();
+                queryGeospatialScaleEntities();
             }
         });
         leftSideSectionContainerLayout.add(executeQueryButton);
@@ -250,7 +265,7 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
         middleContainerLayout.setMargin(false);
         mainLayout.add(middleContainerLayout);
 
-        middleContainerLayout.setWidth(315, Unit.PIXELS);
+        middleContainerLayout.setWidth(515, Unit.PIXELS);
         middleContainerLayout.getStyle().set("border-left", "1px solid var(--lumo-contrast-20pct)");
 
         resultNumberValue = new NativeLabel("");
@@ -268,16 +283,71 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
                 .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
                 .set("padding-bottom", "var(--lumo-space-m)");
 
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(geospatialScaleEntity -> {
+            Icon eyeIcon = new Icon(VaadinIcon.EYE);
+            eyeIcon.setSize("20px");
+            Button timeScaleEntityDetailButton = new Button(eyeIcon, event -> {
+                if(geospatialScaleEntity instanceof GeospatialScaleEntity){
+                    renderGeospatialScaleEntityDetailUI((GeospatialScaleEntity)geospatialScaleEntity);
+                }
+            });
+            timeScaleEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            timeScaleEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            timeScaleEntityDetailButton.setTooltipText("显示地理空间区域尺度实体详情");
 
+            HorizontalLayout buttons = new HorizontalLayout(timeScaleEntityDetailButton);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(15,Unit.PIXELS);
+            buttons.setWidth(80,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
 
+        geospatialScaleEntitiesGrid = new Grid<>();
 
+        geospatialScaleEntitiesGrid.setWidth(510,Unit.PIXELS);
+        geospatialScaleEntitiesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER);
+        geospatialScaleEntitiesGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+        geospatialScaleEntitiesGrid.addColumn(GeospatialScaleEntity::getGeospatialScaleGrade).setHeader("粒度").setKey("idx_0").setWidth("60px").setTooltipGenerator(new ItemLabelGenerator<GeospatialScaleEntity>() {
+            @Override
+            public String apply(GeospatialScaleEntity geospatialScaleEntity) {
+                return geospatialScaleEntity.getGeospatialScaleGrade().toString();
+            }
+        });
+        geospatialScaleEntitiesGrid.addColumn(GeospatialScaleEntity::getGeospatialCode).setHeader("空间编码").setKey("idx_1").setWidth("90px").setTooltipGenerator(new ItemLabelGenerator<GeospatialScaleEntity>() {
+            @Override
+            public String apply(GeospatialScaleEntity geospatialScaleEntity) {
+                return geospatialScaleEntity.getGeospatialCode();
+            }
+        });
+        geospatialScaleEntitiesGrid.addColumn(GeospatialScaleEntity::getChineseName).setHeader("中文名称").setKey("idx_2").setTooltipGenerator(new ItemLabelGenerator<GeospatialScaleEntity>() {
+            @Override
+            public String apply(GeospatialScaleEntity geospatialScaleEntity) {
+                return geospatialScaleEntity.getChineseName();
+            }
+        });
+        geospatialScaleEntitiesGrid.addColumn(GeospatialScaleEntity::getEnglishName).setHeader("英文名称").setKey("idx_3").setTooltipGenerator(new ItemLabelGenerator<GeospatialScaleEntity>() {
+            @Override
+            public String apply(GeospatialScaleEntity geospatialScaleEntity) {
+                return geospatialScaleEntity.getEnglishName();
+            }
+        });
+        geospatialScaleEntitiesGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_4").setWidth("60px");
 
+        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.LOCATION_ARROW,"粒度");
+        geospatialScaleEntitiesGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(false);
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.CODE,"空间编码");
+        geospatialScaleEntitiesGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(VaadinIcon.COMMENT_ELLIPSIS,"中文名称");
+        geospatialScaleEntitiesGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(VaadinIcon.COMMENT_ELLIPSIS_O,"英文名称");
+        geospatialScaleEntitiesGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
+        geospatialScaleEntitiesGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_1_idx4).setSortable(false);
 
-
-
-
-
-
+        middleContainerLayout.add(geospatialScaleEntitiesGrid);
 
         VerticalLayout rightSideContainerLayout = new VerticalLayout();
         rightSideContainerLayout.setSpacing(false);
@@ -448,4 +518,145 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
         clearAttributeButton.setEnabled(false);
     }
 
+    private void queryGeospatialScaleEntities(){
+        if(geospatialScaleEntitiesSearchType.equals("SearchByPropertyMatch")){
+            String geospatialRegionName = geospatialRegionNameSelect.getValue();
+            GeospatialRegion.GeospatialProperty selectedGeospatialProperty = eventPropertyGeospatialPropertySelect.getValue();
+            GeospatialRegion.GeospatialScaleGrade selectedGeospatialScaleGrade = geospatialScaleGradeSelect.getValue();
+            String geospatialAttributeSearchValue = geospatialAttributeSearchField.getValue();
+            if(geospatialRegionName == null){
+                CommonUIOperationUtil.showPopupNotification("请选择地理空间区域名称", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                return;
+            }
+            if(selectedGeospatialProperty == null){
+                CommonUIOperationUtil.showPopupNotification("请选择地理空间属性类型", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                return;
+            }
+            if(selectedGeospatialScaleGrade == null){
+                CommonUIOperationUtil.showPopupNotification("请选择事件地理空间刻度", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                return;
+            }
+            if(geospatialAttributeSearchValue == null || geospatialAttributeSearchValue.equals("")){
+                CommonUIOperationUtil.showPopupNotification("请输入检索属性值", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                return;
+            }
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            GeospatialRegion targetGeospatialRegion = coreRealm.getOrCreateGeospatialRegion(geospatialRegionName);
+            if(targetGeospatialRegion != null){
+                //targetGeospatialRegion
+
+
+
+            }
+
+
+        }
+        if(geospatialScaleEntitiesSearchType.equals("SearchBySpaceCalculate")){
+            String geospatialRegionName = geospatialRegionNameSelect1.getValue();
+            GeospatialRegion.GeospatialScaleGrade selectedGeospatialScaleGrade = geospatialScaleGradeSelect1.getValue();
+            GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel = spatialScaleLevelSelect.getValue();
+            GeospatialScaleCalculable.SpatialPredicateType spatialPredicateType = spatialPredicateTypeSelect.getValue();
+            List<GeospatialScaleEntity> targetGeospatialScaleEntities = null;
+            if(geospatialRegionName == null){
+                CommonUIOperationUtil.showPopupNotification("请选择地理空间区域名称", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                return;
+            }
+            if(spatialScaleLevel == null){
+                CommonUIOperationUtil.showPopupNotification("请选择地理空间尺度参考坐标系", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                return;
+            }
+            if(selectedGeospatialScaleGrade == null){
+                CommonUIOperationUtil.showPopupNotification("请选择事件地理空间刻度", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                return;
+            }
+            if(spatialPredicateType == null){
+                CommonUIOperationUtil.showPopupNotification("请选择空间拓扑关系定义", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+                return;
+            }
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            coreRealm.openGlobalSession();
+            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+            if(targetConceptionKind != null){
+                ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+                if(targetConceptionEntity != null){
+                    try {
+                        targetGeospatialScaleEntities = targetConceptionEntity.getSpatialPredicateMatchedGeospatialScaleEntities(spatialScaleLevel,spatialPredicateType,selectedGeospatialScaleGrade,geospatialRegionName);
+                    } catch (CoreRealmServiceRuntimeException e) {
+                        throw new RuntimeException(e);
+                    } catch (CoreRealmServiceEntityExploreException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            coreRealm.closeGlobalSession();
+            geospatialScaleEntitiesGrid.setItems(targetGeospatialScaleEntities);
+        }
+    }
+
+    private void renderGeospatialScaleEntityDetailUI(GeospatialScaleEntity geospatialScaleEntity){
+        String geospatialScaleEntityClassName = RealmConstant.GeospatialScaleEntityClass;
+        GeospatialRegion.GeospatialScaleGrade currentGeospatialScaleGrade = geospatialScaleEntity.getGeospatialScaleGrade();
+        switch(currentGeospatialScaleGrade){
+            case CONTINENT -> geospatialScaleEntityClassName = RealmConstant.GeospatialScaleContinentEntityClass;
+            case COUNTRY_REGION -> geospatialScaleEntityClassName = RealmConstant.GeospatialScaleCountryRegionEntityClass;
+            case PROVINCE -> geospatialScaleEntityClassName = RealmConstant.GeospatialScaleProvinceEntityClass;
+            case PREFECTURE -> geospatialScaleEntityClassName = RealmConstant.GeospatialScalePrefectureEntityClass;
+            case COUNTY -> geospatialScaleEntityClassName = RealmConstant.GeospatialScaleCountyEntityClass;
+            case TOWNSHIP -> geospatialScaleEntityClassName = RealmConstant.GeospatialScaleTownshipEntityClass;
+            case VILLAGE -> geospatialScaleEntityClassName = RealmConstant.GeospatialScaleVillageEntityClass;
+        }
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(geospatialScaleEntityClassName,geospatialScaleEntity.getGeospatialScaleEntityUID());
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("10px");
+        titleDetailLayout.add(conceptionKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(geospatialScaleEntityClassName);
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+        conceptionEntityIcon.setSize("10px");
+        titleDetailLayout.add(conceptionEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel conceptionEntityUIDLabel = new NativeLabel(geospatialScaleEntity.getGeospatialScaleEntityUID());
+        titleDetailLayout.add(conceptionEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
+    }
 }
