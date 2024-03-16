@@ -358,7 +358,7 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
         rightSideContainerLayout.setWidth(470,Unit.PIXELS);
         rightSideContainerLayout.getStyle().set("border-left", "1px solid var(--lumo-contrast-20pct)");
 
-        SecondaryIconTitle eventCommentInfoTitle = new SecondaryIconTitle(VaadinIcon.CALENDAR_CLOCK.create(), "事件信息",resultNumberValue);
+        SecondaryIconTitle eventCommentInfoTitle = new SecondaryIconTitle(VaadinIcon.CALENDAR_CLOCK.create(), "事件信息");
         eventCommentInfoTitle.getStyle().set("padding-left","10px").set("padding-top","9px");
         rightSideContainerLayout.add(eventCommentInfoTitle);
 
@@ -590,15 +590,10 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
             }
             coreRealm.closeGlobalSession();
 
-            if(targetGeospatialScaleEntities != null && targetGeospatialScaleEntities.size()>0){
-                System.out.println(targetGeospatialScaleEntities.get(0).getChineseName());
-                System.out.println(targetGeospatialScaleEntities.get(0).getEnglishName());
-                System.out.println(targetGeospatialScaleEntities.get(0).getGeospatialCode());
-
-
-            }
-
             geospatialScaleEntitiesGrid.setItems(targetGeospatialScaleEntities);
+            CommonUIOperationUtil.showPopupNotification("地理空间刻度实体查询操作成功，查询返回实体数: "+targetGeospatialScaleEntities.size(),
+                    NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
+            resultNumberValue.setText("实体总量："+this.numberFormat.format(targetGeospatialScaleEntities.size()));
         }
     }
 
