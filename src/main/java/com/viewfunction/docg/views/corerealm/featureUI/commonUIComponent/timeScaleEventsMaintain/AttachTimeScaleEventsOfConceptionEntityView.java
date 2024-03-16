@@ -515,7 +515,7 @@ public class AttachTimeScaleEventsOfConceptionEntityView extends VerticalLayout 
         rightSideContainerLayout.setWidth(470,Unit.PIXELS);
         rightSideContainerLayout.getStyle().set("border-left", "1px solid var(--lumo-contrast-20pct)");
 
-        SecondaryIconTitle eventCommentInfoTitle = new SecondaryIconTitle(VaadinIcon.CALENDAR_CLOCK.create(), "事件信息",resultNumberValue);
+        SecondaryIconTitle eventCommentInfoTitle = new SecondaryIconTitle(VaadinIcon.CALENDAR_CLOCK.create(), "事件信息");
         eventCommentInfoTitle.getStyle().set("padding-left","10px").set("padding-top","9px");
         rightSideContainerLayout.add(eventCommentInfoTitle);
 
