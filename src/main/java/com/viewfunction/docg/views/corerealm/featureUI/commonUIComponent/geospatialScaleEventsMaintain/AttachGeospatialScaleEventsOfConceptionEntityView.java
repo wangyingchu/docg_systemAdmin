@@ -225,7 +225,7 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
         geospatialScaleGradeSelect1.setRequired(true);
         geospatialScaleGradeSelect1.setRequiredIndicatorVisible(true);
         geospatialScaleGradeSelect1.setItems(
-                GeospatialRegion.GeospatialScaleGrade.CONTINENT,
+                //GeospatialRegion.GeospatialScaleGrade.CONTINENT,
                 GeospatialRegion.GeospatialScaleGrade.COUNTRY_REGION,
                 GeospatialRegion.GeospatialScaleGrade.PROVINCE,
                 GeospatialRegion.GeospatialScaleGrade.PREFECTURE,
@@ -589,6 +589,15 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
                 }
             }
             coreRealm.closeGlobalSession();
+
+            if(targetGeospatialScaleEntities != null && targetGeospatialScaleEntities.size()>0){
+                System.out.println(targetGeospatialScaleEntities.get(0).getChineseName());
+                System.out.println(targetGeospatialScaleEntities.get(0).getEnglishName());
+                System.out.println(targetGeospatialScaleEntities.get(0).getGeospatialCode());
+
+
+            }
+
             geospatialScaleEntitiesGrid.setItems(targetGeospatialScaleEntities);
         }
     }
