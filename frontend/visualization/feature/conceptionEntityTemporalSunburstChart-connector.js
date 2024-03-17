@@ -154,12 +154,14 @@ window.Vaadin.Flow.feature_ConceptionEntityTemporalSunburstChart = {
                 ];
                 */
                 c.$connector.sunburstChart.data.setAll(sunburstEntities);
+                /*
                 let legend = c.$connector.container.children.push(am5.Legend.new(c.$connector.root, {
                     centerX: am5.percent(50),
                     x: am5.percent(50),
                     layout: c.$connector.root.gridLayout
                 }));
                 legend.data.setAll(c.$connector.sunburstChart.dataItems[0].get("children"));
+                */
             }
         };
         am5.ready(function() {
