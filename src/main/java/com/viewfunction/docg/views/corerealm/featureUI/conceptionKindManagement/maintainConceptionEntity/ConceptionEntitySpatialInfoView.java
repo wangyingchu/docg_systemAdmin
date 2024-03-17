@@ -112,8 +112,10 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
                     if(geospatialScaleDataPairList == null || geospatialScaleDataPairList.size() == 0){
                         CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中不包含地理空间相关信息", NotificationVariant.LUMO_CONTRAST,5000, Notification.Position.BOTTOM_START);
                         conceptionEntitySpatialDataView.setVisible(false);
+                        doesNotContainsSpatialInfoMessage.setVisible(true);
                     }else{
                         doesNotContainsSpatialInfoMessage.setVisible(false);
+                        conceptionEntitySpatialDataView.setVisible(true);
                         conceptionEntitySpatialDataView.renderSpatialDataInfo(geospatialScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
                     }
                 }else{
