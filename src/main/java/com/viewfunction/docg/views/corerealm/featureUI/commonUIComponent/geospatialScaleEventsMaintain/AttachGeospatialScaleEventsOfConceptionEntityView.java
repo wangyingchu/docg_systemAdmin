@@ -9,6 +9,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -38,10 +39,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityM
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalLayout {
     private String conceptionKind;
@@ -66,6 +64,16 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
     private Dialog containerDialog;
     private String geospatialScaleEntitiesSearchType = "SearchByPropertyMatch";
     private Grid<GeospatialScaleEntity> geospatialScaleEntitiesGrid;
+    private AttachGeospatialScaleEventsOfConceptionEntityCallback attachGeospatialScaleEventsOfConceptionEntityCallback;
+
+    public void setAttachGeospatialScaleEventsOfConceptionEntityCallback(AttachGeospatialScaleEventsOfConceptionEntityCallback attachGeospatialScaleEventsOfConceptionEntityCallback) {
+        this.attachGeospatialScaleEventsOfConceptionEntityCallback = attachGeospatialScaleEventsOfConceptionEntityCallback;
+    }
+
+    public interface AttachGeospatialScaleEventsOfConceptionEntityCallback {
+        public void onSuccess(List<GeospatialScaleEvent> resultEventList);
+    }
+
     public AttachGeospatialScaleEventsOfConceptionEntityView(String conceptionKind,String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
@@ -286,16 +294,16 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(geospatialScaleEntity -> {
             Icon eyeIcon = new Icon(VaadinIcon.EYE);
             eyeIcon.setSize("20px");
-            Button timeScaleEntityDetailButton = new Button(eyeIcon, event -> {
+            Button geospatialScaleEntityDetailButton = new Button(eyeIcon, event -> {
                 if(geospatialScaleEntity instanceof GeospatialScaleEntity){
                     renderGeospatialScaleEntityDetailUI((GeospatialScaleEntity)geospatialScaleEntity);
                 }
             });
-            timeScaleEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            timeScaleEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            timeScaleEntityDetailButton.setTooltipText("显示地理空间区域尺度实体详情");
+            geospatialScaleEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            geospatialScaleEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            geospatialScaleEntityDetailButton.setTooltipText("显示地理空间区域尺度实体详情");
 
-            HorizontalLayout buttons = new HorizontalLayout(timeScaleEntityDetailButton);
+            HorizontalLayout buttons = new HorizontalLayout(geospatialScaleEntityDetailButton);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -441,7 +449,7 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //attachConceptionEntityToTimeFlow();
+                attachConceptionEntityToGeospatialRegion();
             }
         });
         this.eventAttributeEditorsMap = new HashMap<>();
@@ -662,5 +670,107 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
         fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
         conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
+    }
+
+    private void attachConceptionEntityToGeospatialRegion(){
+        Set<GeospatialScaleEntity> selectedGeospatialScaleEntitySet = geospatialScaleEntitiesGrid.getSelectedItems();
+        if(selectedGeospatialScaleEntitySet == null || selectedGeospatialScaleEntitySet.isEmpty()){
+            CommonUIOperationUtil.showPopupNotification("请选择至少一项地理空间尺度实体", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
+        String eventComment = eventCommentField.getValue();
+        if(eventComment.equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入地理空间事件备注", NotificationVariant.LUMO_ERROR,10000, Notification.Position.MIDDLE);
+            return;
+        }
+
+        List<Button> actionButtonList = new ArrayList<>();
+
+        Button confirmButton = new Button("确认链接概念实体至地理空间区域",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行链接概念实体至地理空间区域操作",actionButtonList,400,180);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doAttachConceptionEntityToGeospatialRegion();
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doAttachConceptionEntityToGeospatialRegion(){
+        Set<GeospatialScaleEntity> selectedGeospatialScaleEntitySet = geospatialScaleEntitiesGrid.getSelectedItems();
+        if(selectedGeospatialScaleEntitySet != null & !selectedGeospatialScaleEntitySet.isEmpty()){
+            List<GeospatialScaleEvent> resultEventList = new ArrayList<>();
+            Map<String, Object> eventData = eventAttributeEditorsMap.isEmpty() ? null : new HashMap<>();
+            if(!eventAttributeEditorsMap.isEmpty()){
+                Set<String> commentPropertiesNameSet = eventAttributeEditorsMap.keySet();
+                for(String currentPropertyName:commentPropertiesNameSet){
+                    AttributeEditorItemWidget attributeEditorItemWidget = eventAttributeEditorsMap.get(currentPropertyName);
+                    eventData.put(attributeEditorItemWidget.getAttributeName(),attributeEditorItemWidget.getAttributeValue().getAttributeValue());
+                }
+            }
+
+            String eventComment = eventCommentField.getValue();
+
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            coreRealm.openGlobalSession();
+            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+            ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+
+            for(GeospatialScaleEntity currentGeospatialScaleEntity : selectedGeospatialScaleEntitySet){
+                try {
+                    GeospatialScaleEvent resultEvent = targetConceptionEntity.
+                            attachGeospatialScaleEventByGeospatialScaleEntityUID(currentGeospatialScaleEntity.getGeospatialScaleEntityUID(),eventComment,eventData);
+                    if(resultEvent != null){
+                        resultEventList.add(resultEvent);
+                    }
+                } catch (CoreRealmServiceRuntimeException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            if(this.attachGeospatialScaleEventsOfConceptionEntityCallback != null){
+                this.attachGeospatialScaleEventsOfConceptionEntityCallback.onSuccess(resultEventList);
+            }
+
+            if(this.containerDialog != null){
+                this.containerDialog.close();
+            }
+            coreRealm.closeGlobalSession();
+            showPopupNotification(resultEventList.size(),NotificationVariant.LUMO_SUCCESS);
+        }
+    }
+
+    private void showPopupNotification(int resultNumber, NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text("链接概念实体 "+this.conceptionKind+"/"+this.conceptionEntityUID+ " 至地理空间区域操作成功"));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
+
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        notificationMessageContainer.add(new Div(new Text("链接实体数: "+resultNumber)));
+        notification.setDuration(3000);
+        notification.open();
     }
 }

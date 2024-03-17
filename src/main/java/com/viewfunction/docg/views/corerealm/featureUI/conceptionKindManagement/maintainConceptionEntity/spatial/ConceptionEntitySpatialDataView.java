@@ -19,7 +19,6 @@ import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialScaleEventsMaintain.AttachGeospatialScaleEventsOfConceptionEntityView;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.processingDataList.ProcessingDataListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,9 +160,19 @@ public class ConceptionEntitySpatialDataView extends VerticalLayout {
     }
 
     private void renderAttachGeospatialScaleEventsOfConceptionEntityView(){
+        AttachGeospatialScaleEventsOfConceptionEntityView.AttachGeospatialScaleEventsOfConceptionEntityCallback
+                attachGeospatialScaleEventsOfConceptionEntityCallback = new AttachGeospatialScaleEventsOfConceptionEntityView.AttachGeospatialScaleEventsOfConceptionEntityCallback() {
+            @Override
+            public void onSuccess(List<GeospatialScaleEvent> resultEventList) {
+                refreshSpatialEventAttributesInfo();
+            }
+        };
+
         AttachGeospatialScaleEventsOfConceptionEntityView attachGeospatialScaleEventsOfConceptionEntityView = new AttachGeospatialScaleEventsOfConceptionEntityView(this.conceptionKindName,this.conceptionEntityUID);
+        attachGeospatialScaleEventsOfConceptionEntityView.setAttachGeospatialScaleEventsOfConceptionEntityCallback(attachGeospatialScaleEventsOfConceptionEntityCallback);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"关联地理空间区域事件",null,true,1270,580,false);
         fixSizeWindow.setWindowContent(attachGeospatialScaleEventsOfConceptionEntityView);
+        attachGeospatialScaleEventsOfConceptionEntityView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }

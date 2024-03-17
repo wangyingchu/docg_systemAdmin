@@ -16,6 +16,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.GeospatialScaleD
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.GeospatialScaleEvent;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
@@ -127,9 +128,18 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
     }
 
     private void renderAttachGeospatialScaleEventsOfConceptionEntityView(){
+        AttachGeospatialScaleEventsOfConceptionEntityView.AttachGeospatialScaleEventsOfConceptionEntityCallback
+                attachGeospatialScaleEventsOfConceptionEntityCallback = new AttachGeospatialScaleEventsOfConceptionEntityView.AttachGeospatialScaleEventsOfConceptionEntityCallback() {
+            @Override
+            public void onSuccess(List<GeospatialScaleEvent> resultEventList) {
+                renderEntitySpatialInfo();
+            }
+        };
         AttachGeospatialScaleEventsOfConceptionEntityView attachGeospatialScaleEventsOfConceptionEntityView = new AttachGeospatialScaleEventsOfConceptionEntityView(this.conceptionKind,this.conceptionEntityUID);
+        attachGeospatialScaleEventsOfConceptionEntityView.setAttachGeospatialScaleEventsOfConceptionEntityCallback(attachGeospatialScaleEventsOfConceptionEntityCallback);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.CODE_BRANCH_SOLID.create(),"关联地理空间区域事件",null,true,1270,580,false);
         fixSizeWindow.setWindowContent(attachGeospatialScaleEventsOfConceptionEntityView);
+        attachGeospatialScaleEventsOfConceptionEntityView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
