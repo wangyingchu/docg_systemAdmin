@@ -85,6 +85,8 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
         add(temporalEntityAndChartContainer);
 
         conceptionEntityTemporalDataView = new ConceptionEntityTemporalDataView();
+        conceptionEntityTemporalDataView.setContainerConceptionEntityTemporalInfoView(this);
+
         conceptionEntityTemporalSunburstChart = new ConceptionEntityTemporalSunburstChart();
         temporalEntityAndChartContainer.add(conceptionEntityTemporalSunburstChart);
         temporalEntityAndChartContainer.add(conceptionEntityTemporalDataView);

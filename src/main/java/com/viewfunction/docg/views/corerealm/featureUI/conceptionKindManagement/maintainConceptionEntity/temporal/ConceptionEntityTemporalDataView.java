@@ -20,6 +20,7 @@ import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.timeScaleEventsMaintain.AttachTimeScaleEventsOfConceptionEntityView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityTemporalInfoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
     private String conceptionEntityUID;
     private List<TimeScaleDataPair> timeScaleDataPairList;
     private Accordion accordion;
+    private ConceptionEntityTemporalInfoView containerConceptionEntityTemporalInfoView;
 
     public ConceptionEntityTemporalDataView(){
         this.getStyle().set("padding-left","100px");
@@ -94,12 +96,6 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
     }
 
     public void refreshTemporalEventAttributesInfo(){
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        coreRealm.openGlobalSession();
-        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
-        ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
-
-        this.timeScaleDataPairList = targetConceptionEntity.getAttachedTimeScaleDataPairs();
         accordion.getChildren().forEach(new Consumer<Component>() {
             @Override
             public void accept(Component component) {
@@ -107,18 +103,27 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
             }
         });
 
-        if(this.timeScaleDataPairList != null && this.timeScaleDataPairList.size() >0){
-            for(TimeScaleDataPair currentTimeScaleDataPair :this.timeScaleDataPairList){
-                TimeScaleEvent currentTimeScaleEvent = currentTimeScaleDataPair.getTimeScaleEvent();
-                TimeScaleEntity currentTimeScaleEntity = currentTimeScaleDataPair.getTimeScaleEntity();
-                TemporalEventSummaryWidget currentTemporalEventSummaryWidget = new TemporalEventSummaryWidget(currentTimeScaleEvent, currentTimeScaleEntity);
-                currentTemporalEventSummaryWidget.setContainerConceptionEntityTemporalDataView(this);
-                TemporalEventDetailWidget currentTemporalEventDetailWidget = new TemporalEventDetailWidget(currentTimeScaleEvent, currentTimeScaleEntity);
-                AccordionPanel accordionPanel = new AccordionPanel(currentTemporalEventSummaryWidget,currentTemporalEventDetailWidget);
-                accordion.add(accordionPanel);
+        if(containerConceptionEntityTemporalInfoView != null){
+            containerConceptionEntityTemporalInfoView.renderEntityTemporalInfo();
+        }else{
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            coreRealm.openGlobalSession();
+            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+            ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+            this.timeScaleDataPairList = targetConceptionEntity.getAttachedTimeScaleDataPairs();
+            if(this.timeScaleDataPairList != null && this.timeScaleDataPairList.size() >0){
+                for(TimeScaleDataPair currentTimeScaleDataPair :this.timeScaleDataPairList){
+                    TimeScaleEvent currentTimeScaleEvent = currentTimeScaleDataPair.getTimeScaleEvent();
+                    TimeScaleEntity currentTimeScaleEntity = currentTimeScaleDataPair.getTimeScaleEntity();
+                    TemporalEventSummaryWidget currentTemporalEventSummaryWidget = new TemporalEventSummaryWidget(currentTimeScaleEvent, currentTimeScaleEntity);
+                    currentTemporalEventSummaryWidget.setContainerConceptionEntityTemporalDataView(this);
+                    TemporalEventDetailWidget currentTemporalEventDetailWidget = new TemporalEventDetailWidget(currentTimeScaleEvent, currentTimeScaleEntity);
+                    AccordionPanel accordionPanel = new AccordionPanel(currentTemporalEventSummaryWidget,currentTemporalEventDetailWidget);
+                    accordion.add(accordionPanel);
+                }
             }
+            coreRealm.closeGlobalSession();
         }
-        coreRealm.closeGlobalSession();
     }
 
     private void renderAttachTimeScaleEventsOfConceptionEntityView(){
@@ -135,5 +140,9 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
         attachTimeScaleEventsOfConceptionEntityView.setAttachTimeScaleEventsOfConceptionEntityCallback(attachTimeScaleEventsOfConceptionEntityCallback);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+    public void setContainerConceptionEntityTemporalInfoView(ConceptionEntityTemporalInfoView containerConceptionEntityTemporalInfoView) {
+        this.containerConceptionEntityTemporalInfoView = containerConceptionEntityTemporalInfoView;
     }
 }
