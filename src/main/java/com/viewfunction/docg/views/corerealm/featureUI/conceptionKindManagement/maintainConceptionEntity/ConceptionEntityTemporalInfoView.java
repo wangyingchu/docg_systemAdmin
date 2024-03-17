@@ -134,11 +134,15 @@ public class ConceptionEntityTemporalInfoView extends VerticalLayout {
                         conceptionEntityTemporalTimelineChart.setVisible(false);
                         conceptionEntityTemporalDataView.setVisible(false);
                         conceptionEntityTemporalSunburstChart.setVisible(false);
+                        temporalEntityAndChartContainer.setVisible(false);
+                        doesNotContainsTemporalInfoMessage.setVisible(true);
                         CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中不包含时间序列相关信息", NotificationVariant.LUMO_CONTRAST,5000, Notification.Position.BOTTOM_START);
                     }else{
                         doesNotContainsTemporalInfoMessage.setVisible(false);
                         temporalEntityAndChartContainer.setVisible(true);
                         conceptionEntityTemporalTimelineChart.setVisible(true);
+                        conceptionEntityTemporalDataView.setVisible(true);
+                        conceptionEntityTemporalSunburstChart.setVisible(true);
 
                         conceptionEntityTemporalTimelineChart.renderTemporalTimelineInfo(timeScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);
                         conceptionEntityTemporalDataView.renderTemporalDataInfo(timeScaleDataPairList,this.conceptionKind,this.conceptionEntityUID);

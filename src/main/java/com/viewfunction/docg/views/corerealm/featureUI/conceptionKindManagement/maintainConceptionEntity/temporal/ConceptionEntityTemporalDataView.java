@@ -85,6 +85,7 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
                 TimeScaleEvent currentTimeScaleEvent = currentTimeScaleDataPair.getTimeScaleEvent();
                 TimeScaleEntity currentTimeScaleEntity = currentTimeScaleDataPair.getTimeScaleEntity();
                 TemporalEventSummaryWidget currentTemporalEventSummaryWidget = new TemporalEventSummaryWidget(currentTimeScaleEvent, currentTimeScaleEntity);
+                currentTemporalEventSummaryWidget.setContainerConceptionEntityTemporalDataView(this);
                 TemporalEventDetailWidget currentTemporalEventDetailWidget = new TemporalEventDetailWidget(currentTimeScaleEvent, currentTimeScaleEntity);
                 AccordionPanel accordionPanel = new AccordionPanel(currentTemporalEventSummaryWidget,currentTemporalEventDetailWidget);
                 accordion.add(accordionPanel);
@@ -92,7 +93,7 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
         }
     }
 
-    private void refreshTemporalEventAttributesInfo(){
+    public void refreshTemporalEventAttributesInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
@@ -111,6 +112,7 @@ public class ConceptionEntityTemporalDataView extends VerticalLayout {
                 TimeScaleEvent currentTimeScaleEvent = currentTimeScaleDataPair.getTimeScaleEvent();
                 TimeScaleEntity currentTimeScaleEntity = currentTimeScaleDataPair.getTimeScaleEntity();
                 TemporalEventSummaryWidget currentTemporalEventSummaryWidget = new TemporalEventSummaryWidget(currentTimeScaleEvent, currentTimeScaleEntity);
+                currentTemporalEventSummaryWidget.setContainerConceptionEntityTemporalDataView(this);
                 TemporalEventDetailWidget currentTemporalEventDetailWidget = new TemporalEventDetailWidget(currentTimeScaleEvent, currentTimeScaleEntity);
                 AccordionPanel accordionPanel = new AccordionPanel(currentTemporalEventSummaryWidget,currentTemporalEventDetailWidget);
                 accordion.add(accordionPanel);

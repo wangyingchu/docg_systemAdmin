@@ -29,6 +29,7 @@ public class TemporalEventSummaryWidget extends HorizontalLayout {
 
     private TimeScaleEvent timeScaleEvent;
     private TimeScaleEntity timeScaleEntity;
+    private ConceptionEntityTemporalDataView containerConceptionEntityTemporalDataView;
 
     public TemporalEventSummaryWidget(TimeScaleEvent timeScaleEvent, TimeScaleEntity timeScaleEntity){
         this.timeScaleEvent = timeScaleEvent;
@@ -294,11 +295,18 @@ public class TemporalEventSummaryWidget extends HorizontalLayout {
             boolean deleteResult = targetConceptionKind.deleteEntity(timeScaleEventUID);
             if(deleteResult){
                 CommonUIOperationUtil.showPopupNotification("删除时间序列关联事件 "+ timeScaleEventUID +" 成功", NotificationVariant.LUMO_SUCCESS);
+                if(this.containerConceptionEntityTemporalDataView != null){
+                    this.containerConceptionEntityTemporalDataView.refreshTemporalEventAttributesInfo();
+                }
             }else{
                 CommonUIOperationUtil.showPopupNotification("删除时间序列关联事件 "+ timeScaleEventUID +" 失败", NotificationVariant.LUMO_ERROR);
             }
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setContainerConceptionEntityTemporalDataView(ConceptionEntityTemporalDataView containerConceptionEntityTemporalDataView) {
+        this.containerConceptionEntityTemporalDataView = containerConceptionEntityTemporalDataView;
     }
 }
