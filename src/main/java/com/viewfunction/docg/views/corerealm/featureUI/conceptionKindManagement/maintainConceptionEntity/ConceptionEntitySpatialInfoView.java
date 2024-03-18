@@ -76,6 +76,7 @@ public class ConceptionEntitySpatialInfoView extends VerticalLayout {
         add(doesNotContainsSpatialInfoMessage);
 
         conceptionEntitySpatialDataView = new ConceptionEntitySpatialDataView();
+        conceptionEntitySpatialDataView.setContainerConceptionEntitySpatialInfoView(this);
         add(conceptionEntitySpatialDataView);
     }
 

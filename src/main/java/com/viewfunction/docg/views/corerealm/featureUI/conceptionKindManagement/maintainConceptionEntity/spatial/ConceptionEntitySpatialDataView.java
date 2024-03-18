@@ -19,6 +19,7 @@ import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialScaleEventsMaintain.AttachGeospatialScaleEventsOfConceptionEntityView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntitySpatialInfoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class ConceptionEntitySpatialDataView extends VerticalLayout {
     private Accordion accordion;
     private Scroller scroller;
     private Registration listener;
+    private ConceptionEntitySpatialInfoView containerConceptionEntitySpatialInfoView;
 
     public ConceptionEntitySpatialDataView(){
 
@@ -124,39 +126,45 @@ public class ConceptionEntitySpatialDataView extends VerticalLayout {
     }
 
     public void refreshSpatialEventAttributesInfo(){
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        coreRealm.openGlobalSession();
-        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
-        ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
-
-        this.geospatialScaleDataPairList = targetConceptionEntity.getAttachedGeospatialScaleDataPairs();
         accordion.getChildren().forEach(new Consumer<Component>() {
             @Override
             public void accept(Component component) {
                 accordion.remove(component);
             }
         });
-        if(this.geospatialScaleDataPairList != null && this.geospatialScaleDataPairList.size() >0) {
-            for (GeospatialScaleDataPair currentGeospatialScaleDataPair : this.geospatialScaleDataPairList) {
-                GeospatialScaleEvent currentGeospatialScaleEvent = currentGeospatialScaleDataPair.getGeospatialScaleEvent();
-                GeospatialScaleEntity currentGeospatialScaleEntity = currentGeospatialScaleDataPair.getGeospatialScaleEntity();
-                GeospatialEventSummaryWidget currentGeospatialEventSummaryWidget = new GeospatialEventSummaryWidget(currentGeospatialScaleEvent, currentGeospatialScaleEntity);
-                currentGeospatialEventSummaryWidget.setConceptionEntitySpatialDataView(this);
-                GeospatialEventDetailWidget currentGeospatialEventDetailWidget = new GeospatialEventDetailWidget(currentGeospatialScaleEvent, currentGeospatialScaleEntity);
-                AccordionPanel accordionPanel = new AccordionPanel(currentGeospatialEventSummaryWidget, currentGeospatialEventDetailWidget);
-                accordionPanel.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
-                    @Override
-                    public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
-                        boolean isOpened = openedChangeEvent.isOpened();
-                        if (isOpened) {
-                            currentGeospatialEventDetailWidget.renderEntityMapInfo();
+
+        if(this.containerConceptionEntitySpatialInfoView != null){
+            this.containerConceptionEntitySpatialInfoView.renderEntitySpatialInfo();
+        }else{
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            coreRealm.openGlobalSession();
+            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+            ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+
+            this.geospatialScaleDataPairList = targetConceptionEntity.getAttachedGeospatialScaleDataPairs();
+
+            if(this.geospatialScaleDataPairList != null && this.geospatialScaleDataPairList.size() >0) {
+                for (GeospatialScaleDataPair currentGeospatialScaleDataPair : this.geospatialScaleDataPairList) {
+                    GeospatialScaleEvent currentGeospatialScaleEvent = currentGeospatialScaleDataPair.getGeospatialScaleEvent();
+                    GeospatialScaleEntity currentGeospatialScaleEntity = currentGeospatialScaleDataPair.getGeospatialScaleEntity();
+                    GeospatialEventSummaryWidget currentGeospatialEventSummaryWidget = new GeospatialEventSummaryWidget(currentGeospatialScaleEvent, currentGeospatialScaleEntity);
+                    currentGeospatialEventSummaryWidget.setConceptionEntitySpatialDataView(this);
+                    GeospatialEventDetailWidget currentGeospatialEventDetailWidget = new GeospatialEventDetailWidget(currentGeospatialScaleEvent, currentGeospatialScaleEntity);
+                    AccordionPanel accordionPanel = new AccordionPanel(currentGeospatialEventSummaryWidget, currentGeospatialEventDetailWidget);
+                    accordionPanel.addOpenedChangeListener(new ComponentEventListener<Details.OpenedChangeEvent>() {
+                        @Override
+                        public void onComponentEvent(Details.OpenedChangeEvent openedChangeEvent) {
+                            boolean isOpened = openedChangeEvent.isOpened();
+                            if (isOpened) {
+                                currentGeospatialEventDetailWidget.renderEntityMapInfo();
+                            }
                         }
-                    }
-                });
-                accordion.add(accordionPanel);
+                    });
+                    accordion.add(accordionPanel);
+                }
             }
+            coreRealm.closeGlobalSession();
         }
-        coreRealm.closeGlobalSession();
     }
 
     private void renderAttachGeospatialScaleEventsOfConceptionEntityView(){
@@ -175,5 +183,9 @@ public class ConceptionEntitySpatialDataView extends VerticalLayout {
         attachGeospatialScaleEventsOfConceptionEntityView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+    public void setContainerConceptionEntitySpatialInfoView(ConceptionEntitySpatialInfoView containerConceptionEntitySpatialInfoView) {
+        this.containerConceptionEntitySpatialInfoView = containerConceptionEntitySpatialInfoView;
     }
 }
