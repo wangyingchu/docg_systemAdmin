@@ -554,19 +554,13 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             GeospatialRegion targetGeospatialRegion = coreRealm.getOrCreateGeospatialRegion(geospatialRegionName);
             if(targetGeospatialRegion != null){
-                //targetGeospatialRegion
-
-
-
-
-
-
-
-
-
+                List<GeospatialScaleEntity> targetGeospatialScaleEntities =
+                        targetGeospatialRegion.listGeospatialScaleEntities(selectedGeospatialScaleGrade,selectedGeospatialProperty,geospatialAttributeSearchValue);
+                geospatialScaleEntitiesGrid.setItems(targetGeospatialScaleEntities);
+                CommonUIOperationUtil.showPopupNotification("地理空间刻度实体查询操作成功，查询返回实体数: "+targetGeospatialScaleEntities.size(),
+                        NotificationVariant.LUMO_SUCCESS,3000, Notification.Position.BOTTOM_START);
+                resultNumberValue.setText("实体总量："+this.numberFormat.format(targetGeospatialScaleEntities.size()));
             }
-
-
         }
         if(geospatialScaleEntitiesSearchType.equals("SearchBySpaceCalculate")){
             String geospatialRegionName = geospatialRegionNameSelect1.getValue();
