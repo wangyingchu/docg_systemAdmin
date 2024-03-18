@@ -79,6 +79,9 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
         this.conceptionEntityUID = conceptionEntityUID;
 
         this.setSpacing(false);
+        this.setMargin(false);
+        this.setPadding(false);
+
         this.numberFormat = NumberFormat.getInstance();
 
         Icon conceptionKindIcon = VaadinIcon.CUBE.create();
@@ -363,7 +366,7 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
         rightSideContainerLayout.setPadding(false);
         mainLayout.add(rightSideContainerLayout);
 
-        rightSideContainerLayout.setWidth(470,Unit.PIXELS);
+        rightSideContainerLayout.setWidth(510,Unit.PIXELS);
         rightSideContainerLayout.getStyle().set("border-left", "1px solid var(--lumo-contrast-20pct)");
 
         SecondaryIconTitle eventCommentInfoTitle = new SecondaryIconTitle(VaadinIcon.CALENDAR_CLOCK.create(), "事件信息");
@@ -552,6 +555,12 @@ public class AttachGeospatialScaleEventsOfConceptionEntityView extends VerticalL
             GeospatialRegion targetGeospatialRegion = coreRealm.getOrCreateGeospatialRegion(geospatialRegionName);
             if(targetGeospatialRegion != null){
                 //targetGeospatialRegion
+
+
+
+
+
+
 
 
 
