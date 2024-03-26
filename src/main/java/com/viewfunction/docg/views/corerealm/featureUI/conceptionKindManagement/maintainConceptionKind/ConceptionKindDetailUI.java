@@ -251,6 +251,32 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 }
             });
 
+
+            HorizontalLayout action0Layout_1 = new HorizontalLayout();
+            action0Layout_1.setPadding(false);
+            action0Layout_1.setSpacing(false);
+            action0Layout_1.setMargin(false);
+            action0Layout_1.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action0_1Icon = VaadinIcon.LIST_OL.create();
+            action0_1Icon.setSize("10px");
+            Span action0_1Space = new Span();
+            action0_1Space.setWidth(6,Unit.PIXELS);
+            NativeLabel action0_1Label = new NativeLabel("属性值分组统计(100000)");
+            action0_1Label.addClassNames("text-xs","font-semibold","text-secondary");
+            action0Layout_1.add(action0_1Icon,action0_1Space,action0_1Label);
+            MenuItem action0_1Item = actionOptionsSubItems.addItem(action0Layout_1);
+            action0_1Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    renderSampleRandomAttributesView(attributeInfo.getAttributeName());
+                }
+            });
+
+
+
+
+
+
             HorizontalLayout action1Layout = new HorizontalLayout();
             action1Layout.setPadding(false);
             action1Layout.setSpacing(false);
