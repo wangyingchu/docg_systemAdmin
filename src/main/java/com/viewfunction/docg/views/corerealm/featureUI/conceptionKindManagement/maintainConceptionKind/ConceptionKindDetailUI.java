@@ -48,6 +48,7 @@ import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationIn
 import com.viewfunction.docg.element.eventHandling.KindScopeAttributeAddedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributeValueGroupInfoListView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.DuplicateAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeTypeConvert.ConvertEntityAttributeToTemporalTypeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributesViewKindMaintain.RelatedAttributesViewKindRuntimeConfigurationInfoView;
@@ -251,7 +252,6 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                 }
             });
 
-
             HorizontalLayout action0Layout_1 = new HorizontalLayout();
             action0Layout_1.setPadding(false);
             action0Layout_1.setSpacing(false);
@@ -268,14 +268,9 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             action0_1Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                    renderSampleRandomAttributesView(attributeInfo.getAttributeName());
+                    renderGroupByAttributeValueView(attributeInfo.getAttributeName());
                 }
             });
-
-
-
-
-
 
             HorizontalLayout action1Layout = new HorizontalLayout();
             action1Layout.setPadding(false);
@@ -840,8 +835,16 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
     private void renderSampleRandomAttributesView(String attributeName){
         AttributesValueListView attributesValueListView = new AttributesValueListView(AttributesValueListView.AttributeKindType.ConceptionKind,this.conceptionKind,attributeName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create(),"属性值随机采样 (100项)",null,true,500,510,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.LIST_OL.create(),"属性值随机采样 (100项)",null,true,500,520,false);
         fixSizeWindow.setWindowContent(attributesValueListView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderGroupByAttributeValueView(String attributeName){
+        AttributeValueGroupInfoListView attributeValueGroupInfoListView = new AttributeValueGroupInfoListView(AttributeValueGroupInfoListView.AttributeKindType.ConceptionKind,this.conceptionKind,attributeName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create(),"属性值分组统计(100,000项)",null,true,500,520,false);
+        fixSizeWindow.setWindowContent(attributeValueGroupInfoListView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
