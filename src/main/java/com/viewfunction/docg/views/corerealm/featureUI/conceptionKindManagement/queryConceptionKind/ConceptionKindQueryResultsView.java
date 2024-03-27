@@ -137,6 +137,15 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         MenuItem analyzeDataSubMenu = subMenu.addItem(LineAwesomeIconsSvg.BONG_SOLID.create());
         analyzeDataSubMenu.add(" 数据分析");
 
+        MenuItem displayGISInfo = analyzeDataSubMenu.getSubMenu().addItem(VaadinIcon.GLOBE.create());
+        displayGISInfo.add("显示地理空间属性");
+        displayGISInfo.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                //exportExcelQueryResult();
+            }
+        });
+
         queryResultGrid = new Grid<>();
         queryResultGrid.setWidth(100,Unit.PERCENTAGE);
         queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
