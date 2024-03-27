@@ -25,6 +25,7 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
@@ -139,10 +140,34 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
         MenuItem displayGISInfo = analyzeDataSubMenu.getSubMenu().addItem(VaadinIcon.GLOBE.create());
         displayGISInfo.add("显示地理空间属性");
-        displayGISInfo.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+
+        MenuItem globalGISInfo = displayGISInfo.getSubMenu().addItem(VaadinIcon.GLOBE_WIRE.create());
+        globalGISInfo.add("全球坐标系地理空间信息");
+
+        MenuItem countryGISInfo = displayGISInfo.getSubMenu().addItem(VaadinIcon.LOCATION_ARROW_CIRCLE.create());
+        countryGISInfo.add("国家坐标系地理空间信息");
+
+        MenuItem localGISInfo = displayGISInfo.getSubMenu().addItem(VaadinIcon.HOME.create());
+        localGISInfo.add("本地坐标系地理空间信息");
+
+        globalGISInfo.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                //exportExcelQueryResult();
+                showEntitiesGISInfo(GeospatialScaleCalculable.SpatialScaleLevel.Global);
+            }
+        });
+
+        countryGISInfo.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                showEntitiesGISInfo(GeospatialScaleCalculable.SpatialScaleLevel.Country);
+            }
+        });
+
+        localGISInfo.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                showEntitiesGISInfo(GeospatialScaleCalculable.SpatialScaleLevel.Local);
             }
         });
 
@@ -476,5 +501,28 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         fixSizeWindow.setModel(true);
         downloadExcelFormatQueryResultsView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    private void showEntitiesGISInfo(GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel){
+        Icon windowTitleIcon = null;
+        String windowTitleTxt = null;
+        switch(spatialScaleLevel){
+            case Global :
+                windowTitleIcon = VaadinIcon.GLOBE.create();
+                windowTitleTxt="g";
+                break;
+            case Country:
+                windowTitleIcon = VaadinIcon.LOCATION_ARROW_CIRCLE.create();
+                windowTitleTxt="c";
+                break;
+            case Local:
+                windowTitleIcon = VaadinIcon.HOME.create();
+                windowTitleTxt="l";
+                break;
+        }
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(windowTitleIcon,windowTitleTxt,null,null,true);
+        //fullScreenWindow.setWindowContent(conceptionKindQueryUI);
+        fullScreenWindow.show();
     }
 }
