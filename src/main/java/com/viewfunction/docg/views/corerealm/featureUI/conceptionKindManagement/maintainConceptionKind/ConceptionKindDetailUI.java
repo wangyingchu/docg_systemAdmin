@@ -261,7 +261,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             action0_1Icon.setSize("10px");
             Span action0_1Space = new Span();
             action0_1Space.setWidth(6,Unit.PIXELS);
-            NativeLabel action0_1Label = new NativeLabel("属性值分组统计(100000)");
+            NativeLabel action0_1Label = new NativeLabel("属性值分组统计(100,000)");
             action0_1Label.addClassNames("text-xs","font-semibold","text-secondary");
             action0Layout_1.add(action0_1Icon,action0_1Space,action0_1Label);
             MenuItem action0_1Item = actionOptionsSubItems.addItem(action0Layout_1);
@@ -835,7 +835,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
     private void renderSampleRandomAttributesView(String attributeName){
         AttributesValueListView attributesValueListView = new AttributesValueListView(AttributesValueListView.AttributeKindType.ConceptionKind,this.conceptionKind,attributeName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.LIST_OL.create(),"属性值随机采样 (100项)",null,true,500,520,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create(),"属性值随机采样 (100项)",null,true,500,520,false);
         fixSizeWindow.setWindowContent(attributesValueListView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
@@ -843,7 +843,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
     private void renderGroupByAttributeValueView(String attributeName){
         AttributeValueGroupInfoListView attributeValueGroupInfoListView = new AttributeValueGroupInfoListView(AttributeValueGroupInfoListView.AttributeKindType.ConceptionKind,this.conceptionKind,attributeName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create(),"属性值分组统计(100,000项)",null,true,500,520,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.LIST_OL.create(),"属性值分组统计(100,000项)",null,true,500,520,false);
         fixSizeWindow.setWindowContent(attributeValueGroupInfoListView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
