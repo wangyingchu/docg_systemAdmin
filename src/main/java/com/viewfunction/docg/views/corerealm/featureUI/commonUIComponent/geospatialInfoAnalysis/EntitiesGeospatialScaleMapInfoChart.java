@@ -12,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
@@ -21,7 +22,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntiti
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.geospatial.GeospatialCalculateUtil;
 
@@ -96,7 +96,6 @@ public class EntitiesGeospatialScaleMapInfoChart extends VerticalLayout {
                     String interiorPointWKT = null;
                     String envelopeAreaWKT = null;
                     String geometryContentWKT = null;
-
                     String conceptionKindName = null;
                     String conceptionEntityUID = null;
 
@@ -201,57 +200,6 @@ public class EntitiesGeospatialScaleMapInfoChart extends VerticalLayout {
                         }
                     }
                 }
-
-
-
-
-
-            /*
-            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-            CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
-            List<String> queryAttributeNamesList = new ArrayList<>();
-            try {
-                switch(this.spatialScaleLevel){
-                    case Global :
-                        queryAttributeNamesList.add(RealmConstant._GeospatialGLGeometryContent);
-                        queryAttributeNamesList.add(RealmConstant._GeospatialGlobalCRSAID);
-                        queryAttributeNamesList.add(RealmConstant._GeospatialGeometryType);
-                        break;
-                    case Country :
-                        queryAttributeNamesList.add(RealmConstant._GeospatialCLGeometryContent);
-                        queryAttributeNamesList.add(RealmConstant._GeospatialCountryCRSAID);
-                        queryAttributeNamesList.add(RealmConstant._GeospatialGeometryType);
-                        break;
-                    case Local :
-                        queryAttributeNamesList.add(RealmConstant._GeospatialLLGeometryContent);
-                        queryAttributeNamesList.add(RealmConstant._GeospatialLocalCRSAID);
-                        queryAttributeNamesList.add(RealmConstant._GeospatialGeometryType);
-                }
-                List<ConceptionEntityValue> conceptionEntityResultValueList = crossKindDataOperator.getSingleValueConceptionEntityAttributesByUIDs(conceptionEntitiesUIDList,queryAttributeNamesList);
-                if(conceptionEntityResultValueList != null){
-                    for(ConceptionEntityValue currentConceptionEntityValue:conceptionEntityResultValueList){
-                        String geometryCRSAID = null;
-                        String wktContent = null;
-                        String geospatialGeometryType = currentConceptionEntityValue.getEntityAttributesValue().get(RealmConstant._GeospatialGeometryType).toString();
-                        switch(this.spatialScaleLevel){
-                            case Global :
-                                geometryCRSAID = currentConceptionEntityValue.getEntityAttributesValue().get(RealmConstant._GeospatialGlobalCRSAID).toString();
-                                wktContent = currentConceptionEntityValue.getEntityAttributesValue().get(RealmConstant._GeospatialGLGeometryContent).toString();
-                                break;
-                            case Country :
-                                geometryCRSAID = currentConceptionEntityValue.getEntityAttributesValue().get(RealmConstant._GeospatialCountryCRSAID).toString();
-                                wktContent = currentConceptionEntityValue.getEntityAttributesValue().get(RealmConstant._GeospatialCLGeometryContent).toString();
-                                break;
-                            case Local :
-                                geometryCRSAID = currentConceptionEntityValue.getEntityAttributesValue().get(RealmConstant._GeospatialLocalCRSAID).toString();
-                                wktContent = currentConceptionEntityValue.getEntityAttributesValue().get(RealmConstant._GeospatialLLGeometryContent).toString();
-                        }
-                        if(wktContent!= null){
-                            renderEntityContent(currentConceptionEntityValue.getConceptionEntityUID(),geospatialGeometryType,getGeoJsonFromWKTContent(geometryCRSAID,wktContent));
-                        }
-                    }
-                }
-                */
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
             }finally {
