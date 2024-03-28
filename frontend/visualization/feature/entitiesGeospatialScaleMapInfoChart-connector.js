@@ -108,9 +108,9 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
                     "dashArray": 5,
                     "color": '#666666',
                     "weight": 1,
-                    "opacity": 0.4,
+                    "opacity": 0.1,
                     "fillColor": '#AAAAAA',
-                    "fillOpacity": 0.2
+                    "fillOpacity": 0.05
                 };
 
                 L.geoJSON(geoJsonObject, {

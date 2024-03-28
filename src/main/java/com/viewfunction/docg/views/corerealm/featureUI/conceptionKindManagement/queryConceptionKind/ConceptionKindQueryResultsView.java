@@ -140,7 +140,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         analyzeDataSubMenu.add(" 数据分析");
 
         MenuItem displayGISInfo = analyzeDataSubMenu.getSubMenu().addItem(VaadinIcon.GLOBE.create());
-        displayGISInfo.add("显示地理空间属性");
+        displayGISInfo.add("随机抽样显示地理空间属性");
 
         MenuItem globalGISInfo = displayGISInfo.getSubMenu().addItem(VaadinIcon.GLOBE_WIRE.create());
         globalGISInfo.add("全球坐标系地理空间信息");
