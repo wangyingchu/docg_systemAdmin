@@ -523,7 +523,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         }
 
         FullScreenWindow fullScreenWindow = new FullScreenWindow(windowTitleIcon,windowTitleTxt,null,null,true);
-        EntitiesGeospatialScaleMapInfoChart entitiesGeospatialScaleMapInfoChart = new EntitiesGeospatialScaleMapInfoChart(spatialScaleLevel,this.lastConceptionEntitiesAttributesRetrieveResult);
+        EntitiesGeospatialScaleMapInfoChart entitiesGeospatialScaleMapInfoChart = new EntitiesGeospatialScaleMapInfoChart(this.conceptionKindName,spatialScaleLevel,this.lastConceptionEntitiesAttributesRetrieveResult);
         fullScreenWindow.setWindowContent(entitiesGeospatialScaleMapInfoChart);
         fullScreenWindow.show();
         entitiesGeospatialScaleMapInfoChart.renderMapAndSpatialInfo();
