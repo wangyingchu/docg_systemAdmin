@@ -2,15 +2,15 @@ package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospa
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vaadin.flow.component.AttachEvent;
+
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
-import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
@@ -39,6 +39,9 @@ public class EntitiesGeospatialScaleMapInfoChart extends VerticalLayout {
         this.spatialScaleLevel = spatialScaleLevel;
         this.conceptionEntitiesAttributesRetrieveResult = conceptionEntitiesAttributesRetrieveResult;
         this.kindName = kindName;
+
+        this.setWidthFull();
+        this.setHeight(700, Unit.PIXELS);
     }
 
     private void initConnector() {
@@ -87,8 +90,7 @@ public class EntitiesGeospatialScaleMapInfoChart extends VerticalLayout {
                 }
                 List<ConceptionEntityValue> conceptionEntityResultValueList = crossKindDataOperator.getSingleValueConceptionEntityAttributesByUIDs(entitiesUIDList,queryAttributeNamesList);
                 if(conceptionEntityResultValueList != null){
-                    ConceptionEntityValue currentConceptionEntityValue = conceptionEntityResultValueList.get(0);
-                    //for(ConceptionEntityValue currentConceptionEntityValue:conceptionEntityResultValueList){
+                    for(ConceptionEntityValue currentConceptionEntityValue:conceptionEntityResultValueList){
                         String geometryCRSAID = null;
                         String wktContent = null;
                         String geospatialGeometryType = currentConceptionEntityValue.getEntityAttributesValue().get(RealmConstant._GeospatialGeometryType).toString();
@@ -105,12 +107,8 @@ public class EntitiesGeospatialScaleMapInfoChart extends VerticalLayout {
                                 geometryCRSAID = currentConceptionEntityValue.getEntityAttributesValue().get(RealmConstant._GeospatialLocalCRSAID).toString();
                                 wktContent = currentConceptionEntityValue.getEntityAttributesValue().get(RealmConstant._GeospatialLLGeometryContent).toString();
                         }
-
-
                         renderEntityContent(currentConceptionEntityValue.getConceptionEntityUID(),geospatialGeometryType,getGeoJsonFromWKTContent(geometryCRSAID,wktContent));
-
-
-                    //}
+                    }
                 }
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
@@ -127,40 +125,6 @@ public class EntitiesGeospatialScaleMapInfoChart extends VerticalLayout {
         return null;
     }
 
-/*
-    public void renderCentroidPoint(String centroidPointGeoJson){
-        this.centroidPointGeoJson = centroidPointGeoJson;
-        runBeforeClientResponse(ui -> {
-            try {
-                getElement().callJsFunction("$connector.renderCentroidPoint", new Serializable[]{(new ObjectMapper()).writeValueAsString(centroidPointGeoJson)});
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    public void renderInteriorPoint(String interiorPointGeoJson){
-        this.interiorPointGeoJson = interiorPointGeoJson;
-        runBeforeClientResponse(ui -> {
-            try {
-                getElement().callJsFunction("$connector.renderInteriorPoint", new Serializable[]{(new ObjectMapper()).writeValueAsString(interiorPointGeoJson)});
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    public void renderEnvelope(String envelopeGeoJson){
-        this.envelopeGeoJson = envelopeGeoJson;
-        runBeforeClientResponse(ui -> {
-            try {
-                getElement().callJsFunction("$connector.renderEnvelope", new Serializable[]{(new ObjectMapper()).writeValueAsString(envelopeGeoJson)});
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-*/
     public void renderEntityContent(String entityUID, String _WKTGeometryType, String entityContentGeoJsonStr){
         String entityContentGeoJson = entityContentGeoJsonStr;
         switch (_WKTGeometryType){

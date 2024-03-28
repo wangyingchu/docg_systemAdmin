@@ -18,12 +18,6 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
             },
 
             renderPointEntityContent : function(geoJsonStr,conceptionKindName,conceptionEntityUID) {
-
-
-                console.log(geoJsonStr);
-                console.log(geoJsonStr);
-                console.log(geoJsonStr);
-
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
                 c.$connector.renderEntityContent(geoJsonObject,conceptionKindName,conceptionEntityUID);
                 const pointLocation = geoJsonObject.features[0].geometry.coordinates;
