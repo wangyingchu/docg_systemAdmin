@@ -526,5 +526,6 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         EntitiesGeospatialScaleMapInfoChart entitiesGeospatialScaleMapInfoChart = new EntitiesGeospatialScaleMapInfoChart(spatialScaleLevel,this.lastConceptionEntitiesAttributesRetrieveResult);
         fullScreenWindow.setWindowContent(entitiesGeospatialScaleMapInfoChart);
         fullScreenWindow.show();
+        entitiesGeospatialScaleMapInfoChart.renderMapAndSpatialInfo();
     }
 }

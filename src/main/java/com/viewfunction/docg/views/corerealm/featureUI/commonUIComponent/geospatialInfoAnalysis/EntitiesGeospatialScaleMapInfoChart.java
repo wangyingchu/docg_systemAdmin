@@ -37,11 +37,17 @@ public class EntitiesGeospatialScaleMapInfoChart extends VerticalLayout {
 
     public void renderMapAndSpatialInfo(){
         initConnector();
+        System.out.println("ASDDDDDDDDDDDDDDDD");
+        System.out.println("ASDDDDDDDDDDDDDDDD");
+        System.out.println("ASDDDDDDDDDDDDDDDD");
+        System.out.println("ASDDDDDDDDDDDDDDDD");
     }
 
+    /*
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         renderMapAndSpatialInfo();
     }
+    */
 }
