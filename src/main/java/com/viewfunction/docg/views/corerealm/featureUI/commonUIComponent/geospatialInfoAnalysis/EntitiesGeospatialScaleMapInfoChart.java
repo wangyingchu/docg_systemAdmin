@@ -3,12 +3,15 @@ package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospa
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
+import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
@@ -27,6 +30,7 @@ import java.util.List;
 public class EntitiesGeospatialScaleMapInfoChart extends VerticalLayout {
     private GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel;
     private ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult;
+    private Registration listener;
     private String kindName;
     public EntitiesGeospatialScaleMapInfoChart(String kindName,GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel, ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult){
         this.setPadding(false);
@@ -42,6 +46,19 @@ public class EntitiesGeospatialScaleMapInfoChart extends VerticalLayout {
 
         this.setWidthFull();
         this.setHeight(700, Unit.PIXELS);
+    }
+
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            this.setHeight(receiver.getBodyClientHeight()-75,Unit.PIXELS);
+        }));
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        listener.remove();
+        super.onDetach(detachEvent);
     }
 
     private void initConnector() {
@@ -107,7 +124,9 @@ public class EntitiesGeospatialScaleMapInfoChart extends VerticalLayout {
                                 geometryCRSAID = currentConceptionEntityValue.getEntityAttributesValue().get(RealmConstant._GeospatialLocalCRSAID).toString();
                                 wktContent = currentConceptionEntityValue.getEntityAttributesValue().get(RealmConstant._GeospatialLLGeometryContent).toString();
                         }
-                        renderEntityContent(currentConceptionEntityValue.getConceptionEntityUID(),geospatialGeometryType,getGeoJsonFromWKTContent(geometryCRSAID,wktContent));
+                        if(wktContent!= null){
+                            renderEntityContent(currentConceptionEntityValue.getConceptionEntityUID(),geospatialGeometryType,getGeoJsonFromWKTContent(geometryCRSAID,wktContent));
+                        }
                     }
                 }
             } catch (CoreRealmServiceEntityExploreException e) {
