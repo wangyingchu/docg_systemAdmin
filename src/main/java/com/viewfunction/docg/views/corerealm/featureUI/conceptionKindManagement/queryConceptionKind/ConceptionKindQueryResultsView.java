@@ -38,6 +38,7 @@ import com.viewfunction.docg.element.eventHandling.ConceptionEntityDeletedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialInfoAnalysis.EntitiesGeospatialScaleMapInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.AddConceptionEntityToProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.DeleteConceptionEntityView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
@@ -505,24 +506,25 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
     private void showEntitiesGISInfo(GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel){
         Icon windowTitleIcon = null;
-        String windowTitleTxt = null;
+        String windowTitleTxt = this.conceptionKindName + " 概念实体 ("+ this.numberFormat.format(this.lastConceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues().size())+") ";
         switch(spatialScaleLevel){
             case Global :
-                windowTitleIcon = VaadinIcon.GLOBE.create();
-                windowTitleTxt="g";
+                windowTitleIcon = VaadinIcon.GLOBE_WIRE.create();
+                windowTitleTxt = windowTitleTxt + "全球坐标系空间数据展示";
                 break;
             case Country:
                 windowTitleIcon = VaadinIcon.LOCATION_ARROW_CIRCLE.create();
-                windowTitleTxt="c";
+                windowTitleTxt = windowTitleTxt + "国家坐标系空间数据展示";
                 break;
             case Local:
                 windowTitleIcon = VaadinIcon.HOME.create();
-                windowTitleTxt="l";
+                windowTitleTxt = windowTitleTxt + "本地坐标系空间数据展示";
                 break;
         }
 
         FullScreenWindow fullScreenWindow = new FullScreenWindow(windowTitleIcon,windowTitleTxt,null,null,true);
-        //fullScreenWindow.setWindowContent(conceptionKindQueryUI);
+        EntitiesGeospatialScaleMapInfoChart entitiesGeospatialScaleMapInfoChart = new EntitiesGeospatialScaleMapInfoChart(spatialScaleLevel,this.lastConceptionEntitiesAttributesRetrieveResult);
+        fullScreenWindow.setWindowContent(entitiesGeospatialScaleMapInfoChart);
         fullScreenWindow.show();
     }
 }
