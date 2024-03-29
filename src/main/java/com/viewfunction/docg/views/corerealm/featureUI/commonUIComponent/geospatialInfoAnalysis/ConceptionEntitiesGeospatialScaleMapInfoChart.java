@@ -15,16 +15,13 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleC
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.geospatial.GeospatialCalculateUtil;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @JavaScript("./visualization/feature/entitiesGeospatialScaleMapInfoChart-connector.js")
 public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayout {
@@ -48,7 +45,6 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
         this.setHeight(700, Unit.PIXELS);
     }
 
-
     private void initConnector() {
         runBeforeClientResponse(ui -> ui.getPage().executeJs(
                 "window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart.initLazy($0)", getElement()));
@@ -59,15 +55,13 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
                 .beforeClientResponse(this, context -> command.accept(ui)));
     }
 
-    public void renderMapAndSpatialInfo(){
+    public void renderMapAndSpatialInfo(List<String> conceptionEntitiesUIDList){
         initConnector();
-        renderEntities();
+        renderEntities(conceptionEntitiesUIDList);
     }
 
-    private void renderEntities(){
-        List<String> conceptionEntitiesUIDList = getRandomEntitiesUID(randomEntityCount,this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues());
+    private void renderEntities(List<String> conceptionEntitiesUIDList){
         if(conceptionEntitiesUIDList != null){
-
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             coreRealm.openGlobalSession();
             CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
@@ -189,15 +183,6 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
                 coreRealm.closeGlobalSession();
             }
         }
-    }
-
-    private List<String> getRandomEntitiesUID(int targetEntitiesCount,List<ConceptionEntityValue> conceptionEntityValueList){
-        List<String> targetUIDList = new ArrayList<>();
-        while(targetUIDList.size() < targetEntitiesCount){
-            int currentIdx = new Random().nextInt(conceptionEntityValueList.size());
-            targetUIDList.add(conceptionEntityValueList.get(currentIdx).getConceptionEntityUID());
-        }
-        return targetUIDList;
     }
 
     private String getGeoJsonFromWKTContent(String geometryCRSAID,String wktContent){
