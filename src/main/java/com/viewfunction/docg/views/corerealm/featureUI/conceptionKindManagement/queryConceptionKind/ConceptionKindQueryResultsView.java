@@ -37,8 +37,7 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityDeletedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
-
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialInfoAnalysis.EntitiesGeospatialScaleMapInfoChart;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialInfoAnalysis.ConceptionEntitiesGeospatialInfoAnalysisView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.AddConceptionEntityToProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.DeleteConceptionEntityView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
@@ -523,9 +522,8 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         }
 
         FullScreenWindow fullScreenWindow = new FullScreenWindow(windowTitleIcon,windowTitleTxt,null,null,true);
-        EntitiesGeospatialScaleMapInfoChart entitiesGeospatialScaleMapInfoChart = new EntitiesGeospatialScaleMapInfoChart(this.conceptionKindName,spatialScaleLevel,this.lastConceptionEntitiesAttributesRetrieveResult);
-        fullScreenWindow.setWindowContent(entitiesGeospatialScaleMapInfoChart);
+        ConceptionEntitiesGeospatialInfoAnalysisView conceptionEntitiesGeospatialInfoAnalysisView = new ConceptionEntitiesGeospatialInfoAnalysisView(this.conceptionKindName,spatialScaleLevel,this.lastConceptionEntitiesAttributesRetrieveResult);
+        fullScreenWindow.setWindowContent(conceptionEntitiesGeospatialInfoAnalysisView);
         fullScreenWindow.show();
-        entitiesGeospatialScaleMapInfoChart.renderMapAndSpatialInfo();
     }
 }
