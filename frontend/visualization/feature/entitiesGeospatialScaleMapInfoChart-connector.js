@@ -42,7 +42,7 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
                     "fillColor": '#1685a9',
                     "fillOpacity": 0.65
                 };
-                L.geoJSON(geoJsonObject, {
+                let contentLayer = L.geoJSON(geoJsonObject, {
                     pointToLayer: function (feature, latlng) {
                         return L.circleMarker(latlng, {
                             radius: 6,
@@ -56,6 +56,7 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
                     style:geoStyle,
                     onEachFeature: onEachFeature
                 }).addTo(map);
+                assetsLayersArray.push(contentLayer);
 
                 function onEachFeature(feature, layer) {
                     let popupContent = '<p> '+ conceptionKindName+' - '+conceptionEntityUID+' ('+feature.geometry.type +')</p>';
@@ -68,7 +69,7 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
 
             renderCentroidPoint : function(geoJsonStr) {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
-                L.geoJSON(geoJsonObject, {
+                let centroidPointLayer = L.geoJSON(geoJsonObject, {
                     pointToLayer: function (feature, latlng) {
                         return L.circleMarker(latlng, {
                             dashArray: 5,
@@ -81,13 +82,15 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
                         });
                     }
                 }).addTo(map);
+                assetsLayersArray.push(centroidPointLayer);
+
                 const pointLocation = geoJsonObject.features[0].geometry.coordinates;
                 map.setView([pointLocation[1],pointLocation[0]], 15);
             },
 
             renderInteriorPoint : function(geoJsonStr) {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
-                L.geoJSON(geoJsonObject, {
+                let interiorPointLayer = L.geoJSON(geoJsonObject, {
                     pointToLayer: function (feature, latlng) {
                         return L.circleMarker(latlng, {
                             dashArray: 5,
@@ -100,6 +103,7 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
                         });
                     }
                 }).addTo(map);
+                assetsLayersArray.push(interiorPointLayer);
             },
 
             renderEnvelope: function(geoJsonStr) {
@@ -113,7 +117,7 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
                     "fillOpacity": 0.05
                 };
 
-                L.geoJSON(geoJsonObject, {
+                let envelopeLayer = L.geoJSON(geoJsonObject, {
                     pointToLayer: function (feature, latlng) {
                         return L.circleMarker(latlng, {
                             radius: 6,
@@ -126,6 +130,13 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
                     },
                     style:geoStyle
                 }).addTo(map);
+                assetsLayersArray.push(envelopeLayer);
+            },
+
+            clearMap:function(){
+                assetsLayersArray.forEach(function(layer){
+                    map.removeLayer(layer);
+                });
             }
         };
         /* access_token doesn't work anymore,so stop use mapbox
@@ -204,5 +215,7 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
             'tdtu':tdtu
         };
         L.control.layers(baseLayers).addTo(map);
+
+        const assetsLayersArray = [];
     }
 }

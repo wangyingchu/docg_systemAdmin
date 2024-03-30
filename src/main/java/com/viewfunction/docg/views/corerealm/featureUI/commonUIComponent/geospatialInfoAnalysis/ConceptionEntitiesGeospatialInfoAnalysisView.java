@@ -83,6 +83,7 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
         }
         int currentSampleCount = entitiesSampleCountField.getValue();
         List<String> conceptionEntitiesUIDList = getRandomEntitiesUID(currentSampleCount,this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues());
+        this.conceptionEntitiesGeospatialScaleMapInfoChart.clearMap();
         if(conceptionEntitiesUIDList != null){
             this.conceptionEntitiesGeospatialScaleMapInfoChart.renderMapAndSpatialInfo(getRandomEntitiesUID(currentSampleCount,this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues()));
         }
