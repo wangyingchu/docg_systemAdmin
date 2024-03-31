@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -20,9 +21,11 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleC
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +39,6 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
     private ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult;
     private NativeLabel resultNumberValue;
     private Grid<ConceptionEntity> displayedConceptionEntitiesGrid;
-
-
-
 
     public ConceptionEntitiesGeospatialInfoAnalysisView(String kindName, GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel,
                                                         ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult) {
@@ -138,7 +138,7 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(conceptionEntityValue != null){
-                        //renderConceptionEntityUI(conceptionEntityValue);
+                        renderConceptionEntityUI(conceptionEntityValue);
                     }
                 }
             });
@@ -176,10 +176,71 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
 
     private List<String> getRandomEntitiesUID(int targetEntitiesCount,List<ConceptionEntityValue> conceptionEntityValueList){
         List<String> targetUIDList = new ArrayList<>();
-        while(targetUIDList.size() < targetEntitiesCount){
+        int loopCount = 0;
+        while(loopCount < targetEntitiesCount){
             int currentIdx = new Random().nextInt(conceptionEntityValueList.size());
-            targetUIDList.add(conceptionEntityValueList.get(currentIdx).getConceptionEntityUID());
+            String currentConceptionEntityUID = conceptionEntityValueList.get(currentIdx).getConceptionEntityUID();
+            if(!targetUIDList.contains(currentConceptionEntityUID)){
+                targetUIDList.add(currentConceptionEntityUID);
+            }
+            loopCount++;
         }
         return targetUIDList;
+    }
+
+    private void renderConceptionEntityUI(ConceptionEntity conceptionEntityValue){
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(conceptionEntityValue.getConceptionKindName(),conceptionEntityValue.getConceptionEntityUID());
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("10px");
+        titleDetailLayout.add(conceptionKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(conceptionEntityValue.getConceptionKindName());
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+        conceptionEntityIcon.setSize("10px");
+        titleDetailLayout.add(conceptionEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel conceptionEntityUIDLabel = new NativeLabel(conceptionEntityValue.getConceptionEntityUID());
+        titleDetailLayout.add(conceptionEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
     }
 }
