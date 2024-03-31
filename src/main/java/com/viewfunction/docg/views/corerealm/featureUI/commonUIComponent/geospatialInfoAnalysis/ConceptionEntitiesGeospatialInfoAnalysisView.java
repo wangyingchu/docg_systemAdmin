@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 
+import com.vaadin.flow.function.SerializableConsumer;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
@@ -28,8 +29,8 @@ import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout {
     private Registration listener;
@@ -175,17 +176,22 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
     }
 
     private List<String> getRandomEntitiesUID(int targetEntitiesCount,List<ConceptionEntityValue> conceptionEntityValueList){
-        List<String> targetUIDList = new ArrayList<>();
-        int loopCount = 0;
-        while(loopCount < targetEntitiesCount){
-            int currentIdx = new Random().nextInt(conceptionEntityValueList.size());
-            String currentConceptionEntityUID = conceptionEntityValueList.get(currentIdx).getConceptionEntityUID();
-            if(!targetUIDList.contains(currentConceptionEntityUID)){
-                targetUIDList.add(currentConceptionEntityUID);
+        List<String> allEntitiesUIDList = new ArrayList<>();
+        conceptionEntityValueList.forEach(new SerializableConsumer<ConceptionEntityValue>() {
+            @Override
+            public void accept(ConceptionEntityValue conceptionEntityValue) {
+                allEntitiesUIDList.add(conceptionEntityValue.getConceptionEntityUID());
             }
-            loopCount++;
+        });
+
+        int realSampleCount = 0;
+        if(conceptionEntityValueList.size() >= targetEntitiesCount){
+            realSampleCount = targetEntitiesCount;
+        }else{
+            realSampleCount = conceptionEntityValueList.size();
         }
-        return targetUIDList;
+        Collections.shuffle(allEntitiesUIDList);
+        return allEntitiesUIDList.subList(0, realSampleCount);
     }
 
     private void renderConceptionEntityUI(ConceptionEntity conceptionEntityValue){
