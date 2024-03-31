@@ -21,6 +21,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.geospatial.GeospatialCalculateUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @JavaScript("./visualization/feature/entitiesGeospatialScaleMapInfoChart-connector.js")
@@ -55,12 +56,14 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
                 .beforeClientResponse(this, context -> command.accept(ui)));
     }
 
-    public void renderMapAndSpatialInfo(List<String> conceptionEntitiesUIDList){
+    public List<ConceptionEntity> renderMapAndSpatialInfo(List<String> conceptionEntitiesUIDList){
         initConnector();
-        renderEntities(conceptionEntitiesUIDList);
+        return renderEntities(conceptionEntitiesUIDList);
     }
 
-    private void renderEntities(List<String> conceptionEntitiesUIDList){
+    private List<ConceptionEntity> renderEntities(List<String> conceptionEntitiesUIDList){
+        List<ConceptionEntity> displayedConceptionEntitiesList = new ArrayList<>();
+
         if(conceptionEntitiesUIDList != null){
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             coreRealm.openGlobalSession();
@@ -174,6 +177,7 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
                             } catch (CoreRealmServiceRuntimeException e) {
                                 throw new RuntimeException(e);
                             }
+                            displayedConceptionEntitiesList.add(conceptionEntity);
                         }
                     }
                 }
@@ -183,6 +187,7 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
                 coreRealm.closeGlobalSession();
             }
         }
+        return displayedConceptionEntitiesList;
     }
 
     private String getGeoJsonFromWKTContent(String geometryCRSAID,String wktContent){

@@ -1,19 +1,27 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialInfoAnalysis;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
+import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 
 import java.util.ArrayList;
@@ -25,8 +33,12 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
     private IntegerField entitiesSampleCountField;
     private ConceptionEntitiesGeospatialScaleMapInfoChart conceptionEntitiesGeospatialScaleMapInfoChart;
     private int entitiesSampleCount = 100;
-
     private ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult;
+    private NativeLabel resultNumberValue;
+    private Grid<ConceptionEntity> displayedConceptionEntitiesGrid;
+
+
+
 
     public ConceptionEntitiesGeospatialInfoAnalysisView(String kindName, GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel,
                                                         ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult) {
@@ -59,15 +71,85 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(VaadinIcon.CONTROLLER.create(), "数据采样设置",actionElementsList,null);
         add(secondaryTitleActionBar);
 
+        HorizontalLayout mainLayout = new HorizontalLayout();
+        mainLayout.setSpacing(false);
+        mainLayout.setMargin(false);
+        mainLayout.setPadding(false);
+        mainLayout.setWidthFull();
+        add(mainLayout);
+
+        VerticalLayout leftSideContainer = new VerticalLayout();
+        leftSideContainer.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
+        leftSideContainer.setWidth(400,Unit.PIXELS);
+        leftSideContainer.setSpacing(true);
+        leftSideContainer.setMargin(false);
+        leftSideContainer.setPadding(false);
+        mainLayout.add(leftSideContainer);
+
+        VerticalLayout rightSideContainer = new VerticalLayout();
+        rightSideContainer.setSpacing(false);
+        rightSideContainer.setMargin(false);
+        rightSideContainer.setPadding(false);
+        mainLayout.add(rightSideContainer);
+
+        this.resultNumberValue = new NativeLabel("100");
+        this.resultNumberValue.addClassNames("text-xs","font-bold");
+        this.resultNumberValue.getStyle().set("padding-right","10px");
+
+        SecondaryIconTitle filterTitle = new SecondaryIconTitle(FontAwesome.Solid.MAP.create(),"含地理空间信息概念实体采样结果",resultNumberValue);
+        filterTitle.getStyle().set("padding-left","10px");
+        leftSideContainer.add(filterTitle);
+
+        this.displayedConceptionEntitiesGrid = new Grid<>();
+        this.displayedConceptionEntitiesGrid.setWidth(100,Unit.PERCENTAGE);
+        this.displayedConceptionEntitiesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COMPACT);
+        this.displayedConceptionEntitiesGrid.addColumn(ConceptionEntity::getConceptionKindName).setHeader("").setKey("idx_0").setFlexGrow(1).setResizable(false);
+        this.displayedConceptionEntitiesGrid.addColumn(ConceptionEntity::getConceptionEntityUID).setHeader("").setKey("idx_1").setFlexGrow(0).setWidth("100px").setResizable(false);
+        this.displayedConceptionEntitiesGrid.addComponentColumn(new ConceptionEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_2").setFlexGrow(0).setWidth("60px").setResizable(false);
+        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.CUBE,"概念类型");
+        this.displayedConceptionEntitiesGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.KEY_O,"概念实体UID");
+        this.displayedConceptionEntitiesGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
+        this.displayedConceptionEntitiesGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(false);
+
+        leftSideContainer.add(this.displayedConceptionEntitiesGrid);
+
         this.conceptionEntitiesGeospatialScaleMapInfoChart = new ConceptionEntitiesGeospatialScaleMapInfoChart(kindName,spatialScaleLevel,conceptionEntitiesAttributesRetrieveResult);
-        add(this.conceptionEntitiesGeospatialScaleMapInfoChart);
-        this.conceptionEntitiesGeospatialScaleMapInfoChart.renderMapAndSpatialInfo(getRandomEntitiesUID(entitiesSampleCount,this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues()));
+        rightSideContainer.add(this.conceptionEntitiesGeospatialScaleMapInfoChart);
+
+        List<ConceptionEntity> displayedConceptionEntities = this.conceptionEntitiesGeospatialScaleMapInfoChart.renderMapAndSpatialInfo(getRandomEntitiesUID(entitiesSampleCount,this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues()));
+        this.resultNumberValue.setText(""+displayedConceptionEntities.size());
+        this.displayedConceptionEntitiesGrid.setItems(displayedConceptionEntities);
+    }
+
+    private class ConceptionEntityActionButtonsValueProvider implements ValueProvider<ConceptionEntity,HorizontalLayout>{
+        @Override
+        public HorizontalLayout apply(ConceptionEntity conceptionEntityValue) {
+            HorizontalLayout actionButtonContainerLayout = new HorizontalLayout();
+            actionButtonContainerLayout.setMargin(false);
+            actionButtonContainerLayout.setSpacing(false);
+            Button showDetailButton = new Button();
+            showDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            showDetailButton.setIcon(VaadinIcon.EYE.create());
+            showDetailButton.setTooltipText("显示概念实体详情");
+            actionButtonContainerLayout.add(showDetailButton);
+            showDetailButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(conceptionEntityValue != null){
+                        //renderConceptionEntityUI(conceptionEntityValue);
+                    }
+                }
+            });
+            return actionButtonContainerLayout;
+        }
     }
 
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            conceptionEntitiesGeospatialScaleMapInfoChart.setHeight(receiver.getBodyClientHeight()-120, Unit.PIXELS);
+            this.conceptionEntitiesGeospatialScaleMapInfoChart.setHeight(receiver.getBodyClientHeight()-120, Unit.PIXELS);
         }));
     }
 
@@ -78,14 +160,17 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
     }
 
     private void refreshMapSpatialInfo(){
-        if(entitiesSampleCountField.getValue() == null || entitiesSampleCountField.isInvalid()){
-            entitiesSampleCountField.setValue(entitiesSampleCount);
+        if(this.entitiesSampleCountField.getValue() == null || this.entitiesSampleCountField.isInvalid()){
+            this.entitiesSampleCountField.setValue(this.entitiesSampleCount);
         }
-        int currentSampleCount = entitiesSampleCountField.getValue();
+        int currentSampleCount = this.entitiesSampleCountField.getValue();
         List<String> conceptionEntitiesUIDList = getRandomEntitiesUID(currentSampleCount,this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues());
         this.conceptionEntitiesGeospatialScaleMapInfoChart.clearMap();
         if(conceptionEntitiesUIDList != null){
-            this.conceptionEntitiesGeospatialScaleMapInfoChart.renderMapAndSpatialInfo(getRandomEntitiesUID(currentSampleCount,this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues()));
+            List<String> targetEntitiesUIDList = getRandomEntitiesUID(currentSampleCount,this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues());
+            List<ConceptionEntity> displayedConceptionEntities = this.conceptionEntitiesGeospatialScaleMapInfoChart.renderMapAndSpatialInfo(targetEntitiesUIDList);
+            this.resultNumberValue.setText(""+displayedConceptionEntities.size());
+            this.displayedConceptionEntitiesGrid.setItems(displayedConceptionEntities);
         }
     }
 
