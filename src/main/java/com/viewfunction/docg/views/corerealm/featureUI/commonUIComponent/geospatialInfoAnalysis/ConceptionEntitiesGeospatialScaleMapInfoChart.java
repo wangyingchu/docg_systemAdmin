@@ -16,6 +16,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleF
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.geospatial.GeospatialCalculateUtil;
@@ -23,6 +24,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.geospatial.Geospati
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @JavaScript("./visualization/feature/entitiesGeospatialScaleMapInfoChart-connector.js")
 public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayout {
@@ -321,5 +323,104 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    public void flyToPoint(String envelopeGeoJson){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.flyToPoint", new Serializable[]{(new ObjectMapper()).writeValueAsString(envelopeGeoJson)});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public void flyToPointedConceptionEntities(Set<ConceptionEntity> conceptionEntitiesSet){
+        if(conceptionEntitiesSet != null || !conceptionEntitiesSet.isEmpty()){
+            ConceptionEntity firstEntity = conceptionEntitiesSet.iterator().next();
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            coreRealm.openGlobalSession();
+            ConceptionKind conceptionKind = coreRealm.getConceptionKind(firstEntity.getConceptionKindName());
+            try {
+                ConceptionEntity conceptionEntity = conceptionKind.getEntityByUID(firstEntity.getConceptionEntityUID());
+                if(conceptionEntity!= null){
+                    String centroidPointWKT = null;
+                    String interiorPointWKT = null;
+                    String geometryContentWKT = null;
+
+                    GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = conceptionEntity.getGeometryType();
+                    if(_WKTGeometryType != null) {
+                        try {
+                            centroidPointWKT = conceptionEntity.getEntitySpatialCentroidPointWKTGeometryContent(this.spatialScaleLevel);
+                            interiorPointWKT = conceptionEntity.getEntitySpatialInteriorPointWKTGeometryContent(this.spatialScaleLevel);
+
+                            geometryContentWKT = null;
+                            String geometryCRSAID = null;
+                            switch (this.spatialScaleLevel) {
+                                case Local:
+                                    geometryContentWKT = conceptionEntity.getLLGeometryContent();
+                                    geometryCRSAID = conceptionEntity.getLocalCRSAID();
+                                    break;
+                                case Global:
+                                    geometryContentWKT = conceptionEntity.getGLGeometryContent();
+                                    geometryCRSAID = conceptionEntity.getGlobalCRSAID();
+                                    break;
+                                case Country:
+                                    geometryContentWKT = conceptionEntity.getCLGeometryContent();
+                                    geometryCRSAID = conceptionEntity.getCountryCRSAID();
+                                }
+
+                            switch (_WKTGeometryType) {
+                                case POINT:
+                                    flyToPoint(getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT));
+                                    break;
+                                case LINESTRING:
+                                    if(centroidPointWKT != null){
+                                        flyToPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                    }
+                                    if(interiorPointWKT != null){
+                                        flyToPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
+                                    }
+                                    break;
+                                case POLYGON:
+                                    if(interiorPointWKT != null){
+                                        flyToPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
+                                    }
+                                    break;
+                                case MULTIPOINT:
+                                    if(centroidPointWKT != null){
+                                        flyToPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                    }
+                                    break;
+                                case MULTILINESTRING:
+                                    if(centroidPointWKT != null){
+                                        flyToPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                    }
+                                    if(interiorPointWKT != null){
+                                        flyToPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
+                                    }
+                                    break;
+                                case MULTIPOLYGON:
+                                    if(centroidPointWKT != null){
+                                        flyToPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                    }
+                                    break;
+                                case GEOMETRYCOLLECTION:
+                                    if(centroidPointWKT != null){
+                                        flyToPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT));
+                                    }
+                                    if(interiorPointWKT != null){
+                                        flyToPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
+                                    }
+                            }
+                        } catch (CoreRealmServiceRuntimeException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }finally {
+                coreRealm.closeGlobalSession();
+            }
+        }
     }
 }

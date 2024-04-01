@@ -14,6 +14,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
@@ -31,6 +33,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout {
     private Registration listener;
@@ -130,6 +133,15 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
         this.displayedConceptionEntitiesGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
         GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
         this.displayedConceptionEntitiesGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(false);
+        this.displayedConceptionEntitiesGrid.addSelectionListener(new SelectionListener<Grid<ConceptionEntity>, ConceptionEntity>() {
+            @Override
+            public void selectionChange(SelectionEvent<Grid<ConceptionEntity>, ConceptionEntity> selectionEvent) {
+                Set<ConceptionEntity> selectedEntities = selectionEvent.getAllSelectedItems();
+                if(!selectedEntities.isEmpty()){
+                    conceptionEntitiesGeospatialScaleMapInfoChart.flyToPointedConceptionEntities(selectedEntities);
+                }
+            }
+        });
 
         leftSideContainer.add(this.displayedConceptionEntitiesGrid);
 

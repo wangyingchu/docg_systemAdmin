@@ -137,6 +137,12 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
                 assetsLayersArray.forEach(function(layer){
                     map.removeLayer(layer);
                 });
+            },
+
+            flyToPoint : function(geoJsonStr) {
+                const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
+                const pointLocation = geoJsonObject.features[0].geometry.coordinates;
+                map.setView([pointLocation[1],pointLocation[0]], 17);
             }
         };
         /* access_token doesn't work anymore,so stop use mapbox
