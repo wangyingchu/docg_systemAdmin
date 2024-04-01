@@ -70,7 +70,6 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
             CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
             try {
                 List<ConceptionEntity> targetConceptionEntities = crossKindDataOperator.getConceptionEntitiesByUIDs(conceptionEntitiesUIDList);
-
                 if(targetConceptionEntities!= null){
                     String centroidPointWKT = null;
                     String interiorPointWKT = null;
@@ -80,7 +79,6 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
                     String conceptionEntityUID = null;
 
                     for(ConceptionEntity conceptionEntity:targetConceptionEntities){
-
                         GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = conceptionEntity.getGeometryType();
                         conceptionKindName = conceptionEntity.getConceptionKindName();
                         conceptionEntityUID = conceptionEntity.getConceptionEntityUID();
@@ -174,10 +172,11 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
                                         }
                                         renderEntityContent(_WKTGeometryType,getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT),conceptionKindName,conceptionEntityUID);
                                     }
+
+                                    displayedConceptionEntitiesList.add(conceptionEntity);
                             } catch (CoreRealmServiceRuntimeException e) {
-                                throw new RuntimeException(e);
+                                e.printStackTrace();
                             }
-                            displayedConceptionEntitiesList.add(conceptionEntity);
                         }
                     }
                 }

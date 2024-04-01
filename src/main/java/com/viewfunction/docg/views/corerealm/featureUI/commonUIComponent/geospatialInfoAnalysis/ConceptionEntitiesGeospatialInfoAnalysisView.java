@@ -40,6 +40,8 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
     private ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult;
     private NativeLabel resultNumberValue;
     private Grid<ConceptionEntity> displayedConceptionEntitiesGrid;
+    private HorizontalLayout doesNotContainsSpatialInfoMessage;
+    private HorizontalLayout mainLayout;
 
     public ConceptionEntitiesGeospatialInfoAnalysisView(String kindName, GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel,
                                                         ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult) {
@@ -72,7 +74,22 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(VaadinIcon.CONTROLLER.create(), "数据采样设置",actionElementsList,null);
         add(secondaryTitleActionBar);
 
-        HorizontalLayout mainLayout = new HorizontalLayout();
+        doesNotContainsSpatialInfoMessage = new HorizontalLayout();
+        doesNotContainsSpatialInfoMessage.setSpacing(true);
+        doesNotContainsSpatialInfoMessage.setPadding(true);
+        doesNotContainsSpatialInfoMessage.setMargin(true);
+        doesNotContainsSpatialInfoMessage.setWidth(100,Unit.PERCENTAGE);
+        doesNotContainsSpatialInfoMessage.setHeight(300,Unit.PIXELS);
+        Icon messageLogo = new Icon(VaadinIcon.MAILBOX);
+        messageLogo.getStyle()
+                .set("color","#2e4e7e").set("padding-right", "5px");
+        messageLogo.setSize("30px");
+        NativeLabel messageLabel = new NativeLabel(" 当前采样概念实体中不包含指定类型的地理空间信息");
+        messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
+        doesNotContainsSpatialInfoMessage.add(messageLogo,messageLabel);
+        add(doesNotContainsSpatialInfoMessage);
+
+        mainLayout = new HorizontalLayout();
         mainLayout.setSpacing(false);
         mainLayout.setMargin(false);
         mainLayout.setPadding(false);
@@ -120,6 +137,13 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
         rightSideContainer.add(this.conceptionEntitiesGeospatialScaleMapInfoChart);
 
         List<ConceptionEntity> displayedConceptionEntities = this.conceptionEntitiesGeospatialScaleMapInfoChart.renderMapAndSpatialInfo(getRandomEntitiesUID(entitiesSampleCount,this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues()));
+        if(displayedConceptionEntities == null || displayedConceptionEntities.size() == 0){
+            mainLayout.setVisible(false);
+            doesNotContainsSpatialInfoMessage.setVisible(true);
+        }else{
+            mainLayout.setVisible(true);
+            doesNotContainsSpatialInfoMessage.setVisible(false);
+        }
         this.resultNumberValue.setText(""+displayedConceptionEntities.size());
         this.displayedConceptionEntitiesGrid.setItems(displayedConceptionEntities);
     }
@@ -170,6 +194,13 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
         if(conceptionEntitiesUIDList != null){
             List<String> targetEntitiesUIDList = getRandomEntitiesUID(currentSampleCount,this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues());
             List<ConceptionEntity> displayedConceptionEntities = this.conceptionEntitiesGeospatialScaleMapInfoChart.renderMapAndSpatialInfo(targetEntitiesUIDList);
+            if(displayedConceptionEntities == null || displayedConceptionEntities.size() == 0){
+                mainLayout.setVisible(false);
+                doesNotContainsSpatialInfoMessage.setVisible(true);
+            }else{
+                mainLayout.setVisible(true);
+                doesNotContainsSpatialInfoMessage.setVisible(false);
+            }
             this.resultNumberValue.setText(""+displayedConceptionEntities.size());
             this.displayedConceptionEntitiesGrid.setItems(displayedConceptionEntities);
         }
