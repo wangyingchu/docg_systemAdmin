@@ -56,6 +56,11 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
                     style:geoStyle,
                     onEachFeature: onEachFeature
                 }).addTo(map);
+
+                contentLayer.on("click",function(ev) {
+                    c.$connector.selectConceptionEntityByUID(conceptionEntityUID); // ev is an event object (MouseEvent in this case)
+                });
+
                 assetsLayersArray.push(contentLayer);
 
                 function onEachFeature(feature, layer) {
@@ -135,6 +140,7 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
 
             clearMap:function(){
                 assetsLayersArray.forEach(function(layer){
+                    layer.off("click");
                     map.removeLayer(layer);
                 });
             },
@@ -143,6 +149,10 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
                 const pointLocation = geoJsonObject.features[0].geometry.coordinates;
                 map.setView([pointLocation[1],pointLocation[0]], 17);
+            },
+
+            selectConceptionEntityByUID: function(conceptionEntityUID) {
+                c.$server.selectConceptionEntityByUID(conceptionEntityUID);
             }
         };
         /* access_token doesn't work anymore,so stop use mapbox

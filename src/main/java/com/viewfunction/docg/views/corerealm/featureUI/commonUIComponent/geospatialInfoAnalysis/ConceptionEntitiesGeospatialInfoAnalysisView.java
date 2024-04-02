@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.function.SerializableConsumer;
@@ -23,6 +24,7 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
@@ -30,10 +32,7 @@ import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout {
     private Registration listener;
@@ -147,6 +146,7 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
 
         this.conceptionEntitiesGeospatialScaleMapInfoChart = new ConceptionEntitiesGeospatialScaleMapInfoChart(kindName,spatialScaleLevel,conceptionEntitiesAttributesRetrieveResult);
         rightSideContainer.add(this.conceptionEntitiesGeospatialScaleMapInfoChart);
+        this.conceptionEntitiesGeospatialScaleMapInfoChart.setContainerConceptionEntitiesGeospatialInfoAnalysisView(this);
 
         List<ConceptionEntity> displayedConceptionEntities = this.conceptionEntitiesGeospatialScaleMapInfoChart.renderMapAndSpatialInfo(getRandomEntitiesUID(entitiesSampleCount,this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues()));
         if(displayedConceptionEntities == null || displayedConceptionEntities.size() == 0){
@@ -291,5 +291,30 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
         fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
         conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
+    }
+
+    public void selectConceptionEntity(String conceptionEntityUID){
+
+        //this.displayedConceptionEntitiesGrid.getDataProvider().
+
+
+
+
+
+        ListDataProvider dtaProvider=(ListDataProvider)displayedConceptionEntitiesGrid.getDataProvider();
+        Collection<ConceptionEntity> ConceptionEntityList = dtaProvider.getItems();
+        for(ConceptionEntity currentConceptionEntity:ConceptionEntityList){
+            if(currentConceptionEntity.getConceptionEntityUID().equals(conceptionEntityUID)){
+                displayedConceptionEntitiesGrid.select(currentConceptionEntity);
+                //displayedConceptionEntitiesGrid.scrollToIndex();
+                break;
+            }
+        }
+
+
+
+
+
+
     }
 }

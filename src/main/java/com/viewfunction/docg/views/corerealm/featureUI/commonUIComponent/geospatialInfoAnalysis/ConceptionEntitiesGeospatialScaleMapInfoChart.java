@@ -3,6 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospa
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
@@ -32,6 +33,8 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
     private ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult;
     private String kindName;
     private int randomEntityCount = 100;
+    private ConceptionEntitiesGeospatialInfoAnalysisView containerConceptionEntitiesGeospatialInfoAnalysisView;
+
     public ConceptionEntitiesGeospatialScaleMapInfoChart(String kindName, GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel, ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult){
         this.setPadding(false);
         this.setSpacing(false);
@@ -422,5 +425,16 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
                 coreRealm.closeGlobalSession();
             }
         }
+    }
+
+    @ClientCallable
+    public void selectConceptionEntityByUID(String entityUID) {
+        if(this.containerConceptionEntitiesGeospatialInfoAnalysisView != null){
+            this.containerConceptionEntitiesGeospatialInfoAnalysisView.selectConceptionEntity(entityUID);
+        }
+    }
+
+    public void setContainerConceptionEntitiesGeospatialInfoAnalysisView(ConceptionEntitiesGeospatialInfoAnalysisView containerConceptionEntitiesGeospatialInfoAnalysisView) {
+        this.containerConceptionEntitiesGeospatialInfoAnalysisView = containerConceptionEntitiesGeospatialInfoAnalysisView;
     }
 }
