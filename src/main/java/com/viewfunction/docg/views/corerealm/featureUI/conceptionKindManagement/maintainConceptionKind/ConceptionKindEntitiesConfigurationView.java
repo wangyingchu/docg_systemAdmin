@@ -23,6 +23,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefreshEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCreatedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
@@ -170,6 +171,27 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
                 renderDownloadARROWFormatConceptionEntitiesView();
+            }
+        });
+
+        exportSubItems.addSeparator();
+
+        HorizontalLayout syncToDataSliceActionLayout = new HorizontalLayout();
+        syncToDataSliceActionLayout.setPadding(false);
+        syncToDataSliceActionLayout.setSpacing(false);
+        syncToDataSliceActionLayout.setMargin(false);
+        syncToDataSliceActionLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon syncToDataSliceActionIcon = LineAwesomeIconsSvg.BUFFER.create();
+        syncToDataSliceActionIcon.setSize("10px");
+        Span syncToDataSliceActionSpace = new Span();
+        syncToDataSliceActionSpace.setWidth(6,Unit.PIXELS);
+        NativeLabel syncToDataSliceActionLabel = new NativeLabel("Data Slice 数据切片");
+        syncToDataSliceActionLayout.add(syncToDataSliceActionIcon,syncToDataSliceActionSpace,syncToDataSliceActionLabel);
+        MenuItem syncToDataSliceItem = exportSubItems.addItem(syncToDataSliceActionLayout);
+        syncToDataSliceItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                renderSyncConceptionKindEntitiesToDataSliceView();
             }
         });
 
@@ -541,5 +563,9 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         attachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+    private void renderSyncConceptionKindEntitiesToDataSliceView(){
+
     }
 }
