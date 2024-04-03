@@ -24,8 +24,8 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+
 import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
@@ -294,27 +294,15 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
     }
 
     public void selectConceptionEntity(String conceptionEntityUID){
-
-        //this.displayedConceptionEntitiesGrid.getDataProvider().
-
-
-
-
-
+        String selectTargetUID = conceptionEntityUID.replaceAll("\"","");
         ListDataProvider dtaProvider=(ListDataProvider)displayedConceptionEntitiesGrid.getDataProvider();
-        Collection<ConceptionEntity> ConceptionEntityList = dtaProvider.getItems();
-        for(ConceptionEntity currentConceptionEntity:ConceptionEntityList){
-            if(currentConceptionEntity.getConceptionEntityUID().equals(conceptionEntityUID)){
+        List<ConceptionEntity> conceptionEntityList = dtaProvider.getItems().stream().toList();
+        for(ConceptionEntity currentConceptionEntity:conceptionEntityList){
+            if(currentConceptionEntity.getConceptionEntityUID().equals(selectTargetUID)){
                 displayedConceptionEntitiesGrid.select(currentConceptionEntity);
-                //displayedConceptionEntitiesGrid.scrollToIndex();
+                displayedConceptionEntitiesGrid.scrollToIndex(conceptionEntityList.indexOf(currentConceptionEntity));
                 break;
             }
         }
-
-
-
-
-
-
     }
 }
