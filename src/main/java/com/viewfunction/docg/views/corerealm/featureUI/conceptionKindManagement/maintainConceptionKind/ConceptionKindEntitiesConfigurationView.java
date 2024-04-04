@@ -126,21 +126,27 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         importDataMenu.add(downArrowIcon1);
 
         SubMenu importSubItems = importDataMenu.getSubMenu();
-        MenuItem csvImportItem = importSubItems.addItem("CSV 格式数据");
+
+        HorizontalLayout importFromCSVwActionLayout = generateActionLayout(VaadinIcon.FILE_TEXT_O.create(), "CSV 格式数据");
+        MenuItem csvImportItem = importSubItems.addItem(importFromCSVwActionLayout);
         csvImportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
                 renderLoadCSVFormatConceptionEntitiesView();
             }
         });
-        MenuItem arrowImportItem = importSubItems.addItem("ARROW 格式数据");
+
+        HorizontalLayout importFromArrowActionLayout = generateActionLayout(VaadinIcon.CURSOR_O.create(),"ARROW 格式数据");
+        MenuItem arrowImportItem = importSubItems.addItem(importFromArrowActionLayout);
         arrowImportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
                 renderLoadARROWFormatConceptionEntitiesView();
             }
         });
-        MenuItem shpImportItem = importSubItems.addItem("SHP 格式数据");
+
+        HorizontalLayout importFromShpActionLayout = generateActionLayout(VaadinIcon.MAP_MARKER.create(),"SHP 格式数据");
+        MenuItem shpImportItem = importSubItems.addItem(importFromShpActionLayout);
         shpImportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
@@ -158,7 +164,9 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         exportDataMenu.add(downArrowIcon2);
 
         SubMenu exportSubItems = exportDataMenu.getSubMenu();
-        MenuItem csvExportItem = exportSubItems.addItem("CSV 格式数据");
+
+        HorizontalLayout exportToCSVwActionLayout = generateActionLayout(VaadinIcon.FILE_TEXT_O.create(), "CSV 格式数据");
+        MenuItem csvExportItem = exportSubItems.addItem(exportToCSVwActionLayout);
         csvExportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
@@ -166,7 +174,8 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
             }
         });
 
-        MenuItem arrowExportItem = exportSubItems.addItem("ARROW 格式数据");
+        HorizontalLayout exportToArrowActionLayout = generateActionLayout(VaadinIcon.CURSOR_O.create(),"ARROW 格式数据");
+        MenuItem arrowExportItem = exportSubItems.addItem(exportToArrowActionLayout);
         arrowExportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
@@ -176,17 +185,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
         exportSubItems.addSeparator();
 
-        HorizontalLayout syncToDataSliceActionLayout = new HorizontalLayout();
-        syncToDataSliceActionLayout.setPadding(false);
-        syncToDataSliceActionLayout.setSpacing(false);
-        syncToDataSliceActionLayout.setMargin(false);
-        syncToDataSliceActionLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        Icon syncToDataSliceActionIcon = LineAwesomeIconsSvg.BUFFER.create();
-        syncToDataSliceActionIcon.setSize("10px");
-        Span syncToDataSliceActionSpace = new Span();
-        syncToDataSliceActionSpace.setWidth(6,Unit.PIXELS);
-        NativeLabel syncToDataSliceActionLabel = new NativeLabel("Data Slice 数据切片");
-        syncToDataSliceActionLayout.add(syncToDataSliceActionIcon,syncToDataSliceActionSpace,syncToDataSliceActionLabel);
+        HorizontalLayout syncToDataSliceActionLayout = generateActionLayout(LineAwesomeIconsSvg.BUFFER.create(),"Data Slice 数据切片");
         MenuItem syncToDataSliceItem = exportSubItems.addItem(syncToDataSliceActionLayout);
         syncToDataSliceItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
@@ -563,6 +562,20 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         attachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+    private HorizontalLayout generateActionLayout(Icon actionIcon,String actionText){
+        HorizontalLayout actionLayout = new HorizontalLayout();
+        actionLayout.setPadding(false);
+        actionLayout.setSpacing(false);
+        actionLayout.setMargin(false);
+        actionLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        actionIcon.setSize("10px");
+        Span actionSpace = new Span();
+        actionSpace.setWidth(6,Unit.PIXELS);
+        NativeLabel actionLabel = new NativeLabel(actionText);
+        actionLayout.add(actionIcon,actionSpace,actionLabel);
+        return actionLayout;
     }
 
     private void renderSyncConceptionKindEntitiesToDataSliceView(){
