@@ -185,7 +185,9 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
 
         Scroller queryConditionItemsScroller = new Scroller(this.entityAttributeNamesMappingView);
         queryConditionItemsScroller.getStyle()
-                .set("border-right", "1px solid var(--lumo-contrast-20pct)").set("border-top", "1px solid var(--lumo-contrast-20pct)");
+                .set("border-right", "1px solid var(--lumo-contrast-20pct)")
+                .set("border-top", "1px solid var(--lumo-contrast-20pct)")
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
 
         queryConditionItemsScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         conceptionKindAttributesInfoLayout.add(queryConditionItemsScroller);
