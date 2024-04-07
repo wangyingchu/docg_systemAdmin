@@ -10,12 +10,17 @@ import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
+import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
@@ -24,6 +29,7 @@ import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class SyncConceptionEntitiesToDataSliceView extends VerticalLayout {
@@ -32,6 +38,37 @@ public class SyncConceptionEntitiesToDataSliceView extends VerticalLayout {
     private HorizontalLayout doesNotDetectDataGridInfoMessage;
     private VerticalLayout contentContainer;
     private Grid<DataSliceMetaInfo> dataSliceMetaInfoGrid;
+    private EntityAttributeNamesMappingView entityAttributeNamesMappingView;
+
+    private class DataSlicePropertyDefinitionVO{
+        private String propertyName;
+        private DataSlicePropertyType dataSlicePropertyType;
+        private boolean isPrimaryKey;
+
+        public String getPropertyName() {
+            return propertyName;
+        }
+
+        public void setPropertyName(String propertyName) {
+            this.propertyName = propertyName;
+        }
+
+        public DataSlicePropertyType getDataSlicePropertyType() {
+            return dataSlicePropertyType;
+        }
+
+        public void setDataSlicePropertyType(DataSlicePropertyType dataSlicePropertyType) {
+            this.dataSlicePropertyType = dataSlicePropertyType;
+        }
+
+        public boolean isPrimaryKey() {
+            return isPrimaryKey;
+        }
+
+        public void setPrimaryKey(boolean primaryKey) {
+            isPrimaryKey = primaryKey;
+        }
+    }
 
     public SyncConceptionEntitiesToDataSliceView(String conceptionKindName){
         this.setWidthFull();
@@ -75,14 +112,15 @@ public class SyncConceptionEntitiesToDataSliceView extends VerticalLayout {
         this.contentContainer.add(syncOperationContentContainer);
 
         VerticalLayout existingDataSliceInfoLayout = new VerticalLayout();
-        existingDataSliceInfoLayout.setWidth(800,Unit.PIXELS);
+        existingDataSliceInfoLayout.setWidth(500,Unit.PIXELS);
         existingDataSliceInfoLayout.setSpacing(false);
         existingDataSliceInfoLayout.setPadding(false);
         existingDataSliceInfoLayout.setMargin(false);
-
         VerticalLayout conceptionKindAttributesInfoLayout = new VerticalLayout();
-        conceptionKindAttributesInfoLayout.setWidthFull();
-
+        conceptionKindAttributesInfoLayout.setWidth(500,Unit.PIXELS);
+        conceptionKindAttributesInfoLayout.setSpacing(false);
+        conceptionKindAttributesInfoLayout.setPadding(false);
+        conceptionKindAttributesInfoLayout.setMargin(false);
         syncOperationContentContainer.add(existingDataSliceInfoLayout,conceptionKindAttributesInfoLayout);
 
         ThirdLevelIconTitle dataSlicesInfoTitle = new ThirdLevelIconTitle(new Icon(VaadinIcon.LIST),"已有数据切片");
@@ -114,6 +152,35 @@ public class SyncConceptionEntitiesToDataSliceView extends VerticalLayout {
         this.dataSliceMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader_idx3 = new LightGridColumnHeader(VaadinIcon.STOCK,"切片数据量");
         this.dataSliceMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
+
+        this.dataSliceMetaInfoGrid.addSelectionListener(new SelectionListener<Grid<DataSliceMetaInfo>, DataSliceMetaInfo>() {
+            @Override
+            public void selectionChange(SelectionEvent<Grid<DataSliceMetaInfo>, DataSliceMetaInfo> selectionEvent) {
+                Set<DataSliceMetaInfo> selectedItemSet = selectionEvent.getAllSelectedItems();
+                if(selectedItemSet.size() == 0){
+                    clearDataSlicePropertiesMappingContent();
+                }else{
+                    DataSliceMetaInfo selectedDataSliceMetaInfo = selectedItemSet.iterator().next();
+                    renderDataSlicePropertiesMappingContent(selectedDataSliceMetaInfo);
+                }
+            }
+        });
+
+        ThirdLevelIconTitle dataPropertiesMappingInfoTitle = new ThirdLevelIconTitle(new Icon(VaadinIcon.ARROWS_LONG_H),"切片数据属性映射");
+        dataPropertiesMappingInfoTitle.getStyle().set("padding-bottom","5px");
+        dataPropertiesMappingInfoTitle.getStyle().set("padding-top","10px");
+        dataPropertiesMappingInfoTitle.getStyle().set("padding-left","5px");
+        conceptionKindAttributesInfoLayout.add(dataPropertiesMappingInfoTitle);
+
+        this.entityAttributeNamesMappingView = new EntityAttributeNamesMappingView(null,null);
+        this.entityAttributeNamesMappingView.setHeight(460,Unit.PIXELS);
+        this.entityAttributeNamesMappingView.setWidth(300,Unit.PIXELS);
+        this.entityAttributeNamesMappingView.getStyle().set("padding-left","15px");
+
+        Scroller queryConditionItemsScroller = new Scroller(this.entityAttributeNamesMappingView);
+        queryConditionItemsScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        conceptionKindAttributesInfoLayout.add(queryConditionItemsScroller);
+
     }
 
     @Override
@@ -131,17 +198,64 @@ public class SyncConceptionEntitiesToDataSliceView extends VerticalLayout {
         try {
             //Set<DataComputeUnitMetaInfo> dataComputeUnitMetaInfoSet =
             targetComputeGrid.listDataComputeUnit();
-
             Set<DataSliceMetaInfo> dataSliceMetaInfoSet = targetComputeGrid.listDataSlice();
-
-
             this.dataSliceMetaInfoGrid.setItems(dataSliceMetaInfoSet);
-
             doesNotDetectDataGridInfoMessage.setVisible(false);
             contentContainer.setVisible(true);
         } catch (ComputeGridException e) {
             doesNotDetectDataGridInfoMessage.setVisible(true);
             contentContainer.setVisible(false);
+        }
+    }
+
+    private void clearDataSlicePropertiesMappingContent(){
+        this.entityAttributeNamesMappingView.refreshEntityAttributeNamesMappingInfo(null,null);
+    }
+
+    private void renderDataSlicePropertiesMappingContent(DataSliceMetaInfo dataSliceMetaInfo){
+        if(dataSliceMetaInfo != null){
+            String dataSliceName = dataSliceMetaInfo.getDataSliceName();
+            ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
+            try {
+                DataSliceDetailInfo dataSliceDetailInfo = targetComputeGrid.getDataSliceDetail(dataSliceName);
+                if(dataSliceDetailInfo != null){
+                    List<String> sliceAttributesNameList = new ArrayList<>();
+                    sliceAttributesNameList.add("A001");
+                    sliceAttributesNameList.add("A002");
+                    sliceAttributesNameList.add("A003");
+                    sliceAttributesNameList.add("A004");
+                    sliceAttributesNameList.add("A005");
+                    sliceAttributesNameList.add("A006");
+                    sliceAttributesNameList.add("A007");
+                    sliceAttributesNameList.add("A008");
+                    sliceAttributesNameList.add("A009");
+                    sliceAttributesNameList.add("A0010");
+
+                    List<String> conceptionKindPropertiesNameList = new ArrayList<>();
+                    conceptionKindPropertiesNameList.add("YYYUUU_SOOOP");
+
+                    Set<String> primaryKeyPropertiesNames = dataSliceDetailInfo.getPrimaryKeyPropertiesNames();
+                    Map<String, DataSlicePropertyType> dataSlicePropertiesMap = dataSliceDetailInfo.getPropertiesDefinition();
+                    List<DataSlicePropertyDefinitionVO> dataSlicePropertyDefinitionVOList = new ArrayList<>();
+                    Set<String> propertyNameSet = dataSlicePropertiesMap.keySet();
+                    for(String currentName : propertyNameSet){
+                        DataSlicePropertyDefinitionVO currentDataSlicePropertyDefinitionVO = new DataSlicePropertyDefinitionVO();
+                        currentDataSlicePropertyDefinitionVO.setPropertyName(currentName);
+                        currentDataSlicePropertyDefinitionVO.setDataSlicePropertyType(dataSlicePropertiesMap.get(currentName));
+                        if(primaryKeyPropertiesNames.contains(currentName)){
+                            currentDataSlicePropertyDefinitionVO.setPrimaryKey(true);
+                        }else{
+                            currentDataSlicePropertyDefinitionVO.setPrimaryKey(false);
+                        }
+                        dataSlicePropertyDefinitionVOList.add(currentDataSlicePropertyDefinitionVO);
+
+                        sliceAttributesNameList.add(currentName);
+                    }
+                    this.entityAttributeNamesMappingView.refreshEntityAttributeNamesMappingInfo(sliceAttributesNameList,conceptionKindPropertiesNameList);
+                }
+            } catch (ComputeGridException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
