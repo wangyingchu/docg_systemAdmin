@@ -13,9 +13,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.NumberRenderer;
-
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
+
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
@@ -75,27 +75,27 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
         this.setWidthFull();
         this.conceptionKindName = conceptionKindName;
 
-        doesNotDetectDataGridInfoMessage = new HorizontalLayout();
-        doesNotDetectDataGridInfoMessage.setSpacing(true);
-        doesNotDetectDataGridInfoMessage.setPadding(true);
-        doesNotDetectDataGridInfoMessage.setMargin(true);
-        doesNotDetectDataGridInfoMessage.setWidth(100,Unit.PERCENTAGE);
+        this.doesNotDetectDataGridInfoMessage = new HorizontalLayout();
+        this.doesNotDetectDataGridInfoMessage.setSpacing(true);
+        this.doesNotDetectDataGridInfoMessage.setPadding(true);
+        this.doesNotDetectDataGridInfoMessage.setMargin(true);
+        this.doesNotDetectDataGridInfoMessage.setWidth(100,Unit.PERCENTAGE);
         Icon messageLogo = new Icon(VaadinIcon.EXCLAMATION_CIRCLE);
         messageLogo.getStyle()
                 .set("color","#ce0000").set("padding-right", "5px");
         messageLogo.setSize("30px");
         NativeLabel messageLabel = new NativeLabel(" 未检测到运行中的数据计算网格");
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#ce0000");
-        doesNotDetectDataGridInfoMessage.add(messageLogo,messageLabel);
-        add(doesNotDetectDataGridInfoMessage);
-        doesNotDetectDataGridInfoMessage.setVisible(false);
+        this.doesNotDetectDataGridInfoMessage.add(messageLogo,messageLabel);
+        add(this.doesNotDetectDataGridInfoMessage);
+        this.doesNotDetectDataGridInfoMessage.setVisible(false);
 
-        contentContainer = new VerticalLayout();
-        contentContainer.setWidthFull();
-        contentContainer.setSpacing(false);
-        contentContainer.setPadding(false);
-        contentContainer.setMargin(false);
-        add(contentContainer);
+        this.contentContainer = new VerticalLayout();
+        this.contentContainer.setWidthFull();
+        this.contentContainer.setSpacing(false);
+        this.contentContainer.setPadding(false);
+        this.contentContainer.setMargin(false);
+        add(this.contentContainer);
 
         Icon kindIcon = VaadinIcon.CUBE.create();
         kindIcon.setSize("12px");
@@ -103,8 +103,8 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
         List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
         footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(kindIcon, this.conceptionKindName));
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
-        contentContainer.add(entityInfoFootprintMessageBar);
-        contentContainer.setVisible(true);
+        this.contentContainer.add(entityInfoFootprintMessageBar);
+        this.contentContainer.setVisible(true);
 
         HorizontalLayout syncOperationContentContainer = new HorizontalLayout();
         syncOperationContentContainer.setSpacing(false);
@@ -118,11 +118,16 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
         existingDataSliceInfoLayout.setPadding(false);
         existingDataSliceInfoLayout.setMargin(false);
         VerticalLayout conceptionKindAttributesInfoLayout = new VerticalLayout();
-        conceptionKindAttributesInfoLayout.setWidth(500,Unit.PIXELS);
+        conceptionKindAttributesInfoLayout.setWidth(300,Unit.PIXELS);
         conceptionKindAttributesInfoLayout.setSpacing(false);
         conceptionKindAttributesInfoLayout.setPadding(false);
         conceptionKindAttributesInfoLayout.setMargin(false);
-        syncOperationContentContainer.add(existingDataSliceInfoLayout,conceptionKindAttributesInfoLayout);
+        VerticalLayout syncDataSliceDataControllerLayout = new VerticalLayout();
+        syncDataSliceDataControllerLayout.setWidth(200,Unit.PIXELS);
+        syncDataSliceDataControllerLayout.setSpacing(false);
+        syncDataSliceDataControllerLayout.setPadding(false);
+        syncDataSliceDataControllerLayout.setMargin(false);
+        syncOperationContentContainer.add(existingDataSliceInfoLayout,conceptionKindAttributesInfoLayout,syncDataSliceDataControllerLayout);
 
         ThirdLevelIconTitle dataSlicesInfoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CLONE.create(),"已有数据切片");
         dataSlicesInfoTitle.getStyle().set("padding-bottom","5px");
@@ -179,9 +184,11 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
         this.entityAttributeNamesMappingView.getStyle().set("padding-left","15px");
 
         Scroller queryConditionItemsScroller = new Scroller(this.entityAttributeNamesMappingView);
+        queryConditionItemsScroller.getStyle()
+                .set("border-right", "1px solid var(--lumo-contrast-20pct)").set("border-top", "1px solid var(--lumo-contrast-20pct)");
+
         queryConditionItemsScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         conceptionKindAttributesInfoLayout.add(queryConditionItemsScroller);
-
     }
 
     @Override
