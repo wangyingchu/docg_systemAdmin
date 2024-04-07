@@ -189,7 +189,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         MenuItem syncToDataSliceItem = exportSubItems.addItem(syncToDataSliceActionLayout);
         SubMenu syncToDataSliceSubItems = syncToDataSliceItem.getSubMenu();
 
-        HorizontalLayout syncToExistingDataSliceActionLayout = generateActionLayout(LineAwesomeIconsSvg.CLONE.create(),"导入已有数据切片");
+        HorizontalLayout syncToExistingDataSliceActionLayout = generateActionLayout(LineAwesomeIconsSvg.CLONE.create(),"导出至已有数据切片");
         MenuItem syncToExistingDataSliceActionItem = syncToDataSliceSubItems.addItem(syncToExistingDataSliceActionLayout);
         syncToExistingDataSliceActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
@@ -198,7 +198,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
             }
         });
 
-        HorizontalLayout syncToNewDataSliceActionLayout = generateActionLayout(VaadinIcon.PLUS_SQUARE_O.create(),"导入新建数据切片");
+        HorizontalLayout syncToNewDataSliceActionLayout = generateActionLayout(VaadinIcon.PLUS_SQUARE_O.create(),"导出至新建数据切片");
         MenuItem syncToNewDataSliceActionItem = syncToDataSliceSubItems.addItem(syncToNewDataSliceActionLayout);
         syncToNewDataSliceActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
@@ -593,7 +593,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
     private void renderSyncConceptionKindEntitiesToExistingDataSliceView(){
         SyncConceptionEntitiesToExistingDataSliceView syncConceptionEntitiesToExistingDataSliceView = new SyncConceptionEntitiesToExistingDataSliceView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BUFFER.create(),"同步概念类型实体至 Data Slice 数据切片",null,true,1050,605,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BUFFER.create(),"导出概念类型实体至 Data Slice 数据切片",null,true,1050,605,false);
         fixSizeWindow.setWindowContent(syncConceptionEntitiesToExistingDataSliceView);
         fixSizeWindow.setModel(true);
         syncConceptionEntitiesToExistingDataSliceView.setContainerDialog(fixSizeWindow);
@@ -602,7 +602,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
     private void renderSyncConceptionKindEntitiesToNewDataSliceView(){
         SyncConceptionEntitiesToNewDataSliceView syncConceptionEntitiesToNewDataSliceView = new SyncConceptionEntitiesToNewDataSliceView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BUFFER.create(),"同步概念类型实体至 Data Slice 数据切片",null,true,1050,605,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BUFFER.create(),"导出概念类型实体至 Data Slice 数据切片",null,true,1050,605,false);
         fixSizeWindow.setWindowContent(syncConceptionEntitiesToNewDataSliceView);
         fixSizeWindow.setModel(true);
         syncConceptionEntitiesToNewDataSliceView.setContainerDialog(fixSizeWindow);
