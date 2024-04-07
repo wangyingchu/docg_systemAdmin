@@ -1,11 +1,16 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
@@ -13,6 +18,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
@@ -30,6 +36,8 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
     private TextField dataSource;
     private TextField creator;
     private TextField entityBelongedConceptionKinds;
+    private Button retireFromConceptionKindButton;
+
     public ConceptionEntityMetaInfoView(String conceptionKind,String conceptionEntityUID){
         this.setMargin(false);
         this.setSpacing(false);
@@ -47,7 +55,37 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
 
+        HorizontalLayout actionContainerLayout = new HorizontalLayout();
+        actionContainerLayout.setSpacing(false);
+        actionContainerLayout.setMargin(false);
+        actionContainerLayout.setPadding(false);
+
+        Button joinConceptionKindButton = new Button();
+        joinConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SUCCESS,ButtonVariant.LUMO_TERTIARY);
+        joinConceptionKindButton.setTooltipText("加入新的概念类型");
+        joinConceptionKindButton.setIcon(VaadinIcon.PLUS.create());
+        joinConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderJoinConceptionKindUI();
+            }
+        });
+
+        retireFromConceptionKindButton = new Button();
+        retireFromConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_TERTIARY);
+        retireFromConceptionKindButton.setTooltipText("退出所属概念类型");
+        retireFromConceptionKindButton.setIcon(VaadinIcon.MINUS.create());
+        retireFromConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderRetireFromConceptionKindUI();
+            }
+        });
+
+        actionContainerLayout.add(joinConceptionKindButton,retireFromConceptionKindButton);
+
         entityBelongedConceptionKinds = new TextField("实体所属概念类型");
+        entityBelongedConceptionKinds.setPrefixComponent(actionContainerLayout);
         entityBelongedConceptionKinds.setWidthFull();
         entityBelongedConceptionKinds.setReadOnly(true);
         add(entityBelongedConceptionKinds);
@@ -83,6 +121,9 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
             if(targetEntity != null){
                 List<String> belongedKinds = targetEntity.getAllConceptionKindNames();
                 entityBelongedConceptionKinds.setValue(belongedKinds.toString());
+                if(belongedKinds.size() ==1){
+                    retireFromConceptionKindButton.setEnabled(false);
+                }
                 ZoneId zoneId = ZoneId.systemDefault();
                 if(targetEntity.hasAttribute(RealmConstant._createDateProperty)){
                     Date createdDateValue = (Date)targetEntity.getAttribute(RealmConstant._createDateProperty).getAttributeValue();
@@ -110,4 +151,15 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
         }
         coreRealm.closeGlobalSession();
     }
+
+    private void renderJoinConceptionKindUI(){
+        JoinNewConceptionKindsView joinNewConceptionKindsView = new JoinNewConceptionKindsView(this.conceptionKind,this.conceptionEntityUID);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"加入概念类型",null,true,490,200,false);
+        fixSizeWindow.setWindowContent(joinNewConceptionKindsView);
+        fixSizeWindow.setModel(true);
+        joinNewConceptionKindsView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderRetireFromConceptionKindUI(){}
 }
