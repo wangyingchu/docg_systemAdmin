@@ -187,12 +187,19 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
         HorizontalLayout syncToDataSliceActionLayout = generateActionLayout(LineAwesomeIconsSvg.BUFFER.create(),"Data Slice 数据切片");
         MenuItem syncToDataSliceItem = exportSubItems.addItem(syncToDataSliceActionLayout);
-        syncToDataSliceItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+        SubMenu syncToDataSliceSubItems = syncToDataSliceItem.getSubMenu();
+
+        HorizontalLayout syncToExistingDataSliceActionLayout = generateActionLayout(LineAwesomeIconsSvg.CLONE.create(),"导入已有数据切片");
+        MenuItem syncToExistingDataSliceActionItem = syncToDataSliceSubItems.addItem(syncToExistingDataSliceActionLayout);
+        syncToExistingDataSliceActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                renderSyncConceptionKindEntitiesToDataSliceView();
+                renderSyncConceptionKindEntitiesToExistingDataSliceView();
             }
         });
+
+        HorizontalLayout syncToNewDataSliceActionLayout = generateActionLayout(VaadinIcon.PLUS_SQUARE_O.create(),"导入新建数据切片");
+        MenuItem syncToNewDataSliceActionItem = syncToDataSliceSubItems.addItem(syncToNewDataSliceActionLayout);
 
         infoContainer.add(exportMenuBar);
 
@@ -578,12 +585,12 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         return actionLayout;
     }
 
-    private void renderSyncConceptionKindEntitiesToDataSliceView(){
-        SyncConceptionEntitiesToDataSliceView syncConceptionEntitiesToDataSliceView = new SyncConceptionEntitiesToDataSliceView(this.conceptionKindName);
+    private void renderSyncConceptionKindEntitiesToExistingDataSliceView(){
+        SyncConceptionEntitiesToExistingDataSliceView syncConceptionEntitiesToExistingDataSliceView = new SyncConceptionEntitiesToExistingDataSliceView(this.conceptionKindName);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BUFFER.create(),"同步概念类型实体至 Data Slice 数据切片",null,true,1050,605,false);
-        fixSizeWindow.setWindowContent(syncConceptionEntitiesToDataSliceView);
+        fixSizeWindow.setWindowContent(syncConceptionEntitiesToExistingDataSliceView);
         fixSizeWindow.setModel(true);
-        syncConceptionEntitiesToDataSliceView.setContainerDialog(fixSizeWindow);
+        syncConceptionEntitiesToExistingDataSliceView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 }

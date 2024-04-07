@@ -25,6 +25,7 @@ import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.Compute
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class SyncConceptionEntitiesToDataSliceView extends VerticalLayout {
+public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayout {
     private String conceptionKindName;
     private Dialog containerDialog;
     private HorizontalLayout doesNotDetectDataGridInfoMessage;
@@ -70,7 +71,7 @@ public class SyncConceptionEntitiesToDataSliceView extends VerticalLayout {
         }
     }
 
-    public SyncConceptionEntitiesToDataSliceView(String conceptionKindName){
+    public SyncConceptionEntitiesToExistingDataSliceView(String conceptionKindName){
         this.setWidthFull();
         this.conceptionKindName = conceptionKindName;
 
@@ -123,7 +124,7 @@ public class SyncConceptionEntitiesToDataSliceView extends VerticalLayout {
         conceptionKindAttributesInfoLayout.setMargin(false);
         syncOperationContentContainer.add(existingDataSliceInfoLayout,conceptionKindAttributesInfoLayout);
 
-        ThirdLevelIconTitle dataSlicesInfoTitle = new ThirdLevelIconTitle(new Icon(VaadinIcon.LIST),"已有数据切片");
+        ThirdLevelIconTitle dataSlicesInfoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CLONE.create(),"已有数据切片");
         dataSlicesInfoTitle.getStyle().set("padding-bottom","5px");
         dataSlicesInfoTitle.getStyle().set("padding-top","10px");
         existingDataSliceInfoLayout.add(dataSlicesInfoTitle);
