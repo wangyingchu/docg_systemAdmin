@@ -1,20 +1,27 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.exchangeConceptionEntities;
 
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.NumberRenderer;
 
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
-import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataComputeUnitMetaInfo;
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
+import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -23,18 +30,12 @@ public class SyncConceptionEntitiesToDataSliceView extends VerticalLayout {
     private String conceptionKindName;
     private Dialog containerDialog;
     private HorizontalLayout doesNotDetectDataGridInfoMessage;
+    private VerticalLayout contentContainer;
+    private Grid<DataSliceMetaInfo> dataSliceMetaInfoGrid;
 
     public SyncConceptionEntitiesToDataSliceView(String conceptionKindName){
         this.setWidthFull();
         this.conceptionKindName = conceptionKindName;
-
-        Icon kindIcon = VaadinIcon.CUBE.create();
-        kindIcon.setSize("12px");
-        kindIcon.getStyle().set("padding-right","3px");
-        List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
-        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(kindIcon, this.conceptionKindName));
-        FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
-        add(entityInfoFootprintMessageBar);
 
         doesNotDetectDataGridInfoMessage = new HorizontalLayout();
         doesNotDetectDataGridInfoMessage.setSpacing(true);
@@ -50,6 +51,69 @@ public class SyncConceptionEntitiesToDataSliceView extends VerticalLayout {
         doesNotDetectDataGridInfoMessage.add(messageLogo,messageLabel);
         add(doesNotDetectDataGridInfoMessage);
         doesNotDetectDataGridInfoMessage.setVisible(false);
+
+        contentContainer = new VerticalLayout();
+        contentContainer.setWidthFull();
+        contentContainer.setSpacing(false);
+        contentContainer.setPadding(false);
+        contentContainer.setMargin(false);
+        add(contentContainer);
+
+        Icon kindIcon = VaadinIcon.CUBE.create();
+        kindIcon.setSize("12px");
+        kindIcon.getStyle().set("padding-right","3px");
+        List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(kindIcon, this.conceptionKindName));
+        FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
+        contentContainer.add(entityInfoFootprintMessageBar);
+        contentContainer.setVisible(true);
+
+        HorizontalLayout syncOperationContentContainer = new HorizontalLayout();
+        syncOperationContentContainer.setSpacing(false);
+        syncOperationContentContainer.setPadding(false);
+        syncOperationContentContainer.setMargin(false);
+        this.contentContainer.add(syncOperationContentContainer);
+
+        VerticalLayout existingDataSliceInfoLayout = new VerticalLayout();
+        existingDataSliceInfoLayout.setWidth(800,Unit.PIXELS);
+        existingDataSliceInfoLayout.setSpacing(false);
+        existingDataSliceInfoLayout.setPadding(false);
+        existingDataSliceInfoLayout.setMargin(false);
+
+        VerticalLayout conceptionKindAttributesInfoLayout = new VerticalLayout();
+        conceptionKindAttributesInfoLayout.setWidthFull();
+
+        syncOperationContentContainer.add(existingDataSliceInfoLayout,conceptionKindAttributesInfoLayout);
+
+        ThirdLevelIconTitle dataSlicesInfoTitle = new ThirdLevelIconTitle(new Icon(VaadinIcon.LIST),"已有数据切片");
+        dataSlicesInfoTitle.getStyle().set("padding-bottom","5px");
+        dataSlicesInfoTitle.getStyle().set("padding-top","10px");
+        existingDataSliceInfoLayout.add(dataSlicesInfoTitle);
+
+        this.dataSliceMetaInfoGrid = new Grid<>();
+        this.dataSliceMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        existingDataSliceInfoLayout.add(this.dataSliceMetaInfoGrid);
+
+        this.dataSliceMetaInfoGrid.addColumn(DataSliceMetaInfo::getDataSliceName).setHeader("切片名称").setKey("idx_0").setFlexGrow(1).setTooltipGenerator(new ItemLabelGenerator<DataSliceMetaInfo>() {
+            @Override
+            public String apply(DataSliceMetaInfo dataSliceMetaInfo) {
+                return dataSliceMetaInfo.getDataSliceName();
+            }
+        });
+        this.dataSliceMetaInfoGrid.addColumn(DataSliceMetaInfo::getSliceGroupName).setHeader("切片分组").setKey("idx_1").setFlexGrow(1).setTooltipGenerator(new ItemLabelGenerator<DataSliceMetaInfo>() {
+            @Override
+            public String apply(DataSliceMetaInfo dataSliceMetaInfo) {
+                return dataSliceMetaInfo.getSliceGroupName();
+            }
+        });
+        this.dataSliceMetaInfoGrid.addColumn(new NumberRenderer<>(DataSliceMetaInfo::getPrimaryDataCount, NumberFormat.getIntegerInstance())).setHeader("切片数据量").setKey("idx_3").setWidth("130px").setFlexGrow(0);
+
+        LightGridColumnHeader gridColumnHeader_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"切片名称");
+        this.dataSliceMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_idx1 = new LightGridColumnHeader(VaadinIcon.ARCHIVES,"切片分组");
+        this.dataSliceMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_idx3 = new LightGridColumnHeader(VaadinIcon.STOCK,"切片数据量");
+        this.dataSliceMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
     }
 
     @Override
@@ -65,9 +129,19 @@ public class SyncConceptionEntitiesToDataSliceView extends VerticalLayout {
     private void checkComputeGridStatusInfo(){
         ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
         try {
-            Set<DataComputeUnitMetaInfo> dataComputeUnitMetaInfoSet = targetComputeGrid.listDataComputeUnit();
+            //Set<DataComputeUnitMetaInfo> dataComputeUnitMetaInfoSet =
+            targetComputeGrid.listDataComputeUnit();
+
+            Set<DataSliceMetaInfo> dataSliceMetaInfoSet = targetComputeGrid.listDataSlice();
+
+
+            this.dataSliceMetaInfoGrid.setItems(dataSliceMetaInfoSet);
+
+            doesNotDetectDataGridInfoMessage.setVisible(false);
+            contentContainer.setVisible(true);
         } catch (ComputeGridException e) {
             doesNotDetectDataGridInfoMessage.setVisible(true);
+            contentContainer.setVisible(false);
         }
     }
 }
