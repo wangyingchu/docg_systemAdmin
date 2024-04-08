@@ -1188,8 +1188,8 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
     }
 
     private void searchConceptionEntityByUID(String conceptionEntityUID){
-        if(conceptionEntityUID == null){
-            CommonUIOperationUtil.showPopupNotification("请输入概念实体唯一值ID",NotificationVariant.LUMO_WARNING,0, Notification.Position.MIDDLE);
+        if(conceptionEntityUID == null || conceptionEntityUID.equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入概念实体唯一值ID",NotificationVariant.LUMO_WARNING,0, Notification.Position.TOP_END);
         }else{
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             coreRealm.openGlobalSession();
@@ -1197,7 +1197,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(conceptionEntityUID);
             coreRealm.closeGlobalSession();
             if(targetConceptionEntity == null){
-                CommonUIOperationUtil.showPopupNotification("概念类型 "+this.conceptionKind+" 中不存在UID为 "+conceptionEntityUID+" 的概念实体",NotificationVariant.LUMO_ERROR,0, Notification.Position.MIDDLE);
+                CommonUIOperationUtil.showPopupNotification("概念类型 "+this.conceptionKind+" 中不存在UID为 "+conceptionEntityUID+" 的概念实体",NotificationVariant.LUMO_ERROR,0, Notification.Position.TOP_END);
             }else{
                 ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(this.conceptionKind,conceptionEntityUID);
 
