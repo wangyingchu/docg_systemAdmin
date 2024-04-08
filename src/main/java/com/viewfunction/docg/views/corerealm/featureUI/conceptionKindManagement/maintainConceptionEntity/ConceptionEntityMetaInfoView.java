@@ -145,10 +145,21 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
             if(targetEntity != null){
                 List<String> belongedKinds = targetEntity.getAllConceptionKindNames();
                 entityBelongedConceptionKinds.setValue(belongedKinds.toString());
-                if(belongedKinds.size() == 1){
-                    retreatFromConceptionKindButton.setEnabled(false);
-                }else{
+                int canRetreatCount = 0;
+                boolean isInternalKind = false;
+                for(String belongedKind : belongedKinds){
+                    if(!belongedKind.startsWith("DOCG_")){
+                        canRetreatCount++;
+                    }else{
+                        isInternalKind = true;
+                    }
+                }
+                if(isInternalKind && canRetreatCount == 1){
                     retreatFromConceptionKindButton.setEnabled(true);
+                }else if(canRetreatCount > 1){
+                    retreatFromConceptionKindButton.setEnabled(true);
+                }else{
+                    retreatFromConceptionKindButton.setEnabled(false);
                 }
                 ZoneId zoneId = ZoneId.systemDefault();
                 if(targetEntity.hasAttribute(RealmConstant._createDateProperty)){
