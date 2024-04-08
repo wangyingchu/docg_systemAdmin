@@ -21,6 +21,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.TabSheet;
 
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.NumberRenderer;
@@ -36,6 +38,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCo
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
@@ -46,6 +49,7 @@ import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefres
 import com.viewfunction.docg.element.eventHandling.ConceptionKindCleanedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindConfigurationInfoRefreshEvent;
 import com.viewfunction.docg.element.eventHandling.KindScopeAttributeAddedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributeValueGroupInfoListView;
@@ -57,6 +61,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityM
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.RelationAttachKindsConfigurationView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
 
 import java.text.NumberFormat;
@@ -170,6 +175,32 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             }
         });
         buttonList.add(queryConceptionKindButton);
+
+        HorizontalLayout queryEntityByUIDContainerLayout = new HorizontalLayout();
+        TextField uidSearchTextField = new TextField();
+        uidSearchTextField.setTooltipText("输入唯一值ID检索概念实体");
+        uidSearchTextField.setWidth(140,Unit.PIXELS);
+        uidSearchTextField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        Icon uidSearchIcon = VaadinIcon.KEY_O.create();
+        uidSearchIcon.addClassNames("text-tertiary");
+        uidSearchTextField.setPrefixComponent(uidSearchIcon);
+        Button queryConceptionEntityByUIDButton= new Button();
+        queryConceptionEntityByUIDButton.setIcon(VaadinIcon.SEARCH.create());
+        queryConceptionEntityByUIDButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        queryConceptionEntityByUIDButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                searchConceptionEntityByUID(uidSearchTextField.getValue());
+            }
+        });
+        uidSearchTextField.setSuffixComponent(queryConceptionEntityByUIDButton);
+        uidSearchTextField.setPlaceholder("Entity UID");
+        queryEntityByUIDContainerLayout.add(uidSearchTextField);
+        buttonList.add(queryEntityByUIDContainerLayout);
+
+        Icon divIcon0 = VaadinIcon.LINE_V.create();
+        divIcon0.setSize("8px");
+        buttonList.add(divIcon0);
 
         Button conceptionKindMetaInfoButton= new Button("概念类型元数据");
         conceptionKindMetaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
@@ -1154,6 +1185,75 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+    private void searchConceptionEntityByUID(String conceptionEntityUID){
+        if(conceptionEntityUID == null){
+            CommonUIOperationUtil.showPopupNotification("请输入概念实体唯一值ID",NotificationVariant.LUMO_WARNING,0, Notification.Position.MIDDLE);
+        }else{
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            coreRealm.openGlobalSession();
+            com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+            ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(conceptionEntityUID);
+            coreRealm.closeGlobalSession();
+            if(targetConceptionEntity == null){
+                CommonUIOperationUtil.showPopupNotification("概念类型 "+this.conceptionKind+" 中不存在UID为 "+conceptionEntityUID+" 的概念实体",NotificationVariant.LUMO_ERROR,0, Notification.Position.MIDDLE);
+            }else{
+                ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(this.conceptionKind,conceptionEntityUID);
+
+                List<Component> actionComponentList = new ArrayList<>();
+
+                HorizontalLayout titleDetailLayout = new HorizontalLayout();
+                titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+                titleDetailLayout.setSpacing(false);
+
+                Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+                footPrintStartIcon.setSize("14px");
+                footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+                titleDetailLayout.add(footPrintStartIcon);
+                HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+                spaceDivLayout1.setWidth(8,Unit.PIXELS);
+                titleDetailLayout.add(spaceDivLayout1);
+
+                Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+                conceptionKindIcon.setSize("10px");
+                titleDetailLayout.add(conceptionKindIcon);
+                HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+                spaceDivLayout2.setWidth(5,Unit.PIXELS);
+                titleDetailLayout.add(spaceDivLayout2);
+                NativeLabel conceptionKindNameLabel = new NativeLabel(this.conceptionKind);
+                titleDetailLayout.add(conceptionKindNameLabel);
+
+                HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+                spaceDivLayout3.setWidth(5,Unit.PIXELS);
+                titleDetailLayout.add(spaceDivLayout3);
+
+                Icon divIcon = VaadinIcon.ITALIC.create();
+                divIcon.setSize("8px");
+                titleDetailLayout.add(divIcon);
+
+                HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+                spaceDivLayout4.setWidth(5,Unit.PIXELS);
+                titleDetailLayout.add(spaceDivLayout4);
+
+                Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+                conceptionEntityIcon.setSize("10px");
+                titleDetailLayout.add(conceptionEntityIcon);
+
+                HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+                spaceDivLayout5.setWidth(5,Unit.PIXELS);
+                titleDetailLayout.add(spaceDivLayout5);
+                NativeLabel conceptionEntityUIDLabel = new NativeLabel(conceptionEntityUID);
+                titleDetailLayout.add(conceptionEntityUIDLabel);
+
+                actionComponentList.add(titleDetailLayout);
+
+                FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
+                fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+                conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
+                fullScreenWindow.show();
+            }
+        }
     }
 
     private void renderDuplicateConceptionKindAttributeView(String attributeName){
