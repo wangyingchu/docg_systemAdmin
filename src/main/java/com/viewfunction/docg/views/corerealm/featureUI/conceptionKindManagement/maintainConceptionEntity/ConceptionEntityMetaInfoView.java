@@ -36,7 +36,7 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
     private TextField dataSource;
     private TextField creator;
     private TextField entityBelongedConceptionKinds;
-    private Button retireFromConceptionKindButton;
+    private Button retreatFromConceptionKindButton;
 
     public ConceptionEntityMetaInfoView(String conceptionKind,String conceptionEntityUID){
         this.setMargin(false);
@@ -71,18 +71,18 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
             }
         });
 
-        retireFromConceptionKindButton = new Button();
-        retireFromConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_TERTIARY);
-        retireFromConceptionKindButton.setTooltipText("退出所属概念类型");
-        retireFromConceptionKindButton.setIcon(VaadinIcon.MINUS.create());
-        retireFromConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        retreatFromConceptionKindButton = new Button();
+        retreatFromConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_TERTIARY);
+        retreatFromConceptionKindButton.setTooltipText("退出所属概念类型");
+        retreatFromConceptionKindButton.setIcon(VaadinIcon.MINUS.create());
+        retreatFromConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderRetireFromConceptionKindUI();
+                renderRetreatFromConceptionKindUI();
             }
         });
 
-        actionContainerLayout.add(joinConceptionKindButton,retireFromConceptionKindButton);
+        actionContainerLayout.add(joinConceptionKindButton, retreatFromConceptionKindButton);
 
         entityBelongedConceptionKinds = new TextField("实体所属概念类型");
         entityBelongedConceptionKinds.setPrefixComponent(actionContainerLayout);
@@ -126,7 +126,15 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
         fixSizeWindow.show();
     }
 
-    private void renderRetireFromConceptionKindUI(){}
+    private void renderRetreatFromConceptionKindUI(){
+        RetreatFromConceptionKindsView retreatFromConceptionKindsView = new RetreatFromConceptionKindsView(this.conceptionKind,this.conceptionEntityUID);
+        retreatFromConceptionKindsView.setCallerConceptionEntityMetaInfoView(this);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.MINUS),"退出概念类型",null,true,490,200,false);
+        fixSizeWindow.setWindowContent(retreatFromConceptionKindsView);
+        fixSizeWindow.setModel(true);
+        retreatFromConceptionKindsView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
 
     public void refreshEntityMetaInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -138,9 +146,9 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
                 List<String> belongedKinds = targetEntity.getAllConceptionKindNames();
                 entityBelongedConceptionKinds.setValue(belongedKinds.toString());
                 if(belongedKinds.size() == 1){
-                    retireFromConceptionKindButton.setEnabled(false);
+                    retreatFromConceptionKindButton.setEnabled(false);
                 }else{
-                    retireFromConceptionKindButton.setEnabled(true);
+                    retreatFromConceptionKindButton.setEnabled(true);
                 }
                 ZoneId zoneId = ZoneId.systemDefault();
                 if(targetEntity.hasAttribute(RealmConstant._createDateProperty)){
