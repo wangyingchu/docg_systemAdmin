@@ -113,6 +113,22 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        refreshEntityMetaInfo();
+    }
+
+    private void renderJoinConceptionKindUI(){
+        JoinNewConceptionKindsView joinNewConceptionKindsView = new JoinNewConceptionKindsView(this.conceptionKind,this.conceptionEntityUID);
+        joinNewConceptionKindsView.setCallerConceptionEntityMetaInfoView(this);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"加入概念类型",null,true,490,200,false);
+        fixSizeWindow.setWindowContent(joinNewConceptionKindsView);
+        fixSizeWindow.setModel(true);
+        joinNewConceptionKindsView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderRetireFromConceptionKindUI(){}
+
+    public void refreshEntityMetaInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
@@ -121,8 +137,10 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
             if(targetEntity != null){
                 List<String> belongedKinds = targetEntity.getAllConceptionKindNames();
                 entityBelongedConceptionKinds.setValue(belongedKinds.toString());
-                if(belongedKinds.size() ==1){
+                if(belongedKinds.size() == 1){
                     retireFromConceptionKindButton.setEnabled(false);
+                }else{
+                    retireFromConceptionKindButton.setEnabled(true);
                 }
                 ZoneId zoneId = ZoneId.systemDefault();
                 if(targetEntity.hasAttribute(RealmConstant._createDateProperty)){
@@ -151,15 +169,4 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
         }
         coreRealm.closeGlobalSession();
     }
-
-    private void renderJoinConceptionKindUI(){
-        JoinNewConceptionKindsView joinNewConceptionKindsView = new JoinNewConceptionKindsView(this.conceptionKind,this.conceptionEntityUID);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS),"加入概念类型",null,true,490,200,false);
-        fixSizeWindow.setWindowContent(joinNewConceptionKindsView);
-        fixSizeWindow.setModel(true);
-        joinNewConceptionKindsView.setContainerDialog(fixSizeWindow);
-        fixSizeWindow.show();
-    }
-
-    private void renderRetireFromConceptionKindUI(){}
 }
