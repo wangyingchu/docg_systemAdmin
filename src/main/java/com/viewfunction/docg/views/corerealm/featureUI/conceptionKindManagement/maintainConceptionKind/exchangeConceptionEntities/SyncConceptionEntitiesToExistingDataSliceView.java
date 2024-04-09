@@ -39,7 +39,7 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
     private HorizontalLayout doesNotDetectDataGridInfoMessage;
     private VerticalLayout contentContainer;
     private Grid<DataSliceMetaInfo> dataSliceMetaInfoGrid;
-    private EntityAttributeNamesMappingView entityAttributeNamesMappingView;
+    private DataSlicePropertiesMappingView entityAttributeNamesMappingView;
 
     private class DataSlicePropertyDefinitionVO{
         private String propertyName;
@@ -178,7 +178,7 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
         dataPropertiesMappingInfoTitle.getStyle().set("padding-left","5px");
         conceptionKindAttributesInfoLayout.add(dataPropertiesMappingInfoTitle);
 
-        this.entityAttributeNamesMappingView = new EntityAttributeNamesMappingView(null,null);
+        this.entityAttributeNamesMappingView = new DataSlicePropertiesMappingView(null,null);
         this.entityAttributeNamesMappingView.setHeight(460,Unit.PIXELS);
         this.entityAttributeNamesMappingView.setWidth(300,Unit.PIXELS);
         this.entityAttributeNamesMappingView.getStyle().set("padding-left","15px");
