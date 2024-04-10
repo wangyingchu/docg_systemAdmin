@@ -18,7 +18,7 @@ public class DataSlicePropertiesMappingView extends VerticalLayout {
 
         if(attributesList != null){
             for(String currentAttribute : attributesList){
-                EntityAttributeNameMapperWidget currentEntityAttributeNameMapperWidget = new EntityAttributeNameMapperWidget(currentAttribute,existingKindAttributesList);
+                DataSlicePropertyNameMapperWidget currentEntityAttributeNameMapperWidget = new DataSlicePropertyNameMapperWidget(currentAttribute,existingKindAttributesList);
                 add(currentEntityAttributeNameMapperWidget);
             }
         }
@@ -28,7 +28,7 @@ public class DataSlicePropertiesMappingView extends VerticalLayout {
         this.removeAll();
         if(attributesList != null){
             for(String currentAttribute : attributesList){
-                EntityAttributeNameMapperWidget currentEntityAttributeNameMapperWidget = new EntityAttributeNameMapperWidget(currentAttribute,existingKindAttributesList);
+                DataSlicePropertyNameMapperWidget currentEntityAttributeNameMapperWidget = new DataSlicePropertyNameMapperWidget(currentAttribute,existingKindAttributesList);
                 add(currentEntityAttributeNameMapperWidget);
             }
         }
@@ -39,8 +39,8 @@ public class DataSlicePropertiesMappingView extends VerticalLayout {
         this.getChildren().forEach(new Consumer<Component>() {
             @Override
             public void accept(Component component) {
-                if(component instanceof EntityAttributeNameMapperWidget){
-                    EntityAttributeNameMapperWidget currentEntityAttributeNameMapperWidget = (EntityAttributeNameMapperWidget)component;
+                if(component instanceof DataSlicePropertyNameMapperWidget){
+                    DataSlicePropertyNameMapperWidget currentEntityAttributeNameMapperWidget = (DataSlicePropertyNameMapperWidget)component;
                     attributesMapping.put(currentEntityAttributeNameMapperWidget.getAttributeName(),currentEntityAttributeNameMapperWidget.getAttributeMapping());
                 }
             }

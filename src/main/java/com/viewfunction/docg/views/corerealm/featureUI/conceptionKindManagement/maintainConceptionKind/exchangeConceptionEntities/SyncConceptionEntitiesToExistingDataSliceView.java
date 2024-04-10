@@ -230,6 +230,8 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
                 DataSliceDetailInfo dataSliceDetailInfo = targetComputeGrid.getDataSliceDetail(dataSliceName);
                 if(dataSliceDetailInfo != null){
                     List<String> sliceAttributesNameList = new ArrayList<>();
+
+                    /*
                     sliceAttributesNameList.add("A001");
                     sliceAttributesNameList.add("A002");
                     sliceAttributesNameList.add("A003");
@@ -240,11 +242,16 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
                     sliceAttributesNameList.add("A008");
                     sliceAttributesNameList.add("A009");
                     sliceAttributesNameList.add("A0010");
-
+                    */
+                    
                     List<String> conceptionKindPropertiesNameList = new ArrayList<>();
                     conceptionKindPropertiesNameList.add("YYYUUU_SOOOP");
 
                     Set<String> primaryKeyPropertiesNames = dataSliceDetailInfo.getPrimaryKeyPropertiesNames();
+
+
+                    System.out.println(primaryKeyPropertiesNames);
+
                     Map<String, DataSlicePropertyType> dataSlicePropertiesMap = dataSliceDetailInfo.getPropertiesDefinition();
                     List<DataSlicePropertyDefinitionVO> dataSlicePropertyDefinitionVOList = new ArrayList<>();
                     Set<String> propertyNameSet = dataSlicePropertiesMap.keySet();
