@@ -178,7 +178,7 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
         dataPropertiesMappingInfoTitle.getStyle().set("padding-left","5px");
         conceptionKindAttributesInfoLayout.add(dataPropertiesMappingInfoTitle);
 
-        this.entityAttributeNamesMappingView = new DataSlicePropertiesMappingView(null,null);
+        this.entityAttributeNamesMappingView = new DataSlicePropertiesMappingView();
         this.entityAttributeNamesMappingView.setHeight(460,Unit.PIXELS);
         this.entityAttributeNamesMappingView.setWidth(300,Unit.PIXELS);
         this.entityAttributeNamesMappingView.getStyle().set("padding-left","15px");
@@ -206,7 +206,6 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
     private void checkComputeGridStatusInfo(){
         ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
         try {
-            //Set<DataComputeUnitMetaInfo> dataComputeUnitMetaInfoSet =
             targetComputeGrid.listDataComputeUnit();
             Set<DataSliceMetaInfo> dataSliceMetaInfoSet = targetComputeGrid.listDataSlice();
             this.dataSliceMetaInfoGrid.setItems(dataSliceMetaInfoSet);
@@ -219,7 +218,7 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
     }
 
     private void clearDataSlicePropertiesMappingContent(){
-        this.entityAttributeNamesMappingView.refreshEntityAttributeNamesMappingInfo(null,null);
+        this.entityAttributeNamesMappingView.clearMappingInfo();
     }
 
     private void renderDataSlicePropertiesMappingContent(DataSliceMetaInfo dataSliceMetaInfo){
@@ -229,30 +228,29 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
             try {
                 DataSliceDetailInfo dataSliceDetailInfo = targetComputeGrid.getDataSliceDetail(dataSliceName);
                 if(dataSliceDetailInfo != null){
+
+
+                    Set<String> primaryKeyPropertiesNames = dataSliceDetailInfo.getPrimaryKeyPropertiesNames();
+                    Map<String, DataSlicePropertyType> dataSlicePropertiesMap = dataSliceDetailInfo.getPropertiesDefinition();
+
+                    this.entityAttributeNamesMappingView.renderDataSlicePropertiesMapping(dataSlicePropertiesMap,primaryKeyPropertiesNames,null);
+
+
+
+
+
                     List<String> sliceAttributesNameList = new ArrayList<>();
 
-                    /*
-                    sliceAttributesNameList.add("A001");
-                    sliceAttributesNameList.add("A002");
-                    sliceAttributesNameList.add("A003");
-                    sliceAttributesNameList.add("A004");
-                    sliceAttributesNameList.add("A005");
-                    sliceAttributesNameList.add("A006");
-                    sliceAttributesNameList.add("A007");
-                    sliceAttributesNameList.add("A008");
-                    sliceAttributesNameList.add("A009");
-                    sliceAttributesNameList.add("A0010");
-                    */
+
                     
                     List<String> conceptionKindPropertiesNameList = new ArrayList<>();
                     conceptionKindPropertiesNameList.add("YYYUUU_SOOOP");
 
-                    Set<String> primaryKeyPropertiesNames = dataSliceDetailInfo.getPrimaryKeyPropertiesNames();
 
 
                     System.out.println(primaryKeyPropertiesNames);
 
-                    Map<String, DataSlicePropertyType> dataSlicePropertiesMap = dataSliceDetailInfo.getPropertiesDefinition();
+
                     List<DataSlicePropertyDefinitionVO> dataSlicePropertyDefinitionVOList = new ArrayList<>();
                     Set<String> propertyNameSet = dataSlicePropertiesMap.keySet();
                     for(String currentName : propertyNameSet){
