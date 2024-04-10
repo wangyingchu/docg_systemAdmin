@@ -108,7 +108,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.conceptionKind = beforeEnterEvent.getRouteParameters().get("conceptionKind").get();
-        this.conceptionKindDetailViewHeightOffset = 45;
+        this.conceptionKindDetailViewHeightOffset = 50;
     }
 
     @Override

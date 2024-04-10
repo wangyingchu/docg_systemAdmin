@@ -101,7 +101,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.relationKind = beforeEnterEvent.getRouteParameters().get("relationKind").get();
-        this.relationKindDetailViewHeightOffset = 45;
+        this.relationKindDetailViewHeightOffset = 50;
     }
 
     @Override
