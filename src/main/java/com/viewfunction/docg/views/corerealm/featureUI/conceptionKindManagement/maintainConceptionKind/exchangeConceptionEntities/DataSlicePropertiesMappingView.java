@@ -3,6 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 
@@ -15,7 +16,7 @@ public class DataSlicePropertiesMappingView extends VerticalLayout {
     private Set<String> primaryKeyPropertiesNameSet;
 
     public DataSlicePropertiesMappingView(){
-        this.setPadding(false);
+        this.setPadding(true);
         this.setMargin(false);
         this.setSpacing(false);
         this.setWidth(100, Unit.PERCENTAGE);
@@ -26,10 +27,12 @@ public class DataSlicePropertiesMappingView extends VerticalLayout {
         this.dataSlicePropertiesMap = dataSlicePropertiesMap;
         this.primaryKeyPropertiesNameSet = primaryKeyPropertiesNameSet;
         this.removeAll();
-        if(dataSlicePropertiesMap != null && dataSlicePropertiesMap.size() > 0){
-            Set<String> dataSlicePropertiesNameSet = dataSlicePropertiesMap.keySet();
+        if(this.dataSlicePropertiesMap != null && this.dataSlicePropertiesMap.size() > 0){
+            Set<String> dataSlicePropertiesNameSet = this.dataSlicePropertiesMap.keySet();
             for(String currentName:dataSlicePropertiesNameSet){
-                DataSlicePropertyNameMapperWidget currentEntityAttributeNameMapperWidget = new DataSlicePropertyNameMapperWidget(currentName,kindEntityAttributeRuntimeStatisticsList);
+                boolean isPKFlag = this.primaryKeyPropertiesNameSet.contains(currentName);
+                DataSlicePropertyNameMapperWidget currentEntityAttributeNameMapperWidget =
+                        new DataSlicePropertyNameMapperWidget(currentName,this.dataSlicePropertiesMap.get(currentName),isPKFlag,kindEntityAttributeRuntimeStatisticsList);
                 add(currentEntityAttributeNameMapperWidget);
             }
         }
@@ -51,5 +54,10 @@ public class DataSlicePropertiesMappingView extends VerticalLayout {
             }
         });
         return attributesMapping;
+    }
+
+    public boolean validPropertiesMappingStatus(){
+
+        return true;
     }
 }

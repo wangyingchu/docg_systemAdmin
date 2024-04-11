@@ -1,8 +1,8 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.exchangeConceptionEntities;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.ItemLabelGenerator;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -28,6 +28,7 @@ import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSliceProper
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
+import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
@@ -38,6 +39,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayout {
+
     private String conceptionKindName;
     private Dialog containerDialog;
     private HorizontalLayout doesNotDetectDataGridInfoMessage;
@@ -45,6 +47,9 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
     private Grid<DataSliceMetaInfo> dataSliceMetaInfoGrid;
     private DataSlicePropertiesMappingView entityAttributeNamesMappingView;
     private List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList;
+    private SecondaryTitleActionBar selectedDataSliceNameInfoActionBar;
+    private String selectedDataSliceName;
+    private Button syncToDataSliceButton;
 
     public SyncConceptionEntitiesToExistingDataSliceView(String conceptionKindName){
         this.setWidthFull();
@@ -166,6 +171,35 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
 
         queryConditionItemsScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         conceptionKindAttributesInfoLayout.add(queryConditionItemsScroller);
+
+        ThirdLevelIconTitle sliceSyncInfoTitle = new ThirdLevelIconTitle(new Icon(VaadinIcon.ARROWS_LONG_H),"切片数据导出配置");
+        sliceSyncInfoTitle.getStyle().set("padding-bottom","5px");
+        sliceSyncInfoTitle.getStyle().set("padding-top","10px");
+        sliceSyncInfoTitle.getStyle().set("padding-left","5px");
+        syncDataSliceDataControllerLayout.add(sliceSyncInfoTitle);
+
+        VerticalLayout syncDataSliceDataControllerContentContainer= new VerticalLayout();
+        syncDataSliceDataControllerLayout.setWidth(200,Unit.PIXELS);
+        syncDataSliceDataControllerContentContainer.setSpacing(true);
+        syncDataSliceDataControllerContentContainer.setPadding(true);
+        syncDataSliceDataControllerContentContainer.setMargin(true);
+        syncDataSliceDataControllerLayout.add(syncDataSliceDataControllerContentContainer);
+
+        selectedDataSliceNameInfoActionBar = new SecondaryTitleActionBar(LineAwesomeIconsSvg.CLONE.create(),"-",null,null);
+        selectedDataSliceNameInfoActionBar.setWidth(100,Unit.PERCENTAGE);
+        syncDataSliceDataControllerContentContainer.add(selectedDataSliceNameInfoActionBar);
+
+        syncToDataSliceButton = new Button("导出至数据切片",LineAwesomeIconsSvg.MEMORY_SOLID.create());
+        syncToDataSliceButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        syncToDataSliceButton.setDisableOnClick(true);
+        syncDataSliceDataControllerContentContainer.add(syncToDataSliceButton);
+        syncToDataSliceButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                syncToDataSlice();
+            }
+        });
+        this.syncToDataSliceButton.setEnabled(false);
     }
 
     @Override
@@ -194,6 +228,9 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
 
     private void clearDataSlicePropertiesMappingContent(){
         this.entityAttributeNamesMappingView.clearMappingInfo();
+        this.selectedDataSliceNameInfoActionBar.updateTitleContent("-");
+        this.selectedDataSliceName = null;
+        this.syncToDataSliceButton.setEnabled(false);
     }
 
     private void renderDataSlicePropertiesMappingContent(DataSliceMetaInfo dataSliceMetaInfo){
@@ -203,6 +240,9 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
             try {
                 DataSliceDetailInfo dataSliceDetailInfo = targetComputeGrid.getDataSliceDetail(dataSliceName);
                 if(dataSliceDetailInfo != null){
+                    this.selectedDataSliceNameInfoActionBar.updateTitleContent(dataSliceName);
+                    this.selectedDataSliceName = dataSliceName;
+                    this.syncToDataSliceButton.setEnabled(true);
                     if(this.kindEntityAttributeRuntimeStatisticsList == null){
                         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
                         coreRealm.openGlobalSession();
@@ -218,5 +258,10 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private void syncToDataSlice(){
+        boolean validResult = this.entityAttributeNamesMappingView.validPropertiesMappingStatus();
+
     }
 }
