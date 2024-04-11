@@ -16,6 +16,10 @@ import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
@@ -40,36 +44,7 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
     private VerticalLayout contentContainer;
     private Grid<DataSliceMetaInfo> dataSliceMetaInfoGrid;
     private DataSlicePropertiesMappingView entityAttributeNamesMappingView;
-
-    private class DataSlicePropertyDefinitionVO{
-        private String propertyName;
-        private DataSlicePropertyType dataSlicePropertyType;
-        private boolean isPrimaryKey;
-
-        public String getPropertyName() {
-            return propertyName;
-        }
-
-        public void setPropertyName(String propertyName) {
-            this.propertyName = propertyName;
-        }
-
-        public DataSlicePropertyType getDataSlicePropertyType() {
-            return dataSlicePropertyType;
-        }
-
-        public void setDataSlicePropertyType(DataSlicePropertyType dataSlicePropertyType) {
-            this.dataSlicePropertyType = dataSlicePropertyType;
-        }
-
-        public boolean isPrimaryKey() {
-            return isPrimaryKey;
-        }
-
-        public void setPrimaryKey(boolean primaryKey) {
-            isPrimaryKey = primaryKey;
-        }
-    }
+    private List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList;
 
     public SyncConceptionEntitiesToExistingDataSliceView(String conceptionKindName){
         this.setWidthFull();
@@ -228,45 +203,16 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
             try {
                 DataSliceDetailInfo dataSliceDetailInfo = targetComputeGrid.getDataSliceDetail(dataSliceName);
                 if(dataSliceDetailInfo != null){
-
-
+                    if(this.kindEntityAttributeRuntimeStatisticsList == null){
+                        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                        coreRealm.openGlobalSession();
+                        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
+                        kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(1000000);
+                        coreRealm.closeGlobalSession();
+                    }
                     Set<String> primaryKeyPropertiesNames = dataSliceDetailInfo.getPrimaryKeyPropertiesNames();
                     Map<String, DataSlicePropertyType> dataSlicePropertiesMap = dataSliceDetailInfo.getPropertiesDefinition();
-
-                    this.entityAttributeNamesMappingView.renderDataSlicePropertiesMapping(dataSlicePropertiesMap,primaryKeyPropertiesNames,null);
-
-
-
-
-
-                    List<String> sliceAttributesNameList = new ArrayList<>();
-
-
-                    
-                    List<String> conceptionKindPropertiesNameList = new ArrayList<>();
-                    conceptionKindPropertiesNameList.add("YYYUUU_SOOOP");
-
-
-
-                    System.out.println(primaryKeyPropertiesNames);
-
-
-                    List<DataSlicePropertyDefinitionVO> dataSlicePropertyDefinitionVOList = new ArrayList<>();
-                    Set<String> propertyNameSet = dataSlicePropertiesMap.keySet();
-                    for(String currentName : propertyNameSet){
-                        DataSlicePropertyDefinitionVO currentDataSlicePropertyDefinitionVO = new DataSlicePropertyDefinitionVO();
-                        currentDataSlicePropertyDefinitionVO.setPropertyName(currentName);
-                        currentDataSlicePropertyDefinitionVO.setDataSlicePropertyType(dataSlicePropertiesMap.get(currentName));
-                        if(primaryKeyPropertiesNames.contains(currentName)){
-                            currentDataSlicePropertyDefinitionVO.setPrimaryKey(true);
-                        }else{
-                            currentDataSlicePropertyDefinitionVO.setPrimaryKey(false);
-                        }
-                        dataSlicePropertyDefinitionVOList.add(currentDataSlicePropertyDefinitionVO);
-
-                        sliceAttributesNameList.add(currentName);
-                    }
-                    this.entityAttributeNamesMappingView.refreshEntityAttributeNamesMappingInfo(sliceAttributesNameList,conceptionKindPropertiesNameList);
+                    this.entityAttributeNamesMappingView.renderDataSlicePropertiesMapping(dataSlicePropertiesMap,primaryKeyPropertiesNames,kindEntityAttributeRuntimeStatisticsList);
                 }
             } catch (ComputeGridException e) {
                 throw new RuntimeException(e);
