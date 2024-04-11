@@ -57,7 +57,14 @@ public class DataSlicePropertiesMappingView extends VerticalLayout {
     }
 
     public boolean validPropertiesMappingStatus(){
-
-        return true;
+        final boolean[] validResult = {true};
+        this.getChildren().forEach(new Consumer<Component>() {
+            @Override
+            public void accept(Component component) {
+                DataSlicePropertyNameMapperWidget currentEntityAttributeNameMapperWidget = (DataSlicePropertyNameMapperWidget)component;
+                validResult[0] = validResult[0] & currentEntityAttributeNameMapperWidget.isValid();
+            }
+        });
+        return validResult[0];
     }
 }

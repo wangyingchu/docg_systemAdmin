@@ -113,4 +113,9 @@ public class DataSlicePropertyNameMapperWidget extends VerticalLayout {
                 .withProperty("attributeKindName", KindEntityAttributeRuntimeStatistics::getAttributeName)
                 .withProperty("attributeKindDataType",KindEntityAttributeRuntimeStatistics::getAttributeDataType);
     }
+
+    public boolean isValid(){
+        KindEntityAttributeRuntimeStatistics currentMapping = attributeRuntimeMappingSelect.getValue();
+        return currentMapping != null && currentMapping.getAttributeName() != null;
+    }
 }

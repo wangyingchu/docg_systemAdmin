@@ -9,6 +9,8 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -26,11 +28,9 @@ import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMet
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
-import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
-import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
-import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
-import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
+import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -191,7 +191,6 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
 
         syncToDataSliceButton = new Button("导出至数据切片",LineAwesomeIconsSvg.MEMORY_SOLID.create());
         syncToDataSliceButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        syncToDataSliceButton.setDisableOnClick(true);
         syncDataSliceDataControllerContentContainer.add(syncToDataSliceButton);
         syncToDataSliceButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -262,6 +261,32 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
 
     private void syncToDataSlice(){
         boolean validResult = this.entityAttributeNamesMappingView.validPropertiesMappingStatus();
+        if(!validResult){
+            CommonUIOperationUtil.showPopupNotification("请选择全部的类型属性映射", NotificationVariant.LUMO_WARNING,0, Notification.Position.MIDDLE);
+        }else{
+            List<Button> actionButtonList = new ArrayList<>();
+            Button confirmButton = new Button("确认导出实体数据至数据切片",new Icon(VaadinIcon.CHECK_CIRCLE));
+            //confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            Button cancelButton = new Button("取消操作");
+            cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+            actionButtonList.add(confirmButton);
+            actionButtonList.add(cancelButton);
+
+            ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认是否向数据切片 "+this.selectedDataSliceName+" 导出概念类型实体数据",actionButtonList,650,180);
+            confirmWindow.open();
+            confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    //doCreateAttributeKind(attributeKindName,attributeKindDesc,attributeDataType,confirmWindow);
+                }
+            });
+            cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    confirmWindow.closeConfirmWindow();
+                }
+            });
+        }
 
     }
 }
