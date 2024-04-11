@@ -247,6 +247,9 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
                         coreRealm.openGlobalSession();
                         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
                         kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(1000000);
+                        KindEntityAttributeRuntimeStatistics conceptionEntityUIDProperty =
+                                new KindEntityAttributeRuntimeStatistics("ALL","DOCG_ConceptionEntity_UID","STRING",0,0);
+                        kindEntityAttributeRuntimeStatisticsList.add(conceptionEntityUIDProperty);
                         coreRealm.closeGlobalSession();
                     }
                     Set<String> primaryKeyPropertiesNames = dataSliceDetailInfo.getPrimaryKeyPropertiesNames();
@@ -266,7 +269,6 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
         }else{
             List<Button> actionButtonList = new ArrayList<>();
             Button confirmButton = new Button("确认导出实体数据至数据切片",new Icon(VaadinIcon.CHECK_CIRCLE));
-            //confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
             Button cancelButton = new Button("取消操作");
             cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
             actionButtonList.add(confirmButton);
@@ -277,7 +279,7 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
             confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    //doCreateAttributeKind(attributeKindName,attributeKindDesc,attributeDataType,confirmWindow);
+                    doSyncConceptionEntitiesToDataSlice(confirmWindow);
                 }
             });
             cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -287,6 +289,13 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
                 }
             });
         }
-
     }
+
+    private void doSyncConceptionEntitiesToDataSlice(ConfirmWindow confirmWindow){
+        confirmWindow.closeConfirmWindow();
+        if(this.containerDialog != null){
+            this.containerDialog.close();
+        }
+    }
+
 }
