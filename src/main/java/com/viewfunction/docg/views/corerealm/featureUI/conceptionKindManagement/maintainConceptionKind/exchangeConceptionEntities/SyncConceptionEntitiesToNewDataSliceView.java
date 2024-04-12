@@ -166,6 +166,7 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
         dataSliceGroupField.setPrefixComponent(VaadinIcon.ARCHIVES.create());
         syncDataSliceDataControllerContentContainer.add(dataSliceGroupField);
 
+        /*
         selectedDataSliceNameInfoActionBar = new SecondaryTitleActionBar(LineAwesomeIconsSvg.CLONE.create(),"-",null,null,false);
         selectedDataSliceNameInfoActionBar.setWidth(100,Unit.PERCENTAGE);
         syncDataSliceDataControllerContentContainer.add(selectedDataSliceNameInfoActionBar);
@@ -173,6 +174,8 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
         selectedDataSliceGroupInfoActionBar = new SecondaryTitleActionBar(VaadinIcon.ARCHIVES.create(), "-",null,null);
         selectedDataSliceGroupInfoActionBar.setWidth(100,Unit.PERCENTAGE);
         syncDataSliceDataControllerContentContainer.add(selectedDataSliceGroupInfoActionBar);
+        */
+
 
         syncToDataSliceButton = new Button("导出至数据切片",LineAwesomeIconsSvg.MEMORY_SOLID.create());
         syncToDataSliceButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
