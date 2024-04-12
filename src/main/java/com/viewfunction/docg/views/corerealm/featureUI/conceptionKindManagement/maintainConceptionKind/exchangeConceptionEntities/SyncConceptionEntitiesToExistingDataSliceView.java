@@ -18,13 +18,16 @@ import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.util.CoreRealmOperationUtil;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceOperationResult;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
@@ -38,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceOperationResult.*;
+
 public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayout {
 
     private String conceptionKindName;
@@ -48,7 +53,9 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
     private DataSlicePropertiesMappingView entityAttributeNamesMappingView;
     private List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList;
     private SecondaryTitleActionBar selectedDataSliceNameInfoActionBar;
+    private SecondaryTitleActionBar selectedDataSliceGroupInfoActionBar;
     private String selectedDataSliceName;
+    private String selectedDataSliceGroup;
     private Button syncToDataSliceButton;
 
     public SyncConceptionEntitiesToExistingDataSliceView(String conceptionKindName){
@@ -185,9 +192,13 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
         syncDataSliceDataControllerContentContainer.setMargin(true);
         syncDataSliceDataControllerLayout.add(syncDataSliceDataControllerContentContainer);
 
-        selectedDataSliceNameInfoActionBar = new SecondaryTitleActionBar(LineAwesomeIconsSvg.CLONE.create(),"-",null,null);
+        selectedDataSliceNameInfoActionBar = new SecondaryTitleActionBar(LineAwesomeIconsSvg.CLONE.create(),"-",null,null,false);
         selectedDataSliceNameInfoActionBar.setWidth(100,Unit.PERCENTAGE);
         syncDataSliceDataControllerContentContainer.add(selectedDataSliceNameInfoActionBar);
+
+        selectedDataSliceGroupInfoActionBar = new SecondaryTitleActionBar(VaadinIcon.ARCHIVES.create(), "-",null,null);
+        selectedDataSliceGroupInfoActionBar.setWidth(100,Unit.PERCENTAGE);
+        syncDataSliceDataControllerContentContainer.add(selectedDataSliceGroupInfoActionBar);
 
         syncToDataSliceButton = new Button("导出至数据切片",LineAwesomeIconsSvg.MEMORY_SOLID.create());
         syncToDataSliceButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -228,7 +239,9 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
     private void clearDataSlicePropertiesMappingContent(){
         this.entityAttributeNamesMappingView.clearMappingInfo();
         this.selectedDataSliceNameInfoActionBar.updateTitleContent("-");
+        this.selectedDataSliceGroupInfoActionBar.updateTitleContent("-");
         this.selectedDataSliceName = null;
+        this.selectedDataSliceGroup = null;
         this.syncToDataSliceButton.setEnabled(false);
     }
 
@@ -240,7 +253,9 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
                 DataSliceDetailInfo dataSliceDetailInfo = targetComputeGrid.getDataSliceDetail(dataSliceName);
                 if(dataSliceDetailInfo != null){
                     this.selectedDataSliceNameInfoActionBar.updateTitleContent(dataSliceName);
+                    this.selectedDataSliceGroupInfoActionBar.updateTitleContent(dataSliceDetailInfo.getSliceGroupName());
                     this.selectedDataSliceName = dataSliceName;
+                    this.selectedDataSliceGroup = dataSliceDetailInfo.getSliceGroupName();
                     this.syncToDataSliceButton.setEnabled(true);
                     if(this.kindEntityAttributeRuntimeStatisticsList == null){
                         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -292,10 +307,20 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
     }
 
     private void doSyncConceptionEntitiesToDataSlice(ConfirmWindow confirmWindow){
+        QueryParameters queryParameters = new QueryParameters();
+
+        Map<String,String> propertiesMapping = this.entityAttributeNamesMappingView.getAttributesMapping();
+
+
+
+        //DataSliceOperationResult dataSliceOperationResult =
+        //        CoreRealmOperationUtil.syncConceptionKindToDataSlice(this.conceptionKindName,this.selectedDataSliceName,this.selectedDataSliceGroup,null,queryParameters);
+
+        //dataSliceOperationResult.getOperationSummary();
+
         confirmWindow.closeConfirmWindow();
         if(this.containerDialog != null){
             this.containerDialog.close();
         }
     }
-
 }
