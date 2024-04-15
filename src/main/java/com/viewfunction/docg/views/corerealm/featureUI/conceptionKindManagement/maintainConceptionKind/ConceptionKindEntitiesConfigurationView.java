@@ -602,7 +602,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
     private void renderSyncConceptionKindEntitiesToNewDataSliceView(){
         SyncConceptionEntitiesToNewDataSliceView syncConceptionEntitiesToNewDataSliceView = new SyncConceptionEntitiesToNewDataSliceView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BUFFER.create(),"导出概念类型实体至 Data Slice 数据切片",null,true,1050,605,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BUFFER.create(),"导出概念类型实体至 Data Slice 数据切片",null,true,730,540,false);
         fixSizeWindow.setWindowContent(syncConceptionEntitiesToNewDataSliceView);
         fixSizeWindow.setModel(true);
         syncConceptionEntitiesToNewDataSliceView.setContainerDialog(fixSizeWindow);
