@@ -214,7 +214,7 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
             return;
         }
 
-        boolean overwriteSameNameDataSliceData = clearExistDataSliceDataCheckbox.getValue();
+
 
         List<Button> actionButtonList = new ArrayList<>();
         Button confirmButton = new Button("确认导出实体数据至数据切片",new Icon(VaadinIcon.CHECK_CIRCLE));
@@ -253,8 +253,16 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
         String dataSliceName = (dataSliceNameField.getValue() == null || dataSliceNameField.getValue().equals("")) ? null : dataSliceNameField.getValue();
         String dataSliceGroupName = (dataSliceGroupField.getValue() == null || dataSliceGroupField.getValue().equals("")) ? null : dataSliceGroupField.getValue();
 
-        DataSliceOperationResult dataSliceOperationResult =
-                CoreRealmOperationUtil.syncConceptionKindToDataSlice(this.conceptionKindName,dataSliceName,dataSliceGroupName,dataSlicePropertyMap,queryParameters);
+        boolean overwriteSameNameDataSliceData = clearExistDataSliceDataCheckbox.getValue();
+        DataSliceOperationResult dataSliceOperationResult = null;
+        if(overwriteSameNameDataSliceData){
+            dataSliceOperationResult =
+                    CoreRealmOperationUtil.cleanAndSyncConceptionKindToDataSlice(this.conceptionKindName,dataSliceName,dataSliceGroupName,dataSlicePropertyMap,queryParameters);
+        }else{
+            dataSliceOperationResult =
+                    CoreRealmOperationUtil.syncConceptionKindToDataSlice(this.conceptionKindName,dataSliceName,dataSliceGroupName,dataSlicePropertyMap,queryParameters);
+        }
+
         if(dataSliceOperationResult != null){
             confirmWindow.closeConfirmWindow();
             if(this.containerDialog != null){
@@ -269,7 +277,7 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
     private void showPopupNotification(DataSliceOperationResult dataSliceOperationResult, NotificationVariant notificationVariant){
         Notification notification = new Notification();
         notification.addThemeVariants(notificationVariant);
-        Div text = new Div(new Text("概念类型 "+conceptionKindName+" 导出实体数据至数据切片操作完成: "+dataSliceOperationResult.getOperationSummary()));
+        Div text = new Div(new Text("概念类型 "+conceptionKindName+" 导出实体数据至数据切片操作完成"));
         Button closeButton = new Button(new Icon("lumo", "cross"));
         closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         closeButton.addClickListener(event -> {
