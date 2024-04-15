@@ -1,15 +1,13 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.exchangeConceptionEntities;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -27,6 +25,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.util.CoreRealmOperationUtil;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceOperationResult;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
@@ -36,6 +35,7 @@ import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.helper.DataSliceOperationHelper;
 
 import java.util.*;
 
@@ -48,7 +48,6 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
     private Button syncToDataSliceButton;
     private TextField dataSliceNameField;
     private TextField dataSliceGroupField;
-    private Checkbox useConceptionEntityUIDAsDataSlicePKCheckbox;
     private Checkbox clearExistDataSliceDataCheckbox;
 
     public SyncConceptionEntitiesToNewDataSliceView(String conceptionKindName) {
@@ -154,11 +153,6 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
         dataSliceGroupField.setPrefixComponent(VaadinIcon.ARCHIVES.create());
         syncDataSliceDataControllerContentContainer.add(dataSliceGroupField);
 
-        useConceptionEntityUIDAsDataSlicePKCheckbox = new Checkbox();
-        useConceptionEntityUIDAsDataSlicePKCheckbox.setLabel("使用概念实体唯一值ID做为数据切片主键");
-        useConceptionEntityUIDAsDataSlicePKCheckbox.addClassNames("text-tertiary");
-        syncDataSliceDataControllerContentContainer.add(useConceptionEntityUIDAsDataSlicePKCheckbox);
-
         clearExistDataSliceDataCheckbox = new Checkbox();
         clearExistDataSliceDataCheckbox.setLabel("覆写同名目标数据切片中的已有数据");
         clearExistDataSliceDataCheckbox.addClassNames("text-tertiary");
@@ -219,17 +213,7 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
             CommonUIOperationUtil.showPopupNotification("请选择至少一项概念类型属性", NotificationVariant.LUMO_WARNING,0, Notification.Position.MIDDLE);
             return;
         }
-        String dataSliceName = dataSliceNameField.getValue();
-        if(dataSliceName == null || dataSliceName.equals("")){
-            CommonUIOperationUtil.showPopupNotification("请输入数据切片名称", NotificationVariant.LUMO_WARNING,0, Notification.Position.MIDDLE);
-            return;
-        }
-        String dataSliceGroupName = dataSliceGroupField.getValue();
-        if(dataSliceGroupName == null || dataSliceGroupName.equals("")){
-            CommonUIOperationUtil.showPopupNotification("请输入数据切片分组名称", NotificationVariant.LUMO_WARNING,0, Notification.Position.MIDDLE);
-            return;
-        }
-        boolean weatherUseUIDAsPk = useConceptionEntityUIDAsDataSlicePKCheckbox.getValue();
+
         boolean overwriteSameNameDataSliceData = clearExistDataSliceDataCheckbox.getValue();
 
         List<Button> actionButtonList = new ArrayList<>();
@@ -239,7 +223,7 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
         actionButtonList.add(confirmButton);
         actionButtonList.add(cancelButton);
 
-        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认是否向数据切片 "+dataSliceName+" 导出概念类型实体数据",actionButtonList,650,180);
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认是否向计算网格导出概念类型 "+this.conceptionKindName+" 的概念实体数据切片",actionButtonList,650,180);
         confirmWindow.open();
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -258,33 +242,51 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
     private void doSyncConceptionEntitiesToDataSlice(ConfirmWindow confirmWindow){
         QueryParameters queryParameters = new QueryParameters();
         queryParameters.setResultNumber(100000000);
-
-
-        List<String> dataSliceNameList = new ArrayList<>();
-
         Map<String, DataSlicePropertyType> dataSlicePropertyMap = new HashMap<>();
-
         Set<KindEntityAttributeRuntimeStatistics> selectedConceptionKindAttributesSet =this.conceptionKindAttributesInfoGrid.getSelectedItems();
         for(KindEntityAttributeRuntimeStatistics currentKindEntityAttributeRuntimeStatistics : selectedConceptionKindAttributesSet){
-            dataSliceNameList.add(currentKindEntityAttributeRuntimeStatistics.getAttributeName());
-
-            dataSlicePropertyMap.put(currentKindEntityAttributeRuntimeStatistics.getAttributeName(),DataSlicePropertyType.STRING);
+            dataSlicePropertyMap.put(currentKindEntityAttributeRuntimeStatistics.getAttributeName(),
+                    DataSliceOperationHelper.getCorrespondingDataSlicePropertyType(currentKindEntityAttributeRuntimeStatistics.getAttributeDataType())
+            );
         }
 
+        String dataSliceName = (dataSliceNameField.getValue() == null || dataSliceNameField.getValue().equals("")) ? null : dataSliceNameField.getValue();
+        String dataSliceGroupName = (dataSliceGroupField.getValue() == null || dataSliceGroupField.getValue().equals("")) ? null : dataSliceGroupField.getValue();
 
-
-        CoreRealmOperationUtil.syncConceptionKindToDataSlice(this.conceptionKindName,null,null,dataSlicePropertyMap,queryParameters);
-
-        //CoreRealmOperationUtil.loadConceptionKindEntitiesToDataSlice(this.conceptionKindName,dataSliceNameList,queryParameters,dataSliceNameField.getValue(),useConceptionEntityUIDAsDataSlicePKCheckbox.getValue(),10);
-        //CoreRealmOperationUtil.refreshDataSliceAndLoadDataFromConceptionKind(dataSliceGroupField.getValue(),dataSliceNameField.getValue(),);
-
-
-        confirmWindow.closeConfirmWindow();
-        if(this.containerDialog != null){
-            this.containerDialog.close();
+        DataSliceOperationResult dataSliceOperationResult =
+                CoreRealmOperationUtil.syncConceptionKindToDataSlice(this.conceptionKindName,dataSliceName,dataSliceGroupName,dataSlicePropertyMap,queryParameters);
+        if(dataSliceOperationResult != null){
+            confirmWindow.closeConfirmWindow();
+            if(this.containerDialog != null){
+                this.containerDialog.close();
+            }
+            showPopupNotification(dataSliceOperationResult,NotificationVariant.LUMO_SUCCESS);
+        }else{
+            CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKindName+" 导出实体数据至数据切片操作失败 ", NotificationVariant.LUMO_ERROR,0, Notification.Position.BOTTOM_START);
         }
-
     }
 
+    private void showPopupNotification(DataSliceOperationResult dataSliceOperationResult, NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text("概念类型 "+conceptionKindName+" 导出实体数据至数据切片操作完成: "+dataSliceOperationResult.getOperationSummary()));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
 
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        notificationMessageContainer.add(new Div(new Text("导出成功实体数: "+dataSliceOperationResult.getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("导出失败实体数: "+dataSliceOperationResult.getFailItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("操作开始时间: "+dataSliceOperationResult.getStartTime())));
+        notificationMessageContainer.add(new Div(new Text("操作结束时间: "+dataSliceOperationResult.getFinishTime())));
+        notification.add(notificationMessageContainer);
+        notification.setDuration(0);
+        notification.open();
+    }
 }
