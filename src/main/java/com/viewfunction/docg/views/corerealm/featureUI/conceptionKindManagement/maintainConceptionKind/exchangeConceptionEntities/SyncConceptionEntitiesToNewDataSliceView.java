@@ -13,26 +13,31 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.util.CoreRealmOperationUtil;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
+import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
     private String conceptionKindName;
@@ -165,7 +170,7 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
         syncToDataSliceButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //syncToDataSlice();
+                syncToDataSlice();
             }
         });
     }
@@ -207,4 +212,79 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
         coreRealm.closeGlobalSession();
         conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
     }
+
+    private void syncToDataSlice(){
+        Set<KindEntityAttributeRuntimeStatistics> selectedConceptionKindAttributesSet =this.conceptionKindAttributesInfoGrid.getSelectedItems();
+        if(selectedConceptionKindAttributesSet.size() == 0){
+            CommonUIOperationUtil.showPopupNotification("请选择至少一项概念类型属性", NotificationVariant.LUMO_WARNING,0, Notification.Position.MIDDLE);
+            return;
+        }
+        String dataSliceName = dataSliceNameField.getValue();
+        if(dataSliceName == null || dataSliceName.equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入数据切片名称", NotificationVariant.LUMO_WARNING,0, Notification.Position.MIDDLE);
+            return;
+        }
+        String dataSliceGroupName = dataSliceGroupField.getValue();
+        if(dataSliceGroupName == null || dataSliceGroupName.equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入数据切片分组名称", NotificationVariant.LUMO_WARNING,0, Notification.Position.MIDDLE);
+            return;
+        }
+        boolean weatherUseUIDAsPk = useConceptionEntityUIDAsDataSlicePKCheckbox.getValue();
+        boolean overwriteSameNameDataSliceData = clearExistDataSliceDataCheckbox.getValue();
+
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认导出实体数据至数据切片",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认是否向数据切片 "+dataSliceName+" 导出概念类型实体数据",actionButtonList,650,180);
+        confirmWindow.open();
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doSyncConceptionEntitiesToDataSlice(confirmWindow);
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doSyncConceptionEntitiesToDataSlice(ConfirmWindow confirmWindow){
+        QueryParameters queryParameters = new QueryParameters();
+        queryParameters.setResultNumber(100000000);
+
+
+        List<String> dataSliceNameList = new ArrayList<>();
+
+        Map<String, DataSlicePropertyType> dataSlicePropertyMap = new HashMap<>();
+
+        Set<KindEntityAttributeRuntimeStatistics> selectedConceptionKindAttributesSet =this.conceptionKindAttributesInfoGrid.getSelectedItems();
+        for(KindEntityAttributeRuntimeStatistics currentKindEntityAttributeRuntimeStatistics : selectedConceptionKindAttributesSet){
+            dataSliceNameList.add(currentKindEntityAttributeRuntimeStatistics.getAttributeName());
+
+            dataSlicePropertyMap.put(currentKindEntityAttributeRuntimeStatistics.getAttributeName(),DataSlicePropertyType.STRING);
+        }
+
+
+
+        CoreRealmOperationUtil.syncConceptionKindToDataSlice(this.conceptionKindName,null,null,dataSlicePropertyMap,queryParameters);
+
+        //CoreRealmOperationUtil.loadConceptionKindEntitiesToDataSlice(this.conceptionKindName,dataSliceNameList,queryParameters,dataSliceNameField.getValue(),useConceptionEntityUIDAsDataSlicePKCheckbox.getValue(),10);
+        //CoreRealmOperationUtil.refreshDataSliceAndLoadDataFromConceptionKind(dataSliceGroupField.getValue(),dataSliceNameField.getValue(),);
+
+
+        confirmWindow.closeConfirmWindow();
+        if(this.containerDialog != null){
+            this.containerDialog.close();
+        }
+
+    }
+
+
 }
