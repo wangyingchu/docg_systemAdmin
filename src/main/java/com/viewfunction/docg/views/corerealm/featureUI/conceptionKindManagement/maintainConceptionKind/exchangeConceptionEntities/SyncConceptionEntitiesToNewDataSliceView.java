@@ -24,6 +24,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.util.CoreRealmOperationUtil;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
+import com.viewfunction.docg.dataCompute.computeServiceCore.internal.ignite.ComputeGridObserver;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceOperationResult;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
@@ -182,8 +183,6 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
     private void checkComputeGridStatusInfo(){
         ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
         try {
-            //Set<DataComputeUnitMetaInfo> dataComputeUnitMetaInfoSet =
-            targetComputeGrid.listDataComputeUnit();
             Set<DataSliceMetaInfo> dataSliceMetaInfoSet = targetComputeGrid.listDataSlice();
             doesNotDetectDataGridInfoMessage.setVisible(false);
             contentContainer.setVisible(true);
@@ -213,8 +212,6 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
             CommonUIOperationUtil.showPopupNotification("请选择至少一项概念类型属性", NotificationVariant.LUMO_WARNING,0, Notification.Position.MIDDLE);
             return;
         }
-
-
 
         List<Button> actionButtonList = new ArrayList<>();
         Button confirmButton = new Button("确认导出实体数据至数据切片",new Icon(VaadinIcon.CHECK_CIRCLE));
@@ -254,6 +251,19 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
         String dataSliceGroupName = (dataSliceGroupField.getValue() == null || dataSliceGroupField.getValue().equals("")) ? null : dataSliceGroupField.getValue();
 
         boolean overwriteSameNameDataSliceData = clearExistDataSliceDataCheckbox.getValue();
+        if(!overwriteSameNameDataSliceData){
+            // need check whether data slice already exist, slice name naming method should follow logic in method CoreRealmOperationUtil.syncConceptionKindToDataSlice
+            String dataSliceRealName = dataSliceName != null ? dataSliceName : conceptionKindName;
+
+            ComputeGridObserver computeGridObserver = ComputeGridObserver.getObserverInstance();
+            Set<DataSliceMetaInfo> dataSliceDetailInfoSet = computeGridObserver.listDataSlice();
+            for(DataSliceMetaInfo currentDataSliceMetaInfo:dataSliceDetailInfoSet){
+                if(dataSliceRealName.equals(currentDataSliceMetaInfo.getDataSliceName())){
+                    CommonUIOperationUtil.showPopupNotification("数据切片 "+dataSliceRealName+" 已经存在", NotificationVariant.LUMO_ERROR,0, Notification.Position.MIDDLE);
+                    return;
+                }
+            }
+        }
         DataSliceOperationResult dataSliceOperationResult = null;
         if(overwriteSameNameDataSliceData){
             dataSliceOperationResult =

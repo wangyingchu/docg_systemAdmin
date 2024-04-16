@@ -23,11 +23,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttrib
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.util.CoreRealmOperationUtil;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
-import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceOperationResult;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
@@ -40,8 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceOperationResult.*;
 
 public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayout {
 
@@ -225,7 +221,6 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
     private void checkComputeGridStatusInfo(){
         ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
         try {
-            targetComputeGrid.listDataComputeUnit();
             Set<DataSliceMetaInfo> dataSliceMetaInfoSet = targetComputeGrid.listDataSlice();
             this.dataSliceMetaInfoGrid.setItems(dataSliceMetaInfoSet);
             doesNotDetectDataGridInfoMessage.setVisible(false);
