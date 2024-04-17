@@ -13,13 +13,16 @@ import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataSlicePropertyNameMapperWidget extends VerticalLayout {
 
     private String attributeName;
+    private DataSlicePropertyType dataSlicePropertyType;
     private ComboBox<KindEntityAttributeRuntimeStatistics> attributeRuntimeMappingSelect;
 
     public DataSlicePropertyNameMapperWidget(String attributeName,DataSlicePropertyType dataSlicePropertyType, boolean isPKProperty,
@@ -29,6 +32,7 @@ public class DataSlicePropertyNameMapperWidget extends VerticalLayout {
         this.setSpacing(true);
         this.setWidth(100, Unit.PERCENTAGE);
         this.attributeName = attributeName;
+        this.dataSlicePropertyType = dataSlicePropertyType;
 
         HorizontalLayout attributeOriginalNameInfo = new HorizontalLayout();
         attributeOriginalNameInfo.setSpacing(false);
@@ -69,7 +73,7 @@ public class DataSlicePropertyNameMapperWidget extends VerticalLayout {
         attributeRuntimeMappingSelect.setWidth(98,Unit.PERCENTAGE);
         attributeRuntimeMappingSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         attributeRuntimeMappingSelect.setPlaceholder("选择对应的类型属性");
-        attributeRuntimeMappingSelect.setItems(attributeRuntimeMapping);
+        attributeRuntimeMappingSelect.setItems(filterTypeMatchedAttributeRuntimeMapping(attributeRuntimeMapping));
         attributeRuntimeMappingSelect.setRequired(false);
         attributeRuntimeMappingSelect.setAllowCustomValue(true);
         attributeRuntimeMappingSelect.setPageSize(10);
@@ -117,5 +121,104 @@ public class DataSlicePropertyNameMapperWidget extends VerticalLayout {
     public boolean isValid(){
         KindEntityAttributeRuntimeStatistics currentMapping = attributeRuntimeMappingSelect.getValue();
         return currentMapping != null && currentMapping.getAttributeName() != null;
+    }
+
+    private List<KindEntityAttributeRuntimeStatistics> filterTypeMatchedAttributeRuntimeMapping(List<KindEntityAttributeRuntimeStatistics> attributeRuntimeMapping){
+        List<KindEntityAttributeRuntimeStatistics> filteredAttributeRuntimeMapping = new ArrayList<>();
+        for(KindEntityAttributeRuntimeStatistics currentKindEntityAttributeRuntimeStatistics : attributeRuntimeMapping){
+            AttributeDataType attributeDataType = currentKindEntityAttributeRuntimeStatistics.getAttributeDataType();
+            switch(this.dataSlicePropertyType){
+                case STRING :
+                    filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    break;
+                case BOOLEAN:
+                    if(attributeDataType.equals(AttributeDataType.BOOLEAN)){
+                        filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    }
+                    break;
+                case INT:
+                    if(attributeDataType.equals(AttributeDataType.INT) ||
+                            attributeDataType.equals(AttributeDataType.SHORT)){
+                        filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    }
+                    break;
+                case SHORT:
+                    if(attributeDataType.equals(AttributeDataType.SHORT)){
+                        filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    }
+                    break;
+                case LONG:
+                    if(attributeDataType.equals(AttributeDataType.LONG) ||
+                            attributeDataType.equals(AttributeDataType.INT) ||
+                            attributeDataType.equals(AttributeDataType.SHORT)){
+                        filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    }
+                    break;
+                case FLOAT:
+                    if(attributeDataType.equals(AttributeDataType.FLOAT) ||
+                            attributeDataType.equals(AttributeDataType.LONG) ||
+                            attributeDataType.equals(AttributeDataType.INT) ||
+                            attributeDataType.equals(AttributeDataType.SHORT)){
+                        filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    }
+                    break;
+                case DOUBLE:
+                    if(attributeDataType.equals(AttributeDataType.DOUBLE) ||
+                            attributeDataType.equals(AttributeDataType.FLOAT) ||
+                            attributeDataType.equals(AttributeDataType.LONG) ||
+                            attributeDataType.equals(AttributeDataType.INT) ||
+                            attributeDataType.equals(AttributeDataType.SHORT)){
+                        filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    }
+                    break;
+                case DATE:
+                    if(attributeDataType.equals(AttributeDataType.DATE)||
+                            attributeDataType.equals(AttributeDataType.DATETIME)){
+                        filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    }
+                    break;
+                case TIME:
+                    if(attributeDataType.equals(AttributeDataType.TIME)){
+                        filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    }
+                    break;
+                case TIMESTAMP:
+                    if(attributeDataType.equals(AttributeDataType.TIMESTAMP)){
+                        filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    }
+                    break;
+                case BYTE:
+                    if(attributeDataType.equals(AttributeDataType.BYTE)){
+                        filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    }
+                    break;
+                case DECIMAL:
+                    if(attributeDataType.equals(AttributeDataType.DECIMAL) ||
+                            attributeDataType.equals(AttributeDataType.DOUBLE) ||
+                            attributeDataType.equals(AttributeDataType.FLOAT) ||
+                            attributeDataType.equals(AttributeDataType.LONG) ||
+                            attributeDataType.equals(AttributeDataType.INT) ||
+                            attributeDataType.equals(AttributeDataType.SHORT)){
+                        filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    }
+                    break;
+                case BINARY:
+                    if(attributeDataType.equals(AttributeDataType.BINARY)){
+                        filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    }
+                    break;
+                case GEOMETRY:
+                    if(attributeDataType.equals(AttributeDataType.STRING)){
+                        filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    }
+                    break;
+                case UUID:
+                    if(attributeDataType.equals(AttributeDataType.STRING)){
+                        filteredAttributeRuntimeMapping.add(currentKindEntityAttributeRuntimeStatistics);
+                    }
+                    break;
+            }
+        }
+        return filteredAttributeRuntimeMapping;
     }
 }
