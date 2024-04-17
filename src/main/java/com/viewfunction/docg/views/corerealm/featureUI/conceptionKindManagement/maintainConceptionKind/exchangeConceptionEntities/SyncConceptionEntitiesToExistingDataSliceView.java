@@ -257,9 +257,6 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
                         coreRealm.openGlobalSession();
                         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
                         kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(1000000);
-                        KindEntityAttributeRuntimeStatistics conceptionEntityUIDProperty =
-                                new KindEntityAttributeRuntimeStatistics("ALL","DOCG_ConceptionEntity_UID","STRING",0,0);
-                        kindEntityAttributeRuntimeStatisticsList.add(conceptionEntityUIDProperty);
                         coreRealm.closeGlobalSession();
                     }
                     Set<String> primaryKeyPropertiesNames = dataSliceDetailInfo.getPrimaryKeyPropertiesNames();

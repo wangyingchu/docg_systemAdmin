@@ -125,6 +125,11 @@ public class DataSlicePropertyNameMapperWidget extends VerticalLayout {
 
     private List<KindEntityAttributeRuntimeStatistics> filterTypeMatchedAttributeRuntimeMapping(List<KindEntityAttributeRuntimeStatistics> attributeRuntimeMapping){
         List<KindEntityAttributeRuntimeStatistics> filteredAttributeRuntimeMapping = new ArrayList<>();
+        if(this.dataSlicePropertyType.equals(DataSlicePropertyType.STRING)){
+            KindEntityAttributeRuntimeStatistics conceptionEntityUIDProperty =
+                    new KindEntityAttributeRuntimeStatistics("ALL","DOCG_ConceptionEntity_UID","STRING",0,0);
+            filteredAttributeRuntimeMapping.add(conceptionEntityUIDProperty);
+        }
         for(KindEntityAttributeRuntimeStatistics currentKindEntityAttributeRuntimeStatistics : attributeRuntimeMapping){
             AttributeDataType attributeDataType = currentKindEntityAttributeRuntimeStatistics.getAttributeDataType();
             switch(this.dataSlicePropertyType){
