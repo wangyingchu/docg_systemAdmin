@@ -310,7 +310,7 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
 
     private void doSyncConceptionEntitiesToDataSlice(Map<String,String> finalAttributeMapping,ConfirmWindow confirmWindow){
         QueryParameters queryParameters = new QueryParameters();
-
+        queryParameters.setResultNumber(100000000);
         Map<String,String> propertiesMapping = this.entityAttributeNamesMappingView.getAttributesMapping();
 
 
