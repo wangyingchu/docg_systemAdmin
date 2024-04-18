@@ -24,6 +24,7 @@ public class DataSlicePropertyNameMapperWidget extends VerticalLayout {
     private String attributeName;
     private DataSlicePropertyType dataSlicePropertyType;
     private ComboBox<KindEntityAttributeRuntimeStatistics> attributeRuntimeMappingSelect;
+    private boolean isPKProperty;
 
     public DataSlicePropertyNameMapperWidget(String attributeName,DataSlicePropertyType dataSlicePropertyType, boolean isPKProperty,
                                              List<KindEntityAttributeRuntimeStatistics> attributeRuntimeMapping){
@@ -33,6 +34,7 @@ public class DataSlicePropertyNameMapperWidget extends VerticalLayout {
         this.setWidth(100, Unit.PERCENTAGE);
         this.attributeName = attributeName;
         this.dataSlicePropertyType = dataSlicePropertyType;
+        this.isPKProperty = isPKProperty;
 
         HorizontalLayout attributeOriginalNameInfo = new HorizontalLayout();
         attributeOriginalNameInfo.setSpacing(false);
@@ -55,9 +57,10 @@ public class DataSlicePropertyNameMapperWidget extends VerticalLayout {
 
         Icon isPKIcon = VaadinIcon.KEY.create();
         isPKIcon.getStyle()
+                .set("color","#CE0000")
                 .set("padding-left","5px")
                 .set("font-weight","bold");
-        isPKIcon.setSize("12px");
+        isPKIcon.setSize("14px");
         attributeOriginalNameInfo.add(isPKIcon);
         isPKIcon.setVisible(isPKProperty);
         isPKIcon.setTooltipText("数据切片主键");
@@ -74,7 +77,7 @@ public class DataSlicePropertyNameMapperWidget extends VerticalLayout {
         attributeRuntimeMappingSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         attributeRuntimeMappingSelect.setPlaceholder("选择对应的类型属性");
         attributeRuntimeMappingSelect.setItems(filterTypeMatchedAttributeRuntimeMapping(attributeRuntimeMapping));
-        attributeRuntimeMappingSelect.setRequired(false);
+        attributeRuntimeMappingSelect.setRequired(this.isPKProperty);
         attributeRuntimeMappingSelect.setAllowCustomValue(true);
         attributeRuntimeMappingSelect.setPageSize(10);
         attributeRuntimeMappingSelect.setItemLabelGenerator(new ItemLabelGenerator<KindEntityAttributeRuntimeStatistics>() {
@@ -120,7 +123,11 @@ public class DataSlicePropertyNameMapperWidget extends VerticalLayout {
 
     public boolean isValid(){
         KindEntityAttributeRuntimeStatistics currentMapping = attributeRuntimeMappingSelect.getValue();
-        return currentMapping != null && currentMapping.getAttributeName() != null;
+        if(this.isPKProperty){
+            return currentMapping != null && currentMapping.getAttributeName() != null;
+        }else{
+            return true;
+        }
     }
 
     private List<KindEntityAttributeRuntimeStatistics> filterTypeMatchedAttributeRuntimeMapping(List<KindEntityAttributeRuntimeStatistics> attributeRuntimeMapping){

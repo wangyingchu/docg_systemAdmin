@@ -34,10 +34,7 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayout {
 
@@ -272,33 +269,46 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
     private void syncToDataSlice(){
         boolean validResult = this.entityAttributeNamesMappingView.validPropertiesMappingStatus();
         if(!validResult){
-            CommonUIOperationUtil.showPopupNotification("请选择全部的类型属性映射", NotificationVariant.LUMO_WARNING,0, Notification.Position.MIDDLE);
+            CommonUIOperationUtil.showPopupNotification("请选择全部的数据切片主键类型属性映射。如无主键属性，请选择至少一项常规属性映射", NotificationVariant.LUMO_WARNING,0, Notification.Position.MIDDLE);
         }else{
-            List<Button> actionButtonList = new ArrayList<>();
-            Button confirmButton = new Button("确认导出实体数据至数据切片",new Icon(VaadinIcon.CHECK_CIRCLE));
-            Button cancelButton = new Button("取消操作");
-            cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
-            actionButtonList.add(confirmButton);
-            actionButtonList.add(cancelButton);
+            Map<String,String> attributeMapping = this.entityAttributeNamesMappingView.getAttributesMapping();
+            Map<String,String> finalAttributeMapping = new HashMap<>();
+            Set<String> attributeNamesSet = attributeMapping.keySet();
+            for(String attributeName : attributeNamesSet){
+                String attributeValue = attributeMapping.get(attributeName);
+                if(attributeValue != null){
+                    finalAttributeMapping.put(attributeName,attributeValue);
+                }
+            }
+            if(finalAttributeMapping.size() == 0){
+                CommonUIOperationUtil.showPopupNotification("请选择至少一项属性映射", NotificationVariant.LUMO_WARNING,0, Notification.Position.MIDDLE);
+            }else{
+                List<Button> actionButtonList = new ArrayList<>();
+                Button confirmButton = new Button("确认导出实体数据至数据切片",new Icon(VaadinIcon.CHECK_CIRCLE));
+                Button cancelButton = new Button("取消操作");
+                cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+                actionButtonList.add(confirmButton);
+                actionButtonList.add(cancelButton);
 
-            ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认是否向数据切片 "+this.selectedDataSliceName+" 导出概念类型实体数据",actionButtonList,650,180);
-            confirmWindow.open();
-            confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-                @Override
-                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    doSyncConceptionEntitiesToDataSlice(confirmWindow);
-                }
-            });
-            cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-                @Override
-                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    confirmWindow.closeConfirmWindow();
-                }
-            });
+                ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认是否向数据切片 "+this.selectedDataSliceName+" 导出概念类型实体数据",actionButtonList,650,180);
+                confirmWindow.open();
+                confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                        doSyncConceptionEntitiesToDataSlice(finalAttributeMapping,confirmWindow);
+                    }
+                });
+                cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                    @Override
+                    public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                        confirmWindow.closeConfirmWindow();
+                    }
+                });
+            }
         }
     }
 
-    private void doSyncConceptionEntitiesToDataSlice(ConfirmWindow confirmWindow){
+    private void doSyncConceptionEntitiesToDataSlice(Map<String,String> finalAttributeMapping,ConfirmWindow confirmWindow){
         QueryParameters queryParameters = new QueryParameters();
 
         Map<String,String> propertiesMapping = this.entityAttributeNamesMappingView.getAttributesMapping();
