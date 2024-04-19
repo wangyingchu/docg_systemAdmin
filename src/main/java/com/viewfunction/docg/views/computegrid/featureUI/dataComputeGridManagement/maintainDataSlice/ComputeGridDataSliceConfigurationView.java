@@ -524,11 +524,20 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 try(ComputeGridObserver computeGridObserver = ComputeGridObserver.getObserverInstance()) {
                     computeGridObserver.emptyDataSlice(dataSliceMetaInfo.getDataSliceName());
+                    ListDataProvider dataProvider = (ListDataProvider)dataSliceMetaInfoGrid.getDataProvider();
+                    Collection<DataSliceMetaInfo> dataSliceMetaInfoCollection = dataProvider.getItems();
+                    for(DataSliceMetaInfo currentDataSliceMetaInfo : dataSliceMetaInfoCollection){
+                        if(dataSliceMetaInfo.getDataSliceName().equals(currentDataSliceMetaInfo.getDataSliceName())){
+                            currentDataSliceMetaInfo.setPrimaryDataCount(0);
+                            currentDataSliceMetaInfo.setBackupDataCount(0);
+                            currentDataSliceMetaInfo.setTotalDataCount(0);
+                        }
+                    }
+                    dataProvider.refreshAll();
 
                     if(lastSelectedDataSliceMetaInfo != null &&
                             lastSelectedDataSliceMetaInfo.getDataSliceName().equals(dataSliceMetaInfo.getDataSliceName())){
                         renderDataSliceOverview(dataSliceMetaInfo);
-                        //lastSelectedDataSliceMetaInfo = dataSliceMetaInfo;
                     }
 
                     CommonUIOperationUtil.showPopupNotification("清除数据切片 "+dataSliceMetaInfo.getDataSliceName()+" 中的所有数据成功", NotificationVariant.LUMO_SUCCESS);
