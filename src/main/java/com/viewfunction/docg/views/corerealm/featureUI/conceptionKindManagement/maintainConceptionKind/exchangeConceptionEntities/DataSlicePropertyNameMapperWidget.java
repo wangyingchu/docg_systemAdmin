@@ -25,6 +25,7 @@ public class DataSlicePropertyNameMapperWidget extends VerticalLayout {
     private DataSlicePropertyType dataSlicePropertyType;
     private ComboBox<KindEntityAttributeRuntimeStatistics> attributeRuntimeMappingSelect;
     private boolean isPKProperty;
+    public static final String ConceptionEntity_UID_AliasName = "DOCG_ConceptionEntity_UID";
 
     public DataSlicePropertyNameMapperWidget(String attributeName,DataSlicePropertyType dataSlicePropertyType, boolean isPKProperty,
                                              List<KindEntityAttributeRuntimeStatistics> attributeRuntimeMapping){
@@ -134,7 +135,7 @@ public class DataSlicePropertyNameMapperWidget extends VerticalLayout {
         List<KindEntityAttributeRuntimeStatistics> filteredAttributeRuntimeMapping = new ArrayList<>();
         if(this.dataSlicePropertyType.equals(DataSlicePropertyType.STRING)){
             KindEntityAttributeRuntimeStatistics conceptionEntityUIDProperty =
-                    new KindEntityAttributeRuntimeStatistics("ALL","DOCG_ConceptionEntity_UID","STRING",0,0);
+                    new KindEntityAttributeRuntimeStatistics("ALL",ConceptionEntity_UID_AliasName,"STRING",0,0);
             filteredAttributeRuntimeMapping.add(conceptionEntityUIDProperty);
         }
         for(KindEntityAttributeRuntimeStatistics currentKindEntityAttributeRuntimeStatistics : attributeRuntimeMapping){

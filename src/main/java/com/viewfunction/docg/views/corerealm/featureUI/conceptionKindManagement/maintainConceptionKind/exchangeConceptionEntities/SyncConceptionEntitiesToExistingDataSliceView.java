@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -23,9 +24,11 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttrib
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.util.CoreRealmOperationUtil;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceOperationResult;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
@@ -311,18 +314,42 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
     private void doSyncConceptionEntitiesToDataSlice(Map<String,String> finalAttributeMapping,ConfirmWindow confirmWindow){
         QueryParameters queryParameters = new QueryParameters();
         queryParameters.setResultNumber(100000000);
-        Map<String,String> propertiesMapping = this.entityAttributeNamesMappingView.getAttributesMapping();
 
+        DataSliceOperationResult dataSliceOperationResult =CoreRealmOperationUtil.loadConceptionKindEntitiesToDataSlice(this.conceptionKindName,this.selectedDataSliceName,
+                finalAttributeMapping,queryParameters,DataSlicePropertyNameMapperWidget.ConceptionEntity_UID_AliasName);
 
-
-        //DataSliceOperationResult dataSliceOperationResult =
-        //        CoreRealmOperationUtil.syncConceptionKindToDataSlice(this.conceptionKindName,this.selectedDataSliceName,this.selectedDataSliceGroup,null,queryParameters);
-
-        //dataSliceOperationResult.getOperationSummary();
-
-        confirmWindow.closeConfirmWindow();
-        if(this.containerDialog != null){
-            this.containerDialog.close();
+        if(dataSliceOperationResult != null){
+            confirmWindow.closeConfirmWindow();
+            if(this.containerDialog != null){
+                this.containerDialog.close();
+            }
+            showPopupNotification(dataSliceOperationResult,NotificationVariant.LUMO_SUCCESS);
+        }else{
+            CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKindName+" 导出实体数据至数据切片操作失败 ", NotificationVariant.LUMO_ERROR,0, Notification.Position.BOTTOM_START);
         }
+    }
+
+    private void showPopupNotification(DataSliceOperationResult dataSliceOperationResult, NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text("概念类型 "+conceptionKindName+" 导出实体数据至数据切片操作完成"));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
+
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        notificationMessageContainer.add(new Div(new Text("导出成功实体数: "+dataSliceOperationResult.getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("导出失败实体数: "+dataSliceOperationResult.getFailItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("操作开始时间: "+dataSliceOperationResult.getStartTime())));
+        notificationMessageContainer.add(new Div(new Text("操作结束时间: "+dataSliceOperationResult.getFinishTime())));
+        notification.add(notificationMessageContainer);
+        notification.setDuration(0);
+        notification.open();
     }
 }
