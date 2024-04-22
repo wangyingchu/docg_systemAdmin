@@ -10,8 +10,6 @@ import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.WebBrowser;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryCriteriaView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryResultsView;
 
 public class DataSliceQueryUI extends VerticalLayout {
 
@@ -27,16 +25,16 @@ public class DataSliceQueryUI extends VerticalLayout {
         this.queryFieldsContainer.setPadding(false);
         this.queryFieldsContainer.setSpacing(false);
         this.queryFieldsContainer.setMargin(false);
-        //ConceptionKindQueryCriteriaView conceptionKindQueryCriteriaView = new ConceptionKindQueryCriteriaView(this.conceptionKindName);
-        //this.queryFieldsContainer.add(conceptionKindQueryCriteriaView);
+        DataSliceQueryCriteriaView dataSliceQueryCriteriaView = new DataSliceQueryCriteriaView(this.dataSliceMetaInfo);
+        this.queryFieldsContainer.add(dataSliceQueryCriteriaView);
 
         WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
         if(webBrowser.isChrome()){
-            this.queryFieldsContainer.setMinWidth(360, Unit.PIXELS);
-            this.queryFieldsContainer.setMaxWidth(360,Unit.PIXELS);
+            this.queryFieldsContainer.setMinWidth(310, Unit.PIXELS);
+            this.queryFieldsContainer.setMaxWidth(310,Unit.PIXELS);
         }else{
-            this.queryFieldsContainer.setMinWidth(350,Unit.PIXELS);
-            this.queryFieldsContainer.setMaxWidth(350,Unit.PIXELS);
+            this.queryFieldsContainer.setMinWidth(300,Unit.PIXELS);
+            this.queryFieldsContainer.setMaxWidth(300,Unit.PIXELS);
         }
 
         this.queryResultContainer= new VerticalLayout();
