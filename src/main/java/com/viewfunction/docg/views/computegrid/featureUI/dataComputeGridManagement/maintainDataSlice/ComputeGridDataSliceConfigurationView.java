@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -36,6 +37,7 @@ import com.viewfunction.docg.element.eventHandling.DataSliceCreatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.CreateDataSliceView;
+import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.maintainDataSlice.queryDataSlice.DataSliceQueryUI;
 
 import java.text.NumberFormat;
 import java.util.*;
@@ -504,7 +506,37 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
         fixSizeWindow.show();
     }
 
-    private void renderQueryDataSliceUI(DataSliceMetaInfo dataSliceMetaInfo){}
+    private void renderQueryDataSliceUI(DataSliceMetaInfo dataSliceMetaInfo){
+        DataSliceQueryUI dataSliceQueryUI = new DataSliceQueryUI(dataSliceMetaInfo);
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon dataSliceIcon = LineAwesomeIconsSvg.CLONE.create();
+        dataSliceIcon.setSize("10px");
+        titleDetailLayout.add(dataSliceIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel dataSliceName = new NativeLabel(dataSliceMetaInfo.getDataSliceName());
+        titleDetailLayout.add(dataSliceName);
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(VaadinIcon.RECORDS.create(),"数据切片数据记录查询",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(dataSliceQueryUI);
+        fullScreenWindow.show();
+    }
 
     private void renderEmptyDataSliceUI(DataSliceMetaInfo dataSliceMetaInfo){
         List<Button> actionButtonList = new ArrayList<>();
