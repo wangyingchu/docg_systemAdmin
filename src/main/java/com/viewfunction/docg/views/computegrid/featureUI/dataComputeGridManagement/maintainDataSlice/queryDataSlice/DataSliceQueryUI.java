@@ -30,11 +30,11 @@ public class DataSliceQueryUI extends VerticalLayout {
 
         WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
         if(webBrowser.isChrome()){
-            this.queryFieldsContainer.setMinWidth(310, Unit.PIXELS);
-            this.queryFieldsContainer.setMaxWidth(310,Unit.PIXELS);
+            this.queryFieldsContainer.setMinWidth(350, Unit.PIXELS);
+            this.queryFieldsContainer.setMaxWidth(350,Unit.PIXELS);
         }else{
-            this.queryFieldsContainer.setMinWidth(300,Unit.PIXELS);
-            this.queryFieldsContainer.setMaxWidth(300,Unit.PIXELS);
+            this.queryFieldsContainer.setMinWidth(350,Unit.PIXELS);
+            this.queryFieldsContainer.setMaxWidth(350,Unit.PIXELS);
         }
 
         this.queryResultContainer= new VerticalLayout();
