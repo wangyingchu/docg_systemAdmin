@@ -41,8 +41,8 @@ public class DataSliceQueryUI extends VerticalLayout {
         this.queryResultContainer.setPadding(false);
         this.queryResultContainer.setSpacing(false);
         this.queryResultContainer.setMargin(false);
-        //ConceptionKindQueryResultsView conceptionKindQueryResultsView = new ConceptionKindQueryResultsView(this.conceptionKindName);
-        //this.queryResultContainer.add(conceptionKindQueryResultsView);
+        DataSliceQueryResultsView dataSliceQueryResultsView = new DataSliceQueryResultsView(this.dataSliceMetaInfo);
+        this.queryResultContainer.add(dataSliceQueryResultsView);
 
         SplitLayout splitLayout = new SplitLayout(queryFieldsContainer, queryResultContainer);
         splitLayout.setSplitterPosition(0);
