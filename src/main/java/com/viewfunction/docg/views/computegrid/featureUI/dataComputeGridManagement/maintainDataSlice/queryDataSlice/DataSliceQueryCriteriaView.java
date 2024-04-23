@@ -7,7 +7,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -26,17 +25,12 @@ import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.Compute
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
-import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
-import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.QueryConditionItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.QueryResultSetConfigView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public class DataSliceQueryCriteriaView extends VerticalLayout {
     private ComboBox<DataSlicePropertyDefinitionVO> queryCriteriaFilterSelect;
@@ -130,9 +124,7 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
                 if(changedItem != null){
                     queryCriteriaFilterSelect.setValue(null);
                     String selectedAttribute = changedItem.getPropertyName();
-
-
-                    //addQueryConditionItem(selectedAttribute,changedItem.getAttributeDataType());
+                    addQueryConditionItem(selectedAttribute,changedItem.getDataSlicePropertyType());
 
 
                 }
@@ -267,19 +259,6 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
     }
 
     private void loadQueryCriteriaComboBox() {
-
-        /*
-        int entityAttributesDistributionStatisticSampleRatio = 20000;
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        coreRealm.openGlobalSession();
-        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKindName);
-        List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList =
-                targetConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
-        coreRealm.closeGlobalSession();
-        queryCriteriaFilterSelect.setItems(kindEntityAttributeRuntimeStatisticsList);
-        */
-
-
         ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
         try {
             DataSliceDetailInfo dataSliceDetailInfo = targetComputeGrid.getDataSliceDetail(this.dataSliceMetaInfo.getDataSliceName());
@@ -322,10 +301,8 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
                 .withProperty("attributeDataType", DataSlicePropertyDefinitionVO::getDataSlicePropertyType);
     }
 
-    /*
-    @Override
-    public void removeCriteriaFilterItem(QueryConditionItemWidget queryConditionItemWidget){
-        String removedAttributeName = queryConditionItemWidget.getAttributeName();
+    public void removeCriteriaFilterItem(DataSliceQueryConditionItemWidget queryConditionItemWidget){
+        String removedAttributeName = queryConditionItemWidget.getPropertyName();
         boolean isDefaultCondition = queryConditionItemWidget.isDefaultQueryConditionItem();
         resultAttributesList.remove(removedAttributeName);
         criteriaItemsContainer.remove(queryConditionItemWidget);
@@ -333,40 +310,23 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
             boolean hasSecondItem = criteriaItemsContainer.getChildren().findFirst().isPresent();
             if(hasSecondItem){
                 Component currentNewDefaultItem = criteriaItemsContainer.getChildren().findFirst().get();
-                ((QueryConditionItemWidget)currentNewDefaultItem).setAsDefaultQueryConditionItem();
+                ((DataSliceQueryConditionItemWidget)currentNewDefaultItem).setAsDefaultQueryConditionItem();
             }
         }
     }
-*/
 
-
-    private void renderQueryResultSetConfigUI(){
-        QueryResultSetConfigView queryResultSetConfigView = new QueryResultSetConfigView(this.queryParameters);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"查询结果集参数",null,true,350,500,false);
-        fixSizeWindow.setWindowContent(queryResultSetConfigView);
-        fixSizeWindow.setModel(true);
-        queryResultSetConfigView.setContainerDialog(fixSizeWindow);
-        fixSizeWindow.show();
-    }
-
-
-
-   /*
-    @Override
-    public void addQueryConditionItem(String attributeName, AttributeDataType attributeDataType){
+    public void addQueryConditionItem(String attributeName, DataSlicePropertyType attributeDataType){
         if(!resultAttributesList.contains(attributeName)){
             resultAttributesList.add(attributeName);
-            QueryConditionItemWidget queryConditionItemWidget = new QueryConditionItemWidget(attributeName,attributeDataType,this.queryConditionDataBinder);
-            queryConditionItemWidget.setContainerDataInstanceQueryCriteriaView(this);
+            DataSliceQueryConditionItemWidget dataSliceQueryConditionItemWidget = new DataSliceQueryConditionItemWidget(attributeName,attributeDataType,this.queryConditionDataBinder);
+            dataSliceQueryConditionItemWidget.setContainerDataSliceQueryCriteriaView(this);
             if(resultAttributesList.size()==1){
                 //this one is the default query condition
-                queryConditionItemWidget.setAsDefaultQueryConditionItem();
+                dataSliceQueryConditionItemWidget.setAsDefaultQueryConditionItem();
             }
-            criteriaItemsContainer.add(queryConditionItemWidget);
+            criteriaItemsContainer.add(dataSliceQueryConditionItemWidget);
         }
     }
-*/
-
 
     private void setDefaultQueryConditionIsSet(boolean defaultQueryConditionIsSet) {
         this.defaultQueryConditionIsSet = defaultQueryConditionIsSet;
@@ -376,7 +336,12 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
         this.otherQueryConditionsAreSet = otherQueryConditionsAreSet;
     }
 
-
-
-
+    private void renderQueryResultSetConfigUI(){
+        QueryResultSetConfigView queryResultSetConfigView = new QueryResultSetConfigView(this.queryParameters);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"查询结果集参数",null,true,350,500,false);
+        fixSizeWindow.setWindowContent(queryResultSetConfigView);
+        fixSizeWindow.setModel(true);
+        queryResultSetConfigView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
 }
