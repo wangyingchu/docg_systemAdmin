@@ -25,11 +25,9 @@ import com.vaadin.flow.data.binder.Validator;
 import com.vaadin.flow.data.converter.*;
 import com.vaadin.flow.data.validator.*;
 import com.vaadin.flow.function.ValueProvider;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.MultiValuePropertyInputWidget;
 
 import java.math.BigDecimal;
 
@@ -274,9 +272,6 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
         spaceDivLayout2.setWidth(100,Unit.PERCENTAGE);
         spaceDivLayout2.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)").set("padding-top","3px");
         add(spaceDivLayout2);
-
-
-
     }
 
     private void setFilteringLogic(String filteringLogicValue){
@@ -330,7 +325,6 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
 
     public void setAsDefaultQueryConditionItem(){
         this.isFirstQueryCondition = true;
-        /*
         this.plusIcon.setSize("20px");
         this.multiIcon.setSize("16px");
         this.filteringLogicOrButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS);
@@ -339,11 +333,8 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
         this.filteringLogicAndButton.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
         this.filteringLogicOrButton.setEnabled(false);
         this.filteringLogicAndButton.setEnabled(false);
-
         this.isDefaultLabel.setVisible(true);
         this.joinTypeLabel.setVisible(false);
-        */
-
     }
 
     public DataSlicePropertyType getPropertyDataType() {
@@ -663,9 +654,174 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
         return containerHorizontalLayout;
     }
 
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        setQueryConditionSelectionByDataType();
+    }
+
+    private void setQueryConditionSelectionByDataType(){
+        if(this.propertyDataType !=null) {
+            switch (this.propertyDataType) {
+                case STRING:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_SimilarTo,
+                            FilteringItemType_RegularMatch,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case BOOLEAN:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case DATE:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case TIMESTAMP:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                    /*
+                case DATETIME:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                    */
+                case TIME:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case INT:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case LONG:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case DOUBLE:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case FLOAT:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case SHORT:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case DECIMAL:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case BYTE:
+                    this.filteringItemTypeSelection.setItems(
+                            FilteringItemType_Equal,
+                            FilteringItemType_NotEqual,
+                            FilteringItemType_Between,
+                            FilteringItemType_GreatThan,
+                            FilteringItemType_GreatThanEqual,
+                            FilteringItemType_LessThan,
+                            FilteringItemType_LessThanEqual,
+                            FilteringItemType_InValue,
+                            FilteringItemType_NullValue);
+                    break;
+                case BINARY:
+                    break;
+            }
+        }
+    }
+
     public Component generateInValueQueryValueInputElements(){
-        MultiValuePropertyInputWidget multiValuePropertyInput =new MultiValuePropertyInputWidget(165);
-       // multiValuePropertyInput.setQueryConditionItemWidget(this);
+        DataSliceMultiValuePropertyInputWidget dataSliceMultiValuePropertyInputWidget =new DataSliceMultiValuePropertyInputWidget(165);
+        dataSliceMultiValuePropertyInputWidget.setQueryConditionItemWidget(this);
         return multiValuePropertyInput;
     }
 }
