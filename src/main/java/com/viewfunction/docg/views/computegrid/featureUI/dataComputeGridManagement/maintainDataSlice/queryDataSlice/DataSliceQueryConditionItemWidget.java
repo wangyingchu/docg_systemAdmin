@@ -822,6 +822,6 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
     public Component generateInValueQueryValueInputElements(){
         DataSliceMultiValuePropertyInputWidget dataSliceMultiValuePropertyInputWidget =new DataSliceMultiValuePropertyInputWidget(165);
         dataSliceMultiValuePropertyInputWidget.setQueryConditionItemWidget(this);
-        return multiValuePropertyInput;
+        return dataSliceMultiValuePropertyInputWidget;
     }
 }
