@@ -830,15 +830,9 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
         return dataSliceMultiValuePropertyInputWidget;
     }
 
-
-
     public FilteringItem getFilteringItem(){
         String propertyName = this.propertyName;
-
-
         DataSlicePropertyType dataSlicePropertyType = this.getPropertyDataType();
-
-
 
         FilteringItem targetFilteringItem = null;
         if(this.currentSelectedFilteringItemType == null){
@@ -847,8 +841,6 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
         Object singleQueryValue = null;
         Object betweenQueryFromValue = null;
         Object betweenQueryToValue = null;
-
-
 
         switch(dataSlicePropertyType){
             case BOOLEAN :
@@ -884,24 +876,30 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                     betweenQueryToValue = ((TimePicker) this.betweenQueryToValueTextField).getValue();
                 }
                 break;
-
-
-
-
+            case TIMESTAMP:
+                if(this.singleQueryValueTextField != null) {
+                    singleQueryValue = ((TextField) this.singleQueryValueTextField).getValue();
+                }
+                if(this.betweenQueryFromValueTextField != null) {
+                    betweenQueryFromValue = ((TextField) this.betweenQueryFromValueTextField).getValue();
+                }
+                if(this.betweenQueryToValueTextField != null) {
+                    betweenQueryToValue = ((TextField) this.betweenQueryToValueTextField).getValue();
+                }
+                break;
+            default:
+                if (this.singleQueryValueTextField != null) {
+                    singleQueryValue = ((TextField) this.singleQueryValueTextField).getValue();
+                }
+                if(this.betweenQueryFromValueTextField != null) {
+                    betweenQueryFromValue = ((TextField) this.betweenQueryFromValueTextField).getValue();
+                }
+                if(this.betweenQueryToValueTextField != null) {
+                    betweenQueryToValue = ((TextField) this.betweenQueryToValueTextField).getValue();
+                }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
+        /*
         if(propertyDataType.equals(""+ AttributeDataType.BOOLEAN)){
             if(this.singleQueryValueTextField != null) {
                 singleQueryValue = ((ComboBox) this.singleQueryValueTextField).getValue();
@@ -963,11 +961,149 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                 betweenQueryToValue = ((TextField) this.betweenQueryToValueTextField).getValue();
             }
         }
-
+    */
         Object singleQueryValueObj = null;
         Object betweenQueryFromValueObj = null;
         Object betweenQueryToValueObj = null;
 
+        switch(this.propertyDataType){
+            case BOOLEAN :
+                if (singleQueryValue != null) {
+                    singleQueryValueObj = new Boolean(singleQueryValue.toString());
+                }
+                if(betweenQueryFromValue != null) {
+                    betweenQueryFromValueObj = new Boolean(betweenQueryFromValue.toString());
+                }
+                if(betweenQueryToValue != null) {
+                    betweenQueryToValueObj = new Boolean(betweenQueryToValue.toString());
+                }
+                break;
+            case INT:
+                if (singleQueryValue != null && !singleQueryValue.equals("")) {
+                    singleQueryValueObj = new Integer(singleQueryValue.toString());
+                }
+                if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
+                    betweenQueryFromValueObj = new Integer(betweenQueryFromValue.toString());
+                }
+                if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
+                    betweenQueryToValueObj = new Integer(betweenQueryToValue.toString());
+                }
+                break;
+            case SHORT:
+                if (singleQueryValue != null && !singleQueryValue.equals("")) {
+                    singleQueryValueObj = new Short(singleQueryValue.toString());
+                }
+                if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
+                    betweenQueryFromValueObj = new Short(betweenQueryFromValue.toString());
+                }
+                if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
+                    betweenQueryToValueObj = new Short(betweenQueryToValue.toString());
+                }
+                break;
+            case LONG:
+                if (singleQueryValue != null && !singleQueryValue.equals("")) {
+                    singleQueryValueObj = new Long(singleQueryValue.toString());
+                }
+                if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
+                    betweenQueryFromValueObj = new Long(betweenQueryFromValue.toString());
+                }
+                if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
+                    betweenQueryToValueObj = new Long(betweenQueryToValue.toString());
+                }
+                break;
+                case FLOAT:
+                if (singleQueryValue != null && !singleQueryValue.equals("")) {
+                    singleQueryValueObj = new Float(singleQueryValue.toString());
+                }
+                if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
+                    betweenQueryFromValueObj = new Float(betweenQueryFromValue.toString());
+                }
+                if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
+                    betweenQueryToValueObj = new Float(betweenQueryToValue.toString());
+                }
+                break;
+            case DOUBLE:
+                if (singleQueryValue != null && !singleQueryValue.equals("")) {
+                    singleQueryValueObj = new Double(singleQueryValue.toString());
+                }
+                if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
+                    betweenQueryFromValueObj = new Double(betweenQueryFromValue.toString());
+                }
+                if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
+                    betweenQueryToValueObj = new Double(betweenQueryToValue.toString());
+                }
+                break;
+            case DATE:
+                if (singleQueryValue != null) {
+                    singleQueryValueObj = singleQueryValue;
+                }
+                if(betweenQueryFromValue != null) {
+                    betweenQueryFromValueObj =betweenQueryFromValue;
+                }
+                if(betweenQueryToValue != null) {
+                    betweenQueryToValueObj = betweenQueryToValue;
+                }
+                break;
+            case TIME:
+                if (singleQueryValue != null) {
+                    singleQueryValueObj = singleQueryValue;
+                }
+                if (betweenQueryFromValue != null) {
+                    betweenQueryFromValueObj = betweenQueryFromValue;
+                }
+                if (betweenQueryToValue != null) {
+                    betweenQueryToValueObj = betweenQueryToValue;
+                }
+                break;
+            case TIMESTAMP:
+                if (singleQueryValue != null) {
+                    singleQueryValueObj = singleQueryValue;
+                }
+                if (betweenQueryFromValue != null) {
+                    betweenQueryFromValueObj = betweenQueryFromValue;
+                }
+                if (betweenQueryToValue != null) {
+                    betweenQueryToValueObj = betweenQueryToValue;
+                }
+                break;
+            case STRING:
+                if (singleQueryValue != null) {
+                    singleQueryValueObj = singleQueryValue.toString();
+                }
+                if(betweenQueryFromValue != null) {
+                    betweenQueryFromValueObj = betweenQueryFromValue.toString();
+                }
+                if(betweenQueryToValue != null) {
+                    betweenQueryToValueObj = betweenQueryToValue.toString();
+                }
+                break;
+            case BINARY:
+                break;
+            case BYTE:
+                if (singleQueryValue != null && !singleQueryValue.equals("")) {
+                    singleQueryValueObj = new Byte(singleQueryValue.toString());
+                }
+                if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
+                    betweenQueryFromValueObj = new Byte(betweenQueryFromValue.toString());
+                }
+                if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
+                    betweenQueryToValueObj = new Byte(betweenQueryToValue.toString());
+                }
+                break;
+            case DECIMAL:
+                if (singleQueryValue != null && !singleQueryValue.equals("")) {
+                    singleQueryValueObj = new BigDecimal(singleQueryValue.toString());
+                }
+                if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
+                    betweenQueryFromValueObj = new BigDecimal(betweenQueryFromValue.toString());
+                }
+                if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
+                    betweenQueryToValueObj = new BigDecimal(betweenQueryToValue.toString());
+                }
+                break;
+        }
+
+        /*
         if(propertyDataType.equals(""+AttributeDataType.BOOLEAN)){
             if (singleQueryValue != null) {
                 singleQueryValueObj = new Boolean(singleQueryValue.toString());
@@ -1101,6 +1237,7 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                 betweenQueryToValueObj = new BigDecimal(betweenQueryToValue.toString());
             }
         }
+        */
 
         switch(this.currentSelectedFilteringItemType){
             case FilteringItemType_Equal:
@@ -1208,5 +1345,4 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
     public void resetQueryConditionItem(){
         this.filteringItemTypeSelection.setValue(null);
     }
-
 }
