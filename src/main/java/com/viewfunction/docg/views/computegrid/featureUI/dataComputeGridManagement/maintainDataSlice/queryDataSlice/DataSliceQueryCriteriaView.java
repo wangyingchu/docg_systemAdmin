@@ -7,6 +7,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -16,6 +17,7 @@ import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.FilteringItem;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
@@ -25,12 +27,16 @@ import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.Compute
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
+import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.QueryResultSetConfigView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class DataSliceQueryCriteriaView extends VerticalLayout {
     private ComboBox<DataSlicePropertyDefinitionVO> queryCriteriaFilterSelect;
@@ -41,7 +47,6 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
     private Binder<String> queryConditionDataBinder;
     private boolean defaultQueryConditionIsSet = true;
     private boolean otherQueryConditionsAreSet = false;
-
     private DataSliceMetaInfo dataSliceMetaInfo;
 
     private class DataSlicePropertyDefinitionVO{
@@ -135,12 +140,7 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
 
         buttonSpaceDivLayout.add(queryCriteriaFilterSelect);
         buttonSpaceDivLayout.setFlexGrow(1,queryCriteriaFilterSelect);
-
-
-
         buttonSpaceDivLayout.setVerticalComponentAlignment(Alignment.CENTER,queryCriteriaFilterSelect);
-
-
         filterDropdownSelectorContainerLayout.add(buttonSpaceDivLayout);
 
         criteriaItemsContainer = new VerticalLayout();
@@ -171,7 +171,7 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                queryConceptionEntities();
+                queryDataSliceRecords();
             }
         });
         buttonsContainerLayout.add(executeQueryButton);
@@ -191,21 +191,21 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
 
         this.queryParameters = new QueryParameters();
         this.queryConditionDataBinder = new Binder<>();
-
     }
 
-
-    private void queryConceptionEntities(){
+    private void queryDataSliceRecords(){
         queryParameters.getAndFilteringItemsList().clear();
         queryParameters.getOrFilteringItemsList().clear();
         queryParameters.setDefaultFilteringItem(null);
+
         setDefaultQueryConditionIsSet(true);
         setOtherQueryConditionsAreSet(false);
-/*
+
         criteriaItemsContainer.getChildren().forEach(new Consumer<Component>() {
             @Override
             public void accept(Component component) {
-                QueryConditionItemWidget currentQueryConditionItemWidget = (QueryConditionItemWidget)component;
+                DataSliceQueryConditionItemWidget currentQueryConditionItemWidget = (DataSliceQueryConditionItemWidget)component;
+
                 FilteringItem currentFilteringItem = currentQueryConditionItemWidget.getFilteringItem();
                 if(currentQueryConditionItemWidget.isDefaultQueryConditionItem() & currentFilteringItem == null){
                     setDefaultQueryConditionIsSet(false);
@@ -227,13 +227,15 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
             CommonUIOperationUtil.showPopupNotification("请设定默认查询条件的属性过滤值", NotificationVariant.LUMO_ERROR);
         }else{
             ConceptionKindQueriedEvent conceptionKindQueriedEvent = new ConceptionKindQueriedEvent();
-            conceptionKindQueriedEvent.setConceptionKindName(this.conceptionKindName);
+
+
+            //conceptionKindQueriedEvent.setConceptionKindName(this.conceptionKindName);
+
+
             conceptionKindQueriedEvent.setResultAttributesList(this.resultAttributesList);
             conceptionKindQueriedEvent.setQueryParameters(this.queryParameters);
             ResourceHolder.getApplicationBlackboard().fire(conceptionKindQueriedEvent);
         }
-
-        */
     }
 
     @Override

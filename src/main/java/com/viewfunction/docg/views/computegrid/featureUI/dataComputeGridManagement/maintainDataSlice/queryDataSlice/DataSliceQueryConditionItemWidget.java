@@ -25,9 +25,14 @@ import com.vaadin.flow.data.binder.Validator;
 import com.vaadin.flow.data.converter.*;
 import com.vaadin.flow.data.validator.*;
 import com.vaadin.flow.function.ValueProvider;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.*;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.MultiValuePropertyInputWidget;
 
 import java.math.BigDecimal;
 
@@ -824,4 +829,384 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
         dataSliceMultiValuePropertyInputWidget.setQueryConditionItemWidget(this);
         return dataSliceMultiValuePropertyInputWidget;
     }
+
+
+
+    public FilteringItem getFilteringItem(){
+        String propertyName = this.propertyName;
+
+
+        DataSlicePropertyType dataSlicePropertyType = this.getPropertyDataType();
+
+
+
+        FilteringItem targetFilteringItem = null;
+        if(this.currentSelectedFilteringItemType == null){
+            return null;
+        }
+        Object singleQueryValue = null;
+        Object betweenQueryFromValue = null;
+        Object betweenQueryToValue = null;
+
+
+
+        switch(dataSlicePropertyType){
+            case BOOLEAN :
+                if(this.singleQueryValueTextField != null) {
+                    singleQueryValue = ((ComboBox) this.singleQueryValueTextField).getValue();
+                }
+                if(this.betweenQueryFromValueTextField != null) {
+                    betweenQueryFromValue = ((ComboBox) this.betweenQueryFromValueTextField).getValue();
+                }
+                if(this.betweenQueryToValueTextField != null) {
+                    betweenQueryToValue = ((ComboBox) this.betweenQueryToValueTextField).getValue();
+                }
+                break;
+            case DATE:
+                if(this.singleQueryValueTextField != null) {
+                    singleQueryValue = ((DatePicker) this.singleQueryValueTextField).getValue();
+                }
+                if(this.betweenQueryFromValueTextField != null) {
+                    betweenQueryFromValue = ((DatePicker) this.betweenQueryFromValueTextField).getValue();
+                }
+                if(this.betweenQueryToValueTextField != null) {
+                    betweenQueryToValue = ((DatePicker) this.betweenQueryToValueTextField).getValue();
+                }
+                break;
+            case TIME:
+                if(this.singleQueryValueTextField != null) {
+                    singleQueryValue = ((TimePicker) this.singleQueryValueTextField).getValue();
+                }
+                if(this.betweenQueryFromValueTextField != null) {
+                    betweenQueryFromValue = ((TimePicker) this.betweenQueryFromValueTextField).getValue();
+                }
+                if(this.betweenQueryToValueTextField != null) {
+                    betweenQueryToValue = ((TimePicker) this.betweenQueryToValueTextField).getValue();
+                }
+                break;
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        if(propertyDataType.equals(""+ AttributeDataType.BOOLEAN)){
+            if(this.singleQueryValueTextField != null) {
+                singleQueryValue = ((ComboBox) this.singleQueryValueTextField).getValue();
+            }
+            if(this.betweenQueryFromValueTextField != null) {
+                betweenQueryFromValue = ((ComboBox) this.betweenQueryFromValueTextField).getValue();
+            }
+            if(this.betweenQueryToValueTextField != null) {
+                betweenQueryToValue = ((ComboBox) this.betweenQueryToValueTextField).getValue();
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.DATE)){
+            if(this.singleQueryValueTextField != null) {
+                singleQueryValue = ((DatePicker) this.singleQueryValueTextField).getValue();
+            }
+            if(this.betweenQueryFromValueTextField != null) {
+                betweenQueryFromValue = ((DatePicker) this.betweenQueryFromValueTextField).getValue();
+            }
+            if(this.betweenQueryToValueTextField != null) {
+                betweenQueryToValue = ((DatePicker) this.betweenQueryToValueTextField).getValue();
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.TIME)){
+            if(this.singleQueryValueTextField != null) {
+                singleQueryValue = ((TimePicker) this.singleQueryValueTextField).getValue();
+            }
+            if(this.betweenQueryFromValueTextField != null) {
+                betweenQueryFromValue = ((TimePicker) this.betweenQueryFromValueTextField).getValue();
+            }
+            if(this.betweenQueryToValueTextField != null) {
+                betweenQueryToValue = ((TimePicker) this.betweenQueryToValueTextField).getValue();
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.DATETIME)){
+            if(this.singleQueryValueTextField != null) {
+                singleQueryValue = ((DateTimePicker) this.singleQueryValueTextField).getValue();
+            }
+            if(this.betweenQueryFromValueTextField != null) {
+                betweenQueryFromValue = ((DateTimePicker) this.betweenQueryFromValueTextField).getValue();
+            }
+            if(this.betweenQueryToValueTextField != null) {
+                betweenQueryToValue = ((DateTimePicker) this.betweenQueryToValueTextField).getValue();
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.TIMESTAMP)){
+            if(this.singleQueryValueTextField != null) {
+                singleQueryValue = ((TextField) this.singleQueryValueTextField).getValue();
+            }
+            if(this.betweenQueryFromValueTextField != null) {
+                betweenQueryFromValue = ((TextField) this.betweenQueryFromValueTextField).getValue();
+            }
+            if(this.betweenQueryToValueTextField != null) {
+                betweenQueryToValue = ((TextField) this.betweenQueryToValueTextField).getValue();
+            }
+        }else {
+            if (this.singleQueryValueTextField != null) {
+                singleQueryValue = ((TextField) this.singleQueryValueTextField).getValue();
+            }
+            if(this.betweenQueryFromValueTextField != null) {
+                betweenQueryFromValue = ((TextField) this.betweenQueryFromValueTextField).getValue();
+            }
+            if(this.betweenQueryToValueTextField != null) {
+                betweenQueryToValue = ((TextField) this.betweenQueryToValueTextField).getValue();
+            }
+        }
+
+        Object singleQueryValueObj = null;
+        Object betweenQueryFromValueObj = null;
+        Object betweenQueryToValueObj = null;
+
+        if(propertyDataType.equals(""+AttributeDataType.BOOLEAN)){
+            if (singleQueryValue != null) {
+                singleQueryValueObj = new Boolean(singleQueryValue.toString());
+            }
+            if(betweenQueryFromValue != null) {
+                betweenQueryFromValueObj = new Boolean(betweenQueryFromValue.toString());
+            }
+            if(betweenQueryToValue != null) {
+                betweenQueryToValueObj = new Boolean(betweenQueryToValue.toString());
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.INT)){
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
+                singleQueryValueObj = new Integer(singleQueryValue.toString());
+            }
+            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
+                betweenQueryFromValueObj = new Integer(betweenQueryFromValue.toString());
+            }
+            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
+                betweenQueryToValueObj = new Integer(betweenQueryToValue.toString());
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.SHORT)){
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
+                singleQueryValueObj = new Short(singleQueryValue.toString());
+            }
+            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
+                betweenQueryFromValueObj = new Short(betweenQueryFromValue.toString());
+            }
+            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
+                betweenQueryToValueObj = new Short(betweenQueryToValue.toString());
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.LONG)){
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
+                singleQueryValueObj = new Long(singleQueryValue.toString());
+            }
+            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
+                betweenQueryFromValueObj = new Long(betweenQueryFromValue.toString());
+            }
+            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
+                betweenQueryToValueObj = new Long(betweenQueryToValue.toString());
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.FLOAT)){
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
+                singleQueryValueObj = new Float(singleQueryValue.toString());
+            }
+            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
+                betweenQueryFromValueObj = new Float(betweenQueryFromValue.toString());
+            }
+            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
+                betweenQueryToValueObj = new Float(betweenQueryToValue.toString());
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.DOUBLE)){
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
+                singleQueryValueObj = new Double(singleQueryValue.toString());
+            }
+            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
+                betweenQueryFromValueObj = new Double(betweenQueryFromValue.toString());
+            }
+            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
+                betweenQueryToValueObj = new Double(betweenQueryToValue.toString());
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.DATE)){
+            if (singleQueryValue != null) {
+                singleQueryValueObj = singleQueryValue;
+            }
+            if(betweenQueryFromValue != null) {
+                betweenQueryFromValueObj =betweenQueryFromValue;
+            }
+            if(betweenQueryToValue != null) {
+                betweenQueryToValueObj = betweenQueryToValue;
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.TIME)) {
+            if (singleQueryValue != null) {
+                singleQueryValueObj = singleQueryValue;
+            }
+            if (betweenQueryFromValue != null) {
+                betweenQueryFromValueObj = betweenQueryFromValue;
+            }
+            if (betweenQueryToValue != null) {
+                betweenQueryToValueObj = betweenQueryToValue;
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.DATETIME)) {
+            if (singleQueryValue != null) {
+                singleQueryValueObj = singleQueryValue;
+            }
+            if (betweenQueryFromValue != null) {
+                betweenQueryFromValueObj = betweenQueryFromValue;
+            }
+            if (betweenQueryToValue != null) {
+                betweenQueryToValueObj = betweenQueryToValue;
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.TIMESTAMP)) {
+            if (singleQueryValue != null) {
+                singleQueryValueObj = singleQueryValue;
+            }
+            if (betweenQueryFromValue != null) {
+                betweenQueryFromValueObj = betweenQueryFromValue;
+            }
+            if (betweenQueryToValue != null) {
+                betweenQueryToValueObj = betweenQueryToValue;
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.STRING)){
+            if (singleQueryValue != null) {
+                singleQueryValueObj = singleQueryValue.toString();
+            }
+            if(betweenQueryFromValue != null) {
+                betweenQueryFromValueObj = betweenQueryFromValue.toString();
+            }
+            if(betweenQueryToValue != null) {
+                betweenQueryToValueObj = betweenQueryToValue.toString();
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.BINARY)){
+
+        }else if(propertyDataType.equals(""+AttributeDataType.BYTE)){
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
+                singleQueryValueObj = new Byte(singleQueryValue.toString());
+            }
+            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
+                betweenQueryFromValueObj = new Byte(betweenQueryFromValue.toString());
+            }
+            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
+                betweenQueryToValueObj = new Byte(betweenQueryToValue.toString());
+            }
+        }else if(propertyDataType.equals(""+AttributeDataType.DECIMAL)){
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
+                singleQueryValueObj = new BigDecimal(singleQueryValue.toString());
+            }
+            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
+                betweenQueryFromValueObj = new BigDecimal(betweenQueryFromValue.toString());
+            }
+            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
+                betweenQueryToValueObj = new BigDecimal(betweenQueryToValue.toString());
+            }
+        }
+
+        switch(this.currentSelectedFilteringItemType){
+            case FilteringItemType_Equal:
+                if(singleQueryValueObj != null){
+                    targetFilteringItem = new EqualFilteringItem(propertyName,singleQueryValueObj);
+                    break;
+                }else{
+                    return null;
+                }
+            case FilteringItemType_NotEqual:
+                if(singleQueryValueObj != null){
+                    targetFilteringItem = new NotEqualFilteringItem(propertyName,singleQueryValueObj);
+                    break;
+                }else{
+                    return null;
+                }
+            case FilteringItemType_RegularMatch:
+                if(singleQueryValue != null){
+                    targetFilteringItem = new RegularMatchFilteringItem(propertyName,singleQueryValue.toString());
+                    break;
+                }else{
+                    return null;
+                }
+            case FilteringItemType_GreatThan:
+                if(singleQueryValueObj != null){
+                    targetFilteringItem  = new GreaterThanFilteringItem(propertyName,singleQueryValueObj);
+                    break;
+                }else{
+                    return null;
+                }
+            case FilteringItemType_GreatThanEqual:
+                if(singleQueryValueObj != null){
+                    targetFilteringItem = new GreaterThanEqualFilteringItem(propertyName,singleQueryValueObj);
+                    break;
+                }else{
+                    return null;
+                }
+            case FilteringItemType_LessThan:
+                if(singleQueryValueObj != null){
+                    targetFilteringItem = new LessThanFilteringItem(propertyName,singleQueryValueObj);
+                    break;
+                }else{
+                    return null;
+                }
+            case FilteringItemType_LessThanEqual:
+                if(singleQueryValueObj != null){
+                    targetFilteringItem = new LessThanEqualFilteringItem(propertyName,singleQueryValueObj);
+                    break;
+                }else{
+                    return null;
+                }
+            case FilteringItemType_SimilarTo:
+                SimilarFilteringItem.MatchingType matchingType = null;
+                String matchingTypeValue=this.similarToMatchingTypeSelector.getValue().toString();
+                if(matchingTypeValue.equals(SimilarToMatchingType_BeginWith)){
+                    matchingType= SimilarFilteringItem.MatchingType.BeginWith;
+                }
+                if(matchingTypeValue.equals(SimilarToMatchingType_EndWith)){
+                    matchingType= SimilarFilteringItem.MatchingType.EndWith;
+                }
+                if(matchingTypeValue.equals(SimilarToMatchingType_Contain)){
+                    matchingType= SimilarFilteringItem.MatchingType.Contain;
+                }
+                if(this.similarToConditionValueTextField.getValue()!=null){
+                    targetFilteringItem = new SimilarFilteringItem(propertyName, this.similarToConditionValueTextField.getValue().toString(),matchingType);
+                    break;
+                }else{
+                    return null;
+                }
+            case FilteringItemType_Between:
+                if(betweenQueryFromValueObj != null && betweenQueryToValueObj != null){
+                    targetFilteringItem = new BetweenFilteringItem(propertyName,betweenQueryFromValueObj,betweenQueryToValueObj);
+                    break;
+                }else{
+                    return null;
+                }
+            case FilteringItemType_InValue:
+                if(((MultiValuePropertyInputWidget)this.multiValuePropertyInput).getMultiValueList() != null && ((MultiValuePropertyInputWidget)this.multiValuePropertyInput).getMultiValueList().size()>0){
+                    targetFilteringItem = new InValueFilteringItem(propertyName,((MultiValuePropertyInputWidget)this.multiValuePropertyInput).getMultiValueList());
+                    break;
+                }else{
+                    return null;
+                }
+            case FilteringItemType_NullValue:
+                targetFilteringItem = new NullValueFilteringItem(propertyName);
+                break;
+        }
+
+        if(this.reverseCondition){
+            targetFilteringItem.reverseCondition();
+        }
+        return targetFilteringItem;
+    }
+
+    public QueryParameters.FilteringLogic getFilteringLogic(){
+        if(this.filteringLogic.equals(filteringLogic_OR)){
+            return QueryParameters.FilteringLogic.OR;
+        }
+        if(this.filteringLogic.equals(filteringLogic_AND)){
+            return QueryParameters.FilteringLogic.AND;
+        }
+        return null;
+    }
+
+    public void resetQueryConditionItem(){
+        this.filteringItemTypeSelection.setValue(null);
+    }
+
 }
