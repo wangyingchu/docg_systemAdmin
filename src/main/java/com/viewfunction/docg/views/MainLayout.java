@@ -360,6 +360,8 @@ public class MainLayout extends AppLayout {
                 TimeFlowCreatedEvent.class);
         _BLACKBOARD.register(KindScopeAttributeAddedEvent.KindScopeAttributeAddedListener.class,
                 KindScopeAttributeAddedEvent.class);
+        _BLACKBOARD.register(DataSliceQueriedEvent.DataSliceQueriedListener.class,
+                DataSliceQueriedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

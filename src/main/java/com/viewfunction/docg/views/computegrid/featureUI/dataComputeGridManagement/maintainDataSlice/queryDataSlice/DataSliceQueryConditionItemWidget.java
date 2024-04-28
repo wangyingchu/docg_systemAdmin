@@ -26,9 +26,8 @@ import com.vaadin.flow.data.converter.*;
 import com.vaadin.flow.data.validator.*;
 import com.vaadin.flow.function.ValueProvider;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
-import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.*;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
+import com.viewfunction.docg.dataCompute.computeServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.dataCompute.computeServiceCore.analysis.query.filteringItem.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
@@ -53,7 +52,6 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
     private final String FilteringItemType_Equal="Equal";
     private final String FilteringItemType_NotEqual="Not Equal";
     private final String FilteringItemType_SimilarTo="Similar To";
-    private final String FilteringItemType_RegularMatch="Regular Match";
     private final String FilteringItemType_Between= "Between";
     private final String FilteringItemType_GreatThan="Great Than";
     private final String FilteringItemType_GreatThanEqual="Great Than Equal";
@@ -379,10 +377,6 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                 this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
                 break;
-            case FilteringItemType_RegularMatch:
-                this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
-                this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
-                break;
             case FilteringItemType_GreatThan:
                 this.singleQueryValueTextField = generateSingleQueryValueTextField(210);
                 this.conditionValueInputElementsLayout.add(this.singleQueryValueTextField);
@@ -673,7 +667,6 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                             FilteringItemType_Equal,
                             FilteringItemType_NotEqual,
                             FilteringItemType_SimilarTo,
-                            FilteringItemType_RegularMatch,
                             FilteringItemType_InValue,
                             FilteringItemType_NullValue);
                     break;
@@ -899,69 +892,6 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                 }
         }
 
-        /*
-        if(propertyDataType.equals(""+ AttributeDataType.BOOLEAN)){
-            if(this.singleQueryValueTextField != null) {
-                singleQueryValue = ((ComboBox) this.singleQueryValueTextField).getValue();
-            }
-            if(this.betweenQueryFromValueTextField != null) {
-                betweenQueryFromValue = ((ComboBox) this.betweenQueryFromValueTextField).getValue();
-            }
-            if(this.betweenQueryToValueTextField != null) {
-                betweenQueryToValue = ((ComboBox) this.betweenQueryToValueTextField).getValue();
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.DATE)){
-            if(this.singleQueryValueTextField != null) {
-                singleQueryValue = ((DatePicker) this.singleQueryValueTextField).getValue();
-            }
-            if(this.betweenQueryFromValueTextField != null) {
-                betweenQueryFromValue = ((DatePicker) this.betweenQueryFromValueTextField).getValue();
-            }
-            if(this.betweenQueryToValueTextField != null) {
-                betweenQueryToValue = ((DatePicker) this.betweenQueryToValueTextField).getValue();
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.TIME)){
-            if(this.singleQueryValueTextField != null) {
-                singleQueryValue = ((TimePicker) this.singleQueryValueTextField).getValue();
-            }
-            if(this.betweenQueryFromValueTextField != null) {
-                betweenQueryFromValue = ((TimePicker) this.betweenQueryFromValueTextField).getValue();
-            }
-            if(this.betweenQueryToValueTextField != null) {
-                betweenQueryToValue = ((TimePicker) this.betweenQueryToValueTextField).getValue();
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.DATETIME)){
-            if(this.singleQueryValueTextField != null) {
-                singleQueryValue = ((DateTimePicker) this.singleQueryValueTextField).getValue();
-            }
-            if(this.betweenQueryFromValueTextField != null) {
-                betweenQueryFromValue = ((DateTimePicker) this.betweenQueryFromValueTextField).getValue();
-            }
-            if(this.betweenQueryToValueTextField != null) {
-                betweenQueryToValue = ((DateTimePicker) this.betweenQueryToValueTextField).getValue();
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.TIMESTAMP)){
-            if(this.singleQueryValueTextField != null) {
-                singleQueryValue = ((TextField) this.singleQueryValueTextField).getValue();
-            }
-            if(this.betweenQueryFromValueTextField != null) {
-                betweenQueryFromValue = ((TextField) this.betweenQueryFromValueTextField).getValue();
-            }
-            if(this.betweenQueryToValueTextField != null) {
-                betweenQueryToValue = ((TextField) this.betweenQueryToValueTextField).getValue();
-            }
-        }else {
-            if (this.singleQueryValueTextField != null) {
-                singleQueryValue = ((TextField) this.singleQueryValueTextField).getValue();
-            }
-            if(this.betweenQueryFromValueTextField != null) {
-                betweenQueryFromValue = ((TextField) this.betweenQueryFromValueTextField).getValue();
-            }
-            if(this.betweenQueryToValueTextField != null) {
-                betweenQueryToValue = ((TextField) this.betweenQueryToValueTextField).getValue();
-            }
-        }
-    */
         Object singleQueryValueObj = null;
         Object betweenQueryFromValueObj = null;
         Object betweenQueryToValueObj = null;
@@ -1103,142 +1033,6 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                 break;
         }
 
-        /*
-        if(propertyDataType.equals(""+AttributeDataType.BOOLEAN)){
-            if (singleQueryValue != null) {
-                singleQueryValueObj = new Boolean(singleQueryValue.toString());
-            }
-            if(betweenQueryFromValue != null) {
-                betweenQueryFromValueObj = new Boolean(betweenQueryFromValue.toString());
-            }
-            if(betweenQueryToValue != null) {
-                betweenQueryToValueObj = new Boolean(betweenQueryToValue.toString());
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.INT)){
-            if (singleQueryValue != null && !singleQueryValue.equals("")) {
-                singleQueryValueObj = new Integer(singleQueryValue.toString());
-            }
-            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
-                betweenQueryFromValueObj = new Integer(betweenQueryFromValue.toString());
-            }
-            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
-                betweenQueryToValueObj = new Integer(betweenQueryToValue.toString());
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.SHORT)){
-            if (singleQueryValue != null && !singleQueryValue.equals("")) {
-                singleQueryValueObj = new Short(singleQueryValue.toString());
-            }
-            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
-                betweenQueryFromValueObj = new Short(betweenQueryFromValue.toString());
-            }
-            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
-                betweenQueryToValueObj = new Short(betweenQueryToValue.toString());
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.LONG)){
-            if (singleQueryValue != null && !singleQueryValue.equals("")) {
-                singleQueryValueObj = new Long(singleQueryValue.toString());
-            }
-            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
-                betweenQueryFromValueObj = new Long(betweenQueryFromValue.toString());
-            }
-            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
-                betweenQueryToValueObj = new Long(betweenQueryToValue.toString());
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.FLOAT)){
-            if (singleQueryValue != null && !singleQueryValue.equals("")) {
-                singleQueryValueObj = new Float(singleQueryValue.toString());
-            }
-            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
-                betweenQueryFromValueObj = new Float(betweenQueryFromValue.toString());
-            }
-            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
-                betweenQueryToValueObj = new Float(betweenQueryToValue.toString());
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.DOUBLE)){
-            if (singleQueryValue != null && !singleQueryValue.equals("")) {
-                singleQueryValueObj = new Double(singleQueryValue.toString());
-            }
-            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
-                betweenQueryFromValueObj = new Double(betweenQueryFromValue.toString());
-            }
-            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
-                betweenQueryToValueObj = new Double(betweenQueryToValue.toString());
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.DATE)){
-            if (singleQueryValue != null) {
-                singleQueryValueObj = singleQueryValue;
-            }
-            if(betweenQueryFromValue != null) {
-                betweenQueryFromValueObj =betweenQueryFromValue;
-            }
-            if(betweenQueryToValue != null) {
-                betweenQueryToValueObj = betweenQueryToValue;
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.TIME)) {
-            if (singleQueryValue != null) {
-                singleQueryValueObj = singleQueryValue;
-            }
-            if (betweenQueryFromValue != null) {
-                betweenQueryFromValueObj = betweenQueryFromValue;
-            }
-            if (betweenQueryToValue != null) {
-                betweenQueryToValueObj = betweenQueryToValue;
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.DATETIME)) {
-            if (singleQueryValue != null) {
-                singleQueryValueObj = singleQueryValue;
-            }
-            if (betweenQueryFromValue != null) {
-                betweenQueryFromValueObj = betweenQueryFromValue;
-            }
-            if (betweenQueryToValue != null) {
-                betweenQueryToValueObj = betweenQueryToValue;
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.TIMESTAMP)) {
-            if (singleQueryValue != null) {
-                singleQueryValueObj = singleQueryValue;
-            }
-            if (betweenQueryFromValue != null) {
-                betweenQueryFromValueObj = betweenQueryFromValue;
-            }
-            if (betweenQueryToValue != null) {
-                betweenQueryToValueObj = betweenQueryToValue;
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.STRING)){
-            if (singleQueryValue != null) {
-                singleQueryValueObj = singleQueryValue.toString();
-            }
-            if(betweenQueryFromValue != null) {
-                betweenQueryFromValueObj = betweenQueryFromValue.toString();
-            }
-            if(betweenQueryToValue != null) {
-                betweenQueryToValueObj = betweenQueryToValue.toString();
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.BINARY)){
-
-        }else if(propertyDataType.equals(""+AttributeDataType.BYTE)){
-            if (singleQueryValue != null && !singleQueryValue.equals("")) {
-                singleQueryValueObj = new Byte(singleQueryValue.toString());
-            }
-            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
-                betweenQueryFromValueObj = new Byte(betweenQueryFromValue.toString());
-            }
-            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
-                betweenQueryToValueObj = new Byte(betweenQueryToValue.toString());
-            }
-        }else if(propertyDataType.equals(""+AttributeDataType.DECIMAL)){
-            if (singleQueryValue != null && !singleQueryValue.equals("")) {
-                singleQueryValueObj = new BigDecimal(singleQueryValue.toString());
-            }
-            if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
-                betweenQueryFromValueObj = new BigDecimal(betweenQueryFromValue.toString());
-            }
-            if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
-                betweenQueryToValueObj = new BigDecimal(betweenQueryToValue.toString());
-            }
-        }
-        */
-
         switch(this.currentSelectedFilteringItemType){
             case FilteringItemType_Equal:
                 if(singleQueryValueObj != null){
@@ -1250,13 +1044,6 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
             case FilteringItemType_NotEqual:
                 if(singleQueryValueObj != null){
                     targetFilteringItem = new NotEqualFilteringItem(propertyName,singleQueryValueObj);
-                    break;
-                }else{
-                    return null;
-                }
-            case FilteringItemType_RegularMatch:
-                if(singleQueryValue != null){
-                    targetFilteringItem = new RegularMatchFilteringItem(propertyName,singleQueryValue.toString());
                     break;
                 }else{
                     return null;

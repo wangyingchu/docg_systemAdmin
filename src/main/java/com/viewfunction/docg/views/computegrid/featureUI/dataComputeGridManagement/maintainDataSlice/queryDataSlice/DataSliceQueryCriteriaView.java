@@ -16,8 +16,8 @@ import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.shared.Registration;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
-import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.FilteringItem;
+import com.viewfunction.docg.dataCompute.computeServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.dataCompute.computeServiceCore.analysis.query.filteringItem.FilteringItem;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
@@ -27,7 +27,7 @@ import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.Compute
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
+import com.viewfunction.docg.element.eventHandling.DataSliceQueriedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.QueryResultSetConfigView;
@@ -226,15 +226,11 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
         if(!defaultQueryConditionIsSet & otherQueryConditionsAreSet){
             CommonUIOperationUtil.showPopupNotification("请设定默认查询条件的属性过滤值", NotificationVariant.LUMO_ERROR);
         }else{
-            ConceptionKindQueriedEvent conceptionKindQueriedEvent = new ConceptionKindQueriedEvent();
-
-
-            //conceptionKindQueriedEvent.setConceptionKindName(this.conceptionKindName);
-
-
-            conceptionKindQueriedEvent.setResultAttributesList(this.resultAttributesList);
-            conceptionKindQueriedEvent.setQueryParameters(this.queryParameters);
-            ResourceHolder.getApplicationBlackboard().fire(conceptionKindQueriedEvent);
+            DataSliceQueriedEvent dataSliceQueriedEvent = new DataSliceQueriedEvent();
+            dataSliceQueriedEvent.setDataSliceName(this.dataSliceMetaInfo.getDataSliceName());
+            dataSliceQueriedEvent.setQueryParameters(this.queryParameters);
+            dataSliceQueriedEvent.setResultPropertiesList(this.resultAttributesList);
+            ResourceHolder.getApplicationBlackboard().fire(dataSliceQueriedEvent);
         }
     }
 
@@ -339,11 +335,15 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
     }
 
     private void renderQueryResultSetConfigUI(){
+
+        /*
         QueryResultSetConfigView queryResultSetConfigView = new QueryResultSetConfigView(this.queryParameters);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"查询结果集参数",null,true,350,500,false);
         fixSizeWindow.setWindowContent(queryResultSetConfigView);
         fixSizeWindow.setModel(true);
         queryResultSetConfigView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+        */
+
     }
 }
