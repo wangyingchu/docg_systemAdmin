@@ -18,11 +18,13 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
+import com.viewfunction.docg.dataCompute.computeServiceCore.internal.ignite.ComputeGridObserver;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.eventHandling.DataSliceQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryResultsView;
 
@@ -31,7 +33,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataSliceQueryResultsView extends VerticalLayout {
+public class DataSliceQueryResultsView extends VerticalLayout implements DataSliceQueriedEvent.DataSliceQueriedListener {
 
     private DataSliceMetaInfo dataSliceMetaInfo;
     private Registration listener;
@@ -122,7 +124,7 @@ public class DataSliceQueryResultsView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        //ResourceHolder.getApplicationBlackboard().addListener(this);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             queryResultGrid.setHeight(event.getHeight()-140,Unit.PIXELS);
@@ -139,6 +141,22 @@ public class DataSliceQueryResultsView extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
+
+    @Override
+    public void receivedDataSliceQueriedEvent(DataSliceQueriedEvent event) {
+        event.getDataSliceName();
+        event.getResultPropertiesList();
+        event.getQueryParameters();
+
+        ComputeGridObserver currentComputeGridObserver = ComputeGridObserver.getObserverInstance();
+       // currentComputeGridObserver.
+
+
+
+        System.out.println(event);
+        System.out.println(event);
+        System.out.println(event);
     }
 }
