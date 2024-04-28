@@ -429,7 +429,7 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                         .bind(new ValueProvider<String, Integer>() {
                             @Override
                             public Integer apply(String s) {
-                                return new Integer(s);
+                                return Integer.valueOf(s);
                             }
                         }, new Setter<String, Integer>() {
                             @Override
@@ -460,7 +460,7 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                         .bind(new ValueProvider<String, Long>() {
                             @Override
                             public Long apply(String s) {
-                                return new Long(s);
+                                return Long.valueOf(s);
                             }
                         }, new Setter<String, Long>() {
                             @Override
@@ -479,7 +479,7 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                         .bind(new ValueProvider<String, Float>() {
                             @Override
                             public Float apply(String s) {
-                                return new Float(s);
+                                return Float.valueOf(s);
                             }
                         }, new Setter<String, Float>() {
                             @Override
@@ -498,7 +498,7 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                         .bind(new ValueProvider<String, Integer>() {
                             @Override
                             public Integer apply(String s) {
-                                return new Integer(s);
+                                return Integer.valueOf(s);
                             }
                         }, new Setter<String, Integer>() {
                             @Override
@@ -523,7 +523,7 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                         .bind(new ValueProvider<String, Double>() {
                             @Override
                             public Double apply(String s) {
-                                return new Double(s);
+                                return Double.valueOf(s);
                             }
                         }, new Setter<String, Double>() {
                             @Override
@@ -576,7 +576,7 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                         .bind(new ValueProvider<String, Long>() {
                             @Override
                             public Long apply(String s) {
-                                return new Long(s);
+                                return Long.valueOf(s);
                             }
                         }, new Setter<String, Long>() {
                             @Override
@@ -969,68 +969,68 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
         switch(this.propertyDataType){
             case BOOLEAN :
                 if (singleQueryValue != null) {
-                    singleQueryValueObj = new Boolean(singleQueryValue.toString());
+                    singleQueryValueObj = Boolean.valueOf(singleQueryValue.toString());
                 }
                 if(betweenQueryFromValue != null) {
-                    betweenQueryFromValueObj = new Boolean(betweenQueryFromValue.toString());
+                    betweenQueryFromValueObj = Boolean.valueOf(betweenQueryFromValue.toString());
                 }
                 if(betweenQueryToValue != null) {
-                    betweenQueryToValueObj = new Boolean(betweenQueryToValue.toString());
+                    betweenQueryToValueObj = Boolean.valueOf(betweenQueryToValue.toString());
                 }
                 break;
             case INT:
                 if (singleQueryValue != null && !singleQueryValue.equals("")) {
-                    singleQueryValueObj = new Integer(singleQueryValue.toString());
+                    singleQueryValueObj = Integer.valueOf(singleQueryValue.toString());
                 }
                 if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
-                    betweenQueryFromValueObj = new Integer(betweenQueryFromValue.toString());
+                    betweenQueryFromValueObj = Integer.valueOf(betweenQueryFromValue.toString());
                 }
                 if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
-                    betweenQueryToValueObj = new Integer(betweenQueryToValue.toString());
+                    betweenQueryToValueObj = Integer.valueOf(betweenQueryToValue.toString());
                 }
                 break;
             case SHORT:
                 if (singleQueryValue != null && !singleQueryValue.equals("")) {
-                    singleQueryValueObj = new Short(singleQueryValue.toString());
+                    singleQueryValueObj = Short.valueOf(singleQueryValue.toString());
                 }
                 if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
-                    betweenQueryFromValueObj = new Short(betweenQueryFromValue.toString());
+                    betweenQueryFromValueObj = Short.valueOf(betweenQueryFromValue.toString());
                 }
                 if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
-                    betweenQueryToValueObj = new Short(betweenQueryToValue.toString());
+                    betweenQueryToValueObj = Short.valueOf(betweenQueryToValue.toString());
                 }
                 break;
             case LONG:
                 if (singleQueryValue != null && !singleQueryValue.equals("")) {
-                    singleQueryValueObj = new Long(singleQueryValue.toString());
+                    singleQueryValueObj = Long.valueOf(singleQueryValue.toString());
                 }
                 if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
-                    betweenQueryFromValueObj = new Long(betweenQueryFromValue.toString());
+                    betweenQueryFromValueObj = Long.valueOf(betweenQueryFromValue.toString());
                 }
                 if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
-                    betweenQueryToValueObj = new Long(betweenQueryToValue.toString());
+                    betweenQueryToValueObj = Long.valueOf(betweenQueryToValue.toString());
                 }
                 break;
                 case FLOAT:
                 if (singleQueryValue != null && !singleQueryValue.equals("")) {
-                    singleQueryValueObj = new Float(singleQueryValue.toString());
+                    singleQueryValueObj = Float.valueOf(singleQueryValue.toString());
                 }
                 if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
-                    betweenQueryFromValueObj = new Float(betweenQueryFromValue.toString());
+                    betweenQueryFromValueObj = Float.valueOf(betweenQueryFromValue.toString());
                 }
                 if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
-                    betweenQueryToValueObj = new Float(betweenQueryToValue.toString());
+                    betweenQueryToValueObj = Float.valueOf(betweenQueryToValue.toString());
                 }
                 break;
             case DOUBLE:
                 if (singleQueryValue != null && !singleQueryValue.equals("")) {
-                    singleQueryValueObj = new Double(singleQueryValue.toString());
+                    singleQueryValueObj = Double.valueOf(singleQueryValue.toString());
                 }
                 if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
-                    betweenQueryFromValueObj = new Double(betweenQueryFromValue.toString());
+                    betweenQueryFromValueObj = Double.valueOf(betweenQueryFromValue.toString());
                 }
                 if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
-                    betweenQueryToValueObj = new Double(betweenQueryToValue.toString());
+                    betweenQueryToValueObj = Double.valueOf(betweenQueryToValue.toString());
                 }
                 break;
             case DATE:
@@ -1081,13 +1081,13 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                 break;
             case BYTE:
                 if (singleQueryValue != null && !singleQueryValue.equals("")) {
-                    singleQueryValueObj = new Byte(singleQueryValue.toString());
+                    singleQueryValueObj = Byte.valueOf(singleQueryValue.toString());
                 }
                 if(betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
-                    betweenQueryFromValueObj = new Byte(betweenQueryFromValue.toString());
+                    betweenQueryFromValueObj = Byte.valueOf(betweenQueryFromValue.toString());
                 }
                 if(betweenQueryToValue != null && !betweenQueryToValue.equals("")) {
-                    betweenQueryToValueObj = new Byte(betweenQueryToValue.toString());
+                    betweenQueryToValueObj = Byte.valueOf(betweenQueryToValue.toString());
                 }
                 break;
             case DECIMAL:
