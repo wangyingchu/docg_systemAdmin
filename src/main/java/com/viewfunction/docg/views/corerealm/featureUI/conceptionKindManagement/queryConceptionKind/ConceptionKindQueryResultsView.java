@@ -255,7 +255,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                     if (attributesList != null && attributesList.size() > 0) {
                         for (String currentProperty : attributesList) {
                             if (!currentProperty.equals(_rowIndexPropertyName)) {
-                            queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
+                                queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
                                     @Override
                                     public Object apply(ConceptionEntityValue conceptionEntityValue) {
                                         return conceptionEntityValue.getEntityAttributesValue().get(currentProperty);

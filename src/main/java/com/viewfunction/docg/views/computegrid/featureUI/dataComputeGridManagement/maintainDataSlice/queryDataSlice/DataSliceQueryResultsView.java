@@ -20,12 +20,18 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataServiceInvoker;
 import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataSlice;
+import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.internal.ignite.exception.ComputeGridNotActiveException;
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceQueryResult;
+import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
+import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
+import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.DataSliceQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
@@ -34,10 +40,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataSliceQueryResultsView extends VerticalLayout implements DataSliceQueriedEvent.DataSliceQueriedListener {
 
@@ -50,8 +53,8 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
     private final ZoneId id = ZoneId.systemDefault();
     private final String _rowIndexPropertyName = "ROW_INDEX";
     private List<String> currentRowKeyList;
-    private  List<String> lastQueryAttributesList;
     private NumberFormat numberFormat;
+    private DataSliceDetailInfo dataSliceDetailInfo;
 
     public DataSliceQueryResultsView(DataSliceMetaInfo dataSliceMetaInfo){
         this.dataSliceMetaInfo = dataSliceMetaInfo;
@@ -70,6 +73,13 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
         dataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"结果集数据量","-");
         numberFormat = NumberFormat.getInstance();
 
+        ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
+        try {
+            this.dataSliceDetailInfo = targetComputeGrid.getDataSliceDetail(this.dataSliceMetaInfo.getDataSliceName());
+        } catch (ComputeGridException e) {
+            throw new RuntimeException(e);
+        }
+
         queryResultGrid = new Grid<>();
         queryResultGrid.setWidth(100, Unit.PERCENTAGE);
         queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
@@ -81,14 +91,31 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
             }
         }).setHeader("").setHeader("IDX").setKey("idx").setFlexGrow(0).setWidth("75px").setResizable(false);
         //queryResultGrid.addComponentColumn(new ConceptionKindQueryResultsView.ConceptionEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("120px").setResizable(false);
-        queryResultGrid.addColumn(ConceptionEntityValue::getConceptionEntityUID).setHeader(" EntityUID").setKey("idx_1").setFlexGrow(1).setWidth("150px").setResizable(false);
+
+        if(this.dataSliceDetailInfo != null){
+            Set<String> primaryKeyPropertiesSet = this.dataSliceDetailInfo.getPrimaryKeyPropertiesNames();
+            Map<String, DataSlicePropertyType> dataSlicePropertiesMap = this.dataSliceDetailInfo.getPropertiesDefinition();
+
+            Set<String> propertiesNameSet = dataSlicePropertiesMap.keySet();
+            for(String currentProperty : propertiesNameSet){
+                queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
+                    @Override
+                    public Object apply(ConceptionEntityValue conceptionEntityValue) {
+                        return conceptionEntityValue.getEntityAttributesValue().get(currentProperty);
+                    }
+                }).setHeader(" " + currentProperty).setKey(currentProperty + "_KEY");
+                queryResultGrid.getColumnByKey(currentProperty + "_KEY").setSortable(true).setResizable(true);
+                if(primaryKeyPropertiesSet != null && primaryKeyPropertiesSet.contains(currentProperty)){
+                    queryResultGrid.getColumnByKey(currentProperty + "_KEY").setHeader(new GridColumnHeader(LineAwesomeIconsSvg.KEY_SOLID.create(),currentProperty)).setSortable(false).setResizable(true);
+                }
+            }
+        }
 
         GridColumnHeader gridColumnHeader_idx = new GridColumnHeader(VaadinIcon.LIST_OL,"");
         queryResultGrid.getColumnByKey("idx").setHeader(gridColumnHeader_idx).setSortable(false);
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
         //queryResultGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx1).setSortable(false);
-        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.KEY_O,"概念实体UID");
-        queryResultGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx0).setSortable(false).setResizable(true);
+
         add(queryResultGrid);
 
         queryResultGrid.addItemDoubleClickListener(new ComponentEventListener<ItemDoubleClickEvent<ConceptionEntityValue>>() {
@@ -134,15 +161,9 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
         }
         queryResultGrid.setItems(new ArrayList<>());
         this.currentRowKeyList.clear();
-        this.lastQueryAttributesList = null;
         try(DataServiceInvoker dataServiceInvoker = DataServiceInvoker.getInvokerInstance()){
-
             DataSlice targetDataSlice = dataServiceInvoker.getDataSlice(event.getDataSliceName());
             if(targetDataSlice != null){
-                //DataSliceQueryResult dataSliceQueryResult = targetDataSlice.queryDataRecords(event.getQueryParameters());
-
-                DataSliceMetaInfo dataSliceMetaInfo = targetDataSlice.getDataSliceMetaInfo();
-
                 DataSliceQueryResult dataSliceQueryResult = targetDataSlice.queryDataRecords("SELECT * FROM "+event.getDataSliceName());
                 if(dataSliceQueryResult != null){
                     List<Map<String, Object>> recordsList = dataSliceQueryResult.getResultRecords();
@@ -156,6 +177,11 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
                     String finishTimeStr = finishZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
                     finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
                     dataCountDisplayItem.updateDisplayValue(""+   numberFormat.format(recordsList.size()));
+
+                    for(int i=0 ; i<recordsList.size();i++){
+                       // ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
+                       // currentConceptionEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName,i+1);
+                    }
                 }
             }
         } catch (ComputeGridNotActiveException e) {
@@ -168,7 +194,7 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
     private void showPopupNotification(DataSliceQueryResult dataSliceQueryResult, NotificationVariant notificationVariant){
         Notification notification = new Notification();
         notification.addThemeVariants(notificationVariant);
-        Div text = new Div(new Text("概念类型 "+" 实例查询操作成功"));
+        Div text = new Div(new Text("数据切片 "+this.dataSliceDetailInfo.getDataSliceName()+" 记录查询操作成功"));
         Button closeButton = new Button(new Icon("lumo", "cross"));
         closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         closeButton.addClickListener(event -> {
@@ -180,7 +206,7 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
         notification.add(layout);
 
         VerticalLayout notificationMessageContainer = new VerticalLayout();
-        notificationMessageContainer.add(new Div(new Text("查询返回实体数: "+dataSliceQueryResult.getResultRecords().size())));
+        notificationMessageContainer.add(new Div(new Text("查询返回记录数: "+dataSliceQueryResult.getResultRecords().size())));
         notificationMessageContainer.add(new Div(new Text("操作开始时间: "+dataSliceQueryResult.getStartTime())));
         notificationMessageContainer.add(new Div(new Text("操作结束时间: "+dataSliceQueryResult.getFinishTime())));
         notification.add(notificationMessageContainer);
