@@ -2,40 +2,42 @@ package com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagem
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.menubar.MenuBar;
-import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
-import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataServiceInvoker;
 import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataSlice;
-import com.viewfunction.docg.dataCompute.computeServiceCore.internal.ignite.ComputeGridObserver;
 import com.viewfunction.docg.dataCompute.computeServiceCore.internal.ignite.exception.ComputeGridNotActiveException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceQueryResult;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
-import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.DataSliceQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryResultsView;
 
 import java.text.NumberFormat;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class DataSliceQueryResultsView extends VerticalLayout implements DataSliceQueriedEvent.DataSliceQueriedListener {
 
@@ -47,9 +49,7 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
     private SecondaryKeyValueDisplayItem dataCountDisplayItem;
     private final ZoneId id = ZoneId.systemDefault();
     private final String _rowIndexPropertyName = "ROW_INDEX";
-    private MenuBar queryResultOperationMenuBar;
     private List<String> currentRowKeyList;
-    private ConceptionEntitiesAttributesRetrieveResult lastConceptionEntitiesAttributesRetrieveResult;
     private  List<String> lastQueryAttributesList;
     private NumberFormat numberFormat;
 
@@ -69,27 +69,6 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
         finishTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"查询结束时间","-");
         dataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"结果集数据量","-");
         numberFormat = NumberFormat.getInstance();
-
-        HorizontalLayout actionButtonLayout = new HorizontalLayout();
-        toolbarLayout.add(actionButtonLayout);
-
-        Icon divIcon = new Icon(VaadinIcon.LINE_V);
-        divIcon.setSize("12px");
-        divIcon.getStyle().set("top","-5px").set("position","relative");
-        actionButtonLayout.add(divIcon);
-        actionButtonLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
-
-        queryResultOperationMenuBar = new MenuBar();
-        queryResultOperationMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
-        queryResultOperationMenuBar.getStyle().set("top","-5px").set("position","relative");
-        queryResultOperationMenuBar.setEnabled(false);
-
-        actionButtonLayout.add(queryResultOperationMenuBar);
-        actionButtonLayout.setVerticalComponentAlignment(Alignment.START,queryResultOperationMenuBar);
-
-
-
-
 
         queryResultGrid = new Grid<>();
         queryResultGrid.setWidth(100, Unit.PERCENTAGE);
@@ -156,48 +135,56 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
         queryResultGrid.setItems(new ArrayList<>());
         this.currentRowKeyList.clear();
         this.lastQueryAttributesList = null;
-
-
-
-
-
-
-        event.getDataSliceName();
-        event.getResultPropertiesList();
-        ;
-
-        ComputeGridObserver currentComputeGridObserver = ComputeGridObserver.getObserverInstance();
-       // currentComputeGridObserver.
-
-
-
-        System.out.println(event);
-        System.out.println(event);
-        System.out.println(event);
-
-
-
         try(DataServiceInvoker dataServiceInvoker = DataServiceInvoker.getInvokerInstance()){
 
-            DataSlice targetDataSlice =dataServiceInvoker.getDataSlice(event.getDataSliceName());
+            DataSlice targetDataSlice = dataServiceInvoker.getDataSlice(event.getDataSliceName());
             if(targetDataSlice != null){
                 //DataSliceQueryResult dataSliceQueryResult = targetDataSlice.queryDataRecords(event.getQueryParameters());
-                DataSliceQueryResult dataSliceQueryResult = targetDataSlice.queryDataRecords("SELECT * FROM CateringService");
-                System.out.println(dataSliceQueryResult);
-                System.out.println(dataSliceQueryResult.getResultRecords().size());
-                System.out.println(dataSliceQueryResult.getResultRecords().size());
-                System.out.println(dataSliceQueryResult.getResultRecords().size());
+
+                DataSliceMetaInfo dataSliceMetaInfo = targetDataSlice.getDataSliceMetaInfo();
+
+                DataSliceQueryResult dataSliceQueryResult = targetDataSlice.queryDataRecords("SELECT * FROM "+event.getDataSliceName());
+                if(dataSliceQueryResult != null){
+                    List<Map<String, Object>> recordsList = dataSliceQueryResult.getResultRecords();
+                    showPopupNotification(dataSliceQueryResult, NotificationVariant.LUMO_SUCCESS);
+                    Date startDateTime = dataSliceQueryResult.getStartTime();
+                    ZonedDateTime startZonedDateTime = ZonedDateTime.ofInstant(startDateTime.toInstant(), id);
+                    String startTimeStr = startZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
+                    startTimeDisplayItem.updateDisplayValue(startTimeStr);
+                    Date finishDateTime = dataSliceQueryResult.getFinishTime();
+                    ZonedDateTime finishZonedDateTime = ZonedDateTime.ofInstant(finishDateTime.toInstant(), id);
+                    String finishTimeStr = finishZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
+                    finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
+                    dataCountDisplayItem.updateDisplayValue(""+   numberFormat.format(recordsList.size()));
+                }
             }
-
-
-
-
         } catch (ComputeGridNotActiveException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
 
+    private void showPopupNotification(DataSliceQueryResult dataSliceQueryResult, NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text("概念类型 "+" 实例查询操作成功"));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
 
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        notificationMessageContainer.add(new Div(new Text("查询返回实体数: "+dataSliceQueryResult.getResultRecords().size())));
+        notificationMessageContainer.add(new Div(new Text("操作开始时间: "+dataSliceQueryResult.getStartTime())));
+        notificationMessageContainer.add(new Div(new Text("操作结束时间: "+dataSliceQueryResult.getFinishTime())));
+        notification.add(notificationMessageContainer);
+        notification.setDuration(3000);
+        notification.open();
     }
 }
