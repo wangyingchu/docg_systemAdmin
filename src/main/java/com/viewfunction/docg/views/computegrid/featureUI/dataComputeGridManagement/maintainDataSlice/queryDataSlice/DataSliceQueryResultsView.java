@@ -18,8 +18,12 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
+import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataServiceInvoker;
+import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataSlice;
 import com.viewfunction.docg.dataCompute.computeServiceCore.internal.ignite.ComputeGridObserver;
+import com.viewfunction.docg.dataCompute.computeServiceCore.internal.ignite.exception.ComputeGridNotActiveException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
+import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceQueryResult;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
@@ -146,9 +150,21 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
 
     @Override
     public void receivedDataSliceQueriedEvent(DataSliceQueriedEvent event) {
+        for(String currentExistingRowKey:this.currentRowKeyList){
+            queryResultGrid.removeColumnByKey(currentExistingRowKey);
+        }
+        queryResultGrid.setItems(new ArrayList<>());
+        this.currentRowKeyList.clear();
+        this.lastQueryAttributesList = null;
+
+
+
+
+
+
         event.getDataSliceName();
         event.getResultPropertiesList();
-        event.getQueryParameters();
+        ;
 
         ComputeGridObserver currentComputeGridObserver = ComputeGridObserver.getObserverInstance();
        // currentComputeGridObserver.
@@ -158,5 +174,30 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
         System.out.println(event);
         System.out.println(event);
         System.out.println(event);
+
+
+
+        try(DataServiceInvoker dataServiceInvoker = DataServiceInvoker.getInvokerInstance()){
+
+            DataSlice targetDataSlice =dataServiceInvoker.getDataSlice(event.getDataSliceName());
+            if(targetDataSlice != null){
+                //DataSliceQueryResult dataSliceQueryResult = targetDataSlice.queryDataRecords(event.getQueryParameters());
+                DataSliceQueryResult dataSliceQueryResult = targetDataSlice.queryDataRecords("SELECT * FROM CateringService");
+                System.out.println(dataSliceQueryResult);
+                System.out.println(dataSliceQueryResult.getResultRecords().size());
+                System.out.println(dataSliceQueryResult.getResultRecords().size());
+                System.out.println(dataSliceQueryResult.getResultRecords().size());
+            }
+
+
+
+
+        } catch (ComputeGridNotActiveException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 }
