@@ -125,11 +125,11 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
                 if(primaryKeyPropertiesSet != null && primaryKeyPropertiesSet.contains(currentProperty)){
                     Icon propertyIcon = LineAwesomeIconsSvg.KEY_SOLID.create();
                     propertyIcon.setTooltipText(currentDataSlicePropertyType.toString());
-                    queryResultGrid.getColumnByKey(currentProperty + "_KEY").setHeader(new GridColumnHeader(propertyIcon,currentProperty)).setSortable(false).setResizable(true);
+                    queryResultGrid.getColumnByKey(currentProperty + "_KEY").setHeader(new GridColumnHeader(propertyIcon,currentProperty)).setSortable(true).setResizable(true);
                 }else{
                     Icon propertyIcon = currentProperty.startsWith(RealmConstant.RealmInnerTypePerFix) ? VaadinIcon.ELLIPSIS_CIRCLE_O.create():VaadinIcon.ELLIPSIS_CIRCLE.create();
                     propertyIcon.setTooltipText(currentDataSlicePropertyType.toString());
-                    queryResultGrid.getColumnByKey(currentProperty + "_KEY").setHeader(new GridColumnHeader(propertyIcon,currentProperty)).setSortable(false).setResizable(true);
+                    queryResultGrid.getColumnByKey(currentProperty + "_KEY").setHeader(new GridColumnHeader(propertyIcon,currentProperty)).setSortable(true).setResizable(true);
                 }
             }
         }

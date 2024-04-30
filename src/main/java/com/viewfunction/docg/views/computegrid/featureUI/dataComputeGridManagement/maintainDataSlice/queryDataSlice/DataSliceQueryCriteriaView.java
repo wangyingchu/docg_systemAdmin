@@ -332,15 +332,11 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
     }
 
     private void renderQueryResultSetConfigUI(){
-
-        /*
-        QueryResultSetConfigView queryResultSetConfigView = new QueryResultSetConfigView(this.queryParameters);
+        DataSliceQueryResultSetConfigView dataSliceQueryResultSetConfigView = new DataSliceQueryResultSetConfigView(this.queryParameters);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"查询结果集参数",null,true,350,500,false);
-        fixSizeWindow.setWindowContent(queryResultSetConfigView);
+        fixSizeWindow.setWindowContent(dataSliceQueryResultSetConfigView);
         fixSizeWindow.setModel(true);
-        queryResultSetConfigView.setContainerDialog(fixSizeWindow);
+        dataSliceQueryResultSetConfigView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
-        */
-
     }
 }
