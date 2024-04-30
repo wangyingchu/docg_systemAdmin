@@ -6,7 +6,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -17,7 +16,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataServiceInvoker;
 import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataSlice;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
@@ -46,15 +44,32 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
 
     private DataSliceMetaInfo dataSliceMetaInfo;
     private Registration listener;
-    private Grid<ConceptionEntityValue> queryResultGrid;
+    private Grid<DataSliceRecordWrapper> queryResultGrid;
     private SecondaryKeyValueDisplayItem startTimeDisplayItem;
     private SecondaryKeyValueDisplayItem finishTimeDisplayItem;
     private SecondaryKeyValueDisplayItem dataCountDisplayItem;
     private final ZoneId id = ZoneId.systemDefault();
-    private final String _rowIndexPropertyName = "ROW_INDEX";
     private List<String> currentRowKeyList;
     private NumberFormat numberFormat;
     private DataSliceDetailInfo dataSliceDetailInfo;
+
+    private class DataSliceRecordWrapper{
+        private int rowIndex;
+        private Map<String,Object> recordPropertiesValueMap;
+
+        public DataSliceRecordWrapper(int rowIndex, Map<String,Object> recordPropertiesValueMap) {
+            this.rowIndex = rowIndex;
+            this.recordPropertiesValueMap = recordPropertiesValueMap;
+        }
+
+        public int getRowIndex() {
+            return rowIndex;
+        }
+
+        public Map<String, Object> getRecordPropertiesValueMap() {
+            return recordPropertiesValueMap;
+        }
+    }
 
     public DataSliceQueryResultsView(DataSliceMetaInfo dataSliceMetaInfo){
         this.dataSliceMetaInfo = dataSliceMetaInfo;
@@ -84,10 +99,10 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
         queryResultGrid.setWidth(100, Unit.PERCENTAGE);
         queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         queryResultGrid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
-        queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
+        queryResultGrid.addColumn(new ValueProvider<DataSliceRecordWrapper, Object>() {
             @Override
-            public Object apply(ConceptionEntityValue conceptionEntityValue) {
-                return conceptionEntityValue.getEntityAttributesValue().get(_rowIndexPropertyName);
+            public Object apply(DataSliceRecordWrapper conceptionEntityValue) {
+                return conceptionEntityValue.getRowIndex();
             }
         }).setHeader("").setHeader("IDX").setKey("idx").setFlexGrow(0).setWidth("75px").setResizable(false);
         //queryResultGrid.addComponentColumn(new ConceptionKindQueryResultsView.ConceptionEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("120px").setResizable(false);
@@ -98,10 +113,10 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
 
             Set<String> propertiesNameSet = dataSlicePropertiesMap.keySet();
             for(String currentProperty : propertiesNameSet){
-                queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
+                queryResultGrid.addColumn(new ValueProvider<DataSliceRecordWrapper, Object>() {
                     @Override
-                    public Object apply(ConceptionEntityValue conceptionEntityValue) {
-                        return conceptionEntityValue.getEntityAttributesValue().get(currentProperty);
+                    public Object apply(DataSliceRecordWrapper conceptionEntityValue) {
+                        return conceptionEntityValue.getRecordPropertiesValueMap().get(currentProperty);
                     }
                 }).setHeader(" " + currentProperty).setKey(currentProperty + "_KEY");
                 queryResultGrid.getColumnByKey(currentProperty + "_KEY").setSortable(true).setResizable(true);
@@ -117,7 +132,7 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
         //queryResultGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx1).setSortable(false);
 
         add(queryResultGrid);
-
+/*
         queryResultGrid.addItemDoubleClickListener(new ComponentEventListener<ItemDoubleClickEvent<ConceptionEntityValue>>() {
             @Override
             public void onComponentEvent(ItemDoubleClickEvent<ConceptionEntityValue> conceptionEntityValueItemDoubleClickEvent) {
@@ -127,6 +142,8 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
                 }
             }
         });
+*/
+
 
         this.currentRowKeyList = new ArrayList<>();
     }
@@ -178,10 +195,12 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
                     finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
                     dataCountDisplayItem.updateDisplayValue(""+   numberFormat.format(recordsList.size()));
 
+                    List<DataSliceRecordWrapper> dataSliceRecordWrapperList = new ArrayList<>();
                     for(int i=0 ; i<recordsList.size();i++){
-                       // ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
-                       // currentConceptionEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName,i+1);
+                        DataSliceRecordWrapper currentDataSliceRecordWrapper = new DataSliceRecordWrapper(i+1,recordsList.get(i));
+                        dataSliceRecordWrapperList.add(currentDataSliceRecordWrapper);
                     }
+                    queryResultGrid.setItems(dataSliceRecordWrapperList);
                 }
             }
         } catch (ComputeGridNotActiveException e) {
