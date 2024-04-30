@@ -31,7 +31,6 @@ import com.viewfunction.docg.dataCompute.computeServiceCore.analysis.query.filte
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.MultiValuePropertyInputWidget;
 
 import java.math.BigDecimal;
 
@@ -1102,8 +1101,8 @@ public class DataSliceQueryConditionItemWidget extends VerticalLayout {
                     return null;
                 }
             case FilteringItemType_InValue:
-                if(((MultiValuePropertyInputWidget)this.multiValuePropertyInput).getMultiValueList() != null && ((MultiValuePropertyInputWidget)this.multiValuePropertyInput).getMultiValueList().size()>0){
-                    targetFilteringItem = new InValueFilteringItem(propertyName,((MultiValuePropertyInputWidget)this.multiValuePropertyInput).getMultiValueList());
+                if(((DataSliceMultiValuePropertyInputWidget)this.multiValuePropertyInput).getMultiValueList() != null && ((DataSliceMultiValuePropertyInputWidget)this.multiValuePropertyInput).getMultiValueList().size()>0){
+                    targetFilteringItem = new InValueFilteringItem(propertyName,((DataSliceMultiValuePropertyInputWidget)this.multiValuePropertyInput).getMultiValueList());
                     break;
                 }else{
                     return null;
