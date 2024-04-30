@@ -19,6 +19,7 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataServiceInvoker;
 import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataSlice;
+import com.viewfunction.docg.dataCompute.computeServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.internal.ignite.exception.ComputeGridNotActiveException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
@@ -176,7 +177,10 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
         try(DataServiceInvoker dataServiceInvoker = DataServiceInvoker.getInvokerInstance()){
             DataSlice targetDataSlice = dataServiceInvoker.getDataSlice(event.getDataSliceName());
             if(targetDataSlice != null){
-                DataSliceQueryResult dataSliceQueryResult = targetDataSlice.queryDataRecords(event.getQueryParameters());
+                QueryParameters currentQueryParameter = event.getQueryParameters();
+                QueryParameters realQueryParameter = currentQueryParameter.getDefaultFilteringItem() != null ?
+                        currentQueryParameter:null;
+                DataSliceQueryResult dataSliceQueryResult = targetDataSlice.queryDataRecords(realQueryParameter);
                 if(dataSliceQueryResult != null){
                     List<Map<String, Object>> recordsList = dataSliceQueryResult.getResultRecords();
                     showPopupNotification(dataSliceQueryResult, NotificationVariant.LUMO_SUCCESS);
