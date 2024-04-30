@@ -81,7 +81,7 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
 
     public DataSliceQueryCriteriaView(DataSliceMetaInfo dataSliceMetaInfo) {
         this.dataSliceMetaInfo = dataSliceMetaInfo;
-
+        this.resultAttributesList = new ArrayList<>();
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.SEARCH),"查询条件");
         add(filterTitle1);
 
@@ -101,8 +101,6 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
 
         HorizontalLayout buttonSpaceDivLayout = new HorizontalLayout();
         buttonSpaceDivLayout.setWidth(99, Unit.PERCENTAGE);
-
-        resultAttributesList = new ArrayList<>();
 
         queryCriteriaFilterSelect = new ComboBox();
         queryCriteriaFilterSelect.setPageSize(30);
@@ -229,7 +227,6 @@ public class DataSliceQueryCriteriaView extends VerticalLayout {
             DataSliceQueriedEvent dataSliceQueriedEvent = new DataSliceQueriedEvent();
             dataSliceQueriedEvent.setDataSliceName(this.dataSliceMetaInfo.getDataSliceName());
             dataSliceQueriedEvent.setQueryParameters(this.queryParameters);
-            dataSliceQueriedEvent.setResultPropertiesList(this.resultAttributesList);
             ResourceHolder.getApplicationBlackboard().fire(dataSliceQueriedEvent);
         }
     }

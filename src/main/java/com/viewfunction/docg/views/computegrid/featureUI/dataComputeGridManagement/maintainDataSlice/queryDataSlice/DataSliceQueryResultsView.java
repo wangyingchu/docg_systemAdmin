@@ -16,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataServiceInvoker;
 import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataSlice;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
@@ -101,11 +102,11 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
         queryResultGrid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
         queryResultGrid.addColumn(new ValueProvider<DataSliceRecordWrapper, Object>() {
             @Override
-            public Object apply(DataSliceRecordWrapper conceptionEntityValue) {
-                return conceptionEntityValue.getRowIndex();
+            public Object apply(DataSliceRecordWrapper dataRecordValue) {
+                return dataRecordValue.getRowIndex();
             }
         }).setHeader("").setHeader("IDX").setKey("idx").setFlexGrow(0).setWidth("75px").setResizable(false);
-        //queryResultGrid.addComponentColumn(new ConceptionKindQueryResultsView.ConceptionEntityActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("120px").setResizable(false);
+        //queryResultGrid.addComponentColumn(new DataRecordActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("70px").setResizable(false);
 
         if(this.dataSliceDetailInfo != null){
             Set<String> primaryKeyPropertiesSet = this.dataSliceDetailInfo.getPrimaryKeyPropertiesNames();
@@ -113,38 +114,32 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
 
             Set<String> propertiesNameSet = dataSlicePropertiesMap.keySet();
             for(String currentProperty : propertiesNameSet){
+                DataSlicePropertyType currentDataSlicePropertyType = dataSlicePropertiesMap.get(currentProperty);
                 queryResultGrid.addColumn(new ValueProvider<DataSliceRecordWrapper, Object>() {
                     @Override
-                    public Object apply(DataSliceRecordWrapper conceptionEntityValue) {
-                        return conceptionEntityValue.getRecordPropertiesValueMap().get(currentProperty);
+                    public Object apply(DataSliceRecordWrapper dataRecordValue) {
+                        return dataRecordValue.getRecordPropertiesValueMap().get(currentProperty);
                     }
                 }).setHeader(" " + currentProperty).setKey(currentProperty + "_KEY");
                 queryResultGrid.getColumnByKey(currentProperty + "_KEY").setSortable(true).setResizable(true);
                 if(primaryKeyPropertiesSet != null && primaryKeyPropertiesSet.contains(currentProperty)){
-                    queryResultGrid.getColumnByKey(currentProperty + "_KEY").setHeader(new GridColumnHeader(LineAwesomeIconsSvg.KEY_SOLID.create(),currentProperty)).setSortable(false).setResizable(true);
+                    Icon propertyIcon = LineAwesomeIconsSvg.KEY_SOLID.create();
+                    propertyIcon.setTooltipText(currentDataSlicePropertyType.toString());
+                    queryResultGrid.getColumnByKey(currentProperty + "_KEY").setHeader(new GridColumnHeader(propertyIcon,currentProperty)).setSortable(false).setResizable(true);
+                }else{
+                    Icon propertyIcon = currentProperty.startsWith(RealmConstant.RealmInnerTypePerFix) ? VaadinIcon.ELLIPSIS_CIRCLE_O.create():VaadinIcon.ELLIPSIS_CIRCLE.create();
+                    propertyIcon.setTooltipText(currentDataSlicePropertyType.toString());
+                    queryResultGrid.getColumnByKey(currentProperty + "_KEY").setHeader(new GridColumnHeader(propertyIcon,currentProperty)).setSortable(false).setResizable(true);
                 }
             }
         }
 
         GridColumnHeader gridColumnHeader_idx = new GridColumnHeader(VaadinIcon.LIST_OL,"");
         queryResultGrid.getColumnByKey("idx").setHeader(gridColumnHeader_idx).setSortable(false);
-        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
+        //GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
         //queryResultGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx1).setSortable(false);
 
         add(queryResultGrid);
-/*
-        queryResultGrid.addItemDoubleClickListener(new ComponentEventListener<ItemDoubleClickEvent<ConceptionEntityValue>>() {
-            @Override
-            public void onComponentEvent(ItemDoubleClickEvent<ConceptionEntityValue> conceptionEntityValueItemDoubleClickEvent) {
-                ConceptionEntityValue targetConceptionEntityValue = conceptionEntityValueItemDoubleClickEvent.getItem();
-                if(targetConceptionEntityValue!= null){
-                    //renderConceptionEntityUI(targetConceptionEntityValue);
-                }
-            }
-        });
-*/
-
-
         this.currentRowKeyList = new ArrayList<>();
     }
 
@@ -231,5 +226,30 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
         notification.add(notificationMessageContainer);
         notification.setDuration(3000);
         notification.open();
+    }
+
+    private class DataRecordActionButtonsValueProvider implements ValueProvider<DataSliceRecordWrapper,HorizontalLayout>{
+        @Override
+        public HorizontalLayout apply(DataSliceRecordWrapper sliceDataRecordValue) {
+            HorizontalLayout actionButtonContainerLayout = new HorizontalLayout();
+            actionButtonContainerLayout.setMargin(false);
+            actionButtonContainerLayout.setSpacing(false);
+
+            Button deleteButton = new Button();
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
+            deleteButton.setIcon(VaadinIcon.TRASH.create());
+            deleteButton.setTooltipText("删除概念实体");
+            actionButtonContainerLayout.add(deleteButton);
+            deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(sliceDataRecordValue != null){
+                        //deleteDataSliceRecord(sliceDataRecordValue);
+                    }
+                }
+            });
+            return actionButtonContainerLayout;
+        }
     }
 }
