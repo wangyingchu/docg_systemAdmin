@@ -176,7 +176,7 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
         try(DataServiceInvoker dataServiceInvoker = DataServiceInvoker.getInvokerInstance()){
             DataSlice targetDataSlice = dataServiceInvoker.getDataSlice(event.getDataSliceName());
             if(targetDataSlice != null){
-                DataSliceQueryResult dataSliceQueryResult = targetDataSlice.queryDataRecords("SELECT * FROM "+event.getDataSliceName());
+                DataSliceQueryResult dataSliceQueryResult = targetDataSlice.queryDataRecords(event.getQueryParameters());
                 if(dataSliceQueryResult != null){
                     List<Map<String, Object>> recordsList = dataSliceQueryResult.getResultRecords();
                     showPopupNotification(dataSliceQueryResult, NotificationVariant.LUMO_SUCCESS);
