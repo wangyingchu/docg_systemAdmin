@@ -13,6 +13,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
@@ -21,6 +22,8 @@ import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataCom
 import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataSlice;
 import com.viewfunction.docg.dataCompute.computeServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
+import com.viewfunction.docg.dataCompute.computeServiceCore.exception.DataSliceDataException;
+import com.viewfunction.docg.dataCompute.computeServiceCore.exception.DataSlicePropertiesStructureException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.internal.ignite.exception.ComputeGridNotActiveException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
@@ -28,11 +31,13 @@ import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceQue
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.DataSliceQueriedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 
 import java.text.NumberFormat;
@@ -107,7 +112,7 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
                 return dataRecordValue.getRowIndex();
             }
         }).setHeader("").setHeader("IDX").setKey("idx").setFlexGrow(0).setWidth("75px").setResizable(false);
-        //queryResultGrid.addComponentColumn(new DataRecordActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("70px").setResizable(false);
+        queryResultGrid.addComponentColumn(new DataRecordActionButtonsValueProvider()).setHeader("操作").setKey("idx_0").setFlexGrow(0).setWidth("65px").setResizable(false);
 
         if(this.dataSliceDetailInfo != null){
             Set<String> primaryKeyPropertiesSet = this.dataSliceDetailInfo.getPrimaryKeyPropertiesNames();
@@ -137,8 +142,8 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
 
         GridColumnHeader gridColumnHeader_idx = new GridColumnHeader(VaadinIcon.LIST_OL,"");
         queryResultGrid.getColumnByKey("idx").setHeader(gridColumnHeader_idx).setSortable(false);
-        //GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
-        //queryResultGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx1).setSortable(false);
+        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
+        queryResultGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx1).setSortable(false);
 
         add(queryResultGrid);
         this.currentRowKeyList = new ArrayList<>();
@@ -241,17 +246,72 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
             deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR );
             deleteButton.setIcon(VaadinIcon.TRASH.create());
-            deleteButton.setTooltipText("删除概念实体");
+            deleteButton.setTooltipText("删除切片数据记录");
             actionButtonContainerLayout.add(deleteButton);
             deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(sliceDataRecordValue != null){
-                        //deleteDataSliceRecord(sliceDataRecordValue);
+                        deleteDataSliceRecord(sliceDataRecordValue);
                     }
                 }
             });
             return actionButtonContainerLayout;
+        }
+    }
+
+    private void deleteDataSliceRecord(DataSliceRecordWrapper sliceDataRecordWrapper){
+        List<Button> actionButtonList = new ArrayList<>();
+
+        Button confirmButton = new Button("确认删除切片数据记录",new Icon(VaadinIcon.CHECK_CIRCLE));
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行删除切片数据记录操作",actionButtonList,300,170);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doDeleteDataSliceRecord(sliceDataRecordWrapper);
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doDeleteDataSliceRecord(DataSliceRecordWrapper sliceDataRecordWrapper){
+        try(DataServiceInvoker dataServiceInvoker = DataServiceInvoker.getInvokerInstance()){
+            DataSlice targetDataSlice = dataServiceInvoker.getDataSlice(dataSliceMetaInfo.getDataSliceName());
+            if(targetDataSlice != null){
+                Set<String> keyProperties = dataSliceDetailInfo.getPrimaryKeyPropertiesNames();
+                Map<String,Object> pkObjectMap = new HashMap<>();
+                for(String currentKeyProperty:keyProperties){
+                    pkObjectMap.put(currentKeyProperty,sliceDataRecordWrapper.getRecordPropertiesValueMap().get(currentKeyProperty));
+                }
+
+                boolean deleteResult = targetDataSlice.deleteDataRecord(pkObjectMap);
+                if(deleteResult){
+                    CommonUIOperationUtil.showPopupNotification("删除切片数据记录操作成功",NotificationVariant.LUMO_SUCCESS);
+                    ListDataProvider dataProvider = (ListDataProvider)queryResultGrid.getDataProvider();
+                    dataProvider.getItems().remove(sliceDataRecordWrapper);
+                    dataCountDisplayItem.updateDisplayValue(""+   numberFormat.format(dataProvider.getItems().size()));
+                    dataProvider.refreshAll();
+                }else{
+                    CommonUIOperationUtil.showPopupNotification("删除切片数据记录操作错误",NotificationVariant.LUMO_ERROR);
+                }
+            }
+        } catch (ComputeGridNotActiveException | DataSlicePropertiesStructureException | DataSliceDataException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
