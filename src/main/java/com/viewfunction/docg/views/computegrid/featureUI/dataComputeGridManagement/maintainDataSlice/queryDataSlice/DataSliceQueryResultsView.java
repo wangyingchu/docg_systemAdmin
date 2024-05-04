@@ -19,16 +19,16 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 
-import com.viewfunction.docg.dataCompute.computeServiceCore.analysis.query.QueryParameters;
-import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
-import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
-import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
-import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceQueryResult;
-import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
-import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataService;
-import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlice;
-import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
-import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.exception.ComputeGridException;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.payload.DataSliceDetailInfo;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.payload.DataSliceMetaInfo;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.payload.DataSliceQueryResult;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.term.ComputeGrid;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.term.DataService;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.term.DataSlice;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.term.DataSlicePropertyType;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.util.factory.ComputeGridTermFactory;
 
 import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;

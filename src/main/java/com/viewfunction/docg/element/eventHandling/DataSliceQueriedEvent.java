@@ -2,7 +2,7 @@ package com.viewfunction.docg.element.eventHandling;
 
 import com.github.wolfie.blackboard.Event;
 import com.github.wolfie.blackboard.Listener;
-import com.viewfunction.docg.dataCompute.computeServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.analysis.query.QueryParameters;
 
 public class DataSliceQueriedEvent implements Event {
 

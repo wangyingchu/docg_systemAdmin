@@ -1,7 +1,7 @@
 package com.viewfunction.docg.util.helper;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
-import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.term.DataSlicePropertyType;
 
 public class DataSliceOperationHelper {
 

@@ -26,10 +26,10 @@ import com.vaadin.flow.data.converter.*;
 import com.vaadin.flow.data.validator.*;
 import com.vaadin.flow.function.ValueProvider;
 
-import com.viewfunction.docg.dataCompute.computeServiceCore.analysis.query.QueryParameters;
-import com.viewfunction.docg.dataCompute.computeServiceCore.analysis.query.filteringItem.*;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.analysis.query.filteringItem.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
-import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
 
 import java.math.BigDecimal;

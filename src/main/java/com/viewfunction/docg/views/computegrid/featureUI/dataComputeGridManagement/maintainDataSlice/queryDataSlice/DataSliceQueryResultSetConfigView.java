@@ -15,7 +15,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 
-import com.viewfunction.docg.dataCompute.computeServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 public class DataSliceQueryResultSetConfigView extends VerticalLayout {

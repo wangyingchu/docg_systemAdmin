@@ -9,7 +9,7 @@ import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.WebBrowser;
 import com.vaadin.flow.shared.Registration;
-import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.payload.DataSliceMetaInfo;
 
 public class DataSliceQueryUI extends VerticalLayout {
 
