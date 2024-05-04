@@ -18,19 +18,18 @@ import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
-import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataServiceInvoker;
-import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.dataService.DataSlice;
+
 import com.viewfunction.docg.dataCompute.computeServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.dataCompute.computeServiceCore.exception.ComputeGridException;
-import com.viewfunction.docg.dataCompute.computeServiceCore.exception.DataSliceDataException;
-import com.viewfunction.docg.dataCompute.computeServiceCore.exception.DataSlicePropertiesStructureException;
-import com.viewfunction.docg.dataCompute.computeServiceCore.internal.ignite.exception.ComputeGridNotActiveException;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceDetailInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceQueryResult;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.ComputeGrid;
+import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataService;
+import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlice;
 import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.dataCompute.computeServiceCore.util.factory.ComputeGridTermFactory;
+
 import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
@@ -174,17 +173,19 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
 
     @Override
     public void receivedDataSliceQueriedEvent(DataSliceQueriedEvent event) {
-        for(String currentExistingRowKey:this.currentRowKeyList){
+        for (String currentExistingRowKey : this.currentRowKeyList) {
             queryResultGrid.removeColumnByKey(currentExistingRowKey);
         }
         queryResultGrid.setItems(new ArrayList<>());
         this.currentRowKeyList.clear();
-        try(DataServiceInvoker dataServiceInvoker = DataServiceInvoker.getInvokerInstance()){
-            DataSlice targetDataSlice = dataServiceInvoker.getDataSlice(event.getDataSliceName());
-            if(targetDataSlice != null){
+
+        ComputeGrid computeGrid = ComputeGridTermFactory.getComputeGrid();
+        try (DataService dataService = computeGrid.getDataService()) {
+            DataSlice targetDataSlice = dataService.getDataSlice(event.getDataSliceName());
+            if (targetDataSlice != null) {
                 QueryParameters currentQueryParameter = event.getQueryParameters();
                 DataSliceQueryResult dataSliceQueryResult = targetDataSlice.queryDataRecords(currentQueryParameter);
-                if(dataSliceQueryResult != null){
+                if (dataSliceQueryResult != null) {
                     List<Map<String, Object>> recordsList = dataSliceQueryResult.getResultRecords();
                     showPopupNotification(dataSliceQueryResult, NotificationVariant.LUMO_SUCCESS);
                     Date startDateTime = dataSliceQueryResult.getStartTime();
@@ -195,17 +196,17 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
                     ZonedDateTime finishZonedDateTime = ZonedDateTime.ofInstant(finishDateTime.toInstant(), id);
                     String finishTimeStr = finishZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
                     finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
-                    dataCountDisplayItem.updateDisplayValue(""+   numberFormat.format(recordsList.size()));
+                    dataCountDisplayItem.updateDisplayValue("" + numberFormat.format(recordsList.size()));
 
                     List<DataSliceRecordWrapper> dataSliceRecordWrapperList = new ArrayList<>();
-                    for(int i=0 ; i<recordsList.size();i++){
-                        DataSliceRecordWrapper currentDataSliceRecordWrapper = new DataSliceRecordWrapper(i+1,recordsList.get(i));
+                    for (int i = 0; i < recordsList.size(); i++) {
+                        DataSliceRecordWrapper currentDataSliceRecordWrapper = new DataSliceRecordWrapper(i + 1, recordsList.get(i));
                         dataSliceRecordWrapperList.add(currentDataSliceRecordWrapper);
                     }
                     queryResultGrid.setItems(dataSliceRecordWrapperList);
                 }
             }
-        } catch (ComputeGridNotActiveException e) {
+        } catch(ComputeGridException e){
             throw new RuntimeException(e);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -288,9 +289,10 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
     }
 
     private void doDeleteDataSliceRecord(DataSliceRecordWrapper sliceDataRecordWrapper){
-        try(DataServiceInvoker dataServiceInvoker = DataServiceInvoker.getInvokerInstance()){
-            DataSlice targetDataSlice = dataServiceInvoker.getDataSlice(dataSliceMetaInfo.getDataSliceName());
-            if(targetDataSlice != null){
+        ComputeGrid computeGrid = ComputeGridTermFactory.getComputeGrid();
+        try (DataService dataService = computeGrid.getDataService()) {
+            DataSlice targetDataSlice = dataService.getDataSlice(dataSliceMetaInfo.getDataSliceName());
+            if (targetDataSlice != null) {
                 Set<String> keyProperties = dataSliceDetailInfo.getPrimaryKeyPropertiesNames();
                 Map<String,Object> pkObjectMap = new HashMap<>();
                 for(String currentKeyProperty:keyProperties){
@@ -308,7 +310,7 @@ public class DataSliceQueryResultsView extends VerticalLayout implements DataSli
                     CommonUIOperationUtil.showPopupNotification("删除切片数据记录操作错误",NotificationVariant.LUMO_ERROR);
                 }
             }
-        } catch (ComputeGridNotActiveException | DataSlicePropertiesStructureException | DataSliceDataException e) {
+        } catch(ComputeGridException e){
             throw new RuntimeException(e);
         } catch (Exception e) {
             throw new RuntimeException(e);
