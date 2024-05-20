@@ -678,6 +678,7 @@ public class AddEntityAttributeView extends VerticalLayout {
                                 }
                             }
                         }
+                        break;
                     case Classification:
                         targetEntity = coreRealm.getClassification(this.kindName);
                         if(targetEntity == null){
@@ -737,6 +738,7 @@ public class AddEntityAttributeView extends VerticalLayout {
                                     relationEntityAttributeAddedEvent.setAttributeValue(attributeValue);
                                     ResourceHolder.getApplicationBlackboard().fire(relationEntityAttributeAddedEvent);
                                     CommonUIOperationUtil.showPopupNotification("在 UID 为 "+ entityUID +" 的关系实体中添加属性 "+attributeName+" 成功", NotificationVariant.LUMO_SUCCESS);
+                                    break;
                                 case Classification:
                                     ClassificationAttributeAddedEvent classificationAttributeAddedEvent = new ClassificationAttributeAddedEvent();
                                     classificationAttributeAddedEvent.setClassificationName(this.kindName);
