@@ -1,6 +1,6 @@
 package com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement;
 
-import com.viewfunction.docg.dataCompute.computeServiceCore.term.DataSlicePropertyType;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.term.DataSlicePropertyType;
 
 public class DataSlicePropertyValueObject {
     private String propertyName;

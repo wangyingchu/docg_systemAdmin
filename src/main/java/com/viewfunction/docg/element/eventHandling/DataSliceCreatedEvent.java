@@ -2,7 +2,7 @@ package com.viewfunction.docg.element.eventHandling;
 
 import com.github.wolfie.blackboard.Event;
 import com.github.wolfie.blackboard.Listener;
-import com.viewfunction.docg.dataCompute.computeServiceCore.payload.DataSliceMetaInfo;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.payload.DataSliceMetaInfo;
 
 public class DataSliceCreatedEvent implements Event {
 
