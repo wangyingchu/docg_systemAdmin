@@ -166,7 +166,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
             Button cleanConceptionKind = new Button(cleanKindIcon, event -> {});
             cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             cleanConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            cleanConceptionKind.setTooltipText("清除概念类型所有实例");
+            cleanConceptionKind.setTooltipText("清除概念类型独享实例");
             cleanConceptionKind.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
@@ -659,11 +659,11 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
     private void renderCleanConceptionKindEntitiesUI(EntityStatisticsInfo entityStatisticsInfo){
         String conceptionKindName = entityStatisticsInfo.getEntityKindName();
-        CleanConceptionKindEntitiesView cleanConceptionKindEntitiesView = new CleanConceptionKindEntitiesView(conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"清除概念类型所有实例",null,true,600,200,false);
-        fixSizeWindow.setWindowContent(cleanConceptionKindEntitiesView);
+        CleanConceptionKindExclusiveEntitiesView cleanConceptionKindExclusiveEntitiesView = new CleanConceptionKindExclusiveEntitiesView(conceptionKindName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"清除概念类型独享实例",null,true,600,220,false);
+        fixSizeWindow.setWindowContent(cleanConceptionKindExclusiveEntitiesView);
         fixSizeWindow.setModel(true);
-        cleanConceptionKindEntitiesView.setContainerDialog(fixSizeWindow);
+        cleanConceptionKindExclusiveEntitiesView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 
