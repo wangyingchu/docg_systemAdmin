@@ -34,6 +34,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityM
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindIndexMaintain.KindIndexConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindEntitiesView;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.CleanConceptionKindExclusiveEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.attachToTimeFlowAndGeospatialRegion.AttachConceptionKindEntitiesToGeospatialRegionByGeoComputeView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.attachToTimeFlowAndGeospatialRegion.AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.attachToTimeFlowAndGeospatialRegion.AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView;
@@ -335,19 +336,55 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         divIcon3.setSize("8px");
         infoContainer.add(divIcon3);
 
-        Icon cleanKindIcon = new Icon(VaadinIcon.RECYCLE);
-        cleanKindIcon.setSize("21px");
-        Button cleanConceptionKindButton = new Button("清除概念类型实例",cleanKindIcon, event -> {});
-        cleanConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        cleanConceptionKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        cleanConceptionKindButton.setTooltipText("清除概念类型所有实例");
-        cleanConceptionKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        MenuBar cleanConceptionKindsMenuBar = new MenuBar();
+        cleanConceptionKindsMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+        MenuItem cleanConceptionKindDataMenu = createIconItem(cleanConceptionKindsMenuBar, VaadinIcon.RECYCLE, "清除概念类型实例", null);
+        Icon cleanConceptionKindsIcon3 = new Icon(VaadinIcon.CHEVRON_DOWN);
+        cleanConceptionKindsIcon3.setSize("14px");
+        cleanConceptionKindDataMenu.add(cleanConceptionKindsIcon3);
+        SubMenu cleanConceptionKindDataSubItems = cleanConceptionKindDataMenu.getSubMenu();
+
+        HorizontalLayout action2Layout = new HorizontalLayout();
+        action2Layout.setPadding(false);
+        action2Layout.setSpacing(false);
+        action2Layout.setMargin(false);
+        action2Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon action2Icon = VaadinIcon.RECYCLE.create();
+        action2Icon.setSize("10px");
+        Span action2Space = new Span();
+        action2Space.setWidth(6,Unit.PIXELS);
+        NativeLabel action2Label = new NativeLabel("清除概念类型所有实例");
+        action2Layout.add(action2Icon,action2Space,action2Label);
+
+        MenuItem cleanAllEntitiesItem = cleanConceptionKindDataSubItems.addItem(action2Layout);
+        cleanAllEntitiesItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
                 renderCleanConceptionKindEntitiesUI();
             }
         });
-        infoContainer.add(cleanConceptionKindButton);
+
+        HorizontalLayout action3Layout = new HorizontalLayout();
+        action3Layout.setPadding(false);
+        action3Layout.setSpacing(false);
+        action3Layout.setMargin(false);
+        action3Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon action3Icon = VaadinIcon.RECYCLE.create();
+        action3Icon.setSize("10px");
+        Span action3ASpace = new Span();
+        action3ASpace.setWidth(6,Unit.PIXELS);
+        NativeLabel action3ALabel = new NativeLabel("清除概念类型独享实例");
+        action3Layout.add(action3Icon,action3ASpace,action3ALabel);
+
+        MenuItem cleanExclusiveEntitiesItem = cleanConceptionKindDataSubItems.addItem(action3Layout);
+        cleanExclusiveEntitiesItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                renderCleanConceptionKindExclusiveEntitiesUI();
+            }
+        });
+
+        infoContainer.add(cleanConceptionKindsMenuBar);
 
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.CONTROLLER),"概念类型组件运行时配置");
         filterTitle2.getStyle().set("padding-top", "var(--lumo-space-s)");
@@ -412,6 +449,15 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         fixSizeWindow.setWindowContent(cleanConceptionKindEntitiesView);
         fixSizeWindow.setModel(true);
         cleanConceptionKindEntitiesView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderCleanConceptionKindExclusiveEntitiesUI(){
+        CleanConceptionKindExclusiveEntitiesView cleanConceptionKindExclusiveEntitiesView = new CleanConceptionKindExclusiveEntitiesView(this.conceptionKindName);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"清除概念类型独享实例",null,true,600,220,false);
+        fixSizeWindow.setWindowContent(cleanConceptionKindExclusiveEntitiesView);
+        fixSizeWindow.setModel(true);
+        cleanConceptionKindExclusiveEntitiesView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 
