@@ -1,7 +1,6 @@
 {
   "dependencies": {
-    "@flowingcode/font-awesome-iron-iconset": "4.2.0",
-    "@polymer/iron-icon": "3.0.1",
+    "@flowingcode/font-awesome-iron-iconset": "5.1.0",
     "@polymer/polymer": "3.5.1",
     "@vaadin/a11y-base": "24.3.13",
     "@vaadin/accordion": "24.3.13",
@@ -75,7 +74,7 @@
     "@vaadin/virtual-list": "24.3.13",
     "construct-style-sheets-polyfill": "3.1.0",
     "date-fns": "2.29.3",
-    "echarts": "5.1.2",
+    "echarts": "5.5.0",
     "lit": "3.1.2",
     "proj4": "2.9.2"
   },
@@ -176,13 +175,11 @@
     "date-fns": "$date-fns",
     "@vaadin/overlay": "$@vaadin/overlay",
     "@vaadin/a11y-base": "$@vaadin/a11y-base",
-    "@vaadin/side-nav": "$@vaadin/side-nav",
-    "@polymer/iron-icon": "$@polymer/iron-icon"
+    "@vaadin/side-nav": "$@vaadin/side-nav"
   },
   "vaadin": {
     "dependencies": {
-      "@flowingcode/font-awesome-iron-iconset": "4.2.0",
-      "@polymer/iron-icon": "3.0.1",
+      "@flowingcode/font-awesome-iron-iconset": "5.1.0",
       "@polymer/polymer": "3.5.1",
       "@vaadin/a11y-base": "24.3.13",
       "@vaadin/accordion": "24.3.13",
@@ -256,7 +253,7 @@
       "@vaadin/virtual-list": "24.3.13",
       "construct-style-sheets-polyfill": "3.1.0",
       "date-fns": "2.29.3",
-      "echarts": "5.1.2",
+      "echarts": "5.5.0",
       "lit": "3.1.2",
       "proj4": "2.9.2"
     },
@@ -278,6 +275,6 @@
       "workbox-core": "7.0.0",
       "workbox-precaching": "7.0.0"
     },
-    "hash": "f913c8f4d55b742a048c9dd3eb35f49a618d9ff3faf621b5781eed703df4ac45"
+    "hash": "a19e6ec983b583121fb231ecbd933041d7300502ed94812df865bdfe256acb89"
   }
 }

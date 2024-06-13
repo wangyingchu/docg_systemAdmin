@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.4</version>
+        <version>3.2.6</version>
     </parent>
 
     <repositories>
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>org.parttio</groupId>
             <artifactId>line-awesome</artifactId>
-            <version>1.1.0</version>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -137,7 +137,7 @@
         <dependency>
             <groupId>com.flowingcode.addons</groupId>
             <artifactId>font-awesome-iron-iconset</artifactId>
-            <version>4.2.0</version>
+            <version>5.2.2</version>
         </dependency>
         <!-- https://vaadin.com/directory/component/paged-tabs/ -->
         <dependency>
@@ -149,24 +149,8 @@
         <dependency>
             <groupId>com.storedobject.chart</groupId>
             <artifactId>so-charts</artifactId>
-            <version>2.3.0</version>
+            <version>3.2.6</version>
         </dependency>
-        <!-- https://vaadin.com/directory/component/veaktor -->
-        <!--
-        <dependency>
-            <groupId>org.vaadin.addons.leif</groupId>
-            <artifactId>veaktor</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        -->
-        <!-- https://vaadin.com/directory/component/pure-timeline-flow -->
-        <!--
-         <dependency>
-             <groupId>de.nils_bauer</groupId>
-             <artifactId>pure-timeline-flow</artifactId>
-             <version>1.0.0</version>
-         </dependency>
-         -->
         <!-- https://vaadin.com/directory/component/blackboard -->
         <!-- https://mvnrepository.com/artifact/org.vaadin.addons/blackboard -->
         <dependency>
@@ -184,7 +168,7 @@
         <dependency>
             <groupId>org.vaadin.tatu</groupId>
             <artifactId>tree</artifactId>
-            <version>3.1.0</version>
+            <version>3.2.0</version>
         </dependency>
 
         <!-- Need add this dependency to fix lib version conflict -->
