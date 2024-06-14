@@ -3,6 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.contextmenu.HasMenuItems;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.grid.Grid;
@@ -176,11 +177,54 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         });
         buttonList.add(queryConceptionKindButton);
 
-        Button sampleConceptionKindEntitiesButton= new Button("概念类型实体随机采样");
-        sampleConceptionKindEntitiesButton.setIcon(VaadinIcon.EYEDROPPER.create());
-        sampleConceptionKindEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        MenuBar sampleConceptionEntitiesMenuBar = new MenuBar();
+        sampleConceptionEntitiesMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+        MenuItem sampleDataMenu = createIconItem(sampleConceptionEntitiesMenuBar, VaadinIcon.EYEDROPPER, "概念类型实体随机采样", null);
+        sampleDataMenu.getStyle().set("font-size","11px");
 
-        buttonList.add(sampleConceptionKindEntitiesButton);
+        Icon downArrowIcon1 = new Icon(VaadinIcon.CHEVRON_DOWN);
+        downArrowIcon1.setSize("14px");
+        sampleDataMenu.add(downArrowIcon1);
+
+        SubMenu importSubItems = sampleDataMenu.getSubMenu();
+
+        HorizontalLayout sample10EntityActionLayout = generateActionLayout(LineAwesomeIconsSvg.CUBES_SOLID.create(), "采样 10 个概念实体");
+        MenuItem _10EntitySampleItem = importSubItems.addItem(sample10EntityActionLayout);
+        _10EntitySampleItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                //renderLoadCSVFormatConceptionEntitiesView();
+            }
+        });
+
+        HorizontalLayout sample20EntityActionLayout = generateActionLayout(LineAwesomeIconsSvg.CUBES_SOLID.create(), "采样 20 个概念实体");
+        MenuItem _20EntitySampleItem = importSubItems.addItem(sample20EntityActionLayout);
+        _20EntitySampleItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                //renderLoadCSVFormatConceptionEntitiesView();
+            }
+        });
+
+        HorizontalLayout sample50EntityActionLayout = generateActionLayout(LineAwesomeIconsSvg.CUBES_SOLID.create(), "采样 50 个概念实体");
+        MenuItem _50EntitySampleItem = importSubItems.addItem(sample50EntityActionLayout);
+        _50EntitySampleItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                //renderLoadCSVFormatConceptionEntitiesView();
+            }
+        });
+
+        HorizontalLayout sample100EntityActionLayout = generateActionLayout(LineAwesomeIconsSvg.CUBES_SOLID.create(), "采样 100 个概念实体");
+        MenuItem _100EntitySampleItem = importSubItems.addItem(sample100EntityActionLayout);
+        _100EntitySampleItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                //renderLoadCSVFormatConceptionEntitiesView();
+            }
+        });
+
+        buttonList.add(sampleConceptionEntitiesMenuBar);
 
         HorizontalLayout queryEntityByUIDContainerLayout = new HorizontalLayout();
         TextField uidSearchTextField = new TextField();
@@ -1281,5 +1325,41 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         duplicateAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
+        return createIconItem(menu, iconName, label, ariaLabel, false);
+    }
+
+    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName,String label, String ariaLabel, boolean isChild) {
+        Icon icon = new Icon(iconName);
+        if (isChild) {
+            icon.getStyle().set("width", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("height", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("marginRight", "var(--lumo-space-s)");
+        }
+        MenuItem item = menu.addItem(icon, e -> {
+        });
+        if (ariaLabel != null) {
+            item.getElement().setAttribute("aria-label", ariaLabel);
+        }
+        if (label != null) {
+            item.add(new Text(label));
+        }
+        return item;
+    }
+
+    private HorizontalLayout generateActionLayout(Icon actionIcon,String actionText){
+        HorizontalLayout actionLayout = new HorizontalLayout();
+        actionLayout.setPadding(false);
+        actionLayout.setSpacing(false);
+        actionLayout.setMargin(false);
+        actionLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        actionIcon.setSize("10px");
+        Span actionSpace = new Span();
+        actionSpace.setWidth(6,Unit.PIXELS);
+        NativeLabel actionLabel = new NativeLabel(actionText);
+        actionLayout.add(actionIcon,actionSpace,actionLabel);
+        return actionLayout;
     }
 }
