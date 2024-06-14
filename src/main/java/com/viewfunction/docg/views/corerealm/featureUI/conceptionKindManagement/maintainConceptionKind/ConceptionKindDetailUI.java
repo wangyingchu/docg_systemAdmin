@@ -176,8 +176,9 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         });
         buttonList.add(queryConceptionKindButton);
 
-
-        Button sampleConceptionKindEntitiesButton= new Button("概念类型实体随机抽样");
+        Button sampleConceptionKindEntitiesButton= new Button("概念类型实体随机采样");
+        sampleConceptionKindEntitiesButton.setIcon(VaadinIcon.EYEDROPPER.create());
+        sampleConceptionKindEntitiesButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
 
         buttonList.add(sampleConceptionKindEntitiesButton);
 
