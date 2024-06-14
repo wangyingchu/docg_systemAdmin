@@ -176,6 +176,11 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         });
         buttonList.add(queryConceptionKindButton);
 
+
+        Button sampleConceptionKindEntitiesButton= new Button("概念类型实体随机抽样");
+
+        buttonList.add(sampleConceptionKindEntitiesButton);
+
         HorizontalLayout queryEntityByUIDContainerLayout = new HorizontalLayout();
         TextField uidSearchTextField = new TextField();
         uidSearchTextField.setTooltipText("输入唯一值ID检索概念实体");

@@ -7,19 +7,23 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 import com.vaadin.flow.theme.Theme;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.vaadin.artur.helpers.LaunchUtil;
 
 /**
  * The entry point of the Spring Boot application.
+ *
+ * Use the @PWA annotation make the application installable on phones, tablets
+ * and some desktop browsers.
+ *
  */
 @SpringBootApplication
-@Theme(value="docg-pac")
-@PWA(name = "DOCG Platform System Administrator Console", shortName = "DOCG-SAC", offlineResources = {})
+@PWA(name = "DOCG Platform System Administrator Console", shortName = "DOCG-SAC")
+@Theme("docg-pac")
 @Push
-public class ApplicationLaunchpad extends SpringBootServletInitializer implements AppShellConfigurator, VaadinServiceInitListener {
+public class ApplicationLaunchpad implements AppShellConfigurator , VaadinServiceInitListener {
 
     public static void main(String[] args) {
         LaunchUtil.launchBrowserInDevelopmentMode(SpringApplication.run(ApplicationLaunchpad.class, args));

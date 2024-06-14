@@ -2,10 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <!-- Vaadin project from https://github.com/vaadin/skeleton-starter-flow-spring -->
     <groupId>com.viewfunction.docg</groupId>
     <artifactId>docg-sac</artifactId>
     <name>DOCG System Administrator Center</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -24,17 +25,6 @@
     </parent>
 
     <repositories>
-        <!-- The order of definitions matters. Explicitly defining central here to make sure it has the highest priority. -->
-
-        <!-- Main Maven repository -->
-        <repository>
-            <id>central</id>
-            <url>https://repo.maven.apache.org/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <!-- Repository used by many Vaadin add-ons -->
         <repository>
             <id>Vaadin Directory</id>
             <url>https://maven.vaadin.com/vaadin-addons</url>
@@ -43,18 +33,6 @@
             </snapshots>
         </repository>
     </repositories>
-
-    <pluginRepositories>
-        <!-- The order of definitions matters. Explicitly defining central here to make sure it has the highest priority. -->
-        <pluginRepository>
-            <!-- Main Maven repository -->
-            <id>central</id>
-            <url>https://repo.maven.apache.org/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
 
     <dependencyManagement>
         <dependencies>
@@ -77,7 +55,7 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>org.parttio</groupId>
             <artifactId>line-awesome</artifactId>
@@ -99,7 +77,7 @@
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-testbench</artifactId>
+            <artifactId>vaadin-testbench-junit5</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -116,12 +94,6 @@
             <artifactId>scrolllayout</artifactId>
             <version>2.0.2</version>
         </dependency>
-        <!-- https://vaadin.com/directory/component/fontawesome-iron-iconset -->
-        <dependency>
-            <groupId>com.flowingcode.addons</groupId>
-            <artifactId>font-awesome-iron-iconset</artifactId>
-            <version>5.2.2</version>
-        </dependency>
         <!-- https://vaadin.com/directory/component/paged-tabs/ -->
         <dependency>
             <groupId>org.vaadin.tabs</groupId>
@@ -132,9 +104,8 @@
         <dependency>
             <groupId>com.storedobject.chart</groupId>
             <artifactId>so-charts</artifactId>
-            <version>3.2.6</version>
+            <version>2.3.0</version>
         </dependency>
-        <!-- https://vaadin.com/directory/component/blackboard -->
         <!-- https://mvnrepository.com/artifact/org.vaadin.addons/blackboard -->
         <dependency>
             <groupId>org.vaadin.addons</groupId>
@@ -151,7 +122,17 @@
         <dependency>
             <groupId>org.vaadin.tatu</groupId>
             <artifactId>tree</artifactId>
-            <version>3.2.0</version>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.parttio</groupId>
+            <artifactId>line-awesome</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.flowingcode.addons</groupId>
+            <artifactId>font-awesome-iron-iconset</artifactId>
+            <version>5.2.2</version>
         </dependency>
 
         <!-- Need add this dependency to fix lib version conflict -->
@@ -159,7 +140,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.17.2</version>
+            <version>1.14.3</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.neo4j.driver/neo4j-java-driver -->
         <dependency>
@@ -196,13 +177,13 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.2.224</version>
+            <version>1.4.197</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.28</version>
+            <version>5.8.17</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.belerweb/pinyin4j -->
         <dependency>
@@ -214,7 +195,7 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>5.2.5</version>
+            <version>5.2.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.arrow</groupId>
@@ -247,13 +228,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <!-- Clean build and startup time for Vaadin apps sometimes may exceed
-                     the default Spring Boot's 30sec timeout.  -->
-                <configuration>
-                    <jvmArguments>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5241</jvmArguments>
-                    <wait>500</wait>
-                    <maxAttempts>240</maxAttempts>
-                </configuration>
             </plugin>
 
             <plugin>
@@ -270,7 +244,7 @@
             </plugin>
         </plugins>
     </build>
-   
+
     <profiles>
         <profile>
             <!-- Production mode is activated using -Pproduction -->
