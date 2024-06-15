@@ -64,6 +64,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relatio
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindSampleUI;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -188,39 +189,39 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
         SubMenu importSubItems = sampleDataMenu.getSubMenu();
 
-        HorizontalLayout sample10EntityActionLayout = generateActionLayout(LineAwesomeIconsSvg.CUBES_SOLID.create(), "采样 10 个概念实体");
+        HorizontalLayout sample10EntityActionLayout = generateActionLayout(LineAwesomeIconsSvg.CUBES_SOLID.create(), "随机采样最多 10 个概念实体");
         MenuItem _10EntitySampleItem = importSubItems.addItem(sample10EntityActionLayout);
         _10EntitySampleItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                //renderLoadCSVFormatConceptionEntitiesView();
+                renderConceptionEntitiesSampleView(10);
             }
         });
 
-        HorizontalLayout sample20EntityActionLayout = generateActionLayout(LineAwesomeIconsSvg.CUBES_SOLID.create(), "采样 20 个概念实体");
+        HorizontalLayout sample20EntityActionLayout = generateActionLayout(LineAwesomeIconsSvg.CUBES_SOLID.create(), "随机采样最多 20 个概念实体");
         MenuItem _20EntitySampleItem = importSubItems.addItem(sample20EntityActionLayout);
         _20EntitySampleItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                //renderLoadCSVFormatConceptionEntitiesView();
+                renderConceptionEntitiesSampleView(20);
             }
         });
 
-        HorizontalLayout sample50EntityActionLayout = generateActionLayout(LineAwesomeIconsSvg.CUBES_SOLID.create(), "采样 50 个概念实体");
+        HorizontalLayout sample50EntityActionLayout = generateActionLayout(LineAwesomeIconsSvg.CUBES_SOLID.create(), "随机采样最多 50 个概念实体");
         MenuItem _50EntitySampleItem = importSubItems.addItem(sample50EntityActionLayout);
         _50EntitySampleItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                //renderLoadCSVFormatConceptionEntitiesView();
+                renderConceptionEntitiesSampleView(50);
             }
         });
 
-        HorizontalLayout sample100EntityActionLayout = generateActionLayout(LineAwesomeIconsSvg.CUBES_SOLID.create(), "采样 100 个概念实体");
+        HorizontalLayout sample100EntityActionLayout = generateActionLayout(LineAwesomeIconsSvg.CUBES_SOLID.create(), "随机采样最多 100 个概念实体");
         MenuItem _100EntitySampleItem = importSubItems.addItem(sample100EntityActionLayout);
         _100EntitySampleItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                //renderLoadCSVFormatConceptionEntitiesView();
+                renderConceptionEntitiesSampleView(100);
             }
         });
 
@@ -1325,6 +1326,60 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         duplicateAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+    private void renderConceptionEntitiesSampleView(int sampleCount){
+        ConceptionKindSampleUI conceptionKindSampleUI = new ConceptionKindSampleUI(this.conceptionKind,sampleCount);
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("10px");
+        titleDetailLayout.add(conceptionKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(this.conceptionKind);
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon conceptionEntityIcon = LineAwesomeIconsSvg.CUBES_SOLID.create();
+        conceptionEntityIcon.setSize("10px");
+        titleDetailLayout.add(conceptionEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel conceptionEntitiesCountLabel = new NativeLabel(""+sampleCount);
+        titleDetailLayout.add(conceptionEntitiesCountLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.EYEDROPPER),"概念类型实体随机采样",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(conceptionKindSampleUI);
+        fullScreenWindow.show();
     }
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
