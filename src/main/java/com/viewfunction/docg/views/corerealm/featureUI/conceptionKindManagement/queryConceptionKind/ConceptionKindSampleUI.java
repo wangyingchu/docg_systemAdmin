@@ -1,6 +1,5 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind;
 
-import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -58,7 +57,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         resampleButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //refreshMapSpatialInfo();
+                doConceptionEntitiesSample();
             }
         });
 
@@ -74,7 +73,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
 
         VerticalLayout leftSideContainer = new VerticalLayout();
         leftSideContainer.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
-        leftSideContainer.setWidth(400,Unit.PIXELS);
+        leftSideContainer.setWidth(300,Unit.PIXELS);
         leftSideContainer.setSpacing(true);
         leftSideContainer.setMargin(false);
         leftSideContainer.setPadding(false);
@@ -86,7 +85,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         rightSideContainer.setPadding(false);
         mainLayout.add(rightSideContainer);
 
-        this.resultNumberValue = new NativeLabel("100");
+        this.resultNumberValue = new NativeLabel("-");
         this.resultNumberValue.addClassNames("text-xs","font-bold");
         this.resultNumberValue.getStyle().set("padding-right","10px");
 
@@ -94,7 +93,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         filterTitle.getStyle().set("padding-left","10px");
         leftSideContainer.add(filterTitle);
 
-        this.conceptionEntitiesListView = new ConceptionEntitiesListView();
+        this.conceptionEntitiesListView = new ConceptionEntitiesListView(false);
         leftSideContainer.add(this.conceptionEntitiesListView);
     }
 
@@ -105,6 +104,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             this.conceptionEntitiesListView.setHeight(receiver.getBodyClientHeight()-145, Unit.PIXELS);
         }));
+        doConceptionEntitiesSample();
     }
 
     @Override
@@ -115,10 +115,14 @@ public class ConceptionKindSampleUI extends VerticalLayout {
     private void doConceptionEntitiesSample(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
-        if(targetConceptionKind == null){
+        if(targetConceptionKind != null){
             try {
-                Set<ConceptionEntity> conceptionEntitySet = targetConceptionKind.getRandomEntities(this.sampleCount);
-
+                int realSampleCount = entitiesSampleCountField.getValue();
+                int executeSampleCount = realSampleCount == this.sampleCount ? this.sampleCount : realSampleCount;
+                Set<ConceptionEntity> conceptionEntitySet = targetConceptionKind.getRandomEntities(executeSampleCount);
+                int resultConceptionEntitiesCount = conceptionEntitySet.size();
+                this.resultNumberValue.setText(""+resultConceptionEntitiesCount);
+                this.conceptionEntitiesListView.renderConceptionEntitiesList(conceptionEntitySet);
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
             }
