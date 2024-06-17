@@ -31,6 +31,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
     private HorizontalLayout mainLayout;
     private NativeLabel resultNumberValue;
     private ConceptionEntitiesListView conceptionEntitiesListView;
+    private ConceptionEntitiesRelationsChart conceptionEntitiesRelationsChart;
 
     public ConceptionKindSampleUI(String conceptionKind, int sampleCount) {
         this.conceptionKind = conceptionKind;
@@ -95,6 +96,8 @@ public class ConceptionKindSampleUI extends VerticalLayout {
 
         this.conceptionEntitiesListView = new ConceptionEntitiesListView(false);
         leftSideContainer.add(this.conceptionEntitiesListView);
+        this.conceptionEntitiesRelationsChart = new ConceptionEntitiesRelationsChart();
+        rightSideContainer.add(this.conceptionEntitiesRelationsChart);
     }
 
     @Override
