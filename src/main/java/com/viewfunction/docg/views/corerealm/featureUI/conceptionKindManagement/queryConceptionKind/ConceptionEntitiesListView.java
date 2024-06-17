@@ -29,12 +29,18 @@ import java.util.Set;
 
 public class ConceptionEntitiesListView extends VerticalLayout {
 
+    public interface SelectConceptionEntityListener {
+        void onSelectConceptionEntity(ConceptionEntity conceptionEntity);
+    }
+
     private Grid<ConceptionEntity> displayedConceptionEntitiesGrid;
     private boolean showConceptionKindName;
+    private SelectConceptionEntityListener selectConceptionEntityListener;
 
     public ConceptionEntitiesListView(boolean showConceptionKindName) {
         this.showConceptionKindName = showConceptionKindName;
         this.displayedConceptionEntitiesGrid = new Grid<>();
+        this.displayedConceptionEntitiesGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         this.displayedConceptionEntitiesGrid.setWidth(100, Unit.PERCENTAGE);
         this.displayedConceptionEntitiesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COMPACT);
         if(this.showConceptionKindName){
@@ -57,7 +63,10 @@ public class ConceptionEntitiesListView extends VerticalLayout {
             public void selectionChange(SelectionEvent<Grid<ConceptionEntity>, ConceptionEntity> selectionEvent) {
                 Set<ConceptionEntity> selectedEntities = selectionEvent.getAllSelectedItems();
                 if(!selectedEntities.isEmpty()){
-                    //conceptionEntitiesGeospatialScaleMapInfoChart.flyToPointedConceptionEntities(selectedEntities);
+                    if(selectConceptionEntityListener != null){
+                        ConceptionEntity selectedConceptionEntity = selectionEvent.getFirstSelectedItem().get();
+                        selectConceptionEntityListener.onSelectConceptionEntity(selectedConceptionEntity);
+                    }
                 }
             }
         });
@@ -148,5 +157,13 @@ public class ConceptionEntitiesListView extends VerticalLayout {
         fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
         conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
+    }
+
+    public SelectConceptionEntityListener getSelectConceptionEntityListener() {
+        return selectConceptionEntityListener;
+    }
+
+    public void setSelectConceptionEntityListener(SelectConceptionEntityListener selectConceptionEntityListener) {
+        this.selectConceptionEntityListener = selectConceptionEntityListener;
     }
 }
