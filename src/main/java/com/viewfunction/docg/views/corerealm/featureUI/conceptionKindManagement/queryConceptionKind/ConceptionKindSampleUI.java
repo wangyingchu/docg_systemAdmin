@@ -126,6 +126,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
                 int resultConceptionEntitiesCount = conceptionEntitySet.size();
                 this.resultNumberValue.setText(""+resultConceptionEntitiesCount);
                 this.conceptionEntitiesListView.renderConceptionEntitiesList(conceptionEntitySet);
+                this.conceptionEntitiesRelationsChart.renderConceptionEntitiesList(conceptionEntitySet);
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
             }
