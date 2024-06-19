@@ -2,12 +2,14 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
@@ -16,9 +18,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @JavaScript("./visualization/feature/conceptionEntitiesRelationsChart-connector.js")
 public class ConceptionEntitiesRelationsChart extends VerticalLayout {
@@ -73,11 +73,46 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
         );
         try {
             List<RelationEntity> relationEntityList = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionEntityUIDList);
-            System.out.println(relationEntityList);
-            System.out.println(relationEntityList);
+            getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+                Map<String,Object> valueMap =new HashMap<>();
+                valueMap.put("graphHeight",receiver.getBodyClientHeight()-140);
+                valueMap.put("graphWidth",receiver.getBodyClientWidth()- 300);
 
+                try {
+                    getElement().callJsFunction("$connector.generateGraph",
+                            new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }));
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void generateGraph(int height, int width, List<Map<String,String>> nodeInfoList, List<Map<String,String>> edgeInfoList){
+        runBeforeClientResponse(ui -> {
+            try {
+                Map<String,Object> valueMap =new HashMap<>();
+                valueMap.put("graphHeight",height-120);
+                valueMap.put("graphWidth",width- 40);
+                valueMap.put("nodesInfo",nodeInfoList);
+                valueMap.put("edgesInfo",edgeInfoList);
+                getElement().callJsFunction("$connector.generateGraph",
+                        new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public void clearData(){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.emptyGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }
