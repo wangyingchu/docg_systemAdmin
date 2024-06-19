@@ -11,7 +11,7 @@ public class TimeFlowRelatedEntitySummaryInfoView extends VerticalLayout {
 
     public TimeFlowRelatedEntitySummaryInfoView(){
         this.setWidth(300, Unit.PIXELS);
-        this.setHeight(320,Unit.PIXELS);
+        this.setHeight(330,Unit.PIXELS);
 
         this.setSpacing(false);
         this.setMargin(false);

@@ -7,6 +7,7 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.JavaScript;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
@@ -20,6 +21,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import java.io.Serializable;
 import java.util.*;
 
+@StyleSheet("webApps/timeFlowCorrelationInfoChart/style.css")
 @JavaScript("./visualization/feature/conceptionEntitiesRelationsChart-connector.js")
 public class ConceptionEntitiesRelationsChart extends VerticalLayout {
 
@@ -73,6 +75,28 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
         );
         try {
             List<RelationEntity> relationEntityList = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionEntityUIDList);
+
+            List<Map<String,String>> nodeInfoList = new ArrayList<>();
+            List<Map<String,String>> edgeInfoList = new ArrayList<>();
+
+            for(ConceptionEntity currentConceptionEntity:conceptionEntitiesSet){
+                Map<String,String> currentNodeInfo = new HashMap<>();
+                currentNodeInfo.put("id",currentConceptionEntity.getConceptionEntityUID());
+                currentNodeInfo.put("size","12");
+                nodeInfoList.add(currentNodeInfo);
+            }
+            for(RelationEntity currentRelationEntity:relationEntityList){
+                Map<String,String> currentEdgeInfo = new HashMap<>();
+                currentEdgeInfo.put("source",currentRelationEntity.getFromConceptionEntityUID());
+                currentEdgeInfo.put("target",currentRelationEntity.getToConceptionEntityUID());
+                currentEdgeInfo.put("entityKind",currentRelationEntity.getRelationKindName());
+                currentEdgeInfo.put("id",currentRelationEntity.getRelationEntityUID());
+                //currentEdgeInfo.put("color",this.relationKindColorMap.get(relationKindName));
+                currentEdgeInfo.put("color","#AAAAAA");
+                edgeInfoList.add(currentEdgeInfo);
+            }
+
+            /*
             getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
                 Map<String,Object> valueMap =new HashMap<>();
                 valueMap.put("graphHeight",receiver.getBodyClientHeight()-140);
@@ -84,6 +108,10 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
+            }));
+        */
+            getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+                generateGraph(receiver.getBodyClientHeight()-20,receiver.getBodyClientWidth()-300, nodeInfoList, edgeInfoList);
             }));
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
