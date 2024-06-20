@@ -16,6 +16,7 @@ window.Vaadin.Flow.feature_ConceptionEntitiesRelationsChart = {
                 let dataObj = eval("(" + data + ")");
                 // Random tree
 
+                /*
                 const N = 300;
                 const gData = {
                     nodes: [...Array(N).keys()].map(i => ({
@@ -33,12 +34,14 @@ window.Vaadin.Flow.feature_ConceptionEntitiesRelationsChart = {
                             //,name:'linkName'+id
                         }))
                 };
-                /*
+                */
+
+
                 const gData = {
                     nodes:dataObj.nodesInfo,
                     links:dataObj.edgesInfo
                 }
-*/
+
                 Graph = ForceGraph3D({
                     extraRenderers: [new THREE.CSS2DRenderer()]
                 })(c).graphData(gData)
