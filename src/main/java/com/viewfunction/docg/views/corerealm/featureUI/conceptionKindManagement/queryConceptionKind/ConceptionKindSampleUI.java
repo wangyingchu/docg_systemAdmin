@@ -58,6 +58,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         resampleButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                conceptionEntitiesRelationsChart.clearData();
                 doConceptionEntitiesSample();
             }
         });
@@ -112,6 +113,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
+        this.conceptionEntitiesRelationsChart.clearData();
         super.onDetach(detachEvent);
     }
 
