@@ -15,7 +15,6 @@ window.Vaadin.Flow.feature_ConceptionEntitiesRelationsChart = {
             generateGraph : function(data) {
                 let dataObj = eval("(" + data + ")");
                 // Random tree
-
                 /*
                 const N = 300;
                 const gData = {
@@ -35,7 +34,6 @@ window.Vaadin.Flow.feature_ConceptionEntitiesRelationsChart = {
                         }))
                 };
                 */
-
 
                 const gData = {
                     nodes:dataObj.nodesInfo,
@@ -73,7 +71,7 @@ window.Vaadin.Flow.feature_ConceptionEntitiesRelationsChart = {
                     })
                     .nodeThreeObject(node => {
                         const nodeEl = document.createElement('div');
-                        nodeEl.textContent = node.entityKind+' ('+node.entityDesc+')';
+                        nodeEl.textContent = node.id;
                         nodeEl.className = 'node-label';
                         return new THREE.CSS2DObject(nodeEl);
                     })

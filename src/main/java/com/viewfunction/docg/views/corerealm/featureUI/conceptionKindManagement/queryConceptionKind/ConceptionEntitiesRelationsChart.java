@@ -25,6 +25,8 @@ import java.util.*;
 @JavaScript("./visualization/feature/conceptionEntitiesRelationsChart-connector.js")
 public class ConceptionEntitiesRelationsChart extends VerticalLayout {
 
+    private Map<String,String> relationKindColorMap;
+
     public ConceptionEntitiesRelationsChart() {
         //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/three.js");
@@ -35,6 +37,7 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
         this.setSpacing(false);
         this.setMargin(false);
         this.setPadding(false);
+        this.relationKindColorMap = new HashMap<>();
         initConnector();
     }
 
@@ -82,7 +85,8 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
             for(ConceptionEntity currentConceptionEntity:conceptionEntitiesSet){
                 Map<String,String> currentNodeInfo = new HashMap<>();
                 currentNodeInfo.put("id",currentConceptionEntity.getConceptionEntityUID());
-                currentNodeInfo.put("size","12");
+                currentNodeInfo.put("size","14");
+                currentNodeInfo.put("color",getRandomColor());
                 nodeInfoList.add(currentNodeInfo);
             }
             for(RelationEntity currentRelationEntity:relationEntityList){
@@ -91,25 +95,10 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
                 currentEdgeInfo.put("target",currentRelationEntity.getToConceptionEntityUID());
                 currentEdgeInfo.put("entityKind",currentRelationEntity.getRelationKindName());
                 currentEdgeInfo.put("id",currentRelationEntity.getRelationEntityUID());
-                //currentEdgeInfo.put("color",this.relationKindColorMap.get(relationKindName));
-                currentEdgeInfo.put("color","#AAAAAA");
+                currentEdgeInfo.put("color",getRelationKindColor(currentRelationEntity.getRelationKindName()));
                 edgeInfoList.add(currentEdgeInfo);
             }
 
-            /*
-            getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-                Map<String,Object> valueMap =new HashMap<>();
-                valueMap.put("graphHeight",receiver.getBodyClientHeight()-140);
-                valueMap.put("graphWidth",receiver.getBodyClientWidth()- 300);
-
-                try {
-                    getElement().callJsFunction("$connector.generateGraph",
-                            new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            }));
-        */
             getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
                 generateGraph(receiver.getBodyClientHeight()-20,receiver.getBodyClientWidth()-300, nodeInfoList, edgeInfoList);
             }));
@@ -142,5 +131,20 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    private String getRelationKindColor(String relationKindName){
+        if(!this.relationKindColorMap.containsKey(relationKindName)){
+            this.relationKindColorMap.put(relationKindName,getRandomColor());
+        }
+        return this.relationKindColorMap.get(relationKindName);
+    }
+
+    private String getRandomColor(){
+        String[] colorList =new String[]{
+                "#EA2027","#006266","#1B1464","#6F1E51","#EE5A24","#009432","#0652DD","#9980FA","#833471",
+                "#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67"
+        };
+        return colorList[new Random().nextInt(colorList.length)];
     }
 }
