@@ -59,6 +59,7 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
                 .beforeClientResponse(this, context -> command.accept(ui)));
     }
 
+    @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -68,6 +69,15 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
+        try {
+            detachEvent.getUI().getElement().callJsFunction("$connector.destroyGraph",
+                    new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        /*
         runBeforeClientResponse(ui -> {
             try {
                 getElement().callJsFunction("$connector.emptyGraph",
@@ -76,10 +86,31 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
                 throw new RuntimeException(e);
             }
         });
+        */
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.destroyGraph",
+                        new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        //getElement().getNode().markAsDirty();
+        //getElement().executeJs()
+
+
+        System.out.println("onDetachonDetachonDetachonDetachonDetach");
+
+        System.out.println("onDetachonDetachonDetachonDetachonDetach");
+
+        System.out.println("onDetachonDetachonDetachonDetachonDetach");
+
+        //throw new NullPointerException();
         // 此处调用 listener.remove() 会抛出 java.lang.NullPointerException 异常，
         // 但是此异常的抛出能够阻止在多次打开 3d-force-graph 蒲公英图的场景下系统UI卡顿，停止相应并出现持续性的线程调用无法回收的情况
         //具体原理未知，有待调查
-        listener.remove();
+        //listener.remove();
         super.onDetach(detachEvent);
     }
 

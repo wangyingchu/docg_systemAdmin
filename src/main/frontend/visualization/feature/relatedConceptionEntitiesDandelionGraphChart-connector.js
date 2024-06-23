@@ -15,6 +15,12 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
                         links:[]
                     }).refresh();
             },
+            destroyGraphAAA:function(data){
+                console.log("AAAAAAAAAAAAAAAAAAAA");
+                Graph.destroy();
+                console.log("AAAAAAAAAAAAAAAAAAAA");
+                alert("aaaa");
+            },
             generateGraph : function(data) {
                 let dataObj = eval("(" + data + ")");
                 // Random tree
