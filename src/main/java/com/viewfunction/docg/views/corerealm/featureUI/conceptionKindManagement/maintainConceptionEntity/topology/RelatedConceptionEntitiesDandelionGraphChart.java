@@ -42,10 +42,10 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
         this.conceptionKindColorMap = new HashMap<>();
         this.relationKindColorMap = new HashMap<>();
         //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/three.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/three-spritetext.min.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/CSS2DRenderer.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/3d-force-graph.min.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/three.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/three-spritetext.min.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/CSS2DRenderer.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/3d-force-graph.min.js");
         initConnector();
     }
 
@@ -69,12 +69,58 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
+
+        RelatedConceptionEntitiesDandelionGraphChart self = (RelatedConceptionEntitiesDandelionGraphChart)(detachEvent.getSource().getElement().getComponent().get());
+
+        System.out.println( detachEvent.getSource().getElement());
+        //System.out.println( detachEvent.getSource().getElement());
+        //System.out.println( detachEvent.getSource().getElement().getComponent());
+        //System.out.println( detachEvent.getSource().getElement().getComponent());
+        System.out.println( self);
+
+
+        self.removeFromParent();
+
         try {
-            detachEvent.getUI().getElement().callJsFunction("$connector.destroyGraph",
-                    new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
+            self.getElement().callJsFunction("$connector.destroyGraphAAA",new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+        System.out.println( "destroyGraphdestroyGraphdestroyGraphdestroyGraphdestroyGraphdestroyGraphdestroyGraph");
+        System.out.println( self);
+
+//self.destoryGraph();
+        //detachEvent.getUI().getElement().removeAllChildren();
+/*
+        try {
+            detachEvent.getSource().getElement().callJsFunction("$connector.destroyGraph",
+                           new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+*/
+        //  try {
+
+/*
+            detachEvent.getUI().getElement().getNode().runWhenAttached(ui -> ui
+                    .beforeClientResponse(this, context -> {
+                        try {
+                            getElement().callJsFunction("$connector.destroyGraph",
+                                    new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }));
+*/
+
+           // detachEvent.getUI().getElement()
+
+
+            //        .callJsFunction("$connector.destroyGraph",
+            //        new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
+   //     } catch (JsonProcessingException e) {
+       //     throw new RuntimeException(e);
+   //     }
 
 
         /*
@@ -87,6 +133,8 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
             }
         });
         */
+
+        /*
         runBeforeClientResponse(ui -> {
             try {
                 getElement().callJsFunction("$connector.destroyGraph",
@@ -95,7 +143,7 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
                 throw new RuntimeException(e);
             }
         });
-
+*/
         //getElement().getNode().markAsDirty();
         //getElement().executeJs()
 
@@ -112,6 +160,18 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
         //具体原理未知，有待调查
         //listener.remove();
         super.onDetach(detachEvent);
+    }
+
+    private void destoryGraph(){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.destroyGraph",
+                        new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+
+        });
     }
 
     private void generateGraph(int height,int width){
