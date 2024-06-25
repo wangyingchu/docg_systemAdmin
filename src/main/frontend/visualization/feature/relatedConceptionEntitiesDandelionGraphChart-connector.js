@@ -2,7 +2,13 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
     initLazy: function (c) {
         // Check whether the connector was already initialized
         if (c.$connector) {
-            return;
+            alert("aaaa");
+            alert("aaaa");
+            alert("aaaa");
+            c.$connector.emptyGraph();
+            c.$connector.destroyGraphAAA();
+
+            //return;
         }
         c.$connector = {
             // functions
@@ -19,7 +25,7 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
                 console.log("AAAAAAAAAAAAAAAAAAAA");
                 Graph.destroy();
                 console.log("AAAAAAAAAAAAAAAAAAAA");
-                alert("aaaa");
+
             },
             generateGraph : function(data) {
                 let dataObj = eval("(" + data + ")");

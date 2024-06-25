@@ -1,9 +1,12 @@
 package com.viewfunction.docg.util;
 
 import com.github.wolfie.blackboard.Blackboard;
+import com.vaadin.flow.component.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ResourceHolder {
 
@@ -20,6 +23,8 @@ public class ResourceHolder {
     private static List<ConceptionEntityResourceHolderVO> conceptionEntityProcessingDataList = new ArrayList<>();
 
     private static List<RelationEntityResourceHolderVO> relationEntityProcessingDataList = new ArrayList<>();
+
+    private static Map<String, Component> globalApplicationComponentsMap = new HashMap<>();
 
     public static List<ConceptionEntityResourceHolderVO> getConceptionEntityProcessingDataList(){
         return conceptionEntityProcessingDataList;
@@ -89,5 +94,13 @@ public class ResourceHolder {
 
     public static void clearRelationEntityProcessingList(){
         relationEntityProcessingDataList.clear();
+    }
+
+    public static Map<String, Component> getGlobalApplicationComponentsMap() {
+        return globalApplicationComponentsMap;
+    }
+
+    public static void setGlobalApplicationComponentsMap(Map<String, Component> globalApplicationComponentsMap) {
+        ResourceHolder.globalApplicationComponentsMap = globalApplicationComponentsMap;
     }
 }

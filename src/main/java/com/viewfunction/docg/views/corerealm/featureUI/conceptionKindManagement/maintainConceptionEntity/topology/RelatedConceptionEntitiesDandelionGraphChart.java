@@ -31,6 +31,7 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
     private int colorIndex2 = 0;
     private Map<String,String> conceptionKindColorMap;
     private Map<String,String> relationKindColorMap;
+
     public RelatedConceptionEntitiesDandelionGraphChart(String mainConceptionKind, String mainConceptionEntityUID, List<ConceptionEntity> conceptionEntityList, List<RelationEntity> relationEntityList){
         this.setSpacing(false);
         this.setMargin(false);
@@ -47,6 +48,27 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/CSS2DRenderer.js");
         UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/3d-force-graph.min.js");
         initConnector();
+    }
+
+    public RelatedConceptionEntitiesDandelionGraphChart(){
+        this.setSpacing(false);
+        this.setMargin(false);
+        this.setPadding(false);
+        this.conceptionKindColorMap = new HashMap<>();
+        this.relationKindColorMap = new HashMap<>();
+        //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/three.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/three-spritetext.min.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/CSS2DRenderer.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/3d-force-graph.min.js");
+        initConnector();
+    }
+
+    public void setDandelionGraphChartData(String mainConceptionKind, String mainConceptionEntityUID, List<ConceptionEntity> conceptionEntityList, List<RelationEntity> relationEntityList){
+        this.mainConceptionEntityUID = mainConceptionEntityUID;
+        this.mainConceptionKind = mainConceptionKind;
+        this.conceptionEntityList = conceptionEntityList;
+        this.relationEntityList = relationEntityList;
     }
 
     private void initConnector() {
@@ -69,7 +91,7 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
-
+/*
         RelatedConceptionEntitiesDandelionGraphChart self = (RelatedConceptionEntitiesDandelionGraphChart)(detachEvent.getSource().getElement().getComponent().get());
 
         System.out.println( detachEvent.getSource().getElement());
@@ -88,6 +110,8 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
         }
         System.out.println( "destroyGraphdestroyGraphdestroyGraphdestroyGraphdestroyGraphdestroyGraphdestroyGraph");
         System.out.println( self);
+
+  */
 
 //self.destoryGraph();
         //detachEvent.getUI().getElement().removeAllChildren();
@@ -159,7 +183,7 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
         // 但是此异常的抛出能够阻止在多次打开 3d-force-graph 蒲公英图的场景下系统UI卡顿，停止相应并出现持续性的线程调用无法回收的情况
         //具体原理未知，有待调查
         //listener.remove();
-        super.onDetach(detachEvent);
+     //   super.onDetach(detachEvent);
     }
 
     private void destoryGraph(){
@@ -175,6 +199,71 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
     }
 
     private void generateGraph(int height,int width){
+        runBeforeClientResponse(ui -> {
+            try {
+                Map<String,Object> valueMap =new HashMap<>();
+                List<Map<String,String>> nodeInfoList = new ArrayList<>();
+                Map<String,String> centerNodeInfo = new HashMap<>();
+                centerNodeInfo.put("id",this.mainConceptionEntityUID);
+                centerNodeInfo.put("entityKind",this.mainConceptionKind);
+                centerNodeInfo.put("color","#888888");
+                nodeInfoList.add(centerNodeInfo);
+
+                List<String> attachedConceptionKinds = new ArrayList<>();
+                for(ConceptionEntity currentConceptionEntity:this.conceptionEntityList){
+                    if(!attachedConceptionKinds.contains(currentConceptionEntity.getConceptionKindName())){
+                        attachedConceptionKinds.add(currentConceptionEntity.getConceptionKindName());
+                    }
+                }
+                generateConceptionKindColorMap(attachedConceptionKinds);
+
+                for(ConceptionEntity currentConceptionEntity:this.conceptionEntityList){
+                    Map<String,String> currentNodeInfo = new HashMap<>();
+                    currentNodeInfo.put("id",currentConceptionEntity.getConceptionEntityUID());
+                    currentNodeInfo.put("entityKind",currentConceptionEntity.getConceptionKindName());
+                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionEntity.getConceptionKindName())!=null){
+                        currentNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionEntity.getConceptionKindName()));
+                    }else{
+                        currentNodeInfo.put("color","#0099FF");
+                    }
+                    nodeInfoList.add(currentNodeInfo);
+                }
+
+                List<Map<String,String>> edgeInfoList = new ArrayList<>();
+
+                List<String> attachedRelationKinds = new ArrayList<>();
+                for(RelationEntity currentRelationEntity:this.relationEntityList){
+                    if(!attachedRelationKinds.contains(currentRelationEntity.getRelationKindName())){
+                        attachedRelationKinds.add(currentRelationEntity.getRelationKindName());
+                    }
+                }
+                generateRelationKindColorMap(attachedRelationKinds);
+
+                for(RelationEntity currentRelationEntity:this.relationEntityList){
+                    Map<String,String> currentEdgeInfo = new HashMap<>();
+                    currentEdgeInfo.put("source",currentRelationEntity.getFromConceptionEntityUID());
+                    currentEdgeInfo.put("target",currentRelationEntity.getToConceptionEntityUID());
+                    currentEdgeInfo.put("entityKind",currentRelationEntity.getRelationKindName());
+                    currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
+                    edgeInfoList.add(currentEdgeInfo);
+                }
+
+                valueMap.put("graphHeight",height-120);
+                valueMap.put("graphWidth",width- 40);
+                valueMap.put("nodesInfo",nodeInfoList);
+                valueMap.put("edgesInfo",edgeInfoList);
+                getElement().callJsFunction("$connector.generateGraph",
+                        new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public void generateGraph2(int height,int width){
+
+        initConnector();
+
         runBeforeClientResponse(ui -> {
             try {
                 Map<String,Object> valueMap =new HashMap<>();
