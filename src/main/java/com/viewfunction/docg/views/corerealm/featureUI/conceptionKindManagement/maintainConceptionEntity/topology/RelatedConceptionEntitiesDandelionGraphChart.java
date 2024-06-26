@@ -91,63 +91,10 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
-/*
-        RelatedConceptionEntitiesDandelionGraphChart self = (RelatedConceptionEntitiesDandelionGraphChart)(detachEvent.getSource().getElement().getComponent().get());
+        super.onDetach(detachEvent);
+    }
 
-        System.out.println( detachEvent.getSource().getElement());
-        //System.out.println( detachEvent.getSource().getElement());
-        //System.out.println( detachEvent.getSource().getElement().getComponent());
-        //System.out.println( detachEvent.getSource().getElement().getComponent());
-        System.out.println( self);
-
-
-        self.removeFromParent();
-
-        try {
-            self.getElement().callJsFunction("$connector.destroyGraphAAA",new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println( "destroyGraphdestroyGraphdestroyGraphdestroyGraphdestroyGraphdestroyGraphdestroyGraph");
-        System.out.println( self);
-
-  */
-
-//self.destoryGraph();
-        //detachEvent.getUI().getElement().removeAllChildren();
-/*
-        try {
-            detachEvent.getSource().getElement().callJsFunction("$connector.destroyGraph",
-                           new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-*/
-        //  try {
-
-/*
-            detachEvent.getUI().getElement().getNode().runWhenAttached(ui -> ui
-                    .beforeClientResponse(this, context -> {
-                        try {
-                            getElement().callJsFunction("$connector.destroyGraph",
-                                    new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }));
-*/
-
-           // detachEvent.getUI().getElement()
-
-
-            //        .callJsFunction("$connector.destroyGraph",
-            //        new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
-   //     } catch (JsonProcessingException e) {
-       //     throw new RuntimeException(e);
-   //     }
-
-
-        /*
+    public void destroyGraph(){
         runBeforeClientResponse(ui -> {
             try {
                 getElement().callJsFunction("$connector.emptyGraph",
@@ -156,9 +103,6 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
                 throw new RuntimeException(e);
             }
         });
-        */
-
-        /*
         runBeforeClientResponse(ui -> {
             try {
                 getElement().callJsFunction("$connector.destroyGraph",
@@ -166,35 +110,6 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
-        });
-*/
-        //getElement().getNode().markAsDirty();
-        //getElement().executeJs()
-
-
-        System.out.println("onDetachonDetachonDetachonDetachonDetach");
-
-        System.out.println("onDetachonDetachonDetachonDetachonDetach");
-
-        System.out.println("onDetachonDetachonDetachonDetachonDetach");
-
-        //throw new NullPointerException();
-        // 此处调用 listener.remove() 会抛出 java.lang.NullPointerException 异常，
-        // 但是此异常的抛出能够阻止在多次打开 3d-force-graph 蒲公英图的场景下系统UI卡顿，停止相应并出现持续性的线程调用无法回收的情况
-        //具体原理未知，有待调查
-        //listener.remove();
-        super.onDetach(detachEvent);
-    }
-
-    private void destoryGraph(){
-        runBeforeClientResponse(ui -> {
-            try {
-                getElement().callJsFunction("$connector.destroyGraph",
-                        new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-
         });
     }
 
@@ -260,69 +175,11 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
         });
     }
 
-    public void generateGraph2(int height,int width){
-
+    public void generateGraph(){
         initConnector();
-
-        runBeforeClientResponse(ui -> {
-            try {
-                Map<String,Object> valueMap =new HashMap<>();
-                List<Map<String,String>> nodeInfoList = new ArrayList<>();
-                Map<String,String> centerNodeInfo = new HashMap<>();
-                centerNodeInfo.put("id",this.mainConceptionEntityUID);
-                centerNodeInfo.put("entityKind",this.mainConceptionKind);
-                centerNodeInfo.put("color","#888888");
-                nodeInfoList.add(centerNodeInfo);
-
-                List<String> attachedConceptionKinds = new ArrayList<>();
-                for(ConceptionEntity currentConceptionEntity:this.conceptionEntityList){
-                    if(!attachedConceptionKinds.contains(currentConceptionEntity.getConceptionKindName())){
-                        attachedConceptionKinds.add(currentConceptionEntity.getConceptionKindName());
-                    }
-                }
-                generateConceptionKindColorMap(attachedConceptionKinds);
-
-                for(ConceptionEntity currentConceptionEntity:this.conceptionEntityList){
-                    Map<String,String> currentNodeInfo = new HashMap<>();
-                    currentNodeInfo.put("id",currentConceptionEntity.getConceptionEntityUID());
-                    currentNodeInfo.put("entityKind",currentConceptionEntity.getConceptionKindName());
-                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionEntity.getConceptionKindName())!=null){
-                        currentNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionEntity.getConceptionKindName()));
-                    }else{
-                        currentNodeInfo.put("color","#0099FF");
-                    }
-                    nodeInfoList.add(currentNodeInfo);
-                }
-
-                List<Map<String,String>> edgeInfoList = new ArrayList<>();
-
-                List<String> attachedRelationKinds = new ArrayList<>();
-                for(RelationEntity currentRelationEntity:this.relationEntityList){
-                    if(!attachedRelationKinds.contains(currentRelationEntity.getRelationKindName())){
-                        attachedRelationKinds.add(currentRelationEntity.getRelationKindName());
-                    }
-                }
-                generateRelationKindColorMap(attachedRelationKinds);
-
-                for(RelationEntity currentRelationEntity:this.relationEntityList){
-                    Map<String,String> currentEdgeInfo = new HashMap<>();
-                    currentEdgeInfo.put("source",currentRelationEntity.getFromConceptionEntityUID());
-                    currentEdgeInfo.put("target",currentRelationEntity.getToConceptionEntityUID());
-                    currentEdgeInfo.put("entityKind",currentRelationEntity.getRelationKindName());
-                    currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
-                    edgeInfoList.add(currentEdgeInfo);
-                }
-
-                valueMap.put("graphHeight",height-120);
-                valueMap.put("graphWidth",width- 40);
-                valueMap.put("nodesInfo",nodeInfoList);
-                valueMap.put("edgesInfo",edgeInfoList);
-                getElement().callJsFunction("$connector.generateGraph",
-                        new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            generateGraph(receiver.getBodyClientHeight(),receiver.getBodyClientWidth());
+        }));
     }
 
     private Map<String,String> generateConceptionKindColorMap(List<String> attachedConceptionKinds){

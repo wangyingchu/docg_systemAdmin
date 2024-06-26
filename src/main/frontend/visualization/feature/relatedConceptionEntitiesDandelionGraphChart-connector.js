@@ -2,23 +2,11 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
     initLazy: function (c) {
         // Check whether the connector was already initialized
         if (c.$connector) {
-            alert("aaaa");
-            alert("aaaa");
-            alert("aaaa");
             c.$connector.emptyGraph();
-            c.$connector.destroyGraphAAA();
-
+            c.$connector.destroyGraph();
             //return;
         }
         c.$connector = {
-
-            onUnregister: function (c){
-                console.log("onUnregisteronAAAA");
-            },
-
-
-
-
             // functions
             emptyGraph:function(data){
                 Graph
@@ -29,11 +17,10 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
                         links:[]
                     }).refresh();
             },
-            destroyGraphAAA:function(data){
-                console.log("AAAAAAAAAAAAAAAAAAAA");
+            destroyGraph:function(data){
+                alert("AAAAAAAAAAAAAAAAAAAA");
                 Graph.destroy();
-                console.log("AAAAAAAAAAAAAAAAAAAA");
-
+                alert("AAAAAAAAAAAAAAAAAAAA");
             },
             generateGraph : function(data) {
                 let dataObj = eval("(" + data + ")");
@@ -128,11 +115,5 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
         };
 
         let Graph;
-    },
-    onUnregisterLazy: function (c){
-        console.log("onUnregisteronUnregisteronUnregistervLazy");
-    },
-    onUnregister: function (c){
-        console.log("onUnregisteronUnregisteronUnregisterv");
     }
 }

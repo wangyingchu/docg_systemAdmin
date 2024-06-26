@@ -24,6 +24,7 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
     private String conceptionKind;
     private String conceptionEntityUID;
     private String GlobalRelatedConceptionEntitiesDandelionGraphChartKey = "GLOBAL_RelatedConceptionEntitiesDandelionGraphChart";
+    private RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart;
 
     public RelatedConceptionEntitiesDandelionGraphInfoView(String conceptionKind, String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
@@ -88,17 +89,15 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
                         }else{
                             isFirstLaunch = false;
                         }
-                        RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart =
+
+                        relatedConceptionEntitiesDandelionGraphChart =
                                 (RelatedConceptionEntitiesDandelionGraphChart)globalApplicationComponentsMap.get(GlobalRelatedConceptionEntitiesDandelionGraphChartKey);
                         relatedConceptionEntitiesDandelionGraphChart.setDandelionGraphChartData(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
-
-                        //new RelatedConceptionEntitiesDandelionGraphChart(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
+                        //relatedConceptionEntitiesDandelionGraphChart = new RelatedConceptionEntitiesDandelionGraphChart(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
                         add(relatedConceptionEntitiesDandelionGraphChart);
                         if(!isFirstLaunch){
-                            relatedConceptionEntitiesDandelionGraphChart.generateGraph2(1000,1000);
+                            relatedConceptionEntitiesDandelionGraphChart.generateGraph();
                         }
-
-
                     }
                 } catch (CoreRealmServiceEntityExploreException e) {
                     throw new RuntimeException(e);
@@ -106,6 +105,12 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
                     coreRealm.closeGlobalSession();
                 }
             }
+        }
+    }
+
+    public void cleanGraphResource(){
+        if(relatedConceptionEntitiesDandelionGraphChart != null){
+            relatedConceptionEntitiesDandelionGraphChart.destroyGraph();
         }
     }
 }
