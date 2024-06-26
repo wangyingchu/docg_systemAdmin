@@ -337,7 +337,13 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     private void renderRelatedConceptionEntitiesDandelionGraphInfo(){
         RelatedConceptionEntitiesDandelionGraphInfoView relatedConceptionEntitiesDandelionGraphInfoView =
                 new RelatedConceptionEntitiesDandelionGraphInfoView(this.conceptionKind,this.conceptionEntityUID);
-        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.ASTERISK),"关联实体全量蒲公英图",null,null,true);
+        FullScreenWindow.CloseFullScreenWindowListener closeFullScreenWindowListener = new FullScreenWindow.CloseFullScreenWindowListener() {
+            @Override
+            public void beforeCloseWindow() {
+                relatedConceptionEntitiesDandelionGraphInfoView.cleanGraphResource();
+            }
+        };
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.ASTERISK),"关联实体全量蒲公英图",null,null,closeFullScreenWindowListener);
         fullScreenWindow.setWindowContent(relatedConceptionEntitiesDandelionGraphInfoView);
         fullScreenWindow.show();
     }
