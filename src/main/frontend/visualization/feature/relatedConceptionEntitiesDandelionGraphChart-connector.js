@@ -11,6 +11,14 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
             //return;
         }
         c.$connector = {
+
+            onUnregister: function (c){
+                console.log("onUnregisteronAAAA");
+            },
+
+
+
+
             // functions
             emptyGraph:function(data){
                 Graph
@@ -120,5 +128,11 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
         };
 
         let Graph;
+    },
+    onUnregisterLazy: function (c){
+        console.log("onUnregisteronUnregisteronUnregistervLazy");
+    },
+    onUnregister: function (c){
+        console.log("onUnregisteronUnregisteronUnregisterv");
     }
 }

@@ -183,7 +183,7 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
         // 但是此异常的抛出能够阻止在多次打开 3d-force-graph 蒲公英图的场景下系统UI卡顿，停止相应并出现持续性的线程调用无法回收的情况
         //具体原理未知，有待调查
         //listener.remove();
-     //   super.onDetach(detachEvent);
+        super.onDetach(detachEvent);
     }
 
     private void destoryGraph(){
