@@ -4,7 +4,7 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
         if (c.$connector) {
             c.$connector.emptyGraph();
             c.$connector.destroyGraph();
-            //return;
+            return;
         }
         c.$connector = {
             // functions
@@ -18,9 +18,7 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
                     }).refresh();
             },
             destroyGraph:function(data){
-                alert("AAAAAAAAAAAAAAAAAAAA");
                 Graph.destroy();
-                alert("AAAAAAAAAAAAAAAAAAAA");
             },
             generateGraph : function(data) {
                 let dataObj = eval("(" + data + ")");
