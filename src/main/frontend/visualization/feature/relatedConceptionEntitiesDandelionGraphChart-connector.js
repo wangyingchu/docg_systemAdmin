@@ -4,7 +4,7 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
         if (c.$connector) {
             c.$connector.emptyGraph();
             c.$connector.destroyGraph();
-            return;
+            //return;
         }
         c.$connector = {
             // functions
