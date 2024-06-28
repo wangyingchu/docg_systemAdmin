@@ -3,8 +3,7 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
         // Check whether the connector was already initialized
         if (c.$connector) {
             c.$connector.emptyGraph();
-            c.$connector.destroyGraph();
-            //return;
+            return;
         }
         c.$connector = {
             // functions
@@ -16,9 +15,6 @@ window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart = {
                         nodes:[],
                         links:[]
                     }).refresh();
-            },
-            destroyGraph:function(data){
-                Graph.destroy();
             },
             generateGraph : function(data) {
                 let dataObj = eval("(" + data + ")");

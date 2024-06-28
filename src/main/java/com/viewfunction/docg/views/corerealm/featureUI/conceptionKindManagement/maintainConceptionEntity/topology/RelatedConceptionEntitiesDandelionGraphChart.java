@@ -94,7 +94,7 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
         super.onDetach(detachEvent);
     }
 
-    public void destroyGraph(){
+    public void emptyGraph(){
         runBeforeClientResponse(ui -> {
             try {
                 getElement().callJsFunction("$connector.emptyGraph",
@@ -102,15 +102,7 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
-        });
-        runBeforeClientResponse(ui -> {
-            try {
-                getElement().callJsFunction("$connector.destroyGraph",
-                        new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+       });
     }
 
     private void generateGraph(int height,int width){

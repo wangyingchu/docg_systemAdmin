@@ -1,7 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology;
 
 import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -13,17 +12,14 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOp
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
-import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLayout {
 
     private String conceptionKind;
     private String conceptionEntityUID;
-    private String GlobalRelatedConceptionEntitiesDandelionGraphChartKey = "GLOBAL_RelatedConceptionEntitiesDandelionGraphChart";
     private RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart;
 
     public RelatedConceptionEntitiesDandelionGraphInfoView(String conceptionKind, String conceptionEntityUID){
@@ -49,12 +45,6 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
-
-        Map<String, Component> globalApplicationComponentsMap = ResourceHolder.getGlobalApplicationComponentsMap();
-        RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart =
-                (RelatedConceptionEntitiesDandelionGraphChart)globalApplicationComponentsMap.get(GlobalRelatedConceptionEntitiesDandelionGraphChartKey);
-        relatedConceptionEntitiesDandelionGraphChart.removeFromParent();
-
         super.onDetach(detachEvent);
     }
 
@@ -80,24 +70,8 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
                     conceptionEntityUIDList.add(this.conceptionEntityUID);
                     if(conceptionEntityUIDList.size()>=2){
                         List<RelationEntity> relationEntityList = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionEntityUIDList);
-
-                        Map<String, Component> globalApplicationComponentsMap = ResourceHolder.getGlobalApplicationComponentsMap();
-                        boolean isFirstLaunch = false;
-                        if(!globalApplicationComponentsMap.containsKey(GlobalRelatedConceptionEntitiesDandelionGraphChartKey)){
-                            globalApplicationComponentsMap.put(GlobalRelatedConceptionEntitiesDandelionGraphChartKey,new RelatedConceptionEntitiesDandelionGraphChart());
-                            isFirstLaunch = true;
-                        }else{
-                            isFirstLaunch = false;
-                        }
-
-                        relatedConceptionEntitiesDandelionGraphChart =
-                                (RelatedConceptionEntitiesDandelionGraphChart)globalApplicationComponentsMap.get(GlobalRelatedConceptionEntitiesDandelionGraphChartKey);
-                        relatedConceptionEntitiesDandelionGraphChart.setDandelionGraphChartData(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
-                        //relatedConceptionEntitiesDandelionGraphChart = new RelatedConceptionEntitiesDandelionGraphChart(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
+                        relatedConceptionEntitiesDandelionGraphChart = new RelatedConceptionEntitiesDandelionGraphChart(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
                         add(relatedConceptionEntitiesDandelionGraphChart);
-                        if(!isFirstLaunch){
-                            relatedConceptionEntitiesDandelionGraphChart.generateGraph();
-                        }
                     }
                 } catch (CoreRealmServiceEntityExploreException e) {
                     throw new RuntimeException(e);
@@ -110,7 +84,7 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
 
     public void cleanGraphResource(){
         if(relatedConceptionEntitiesDandelionGraphChart != null){
-            relatedConceptionEntitiesDandelionGraphChart.destroyGraph();
+            relatedConceptionEntitiesDandelionGraphChart.emptyGraph();
         }
     }
 }
