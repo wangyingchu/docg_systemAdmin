@@ -100,7 +100,7 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
             }
 
             getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-                generateGraph(receiver.getBodyClientHeight()-20,receiver.getBodyClientWidth()-300, nodeInfoList, edgeInfoList);
+                generateGraph(receiver.getBodyClientHeight()-20,receiver.getBodyClientWidth()-550, nodeInfoList, edgeInfoList);
             }));
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);

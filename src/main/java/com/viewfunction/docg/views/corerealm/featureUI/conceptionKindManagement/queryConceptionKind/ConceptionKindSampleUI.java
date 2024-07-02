@@ -3,6 +3,8 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -11,10 +13,12 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
@@ -32,6 +36,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
     private NativeLabel resultNumberValue;
     private ConceptionEntitiesListView conceptionEntitiesListView;
     private ConceptionEntitiesRelationsChart conceptionEntitiesRelationsChart;
+    private Grid<AttributeValue> entityAttributesInfoGrid;
 
     public ConceptionKindSampleUI(String conceptionKind, int sampleCount) {
         this.conceptionKind = conceptionKind;
@@ -74,14 +79,15 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         add(mainLayout);
 
         VerticalLayout leftSideContainer = new VerticalLayout();
+        leftSideContainer.setWidth(260,Unit.PIXELS);
         leftSideContainer.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
-        leftSideContainer.setWidth(300,Unit.PIXELS);
         leftSideContainer.setSpacing(true);
         leftSideContainer.setMargin(false);
         leftSideContainer.setPadding(false);
         mainLayout.add(leftSideContainer);
 
-        VerticalLayout rightSideContainer = new VerticalLayout();
+        HorizontalLayout rightSideContainer = new HorizontalLayout();
+        rightSideContainer.setWidthFull();
         rightSideContainer.setSpacing(false);
         rightSideContainer.setMargin(false);
         rightSideContainer.setPadding(false);
@@ -94,11 +100,37 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         SecondaryIconTitle filterTitle = new SecondaryIconTitle(LineAwesomeIconsSvg.CUBES_SOLID.create(),"概念类型实体采样结果",this.resultNumberValue);
         filterTitle.getStyle().set("padding-left","10px");
         leftSideContainer.add(filterTitle);
-
         this.conceptionEntitiesListView = new ConceptionEntitiesListView(false);
+        this.conceptionEntitiesListView.setWidth(250,Unit.PIXELS);
         leftSideContainer.add(this.conceptionEntitiesListView);
+
         this.conceptionEntitiesRelationsChart = new ConceptionEntitiesRelationsChart();
         rightSideContainer.add(this.conceptionEntitiesRelationsChart);
+
+        VerticalLayout attributesInfoSideContainer = new VerticalLayout();
+        attributesInfoSideContainer.setSpacing(true);
+        attributesInfoSideContainer.setMargin(false);
+        attributesInfoSideContainer.setPadding(false);
+        rightSideContainer.add(attributesInfoSideContainer);
+
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(VaadinIcon.CUBE.create(),"选中概念类型实体信息");
+        filterTitle2.getStyle().set("padding-left","3px");
+        attributesInfoSideContainer.add(filterTitle2);
+
+        entityAttributesInfoGrid = new Grid<>();
+        entityAttributesInfoGrid.setWidthFull();
+        entityAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        entityAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
+        entityAttributesInfoGrid.addColumn(AttributeValue::getAttributeName).setHeader("属性名称").setKey("idx_0");
+        entityAttributesInfoGrid.addColumn(AttributeValue::getAttributeValue).setHeader("属性值").setKey("idx_1").setFlexGrow(1).setResizable(true);
+        entityAttributesInfoGrid.getStyle().set("padding-top", "100px");
+
+        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
+        entityAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.INPUT,"属性值");
+        entityAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+
+        attributesInfoSideContainer.add(entityAttributesInfoGrid);
     }
 
     @Override
