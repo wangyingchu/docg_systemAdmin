@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -37,6 +38,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
     private ConceptionEntitiesListView conceptionEntitiesListView;
     private ConceptionEntitiesRelationsChart conceptionEntitiesRelationsChart;
     private Grid<AttributeValue> entityAttributesInfoGrid;
+    private NativeLabel selectedConceptionEntityUIDLabel;
 
     public ConceptionKindSampleUI(String conceptionKind, int sampleCount) {
         this.conceptionKind = conceptionKind;
@@ -104,18 +106,52 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         this.conceptionEntitiesListView.setWidth(250,Unit.PIXELS);
         leftSideContainer.add(this.conceptionEntitiesListView);
 
+        ConceptionEntitiesListView.SelectConceptionEntityListener selectConceptionEntityListener = new ConceptionEntitiesListView.SelectConceptionEntityListener() {
+            @Override
+            public void onSelectConceptionEntity(ConceptionEntity conceptionEntity) {
+                List<AttributeValue> allAttributesList = conceptionEntity.getAttributes();
+                entityAttributesInfoGrid.setItems(allAttributesList);
+                selectedConceptionEntityUIDLabel.setText(conceptionEntity.getConceptionEntityUID());
+            }
+
+            @Override
+            public void onUnSelectConceptionEntity() {
+                entityAttributesInfoGrid.setItems(new ArrayList<>());
+                selectedConceptionEntityUIDLabel.setText("-");
+            }
+        };
+        this.conceptionEntitiesListView.setSelectConceptionEntityListener(selectConceptionEntityListener);
+
         this.conceptionEntitiesRelationsChart = new ConceptionEntitiesRelationsChart();
         rightSideContainer.add(this.conceptionEntitiesRelationsChart);
 
         VerticalLayout attributesInfoSideContainer = new VerticalLayout();
+        attributesInfoSideContainer.getStyle().set("border-left", "1px solid var(--lumo-contrast-20pct)");
         attributesInfoSideContainer.setSpacing(true);
         attributesInfoSideContainer.setMargin(false);
         attributesInfoSideContainer.setPadding(false);
         rightSideContainer.add(attributesInfoSideContainer);
 
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(VaadinIcon.CUBE.create(),"选中概念类型实体信息");
-        filterTitle2.getStyle().set("padding-left","3px");
+        filterTitle2.getStyle().set("padding-left","5px");
         attributesInfoSideContainer.add(filterTitle2);
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+        conceptionEntityIcon.setSize("10px");
+        titleDetailLayout.add(conceptionEntityIcon);
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        selectedConceptionEntityUIDLabel = new NativeLabel("-");
+        titleDetailLayout.add(selectedConceptionEntityUIDLabel);
+
+        attributesInfoSideContainer.add(titleDetailLayout);
 
         entityAttributesInfoGrid = new Grid<>();
         entityAttributesInfoGrid.setWidthFull();
@@ -139,6 +175,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         super.onAttach(attachEvent);
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             this.conceptionEntitiesListView.setHeight(receiver.getBodyClientHeight()-145, Unit.PIXELS);
+            this.entityAttributesInfoGrid.setHeight(receiver.getBodyClientHeight()-175, Unit.PIXELS);
         }));
         doConceptionEntitiesSample();
     }

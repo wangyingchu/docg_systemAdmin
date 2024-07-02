@@ -31,6 +31,7 @@ public class ConceptionEntitiesListView extends VerticalLayout {
 
     public interface SelectConceptionEntityListener {
         void onSelectConceptionEntity(ConceptionEntity conceptionEntity);
+        void onUnSelectConceptionEntity();
     }
 
     private Grid<ConceptionEntity> displayedConceptionEntitiesGrid;
@@ -66,6 +67,10 @@ public class ConceptionEntitiesListView extends VerticalLayout {
                     if(selectConceptionEntityListener != null){
                         ConceptionEntity selectedConceptionEntity = selectionEvent.getFirstSelectedItem().get();
                         selectConceptionEntityListener.onSelectConceptionEntity(selectedConceptionEntity);
+                    }
+                }else{
+                    if(selectConceptionEntityListener != null){
+                        selectConceptionEntityListener.onUnSelectConceptionEntity();
                     }
                 }
             }
