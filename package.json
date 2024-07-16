@@ -23,6 +23,7 @@
     "lit": "3.1.4",
     "proj4": "2.11.0",
     "react": "18.3.1",
+    "react-colorful": "5.6.1",
     "react-dom": "18.3.1",
     "react-router-dom": "6.23.1"
   },
@@ -68,6 +69,7 @@
       "lit": "3.1.4",
       "proj4": "2.11.0",
       "react": "18.3.1",
+      "react-colorful": "5.6.1",
       "react-dom": "18.3.1",
       "react-router-dom": "6.23.1"
     },
@@ -91,7 +93,7 @@
       "workbox-core": "7.1.0",
       "workbox-precaching": "7.1.0"
     },
-    "hash": "636a01da790d595ec0ecb371e4a8746b44828428b80b191ea368f7cffb57f82a"
+    "hash": "0f4518f7842042342929b6382d5ac8d9611d72990922a9cff117e27ebcad6055"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -115,6 +117,7 @@
     "proj4": "$proj4",
     "@vaadin/vaadin-themable-mixin": "$@vaadin/vaadin-themable-mixin",
     "@vaadin/vaadin-lumo-styles": "$@vaadin/vaadin-lumo-styles",
-    "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles"
+    "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles",
+    "react-colorful": "$react-colorful"
   }
 }
