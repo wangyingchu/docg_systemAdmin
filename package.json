@@ -25,6 +25,7 @@
     "react": "18.3.1",
     "react-colorful": "5.6.1",
     "react-dom": "18.3.1",
+    "react-force-graph": "1.44.4",
     "react-router-dom": "6.23.1"
   },
   "devDependencies": {
@@ -71,6 +72,7 @@
       "react": "18.3.1",
       "react-colorful": "5.6.1",
       "react-dom": "18.3.1",
+      "react-force-graph": "1.44.4",
       "react-router-dom": "6.23.1"
     },
     "devDependencies": {
@@ -93,7 +95,7 @@
       "workbox-core": "7.1.0",
       "workbox-precaching": "7.1.0"
     },
-    "hash": "0f4518f7842042342929b6382d5ac8d9611d72990922a9cff117e27ebcad6055"
+    "hash": "84180ce9dff874fbdadf3f08105d1a426af68d00fe9ad0e914cc8b2c63431aee"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -118,6 +120,7 @@
     "@vaadin/vaadin-themable-mixin": "$@vaadin/vaadin-themable-mixin",
     "@vaadin/vaadin-lumo-styles": "$@vaadin/vaadin-lumo-styles",
     "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles",
-    "react-colorful": "$react-colorful"
+    "react-colorful": "$react-colorful",
+    "react-force-graph": "$react-force-graph"
   }
 }
