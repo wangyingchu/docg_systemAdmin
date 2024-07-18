@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
+import com.viewfunction.docg.element.externalTechFeature.conceptionEntitiesRelationsChart.ConceptionEntitiesRelationsChart;
 import com.viewfunction.docg.element.externalTechFeature.relatedConceptionEntitiesDandelionGraph.RelatedConceptionEntitiesDandelionGraphChart;
 import com.viewfunction.docg.element.externalTechFeature.rgbColorPicker.RgbaColorPicker;
 import com.viewfunction.docg.views.MainLayout;
@@ -22,6 +23,9 @@ public class AboutView extends Div {
         add(rgbaColorPicker);
 
         add(new Button("DIV"));
+
+        ConceptionEntitiesRelationsChart conceptionEntitiesRelationsChart = new ConceptionEntitiesRelationsChart();
+        add(conceptionEntitiesRelationsChart);
 
         RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart = new RelatedConceptionEntitiesDandelionGraphChart();
         add(relatedConceptionEntitiesDandelionGraphChart);
