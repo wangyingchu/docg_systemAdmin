@@ -34,8 +34,8 @@ public class AboutView extends Div {
        // containerVerticalLayout.setWidth(500, Unit.PIXELS);
         //containerVerticalLayout.setHeight(600,Unit.PIXELS);
        // add(containerVerticalLayout);
-        //RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart = new RelatedConceptionEntitiesDandelionGraphChart();
-
+        RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart = new RelatedConceptionEntitiesDandelionGraphChart();
+        add(relatedConceptionEntitiesDandelionGraphChart);
 
         //containerVerticalLayout.add(relatedConceptionEntitiesDandelionGraphChart);
     }

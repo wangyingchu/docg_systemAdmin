@@ -4,7 +4,22 @@ import {ReactElement} from "react";
 
 class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterElement {
     protected override render(hooks: RenderHooks): ReactElement | null {
-        return <ForceGraph3D
+
+
+        const xx = {
+            nodes: [...Array(1000).keys()].map(i => ({id: i})),
+            links: [...Array(1000).keys()]
+                .filter(id => id)
+                .map(id => ({
+                    ['target' ]: id,
+                    [ 'source' ]: Math.round(Math.random() * (id - 1))
+                }))
+        };
+
+        const backgroundColor = '#FFFFFF'
+
+
+        return <ForceGraph3D graphData={xx} backgroundColor={backgroundColor} width={800} height={800}
         />; // (3)
     }
 }
