@@ -29,10 +29,10 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
 
     public DataRelationDistribution3DChart(){
         //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/three.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/three-spritetext.min.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/CSS2DRenderer.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.0/dist/3d-force-graph.min.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/three.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/three-spritetext.min.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/CSS2DRenderer.js");
+        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/3d-force-graph.min.js");
         this.setWidthFull();
         this.setSpacing(false);
         this.setMargin(false);
