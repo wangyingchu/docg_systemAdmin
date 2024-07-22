@@ -27,7 +27,8 @@
     "react-colorful": "5.6.1",
     "react-dom": "18.3.1",
     "react-force-graph": "1.44.4",
-    "react-router-dom": "6.23.1"
+    "react-router-dom": "6.23.1",
+    "three": "r166"
   },
   "devDependencies": {
     "@babel/preset-react": "7.24.7",
@@ -75,7 +76,8 @@
       "react-colorful": "5.6.1",
       "react-dom": "18.3.1",
       "react-force-graph": "1.44.4",
-      "react-router-dom": "6.23.1"
+      "react-router-dom": "6.23.1",
+      "three": "r166"
     },
     "devDependencies": {
       "@babel/preset-react": "7.24.7",
@@ -97,7 +99,7 @@
       "workbox-core": "7.1.0",
       "workbox-precaching": "7.1.0"
     },
-    "hash": "28753b6d11b0cdfa2359a08d6b34596a8109b811feade07843ef05c784320e18"
+    "hash": "595c897d35ee1cca0accbe49eda423b27346619d76bfe2b5b111f93e7f43ab4c"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -124,6 +126,7 @@
     "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles",
     "react-colorful": "$react-colorful",
     "react-force-graph": "$react-force-graph",
-    "@neo4j-nvl/react": "$@neo4j-nvl/react"
+    "@neo4j-nvl/react": "$@neo4j-nvl/react",
+    "three": "$three"
   }
 }

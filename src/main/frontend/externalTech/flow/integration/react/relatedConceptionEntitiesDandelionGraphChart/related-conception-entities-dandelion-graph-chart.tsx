@@ -1,5 +1,5 @@
 import { ForceGraph2D, ForceGraph3D, ForceGraphVR, ForceGraphAR } from 'react-force-graph';
-
+import * as THREE from 'three'
 import {ReactAdapterElement, RenderHooks} from "Frontend/generated/flow/ReactAdapter";
 import {ReactElement} from "react";
 
@@ -16,7 +16,21 @@ class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterEl
         };
 
         return <ForceGraph3D graphData={xx}
-                             backgroundColor={'#FFFFFF'}
+                             //extraRenderers={[new THREE.CSS2DRenderer()]}
+
+
+                              linkThreeObjectExtend={true}
+
+                            linkThreeObject= {(link: { entityKind: any; source: any; target: any; }) => {
+                                // extend link with text sprite
+                                const sprite = new THREE.SpriteText(`${link.entityKind} : ${link.source} > ${link.target}`);
+                                sprite.color = 'black';
+                                sprite.textHeight = 1.5;
+                                return sprite;
+                            }}
+
+
+                             backgroundColor={'#CE0000'}
                              width={800}
                              height={800}
                              nodeVal={node => {
@@ -30,7 +44,7 @@ class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterEl
                              linkCurvature={0.2}
                              linkDirectionalArrowRelPos={0.5}
                              linkWidth={0.3}
-                             linkThreeObjectExtend={true}
+
         />;
     }
 }
