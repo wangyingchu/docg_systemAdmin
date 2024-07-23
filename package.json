@@ -28,7 +28,8 @@
     "react-dom": "18.3.1",
     "react-force-graph": "1.44.4",
     "react-router-dom": "6.23.1",
-    "three": "r166"
+    "three": "0.166.1",
+    "three-spritetext": "1.8.2"
   },
   "devDependencies": {
     "@babel/preset-react": "7.24.7",
@@ -77,7 +78,8 @@
       "react-dom": "18.3.1",
       "react-force-graph": "1.44.4",
       "react-router-dom": "6.23.1",
-      "three": "r166"
+      "three": "0.166.1",
+      "three-spritetext": "1.8.2"
     },
     "devDependencies": {
       "@babel/preset-react": "7.24.7",
@@ -99,7 +101,7 @@
       "workbox-core": "7.1.0",
       "workbox-precaching": "7.1.0"
     },
-    "hash": "595c897d35ee1cca0accbe49eda423b27346619d76bfe2b5b111f93e7f43ab4c"
+    "hash": "e51f2f1325330e4fb2518ed36a7da6587886959a72ae061b1c4321d46af94293"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -125,8 +127,9 @@
     "@vaadin/vaadin-lumo-styles": "$@vaadin/vaadin-lumo-styles",
     "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles",
     "react-colorful": "$react-colorful",
-    "react-force-graph": "$react-force-graph",
     "@neo4j-nvl/react": "$@neo4j-nvl/react",
+    "three-spritetext": "$three-spritetext",
+    "react-force-graph": "$react-force-graph",
     "three": "$three"
   }
 }
