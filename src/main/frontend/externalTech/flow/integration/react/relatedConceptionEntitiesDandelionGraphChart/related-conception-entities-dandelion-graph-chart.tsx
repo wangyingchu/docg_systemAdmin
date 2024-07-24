@@ -1,7 +1,7 @@
 import { ForceGraph2D, ForceGraph3D, ForceGraphVR, ForceGraphAR } from 'react-force-graph';
 import * as THREE from 'three'
 import {ReactAdapterElement, RenderHooks} from "Frontend/generated/flow/ReactAdapter";
-import {ReactElement, useRef} from "react";
+import {ReactElement, useEffect, useRef, useState} from "react";
 import SpriteText from 'three-spritetext';
 import { CSS2DRenderer,CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
