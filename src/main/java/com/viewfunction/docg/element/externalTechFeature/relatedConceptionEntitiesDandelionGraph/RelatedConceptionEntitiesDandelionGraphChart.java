@@ -112,12 +112,10 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends ReactAdapterCo
             currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
             edgeInfoList.add(currentEdgeInfo);
         }
-
         //valueMap.put("graphHeight",height-120);
         //valueMap.put("graphWidth",width- 40);
         valueMap.put("nodesInfo",nodeInfoList);
         valueMap.put("edgesInfo",edgeInfoList);
-
         setChartData(valueMap);
     }
 

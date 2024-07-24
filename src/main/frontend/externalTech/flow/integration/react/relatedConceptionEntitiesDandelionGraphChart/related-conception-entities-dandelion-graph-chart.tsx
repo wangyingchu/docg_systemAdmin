@@ -5,7 +5,6 @@ import {ReactElement, useEffect, useRef, useState} from "react";
 import SpriteText from 'three-spritetext';
 import { CSS2DRenderer,CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
-
 class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterElement {
     protected override render(hooks: RenderHooks): ReactElement | null {
         const [chartWidth, setWidth] = hooks.useState<number>("chartWidth");
@@ -21,6 +20,13 @@ class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterEl
                     [ 'source' ]: Math.round(Math.random() * (id - 1))
                 }))
         };
+
+        const getChartGraphData = () =>{
+            return {
+                nodes:chartData.nodesInfo,
+                links:chartData.edgesInfo
+            }
+        }
 
         const fgRef = useRef();
 
@@ -41,7 +47,7 @@ class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterEl
 
         let forceGraph3D = <ForceGraph3D
             // @ts-ignore
-            graphData={xx}
+            graphData={getChartGraphData()}
             width={chartWidth}
             height={chartHeight}
             ref={fgRef}
