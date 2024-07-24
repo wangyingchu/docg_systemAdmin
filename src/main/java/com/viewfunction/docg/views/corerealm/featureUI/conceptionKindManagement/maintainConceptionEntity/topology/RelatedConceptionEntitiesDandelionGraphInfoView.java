@@ -73,18 +73,13 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
                     if(conceptionEntityUIDList.size()>=2){
                         List<RelationEntity> relationEntityList = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionEntityUIDList);
                         //relatedConceptionEntitiesDandelionGraphChart = new RelatedConceptionEntitiesDandelionGraphChart(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
-                       // add(relatedConceptionEntitiesDandelionGraphChart);
-
-
+                        //add(relatedConceptionEntitiesDandelionGraphChart);
 
                         com.viewfunction.docg.element.externalTechFeature.relatedConceptionEntitiesDandelionGraph.RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart = new com.viewfunction.docg.element.externalTechFeature.relatedConceptionEntitiesDandelionGraph.RelatedConceptionEntitiesDandelionGraphChart();
                         relatedConceptionEntitiesDandelionGraphChart.setChartHeight(windowHeight-500);
                         relatedConceptionEntitiesDandelionGraphChart.setChartWidth(windowWidth-40);
+                        relatedConceptionEntitiesDandelionGraphChart.setDandelionGraphChartData(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
                         add(relatedConceptionEntitiesDandelionGraphChart);
-
-
-
-
                     }
                 } catch (CoreRealmServiceEntityExploreException e) {
                     throw new RuntimeException(e);

@@ -30,7 +30,10 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends ReactAdapterCo
     private Map<String,String> conceptionKindColorMap;
     private Map<String,String> relationKindColorMap;
 
-    public RelatedConceptionEntitiesDandelionGraphChart(){}
+    public RelatedConceptionEntitiesDandelionGraphChart(){
+        this.conceptionKindColorMap = new HashMap<>();
+        this.relationKindColorMap = new HashMap<>();
+    }
 
     public RelatedConceptionEntitiesDandelionGraphChart(String mainConceptionKind, String mainConceptionEntityUID, List<ConceptionEntity> conceptionEntityList, List<RelationEntity> relationEntityList){
         this.mainConceptionEntityUID = mainConceptionEntityUID;
@@ -49,14 +52,19 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends ReactAdapterCo
         setState("charHeight", height);
     }
 
+    public void setChartData(Map<String,Object> valueMap){
+        setState("charData", valueMap);
+    }
+
     public void setDandelionGraphChartData(String mainConceptionKind, String mainConceptionEntityUID, List<ConceptionEntity> conceptionEntityList, List<RelationEntity> relationEntityList){
         this.mainConceptionEntityUID = mainConceptionEntityUID;
         this.mainConceptionKind = mainConceptionKind;
         this.conceptionEntityList = conceptionEntityList;
         this.relationEntityList = relationEntityList;
+        generateGraphData();
     }
 
-    private void generateGraph(){
+    private void generateGraphData(){
 
         Map<String,Object> valueMap =new HashMap<>();
         List<Map<String,String>> nodeInfoList = new ArrayList<>();
@@ -109,6 +117,8 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends ReactAdapterCo
         //valueMap.put("graphWidth",width- 40);
         valueMap.put("nodesInfo",nodeInfoList);
         valueMap.put("edgesInfo",edgeInfoList);
+
+        setChartData(valueMap);
     }
 
     private Map<String,String> generateConceptionKindColorMap(List<String> attachedConceptionKinds){
