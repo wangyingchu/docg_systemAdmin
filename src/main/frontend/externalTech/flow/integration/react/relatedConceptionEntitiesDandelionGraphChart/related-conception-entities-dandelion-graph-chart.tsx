@@ -5,8 +5,12 @@ import {ReactElement, useEffect, useRef, useState} from "react";
 import SpriteText from 'three-spritetext';
 import { CSS2DRenderer,CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
+
 class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterElement {
     protected override render(hooks: RenderHooks): ReactElement | null {
+        const [chartWidth, setWidth] = hooks.useState<number>("chartWidth");
+        const [chartHeight, setHeight] = hooks.useState<number>("chartHeight");
+
         const xx = {
             nodes: [...Array(1000).keys()].map(i => ({id: i})),
             links: [...Array(1000).keys()]
@@ -37,6 +41,8 @@ class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterEl
         let forceGraph3D = <ForceGraph3D
             // @ts-ignore
             graphData={xx}
+            width={chartWidth}
+            height={chartHeight}
             ref={fgRef}
             backgroundColor={'#FFFFFF'}
             nodeRelSize={6}

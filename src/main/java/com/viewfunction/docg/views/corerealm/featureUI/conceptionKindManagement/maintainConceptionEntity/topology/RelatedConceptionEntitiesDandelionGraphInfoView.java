@@ -40,7 +40,9 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
 
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        loadRelatedConceptionEntitiesCollRelationsInfo();
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            loadRelatedConceptionEntitiesCollRelationsInfo(receiver.getWindowInnerHeight(),receiver.getWindowInnerWidth());
+        }));
     }
 
     @Override
@@ -48,7 +50,7 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
         super.onDetach(detachEvent);
     }
 
-    private void loadRelatedConceptionEntitiesCollRelationsInfo(){
+    private void loadRelatedConceptionEntitiesCollRelationsInfo(int windowHeight, int windowWidth){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
@@ -76,7 +78,8 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
 
 
                         com.viewfunction.docg.element.externalTechFeature.relatedConceptionEntitiesDandelionGraph.RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart = new com.viewfunction.docg.element.externalTechFeature.relatedConceptionEntitiesDandelionGraph.RelatedConceptionEntitiesDandelionGraphChart();
-
+                        relatedConceptionEntitiesDandelionGraphChart.setChartHeight(windowHeight-500);
+                        relatedConceptionEntitiesDandelionGraphChart.setChartWidth(windowWidth-40);
                         add(relatedConceptionEntitiesDandelionGraphChart);
 
 
