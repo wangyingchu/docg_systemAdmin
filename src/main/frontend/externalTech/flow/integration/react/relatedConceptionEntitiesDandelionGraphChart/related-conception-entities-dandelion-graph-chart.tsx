@@ -3,7 +3,8 @@ import * as THREE from 'three'
 import {ReactAdapterElement, RenderHooks} from "Frontend/generated/flow/ReactAdapter";
 import {ReactElement} from "react";
 import SpriteText from 'three-spritetext';
-//import CSS2DRenderer from 'three-css2drenderer';
+import { CSS2DRenderer,CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
+
 
 class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterElement {
     protected override render(hooks: RenderHooks): ReactElement | null {
@@ -17,8 +18,6 @@ class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterEl
                 }))
         };
 
-        const GROUPS = 12;
-
         let forceGraph3D = <ForceGraph3D graphData={xx}
                                          backgroundColor={'#FFFFFF'}
                                          nodeRelSize={6}
@@ -30,37 +29,16 @@ class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterEl
                                          linkDirectionalArrowRelPos={0.9}
                                          linkWidth={0.8}
 
-
-
-
-                                     //    nodeAutoColorBy={d => d.id%GROUPS}
-                                     //    linkAutoColorBy={d => xx.nodes[d.source].id%GROUPS}
-
-
-            /*
-
-            */
-              /*
-                                         onNodeDragEnd={node => {
-                                             node.fx = node.x;
-                                             node.fy = node.y;
-                                             node.fz = node.z;
-                                         }}
-                                         */
                                          linkThreeObjectExtend={true}
-                                        // extraRenderers={[new THREE.CSS2DRenderer()]}
                                          linkThreeObject={(link: { entityKind: any; source: any; target: any; }) => {
                                             // extend link with text sprite
                                             const sprite = new SpriteText(`${link.entityKind} : ${link.source} > ${link.target}`);
                                             sprite.color = 'black';
                                             sprite.textHeight = 1.5;
                                             return sprite;
-                                        }}
-
-
+                                         }}
                                          linkPositionUpdate={(sprite, { start, end }) => {
                                              // @ts-ignore
-
                                              const middlePos = Object.assign(...['x', 'y', 'z'].map(c => ({
                                                  // @ts-ignore
                                                  [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
@@ -69,60 +47,29 @@ class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterEl
                                              Object.assign(sprite.position, middlePos);
                                          }}
 
-
-
-
-
-
-
-/*
-                                         linkThreeObject={link => {
-                                             // extend link with text sprite
-                                             const sprite = new SpriteText(`${link.entityKind} : ${link.source} > ${link.target}`);
-                                             sprite.color = 'black';
-                                             sprite.textHeight = 1.5;
-                                             return sprite;
+                                         extraRenderers={[new CSS2DRenderer()]}
+                                         nodeThreeObjectExtend={true}
+                                         nodeThreeObject={(node:{entityKind:any;id:any}) => {
+                                             const nodeEl = document.createElement('div');
+                                             nodeEl.textContent = node.entityKind+' '+node.id;
+                                             //nodeEl.style.color = node.color;
+                                             nodeEl.className = 'node-label';
+                                             return new CSS2DObject(nodeEl);
                                          }}
-*/
 
-
-
-
-
-
-
-
-
-            /*
-
-                                         //
-
-                                         linkThreeObjectExtend={true}
-
-                                        linkThreeObject= {(link: { entityKind: any; source: any; target: any; }) => {
-                                            // extend link with text sprite
-                                            const sprite = new THREE.SpriteText(`${link.entityKind} : ${link.source} > ${link.target}`);
-                                            sprite.color = 'black';
-                                            sprite.textHeight = 1.5;
-                                            return sprite;
-                                        }}
-
-
-                                         backgroundColor={'#CE0000'}
-                                         width={800}
-                                         height={800}
-                                         nodeVal={node => {
-                                             return node.size;
+                                         onNodeDragEnd={node => {
+                                             node.fx = node.x;
+                                             node.fy = node.y;
+                                             node.fz = node.z;
                                          }}
-                                         nodeRelSize={2}
-                                         nodeResolution={100}
-                                         nodeOpacity={0.85}
-                                         linkOpacity={0.7}
-                                         linkDirectionalArrowLength={4}
-                                         linkCurvature={0.2}
-                                         linkDirectionalArrowRelPos={0.5}
-                                         linkWidth={0.3}
-              */
+
+
+
+
+
+
+
+
 
 
 
