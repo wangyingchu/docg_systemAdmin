@@ -35,7 +35,6 @@ class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterEl
         };
 
         let forceGraph3D = <ForceGraph3D
-            onNodeClick={onNodeClickFunc}
             // @ts-ignore
             graphData={xx}
             ref={fgRef}
@@ -76,21 +75,12 @@ class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterEl
                 nodeEl.className = 'node-label';
                 return new CSS2DObject(nodeEl);
             }}
-
             onNodeDragEnd={node => {
                 node.fx = node.x;
                 node.fy = node.y;
                 node.fz = node.z;
             }}
-
-
-
-
-
-
-
-
-
+            onNodeClick={onNodeClickFunc}
         />;
         return forceGraph3D;
     }
