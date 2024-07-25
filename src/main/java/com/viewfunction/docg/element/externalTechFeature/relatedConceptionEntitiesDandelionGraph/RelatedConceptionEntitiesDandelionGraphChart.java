@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//https://www.npmjs.com/package/react-force-graph
 @NpmPackage(value = "react-force-graph", version = "1.44.4")
 @NpmPackage(value = "three", version = "0.166.1")
 @NpmPackage(value = "three-spritetext", version = "1.8.2")

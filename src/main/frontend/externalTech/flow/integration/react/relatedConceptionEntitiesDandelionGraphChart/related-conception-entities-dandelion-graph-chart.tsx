@@ -11,7 +11,7 @@ class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterEl
         const [chartHeight, setHeight] = hooks.useState<number>("chartHeight");
         const [chartData, setChartData] = hooks.useState<any>("charData");
 
-        const xx = {
+        const simulateGraphData = {
             nodes: [...Array(1000).keys()].map(i => ({id: i})),
             links: [...Array(1000).keys()]
                 .filter(id => id)
@@ -29,6 +29,13 @@ class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterEl
         }
 
         const fgRef = useRef();
+
+        useEffect(() => {
+            const fg = fgRef.current;
+            // Spread nodes a little wider
+            // @ts-ignore
+            fgRef.current.d3Force('charge').strength(-100);
+        });
 
         const onNodeClickFunc = (node:{x:any;y:any;z:any})=>{
             // Aim at node from outside it
