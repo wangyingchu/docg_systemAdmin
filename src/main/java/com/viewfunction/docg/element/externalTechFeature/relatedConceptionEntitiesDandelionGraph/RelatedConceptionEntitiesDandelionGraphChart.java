@@ -50,7 +50,7 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends ReactAdapterCo
     }
 
     public void setChartHeight(int height){
-        setState("charHeight", height);
+        setState("chartHeight", height);
     }
 
     public void setChartData(Map<String,Object> valueMap){

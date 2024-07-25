@@ -76,8 +76,8 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
                         //add(relatedConceptionEntitiesDandelionGraphChart);
 
                         com.viewfunction.docg.element.externalTechFeature.relatedConceptionEntitiesDandelionGraph.RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart = new com.viewfunction.docg.element.externalTechFeature.relatedConceptionEntitiesDandelionGraph.RelatedConceptionEntitiesDandelionGraphChart();
-                        relatedConceptionEntitiesDandelionGraphChart.setChartHeight(windowHeight-500);
-                        relatedConceptionEntitiesDandelionGraphChart.setChartWidth(windowWidth-40);
+                        relatedConceptionEntitiesDandelionGraphChart.setChartHeight(windowHeight-110);
+                        relatedConceptionEntitiesDandelionGraphChart.setChartWidth(windowWidth-35);
                         relatedConceptionEntitiesDandelionGraphChart.setDandelionGraphChartData(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
                         add(relatedConceptionEntitiesDandelionGraphChart);
                     }
