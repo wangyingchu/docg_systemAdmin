@@ -1,14 +1,12 @@
 package com.viewfunction.docg.views.about;
 
 import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
+
 import com.viewfunction.docg.element.externalTechFeature.conceptionEntitiesRelationsChart.ConceptionEntitiesRelationsChart;
-import com.viewfunction.docg.element.externalTechFeature.relatedConceptionEntitiesDandelionGraph.RelatedConceptionEntitiesDandelionGraphChart;
 import com.viewfunction.docg.element.externalTechFeature.rgbColorPicker.RgbaColorPicker;
 import com.viewfunction.docg.views.MainLayout;
 
@@ -28,16 +26,6 @@ public class AboutView extends Div {
 
         ConceptionEntitiesRelationsChart conceptionEntitiesRelationsChart = new ConceptionEntitiesRelationsChart();
         add(conceptionEntitiesRelationsChart);
-
-
-        //VerticalLayout containerVerticalLayout = new VerticalLayout();
-       // containerVerticalLayout.setWidth(500, Unit.PIXELS);
-        //containerVerticalLayout.setHeight(600,Unit.PIXELS);
-       // add(containerVerticalLayout);
-        RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart = new RelatedConceptionEntitiesDandelionGraphChart();
-        add(relatedConceptionEntitiesDandelionGraphChart);
-
-        //containerVerticalLayout.add(relatedConceptionEntitiesDandelionGraphChart);
     }
 
 }

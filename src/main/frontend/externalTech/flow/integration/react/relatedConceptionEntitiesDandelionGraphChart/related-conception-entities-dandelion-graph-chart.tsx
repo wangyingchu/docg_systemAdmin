@@ -34,7 +34,7 @@ class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterEl
             const fg = fgRef.current;
             // Spread nodes a little wider
             // @ts-ignore
-            fgRef.current.d3Force('charge').strength(-300);
+            fgRef.current.d3Force('charge').strength(-600);
         });
 
         const onNodeClickFunc = (node:{x:any;y:any;z:any})=>{
