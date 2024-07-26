@@ -20,7 +20,6 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
 
     private String conceptionKind;
     private String conceptionEntityUID;
-    private RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart;
 
     public RelatedConceptionEntitiesDandelionGraphInfoView(String conceptionKind, String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
@@ -72,10 +71,7 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
                     conceptionEntityUIDList.add(this.conceptionEntityUID);
                     if(conceptionEntityUIDList.size()>=2){
                         List<RelationEntity> relationEntityList = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionEntityUIDList);
-                        //relatedConceptionEntitiesDandelionGraphChart = new RelatedConceptionEntitiesDandelionGraphChart(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
-                        //add(relatedConceptionEntitiesDandelionGraphChart);
-
-                        com.viewfunction.docg.element.externalTechFeature.relatedConceptionEntitiesDandelionGraph.RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart = new com.viewfunction.docg.element.externalTechFeature.relatedConceptionEntitiesDandelionGraph.RelatedConceptionEntitiesDandelionGraphChart();
+                        RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart = new RelatedConceptionEntitiesDandelionGraphChart();
                         relatedConceptionEntitiesDandelionGraphChart.setChartHeight(windowHeight-110);
                         relatedConceptionEntitiesDandelionGraphChart.setChartWidth(windowWidth-35);
                         relatedConceptionEntitiesDandelionGraphChart.setDandelionGraphChartData(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
@@ -91,8 +87,6 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
     }
 
     public void cleanGraphResource(){
-        if(relatedConceptionEntitiesDandelionGraphChart != null){
-            relatedConceptionEntitiesDandelionGraphChart.emptyGraph();
-        }
+        // do clean resource operation
     }
 }

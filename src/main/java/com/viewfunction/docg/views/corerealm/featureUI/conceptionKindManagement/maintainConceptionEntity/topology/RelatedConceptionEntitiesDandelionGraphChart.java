@@ -1,67 +1,60 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.dependency.JavaScript;
+import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.dependency.StyleSheet;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.function.SerializableConsumer;
-import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.component.react.ReactAdapterComponent;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//https://www.npmjs.com/package/react-force-graph
+@NpmPackage(value = "react-force-graph", version = "1.44.4")
+@NpmPackage(value = "three", version = "0.166.1")
+@NpmPackage(value = "three-spritetext", version = "1.8.2")
+@JsModule("./externalTech/flow/integration/react/relatedConceptionEntitiesDandelionGraphChart/related-conception-entities-dandelion-graph-chart.tsx")
 @StyleSheet("webApps/relatedConceptionEntitiesDandelionGraphChart/style.css")
-@JavaScript("./visualization/feature/relatedConceptionEntitiesDandelionGraphChart-connector.js")
-public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout {
+@Tag("related-conception-entities-dandelion-graph-chart")
+public class RelatedConceptionEntitiesDandelionGraphChart extends ReactAdapterComponent {
     private String mainConceptionKind;
     private String mainConceptionEntityUID;
     private List<ConceptionEntity> conceptionEntityList;
     private List<RelationEntity> relationEntityList;
-    private Registration listener;
     private int colorIndex = 0;
     private int colorIndex2 = 0;
     private Map<String,String> conceptionKindColorMap;
     private Map<String,String> relationKindColorMap;
 
+    public RelatedConceptionEntitiesDandelionGraphChart(){
+        this.conceptionKindColorMap = new HashMap<>();
+        this.relationKindColorMap = new HashMap<>();
+    }
+
     public RelatedConceptionEntitiesDandelionGraphChart(String mainConceptionKind, String mainConceptionEntityUID, List<ConceptionEntity> conceptionEntityList, List<RelationEntity> relationEntityList){
-        this.setSpacing(false);
-        this.setMargin(false);
-        this.setPadding(false);
         this.mainConceptionEntityUID = mainConceptionEntityUID;
         this.mainConceptionKind = mainConceptionKind;
         this.conceptionEntityList = conceptionEntityList;
         this.relationEntityList = relationEntityList;
         this.conceptionKindColorMap = new HashMap<>();
         this.relationKindColorMap = new HashMap<>();
-        //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/three.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/three-spritetext.min.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/CSS2DRenderer.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/3d-force-graph.min.js");
-        initConnector();
     }
 
-    public RelatedConceptionEntitiesDandelionGraphChart(){
-        this.setSpacing(false);
-        this.setMargin(false);
-        this.setPadding(false);
-        this.conceptionKindColorMap = new HashMap<>();
-        this.relationKindColorMap = new HashMap<>();
-        //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/three.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/three-spritetext.min.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/CSS2DRenderer.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/3d-force-graph.min.js");
-        initConnector();
+    public void setChartWidth(int width){
+        setState("chartWidth", width);
+    }
+
+    public void setChartHeight(int height){
+        setState("chartHeight", height);
+    }
+
+    public void setChartData(Map<String,Object> valueMap){
+        setState("charData", valueMap);
     }
 
     public void setDandelionGraphChartData(String mainConceptionKind, String mainConceptionEntityUID, List<ConceptionEntity> conceptionEntityList, List<RelationEntity> relationEntityList){
@@ -69,109 +62,62 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends VerticalLayout
         this.mainConceptionKind = mainConceptionKind;
         this.conceptionEntityList = conceptionEntityList;
         this.relationEntityList = relationEntityList;
+        generateGraphData();
     }
 
-    private void initConnector() {
-        runBeforeClientResponse(ui -> ui.getPage().executeJs(
-                "window.Vaadin.Flow.feature_RelatedConceptionEntitiesDandelionGraphChart.initLazy($0)", getElement()));
-    }
+    private void generateGraphData(){
 
-    private void runBeforeClientResponse(SerializableConsumer<UI> command) {
-        getElement().getNode().runWhenAttached(ui -> ui
-                .beforeClientResponse(this, context -> command.accept(ui)));
-    }
+        Map<String,Object> valueMap =new HashMap<>();
+        List<Map<String,String>> nodeInfoList = new ArrayList<>();
+        Map<String,String> centerNodeInfo = new HashMap<>();
+        centerNodeInfo.put("id",this.mainConceptionEntityUID);
+        centerNodeInfo.put("entityKind",this.mainConceptionKind);
+        centerNodeInfo.put("color","#888888");
+        nodeInfoList.add(centerNodeInfo);
 
-    @Override
-    protected void onAttach(AttachEvent attachEvent) {
-        super.onAttach(attachEvent);
-        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            generateGraph(receiver.getBodyClientHeight(),receiver.getBodyClientWidth());
-        }));
-    }
-
-    @Override
-    protected void onDetach(DetachEvent detachEvent) {
-        super.onDetach(detachEvent);
-    }
-
-    public void emptyGraph(){
-        runBeforeClientResponse(ui -> {
-            try {
-                getElement().callJsFunction("$connector.emptyGraph",
-                        new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+        List<String> attachedConceptionKinds = new ArrayList<>();
+        for(ConceptionEntity currentConceptionEntity:this.conceptionEntityList){
+            if(!attachedConceptionKinds.contains(currentConceptionEntity.getConceptionKindName())){
+                attachedConceptionKinds.add(currentConceptionEntity.getConceptionKindName());
             }
-       });
-    }
+        }
+        generateConceptionKindColorMap(attachedConceptionKinds);
 
-    private void generateGraph(int height,int width){
-        runBeforeClientResponse(ui -> {
-            try {
-                Map<String,Object> valueMap =new HashMap<>();
-                List<Map<String,String>> nodeInfoList = new ArrayList<>();
-                Map<String,String> centerNodeInfo = new HashMap<>();
-                centerNodeInfo.put("id",this.mainConceptionEntityUID);
-                centerNodeInfo.put("entityKind",this.mainConceptionKind);
-                centerNodeInfo.put("color","#888888");
-                nodeInfoList.add(centerNodeInfo);
-
-                List<String> attachedConceptionKinds = new ArrayList<>();
-                for(ConceptionEntity currentConceptionEntity:this.conceptionEntityList){
-                    if(!attachedConceptionKinds.contains(currentConceptionEntity.getConceptionKindName())){
-                        attachedConceptionKinds.add(currentConceptionEntity.getConceptionKindName());
-                    }
-                }
-                generateConceptionKindColorMap(attachedConceptionKinds);
-
-                for(ConceptionEntity currentConceptionEntity:this.conceptionEntityList){
-                    Map<String,String> currentNodeInfo = new HashMap<>();
-                    currentNodeInfo.put("id",currentConceptionEntity.getConceptionEntityUID());
-                    currentNodeInfo.put("entityKind",currentConceptionEntity.getConceptionKindName());
-                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionEntity.getConceptionKindName())!=null){
-                        currentNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionEntity.getConceptionKindName()));
-                    }else{
-                        currentNodeInfo.put("color","#0099FF");
-                    }
-                    nodeInfoList.add(currentNodeInfo);
-                }
-
-                List<Map<String,String>> edgeInfoList = new ArrayList<>();
-
-                List<String> attachedRelationKinds = new ArrayList<>();
-                for(RelationEntity currentRelationEntity:this.relationEntityList){
-                    if(!attachedRelationKinds.contains(currentRelationEntity.getRelationKindName())){
-                        attachedRelationKinds.add(currentRelationEntity.getRelationKindName());
-                    }
-                }
-                generateRelationKindColorMap(attachedRelationKinds);
-
-                for(RelationEntity currentRelationEntity:this.relationEntityList){
-                    Map<String,String> currentEdgeInfo = new HashMap<>();
-                    currentEdgeInfo.put("source",currentRelationEntity.getFromConceptionEntityUID());
-                    currentEdgeInfo.put("target",currentRelationEntity.getToConceptionEntityUID());
-                    currentEdgeInfo.put("entityKind",currentRelationEntity.getRelationKindName());
-                    currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
-                    edgeInfoList.add(currentEdgeInfo);
-                }
-
-                valueMap.put("graphHeight",height-120);
-                valueMap.put("graphWidth",width- 40);
-                valueMap.put("nodesInfo",nodeInfoList);
-                valueMap.put("edgesInfo",edgeInfoList);
-                getElement().callJsFunction("$connector.generateGraph",
-                        new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+        for(ConceptionEntity currentConceptionEntity:this.conceptionEntityList){
+            Map<String,String> currentNodeInfo = new HashMap<>();
+            currentNodeInfo.put("id",currentConceptionEntity.getConceptionEntityUID());
+            currentNodeInfo.put("entityKind",currentConceptionEntity.getConceptionKindName());
+            if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(currentConceptionEntity.getConceptionKindName())!=null){
+                currentNodeInfo.put("color",this.conceptionKindColorMap.get(currentConceptionEntity.getConceptionKindName()));
+            }else{
+                currentNodeInfo.put("color","#0099FF");
             }
-        });
-    }
+            nodeInfoList.add(currentNodeInfo);
+        }
 
-    public void generateGraph(){
-        initConnector();
-        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            generateGraph(receiver.getBodyClientHeight(),receiver.getBodyClientWidth());
-        }));
+        List<Map<String,String>> edgeInfoList = new ArrayList<>();
+
+        List<String> attachedRelationKinds = new ArrayList<>();
+        for(RelationEntity currentRelationEntity:this.relationEntityList){
+            if(!attachedRelationKinds.contains(currentRelationEntity.getRelationKindName())){
+                attachedRelationKinds.add(currentRelationEntity.getRelationKindName());
+            }
+        }
+        generateRelationKindColorMap(attachedRelationKinds);
+
+        for(RelationEntity currentRelationEntity:this.relationEntityList){
+            Map<String,String> currentEdgeInfo = new HashMap<>();
+            currentEdgeInfo.put("source",currentRelationEntity.getFromConceptionEntityUID());
+            currentEdgeInfo.put("target",currentRelationEntity.getToConceptionEntityUID());
+            currentEdgeInfo.put("entityKind",currentRelationEntity.getRelationKindName());
+            currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
+            edgeInfoList.add(currentEdgeInfo);
+        }
+        //valueMap.put("graphHeight",height-120);
+        //valueMap.put("graphWidth",width- 40);
+        valueMap.put("nodesInfo",nodeInfoList);
+        valueMap.put("edgesInfo",edgeInfoList);
+        setChartData(valueMap);
     }
 
     private Map<String,String> generateConceptionKindColorMap(List<String> attachedConceptionKinds){
