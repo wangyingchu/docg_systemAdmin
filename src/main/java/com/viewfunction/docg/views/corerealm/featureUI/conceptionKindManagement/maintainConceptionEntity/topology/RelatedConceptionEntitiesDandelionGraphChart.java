@@ -36,15 +36,6 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends ReactAdapterCo
         this.relationKindColorMap = new HashMap<>();
     }
 
-    public RelatedConceptionEntitiesDandelionGraphChart(String mainConceptionKind, String mainConceptionEntityUID, List<ConceptionEntity> conceptionEntityList, List<RelationEntity> relationEntityList){
-        this.mainConceptionEntityUID = mainConceptionEntityUID;
-        this.mainConceptionKind = mainConceptionKind;
-        this.conceptionEntityList = conceptionEntityList;
-        this.relationEntityList = relationEntityList;
-        this.conceptionKindColorMap = new HashMap<>();
-        this.relationKindColorMap = new HashMap<>();
-    }
-
     public void setChartWidth(int width){
         setState("chartWidth", width);
     }
@@ -66,7 +57,6 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends ReactAdapterCo
     }
 
     private void generateGraphData(){
-
         Map<String,Object> valueMap =new HashMap<>();
         List<Map<String,String>> nodeInfoList = new ArrayList<>();
         Map<String,String> centerNodeInfo = new HashMap<>();
@@ -113,14 +103,12 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends ReactAdapterCo
             currentEdgeInfo.put("color",this.relationKindColorMap.get(currentRelationEntity.getRelationKindName()));
             edgeInfoList.add(currentEdgeInfo);
         }
-        //valueMap.put("graphHeight",height-120);
-        //valueMap.put("graphWidth",width- 40);
         valueMap.put("nodesInfo",nodeInfoList);
         valueMap.put("edgesInfo",edgeInfoList);
         setChartData(valueMap);
     }
 
-    private Map<String,String> generateConceptionKindColorMap(List<String> attachedConceptionKinds){
+    private void generateConceptionKindColorMap(List<String> attachedConceptionKinds){
         String[] colorList =new String[]{
                 "#EA2027","#006266","#1B1464","#5758BB","#6F1E51","#EE5A24","#009432","##0652DD","#9980FA","#833471",
                 "#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67"
@@ -136,10 +124,9 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends ReactAdapterCo
             }
             colorIndex++;
         }
-        return conceptionKindColorMap;
     }
 
-    private Map<String,String> generateRelationKindColorMap(List<String> attachedRelationKinds){
+    private void generateRelationKindColorMap(List<String> attachedRelationKinds){
         String[] colorList =new String[]{
                 "#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67",
                 "#EA2027","#006266","#1B1464","#5758BB","#6F1E51","#EE5A24","#009432","#0652DD","#9980FA","#833471"
@@ -155,6 +142,5 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends ReactAdapterCo
             }
             colorIndex2++;
         }
-        return relationKindColorMap;
     }
 }
