@@ -11,6 +11,10 @@ Cytoscape.use(COSEBilkent);
 class DataRelationDistributionChartElement extends ReactAdapterElement {
     //https://github.com/plotly/react-cytoscapejs
     protected override render(hooks: RenderHooks): ReactElement | null {
+        const [chartWidth, setWidth] = hooks.useState<number>("chartWidth");
+        const [chartHeight, setHeight] = hooks.useState<number>("chartHeight");
+        const [chartData, setChartData] = hooks.useState<any>("charData");
+
         const elements = [
             { data: { id: 'one', label: 'Node 1' }, position: { x: 0, y: 0 } },
             { data: { id: 'two', label: 'Node 2' }, position: { x: 100, y: 0 } },
@@ -18,6 +22,9 @@ class DataRelationDistributionChartElement extends ReactAdapterElement {
         ];
 
         const layout = { name: 'cose-bilkent' };
+
+        const widthValueStr=''+chartWidth+'px';
+        const heightValueStr=''+chartHeight+'px';
 
         return <CytoscapeComponent
             // @ts-ignore
@@ -33,7 +40,9 @@ class DataRelationDistributionChartElement extends ReactAdapterElement {
                     }
                 ]
             })}
-            style={ { width: '600px', height: '600px' } }
+            style={
+                { width: widthValueStr, height: heightValueStr }
+            }
 
             stylesheet={[
                 {

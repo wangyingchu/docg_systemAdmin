@@ -15,4 +15,12 @@ import com.vaadin.flow.component.react.ReactAdapterComponent;
 @JsModule("./externalTech/flow/integration/react/dataRelationDistributionChart/data-relation-distribution-chart.tsx")
 @Tag("data-relation-distribution-chart")
 public class DataRelationDistributionChart_React extends ReactAdapterComponent {
+
+    public void setChartWidth(int width){
+        setState("chartWidth", width);
+    }
+
+    public void setChartHeight(int height){
+        setState("chartHeight", height);
+    }
 }

@@ -29,6 +29,9 @@ public class AboutView extends Div {
         add(conceptionEntitiesRelationsChart);
 
         DataRelationDistributionChart_React dataRelationDistributionChart_React = new DataRelationDistributionChart_React();
+        dataRelationDistributionChart_React.setChartWidth(200);
+        dataRelationDistributionChart_React.setChartHeight(300);
+
         add(dataRelationDistributionChart_React);
     }
 
