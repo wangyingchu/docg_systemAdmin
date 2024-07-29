@@ -45,7 +45,7 @@ public class RelatedConceptionEntitiesDandelionGraphChart extends ReactAdapterCo
     }
 
     public void setChartData(Map<String,Object> valueMap){
-        setState("charData", valueMap);
+        setState("chartData", valueMap);
     }
 
     public void setDandelionGraphChartData(String mainConceptionKind, String mainConceptionEntityUID, List<ConceptionEntity> conceptionEntityList, List<RelationEntity> relationEntityList){

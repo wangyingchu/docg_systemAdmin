@@ -9,7 +9,7 @@ class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterEl
     protected override render(hooks: RenderHooks): ReactElement | null {
         const [chartWidth, setWidth] = hooks.useState<number>("chartWidth");
         const [chartHeight, setHeight] = hooks.useState<number>("chartHeight");
-        const [chartData, setChartData] = hooks.useState<any>("charData");
+        const [chartData, setChartData] = hooks.useState<any>("chartData");
 
         const simulateGraphData = {
             nodes: [...Array(1000).keys()].map(i => ({id: i})),

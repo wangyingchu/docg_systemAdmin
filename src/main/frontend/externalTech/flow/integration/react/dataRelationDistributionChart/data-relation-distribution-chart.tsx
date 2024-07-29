@@ -13,7 +13,7 @@ class DataRelationDistributionChartElement extends ReactAdapterElement {
     protected override render(hooks: RenderHooks): ReactElement | null {
         const [chartWidth, setWidth] = hooks.useState<number>("chartWidth");
         const [chartHeight, setHeight] = hooks.useState<number>("chartHeight");
-        const [chartData, setChartData] = hooks.useState<any>("charData");
+        const [chartData, setChartData] = hooks.useState<any>("chartData");
 
         const elements = [
             { data: { id: 'one', label: 'Node 1' }, position: { x: 0, y: 0 } },

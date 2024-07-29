@@ -36,9 +36,21 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         }
 
         if(isIn2DMode){
-            dataRelationDistributionChart = new DataRelationDistributionChart();
-            add(dataRelationDistributionChart);
-            dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
+
+
+
+
+            //dataRelationDistributionChart = new DataRelationDistributionChart();
+            //add(dataRelationDistributionChart);
+            //dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
+
+
+            DataRelationDistributionChart_React dataRelationDistributionChart_React = new DataRelationDistributionChart_React();
+            dataRelationDistributionChart_React.setChartWidth(400);
+            dataRelationDistributionChart_React.setChartHeight(400);
+            add(dataRelationDistributionChart_React);
+            dataRelationDistributionChart_React.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
+
         }else{
             dataRelationDistribution3DChart = new DataRelationDistribution3DChart();
             add(dataRelationDistribution3DChart);
