@@ -131,11 +131,11 @@
     "@vaadin/vaadin-lumo-styles": "$@vaadin/vaadin-lumo-styles",
     "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles",
     "react-colorful": "$react-colorful",
-    "@neo4j-nvl/react": "$@neo4j-nvl/react",
-    "three-spritetext": "$three-spritetext",
     "react-force-graph": "$react-force-graph",
+    "@neo4j-nvl/react": "$@neo4j-nvl/react",
     "three": "$three",
     "cytoscape": "$cytoscape",
+    "three-spritetext": "$three-spritetext",
     "react-cytoscapejs": "$react-cytoscapejs"
   }
 }
