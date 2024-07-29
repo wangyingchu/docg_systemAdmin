@@ -20,6 +20,7 @@
     "@vaadin/vaadin-usage-statistics": "2.1.2",
     "construct-style-sheets-polyfill": "3.1.0",
     "cytoscape": "3.30.1",
+    "cytoscape-cose-bilkent": "4.1.0",
     "date-fns": "2.29.3",
     "echarts": "5.1.2",
     "lit": "3.1.4",
@@ -72,6 +73,7 @@
       "@vaadin/vaadin-usage-statistics": "2.1.2",
       "construct-style-sheets-polyfill": "3.1.0",
       "cytoscape": "3.30.1",
+      "cytoscape-cose-bilkent": "4.1.0",
       "date-fns": "2.29.3",
       "echarts": "5.1.2",
       "lit": "3.1.4",
@@ -105,7 +107,7 @@
       "workbox-core": "7.1.0",
       "workbox-precaching": "7.1.0"
     },
-    "hash": "7dea88d91b07e40519dc9a1e723f90cbe49ca60ce42de4d5dafe0f030ea712f7"
+    "hash": "8c3ef5760378b05937d6806e9e25882a672440fd0e50ec623ce80b18b23d4e8e"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -136,6 +138,7 @@
     "three": "$three",
     "cytoscape": "$cytoscape",
     "three-spritetext": "$three-spritetext",
-    "react-cytoscapejs": "$react-cytoscapejs"
+    "react-cytoscapejs": "$react-cytoscapejs",
+    "cytoscape-cose-bilkent": "$cytoscape-cose-bilkent"
   }
 }
