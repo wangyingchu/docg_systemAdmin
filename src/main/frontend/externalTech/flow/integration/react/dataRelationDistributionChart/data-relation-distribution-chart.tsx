@@ -26,10 +26,18 @@ class DataRelationDistributionChartElement extends ReactAdapterElement {
         const widthValueStr=''+chartWidth+'px';
         const heightValueStr=''+chartHeight+'px';
 
+
+
+
+
+
+
         return <CytoscapeComponent
             // @ts-ignore
             cy={(cy) => { this.cy = cy }}
-            elements={CytoscapeComponent.normalizeElements({
+
+
+            simulateElements={CytoscapeComponent.normalizeElements({
                 nodes: [
                     { data: { id: 'one', label: 'Node 1' }, position: { x: 0, y: 0 } },
                     { data: { id: 'two', label: 'Node 2' }, position: { x: 100, y: 0 } }
@@ -40,6 +48,11 @@ class DataRelationDistributionChartElement extends ReactAdapterElement {
                     }
                 ]
             })}
+
+            //elements={CytoscapeComponent.normalizeElements(chartData)}
+
+            elements={CytoscapeComponent.normalizeElements(chartData)}
+
             style={
                 { width: widthValueStr, height: heightValueStr }
             }

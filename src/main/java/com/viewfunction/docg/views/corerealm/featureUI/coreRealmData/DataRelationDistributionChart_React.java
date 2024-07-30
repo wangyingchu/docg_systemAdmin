@@ -33,6 +33,8 @@ public class DataRelationDistributionChart_React extends ReactAdapterComponent {
     }
 
     public void setData(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet, Map<String, Long> conceptionKindsDataCount, Map<String, Long> relationKindsDataCount){
+        List<CytoscapeNodePayload> cytoscapeNodePayloadList = new ArrayList<>();
+        List<CytoscapeEdgePayload> cytoscapeEdgePayloadList = new ArrayList<>();
         if(conceptionKindsDataCount != null){
             Set<String> conceptionKindNameSet = conceptionKindsDataCount.keySet();
             generateConceptionKindColorMap(conceptionKindNameSet);
@@ -49,6 +51,7 @@ public class DataRelationDistributionChart_React extends ReactAdapterComponent {
                         && !currentConceptionKindName.equals(RealmConstant.RelationAttachLinkLogicClass)
                 ){
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
+                    cytoscapeNodePayloadList.add(cytoscapeNodePayload);
                     cytoscapeNodePayload.getData().put("shape","round-octagon");
                     cytoscapeNodePayload.getData().put("background_color","#c00");
                     cytoscapeNodePayload.getData().put("size", ""+Math.log10(conceptionKindsDataCount.get(currentConceptionKindName)));
@@ -60,13 +63,11 @@ public class DataRelationDistributionChart_React extends ReactAdapterComponent {
                         cytoscapeNodePayload.getData().put("shape","round-tag");
                         //cytoscapeNodePayload.getData().put("parent","TS");
                     }
-
                     if(currentConceptionKindName.startsWith("DOCG_GS_")){
                         cytoscapeNodePayload.getData().put("background_color","#C71585");
                         cytoscapeNodePayload.getData().put("shape","round-octagon");
                         //cytoscapeNodePayload.getData().put("parent","GS");
                     }
-
                     if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEventClass)){
                         cytoscapeNodePayload.getData().put("shape","round-diamond");
                         cytoscapeNodePayload.getData().put("size","3");
@@ -90,13 +91,6 @@ public class DataRelationDistributionChart_React extends ReactAdapterComponent {
                     cytoscapeNodePayload.getData().put("id",currentConceptionKindName);
                     cytoscapeNodePayload.getData().put("kind",currentConceptionKindName);
                     cytoscapeNodePayload.getData().put("desc",currentConceptionKindName+"\n ( "+this.numberFormat.format(conceptionKindsDataCount.get(currentConceptionKindName))+" )");
-
-
-
-
-
-
-
                 }
             }
         }
@@ -125,10 +119,11 @@ public class DataRelationDistributionChart_React extends ReactAdapterComponent {
                                 !relationKindName.startsWith("DOCG_TS_FirstChildIs") &&
                                 !relationKindName.startsWith("DOCG_TS_LastChildIs")){
                             CytoscapeEdgePayload cytoscapeEdgePayload =new CytoscapeEdgePayload();
+                            cytoscapeEdgePayloadList.add(cytoscapeEdgePayload);
+
                             cytoscapeEdgePayload.getData().put("type", relationKindName);
                             cytoscapeEdgePayload.getData().put("source", sourceConceptionKindName);
                             cytoscapeEdgePayload.getData().put("target", targetConceptionKindName);
-
                             if(relationKindName.startsWith("DOCG_TS")){
                                 cytoscapeEdgePayload.getData().put("lineWidth", "0.1");
                                 cytoscapeEdgePayload.getData().put("lineColor", "#40E0D0");
@@ -154,21 +149,22 @@ public class DataRelationDistributionChart_React extends ReactAdapterComponent {
                                 cytoscapeEdgePayload.getData().put("curveStyle", "unbundled-bezier");
                                 cytoscapeEdgePayload.getData().put("lineStyle", "solid");
                             }
-
-
-
-
-
-
                         }
                     }
                 }
             }
         }
+        setChartData(cytoscapeNodePayloadList, cytoscapeEdgePayloadList);
     }
 
-    public void setChartData(CytoscapeNodePayload cytoscapeNodePayload,CytoscapeEdgePayload cytoscapeEdgePayload){
-        setState("chartData", cytoscapeNodePayload);
+    public void setChartData(List<CytoscapeNodePayload> cytoscapeNodePayloadList,List<CytoscapeEdgePayload> cytoscapeEdgePayloadList){
+
+        Map<String,Object>  xx= new HashMap<>();
+        xx.put("nodes",cytoscapeNodePayloadList);
+        xx.put("edges",cytoscapeEdgePayloadList);
+
+
+        setState("chartData", xx);
     }
 
     public void setChartWidth(int width){
