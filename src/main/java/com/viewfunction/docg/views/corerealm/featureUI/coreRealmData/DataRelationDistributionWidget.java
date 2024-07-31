@@ -18,6 +18,8 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
     private boolean isIn2DMode = true;
     private DataStatusSnapshotInfo dataStatusSnapshotInfo;
     private Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet;
+    private int _2DChartWidth=1200;
+    private int _2DChartHeight=1200;
 
     public DataRelationDistributionWidget(){
         this.setWidthFull();
@@ -25,7 +27,7 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         this.setMargin(false);
     }
 
-    private void renderDataRelationDistributionInfo(){
+    private void renderDataRelationDistributionInfo(int _2DChartHeight, int _2DChartWidth){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         if(dataStatusSnapshotInfo == null){
@@ -34,16 +36,12 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         if(conceptionKindCorrelationInfoSet == null){
             conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
         }
-
         if(isIn2DMode){
-            //dataRelationDistributionChart = new DataRelationDistributionChart();
-            //add(dataRelationDistributionChart);
-            //dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
-            DataRelationDistributionChart dataRelationDistributionChart_ = new DataRelationDistributionChart();
-            dataRelationDistributionChart_.setChartWidth(800);
-            dataRelationDistributionChart_.setChartHeight(800);
-            add(dataRelationDistributionChart_);
-            dataRelationDistributionChart_.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
+            DataRelationDistributionChart dataRelationDistributionChart = new DataRelationDistributionChart();
+            dataRelationDistributionChart.setChartWidth(_2DChartWidth);
+            dataRelationDistributionChart.setChartHeight(_2DChartHeight);
+            add(dataRelationDistributionChart);
+            dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
         }else{
             dataRelationDistribution3DChart = new DataRelationDistribution3DChart();
             add(dataRelationDistribution3DChart);
@@ -54,12 +52,11 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-
-
-
-
-
-        renderDataRelationDistributionInfo();
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            _2DChartWidth = receiver.getWindowInnerWidth()-1030;
+            _2DChartHeight = receiver.getWindowInnerHeight()-205;
+            renderDataRelationDistributionInfo(_2DChartHeight,_2DChartWidth);
+        }));
     }
 
     public void refreshDataRelationDistributionData(){
@@ -85,7 +82,7 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         if(dataRelationDistributionChartPureJavascript != null){
             dataRelationDistributionChartPureJavascript.setVisible(true);
         }else{
-            renderDataRelationDistributionInfo();
+            renderDataRelationDistributionInfo(_2DChartHeight,_2DChartWidth);
         }
     }
 
@@ -97,7 +94,7 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         if(dataRelationDistribution3DChart != null){
             dataRelationDistribution3DChart.setVisible(true);
         }else{
-            renderDataRelationDistributionInfo();
+            renderDataRelationDistributionInfo(_2DChartHeight,_2DChartWidth);
         }
     }
 }
