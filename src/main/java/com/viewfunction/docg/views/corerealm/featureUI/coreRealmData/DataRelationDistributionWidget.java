@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class DataRelationDistributionWidget extends HorizontalLayout {
 
-    private DataRelationDistributionChart_PureJavascript dataRelationDistributionChartPureJavascript;
+    private DataRelationDistributionChart dataRelationDistributionChart;
     private DataRelationDistribution3DChart dataRelationDistribution3DChart;
     private boolean isIn2DMode = true;
     private DataStatusSnapshotInfo dataStatusSnapshotInfo;
@@ -37,7 +37,7 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
             conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
         }
         if(isIn2DMode){
-            DataRelationDistributionChart dataRelationDistributionChart = new DataRelationDistributionChart();
+            dataRelationDistributionChart = new DataRelationDistributionChart();
             dataRelationDistributionChart.setChartWidth(_2DChartWidth);
             dataRelationDistributionChart.setChartHeight(_2DChartHeight);
             add(dataRelationDistributionChart);
@@ -64,9 +64,13 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
         conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
-        if(dataRelationDistributionChartPureJavascript != null){
-            dataRelationDistributionChartPureJavascript.clearData();
-            dataRelationDistributionChartPureJavascript.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
+        if(dataRelationDistributionChart != null){
+            remove(dataRelationDistributionChart);
+            dataRelationDistributionChart = new DataRelationDistributionChart();
+            dataRelationDistributionChart.setChartWidth(_2DChartWidth);
+            dataRelationDistributionChart.setChartHeight(_2DChartHeight);
+            add(dataRelationDistributionChart);
+            dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
         }
         if(dataRelationDistribution3DChart != null){
             dataRelationDistribution3DChart.clearData();
@@ -79,8 +83,8 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         if(dataRelationDistribution3DChart != null){
             dataRelationDistribution3DChart.setVisible(false);
         }
-        if(dataRelationDistributionChartPureJavascript != null){
-            dataRelationDistributionChartPureJavascript.setVisible(true);
+        if(dataRelationDistributionChart != null){
+            dataRelationDistributionChart.setVisible(true);
         }else{
             renderDataRelationDistributionInfo(_2DChartHeight,_2DChartWidth);
         }
@@ -88,8 +92,8 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
 
     public void show3DChart(){
         isIn2DMode = false;
-        if(dataRelationDistributionChartPureJavascript != null){
-            dataRelationDistributionChartPureJavascript.setVisible(false);
+        if(dataRelationDistributionChart != null){
+            dataRelationDistributionChart.setVisible(false);
         }
         if(dataRelationDistribution3DChart != null){
             dataRelationDistribution3DChart.setVisible(true);

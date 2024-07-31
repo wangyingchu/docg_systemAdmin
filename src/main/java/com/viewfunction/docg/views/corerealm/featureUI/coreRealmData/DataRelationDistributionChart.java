@@ -158,13 +158,10 @@ public class DataRelationDistributionChart extends ReactAdapterComponent {
     }
 
     public void setChartData(List<CytoscapeNodePayload> cytoscapeNodePayloadList,List<CytoscapeEdgePayload> cytoscapeEdgePayloadList){
-
-        Map<String,Object>  xx= new HashMap<>();
-        xx.put("nodes",cytoscapeNodePayloadList);
-        xx.put("edges",cytoscapeEdgePayloadList);
-
-
-        setState("chartData", xx);
+        Map<String,Object>  chartData= new HashMap<>();
+        chartData.put("nodes",cytoscapeNodePayloadList);
+        chartData.put("edges",cytoscapeEdgePayloadList);
+        setState("chartData", chartData);
     }
 
     public void setChartWidth(int width){

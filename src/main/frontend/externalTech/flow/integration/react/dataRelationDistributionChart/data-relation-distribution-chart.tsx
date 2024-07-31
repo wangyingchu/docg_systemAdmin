@@ -14,10 +14,13 @@ class DataRelationDistributionChartElement extends ReactAdapterElement {
         const [chartWidth, setWidth] = hooks.useState<number>("chartWidth");
         const [chartHeight, setHeight] = hooks.useState<number>("chartHeight");
         const [chartData, setChartData] = hooks.useState<any>("chartData");
+
         const layout = { name: 'cose-bilkent' };
         const widthValueStr=''+chartWidth+'px';
         const heightValueStr=''+chartHeight+'px';
         const fgRef = useRef();
+
+        useEffect(() => {});
 
         // @ts-ignore
         const setListeners = (cy) => {
