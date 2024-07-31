@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class DataRelationDistributionWidget extends HorizontalLayout {
 
-    private DataRelationDistributionChart dataRelationDistributionChart;
+    private DataRelationDistributionChart_PureJavascript dataRelationDistributionChartPureJavascript;
     private DataRelationDistribution3DChart dataRelationDistribution3DChart;
     private boolean isIn2DMode = true;
     private DataStatusSnapshotInfo dataStatusSnapshotInfo;
@@ -39,11 +39,11 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
             //dataRelationDistributionChart = new DataRelationDistributionChart();
             //add(dataRelationDistributionChart);
             //dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
-            DataRelationDistributionChart_React dataRelationDistributionChart_React = new DataRelationDistributionChart_React();
-            dataRelationDistributionChart_React.setChartWidth(800);
-            dataRelationDistributionChart_React.setChartHeight(800);
-            add(dataRelationDistributionChart_React);
-            dataRelationDistributionChart_React.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
+            DataRelationDistributionChart dataRelationDistributionChart_ = new DataRelationDistributionChart();
+            dataRelationDistributionChart_.setChartWidth(800);
+            dataRelationDistributionChart_.setChartHeight(800);
+            add(dataRelationDistributionChart_);
+            dataRelationDistributionChart_.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
         }else{
             dataRelationDistribution3DChart = new DataRelationDistribution3DChart();
             add(dataRelationDistribution3DChart);
@@ -54,6 +54,11 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+
+
+
+
+
         renderDataRelationDistributionInfo();
     }
 
@@ -62,9 +67,9 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         dataStatusSnapshotInfo = systemMaintenanceOperator.getDataStatusSnapshot();
         conceptionKindCorrelationInfoSet = systemMaintenanceOperator.getAllDataRelationDistributionStatistics();
-        if(dataRelationDistributionChart != null){
-            dataRelationDistributionChart.clearData();
-            dataRelationDistributionChart.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
+        if(dataRelationDistributionChartPureJavascript != null){
+            dataRelationDistributionChartPureJavascript.clearData();
+            dataRelationDistributionChartPureJavascript.setData(conceptionKindCorrelationInfoSet,dataStatusSnapshotInfo.getConceptionKindsDataCount(),dataStatusSnapshotInfo.getRelationKindsDataCount());
         }
         if(dataRelationDistribution3DChart != null){
             dataRelationDistribution3DChart.clearData();
@@ -77,8 +82,8 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
         if(dataRelationDistribution3DChart != null){
             dataRelationDistribution3DChart.setVisible(false);
         }
-        if(dataRelationDistributionChart != null){
-            dataRelationDistributionChart.setVisible(true);
+        if(dataRelationDistributionChartPureJavascript != null){
+            dataRelationDistributionChartPureJavascript.setVisible(true);
         }else{
             renderDataRelationDistributionInfo();
         }
@@ -86,8 +91,8 @@ public class DataRelationDistributionWidget extends HorizontalLayout {
 
     public void show3DChart(){
         isIn2DMode = false;
-        if(dataRelationDistributionChart != null){
-            dataRelationDistributionChart.setVisible(false);
+        if(dataRelationDistributionChartPureJavascript != null){
+            dataRelationDistributionChartPureJavascript.setVisible(false);
         }
         if(dataRelationDistribution3DChart != null){
             dataRelationDistribution3DChart.setVisible(true);

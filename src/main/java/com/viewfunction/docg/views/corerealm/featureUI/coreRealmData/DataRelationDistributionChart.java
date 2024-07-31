@@ -1,71 +1,46 @@
 package com.viewfunction.docg.views.corerealm.featureUI.coreRealmData;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.dependency.JavaScript;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.function.SerializableConsumer;
+import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.dependency.NpmPackage;
+import com.vaadin.flow.component.react.ReactAdapterComponent;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeEdgePayload;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeNodePayload;
 
-import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.*;
 
-@JavaScript("./visualization/feature/dataRelationDistributionChart-connector.js")
-public class DataRelationDistributionChart extends VerticalLayout {
+//https://www.npmjs.com/package/react-cytoscapejs
+//https://www.npmjs.com/package/cytoscape
+//https://www.npmjs.com/package/cytoscape-cose-bilkent
+@NpmPackage(value = "react-cytoscapejs", version = "2.0.0")
+@NpmPackage(value = "cytoscape", version = "3.30.1")
+@NpmPackage(value = "cytoscape-cose-bilkent", version = "4.1.0")
+@JsModule("./externalTech/flow/integration/react/dataRelationDistributionChart/data-relation-distribution-chart.tsx")
+@Tag("data-relation-distribution-chart")
+public class DataRelationDistributionChart extends ReactAdapterComponent {
 
     private Map<String,String> conceptionKindColorMap;
     private int colorIndex = 0;
     private NumberFormat numberFormat;
 
     public DataRelationDistributionChart(){
-        UI.getCurrent().getPage().addJavaScript("js/cytoscape/3.23.0/dist/cytoscape.min.js");
-        this.setWidthFull();
-        this.setSpacing(false);
-        this.setMargin(false);
-        this.setPadding(false);
         this.conceptionKindColorMap = new HashMap<>();
-        this.setHeight(100, Unit.PERCENTAGE);
         this.numberFormat = NumberFormat.getInstance();
-        initConnector();
     }
 
-    public void setData(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet, Map<String, Long> conceptionKindsDataCount,Map<String, Long> relationKindsDataCount){
+    public void setData(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet, Map<String, Long> conceptionKindsDataCount, Map<String, Long> relationKindsDataCount){
+        List<CytoscapeNodePayload> cytoscapeNodePayloadList = new ArrayList<>();
+        List<CytoscapeEdgePayload> cytoscapeEdgePayloadList = new ArrayList<>();
         if(conceptionKindsDataCount != null){
             Set<String> conceptionKindNameSet = conceptionKindsDataCount.keySet();
             generateConceptionKindColorMap(conceptionKindNameSet);
-            /*
-            CytoscapeNodePayload gs_cytoscapeNodePayload =new CytoscapeNodePayload();
-            gs_cytoscapeNodePayload.getData().put("id","GS");
-            gs_cytoscapeNodePayload.getData().put("background_color","#EEEEEE");
-            runBeforeClientResponse(ui -> {
-                try {
-                    getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(gs_cytoscapeNodePayload)});
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-
-            CytoscapeNodePayload ts_cytoscapeNodePayload =new CytoscapeNodePayload();
-            ts_cytoscapeNodePayload.getData().put("id","TS");
-            ts_cytoscapeNodePayload.getData().put("background_color","#EEEEEE");
-
-            runBeforeClientResponse(ui -> {
-                try {
-                    getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(ts_cytoscapeNodePayload)});
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            */
             for(String currentConceptionKindName:conceptionKindNameSet){
                 if(!currentConceptionKindName.equals(RealmConstant.ConceptionKindClass)
-                && !currentConceptionKindName.equals(RealmConstant.AttributesViewKindClass)
+                        && !currentConceptionKindName.equals(RealmConstant.AttributesViewKindClass)
                         && !currentConceptionKindName.equals(RealmConstant.AttributeKindClass)
                         && !currentConceptionKindName.equals(RealmConstant.RelationKindClass)
                         && !currentConceptionKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
@@ -76,6 +51,7 @@ public class DataRelationDistributionChart extends VerticalLayout {
                         && !currentConceptionKindName.equals(RealmConstant.RelationAttachLinkLogicClass)
                 ){
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
+                    cytoscapeNodePayloadList.add(cytoscapeNodePayload);
                     cytoscapeNodePayload.getData().put("shape","round-octagon");
                     cytoscapeNodePayload.getData().put("background_color","#c00");
                     cytoscapeNodePayload.getData().put("size", ""+Math.log10(conceptionKindsDataCount.get(currentConceptionKindName)));
@@ -87,13 +63,11 @@ public class DataRelationDistributionChart extends VerticalLayout {
                         cytoscapeNodePayload.getData().put("shape","round-tag");
                         //cytoscapeNodePayload.getData().put("parent","TS");
                     }
-
                     if(currentConceptionKindName.startsWith("DOCG_GS_")){
                         cytoscapeNodePayload.getData().put("background_color","#C71585");
                         cytoscapeNodePayload.getData().put("shape","round-octagon");
                         //cytoscapeNodePayload.getData().put("parent","GS");
                     }
-
                     if(currentConceptionKindName.startsWith(RealmConstant.TimeScaleEventClass)){
                         cytoscapeNodePayload.getData().put("shape","round-diamond");
                         cytoscapeNodePayload.getData().put("size","3");
@@ -117,13 +91,6 @@ public class DataRelationDistributionChart extends VerticalLayout {
                     cytoscapeNodePayload.getData().put("id",currentConceptionKindName);
                     cytoscapeNodePayload.getData().put("kind",currentConceptionKindName);
                     cytoscapeNodePayload.getData().put("desc",currentConceptionKindName+"\n ( "+this.numberFormat.format(conceptionKindsDataCount.get(currentConceptionKindName))+" )");
-                    runBeforeClientResponse(ui -> {
-                        try {
-                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
                 }
             }
         }
@@ -152,10 +119,11 @@ public class DataRelationDistributionChart extends VerticalLayout {
                                 !relationKindName.startsWith("DOCG_TS_FirstChildIs") &&
                                 !relationKindName.startsWith("DOCG_TS_LastChildIs")){
                             CytoscapeEdgePayload cytoscapeEdgePayload =new CytoscapeEdgePayload();
+                            cytoscapeEdgePayloadList.add(cytoscapeEdgePayload);
+
                             cytoscapeEdgePayload.getData().put("type", relationKindName);
                             cytoscapeEdgePayload.getData().put("source", sourceConceptionKindName);
                             cytoscapeEdgePayload.getData().put("target", targetConceptionKindName);
-
                             if(relationKindName.startsWith("DOCG_TS")){
                                 cytoscapeEdgePayload.getData().put("lineWidth", "0.1");
                                 cytoscapeEdgePayload.getData().put("lineColor", "#40E0D0");
@@ -181,36 +149,30 @@ public class DataRelationDistributionChart extends VerticalLayout {
                                 cytoscapeEdgePayload.getData().put("curveStyle", "unbundled-bezier");
                                 cytoscapeEdgePayload.getData().put("lineStyle", "solid");
                             }
-                            runBeforeClientResponse(ui -> {
-                                try {
-                                    getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
-                                } catch (JsonProcessingException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            });
                         }
                     }
                 }
             }
         }
-
-        runBeforeClientResponse(ui -> {
-            try {
-                getElement().callJsFunction("$connector.layoutGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        setChartData(cytoscapeNodePayloadList, cytoscapeEdgePayloadList);
     }
 
-    public void clearData(){
-        runBeforeClientResponse(ui -> {
-            try {
-                getElement().callJsFunction("$connector.clearData", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+    public void setChartData(List<CytoscapeNodePayload> cytoscapeNodePayloadList,List<CytoscapeEdgePayload> cytoscapeEdgePayloadList){
+
+        Map<String,Object>  xx= new HashMap<>();
+        xx.put("nodes",cytoscapeNodePayloadList);
+        xx.put("edges",cytoscapeEdgePayloadList);
+
+
+        setState("chartData", xx);
+    }
+
+    public void setChartWidth(int width){
+        setState("chartWidth", width);
+    }
+
+    public void setChartHeight(int height){
+        setState("chartHeight", height);
     }
 
     private Map<String,String> generateConceptionKindColorMap(Set<String> attachedConceptionKindsSet){
@@ -233,15 +195,5 @@ public class DataRelationDistributionChart extends VerticalLayout {
             colorIndex++;
         }
         return conceptionKindColorMap;
-    }
-
-    private void initConnector() {
-        runBeforeClientResponse(ui -> ui.getPage().executeJs(
-                "window.Vaadin.Flow.feature_DataRelationDistributionChart.initLazy($0)", getElement()));
-    }
-
-    private void runBeforeClientResponse(SerializableConsumer<UI> command) {
-        getElement().getNode().runWhenAttached(ui -> ui
-                .beforeClientResponse(this, context -> command.accept(ui)));
     }
 }
