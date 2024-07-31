@@ -19,6 +19,7 @@ import java.util.*;
 @NpmPackage(value = "react-cytoscapejs", version = "2.0.0")
 @NpmPackage(value = "cytoscape", version = "3.30.1")
 @NpmPackage(value = "cytoscape-cose-bilkent", version = "4.1.0")
+@NpmPackage(value = "cytoscape-cola", version = "2.5.1")
 @JsModule("./externalTech/flow/integration/react/dataRelationDistributionChart/data-relation-distribution-chart.tsx")
 @Tag("data-relation-distribution-chart")
 public class DataRelationDistributionChart extends ReactAdapterComponent {
