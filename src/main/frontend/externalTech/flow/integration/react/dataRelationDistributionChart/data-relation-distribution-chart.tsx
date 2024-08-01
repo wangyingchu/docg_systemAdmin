@@ -105,7 +105,7 @@ class DataRelationDistributionChartElement extends ReactAdapterElement {
             maxSimulationTime: 4000, // max length in ms to run the layout
             ungrabifyWhileSimulating: false, // so you can't drag nodes during layout
             fit: true, // on every layout reposition of nodes, fit the viewport
-            padding: 30, // padding around the simulation
+            padding: 5, // padding around the simulation
             boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
             nodeDimensionsIncludeLabels: false, // whether labels should be included in determining the space used by a node
 
