@@ -21,9 +21,6 @@
     "construct-style-sheets-polyfill": "3.1.0",
     "cytoscape": "3.30.1",
     "cytoscape-cola": "2.5.1",
-    "cytoscape-cose-bilkent": "4.1.0",
-    "cytoscape-euler": "1.2.2",
-    "cytoscape-fcose": "2.2.0",
     "date-fns": "2.29.3",
     "echarts": "5.1.2",
     "lit": "3.1.4",
@@ -77,9 +74,6 @@
       "construct-style-sheets-polyfill": "3.1.0",
       "cytoscape": "3.30.1",
       "cytoscape-cola": "2.5.1",
-      "cytoscape-cose-bilkent": "4.1.0",
-      "cytoscape-euler": "1.2.2",
-      "cytoscape-fcose": "2.2.0",
       "date-fns": "2.29.3",
       "echarts": "5.1.2",
       "lit": "3.1.4",
@@ -113,7 +107,7 @@
       "workbox-core": "7.1.0",
       "workbox-precaching": "7.1.0"
     },
-    "hash": "3a43261307418bebf9aabd61260a3a1113cce6d9dfd2daf581175b56d51dadb1"
+    "hash": "aae1a245e762bbec330d933430c685992386540e120ad64e9f13e8d6a630d6dd"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -145,9 +139,6 @@
     "cytoscape": "$cytoscape",
     "three-spritetext": "$three-spritetext",
     "react-cytoscapejs": "$react-cytoscapejs",
-    "cytoscape-cose-bilkent": "$cytoscape-cose-bilkent",
-    "cytoscape-cola": "$cytoscape-cola",
-    "cytoscape-euler": "$cytoscape-euler",
-    "cytoscape-fcose": "$cytoscape-fcose"
+    "cytoscape-cola": "$cytoscape-cola"
   }
 }
