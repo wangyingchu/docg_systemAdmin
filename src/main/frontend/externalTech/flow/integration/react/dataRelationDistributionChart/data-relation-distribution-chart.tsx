@@ -1,4 +1,5 @@
 import ReactDOM from 'react-dom';
+// @ts-ignore
 import CytoscapeComponent from 'react-cytoscapejs';
 // @ts-ignore
 import Cytoscape from 'cytoscape';

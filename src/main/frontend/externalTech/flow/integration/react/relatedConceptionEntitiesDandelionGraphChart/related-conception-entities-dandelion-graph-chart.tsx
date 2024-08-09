@@ -1,8 +1,10 @@
 import { ForceGraph2D, ForceGraph3D, ForceGraphVR, ForceGraphAR } from 'react-force-graph';
+// @ts-ignore
 import * as THREE from 'three'
 import {ReactAdapterElement, RenderHooks} from "Frontend/generated/flow/ReactAdapter";
 import {ReactElement, useEffect, useRef, useState} from "react";
 import SpriteText from 'three-spritetext';
+// @ts-ignore
 import { CSS2DRenderer,CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 class RelatedConceptionEntitiesDandelionGraphChartElement extends ReactAdapterElement {
