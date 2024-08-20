@@ -24,13 +24,13 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttrib
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.dataCompute.applicationCapacity.dataCompute.dataComputeUnit.util.CoreRealmOperationUtil;
 import com.viewfunction.docg.dataCompute.dataComputeServiceCore.exception.ComputeGridException;
 import com.viewfunction.docg.dataCompute.dataComputeServiceCore.payload.DataSliceDetailInfo;
 import com.viewfunction.docg.dataCompute.dataComputeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.dataCompute.dataComputeServiceCore.payload.DataSliceOperationResult;
 import com.viewfunction.docg.dataCompute.dataComputeServiceCore.term.ComputeGrid;
 import com.viewfunction.docg.dataCompute.dataComputeServiceCore.term.DataSlicePropertyType;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.util.common.CoreRealmOperationUtil;
 import com.viewfunction.docg.dataCompute.dataComputeServiceCore.util.factory.ComputeGridTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
@@ -315,7 +315,7 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
         QueryParameters queryParameters = new QueryParameters();
         queryParameters.setResultNumber(100000000);
 
-        DataSliceOperationResult dataSliceOperationResult =CoreRealmOperationUtil.loadConceptionKindEntitiesToDataSlice(this.conceptionKindName,this.selectedDataSliceName,
+        DataSliceOperationResult dataSliceOperationResult = CoreRealmOperationUtil.loadConceptionKindEntitiesToDataSlice(this.conceptionKindName,this.selectedDataSliceName,
                 finalAttributeMapping,queryParameters,DataSlicePropertyNameMapperWidget.ConceptionEntity_UID_AliasName);
 
         if(dataSliceOperationResult != null){
