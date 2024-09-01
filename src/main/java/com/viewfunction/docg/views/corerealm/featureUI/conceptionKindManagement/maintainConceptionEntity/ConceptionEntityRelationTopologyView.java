@@ -3,14 +3,19 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.ConceptionEntityRelationsChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.EntitySyntheticAbstractInfoView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.RelatedConceptionEntitiesDandelionGraphInfoView;
@@ -226,6 +231,31 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
             }
         });
         actionComponentsList.add(fullRelationsInfoButton);
+
+        MenuBar starterPathAnalyOperationMenuBar = new MenuBar();
+        starterPathAnalyOperationMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+        starterPathAnalyOperationMenuBar.getStyle().set("top","0px").set("position","relative");
+
+        Icon starterPathAnalysisMenuIcon = LineAwesomeIconsSvg.DRAW_POLYGON_SOLID.create();
+        starterPathAnalysisMenuIcon.setSize("16px");
+        MenuItem starterPathAnalysisMenuItem = starterPathAnalyOperationMenuBar.addItem(starterPathAnalysisMenuIcon);
+        starterPathAnalysisMenuItem.add("起始点路径分析");
+        Icon downArrowIcon = new Icon(VaadinIcon.CHEVRON_DOWN);
+        downArrowIcon.setSize("12px");
+        starterPathAnalysisMenuItem.add(downArrowIcon);
+        starterPathAnalysisMenuItem.getStyle().set("font-size","1em");
+        actionComponentsList.add(starterPathAnalyOperationMenuBar);
+
+        SubMenu starterPathAnalysisSubMenu = starterPathAnalysisMenuItem.getSubMenu();
+        MenuItem expandSubGraphDataSubMenu = starterPathAnalysisSubMenu.addItem(LineAwesomeIconsSvg.HUBSPOT.create());
+        expandSubGraphDataSubMenu.add(" 扩展子图");
+
+        expandSubGraphDataSubMenu.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                //exportCSVQueryResult();
+            }
+        });
 
         Icon relationsIcon = VaadinIcon.AIRPLANE.create();
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(relationsIcon, "关联关系探索: ", secondaryTitleComponentsList, actionComponentsList);
