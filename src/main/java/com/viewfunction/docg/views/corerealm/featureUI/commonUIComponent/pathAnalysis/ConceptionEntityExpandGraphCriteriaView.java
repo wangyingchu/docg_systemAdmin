@@ -109,7 +109,7 @@ public class ConceptionEntityExpandGraphCriteriaView extends VerticalLayout {
         IntegerField minJumpField = new IntegerField();
         minJumpField.setMin(0);
         minJumpField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        minJumpField.setWidth(30,Unit.PIXELS);
+        minJumpField.setWidth(35,Unit.PIXELS);
         pathJumpConfigSetupContainer.add(minJumpField);
         pathJumpConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,minJumpField);
 
@@ -121,7 +121,7 @@ public class ConceptionEntityExpandGraphCriteriaView extends VerticalLayout {
         IntegerField maxJumpField = new IntegerField();
         maxJumpField.setMin(1);
         maxJumpField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        maxJumpField.setWidth(30,Unit.PIXELS);
+        maxJumpField.setWidth(35,Unit.PIXELS);
         pathJumpConfigSetupContainer.add(maxJumpField);
         pathJumpConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,maxJumpField);
 

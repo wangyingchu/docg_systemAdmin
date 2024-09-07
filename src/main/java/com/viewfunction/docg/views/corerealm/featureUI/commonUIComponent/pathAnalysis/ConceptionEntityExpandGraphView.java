@@ -10,7 +10,6 @@ import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.WebBrowser;
 
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryCriteriaView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryResultsView;
 
 import java.util.ArrayList;
@@ -39,7 +38,6 @@ public class ConceptionEntityExpandGraphView extends VerticalLayout {
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
 
-
         queryFieldsContainer = new VerticalLayout();
         queryFieldsContainer.setPadding(false);
         queryFieldsContainer.setSpacing(false);
@@ -47,7 +45,6 @@ public class ConceptionEntityExpandGraphView extends VerticalLayout {
 
         ConceptionEntityExpandGraphCriteriaView conceptionEntityExpandGraphCriteriaView = new ConceptionEntityExpandGraphCriteriaView();
         queryFieldsContainer.add(conceptionEntityExpandGraphCriteriaView);
-
 
         WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
         if(webBrowser.isChrome()){
@@ -57,10 +54,6 @@ public class ConceptionEntityExpandGraphView extends VerticalLayout {
             queryFieldsContainer.setMinWidth(350,Unit.PIXELS);
             queryFieldsContainer.setMaxWidth(350,Unit.PIXELS);
         }
-
-
-
-
 
         queryResultContainer= new VerticalLayout();
         queryResultContainer.setPadding(false);
@@ -74,14 +67,5 @@ public class ConceptionEntityExpandGraphView extends VerticalLayout {
         splitLayout.setSizeFull();
         splitLayout.addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
         add(splitLayout);
-
-
-
-
-
-
-
-
-
     }
 }
