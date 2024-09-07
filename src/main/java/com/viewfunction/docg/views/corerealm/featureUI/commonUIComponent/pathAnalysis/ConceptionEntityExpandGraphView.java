@@ -49,10 +49,6 @@ public class ConceptionEntityExpandGraphView extends VerticalLayout {
         queryFieldsContainer.add(conceptionEntityExpandGraphCriteriaView);
 
 
-        ConceptionKindQueryCriteriaView conceptionKindQueryCriteriaView = new ConceptionKindQueryCriteriaView(this.conceptionKind);
-        queryFieldsContainer.add(conceptionKindQueryCriteriaView);
-
-
         WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
         if(webBrowser.isChrome()){
             queryFieldsContainer.setMinWidth(360, Unit.PIXELS);
@@ -61,6 +57,10 @@ public class ConceptionEntityExpandGraphView extends VerticalLayout {
             queryFieldsContainer.setMinWidth(350,Unit.PIXELS);
             queryFieldsContainer.setMaxWidth(350,Unit.PIXELS);
         }
+
+
+
+
 
         queryResultContainer= new VerticalLayout();
         queryResultContainer.setPadding(false);
