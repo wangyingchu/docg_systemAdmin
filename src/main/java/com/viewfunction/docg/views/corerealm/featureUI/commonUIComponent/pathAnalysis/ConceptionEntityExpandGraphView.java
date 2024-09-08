@@ -48,19 +48,19 @@ public class ConceptionEntityExpandGraphView extends VerticalLayout {
 
         WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
         if(webBrowser.isChrome()){
-            queryFieldsContainer.setMinWidth(360, Unit.PIXELS);
-            queryFieldsContainer.setMaxWidth(360,Unit.PIXELS);
+            queryFieldsContainer.setMinWidth(320, Unit.PIXELS);
+            queryFieldsContainer.setMaxWidth(320,Unit.PIXELS);
         }else{
-            queryFieldsContainer.setMinWidth(350,Unit.PIXELS);
-            queryFieldsContainer.setMaxWidth(350,Unit.PIXELS);
+            queryFieldsContainer.setMinWidth(310,Unit.PIXELS);
+            queryFieldsContainer.setMaxWidth(310,Unit.PIXELS);
         }
 
         queryResultContainer= new VerticalLayout();
         queryResultContainer.setPadding(false);
         queryResultContainer.setSpacing(false);
         queryResultContainer.setMargin(false);
-        ConceptionKindQueryResultsView conceptionKindQueryResultsView = new ConceptionKindQueryResultsView(this.conceptionKind);
-        queryResultContainer.add(conceptionKindQueryResultsView);
+        //ConceptionKindQueryResultsView conceptionKindQueryResultsView = new ConceptionKindQueryResultsView(this.conceptionKind);
+        //queryResultContainer.add(conceptionKindQueryResultsView);
 
         SplitLayout splitLayout = new SplitLayout(queryFieldsContainer, queryResultContainer);
         splitLayout.setSplitterPosition(0);

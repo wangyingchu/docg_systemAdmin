@@ -7,7 +7,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.NativeLabel;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -42,7 +41,6 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         configCriteriaContainerLayout.add(infoTitle1);
 
         HorizontalLayout relationDirectionRadioGroupContainer = new HorizontalLayout();
-        relationDirectionRadioGroupContainer.setWidth(280,Unit.PIXELS);
         relationDirectionRadioGroupContainer.getStyle().set("padding-top", "var(--lumo-space-m)");
         configCriteriaContainerLayout.add(relationDirectionRadioGroupContainer);
 
@@ -172,15 +170,15 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         buttonsContainerLayout.setPadding(false);
         add(buttonsContainerLayout);
 
-        Button executeQueryButton = new Button("查询概念实体");
-        executeQueryButton.setIcon(new Icon(VaadinIcon.SEARCH));
-        executeQueryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button expandPathButton = new Button("执行路径拓展");
+        expandPathButton.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
+        expandPathButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        expandPathButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 //queryConceptionEntities();
             }
         });
-        buttonsContainerLayout.add(executeQueryButton);
+        buttonsContainerLayout.add(expandPathButton);
     }
 }
