@@ -21,9 +21,9 @@ import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
-public class ConceptionEntityExpandGraphCriteriaView extends VerticalLayout {
+public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
 
-    public ConceptionEntityExpandGraphCriteriaView() {
+    public ConceptionEntityExpandPathCriteriaView() {
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(LineAwesomeIconsSvg.VECTOR_SQUARE_SOLID.create(),"路径扩展条件");
         add(filterTitle1);
 
@@ -52,21 +52,21 @@ public class ConceptionEntityExpandGraphCriteriaView extends VerticalLayout {
         relationDirectionRadioGroupContainer.setVerticalComponentAlignment(Alignment.CENTER,defaultRelationDirectionFilterText);
         RadioButtonGroup<RelationDirection> defaultRelationDirectionRadioGroup = new RadioButtonGroup<>();
         defaultRelationDirectionRadioGroup.addClassName("geospatial-region-detail-ui-radio-group-1");
-        defaultRelationDirectionRadioGroup.setItems(RelationDirection.FROM, RelationDirection.TO);
+        defaultRelationDirectionRadioGroup.setItems(RelationDirection.TWO_WAY, RelationDirection.FROM, RelationDirection.TO);
+        defaultRelationDirectionRadioGroup.setValue(RelationDirection.TWO_WAY);
         relationDirectionRadioGroupContainer.add(defaultRelationDirectionRadioGroup);
         relationDirectionRadioGroupContainer.setVerticalComponentAlignment(Alignment.CENTER,defaultRelationDirectionRadioGroup);
 
         HorizontalLayout relationMatchLogicConfigSetupContainer = new HorizontalLayout();
-        relationMatchLogicConfigSetupContainer.setWidth(280,Unit.PIXELS);
         relationMatchLogicConfigSetupContainer.getStyle().set("padding-top", "var(--lumo-space-m)");
         configCriteriaContainerLayout.add(relationMatchLogicConfigSetupContainer);
 
         NativeLabel relationMatchLogicConfigText = new NativeLabel("关系类型匹配逻辑:");
-        relationMatchLogicConfigText.getStyle().set("font-size","0.7rem").set("color","var(--lumo-contrast-80pct)");
+        relationMatchLogicConfigText.getStyle().set("font-size","0.75rem").set("color","var(--lumo-contrast-80pct)");
         relationMatchLogicConfigSetupContainer.add(relationMatchLogicConfigText);
         relationMatchLogicConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,relationMatchLogicConfigText);
 
-        Button addRelationMatchLogicButton = new Button();
+        Button addRelationMatchLogicButton = new Button("添加关系类型匹配逻辑");
         addRelationMatchLogicButton.setTooltipText("添加关系类型匹配逻辑");
         addRelationMatchLogicButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         addRelationMatchLogicButton.setIcon(VaadinIcon.PLUS.create());
@@ -80,16 +80,23 @@ public class ConceptionEntityExpandGraphCriteriaView extends VerticalLayout {
         criteriaItemsContainer.setWidth(100,Unit.PERCENTAGE);
         criteriaItemsContainer.setHeight(150,Unit.PIXELS);
 
+        for(int i=0;i<20;i++){
+            criteriaItemsContainer.add(new RelationKindMatchLogicWidget());
+        }
+
         Scroller queryConditionItemsScroller = new Scroller(criteriaItemsContainer);
         queryConditionItemsScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         //scroller.getStyle().set("padding", "var(--lumo-space-m)");
         configCriteriaContainerLayout.add(queryConditionItemsScroller);
 
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.getStyle().set("padding-top", "var(--lumo-space-l)");
+        configCriteriaContainerLayout.add(spaceDivLayout1);
+
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CIRCLE_SOLID.create(),"设定概念实体匹配规则");
         configCriteriaContainerLayout.add(infoTitle2);
 
         HorizontalLayout pathJumpConfigSetupContainer = new HorizontalLayout();
-        pathJumpConfigSetupContainer.setWidth(280,Unit.PIXELS);
         pathJumpConfigSetupContainer.getStyle().set("padding-top", "var(--lumo-space-m)");
         configCriteriaContainerLayout.add(pathJumpConfigSetupContainer);
 
@@ -126,12 +133,11 @@ public class ConceptionEntityExpandGraphCriteriaView extends VerticalLayout {
         pathJumpConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,maxJumpField);
 
         HorizontalLayout conceptionMatchLogicConfigSetupContainer = new HorizontalLayout();
-        conceptionMatchLogicConfigSetupContainer.setWidth(280,Unit.PIXELS);
         conceptionMatchLogicConfigSetupContainer.getStyle().set("padding-top", "var(--lumo-space-m)");
         configCriteriaContainerLayout.add(conceptionMatchLogicConfigSetupContainer);
 
         NativeLabel conceptionMatchLogicConfigText = new NativeLabel("概念类型匹配逻辑:");
-        conceptionMatchLogicConfigText.getStyle().set("font-size","0.7rem").set("color","var(--lumo-contrast-80pct)");
+        conceptionMatchLogicConfigText.getStyle().set("font-size","0.75rem").set("color","var(--lumo-contrast-80pct)");
         conceptionMatchLogicConfigSetupContainer.add(conceptionMatchLogicConfigText);
         conceptionMatchLogicConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,conceptionMatchLogicConfigText);
 
@@ -154,6 +160,9 @@ public class ConceptionEntityExpandGraphCriteriaView extends VerticalLayout {
         //scroller.getStyle().set("padding", "var(--lumo-space-m)");
         configCriteriaContainerLayout.add(queryConditionItemsScroller2);
 
+        for(int i=0;i<20;i++){
+            criteriaItemsContainer2.add(new RelationKindMatchLogicWidget());
+        }
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidthFull();

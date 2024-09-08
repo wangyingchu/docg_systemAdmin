@@ -43,8 +43,8 @@ public class ConceptionEntityExpandGraphView extends VerticalLayout {
         queryFieldsContainer.setSpacing(false);
         queryFieldsContainer.setMargin(false);
 
-        ConceptionEntityExpandGraphCriteriaView conceptionEntityExpandGraphCriteriaView = new ConceptionEntityExpandGraphCriteriaView();
-        queryFieldsContainer.add(conceptionEntityExpandGraphCriteriaView);
+        ConceptionEntityExpandPathCriteriaView conceptionEntityExpandPathCriteriaView = new ConceptionEntityExpandPathCriteriaView();
+        queryFieldsContainer.add(conceptionEntityExpandPathCriteriaView);
 
         WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
         if(webBrowser.isChrome()){
