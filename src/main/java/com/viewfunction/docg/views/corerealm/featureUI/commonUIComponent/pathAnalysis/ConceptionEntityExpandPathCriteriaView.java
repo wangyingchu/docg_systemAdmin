@@ -58,7 +58,6 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         relationDirectionRadioGroupContainer.setVerticalComponentAlignment(Alignment.CENTER,defaultRelationDirectionRadioGroup);
 
         HorizontalLayout relationMatchLogicConfigSetupContainer = new HorizontalLayout();
-        relationMatchLogicConfigSetupContainer.getStyle().set("padding-top", "var(--lumo-space-m)");
         configCriteriaContainerLayout.add(relationMatchLogicConfigSetupContainer);
 
         NativeLabel relationMatchLogicConfigText = new NativeLabel("关系类型匹配逻辑:");
@@ -116,7 +115,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         IntegerField minJumpField = new IntegerField();
         minJumpField.setMin(0);
         minJumpField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        minJumpField.setWidth(35,Unit.PIXELS);
+        minJumpField.setWidth(40,Unit.PIXELS);
         pathJumpConfigSetupContainer.add(minJumpField);
         pathJumpConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,minJumpField);
 
@@ -128,12 +127,11 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         IntegerField maxJumpField = new IntegerField();
         maxJumpField.setMin(1);
         maxJumpField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        maxJumpField.setWidth(35,Unit.PIXELS);
+        maxJumpField.setWidth(40,Unit.PIXELS);
         pathJumpConfigSetupContainer.add(maxJumpField);
         pathJumpConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,maxJumpField);
 
         HorizontalLayout conceptionMatchLogicConfigSetupContainer = new HorizontalLayout();
-        conceptionMatchLogicConfigSetupContainer.getStyle().set("padding-top", "var(--lumo-space-m)");
         configCriteriaContainerLayout.add(conceptionMatchLogicConfigSetupContainer);
 
         NativeLabel conceptionMatchLogicConfigText = new NativeLabel("概念类型匹配逻辑:");
@@ -141,8 +139,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         conceptionMatchLogicConfigSetupContainer.add(conceptionMatchLogicConfigText);
         conceptionMatchLogicConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,conceptionMatchLogicConfigText);
 
-        Button addConceptionMatchLogicButton = new Button();
-        addConceptionMatchLogicButton.setTooltipText("添加概念类型匹配逻辑");
+        Button addConceptionMatchLogicButton = new Button("添加概念类型匹配逻辑");
         addConceptionMatchLogicButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         addConceptionMatchLogicButton.setIcon(VaadinIcon.PLUS.create());
         conceptionMatchLogicConfigSetupContainer.add(addConceptionMatchLogicButton);
