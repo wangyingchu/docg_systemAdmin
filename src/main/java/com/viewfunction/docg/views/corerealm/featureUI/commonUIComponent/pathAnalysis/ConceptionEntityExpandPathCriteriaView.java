@@ -74,8 +74,8 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         criteriaItemsContainer.setMargin(false);
         criteriaItemsContainer.setSpacing(false);
         criteriaItemsContainer.setPadding(false);
-        criteriaItemsContainer.setWidth(100,Unit.PERCENTAGE);
-        criteriaItemsContainer.setHeight(150,Unit.PIXELS);
+        criteriaItemsContainer.setWidth(295,Unit.PIXELS);
+        criteriaItemsContainer.setHeight(250,Unit.PIXELS);
 
         for(int i=0;i<20;i++){
             criteriaItemsContainer.add(new RelationKindMatchLogicWidget());
@@ -147,8 +147,8 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         criteriaItemsContainer2.setMargin(false);
         criteriaItemsContainer2.setSpacing(false);
         criteriaItemsContainer2.setPadding(false);
-        criteriaItemsContainer2.setWidth(100,Unit.PERCENTAGE);
-        criteriaItemsContainer2.setHeight(150,Unit.PIXELS);
+        criteriaItemsContainer2.setWidth(295,Unit.PIXELS);
+        criteriaItemsContainer2.setHeight(230,Unit.PIXELS);
 
         Scroller queryConditionItemsScroller2 = new Scroller(criteriaItemsContainer2);
         queryConditionItemsScroller2.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
