@@ -21,6 +21,9 @@ public class RelationKindMatchLogicWidget extends VerticalLayout {
     private String relationKindName;
     private String relationKindDesc;
     private RelationDirection relationDirection;
+    private NativeLabel relationKindDescLabel;
+    private NativeLabel relationKindNameLabel;
+    private ComboBox<RelationDirection> relationDirectionComboBox;
 
     public RelationKindMatchLogicWidget(){
         setSizeFull();
@@ -48,7 +51,7 @@ public class RelationKindMatchLogicWidget extends VerticalLayout {
         relationKindDescInfoContainer.setWidth(100,Unit.PERCENTAGE);
         relationKindMetaInfoContainer.add(relationKindDescInfoContainer);
 
-        NativeLabel relationKindDescLabel = new NativeLabel("共享航班已执行执飞");
+        relationKindDescLabel = new NativeLabel("共享航班已执行执飞");
         relationKindDescLabel.getStyle().set("font-size","0.75rem").set("font-weight","bold").set("padding-right","5px");
         relationKindDescInfoContainer.add(relationKindDescLabel);
         relationKindDescInfoContainer.setFlexGrow(1,relationKindDescLabel);
@@ -59,7 +62,7 @@ public class RelationKindMatchLogicWidget extends VerticalLayout {
         relationKindNameContainer.setSpacing(false);
         relationKindMetaInfoContainer.add(relationKindNameContainer);
 
-        NativeLabel relationKindNameLabel = new NativeLabel("AlreadyServicedShareFlightExecution");
+        relationKindNameLabel = new NativeLabel("AlreadyServicedShareFlightExecution");
         relationKindNameLabel.addClassNames("text-tertiary");
         relationKindNameLabel.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-70pct)").set("padding-left","1px");
         relationKindNameContainer.add(relationKindNameLabel);
@@ -71,7 +74,7 @@ public class RelationKindMatchLogicWidget extends VerticalLayout {
         controlButtonsContainer.setMargin(false);
         controlButtonsContainer.setSpacing(false);
 
-        ComboBox<RelationDirection> relationDirectionComboBox = new ComboBox();
+        relationDirectionComboBox = new ComboBox();
         relationDirectionComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         List<RelationDirection> relationDirectionList = new ArrayList<>();
         relationDirectionList.add(RelationDirection.FROM);
@@ -85,24 +88,19 @@ public class RelationKindMatchLogicWidget extends VerticalLayout {
         relationDirectionComboBox.getStyle().set("font-size","9px");
         controlButtonsContainer.add(relationDirectionComboBox);
 
-        Button clearFilteringLogicButton = new Button();
-        clearFilteringLogicButton.addThemeVariants(ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL);
-        clearFilteringLogicButton.setIcon(VaadinIcon.ERASER.create());
-        clearFilteringLogicButton.setTooltipText("撤销此过滤（显示）条件");
-
-        clearFilteringLogicButton = new Button();
-        clearFilteringLogicButton.addThemeVariants(ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL);
-        clearFilteringLogicButton.setIcon(VaadinIcon.ERASER.create());
-        clearFilteringLogicButton.setTooltipText("撤销此过滤（显示）条件");
-        clearFilteringLogicButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button clearMatchingLogicButton = new Button();
+        clearMatchingLogicButton.addThemeVariants(ButtonVariant.LUMO_ERROR,ButtonVariant.LUMO_SMALL);
+        clearMatchingLogicButton.setIcon(VaadinIcon.ERASER.create());
+        clearMatchingLogicButton.setTooltipText("撤销此匹配规则");
+        clearMatchingLogicButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 //removeCurrentConditionLogic();
             }
         });
-        controlButtonsContainer.add(clearFilteringLogicButton);
+        controlButtonsContainer.add(clearMatchingLogicButton);
 
-        controlButtonsContainer.setVerticalComponentAlignment(Alignment.START,clearFilteringLogicButton);
+        controlButtonsContainer.setVerticalComponentAlignment(Alignment.START,clearMatchingLogicButton);
         relationKindMetaLayout.add(controlButtonsContainer);
         relationKindMetaLayout.setVerticalComponentAlignment(Alignment.START,controlButtonsContainer);
 
@@ -118,6 +116,7 @@ public class RelationKindMatchLogicWidget extends VerticalLayout {
 
     public void setRelationKindName(String relationKindName) {
         this.relationKindName = relationKindName;
+        this.relationKindNameLabel.setText(relationKindName);
     }
 
     public RelationDirection getRelationDirection() {
@@ -126,6 +125,7 @@ public class RelationKindMatchLogicWidget extends VerticalLayout {
 
     public void setRelationDirection(RelationDirection relationDirection) {
         this.relationDirection = relationDirection;
+        this.relationDirectionComboBox.setValue(relationDirection);
     }
 
     public String getRelationKindDesc() {
@@ -134,5 +134,6 @@ public class RelationKindMatchLogicWidget extends VerticalLayout {
 
     public void setRelationKindDesc(String relationKindDesc) {
         this.relationKindDesc = relationKindDesc;
+        this.relationKindDescLabel.setText(relationKindDesc);
     }
 }

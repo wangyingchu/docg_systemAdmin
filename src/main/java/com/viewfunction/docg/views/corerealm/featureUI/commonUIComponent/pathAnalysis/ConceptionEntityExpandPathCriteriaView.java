@@ -156,7 +156,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         configCriteriaContainerLayout.add(queryConditionItemsScroller2);
 
         for(int i=0;i<20;i++){
-            criteriaItemsContainer2.add(new RelationKindMatchLogicWidget());
+            criteriaItemsContainer2.add(new ConceptionKindMatchLogicWidget());
         }
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
