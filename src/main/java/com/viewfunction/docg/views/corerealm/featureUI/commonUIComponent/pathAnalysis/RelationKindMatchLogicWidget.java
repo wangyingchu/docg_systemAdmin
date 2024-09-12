@@ -81,7 +81,6 @@ public class RelationKindMatchLogicWidget extends VerticalLayout {
         relationDirectionList.add(RelationDirection.TO);
         relationDirectionList.add(RelationDirection.TWO_WAY);
         relationDirectionComboBox.setItems(relationDirectionList);
-        relationDirectionComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         relationDirectionComboBox.setWidth(75, Unit.PIXELS);
         relationDirectionComboBox.setValue(RelationDirection.TWO_WAY);
         relationDirectionComboBox.setAllowCustomValue(false);

@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -16,11 +17,15 @@ import com.vaadin.flow.component.textfield.IntegerField;
 
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis.AddRelationMatchLogicUI.AddRelationMatchLogicHelper;
 
 public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
+
+    private VerticalLayout relationMatchLogicCriteriaItemsContainer;
 
     public ConceptionEntityExpandPathCriteriaView() {
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(LineAwesomeIconsSvg.VECTOR_SQUARE_SOLID.create(),"路径扩展条件");
@@ -69,19 +74,21 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         addRelationMatchLogicButton.setIcon(VaadinIcon.PLUS.create());
         relationMatchLogicConfigSetupContainer.add(addRelationMatchLogicButton);
         relationMatchLogicConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,addRelationMatchLogicButton);
+        addRelationMatchLogicButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderAddRelationMatchLogicUI();
+            }
+        });
 
-        VerticalLayout criteriaItemsContainer = new VerticalLayout();
-        criteriaItemsContainer.setMargin(false);
-        criteriaItemsContainer.setSpacing(false);
-        criteriaItemsContainer.setPadding(false);
-        criteriaItemsContainer.setWidth(295,Unit.PIXELS);
-        criteriaItemsContainer.setHeight(250,Unit.PIXELS);
+        relationMatchLogicCriteriaItemsContainer= new VerticalLayout();
+        relationMatchLogicCriteriaItemsContainer.setMargin(false);
+        relationMatchLogicCriteriaItemsContainer.setSpacing(false);
+        relationMatchLogicCriteriaItemsContainer.setPadding(false);
+        relationMatchLogicCriteriaItemsContainer.setWidth(295,Unit.PIXELS);
+        relationMatchLogicCriteriaItemsContainer.setHeight(250,Unit.PIXELS);
 
-        for(int i=0;i<20;i++){
-            criteriaItemsContainer.add(new RelationKindMatchLogicWidget());
-        }
-
-        Scroller queryConditionItemsScroller = new Scroller(criteriaItemsContainer);
+        Scroller queryConditionItemsScroller = new Scroller(relationMatchLogicCriteriaItemsContainer);
         queryConditionItemsScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         //scroller.getStyle().set("padding", "var(--lumo-space-m)");
         configCriteriaContainerLayout.add(queryConditionItemsScroller);
@@ -142,6 +149,12 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         addConceptionMatchLogicButton.setIcon(VaadinIcon.PLUS.create());
         conceptionMatchLogicConfigSetupContainer.add(addConceptionMatchLogicButton);
         conceptionMatchLogicConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,addConceptionMatchLogicButton);
+        addConceptionMatchLogicButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderAddConceptionMatchLogicUI();
+            }
+        });
 
         VerticalLayout criteriaItemsContainer2 = new VerticalLayout();
         criteriaItemsContainer2.setMargin(false);
@@ -181,4 +194,28 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         });
         buttonsContainerLayout.add(expandPathButton);
     }
+
+    AddRelationMatchLogicHelper addRelationMatchLogicHelper = new AddRelationMatchLogicHelper(){
+        @Override
+        public void executeAddRelationMatchLogic(String relationKindName, String relationKindDesc, RelationDirection relationDirection) {
+            RelationKindMatchLogicWidget newRelationKindMatchLogicWidget = new RelationKindMatchLogicWidget();
+            newRelationKindMatchLogicWidget.setRelationKindName(relationKindName);
+            newRelationKindMatchLogicWidget.setRelationKindDesc(relationKindDesc);
+            newRelationKindMatchLogicWidget.setRelationDirection(relationDirection);
+            relationMatchLogicCriteriaItemsContainer.add(newRelationKindMatchLogicWidget);
+            relationMatchLogicCriteriaItemsContainer.setAlignItems(Alignment.START);
+        }
+    };
+
+    private void renderAddRelationMatchLogicUI(){
+        AddRelationMatchLogicUI addRelationMatchLogicUI = new AddRelationMatchLogicUI();
+        addRelationMatchLogicUI.setAddRelationMatchLogicHelper(addRelationMatchLogicHelper);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加关系类型匹配逻辑",null,true,470,280,false);
+        fixSizeWindow.setWindowContent(addRelationMatchLogicUI);
+        fixSizeWindow.setModel(true);
+        addRelationMatchLogicUI.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderAddConceptionMatchLogicUI(){}
 }
