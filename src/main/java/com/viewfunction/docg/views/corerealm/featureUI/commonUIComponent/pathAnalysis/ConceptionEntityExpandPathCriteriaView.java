@@ -86,10 +86,10 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         relationMatchLogicCriteriaItemsContainer.setSpacing(false);
         relationMatchLogicCriteriaItemsContainer.setPadding(false);
         relationMatchLogicCriteriaItemsContainer.setWidth(295,Unit.PIXELS);
-        relationMatchLogicCriteriaItemsContainer.setHeight(250,Unit.PIXELS);
 
         Scroller queryConditionItemsScroller = new Scroller(relationMatchLogicCriteriaItemsContainer);
         queryConditionItemsScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        queryConditionItemsScroller.setHeight(250,Unit.PIXELS);
         //scroller.getStyle().set("padding", "var(--lumo-space-m)");
         configCriteriaContainerLayout.add(queryConditionItemsScroller);
 
@@ -161,10 +161,10 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         criteriaItemsContainer2.setSpacing(false);
         criteriaItemsContainer2.setPadding(false);
         criteriaItemsContainer2.setWidth(295,Unit.PIXELS);
-        criteriaItemsContainer2.setHeight(230,Unit.PIXELS);
 
         Scroller queryConditionItemsScroller2 = new Scroller(criteriaItemsContainer2);
         queryConditionItemsScroller2.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        queryConditionItemsScroller2.setHeight(230,Unit.PIXELS);
         //scroller.getStyle().set("padding", "var(--lumo-space-m)");
         configCriteriaContainerLayout.add(queryConditionItemsScroller2);
 
@@ -195,10 +195,18 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         buttonsContainerLayout.add(expandPathButton);
     }
 
+    RelationKindMatchLogicWidget.RelationKindMatchLogicWidgetHelper relationKindMatchLogicWidgetHelper = new RelationKindMatchLogicWidget.RelationKindMatchLogicWidgetHelper(){
+        @Override
+        public void executeCancelRelationKindMatchLogic(RelationKindMatchLogicWidget relationKindMatchLogicWidget) {
+            relationMatchLogicCriteriaItemsContainer.remove(relationKindMatchLogicWidget);
+        }
+    };
+
     AddRelationMatchLogicHelper addRelationMatchLogicHelper = new AddRelationMatchLogicHelper(){
         @Override
         public void executeAddRelationMatchLogic(String relationKindName, String relationKindDesc, RelationDirection relationDirection) {
             RelationKindMatchLogicWidget newRelationKindMatchLogicWidget = new RelationKindMatchLogicWidget();
+            newRelationKindMatchLogicWidget.setRelationKindMatchLogicWidgetHelper(relationKindMatchLogicWidgetHelper);
             newRelationKindMatchLogicWidget.setRelationKindName(relationKindName);
             newRelationKindMatchLogicWidget.setRelationKindDesc(relationKindDesc);
             newRelationKindMatchLogicWidget.setRelationDirection(relationDirection);

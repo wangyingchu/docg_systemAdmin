@@ -18,12 +18,17 @@ import java.util.List;
 
 public class RelationKindMatchLogicWidget extends VerticalLayout {
 
+    public interface RelationKindMatchLogicWidgetHelper {
+        public void executeCancelRelationKindMatchLogic(RelationKindMatchLogicWidget relationKindMatchLogicWidget);
+    }
+
     private String relationKindName;
     private String relationKindDesc;
     private RelationDirection relationDirection;
     private NativeLabel relationKindDescLabel;
     private NativeLabel relationKindNameLabel;
     private ComboBox<RelationDirection> relationDirectionComboBox;
+    private RelationKindMatchLogicWidgetHelper relationKindMatchLogicWidgetHelper;
 
     public RelationKindMatchLogicWidget(){
         setSizeFull();
@@ -94,7 +99,7 @@ public class RelationKindMatchLogicWidget extends VerticalLayout {
         clearMatchingLogicButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //removeCurrentConditionLogic();
+                clearMatchingLogic();
             }
         });
         controlButtonsContainer.add(clearMatchingLogicButton);
@@ -134,5 +139,15 @@ public class RelationKindMatchLogicWidget extends VerticalLayout {
     public void setRelationKindDesc(String relationKindDesc) {
         this.relationKindDesc = relationKindDesc;
         this.relationKindDescLabel.setText(relationKindDesc);
+    }
+
+    private void clearMatchingLogic() {
+        if(relationKindMatchLogicWidgetHelper != null){
+            relationKindMatchLogicWidgetHelper.executeCancelRelationKindMatchLogic(this);
+        }
+    }
+
+    public void setRelationKindMatchLogicWidgetHelper(RelationKindMatchLogicWidgetHelper relationKindMatchLogicWidgetHelper) {
+        this.relationKindMatchLogicWidgetHelper = relationKindMatchLogicWidgetHelper;
     }
 }
