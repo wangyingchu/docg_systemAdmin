@@ -78,12 +78,12 @@ public class ConceptionKindMatchLogicWidget extends VerticalLayout {
 
         conceptionKindExistenceRuleComboBox = new ComboBox();
         conceptionKindExistenceRuleComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
-        List<ConceptionKindMatchLogic.ConceptionKindExistenceRule> relationDirectionList = new ArrayList<>();
-        relationDirectionList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.MUST_HAVE);
-        relationDirectionList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.END_WITH);
-        relationDirectionList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.NOT_ALLOW);
-        relationDirectionList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.TERMINATE_AT);
-        conceptionKindExistenceRuleComboBox.setItems(relationDirectionList);
+        List<ConceptionKindMatchLogic.ConceptionKindExistenceRule> conceptionKindExistenceRuleList = new ArrayList<>();
+        conceptionKindExistenceRuleList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.MUST_HAVE);
+        conceptionKindExistenceRuleList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.END_WITH);
+        conceptionKindExistenceRuleList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.NOT_ALLOW);
+        conceptionKindExistenceRuleList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.TERMINATE_AT);
+        conceptionKindExistenceRuleComboBox.setItems(conceptionKindExistenceRuleList);
         conceptionKindExistenceRuleComboBox.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
         conceptionKindExistenceRuleComboBox.setWidth(75, Unit.PIXELS);
         conceptionKindExistenceRuleComboBox.setValue(ConceptionKindMatchLogic.ConceptionKindExistenceRule.MUST_HAVE);

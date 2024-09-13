@@ -225,5 +225,13 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         fixSizeWindow.show();
     }
 
-    private void renderAddConceptionMatchLogicUI(){}
+    private void renderAddConceptionMatchLogicUI(){
+        AddConceptionMatchLogicUI addConceptionMatchLogicUI = new AddConceptionMatchLogicUI();
+
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加概念类型匹配逻辑",null,true,470,280,false);
+        fixSizeWindow.setWindowContent(addConceptionMatchLogicUI);
+        fixSizeWindow.setModel(true);
+        addConceptionMatchLogicUI.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
 }

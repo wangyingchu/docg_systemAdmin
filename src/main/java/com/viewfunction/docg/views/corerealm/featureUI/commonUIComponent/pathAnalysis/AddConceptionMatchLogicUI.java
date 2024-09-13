@@ -15,35 +15,36 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.ConceptionKindMatchLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddRelationMatchLogicUI extends VerticalLayout {
+public class AddConceptionMatchLogicUI extends VerticalLayout {
 
-    public interface AddRelationMatchLogicHelper{
-        public void executeAddRelationMatchLogic(String relationKindName,String relationKindDesc,RelationDirection relationDirection);
+    public interface AddConceptionMatchLogicHelper{
+        public void executeAddConceptionMatchLogic(String relationKindName, String relationKindDesc, ConceptionKindMatchLogic.ConceptionKindExistenceRule conceptionKindExistenceRule);
     }
 
     private Dialog containerDialog;
     private ComboBox<KindMetaInfo> relationKindFilterSelect;
-    private ComboBox<RelationDirection> relationDirectionComboBox;
+    private ComboBox<ConceptionKindMatchLogic.ConceptionKindExistenceRule> conceptionKindExistenceRuleComboBox;
     private NativeLabel errorMessage;
-    private AddRelationMatchLogicHelper addRelationMatchLogicHelper;
+    private AddConceptionMatchLogicHelper addConceptionMatchLogicHelper;
 
-    public AddRelationMatchLogicUI() {
+    public AddConceptionMatchLogicUI() {
         HorizontalLayout errorMessageContainer = new HorizontalLayout();
         errorMessageContainer.setSpacing(false);
         errorMessageContainer.setPadding(false);
         errorMessageContainer.setMargin(false);
         errorMessageContainer.getStyle().set("padding-top","3px").set("padding-bottom","3px");
 
-        NativeLabel viewTitle = new NativeLabel("关系类型匹配逻辑信息:");
+        NativeLabel viewTitle = new NativeLabel("概念类型匹配逻辑信息:");
         viewTitle.getStyle().set("color","var(--lumo-contrast-50pct)").set("font-size","0.8rem");
         errorMessageContainer.add(viewTitle);
         errorMessage = new NativeLabel("-");
@@ -52,7 +53,7 @@ public class AddRelationMatchLogicUI extends VerticalLayout {
         errorMessageContainer.add(errorMessage);
         add(errorMessageContainer);
 
-        this.relationKindFilterSelect = new ComboBox("关系类型名称 - RelationKind Name");
+        this.relationKindFilterSelect = new ComboBox("概念类型名称 - ConceptionKind Name");
         this.relationKindFilterSelect.setPageSize(30);
         this.relationKindFilterSelect.setWidth(100, Unit.PERCENTAGE);
         this.relationKindFilterSelect.setRequiredIndicatorVisible(true);
@@ -67,16 +68,24 @@ public class AddRelationMatchLogicUI extends VerticalLayout {
         this.relationKindFilterSelect.setRenderer(createRenderer());
         add(this.relationKindFilterSelect);
 
-        relationDirectionComboBox = new ComboBox("关系方向 - RelationKind Direction");
-        List<RelationDirection> relationDirectionList = new ArrayList<>();
-        relationDirectionList.add(RelationDirection.FROM);
-        relationDirectionList.add(RelationDirection.TO);
-        relationDirectionList.add(RelationDirection.TWO_WAY);
-        relationDirectionComboBox.setItems(relationDirectionList);
-        relationDirectionComboBox.setWidth(100, Unit.PERCENTAGE);
-        relationDirectionComboBox.setValue(RelationDirection.TWO_WAY);
-        relationDirectionComboBox.setAllowCustomValue(false);
-        add(relationDirectionComboBox);
+        conceptionKindExistenceRuleComboBox = new ComboBox("概念类型存在规则 - ConceptionKind ExistenceRule");
+        List<ConceptionKindMatchLogic.ConceptionKindExistenceRule> relationDirectionList = new ArrayList<>();
+
+
+
+        relationDirectionList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.MUST_HAVE);
+        relationDirectionList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.END_WITH);
+        relationDirectionList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.NOT_ALLOW);
+        relationDirectionList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.TERMINATE_AT);
+
+
+
+
+        conceptionKindExistenceRuleComboBox.setItems(relationDirectionList);
+        conceptionKindExistenceRuleComboBox.setWidth(100, Unit.PERCENTAGE);
+        conceptionKindExistenceRuleComboBox.setValue(ConceptionKindMatchLogic.ConceptionKindExistenceRule.MUST_HAVE);
+        conceptionKindExistenceRuleComboBox.setAllowCustomValue(false);
+        add(conceptionKindExistenceRuleComboBox);
 
         Button confirmButton = new Button("确定添加关系类型匹配逻辑",new Icon(VaadinIcon.CHECK));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -98,7 +107,7 @@ public class AddRelationMatchLogicUI extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
             coreRealm.openGlobalSession();
-            List<KindMetaInfo> runtimeRelationKindMetaInfoList = coreRealm.getRelationKindsMetaInfo();
+            List<KindMetaInfo> runtimeRelationKindMetaInfoList = coreRealm.getConceptionKindsMetaInfo();
             this.relationKindFilterSelect.setItems(runtimeRelationKindMetaInfoList);
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
@@ -112,9 +121,9 @@ public class AddRelationMatchLogicUI extends VerticalLayout {
     }
 
     private void doAddRelationMatchLogic(){
-        if(addRelationMatchLogicHelper != null){
+        if(addConceptionMatchLogicHelper != null){
             KindMetaInfo selectedKind = this.relationKindFilterSelect.getValue();
-            addRelationMatchLogicHelper.executeAddRelationMatchLogic(selectedKind.getKindName(),selectedKind.getKindDesc(),relationDirectionComboBox.getValue());
+            addConceptionMatchLogicHelper.executeAddConceptionMatchLogic(selectedKind.getKindName(),selectedKind.getKindDesc(), conceptionKindExistenceRuleComboBox.getValue());
         }
         if(this.containerDialog != null){
             this.containerDialog.close();
@@ -135,7 +144,7 @@ public class AddRelationMatchLogicUI extends VerticalLayout {
                 .withProperty("attributeKindDesc", KindMetaInfo::getKindDesc);
     }
 
-    public void setAddRelationMatchLogicHelper(AddRelationMatchLogicHelper addRelationMatchLogicHelper) {
-        this.addRelationMatchLogicHelper = addRelationMatchLogicHelper;
+    public void setAddConceptionMatchLogicHelper(AddConceptionMatchLogicHelper addConceptionMatchLogicHelper) {
+        this.addConceptionMatchLogicHelper = addConceptionMatchLogicHelper;
     }
 }
