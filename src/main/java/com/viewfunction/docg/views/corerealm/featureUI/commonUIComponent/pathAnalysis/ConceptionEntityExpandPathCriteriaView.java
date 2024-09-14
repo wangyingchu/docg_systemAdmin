@@ -331,6 +331,8 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
     }
 
     private void executeConceptionEntityExpandPath(){
-
+        boolean includeSelf = includeSelfCheckBox.getValue();
+        int minJump = minJumpField.getValue();
+        int maxJump = maxJumpField.getValue();
     }
 }
