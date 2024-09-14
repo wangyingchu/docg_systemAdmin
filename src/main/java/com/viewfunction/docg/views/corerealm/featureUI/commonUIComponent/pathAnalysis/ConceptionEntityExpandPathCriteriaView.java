@@ -1,6 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis;
 
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -9,6 +10,8 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -22,8 +25,13 @@ import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis.AddRelationMatchLogicUI.AddRelationMatchLogicHelper;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis.AddConceptionMatchLogicUI.AddConceptionMatchLogicHelper;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
 
@@ -204,12 +212,16 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
     AddRelationMatchLogicHelper addRelationMatchLogicHelper = new AddRelationMatchLogicHelper(){
         @Override
         public void executeAddRelationMatchLogic(String relationKindName, String relationKindDesc, RelationDirection relationDirection) {
-            RelationKindMatchLogicWidget newRelationKindMatchLogicWidget = new RelationKindMatchLogicWidget();
-            newRelationKindMatchLogicWidget.setRelationKindMatchLogicWidgetHelper(relationKindMatchLogicWidgetHelper);
-            newRelationKindMatchLogicWidget.setRelationKindName(relationKindName);
-            newRelationKindMatchLogicWidget.setRelationKindDesc(relationKindDesc);
-            newRelationKindMatchLogicWidget.setRelationDirection(relationDirection);
-            relationMatchLogicCriteriaItemsContainer.add(newRelationKindMatchLogicWidget);
+            if(checkRelationKindMatchLogicNotExist(relationKindName,relationDirection)){
+                RelationKindMatchLogicWidget newRelationKindMatchLogicWidget = new RelationKindMatchLogicWidget();
+                newRelationKindMatchLogicWidget.setRelationKindMatchLogicWidgetHelper(relationKindMatchLogicWidgetHelper);
+                newRelationKindMatchLogicWidget.setRelationKindName(relationKindName);
+                newRelationKindMatchLogicWidget.setRelationKindDesc(relationKindDesc);
+                newRelationKindMatchLogicWidget.setRelationDirection(relationDirection);
+                relationMatchLogicCriteriaItemsContainer.add(newRelationKindMatchLogicWidget);
+            }else{
+                CommonUIOperationUtil.showPopupNotification("关系类型匹配逻辑已经存在", NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+            }
         }
     };
 
@@ -223,12 +235,16 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
     AddConceptionMatchLogicHelper addConceptionMatchLogicHelper = new AddConceptionMatchLogicUI.AddConceptionMatchLogicHelper(){
         @Override
         public void executeAddConceptionMatchLogic(String conceptionKindName, String conceptionKindDesc, ConceptionKindMatchLogic.ConceptionKindExistenceRule conceptionKindExistenceRule) {
-            ConceptionKindMatchLogicWidget conceptionKindMatchLogicWidget = new ConceptionKindMatchLogicWidget();
-            conceptionKindMatchLogicWidget.setRelationKindMatchLogicWidgetHelper(conceptionKindMatchLogicWidgetHelper);
-            conceptionKindMatchLogicWidget.setConceptionKindName(conceptionKindName);
-            conceptionKindMatchLogicWidget.setConceptionKindDesc(conceptionKindDesc);
-            conceptionKindMatchLogicWidget.setConceptionKindExistenceRule(conceptionKindExistenceRule);
-            conceptionMatchLogicCriteriaItemsContainer.add(conceptionKindMatchLogicWidget);
+            if(checkConceptionKindMatchLogicNotExist(conceptionKindName,conceptionKindExistenceRule)){
+                ConceptionKindMatchLogicWidget conceptionKindMatchLogicWidget = new ConceptionKindMatchLogicWidget();
+                conceptionKindMatchLogicWidget.setRelationKindMatchLogicWidgetHelper(conceptionKindMatchLogicWidgetHelper);
+                conceptionKindMatchLogicWidget.setConceptionKindName(conceptionKindName);
+                conceptionKindMatchLogicWidget.setConceptionKindDesc(conceptionKindDesc);
+                conceptionKindMatchLogicWidget.setConceptionKindExistenceRule(conceptionKindExistenceRule);
+                conceptionMatchLogicCriteriaItemsContainer.add(conceptionKindMatchLogicWidget);
+            }else{
+                CommonUIOperationUtil.showPopupNotification("概念类型匹配逻辑已经存在", NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
+            }
         }
     };
 
@@ -250,5 +266,45 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         fixSizeWindow.setModel(true);
         addConceptionMatchLogicUI.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    private boolean checkConceptionKindMatchLogicNotExist(String conceptionKindName, ConceptionKindMatchLogic.ConceptionKindExistenceRule conceptionKindExistenceRule){
+        Stream<Component> existConceptionMatchLogicWidgets = conceptionMatchLogicCriteriaItemsContainer.getChildren();
+        List<Boolean> haveExistConceptionMatchLogicList = new ArrayList<>();
+        existConceptionMatchLogicWidgets.forEach(
+                existConceptionMatchLogicWidget -> {
+                    ConceptionKindMatchLogicWidget currentConceptionKindMatchLogicWidget = (ConceptionKindMatchLogicWidget) existConceptionMatchLogicWidget;
+                    if(conceptionKindName.equals(currentConceptionKindMatchLogicWidget.getConceptionKindName()) &
+                            conceptionKindExistenceRule.equals(currentConceptionKindMatchLogicWidget.getConceptionKindExistenceRule())
+                    ){
+                        haveExistConceptionMatchLogicList.add(true);
+                    }
+                }
+        );
+        if(haveExistConceptionMatchLogicList.size() == 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private boolean checkRelationKindMatchLogicNotExist(String relationKindName, RelationDirection relationDirection){
+        Stream<Component> existRelationMatchLogicWidgets = relationMatchLogicCriteriaItemsContainer.getChildren();
+        List<Boolean> haveExistRelationMatchLogicList = new ArrayList<>();
+        existRelationMatchLogicWidgets.forEach(
+                existRelationMatchLogicWidget -> {
+                    RelationKindMatchLogicWidget currentRelationKindMatchLogicWidget = (RelationKindMatchLogicWidget) existRelationMatchLogicWidget;
+                    if(relationKindName.equals(currentRelationKindMatchLogicWidget.getRelationKindName()) &
+                            relationDirection.equals(currentRelationKindMatchLogicWidget.getRelationDirection())
+                    ){
+                        haveExistRelationMatchLogicList.add(true);
+                    }
+                }
+        );
+        if(haveExistRelationMatchLogicList.size() == 0){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
