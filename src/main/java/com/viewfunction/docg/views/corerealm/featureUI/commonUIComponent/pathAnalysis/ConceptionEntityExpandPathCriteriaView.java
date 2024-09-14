@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -38,6 +35,9 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
     private VerticalLayout relationMatchLogicCriteriaItemsContainer;
     private VerticalLayout conceptionMatchLogicCriteriaItemsContainer;
     private RadioButtonGroup<RelationDirection> defaultRelationDirectionRadioGroup;
+    private Checkbox includeSelfCheckBox;
+    private IntegerField minJumpField;
+    private IntegerField maxJumpField;
 
     public ConceptionEntityExpandPathCriteriaView() {
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(LineAwesomeIconsSvg.VECTOR_SQUARE_SOLID.create(),"路径扩展条件");
@@ -93,7 +93,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
             }
         });
 
-        relationMatchLogicCriteriaItemsContainer= new VerticalLayout();
+        relationMatchLogicCriteriaItemsContainer = new VerticalLayout();
         relationMatchLogicCriteriaItemsContainer.setMargin(false);
         relationMatchLogicCriteriaItemsContainer.setSpacing(false);
         relationMatchLogicCriteriaItemsContainer.setPadding(false);
@@ -120,16 +120,27 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         includeSelfConfigText.getStyle().set("font-size","0.7rem").set("color","var(--lumo-contrast-80pct)");
         pathJumpConfigSetupContainer.add(includeSelfConfigText);
         pathJumpConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,includeSelfConfigText);
-        Checkbox includeSelfCheckBox = new Checkbox();
+        includeSelfCheckBox = new Checkbox();
         pathJumpConfigSetupContainer.add(includeSelfCheckBox);
         pathJumpConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,includeSelfCheckBox);
+        includeSelfCheckBox.addValueChangeListener(new HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<Checkbox, Boolean>>() {
+            @Override
+            public void valueChanged(AbstractField.ComponentValueChangeEvent<Checkbox, Boolean> checkboxBooleanComponentValueChangeEvent) {
+                boolean currentValue = checkboxBooleanComponentValueChangeEvent.getValue();
+                if(currentValue){
+                    minJumpField.setEnabled(false);
+                }else{
+                    minJumpField.setEnabled(true);
+                }
+            }
+        });
 
         NativeLabel minJumpConfigText = new NativeLabel("最小跳数:");
         minJumpConfigText.getStyle().set("font-size","0.7rem").set("color","var(--lumo-contrast-80pct)");
         pathJumpConfigSetupContainer.add(minJumpConfigText);
         pathJumpConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,minJumpConfigText);
 
-        IntegerField minJumpField = new IntegerField();
+        minJumpField = new IntegerField();
         minJumpField.setMin(0);
         minJumpField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         minJumpField.setWidth(40,Unit.PIXELS);
@@ -141,7 +152,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         pathJumpConfigSetupContainer.add(maxJumpConfigText);
         pathJumpConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,maxJumpConfigText);
 
-        IntegerField maxJumpField = new IntegerField();
+        maxJumpField = new IntegerField();
         maxJumpField.setMin(1);
         maxJumpField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         maxJumpField.setWidth(40,Unit.PIXELS);
@@ -197,7 +208,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         expandPathButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //queryConceptionEntities();
+                executeConceptionEntityExpandPath();
             }
         });
         buttonsContainerLayout.add(expandPathButton);
@@ -317,5 +328,9 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         }else{
             defaultRelationDirectionRadioGroup.setEnabled(true);
         }
+    }
+
+    private void executeConceptionEntityExpandPath(){
+
     }
 }
