@@ -37,6 +37,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
 
     private VerticalLayout relationMatchLogicCriteriaItemsContainer;
     private VerticalLayout conceptionMatchLogicCriteriaItemsContainer;
+    private RadioButtonGroup<RelationDirection> defaultRelationDirectionRadioGroup;
 
     public ConceptionEntityExpandPathCriteriaView() {
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(LineAwesomeIconsSvg.VECTOR_SQUARE_SOLID.create(),"路径扩展条件");
@@ -64,7 +65,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         defaultRelationDirectionFilterText.getStyle().set("font-size","0.7rem").set("color","var(--lumo-contrast-80pct)");
         relationDirectionRadioGroupContainer.add(defaultRelationDirectionFilterText);
         relationDirectionRadioGroupContainer.setVerticalComponentAlignment(Alignment.CENTER,defaultRelationDirectionFilterText);
-        RadioButtonGroup<RelationDirection> defaultRelationDirectionRadioGroup = new RadioButtonGroup<>();
+        defaultRelationDirectionRadioGroup = new RadioButtonGroup<>();
         defaultRelationDirectionRadioGroup.addClassName("geospatial-region-detail-ui-radio-group-1");
         defaultRelationDirectionRadioGroup.setItems(RelationDirection.TWO_WAY, RelationDirection.FROM, RelationDirection.TO);
         defaultRelationDirectionRadioGroup.setValue(RelationDirection.TWO_WAY);
@@ -206,6 +207,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         @Override
         public void executeCancelRelationKindMatchLogic(RelationKindMatchLogicWidget relationKindMatchLogicWidget) {
             relationMatchLogicCriteriaItemsContainer.remove(relationKindMatchLogicWidget);
+            setDefaultRelationDirectionRadioGroupStatus();
         }
     };
 
@@ -222,6 +224,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
             }else{
                 CommonUIOperationUtil.showPopupNotification("关系类型匹配逻辑已经存在", NotificationVariant.LUMO_WARNING,3000, Notification.Position.BOTTOM_START);
             }
+            setDefaultRelationDirectionRadioGroupStatus();
         }
     };
 
@@ -305,6 +308,14 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
             return true;
         }else{
             return false;
+        }
+    }
+
+    private void setDefaultRelationDirectionRadioGroupStatus(){
+        if(relationMatchLogicCriteriaItemsContainer.getComponentCount() > 0){
+            defaultRelationDirectionRadioGroup.setEnabled(false);
+        }else{
+            defaultRelationDirectionRadioGroup.setEnabled(true);
         }
     }
 }
