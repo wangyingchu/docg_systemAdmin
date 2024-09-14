@@ -28,6 +28,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAna
 public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
 
     private VerticalLayout relationMatchLogicCriteriaItemsContainer;
+    private VerticalLayout conceptionMatchLogicCriteriaItemsContainer;
 
     public ConceptionEntityExpandPathCriteriaView() {
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(LineAwesomeIconsSvg.VECTOR_SQUARE_SOLID.create(),"路径扩展条件");
@@ -158,21 +159,17 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
             }
         });
 
-        VerticalLayout criteriaItemsContainer2 = new VerticalLayout();
-        criteriaItemsContainer2.setMargin(false);
-        criteriaItemsContainer2.setSpacing(false);
-        criteriaItemsContainer2.setPadding(false);
-        criteriaItemsContainer2.setWidth(295,Unit.PIXELS);
+        conceptionMatchLogicCriteriaItemsContainer = new VerticalLayout();
+        conceptionMatchLogicCriteriaItemsContainer.setMargin(false);
+        conceptionMatchLogicCriteriaItemsContainer.setSpacing(false);
+        conceptionMatchLogicCriteriaItemsContainer.setPadding(false);
+        conceptionMatchLogicCriteriaItemsContainer.setWidth(295,Unit.PIXELS);
 
-        Scroller queryConditionItemsScroller2 = new Scroller(criteriaItemsContainer2);
+        Scroller queryConditionItemsScroller2 = new Scroller(conceptionMatchLogicCriteriaItemsContainer);
         queryConditionItemsScroller2.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
-        queryConditionItemsScroller2.setHeight(230,Unit.PIXELS);
+        queryConditionItemsScroller2.setHeight(245,Unit.PIXELS);
         //scroller.getStyle().set("padding", "var(--lumo-space-m)");
         configCriteriaContainerLayout.add(queryConditionItemsScroller2);
-
-        for(int i=0;i<20;i++){
-            criteriaItemsContainer2.add(new ConceptionKindMatchLogicWidget());
-        }
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
         spaceDivLayout2.setWidthFull();
@@ -213,14 +210,25 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
             newRelationKindMatchLogicWidget.setRelationKindDesc(relationKindDesc);
             newRelationKindMatchLogicWidget.setRelationDirection(relationDirection);
             relationMatchLogicCriteriaItemsContainer.add(newRelationKindMatchLogicWidget);
-            relationMatchLogicCriteriaItemsContainer.setAlignItems(Alignment.START);
+        }
+    };
+
+    ConceptionKindMatchLogicWidget.ConceptionKindMatchLogicWidgetHelper conceptionKindMatchLogicWidgetHelper = new ConceptionKindMatchLogicWidget.ConceptionKindMatchLogicWidgetHelper(){
+        @Override
+        public void executeCancelConceptionKindMatchLogic(ConceptionKindMatchLogicWidget conceptionKindMatchLogicWidget) {
+            conceptionMatchLogicCriteriaItemsContainer.remove(conceptionKindMatchLogicWidget);
         }
     };
 
     AddConceptionMatchLogicHelper addConceptionMatchLogicHelper = new AddConceptionMatchLogicUI.AddConceptionMatchLogicHelper(){
         @Override
         public void executeAddConceptionMatchLogic(String conceptionKindName, String conceptionKindDesc, ConceptionKindMatchLogic.ConceptionKindExistenceRule conceptionKindExistenceRule) {
-
+            ConceptionKindMatchLogicWidget conceptionKindMatchLogicWidget = new ConceptionKindMatchLogicWidget();
+            conceptionKindMatchLogicWidget.setRelationKindMatchLogicWidgetHelper(conceptionKindMatchLogicWidgetHelper);
+            conceptionKindMatchLogicWidget.setConceptionKindName(conceptionKindName);
+            conceptionKindMatchLogicWidget.setConceptionKindDesc(conceptionKindDesc);
+            conceptionKindMatchLogicWidget.setConceptionKindExistenceRule(conceptionKindExistenceRule);
+            conceptionMatchLogicCriteriaItemsContainer.add(conceptionKindMatchLogicWidget);
         }
     };
 

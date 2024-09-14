@@ -20,12 +20,17 @@ import java.util.List;
 
 public class ConceptionKindMatchLogicWidget extends VerticalLayout {
 
+    public interface ConceptionKindMatchLogicWidgetHelper {
+        public void executeCancelConceptionKindMatchLogic(ConceptionKindMatchLogicWidget conceptionKindMatchLogicWidget);
+    }
+
     private String conceptionKindName;
     private String conceptionKindDesc;
     private ConceptionKindMatchLogic.ConceptionKindExistenceRule conceptionKindExistenceRule;
     private NativeLabel conceptionKindDescLabel;
     private NativeLabel conceptionKindNameLabel;
     private ComboBox<ConceptionKindMatchLogic.ConceptionKindExistenceRule> conceptionKindExistenceRuleComboBox;
+    private ConceptionKindMatchLogicWidgetHelper conceptionKindMatchLogicWidgetHelper;
 
     public ConceptionKindMatchLogicWidget(){
         setSizeFull();
@@ -53,7 +58,7 @@ public class ConceptionKindMatchLogicWidget extends VerticalLayout {
         conceptionKindDescInfoContainer.setWidth(100,Unit.PERCENTAGE);
         conceptionKindMetaInfoContainer.add(conceptionKindDescInfoContainer);
 
-        conceptionKindDescLabel = new NativeLabel("共享航班已执行执飞");
+        conceptionKindDescLabel = new NativeLabel("-");
         conceptionKindDescLabel.getStyle().set("font-size","0.75rem").set("font-weight","bold").set("padding-right","5px");
         conceptionKindDescInfoContainer.add(conceptionKindDescLabel);
         conceptionKindDescInfoContainer.setFlexGrow(1, conceptionKindDescLabel);
@@ -64,7 +69,7 @@ public class ConceptionKindMatchLogicWidget extends VerticalLayout {
         conceptionKindNameContainer.setSpacing(false);
         conceptionKindMetaInfoContainer.add(conceptionKindNameContainer);
 
-        conceptionKindNameLabel = new NativeLabel("AlreadyServicedShareFlightExecution");
+        conceptionKindNameLabel = new NativeLabel("-");
         conceptionKindNameLabel.addClassNames("text-tertiary");
         conceptionKindNameLabel.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-70pct)").set("padding-left","1px");
         conceptionKindNameContainer.add(conceptionKindNameLabel);
@@ -98,7 +103,7 @@ public class ConceptionKindMatchLogicWidget extends VerticalLayout {
         clearMatchingLogicButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //removeCurrentConditionLogic();
+                clearMatchingLogic();
             }
         });
         controlButtonsContainer.add(clearMatchingLogicButton);
@@ -138,5 +143,15 @@ public class ConceptionKindMatchLogicWidget extends VerticalLayout {
     public void setConceptionKindDesc(String conceptionKindDesc) {
         this.conceptionKindDesc = conceptionKindDesc;
         this.conceptionKindDescLabel.setText(conceptionKindDesc);
+    }
+
+    private void clearMatchingLogic() {
+        if(conceptionKindMatchLogicWidgetHelper != null){
+            conceptionKindMatchLogicWidgetHelper.executeCancelConceptionKindMatchLogic(this);
+        }
+    }
+
+    public void setRelationKindMatchLogicWidgetHelper(ConceptionKindMatchLogicWidgetHelper conceptionKindMatchLogicWidgetHelper) {
+        this.conceptionKindMatchLogicWidgetHelper = conceptionKindMatchLogicWidgetHelper;
     }
 }

@@ -56,7 +56,7 @@ public class RelationKindMatchLogicWidget extends VerticalLayout {
         relationKindDescInfoContainer.setWidth(100,Unit.PERCENTAGE);
         relationKindMetaInfoContainer.add(relationKindDescInfoContainer);
 
-        relationKindDescLabel = new NativeLabel("共享航班已执行执飞");
+        relationKindDescLabel = new NativeLabel("-");
         relationKindDescLabel.getStyle().set("font-size","0.75rem").set("font-weight","bold").set("padding-right","5px");
         relationKindDescInfoContainer.add(relationKindDescLabel);
         relationKindDescInfoContainer.setFlexGrow(1,relationKindDescLabel);
@@ -67,7 +67,7 @@ public class RelationKindMatchLogicWidget extends VerticalLayout {
         relationKindNameContainer.setSpacing(false);
         relationKindMetaInfoContainer.add(relationKindNameContainer);
 
-        relationKindNameLabel = new NativeLabel("AlreadyServicedShareFlightExecution");
+        relationKindNameLabel = new NativeLabel("-");
         relationKindNameLabel.addClassNames("text-tertiary");
         relationKindNameLabel.getStyle().set("font-size","0.6rem").set("color","var(--lumo-contrast-70pct)").set("padding-left","1px");
         relationKindNameContainer.add(relationKindNameLabel);
