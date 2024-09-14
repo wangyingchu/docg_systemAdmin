@@ -334,5 +334,12 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         boolean includeSelf = includeSelfCheckBox.getValue();
         int minJump = minJumpField.getValue();
         int maxJump = maxJumpField.getValue();
+        boolean inputCheckPassed = true;
+        if(!includeSelf){
+            if(minJump>maxJump){
+                CommonUIOperationUtil.showPopupNotification("最大跳数不能小于最小跳数", NotificationVariant.LUMO_ERROR);
+                inputCheckPassed = false;
+            }
+        }
     }
 }
