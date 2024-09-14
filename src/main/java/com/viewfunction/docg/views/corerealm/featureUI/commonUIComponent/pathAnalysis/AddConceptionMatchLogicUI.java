@@ -28,11 +28,11 @@ import java.util.List;
 public class AddConceptionMatchLogicUI extends VerticalLayout {
 
     public interface AddConceptionMatchLogicHelper{
-        public void executeAddConceptionMatchLogic(String relationKindName, String relationKindDesc, ConceptionKindMatchLogic.ConceptionKindExistenceRule conceptionKindExistenceRule);
+        public void executeAddConceptionMatchLogic(String conceptionKindName, String conceptionKindDesc, ConceptionKindMatchLogic.ConceptionKindExistenceRule conceptionKindExistenceRule);
     }
 
     private Dialog containerDialog;
-    private ComboBox<KindMetaInfo> relationKindFilterSelect;
+    private ComboBox<KindMetaInfo> conceptionKindFilterSelect;
     private ComboBox<ConceptionKindMatchLogic.ConceptionKindExistenceRule> conceptionKindExistenceRuleComboBox;
     private NativeLabel errorMessage;
     private AddConceptionMatchLogicHelper addConceptionMatchLogicHelper;
@@ -53,11 +53,11 @@ public class AddConceptionMatchLogicUI extends VerticalLayout {
         errorMessageContainer.add(errorMessage);
         add(errorMessageContainer);
 
-        this.relationKindFilterSelect = new ComboBox("概念类型名称 - ConceptionKind Name");
-        this.relationKindFilterSelect.setPageSize(30);
-        this.relationKindFilterSelect.setWidth(100, Unit.PERCENTAGE);
-        this.relationKindFilterSelect.setRequiredIndicatorVisible(true);
-        this.relationKindFilterSelect.setItemLabelGenerator(new ItemLabelGenerator<KindMetaInfo>() {
+        this.conceptionKindFilterSelect = new ComboBox("概念类型 - ConceptionKind");
+        this.conceptionKindFilterSelect.setPageSize(30);
+        this.conceptionKindFilterSelect.setWidth(100, Unit.PERCENTAGE);
+        this.conceptionKindFilterSelect.setRequiredIndicatorVisible(true);
+        this.conceptionKindFilterSelect.setItemLabelGenerator(new ItemLabelGenerator<KindMetaInfo>() {
             @Override
             public String apply(KindMetaInfo attributeKindMetaInfo) {
                 String itemLabelValue = attributeKindMetaInfo.getKindName()+ " ("+
@@ -65,39 +65,38 @@ public class AddConceptionMatchLogicUI extends VerticalLayout {
                 return itemLabelValue;
             }
         });
-        this.relationKindFilterSelect.setRenderer(createRenderer());
-        add(this.relationKindFilterSelect);
+        this.conceptionKindFilterSelect.setRenderer(createRenderer());
+        add(this.conceptionKindFilterSelect);
 
         conceptionKindExistenceRuleComboBox = new ComboBox("概念类型存在规则 - ConceptionKind ExistenceRule");
-        List<ConceptionKindMatchLogic.ConceptionKindExistenceRule> relationDirectionList = new ArrayList<>();
+        conceptionKindExistenceRuleComboBox.setRequiredIndicatorVisible(true);
+        List<ConceptionKindMatchLogic.ConceptionKindExistenceRule> conceptionKindExistenceRuleList = new ArrayList<>();
+        conceptionKindExistenceRuleList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.MUST_HAVE);
+        conceptionKindExistenceRuleList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.END_WITH);
+        conceptionKindExistenceRuleList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.NOT_ALLOW);
+        conceptionKindExistenceRuleList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.TERMINATE_AT);
 
-
-
-        relationDirectionList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.MUST_HAVE);
-        relationDirectionList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.END_WITH);
-        relationDirectionList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.NOT_ALLOW);
-        relationDirectionList.add(ConceptionKindMatchLogic.ConceptionKindExistenceRule.TERMINATE_AT);
-
-
-
-
-        conceptionKindExistenceRuleComboBox.setItems(relationDirectionList);
+        conceptionKindExistenceRuleComboBox.setItems(conceptionKindExistenceRuleList);
         conceptionKindExistenceRuleComboBox.setWidth(100, Unit.PERCENTAGE);
         conceptionKindExistenceRuleComboBox.setValue(ConceptionKindMatchLogic.ConceptionKindExistenceRule.MUST_HAVE);
         conceptionKindExistenceRuleComboBox.setAllowCustomValue(false);
         add(conceptionKindExistenceRuleComboBox);
 
-        Button confirmButton = new Button("确定添加关系类型匹配逻辑",new Icon(VaadinIcon.CHECK));
+        Button confirmButton = new Button("确定添加概念类型匹配逻辑",new Icon(VaadinIcon.CHECK));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 errorMessage.setVisible(false);
-                if(relationKindFilterSelect.getValue()==null){
-                    errorMessage.setText("请选择关系类型名称");
+                if(conceptionKindFilterSelect.getValue()==null){
+                    errorMessage.setText("请选择概念类型");
                     errorMessage.setVisible(true);
-                }else{
-                    doAddRelationMatchLogic();
+                }else if(conceptionKindExistenceRuleComboBox.getValue()==null){
+                    errorMessage.setText("请选择概念类型存在规则");
+                    errorMessage.setVisible(true);
+                }
+                else{
+                    doAddConceptionMatchLogic();
                 }
             }
         });
@@ -108,7 +107,7 @@ public class AddConceptionMatchLogicUI extends VerticalLayout {
         try {
             coreRealm.openGlobalSession();
             List<KindMetaInfo> runtimeRelationKindMetaInfoList = coreRealm.getConceptionKindsMetaInfo();
-            this.relationKindFilterSelect.setItems(runtimeRelationKindMetaInfoList);
+            this.conceptionKindFilterSelect.setItems(runtimeRelationKindMetaInfoList);
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         } finally {
@@ -120,9 +119,9 @@ public class AddConceptionMatchLogicUI extends VerticalLayout {
         this.containerDialog = containerDialog;
     }
 
-    private void doAddRelationMatchLogic(){
+    private void doAddConceptionMatchLogic(){
         if(addConceptionMatchLogicHelper != null){
-            KindMetaInfo selectedKind = this.relationKindFilterSelect.getValue();
+            KindMetaInfo selectedKind = this.conceptionKindFilterSelect.getValue();
             addConceptionMatchLogicHelper.executeAddConceptionMatchLogic(selectedKind.getKindName(),selectedKind.getKindDesc(), conceptionKindExistenceRuleComboBox.getValue());
         }
         if(this.containerDialog != null){

@@ -52,7 +52,7 @@ public class AddRelationMatchLogicUI extends VerticalLayout {
         errorMessageContainer.add(errorMessage);
         add(errorMessageContainer);
 
-        this.relationKindFilterSelect = new ComboBox("关系类型名称 - RelationKind Name");
+        this.relationKindFilterSelect = new ComboBox("关系类型 - RelationKind");
         this.relationKindFilterSelect.setPageSize(30);
         this.relationKindFilterSelect.setWidth(100, Unit.PERCENTAGE);
         this.relationKindFilterSelect.setRequiredIndicatorVisible(true);
@@ -68,6 +68,7 @@ public class AddRelationMatchLogicUI extends VerticalLayout {
         add(this.relationKindFilterSelect);
 
         relationDirectionComboBox = new ComboBox("关系方向 - RelationKind Direction");
+        relationDirectionComboBox.setRequiredIndicatorVisible(true);
         List<RelationDirection> relationDirectionList = new ArrayList<>();
         relationDirectionList.add(RelationDirection.FROM);
         relationDirectionList.add(RelationDirection.TO);
@@ -85,7 +86,10 @@ public class AddRelationMatchLogicUI extends VerticalLayout {
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 errorMessage.setVisible(false);
                 if(relationKindFilterSelect.getValue()==null){
-                    errorMessage.setText("请选择关系类型名称");
+                    errorMessage.setText("请选择关系类型");
+                    errorMessage.setVisible(true);
+                }else if(relationDirectionComboBox.getValue()==null){
+                    errorMessage.setText("请选择关系方向");
                     errorMessage.setVisible(true);
                 }else{
                     doAddRelationMatchLogic();

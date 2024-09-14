@@ -16,12 +16,14 @@ import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.IntegerField;
 
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.ConceptionKindMatchLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis.AddRelationMatchLogicUI.AddRelationMatchLogicHelper;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis.AddConceptionMatchLogicUI.AddConceptionMatchLogicHelper;
 
 public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
 
@@ -215,6 +217,13 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         }
     };
 
+    AddConceptionMatchLogicHelper addConceptionMatchLogicHelper = new AddConceptionMatchLogicUI.AddConceptionMatchLogicHelper(){
+        @Override
+        public void executeAddConceptionMatchLogic(String conceptionKindName, String conceptionKindDesc, ConceptionKindMatchLogic.ConceptionKindExistenceRule conceptionKindExistenceRule) {
+
+        }
+    };
+
     private void renderAddRelationMatchLogicUI(){
         AddRelationMatchLogicUI addRelationMatchLogicUI = new AddRelationMatchLogicUI();
         addRelationMatchLogicUI.setAddRelationMatchLogicHelper(addRelationMatchLogicHelper);
@@ -227,7 +236,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
 
     private void renderAddConceptionMatchLogicUI(){
         AddConceptionMatchLogicUI addConceptionMatchLogicUI = new AddConceptionMatchLogicUI();
-
+        addConceptionMatchLogicUI.setAddConceptionMatchLogicHelper(addConceptionMatchLogicHelper);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加概念类型匹配逻辑",null,true,470,280,false);
         fixSizeWindow.setWindowContent(addConceptionMatchLogicUI);
         fixSizeWindow.setModel(true);
