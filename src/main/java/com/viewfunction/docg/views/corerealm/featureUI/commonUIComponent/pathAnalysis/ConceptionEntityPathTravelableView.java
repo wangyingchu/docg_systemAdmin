@@ -61,8 +61,8 @@ public class ConceptionEntityPathTravelableView extends VerticalLayout {
         queryResultContainer.setSpacing(false);
         queryResultContainer.setMargin(false);
 
-        //ConceptionKindQueryResultsView conceptionKindQueryResultsView = new ConceptionKindQueryResultsView(this.conceptionKind);
-        //queryResultContainer.add(conceptionKindQueryResultsView);
+        ConceptionEntityPathTravelableResultView conceptionEntityPathTravelableResultView = new ConceptionEntityPathTravelableResultView();
+        queryResultContainer.add(conceptionEntityPathTravelableResultView);
 
         SplitLayout splitLayout = new SplitLayout(queryFieldsContainer, queryResultContainer);
         splitLayout.setSplitterPosition(0);
