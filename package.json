@@ -133,12 +133,12 @@
     "@vaadin/vaadin-lumo-styles": "$@vaadin/vaadin-lumo-styles",
     "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles",
     "react-colorful": "$react-colorful",
+    "cytoscape-cola": "$cytoscape-cola",
     "react-force-graph": "$react-force-graph",
     "@neo4j-nvl/react": "$@neo4j-nvl/react",
     "three": "$three",
     "cytoscape": "$cytoscape",
     "three-spritetext": "$three-spritetext",
-    "react-cytoscapejs": "$react-cytoscapejs",
-    "cytoscape-cola": "$cytoscape-cola"
+    "react-cytoscapejs": "$react-cytoscapejs"
   }
 }

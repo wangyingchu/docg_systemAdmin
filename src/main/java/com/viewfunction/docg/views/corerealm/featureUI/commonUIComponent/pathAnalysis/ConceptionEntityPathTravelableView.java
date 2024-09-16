@@ -10,19 +10,19 @@ import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.WebBrowser;
 
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryResultsView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConceptionEntityExpandGraphView extends VerticalLayout {
+public class ConceptionEntityPathTravelableView extends VerticalLayout {
 
     private String conceptionKind;
     private String conceptionEntityUID;
     private VerticalLayout queryFieldsContainer;
     private VerticalLayout queryResultContainer;
+    public enum PathExpandType {ExpandPath,ExpandGraph,ExpandSpanningTree}
 
-    public ConceptionEntityExpandGraphView(String conceptionKind, String conceptionEntityUID){
+    public ConceptionEntityPathTravelableView(String conceptionKind, String conceptionEntityUID){
 
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
@@ -43,7 +43,8 @@ public class ConceptionEntityExpandGraphView extends VerticalLayout {
         queryFieldsContainer.setSpacing(false);
         queryFieldsContainer.setMargin(false);
 
-        ConceptionEntityExpandPathCriteriaView conceptionEntityExpandPathCriteriaView = new ConceptionEntityExpandPathCriteriaView();
+        ConceptionEntityExpandPathCriteriaView conceptionEntityExpandPathCriteriaView =
+                new ConceptionEntityExpandPathCriteriaView(this.conceptionKind,this.conceptionEntityUID,PathExpandType.ExpandPath);
         queryFieldsContainer.add(conceptionEntityExpandPathCriteriaView);
 
         WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
@@ -59,6 +60,7 @@ public class ConceptionEntityExpandGraphView extends VerticalLayout {
         queryResultContainer.setPadding(false);
         queryResultContainer.setSpacing(false);
         queryResultContainer.setMargin(false);
+
         //ConceptionKindQueryResultsView conceptionKindQueryResultsView = new ConceptionKindQueryResultsView(this.conceptionKind);
         //queryResultContainer.add(conceptionKindQueryResultsView);
 

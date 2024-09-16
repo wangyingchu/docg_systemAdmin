@@ -362,6 +362,8 @@ public class MainLayout extends AppLayout {
                 KindScopeAttributeAddedEvent.class);
         _BLACKBOARD.register(DataSliceQueriedEvent.DataSliceQueriedListener.class,
                 DataSliceQueriedEvent.class);
+        _BLACKBOARD.register(ConceptionEntityExpandPathEvent.ConceptionEntityExpandPathListener.class,
+                ConceptionEntityExpandPathEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

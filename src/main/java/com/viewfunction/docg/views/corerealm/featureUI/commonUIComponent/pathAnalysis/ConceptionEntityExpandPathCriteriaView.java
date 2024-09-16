@@ -17,14 +17,18 @@ import com.vaadin.flow.component.textfield.IntegerField;
 
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.ConceptionKindMatchLogic;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.RelationKindMatchLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntityExpandPathEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis.AddRelationMatchLogicUI.AddRelationMatchLogicHelper;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis.AddConceptionMatchLogicUI.AddConceptionMatchLogicHelper;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis.ConceptionEntityPathTravelableView.PathExpandType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +43,15 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
     private IntegerField minJumpField;
     private IntegerField maxJumpField;
 
-    public ConceptionEntityExpandPathCriteriaView() {
+    private String conceptionEntityUID;
+    private String conceptionKind;
+    private PathExpandType pathExpandType;
+
+    public ConceptionEntityExpandPathCriteriaView(String conceptionKind,String conceptionEntityUID,PathExpandType pathExpandType) {
+        this.conceptionKind = conceptionKind;
+        this.conceptionEntityUID = conceptionEntityUID;
+        this.pathExpandType = pathExpandType;
+
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(LineAwesomeIconsSvg.VECTOR_SQUARE_SOLID.create(),"路径扩展条件");
         add(filterTitle1);
 
@@ -332,14 +344,62 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
 
     private void executeConceptionEntityExpandPath(){
         boolean includeSelf = includeSelfCheckBox.getValue();
-        int minJump = minJumpField.getValue();
-        int maxJump = maxJumpField.getValue();
-        boolean inputCheckPassed = true;
+        if(maxJumpField.getValue() == null){
+            CommonUIOperationUtil.showPopupNotification("请输入最大跳数", NotificationVariant.LUMO_ERROR);
+            return;
+        }
         if(!includeSelf){
+            if(minJumpField.getValue() == null){
+                CommonUIOperationUtil.showPopupNotification("请输入最小跳数", NotificationVariant.LUMO_ERROR);
+                return;
+            }
+            int minJump = minJumpField.getValue();
+            int maxJump = maxJumpField.getValue();
             if(minJump>maxJump){
                 CommonUIOperationUtil.showPopupNotification("最大跳数不能小于最小跳数", NotificationVariant.LUMO_ERROR);
-                inputCheckPassed = false;
+                return;
             }
         }
+
+        List<RelationKindMatchLogic> relationKindMatchLogicList = new ArrayList<>();
+        Stream<Component> existRelationMatchLogicWidgets = relationMatchLogicCriteriaItemsContainer.getChildren();
+        existRelationMatchLogicWidgets.forEach(
+                existRelationMatchLogicWidget -> {
+                    RelationKindMatchLogicWidget currentRelationKindMatchLogicWidget = (RelationKindMatchLogicWidget) existRelationMatchLogicWidget;
+                    RelationKindMatchLogic currentRelationKindMatchLogic =
+                            new RelationKindMatchLogic(currentRelationKindMatchLogicWidget.getRelationKindName(),currentRelationKindMatchLogicWidget.getRelationDirection());
+                    relationKindMatchLogicList.add(currentRelationKindMatchLogic);
+                }
+        );
+
+        RelationDirection defaultRelationDirection = this.defaultRelationDirectionRadioGroup.getValue();
+
+        List<ConceptionKindMatchLogic> conceptionKindMatchLogicList = new ArrayList<>();
+        Stream<Component> existConceptionMatchLogicWidgets = conceptionMatchLogicCriteriaItemsContainer.getChildren();
+        existConceptionMatchLogicWidgets.forEach(
+                existConceptionMatchLogicWidget -> {
+                    ConceptionKindMatchLogicWidget currentConceptionKindMatchLogicWidget = (ConceptionKindMatchLogicWidget) existConceptionMatchLogicWidget;
+                    ConceptionKindMatchLogic currentConceptionKindMatchLogic =
+                            new ConceptionKindMatchLogic(currentConceptionKindMatchLogicWidget.getConceptionKindName(),currentConceptionKindMatchLogicWidget.getConceptionKindExistenceRule());
+                    conceptionKindMatchLogicList.add(currentConceptionKindMatchLogic);
+
+                }
+        );
+
+        boolean containsSelf = this.includeSelfCheckBox.getValue();
+        Integer maxJump = this.maxJumpField.getValue();
+        Integer minJump = this.minJumpField.getValue();
+
+        ConceptionEntityExpandPathEvent conceptionEntityExpandPathEvent =new ConceptionEntityExpandPathEvent();
+        conceptionEntityExpandPathEvent.setConceptionEntityUID(this.conceptionEntityUID);
+        conceptionEntityExpandPathEvent.setConceptionKind(this.conceptionKind);
+        conceptionEntityExpandPathEvent.setPathExpandType(this.pathExpandType);
+        conceptionEntityExpandPathEvent.setRelationKindMatchLogics(relationKindMatchLogicList);
+        conceptionEntityExpandPathEvent.setDefaultDirectionForNoneRelationKindMatch(defaultRelationDirection);
+        conceptionEntityExpandPathEvent.setConceptionKindMatchLogics(conceptionKindMatchLogicList);
+        conceptionEntityExpandPathEvent.setContainsSelf(containsSelf);
+        conceptionEntityExpandPathEvent.setMaxJump(maxJump);
+        conceptionEntityExpandPathEvent.setMinJump(minJump);
+        ResourceHolder.getApplicationBlackboard().fire(conceptionEntityExpandPathEvent);
     }
 }
