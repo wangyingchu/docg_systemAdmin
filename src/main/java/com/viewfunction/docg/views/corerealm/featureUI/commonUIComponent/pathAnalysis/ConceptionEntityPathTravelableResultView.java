@@ -4,6 +4,7 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesGraph;
 import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesPath;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
@@ -16,9 +17,7 @@ import java.util.List;
 
 public class ConceptionEntityPathTravelableResultView extends VerticalLayout implements ConceptionEntityExpandPathEvent.ConceptionEntityExpandPathListener{
 
-
     public ConceptionEntityPathTravelableResultView() {}
-
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
@@ -65,9 +64,24 @@ public class ConceptionEntityPathTravelableResultView extends VerticalLayout imp
         if(targetConception != null){
             ConceptionEntity targetConceptionEntity = targetConception.getEntityByUID(conceptionEntityUID);
             if(targetConceptionEntity != null){
-                List<EntitiesPath> entitiesPathList =  targetConceptionEntity.expandPath(event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.getMinJump(),event.getMaxJump());
-                System.out.println(entitiesPathList);
-                System.out.println(entitiesPathList.size());
+                List<EntitiesPath> entitiesPathList = null;
+
+                if(event.getMinJump() != null){
+                    entitiesPathList =  targetConceptionEntity.expandPath(event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.getMinJump(),event.getMaxJump());
+                    System.out.println(entitiesPathList);
+                    System.out.println(entitiesPathList.size());
+
+                }else{
+                    EntitiesGraph entitiesGraph =  targetConceptionEntity.expandGraph(event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.isContainsSelf(),event.getMaxJump());
+                    System.out.println(entitiesGraph);
+                    System.out.println(entitiesGraph.getGraphConceptionKindsDataStatistic());
+                }
+
+
+
+
+
+
             }
         }
     }
