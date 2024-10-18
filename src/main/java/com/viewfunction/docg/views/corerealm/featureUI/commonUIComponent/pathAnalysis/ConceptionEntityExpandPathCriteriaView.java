@@ -214,16 +214,39 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         buttonsContainerLayout.setPadding(false);
         add(buttonsContainerLayout);
 
-        Button expandPathButton = new Button("执行路径拓展");
-        expandPathButton.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
-        expandPathButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        expandPathButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button expandPathButton1 = new Button("执行路径拓展");
+        expandPathButton1.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
+        expandPathButton1.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        expandPathButton1.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 executeConceptionEntityExpandPath();
             }
         });
-        buttonsContainerLayout.add(expandPathButton);
+        buttonsContainerLayout.add(expandPathButton1);
+
+        Button expandPathButton2 = new Button("执行路径拓展");
+        expandPathButton2.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
+        expandPathButton2.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        expandPathButton2.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                executeConceptionEntityExpandPath();
+            }
+        });
+        buttonsContainerLayout.add(expandPathButton2);
+
+        Button expandPathButton3 = new Button("执行路径拓展");
+        expandPathButton3.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
+        expandPathButton3.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        expandPathButton3.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                executeConceptionEntityExpandPath();
+            }
+        });
+        buttonsContainerLayout.add(expandPathButton3);
+
     }
 
     RelationKindMatchLogicWidget.RelationKindMatchLogicWidgetHelper relationKindMatchLogicWidgetHelper = new RelationKindMatchLogicWidget.RelationKindMatchLogicWidgetHelper(){

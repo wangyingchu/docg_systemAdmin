@@ -240,7 +240,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         Icon starterPathAnalysisMenuIcon = LineAwesomeIconsSvg.DRAW_POLYGON_SOLID.create();
         starterPathAnalysisMenuIcon.setSize("16px");
         MenuItem starterPathAnalysisMenuItem = starterPathAnalyOperationMenuBar.addItem(starterPathAnalysisMenuIcon);
-        starterPathAnalysisMenuItem.add("起始点路径分析");
+        starterPathAnalysisMenuItem.add("起始点拓扑分析");
         Icon downArrowIcon = new Icon(VaadinIcon.CHEVRON_DOWN);
         downArrowIcon.setSize("12px");
         starterPathAnalysisMenuItem.add(downArrowIcon);
