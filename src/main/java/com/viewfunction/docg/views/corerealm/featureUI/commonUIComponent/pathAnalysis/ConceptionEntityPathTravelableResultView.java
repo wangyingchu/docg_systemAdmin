@@ -15,7 +15,7 @@ import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.List;
 
-public class ConceptionEntityPathTravelableResultView extends VerticalLayout implements ConceptionEntityExpandPathEvent.ConceptionEntityExpandPathListener{
+public class ConceptionEntityPathTravelableResultView extends VerticalLayout implements ConceptionEntityExpandPathEvent.ConceptionEntityExpandPathListener {
 
     public ConceptionEntityPathTravelableResultView() {}
 
@@ -64,6 +64,15 @@ public class ConceptionEntityPathTravelableResultView extends VerticalLayout imp
         if(targetConception != null){
             ConceptionEntity targetConceptionEntity = targetConception.getEntityByUID(conceptionEntityUID);
             if(targetConceptionEntity != null){
+
+                ConceptionEntityPathTravelableView.PathExpandType pathExpandType = event.getPathExpandType();
+
+                if(ConceptionEntityPathTravelableView.PathExpandType.ExpandPath.equals(pathExpandType)){
+
+
+                }
+
+
                 List<EntitiesPath> entitiesPathList = null;
 
                 if(event.getMinJump() != null){
