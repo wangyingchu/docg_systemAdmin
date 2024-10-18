@@ -393,7 +393,16 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         ConceptionEntityExpandPathEvent conceptionEntityExpandPathEvent =new ConceptionEntityExpandPathEvent();
         conceptionEntityExpandPathEvent.setConceptionEntityUID(this.conceptionEntityUID);
         conceptionEntityExpandPathEvent.setConceptionKind(this.conceptionKind);
-        conceptionEntityExpandPathEvent.setPathExpandType(this.pathExpandType);
+
+        if(this.pathExpandType != null){
+            conceptionEntityExpandPathEvent.setPathExpandType(this.pathExpandType);
+        }else{
+            if(minJump != null){
+                conceptionEntityExpandPathEvent.setPathExpandType(ConceptionEntityPathTravelableView.PathExpandType.ExpandPath);
+            }else{
+                conceptionEntityExpandPathEvent.setPathExpandType(PathExpandType.ExpandGraph);
+            }
+        }
         conceptionEntityExpandPathEvent.setRelationKindMatchLogics(relationKindMatchLogicList);
         conceptionEntityExpandPathEvent.setDefaultDirectionForNoneRelationKindMatch(defaultRelationDirection);
         conceptionEntityExpandPathEvent.setConceptionKindMatchLogics(conceptionKindMatchLogicList);

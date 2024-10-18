@@ -44,7 +44,7 @@ public class ConceptionEntityPathTravelableView extends VerticalLayout {
         queryFieldsContainer.setMargin(false);
 
         ConceptionEntityExpandPathCriteriaView conceptionEntityExpandPathCriteriaView =
-                new ConceptionEntityExpandPathCriteriaView(this.conceptionKind,this.conceptionEntityUID,PathExpandType.ExpandPath);
+                new ConceptionEntityExpandPathCriteriaView(this.conceptionKind,this.conceptionEntityUID,null);
         queryFieldsContainer.add(conceptionEntityExpandPathCriteriaView);
 
         WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();

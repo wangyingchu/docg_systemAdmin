@@ -64,33 +64,20 @@ public class ConceptionEntityPathTravelableResultView extends VerticalLayout imp
         if(targetConception != null){
             ConceptionEntity targetConceptionEntity = targetConception.getEntityByUID(conceptionEntityUID);
             if(targetConceptionEntity != null){
-
                 ConceptionEntityPathTravelableView.PathExpandType pathExpandType = event.getPathExpandType();
-
                 if(ConceptionEntityPathTravelableView.PathExpandType.ExpandPath.equals(pathExpandType)){
-
-
-                }
-
-
-                List<EntitiesPath> entitiesPathList = null;
-
-                if(event.getMinJump() != null){
-                    entitiesPathList =  targetConceptionEntity.expandPath(event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.getMinJump(),event.getMaxJump());
+                    List<EntitiesPath> entitiesPathList = null;
+                    entitiesPathList = targetConceptionEntity.expandPath(event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.getMinJump(),event.getMaxJump());
                     System.out.println(entitiesPathList);
                     System.out.println(entitiesPathList.size());
 
-                }else{
-                    EntitiesGraph entitiesGraph =  targetConceptionEntity.expandGraph(event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.isContainsSelf(),event.getMaxJump());
+                }else if(ConceptionEntityPathTravelableView.PathExpandType.ExpandGraph.equals(pathExpandType)){
+                    EntitiesGraph entitiesGraph = targetConceptionEntity.expandGraph(event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.isContainsSelf(),event.getMaxJump());
                     System.out.println(entitiesGraph);
                     System.out.println(entitiesGraph.getGraphConceptionKindsDataStatistic());
+                }else if(ConceptionEntityPathTravelableView.PathExpandType.ExpandSpanningTree.equals(pathExpandType)){
+
                 }
-
-
-
-
-
-
             }
         }
     }
