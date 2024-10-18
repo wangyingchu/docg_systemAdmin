@@ -210,11 +210,11 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
 
         HorizontalLayout buttonsContainerLayout = new HorizontalLayout();
         buttonsContainerLayout.setMargin(false);
-        buttonsContainerLayout.setSpacing(false);
+        buttonsContainerLayout.setSpacing(true);
         buttonsContainerLayout.setPadding(false);
         add(buttonsContainerLayout);
 
-        Button expandPathButton1 = new Button("执行路径拓展");
+        Button expandPathButton1 = new Button("路径拓展");
         expandPathButton1.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
         expandPathButton1.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         expandPathButton1.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -225,7 +225,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         });
         buttonsContainerLayout.add(expandPathButton1);
 
-        Button expandPathButton2 = new Button("执行路径拓展");
+        Button expandPathButton2 = new Button("子图拓展");
         expandPathButton2.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
         expandPathButton2.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         expandPathButton2.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -236,7 +236,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         });
         buttonsContainerLayout.add(expandPathButton2);
 
-        Button expandPathButton3 = new Button("执行路径拓展");
+        Button expandPathButton3 = new Button("生成树拓展");
         expandPathButton3.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
         expandPathButton3.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         expandPathButton3.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
