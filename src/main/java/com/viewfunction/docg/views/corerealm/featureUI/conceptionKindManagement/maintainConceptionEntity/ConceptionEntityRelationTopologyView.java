@@ -16,7 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis.ConceptionEntityPathTravelableView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis.ConceptionEntityTopologyTravelableView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.ConceptionEntityRelationsChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.EntitySyntheticAbstractInfoView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.RelatedConceptionEntitiesDandelionGraphInfoView;
@@ -249,7 +249,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
 
         SubMenu starterPathAnalysisSubMenu = starterPathAnalysisMenuItem.getSubMenu();
         MenuItem expandSubGraphDataSubMenu = starterPathAnalysisSubMenu.addItem(LineAwesomeIconsSvg.HUBSPOT.create());
-        expandSubGraphDataSubMenu.add(" 扩展子图");
+        expandSubGraphDataSubMenu.add(" 扩展拓扑");
         expandSubGraphDataSubMenu.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
@@ -379,15 +379,15 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
     }
 
     private void renderConceptionEntityExpandGraphInfo(){
-        ConceptionEntityPathTravelableView conceptionEntityPathTravelableView = new ConceptionEntityPathTravelableView(this.conceptionKind,this.conceptionEntityUID);
+        ConceptionEntityTopologyTravelableView conceptionEntityTopologyTravelableView = new ConceptionEntityTopologyTravelableView(this.conceptionKind,this.conceptionEntityUID);
         FullScreenWindow.CloseFullScreenWindowListener closeFullScreenWindowListener = new FullScreenWindow.CloseFullScreenWindowListener() {
             @Override
             public void beforeCloseWindow() {
                 //conceptionEntityExpandGraphView.cleanGraphResource();
             }
         };
-        FullScreenWindow fullScreenWindow = new FullScreenWindow(LineAwesomeIconsSvg.HUBSPOT.create(),"由概念实体出发扩展子图",null,null,closeFullScreenWindowListener);
-        fullScreenWindow.setWindowContent(conceptionEntityPathTravelableView);
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(LineAwesomeIconsSvg.HUBSPOT.create(),"由概念实体出发扩展拓扑",null,null,closeFullScreenWindowListener);
+        fullScreenWindow.setWindowContent(conceptionEntityTopologyTravelableView);
         fullScreenWindow.show();
     }
 }

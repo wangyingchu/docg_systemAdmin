@@ -28,13 +28,13 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis.AddRelationMatchLogicUI.AddRelationMatchLogicHelper;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis.AddConceptionMatchLogicUI.AddConceptionMatchLogicHelper;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis.ConceptionEntityPathTravelableView.PathExpandType;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis.ConceptionEntityTopologyTravelableView.PathExpandType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
+public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
 
     private VerticalLayout relationMatchLogicCriteriaItemsContainer;
     private VerticalLayout conceptionMatchLogicCriteriaItemsContainer;
@@ -47,7 +47,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
     private String conceptionKind;
     private PathExpandType pathExpandType;
 
-    public ConceptionEntityExpandPathCriteriaView(String conceptionKind,String conceptionEntityUID,PathExpandType pathExpandType) {
+    public ConceptionEntityExpandTopologyCriteriaView(String conceptionKind, String conceptionEntityUID, PathExpandType pathExpandType) {
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
         this.pathExpandType = pathExpandType;
@@ -214,38 +214,35 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         buttonsContainerLayout.setPadding(false);
         add(buttonsContainerLayout);
 
-        Button expandPathButton1 = new Button("路径拓展");
-        expandPathButton1.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
-        expandPathButton1.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        expandPathButton1.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button expandPathButton = new Button("拓展路径");
+        expandPathButton.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
+        expandPathButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                executeConceptionEntityExpandPath();
+                executeConceptionEntityExpand(PathExpandType.ExpandPath);
             }
         });
-        buttonsContainerLayout.add(expandPathButton1);
+        buttonsContainerLayout.add(expandPathButton);
 
-        Button expandPathButton2 = new Button("子图拓展");
-        expandPathButton2.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
-        expandPathButton2.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        expandPathButton2.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button expandSubGraphButton = new Button("拓展子图");
+        expandSubGraphButton.setIcon(LineAwesomeIconsSvg.SHARE_ALT_SOLID.create());
+        expandSubGraphButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                executeConceptionEntityExpandPath();
+                executeConceptionEntityExpand(PathExpandType.ExpandGraph);
             }
         });
-        buttonsContainerLayout.add(expandPathButton2);
+        buttonsContainerLayout.add(expandSubGraphButton);
 
-        Button expandPathButton3 = new Button("生成树拓展");
-        expandPathButton3.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
-        expandPathButton3.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        expandPathButton3.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button expandSpanTreeButton = new Button("拓展生成树");
+        expandSpanTreeButton.setIcon(LineAwesomeIconsSvg.SITEMAP_SOLID.create());
+        expandSpanTreeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                executeConceptionEntityExpandPath();
+                executeConceptionEntityExpand(PathExpandType.ExpandSpanningTree);
             }
         });
-        buttonsContainerLayout.add(expandPathButton3);
+        buttonsContainerLayout.add(expandSpanTreeButton);
 
     }
 
@@ -365,7 +362,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         }
     }
 
-    private void executeConceptionEntityExpandPath(){
+    private void executeConceptionEntityExpand(PathExpandType pathExpandType){
         boolean includeSelf = includeSelfCheckBox.getValue();
         if(maxJumpField.getValue() == null){
             CommonUIOperationUtil.showPopupNotification("请输入最大跳数", NotificationVariant.LUMO_ERROR);
@@ -420,11 +417,7 @@ public class ConceptionEntityExpandPathCriteriaView extends VerticalLayout {
         if(this.pathExpandType != null){
             conceptionEntityExpandPathEvent.setPathExpandType(this.pathExpandType);
         }else{
-            if(minJump != null){
-                conceptionEntityExpandPathEvent.setPathExpandType(ConceptionEntityPathTravelableView.PathExpandType.ExpandPath);
-            }else{
-                conceptionEntityExpandPathEvent.setPathExpandType(PathExpandType.ExpandGraph);
-            }
+            conceptionEntityExpandPathEvent.setPathExpandType(pathExpandType);
         }
         conceptionEntityExpandPathEvent.setRelationKindMatchLogics(relationKindMatchLogicList);
         conceptionEntityExpandPathEvent.setDefaultDirectionForNoneRelationKindMatch(defaultRelationDirection);

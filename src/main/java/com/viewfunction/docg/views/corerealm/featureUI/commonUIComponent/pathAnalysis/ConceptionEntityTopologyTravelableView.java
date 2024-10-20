@@ -14,7 +14,7 @@ import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConceptionEntityPathTravelableView extends VerticalLayout {
+public class ConceptionEntityTopologyTravelableView extends VerticalLayout {
 
     private String conceptionKind;
     private String conceptionEntityUID;
@@ -22,7 +22,7 @@ public class ConceptionEntityPathTravelableView extends VerticalLayout {
     private VerticalLayout queryResultContainer;
     public enum PathExpandType {ExpandPath,ExpandGraph,ExpandSpanningTree}
 
-    public ConceptionEntityPathTravelableView(String conceptionKind, String conceptionEntityUID){
+    public ConceptionEntityTopologyTravelableView(String conceptionKind, String conceptionEntityUID){
 
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
@@ -43,9 +43,9 @@ public class ConceptionEntityPathTravelableView extends VerticalLayout {
         queryFieldsContainer.setSpacing(false);
         queryFieldsContainer.setMargin(false);
 
-        ConceptionEntityExpandPathCriteriaView conceptionEntityExpandPathCriteriaView =
-                new ConceptionEntityExpandPathCriteriaView(this.conceptionKind,this.conceptionEntityUID,null);
-        queryFieldsContainer.add(conceptionEntityExpandPathCriteriaView);
+        ConceptionEntityExpandTopologyCriteriaView conceptionEntityExpandTopologyCriteriaView =
+                new ConceptionEntityExpandTopologyCriteriaView(this.conceptionKind,this.conceptionEntityUID,null);
+        queryFieldsContainer.add(conceptionEntityExpandTopologyCriteriaView);
 
         WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
         if(webBrowser.isChrome()){
@@ -61,8 +61,8 @@ public class ConceptionEntityPathTravelableView extends VerticalLayout {
         queryResultContainer.setSpacing(false);
         queryResultContainer.setMargin(false);
 
-        ConceptionEntityPathTravelableResultView conceptionEntityPathTravelableResultView = new ConceptionEntityPathTravelableResultView();
-        queryResultContainer.add(conceptionEntityPathTravelableResultView);
+        ConceptionEntityTopologyTravelableResultView conceptionEntityTopologyTravelableResultView = new ConceptionEntityTopologyTravelableResultView();
+        queryResultContainer.add(conceptionEntityTopologyTravelableResultView);
 
         SplitLayout splitLayout = new SplitLayout(queryFieldsContainer, queryResultContainer);
         splitLayout.setSplitterPosition(0);
