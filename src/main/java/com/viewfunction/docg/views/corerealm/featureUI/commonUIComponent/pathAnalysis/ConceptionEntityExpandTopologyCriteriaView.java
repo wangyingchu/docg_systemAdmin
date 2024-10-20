@@ -16,8 +16,8 @@ import com.vaadin.flow.component.popover.PopoverPosition;
 import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.IntegerField;
-
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.ConceptionKindMatchLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.RelationKindMatchLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
@@ -51,7 +51,7 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
     private Button addRelationMatchLogicButton;
     private Popover addRelationMatchLogicButtonPopover;
     private Button addConceptionMatchLogicButton;
-    private Popover aaddConceptionMatchLogicButtonPopover;
+    private Popover addConceptionMatchLogicButtonPopover;
 
     public ConceptionEntityExpandTopologyCriteriaView(String conceptionKind, String conceptionEntityUID, PathExpandType pathExpandType) {
         this.conceptionKind = conceptionKind;
@@ -326,20 +326,20 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
     }
 
     private void renderAddConceptionMatchLogicUI(){
-        if(aaddConceptionMatchLogicButtonPopover == null){
+        if(addConceptionMatchLogicButtonPopover == null){
             AddConceptionMatchLogicUI addConceptionMatchLogicUI = new AddConceptionMatchLogicUI();
             addConceptionMatchLogicUI.setAddConceptionMatchLogicHelper(addConceptionMatchLogicHelper);
-            aaddConceptionMatchLogicButtonPopover = new Popover();
-            aaddConceptionMatchLogicButtonPopover.setTarget(addConceptionMatchLogicButton);
-            aaddConceptionMatchLogicButtonPopover.setWidth("500px");
-            aaddConceptionMatchLogicButtonPopover.setHeight("220px");
-            aaddConceptionMatchLogicButtonPopover.addThemeVariants(PopoverVariant.ARROW);
-            aaddConceptionMatchLogicButtonPopover.setPosition(PopoverPosition.TOP);
-            aaddConceptionMatchLogicButtonPopover.add(addConceptionMatchLogicUI);
-            aaddConceptionMatchLogicButtonPopover.setAutofocus(true);
-            aaddConceptionMatchLogicButtonPopover.setModal(true);
+            addConceptionMatchLogicButtonPopover = new Popover();
+            addConceptionMatchLogicButtonPopover.setTarget(addConceptionMatchLogicButton);
+            addConceptionMatchLogicButtonPopover.setWidth("500px");
+            addConceptionMatchLogicButtonPopover.setHeight("220px");
+            addConceptionMatchLogicButtonPopover.addThemeVariants(PopoverVariant.ARROW);
+            addConceptionMatchLogicButtonPopover.setPosition(PopoverPosition.TOP);
+            addConceptionMatchLogicButtonPopover.add(addConceptionMatchLogicUI);
+            addConceptionMatchLogicButtonPopover.setAutofocus(true);
+            addConceptionMatchLogicButtonPopover.setModal(true);
         }
-        aaddConceptionMatchLogicButtonPopover.open();
+        addConceptionMatchLogicButtonPopover.open();
 
         /*
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加概念类型匹配逻辑",null,true,470,280,false);

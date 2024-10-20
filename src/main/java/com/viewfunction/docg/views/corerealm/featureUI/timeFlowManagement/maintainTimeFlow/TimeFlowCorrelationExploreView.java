@@ -5,14 +5,14 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.HasMenuItems;
 import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.menubar.MenuBar;
-import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverPosition;
+import com.vaadin.flow.component.popover.PopoverVariant;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEntity;
@@ -44,10 +44,11 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
     private int initDisplayEntitiesCount;
     private Button addMoreTimeFlowEntitiesInfoButton;
     private String timeFlowName;
-    private MenuBar selectedTimeScaleEntityOperationMenuBar;
     private TimeFlowRelatedEntitySummaryInfoView timeFlowRelatedEntitySummaryInfoView;
     private String showingDetailEntityKind;
     private String showingDetailEntityUID;
+    private  Button selectedTimeScaleEntityOperationButton;
+    private Popover selectedTimeScaleEntityOperationButtonPopover;
 
     public TimeFlowCorrelationExploreView(String timeFlowName){
         this.setSpacing(false);
@@ -191,26 +192,32 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         toolbarActionsContainerLayout.add(selectMethodMessage);
         selectMethodMessage.getStyle().set("top","0px").set("position","relative");
 
-        selectedTimeScaleEntityOperationMenuBar = new MenuBar();
-        selectedTimeScaleEntityOperationMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
-        MenuItem timeScaleEntityOperationMenu = createIconItem(selectedTimeScaleEntityOperationMenuBar, VaadinIcon.CROSSHAIRS, "选中实体信息概览", null);
-        timeScaleEntityOperationMenu.getStyle().set("font-size","9px");
-        selectedTimeScaleEntityOperationMenuBar.getStyle().set("top","-7px").set("position","relative");
-        Icon downArrowIcon = new Icon(VaadinIcon.CHEVRON_DOWN);
-        downArrowIcon.setSize("10px");
-        timeScaleEntityOperationMenu.add(downArrowIcon);
-
-        SubMenu operationSubItems = timeScaleEntityOperationMenu.getSubMenu();
         this.timeFlowRelatedEntitySummaryInfoView = new TimeFlowRelatedEntitySummaryInfoView();
-        MenuItem expandFlowActionItem = operationSubItems.addItem(this.timeFlowRelatedEntitySummaryInfoView);
-        expandFlowActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+        //renderConceptionEntityUI(showingDetailEntityKind,showingDetailEntityUID);
+
+        selectedTimeScaleEntityOperationButton = new Button("选中实体信息概览");
+        selectedTimeScaleEntityOperationButton.getStyle().set("font-size","10px");
+        selectedTimeScaleEntityOperationButton.getStyle().set("top","-8px").set("position","relative");
+        selectedTimeScaleEntityOperationButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        selectedTimeScaleEntityOperationButton.setIcon(VaadinIcon.CROSSHAIRS.create());
+        selectedTimeScaleEntityOperationButton.setEnabled(false);
+        toolbarActionsContainerLayout.add(selectedTimeScaleEntityOperationButton);
+        selectedTimeScaleEntityOperationButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
-            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                renderConceptionEntityUI(showingDetailEntityKind,showingDetailEntityUID);
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                selectedTimeScaleEntityOperationButtonPopover.open();
             }
         });
-        selectedTimeScaleEntityOperationMenuBar.setEnabled(false);
-        toolbarActionsContainerLayout.add(selectedTimeScaleEntityOperationMenuBar);
+
+        selectedTimeScaleEntityOperationButtonPopover = new Popover();
+        selectedTimeScaleEntityOperationButtonPopover.setTarget(selectedTimeScaleEntityOperationButton);
+        selectedTimeScaleEntityOperationButtonPopover.setWidth("300px");
+        selectedTimeScaleEntityOperationButtonPopover.setHeight("340px");
+        selectedTimeScaleEntityOperationButtonPopover.addThemeVariants(PopoverVariant.ARROW);
+        selectedTimeScaleEntityOperationButtonPopover.setPosition(PopoverPosition.BOTTOM);
+        selectedTimeScaleEntityOperationButtonPopover.add(timeFlowRelatedEntitySummaryInfoView);
+        selectedTimeScaleEntityOperationButtonPopover.setAutofocus(true);
+        selectedTimeScaleEntityOperationButtonPopover.setModal(true);
 
         this.timeFlowCorrelationInfoChart = new TimeFlowCorrelationInfoChart(this.timeFlowName);
         this.timeFlowCorrelationInfoChart.setContainerTimeFlowCorrelationExploreView(this);
@@ -259,7 +266,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
                 this.timeFlowCorrelationInfoChart.renderTimeFlowCorrelationData(this.timeScaleEntityList);
             }
         }
-        this.selectedTimeScaleEntityOperationMenuBar.setEnabled(false);
+        this.selectedTimeScaleEntityOperationButton.setEnabled(false);
     }
 
     public void renderMoreTimeFlowCorrelationData(){
@@ -269,18 +276,18 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         this.currentLastDisplayEntityIndex = newDisplayEntityIndex;
         this.currentDisplayCountDisplayValue.setText(""+currentLastDisplayEntityIndex);
         this.timeFlowCorrelationInfoChart.renderMoreTimeFlowCorrelationData(newAddedTimeScaleEntityList);
-        this.selectedTimeScaleEntityOperationMenuBar.setEnabled(false);
+        this.selectedTimeScaleEntityOperationButton.setEnabled(false);
     }
 
     public void showEntityDetail(String entityType,String entityUID){
         this.showingDetailEntityKind = entityType;
         this.showingDetailEntityUID = entityUID;
         this.timeFlowRelatedEntitySummaryInfoView.showEntitySummaryInfo(showingDetailEntityKind,showingDetailEntityUID);
-        this.selectedTimeScaleEntityOperationMenuBar.setEnabled(true);
+        this.selectedTimeScaleEntityOperationButton.setEnabled(true);
     }
 
     public void hideEntityDetail(){
-        this.selectedTimeScaleEntityOperationMenuBar.setEnabled(false);
+        this.selectedTimeScaleEntityOperationButton.setEnabled(false);
     }
 
     private void renderConceptionEntityUI(String conceptionKindName,String conceptionEntityUID){
@@ -342,6 +349,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
     private void cleanCurrentTimeFlowEntitiesData(){
         this.timeFlowCorrelationInfoChart.emptyGraph();
         this.currentDisplayCountDisplayValue .setText(""+0);
+        this.selectedTimeScaleEntityOperationButton.setEnabled(false);
     }
 
     private void refreshInitTimeFlowEntitiesInfo(){
