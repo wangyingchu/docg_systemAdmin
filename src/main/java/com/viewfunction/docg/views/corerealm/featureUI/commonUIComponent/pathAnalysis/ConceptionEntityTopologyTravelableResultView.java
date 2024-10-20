@@ -17,7 +17,12 @@ import java.util.List;
 
 public class ConceptionEntityTopologyTravelableResultView extends VerticalLayout implements ConceptionEntityExpandPathEvent.ConceptionEntityExpandPathListener {
 
-    public ConceptionEntityTopologyTravelableResultView() {}
+    public ConceptionEntityTopologyTravelableResultView() {
+
+
+
+
+    }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
@@ -46,6 +51,8 @@ public class ConceptionEntityTopologyTravelableResultView extends VerticalLayout
 
     @Override
     public void receivedConceptionEntityExpandPathEvent(ConceptionEntityExpandPathEvent event) {
+        this.removeAll();
+
         String conceptionKind = event.getConceptionKind();
         String conceptionEntityUID = event.getConceptionEntityUID();
 
@@ -71,12 +78,17 @@ public class ConceptionEntityTopologyTravelableResultView extends VerticalLayout
                     System.out.println(entitiesPathList);
                     System.out.println(entitiesPathList.size());
 
+                    ConceptionEntityExpandPathInfoView conceptionEntityExpandPathInfoView = new ConceptionEntityExpandPathInfoView();
+                    add(conceptionEntityExpandPathInfoView);
                 }else if(ConceptionEntityTopologyTravelableView.PathExpandType.ExpandGraph.equals(pathExpandType)){
                     EntitiesGraph entitiesGraph = targetConceptionEntity.expandGraph(event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.isContainsSelf(),event.getMaxJump());
                     System.out.println(entitiesGraph);
                     System.out.println(entitiesGraph.getGraphConceptionKindsDataStatistic());
+                    ConceptionEntityExpandGraphInfoView conceptionEntityExpandGraphInfoView = new ConceptionEntityExpandGraphInfoView();
+                    add(conceptionEntityExpandGraphInfoView);
                 }else if(ConceptionEntityTopologyTravelableView.PathExpandType.ExpandSpanningTree.equals(pathExpandType)){
-
+                    ConceptionEntityExpandSpanningTreeInfoView conceptionEntityExpandSpanningTreeInfoView = new ConceptionEntityExpandSpanningTreeInfoView();
+                    add(conceptionEntityExpandSpanningTreeInfoView);
                 }
             }
         }
