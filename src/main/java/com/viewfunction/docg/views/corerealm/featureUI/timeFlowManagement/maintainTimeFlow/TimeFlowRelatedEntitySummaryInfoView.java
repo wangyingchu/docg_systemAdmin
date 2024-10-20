@@ -23,6 +23,7 @@ public class TimeFlowRelatedEntitySummaryInfoView extends VerticalLayout {
         this.entityKind = entityKind;
         this.entityUID = entityUID;
         ConceptionEntityMetaInfoView conceptionEntityMetaInfoView = new ConceptionEntityMetaInfoView(this.entityKind,this.entityUID);
+        conceptionEntityMetaInfoView.showDisplayEntityDetailButton(true);
         add(conceptionEntityMetaInfoView);
     }
 }

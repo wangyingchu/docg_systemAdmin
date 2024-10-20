@@ -1,5 +1,6 @@
 package com.viewfunction.docg.element.commonComponent;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -74,5 +75,10 @@ public class FootprintMessageBar extends HorizontalLayout {
                 }
             }
         }
+    }
+
+    public void addAdditionalComponent(Component additionalComponent){
+        this.add(additionalComponent);
+        this.setVerticalComponentAlignment(Alignment.CENTER,additionalComponent);
     }
 }

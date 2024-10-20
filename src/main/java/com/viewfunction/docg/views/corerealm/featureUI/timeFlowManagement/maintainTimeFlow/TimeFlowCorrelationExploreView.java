@@ -3,8 +3,6 @@ package com.viewfunction.docg.views.corerealm.featureUI.timeFlowManagement.maint
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.contextmenu.HasMenuItems;
-import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -16,13 +14,10 @@ import com.vaadin.flow.component.popover.PopoverVariant;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEntity;
-import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TimeFlowCorrelationExploreView extends VerticalLayout {
@@ -193,7 +188,6 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         selectMethodMessage.getStyle().set("top","0px").set("position","relative");
 
         this.timeFlowRelatedEntitySummaryInfoView = new TimeFlowRelatedEntitySummaryInfoView();
-        //renderConceptionEntityUI(showingDetailEntityKind,showingDetailEntityUID);
 
         selectedTimeScaleEntityOperationButton = new Button("选中实体信息概览");
         selectedTimeScaleEntityOperationButton.getStyle().set("font-size","10px");
@@ -290,62 +284,6 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         this.selectedTimeScaleEntityOperationButton.setEnabled(false);
     }
 
-    private void renderConceptionEntityUI(String conceptionKindName,String conceptionEntityUID){
-        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(conceptionKindName,conceptionEntityUID);
-
-        List<Component> actionComponentList = new ArrayList<>();
-
-        HorizontalLayout titleDetailLayout = new HorizontalLayout();
-        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        titleDetailLayout.setSpacing(false);
-
-        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
-        footPrintStartIcon.setSize("14px");
-        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
-        titleDetailLayout.add(footPrintStartIcon);
-        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
-        spaceDivLayout1.setWidth(8,Unit.PIXELS);
-        titleDetailLayout.add(spaceDivLayout1);
-
-        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
-        conceptionKindIcon.setSize("10px");
-        titleDetailLayout.add(conceptionKindIcon);
-        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
-        spaceDivLayout2.setWidth(5,Unit.PIXELS);
-        titleDetailLayout.add(spaceDivLayout2);
-        NativeLabel conceptionKindNameLabel = new NativeLabel(conceptionKindName);
-        titleDetailLayout.add(conceptionKindNameLabel);
-
-        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
-        spaceDivLayout3.setWidth(5,Unit.PIXELS);
-        titleDetailLayout.add(spaceDivLayout3);
-
-        Icon divIcon = VaadinIcon.ITALIC.create();
-        divIcon.setSize("8px");
-        titleDetailLayout.add(divIcon);
-
-        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
-        spaceDivLayout4.setWidth(5,Unit.PIXELS);
-        titleDetailLayout.add(spaceDivLayout4);
-
-        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
-        conceptionEntityIcon.setSize("10px");
-        titleDetailLayout.add(conceptionEntityIcon);
-
-        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
-        spaceDivLayout5.setWidth(5,Unit.PIXELS);
-        titleDetailLayout.add(spaceDivLayout5);
-        NativeLabel conceptionEntityUIDLabel = new NativeLabel(conceptionEntityUID);
-        titleDetailLayout.add(conceptionEntityUIDLabel);
-
-        actionComponentList.add(titleDetailLayout);
-
-        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
-        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
-        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
-        fullScreenWindow.show();
-    }
-
     private void cleanCurrentTimeFlowEntitiesData(){
         this.timeFlowCorrelationInfoChart.emptyGraph();
         this.currentDisplayCountDisplayValue .setText(""+0);
@@ -356,26 +294,5 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
         this.timeFlowCorrelationInfoChart.emptyGraph();
         this.currentDisplayCountDisplayValue .setText(""+initDisplayEntitiesCount);
         renderInitTimeFlowCorrelationData(this.initQueryTimeScaleGrade,this.initTimeArea, this.initTimeScaleEntityList);
-    }
-
-    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
-        return createIconItem(menu, iconName, label, ariaLabel, false);
-    }
-
-    private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName,String label, String ariaLabel, boolean isChild) {
-        Icon icon = new Icon(iconName);
-        if (isChild) {
-            icon.getStyle().set("width", "var(--lumo-icon-size-s)");
-            icon.getStyle().set("height", "var(--lumo-icon-size-s)");
-            icon.getStyle().set("marginRight", "var(--lumo-space-s)");
-        }
-        MenuItem item = menu.addItem(icon, e -> {});
-        if (ariaLabel != null) {
-            item.getElement().setAttribute("aria-label", ariaLabel);
-        }
-        if (label != null) {
-            item.add(new Text(label));
-        }
-        return item;
     }
 }

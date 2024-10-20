@@ -1,12 +1,11 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -20,6 +19,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.time.Instant;
@@ -37,6 +37,7 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
     private TextField creator;
     private TextField entityBelongedConceptionKinds;
     private Button retreatFromConceptionKindButton;
+    private Button displayEntityDetailButton;
 
     public ConceptionEntityMetaInfoView(String conceptionKind,String conceptionEntityUID){
         this.setMargin(false);
@@ -54,6 +55,17 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
         footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,conceptionEntityUID));
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
+
+        Icon eyeIcon = new Icon(VaadinIcon.EYE);
+        eyeIcon.setSize("20px");
+        displayEntityDetailButton = new Button(eyeIcon, event -> {
+            renderConceptionEntityUI(conceptionKind,conceptionEntityUID);
+        });
+        displayEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        displayEntityDetailButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        displayEntityDetailButton.setTooltipText("显示概念实体详情");
+        entityInfoFootprintMessageBar.addAdditionalComponent(displayEntityDetailButton);
+        displayEntityDetailButton.setVisible(false);
 
         HorizontalLayout actionContainerLayout = new HorizontalLayout();
         actionContainerLayout.setSpacing(false);
@@ -187,5 +199,65 @@ public class ConceptionEntityMetaInfoView extends VerticalLayout {
             CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
         }
         coreRealm.closeGlobalSession();
+    }
+
+    private void renderConceptionEntityUI(String conceptionKindName,String conceptionEntityUID){
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(conceptionKindName,conceptionEntityUID);
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8, Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("10px");
+        titleDetailLayout.add(conceptionKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(conceptionKindName);
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+        conceptionEntityIcon.setSize("10px");
+        titleDetailLayout.add(conceptionEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel conceptionEntityUIDLabel = new NativeLabel(conceptionEntityUID);
+        titleDetailLayout.add(conceptionEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
+    }
+
+    public void showDisplayEntityDetailButton(boolean showButtonFlag){
+        this.displayEntityDetailButton.setVisible(showButtonFlag);
     }
 }
