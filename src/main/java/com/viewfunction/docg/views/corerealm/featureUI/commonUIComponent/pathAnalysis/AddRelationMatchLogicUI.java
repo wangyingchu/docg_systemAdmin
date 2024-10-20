@@ -123,6 +123,7 @@ public class AddRelationMatchLogicUI extends VerticalLayout {
         if(this.containerDialog != null){
             this.containerDialog.close();
         }
+        this.relationKindFilterSelect.clear();
     }
 
     private Renderer<KindMetaInfo> createRenderer() {

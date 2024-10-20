@@ -5,13 +5,15 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.NativeLabel;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverPosition;
+import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.IntegerField;
 
@@ -19,7 +21,6 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.ConceptionKindMatchLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.RelationKindMatchLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
-import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
@@ -46,6 +47,11 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
     private String conceptionEntityUID;
     private String conceptionKind;
     private PathExpandType pathExpandType;
+
+    private Button addRelationMatchLogicButton;
+    private Popover addRelationMatchLogicButtonPopover;
+    private Button addConceptionMatchLogicButton;
+    private Popover aaddConceptionMatchLogicButtonPopover;
 
     public ConceptionEntityExpandTopologyCriteriaView(String conceptionKind, String conceptionEntityUID, PathExpandType pathExpandType) {
         this.conceptionKind = conceptionKind;
@@ -92,7 +98,7 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
         relationMatchLogicConfigSetupContainer.add(relationMatchLogicConfigText);
         relationMatchLogicConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,relationMatchLogicConfigText);
 
-        Button addRelationMatchLogicButton = new Button("添加关系类型匹配逻辑");
+        addRelationMatchLogicButton = new Button("添加关系类型匹配逻辑");
         addRelationMatchLogicButton.setTooltipText("添加关系类型匹配逻辑");
         addRelationMatchLogicButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         addRelationMatchLogicButton.setIcon(VaadinIcon.PLUS.create());
@@ -179,7 +185,7 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
         conceptionMatchLogicConfigSetupContainer.add(conceptionMatchLogicConfigText);
         conceptionMatchLogicConfigSetupContainer.setVerticalComponentAlignment(Alignment.CENTER,conceptionMatchLogicConfigText);
 
-        Button addConceptionMatchLogicButton = new Button("添加概念类型匹配逻辑");
+        addConceptionMatchLogicButton = new Button("添加概念类型匹配逻辑");
         addConceptionMatchLogicButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         addConceptionMatchLogicButton.setIcon(VaadinIcon.PLUS.create());
         conceptionMatchLogicConfigSetupContainer.add(addConceptionMatchLogicButton);
@@ -295,23 +301,53 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
     };
 
     private void renderAddRelationMatchLogicUI(){
-        AddRelationMatchLogicUI addRelationMatchLogicUI = new AddRelationMatchLogicUI();
-        addRelationMatchLogicUI.setAddRelationMatchLogicHelper(addRelationMatchLogicHelper);
+        if(addRelationMatchLogicButtonPopover == null){
+            AddRelationMatchLogicUI addRelationMatchLogicUI = new AddRelationMatchLogicUI();
+            addRelationMatchLogicUI.setAddRelationMatchLogicHelper(addRelationMatchLogicHelper);
+            addRelationMatchLogicButtonPopover = new Popover();
+            addRelationMatchLogicButtonPopover.setTarget(addRelationMatchLogicButton);
+            addRelationMatchLogicButtonPopover.setWidth("500px");
+            addRelationMatchLogicButtonPopover.setHeight("220px");
+            addRelationMatchLogicButtonPopover.addThemeVariants(PopoverVariant.ARROW);
+            addRelationMatchLogicButtonPopover.setPosition(PopoverPosition.BOTTOM);
+            addRelationMatchLogicButtonPopover.add(addRelationMatchLogicUI);
+            addRelationMatchLogicButtonPopover.setAutofocus(true);
+            addRelationMatchLogicButtonPopover.setModal(true);
+        }
+        addRelationMatchLogicButtonPopover.open();
+
+        /*
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加关系类型匹配逻辑",null,true,470,280,false);
         fixSizeWindow.setWindowContent(addRelationMatchLogicUI);
         fixSizeWindow.setModel(true);
         addRelationMatchLogicUI.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+        */
     }
 
     private void renderAddConceptionMatchLogicUI(){
-        AddConceptionMatchLogicUI addConceptionMatchLogicUI = new AddConceptionMatchLogicUI();
-        addConceptionMatchLogicUI.setAddConceptionMatchLogicHelper(addConceptionMatchLogicHelper);
+        if(aaddConceptionMatchLogicButtonPopover == null){
+            AddConceptionMatchLogicUI addConceptionMatchLogicUI = new AddConceptionMatchLogicUI();
+            addConceptionMatchLogicUI.setAddConceptionMatchLogicHelper(addConceptionMatchLogicHelper);
+            aaddConceptionMatchLogicButtonPopover = new Popover();
+            aaddConceptionMatchLogicButtonPopover.setTarget(addConceptionMatchLogicButton);
+            aaddConceptionMatchLogicButtonPopover.setWidth("500px");
+            aaddConceptionMatchLogicButtonPopover.setHeight("220px");
+            aaddConceptionMatchLogicButtonPopover.addThemeVariants(PopoverVariant.ARROW);
+            aaddConceptionMatchLogicButtonPopover.setPosition(PopoverPosition.TOP);
+            aaddConceptionMatchLogicButtonPopover.add(addConceptionMatchLogicUI);
+            aaddConceptionMatchLogicButtonPopover.setAutofocus(true);
+            aaddConceptionMatchLogicButtonPopover.setModal(true);
+        }
+        aaddConceptionMatchLogicButtonPopover.open();
+
+        /*
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加概念类型匹配逻辑",null,true,470,280,false);
         fixSizeWindow.setWindowContent(addConceptionMatchLogicUI);
         fixSizeWindow.setModel(true);
         addConceptionMatchLogicUI.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+        */
     }
 
     private boolean checkConceptionKindMatchLogicNotExist(String conceptionKindName, ConceptionKindMatchLogic.ConceptionKindExistenceRule conceptionKindExistenceRule){

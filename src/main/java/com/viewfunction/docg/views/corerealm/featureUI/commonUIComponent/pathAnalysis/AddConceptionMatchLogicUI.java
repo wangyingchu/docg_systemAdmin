@@ -127,6 +127,7 @@ public class AddConceptionMatchLogicUI extends VerticalLayout {
         if(this.containerDialog != null){
             this.containerDialog.close();
         }
+        this.conceptionKindFilterSelect.clear();
     }
 
     private Renderer<KindMetaInfo> createRenderer() {
