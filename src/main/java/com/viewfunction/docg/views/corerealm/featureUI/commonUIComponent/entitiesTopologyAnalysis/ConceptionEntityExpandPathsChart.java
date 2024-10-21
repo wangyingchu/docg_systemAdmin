@@ -201,6 +201,18 @@ public class ConceptionEntityExpandPathsChart extends VerticalLayout {
                     });
                 }
             }
+
+
+
+
+
+
+            initLayoutGraph();
+
+
+
+
+
         }
     }
 

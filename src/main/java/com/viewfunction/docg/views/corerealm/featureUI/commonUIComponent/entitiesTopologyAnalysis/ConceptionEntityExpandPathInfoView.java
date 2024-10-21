@@ -2,6 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entiti
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesPath;
@@ -52,10 +53,19 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
 
 
         if(!this.entitiesPathList.isEmpty()){
+
+            ConceptionEntityExpandPathsChart conceptionEntityExpandPathsChart = new ConceptionEntityExpandPathsChart(this.conceptionKind,this.conceptionEntityUID);
+            add(conceptionEntityExpandPathsChart);
+            conceptionEntityExpandPathsChart.setHeight(800, Unit.PIXELS);
             for(EntitiesPath currentPath : this.entitiesPathList){
 
                 LinkedList<ConceptionEntity> pathConceptionEntitiesList =  currentPath.getPathConceptionEntities();
                 LinkedList<RelationEntity> pathRelationEntitiesList = currentPath.getPathRelationEntities();
+                conceptionEntityExpandPathsChart.setData(pathRelationEntitiesList);
+
+
+
+                /*
                 pathConceptionEntitiesList.forEach(new Consumer<ConceptionEntity>() {
                     @Override
                     public void accept(ConceptionEntity conceptionEntity) {
@@ -69,12 +79,16 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
 
                     }
                 });
+                */
 
             }
 
 
 
         }
+
+
+
 
 
     }
