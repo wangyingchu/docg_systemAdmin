@@ -1,4 +1,4 @@
-package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.pathAnalysis;
+package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
@@ -17,12 +17,7 @@ import java.util.List;
 
 public class ConceptionEntityTopologyTravelableResultView extends VerticalLayout implements ConceptionEntityExpandPathEvent.ConceptionEntityExpandPathListener {
 
-    public ConceptionEntityTopologyTravelableResultView() {
-
-
-
-
-    }
+    public ConceptionEntityTopologyTravelableResultView() {}
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
@@ -55,17 +50,6 @@ public class ConceptionEntityTopologyTravelableResultView extends VerticalLayout
 
         String conceptionKind = event.getConceptionKind();
         String conceptionEntityUID = event.getConceptionEntityUID();
-
-        System.out.println(event.getConceptionEntityUID());
-        System.out.println(event.getConceptionKind());
-        System.out.println(event.getPathExpandType());
-        System.out.println(event.getDefaultDirectionForNoneRelationKindMatch());
-        System.out.println(event.getRelationKindMatchLogics());
-        System.out.println(event.getMaxJump());
-        System.out.println(event.getMinJump());
-        System.out.println(event.isContainsSelf());
-        System.out.println(event.getConceptionKindMatchLogics());
-
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         ConceptionKind targetConception = coreRealm.getConceptionKind(conceptionKind);
         if(targetConception != null){
@@ -73,12 +57,10 @@ public class ConceptionEntityTopologyTravelableResultView extends VerticalLayout
             if(targetConceptionEntity != null){
                 ConceptionEntityTopologyTravelableView.PathExpandType pathExpandType = event.getPathExpandType();
                 if(ConceptionEntityTopologyTravelableView.PathExpandType.ExpandPath.equals(pathExpandType)){
-                    List<EntitiesPath> entitiesPathList = null;
-                    entitiesPathList = targetConceptionEntity.expandPath(event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.getMinJump(),event.getMaxJump());
-                    System.out.println(entitiesPathList);
-                    System.out.println(entitiesPathList.size());
-
-                    ConceptionEntityExpandPathInfoView conceptionEntityExpandPathInfoView = new ConceptionEntityExpandPathInfoView();
+                    int minJump = event.getMinJump() != null ? event.getMinJump() : 0;
+                    List<EntitiesPath> entitiesPathList = targetConceptionEntity.expandPath(
+                            event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),minJump,event.getMaxJump());
+                    ConceptionEntityExpandPathInfoView conceptionEntityExpandPathInfoView = new ConceptionEntityExpandPathInfoView(conceptionKind,conceptionEntityUID,entitiesPathList);
                     add(conceptionEntityExpandPathInfoView);
                 }else if(ConceptionEntityTopologyTravelableView.PathExpandType.ExpandGraph.equals(pathExpandType)){
                     EntitiesGraph entitiesGraph = targetConceptionEntity.expandGraph(event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.isContainsSelf(),event.getMaxJump());
