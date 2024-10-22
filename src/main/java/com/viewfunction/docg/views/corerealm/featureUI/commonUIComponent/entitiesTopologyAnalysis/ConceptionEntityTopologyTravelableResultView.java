@@ -17,7 +17,11 @@ import java.util.List;
 
 public class ConceptionEntityTopologyTravelableResultView extends VerticalLayout implements ConceptionEntityExpandPathEvent.ConceptionEntityExpandPathListener {
 
-    public ConceptionEntityTopologyTravelableResultView() {}
+    public ConceptionEntityTopologyTravelableResultView() {
+        this.setPadding(false);
+        this.setMargin(false);
+        this.setPadding(false);
+    }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
