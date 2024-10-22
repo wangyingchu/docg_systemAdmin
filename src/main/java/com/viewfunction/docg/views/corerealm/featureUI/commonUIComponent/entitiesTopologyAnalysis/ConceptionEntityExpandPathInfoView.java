@@ -5,18 +5,15 @@ import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RuntimeRelationAndConceptionKindAttachInfo;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesPath;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
     private Registration listener;
@@ -53,21 +50,11 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-
-
-
-
-
-
-
-
         if(!this.entitiesPathList.isEmpty()){
             conceptionEntityExpandPathsChart = new ConceptionEntityExpandPathsChart(this.conceptionKind,this.conceptionEntityUID);
             containerLayout.add(conceptionEntityExpandPathsChart);
-            //conceptionEntityExpandPathsChart.setHeight(600, Unit.PIXELS);
-            conceptionEntityExpandPathsChart.setWidth(700, Unit.PIXELS);
-            int idx = this.entitiesPathList.size()<=10 ? this.entitiesPathList.size()-1:10;
 
+            int idx = this.entitiesPathList.size()<=10 ? this.entitiesPathList.size()-1:10;
             List<RelationEntity> fullRelationList = new LinkedList<>();
             for(int i=0;i<idx+1;i++){
                 EntitiesPath currentEntityPath = this.entitiesPathList.get(i);
@@ -103,21 +90,22 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
             }
         }
 
-
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            entitiesPathGrid.setHeight(event.getHeight()-200, Unit.PIXELS);
+            entitiesPathGrid.setHeight(event.getHeight()-145, Unit.PIXELS);
             if(conceptionEntityExpandPathsChart != null){
-                conceptionEntityExpandPathsChart.setHeight(event.getHeight()-500, Unit.PIXELS);
+                conceptionEntityExpandPathsChart.setHeight(event.getHeight()-145, Unit.PIXELS);
+                conceptionEntityExpandPathsChart.setWidth(event.getWidth()-775, Unit.PIXELS);
             }
-
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            entitiesPathGrid.setHeight(browserHeight-200,Unit.PIXELS);
+            int browserWidth = receiver.getBodyClientWidth();
+            entitiesPathGrid.setHeight(browserHeight-145,Unit.PIXELS);
             if(conceptionEntityExpandPathsChart != null){
-                conceptionEntityExpandPathsChart.setHeight(browserHeight-500,Unit.PIXELS);
+                conceptionEntityExpandPathsChart.setHeight(browserHeight-145,Unit.PIXELS);
+                conceptionEntityExpandPathsChart.setWidth(browserWidth-775, Unit.PIXELS);
             }
         }));
     }
