@@ -1,6 +1,5 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis;
 
-import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
@@ -10,16 +9,17 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesPath;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
@@ -53,16 +53,28 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
         //entitiesPathGrid.addColumn(EntitiesPath::getPathWeight).setHeader("权重").setKey("idx_2").setResizable(true).setWidth("20px");
         entitiesPathGrid.addComponentColumn(new PathEndConceptionEntityValueProvider()).setHeader("终点概念实体").setKey("idx_3").setResizable(true).setFlexGrow(1);
 
-        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.WRENCH,"起点概念实体");
+        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.SUN_RISE,"起点概念实体");
         entitiesPathGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx1).setSortable(false);
-        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.KEY_O,"跳数");
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(LineAwesomeIconsSvg.RUNNING_SOLID.create(),"跳数");
         entitiesPathGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx2).setSortable(true);
         //GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.CONNECT_O,"权重");
         //entitiesPathGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx3).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(FontAwesome.Solid.STETHOSCOPE.create(),"终点概念实体");
+        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.SUN_DOWN.create(),"终点概念实体");
         entitiesPathGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx4).setSortable(false);
         entitiesPathGrid.setItems(this.entitiesPathList);
         containerLayout.add(entitiesPathGrid);
+
+        entitiesPathGrid.addSelectionListener(new SelectionListener<Grid<EntitiesPath>, EntitiesPath>() {
+            @Override
+            public void selectionChange(SelectionEvent<Grid<EntitiesPath>, EntitiesPath> selectionEvent) {
+                //conceptionEntityExpandPathsChart.clearData();
+                if(selectionEvent != null){
+                    EntitiesPath selectedPath = selectionEvent.getAllSelectedItems().iterator().next();
+                    conceptionEntityExpandPathsChart.setData(selectedPath.getPathRelationEntities()
+                    );
+                }
+            }
+        });
     }
 
     @Override
@@ -72,40 +84,16 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
             conceptionEntityExpandPathsChart = new ConceptionEntityExpandPathsChart(this.conceptionKind,this.conceptionEntityUID);
             containerLayout.add(conceptionEntityExpandPathsChart);
 
+            /*
             int idx = this.entitiesPathList.size()<=10 ? this.entitiesPathList.size()-1:10;
             List<RelationEntity> fullRelationList = new LinkedList<>();
             for(int i=0;i<idx+1;i++){
                 EntitiesPath currentEntityPath = this.entitiesPathList.get(i);
                 LinkedList<RelationEntity> pathRelationEntitiesList = currentEntityPath.getPathRelationEntities();
                 fullRelationList.addAll(pathRelationEntitiesList);
-
             }
-            conceptionEntityExpandPathsChart.setData(fullRelationList);
-            System.out.println("fullRelationListfullRelationListfullRelationListfullRelationList");
-            System.out.println(fullRelationList);
-            System.out.println("fullRelationListfullRelationListfullRelationListfullRelationList");
-
-            for(EntitiesPath currentPath : this.entitiesPathList){
-                // LinkedList<ConceptionEntity> pathConceptionEntitiesList =  currentPath.getPathConceptionEntities();
-              //  LinkedList<RelationEntity> pathRelationEntitiesList = currentPath.getPathRelationEntities();
-              //
-                /*
-                pathConceptionEntitiesList.forEach(new Consumer<ConceptionEntity>() {
-                    @Override
-                    public void accept(ConceptionEntity conceptionEntity) {
-
-                    }
-                });
-
-                pathRelationEntitiesList.forEach(new Consumer<RelationEntity>() {
-                    @Override
-                    public void accept(RelationEntity relationEntity) {
-
-                    }
-                });
-                */
-
-            }
+            */
+            //conceptionEntityExpandPathsChart.setData(fullRelationList);
         }
 
         // Add browser window listener to observe size change
