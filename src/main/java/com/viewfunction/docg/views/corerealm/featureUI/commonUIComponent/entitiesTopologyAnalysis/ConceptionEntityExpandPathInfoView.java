@@ -1,17 +1,24 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesPath;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
+import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,12 +44,23 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
         containerLayout = new HorizontalLayout();
         add(containerLayout);
         entitiesPathGrid = new Grid<>();
-        entitiesPathGrid.setWidth(410,Unit.PIXELS);
+        entitiesPathGrid.setWidth(570,Unit.PIXELS);
         entitiesPathGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        entitiesPathGrid.setSelectionMode(Grid.SelectionMode.NONE);
-        entitiesPathGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
-        entitiesPathGrid.addColumn(EntitiesPath::getStartConceptionEntityType).setHeader("概念类型").setKey("idx_0").setResizable(true);
-        entitiesPathGrid.addColumn(EntitiesPath::getEndConceptionEntityType).setHeader("概念类型").setKey("idx_1").setResizable(true);
+        entitiesPathGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+
+        entitiesPathGrid.addComponentColumn(new PathStartConceptionEntityValueProvider()).setHeader("起点概念实体").setKey("idx_0").setResizable(true).setFlexGrow(1);
+        entitiesPathGrid.addColumn(EntitiesPath::getPathJumps).setHeader("跳数").setKey("idx_1").setResizable(true).setFlexGrow(0).setWidth("80px");
+        //entitiesPathGrid.addColumn(EntitiesPath::getPathWeight).setHeader("权重").setKey("idx_2").setResizable(true).setWidth("20px");
+        entitiesPathGrid.addComponentColumn(new PathEndConceptionEntityValueProvider()).setHeader("终点概念实体").setKey("idx_3").setResizable(true).setFlexGrow(1);
+
+        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.WRENCH,"起点概念实体");
+        entitiesPathGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx1).setSortable(false);
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.KEY_O,"跳数");
+        entitiesPathGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx2).setSortable(true);
+        //GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.CONNECT_O,"权重");
+        //entitiesPathGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx3).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(FontAwesome.Solid.STETHOSCOPE.create(),"终点概念实体");
+        entitiesPathGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx4).setSortable(false);
         entitiesPathGrid.setItems(this.entitiesPathList);
         containerLayout.add(entitiesPathGrid);
     }
@@ -92,20 +110,20 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
 
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            entitiesPathGrid.setHeight(event.getHeight()-145, Unit.PIXELS);
+            entitiesPathGrid.setHeight(event.getHeight()-120, Unit.PIXELS);
             if(conceptionEntityExpandPathsChart != null){
-                conceptionEntityExpandPathsChart.setHeight(event.getHeight()-145, Unit.PIXELS);
-                conceptionEntityExpandPathsChart.setWidth(event.getWidth()-775, Unit.PIXELS);
+                conceptionEntityExpandPathsChart.setHeight(event.getHeight()-120, Unit.PIXELS);
+                conceptionEntityExpandPathsChart.setWidth(event.getWidth()-940, Unit.PIXELS);
             }
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             int browserWidth = receiver.getBodyClientWidth();
-            entitiesPathGrid.setHeight(browserHeight-145,Unit.PIXELS);
+            entitiesPathGrid.setHeight(browserHeight-120,Unit.PIXELS);
             if(conceptionEntityExpandPathsChart != null){
-                conceptionEntityExpandPathsChart.setHeight(browserHeight-145,Unit.PIXELS);
-                conceptionEntityExpandPathsChart.setWidth(browserWidth-775, Unit.PIXELS);
+                conceptionEntityExpandPathsChart.setHeight(browserHeight-120,Unit.PIXELS);
+                conceptionEntityExpandPathsChart.setWidth(browserWidth-940, Unit.PIXELS);
             }
         }));
     }
@@ -115,5 +133,47 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
+    }
+
+    private class PathStartConceptionEntityValueProvider implements ValueProvider<EntitiesPath,HorizontalLayout> {
+        @Override
+        public HorizontalLayout apply(EntitiesPath entitiesPath) {
+            String startConceptionEntityUID = entitiesPath.getStartConceptionEntityUID();
+            String startConceptionEntityType = entitiesPath.getStartConceptionEntityType();
+
+            Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+            conceptionKindIcon.setSize("12px");
+            conceptionKindIcon.getStyle().set("padding-right","3px");
+            Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+            conceptionEntityIcon.setSize("18px");
+            conceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
+            List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
+            footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,startConceptionEntityType));
+            footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,startConceptionEntityUID));
+            FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList,true);
+            entityInfoFootprintMessageBar.getStyle().set("font-size","10px");
+            return entityInfoFootprintMessageBar;
+        }
+    }
+
+    private class PathEndConceptionEntityValueProvider implements ValueProvider<EntitiesPath,HorizontalLayout> {
+        @Override
+        public HorizontalLayout apply(EntitiesPath entitiesPath) {
+            String endConceptionEntityUID = entitiesPath.getEndConceptionEntityUID();
+            String endConceptionEntityType = entitiesPath.getEndConceptionEntityType();
+
+            Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+            conceptionKindIcon.setSize("12px");
+            conceptionKindIcon.getStyle().set("padding-right","3px");
+            Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+            conceptionEntityIcon.setSize("18px");
+            conceptionEntityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
+            List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
+            footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionKindIcon,endConceptionEntityType));
+            footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,endConceptionEntityUID));
+            FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList,true);
+            entityInfoFootprintMessageBar.getStyle().set("font-size","10px");
+            return entityInfoFootprintMessageBar;
+        }
     }
 }
