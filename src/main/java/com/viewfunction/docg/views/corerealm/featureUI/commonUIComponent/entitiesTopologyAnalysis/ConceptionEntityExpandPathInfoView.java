@@ -83,17 +83,6 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
         if(!this.entitiesPathList.isEmpty()){
             conceptionEntityExpandPathsChart = new ConceptionEntityExpandPathsChart(this.conceptionKind,this.conceptionEntityUID);
             containerLayout.add(conceptionEntityExpandPathsChart);
-
-            /*
-            int idx = this.entitiesPathList.size()<=10 ? this.entitiesPathList.size()-1:10;
-            List<RelationEntity> fullRelationList = new LinkedList<>();
-            for(int i=0;i<idx+1;i++){
-                EntitiesPath currentEntityPath = this.entitiesPathList.get(i);
-                LinkedList<RelationEntity> pathRelationEntitiesList = currentEntityPath.getPathRelationEntities();
-                fullRelationList.addAll(pathRelationEntitiesList);
-            }
-            */
-            //conceptionEntityExpandPathsChart.setData(fullRelationList);
         }
 
         // Add browser window listener to observe size change
