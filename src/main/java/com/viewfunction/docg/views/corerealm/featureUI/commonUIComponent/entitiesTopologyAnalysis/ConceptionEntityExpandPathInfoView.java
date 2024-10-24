@@ -1,14 +1,16 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.function.ValueProvider;
@@ -20,17 +22,20 @@ import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
     private Registration listener;
     private String conceptionKind;
     private String conceptionEntityUID;
     private List<EntitiesPath> entitiesPathList;
-
     private Grid<EntitiesPath> entitiesPathGrid;
     private HorizontalLayout containerLayout;
     private ConceptionEntityExpandPathsChart conceptionEntityExpandPathsChart;
+    private Map<EntitiesPath,Icon> entitiesPathDisplayIconMap;
+    private Popover EntitiesPathInfoPopover;
 
     public ConceptionEntityExpandPathInfoView(String conceptionKind,String conceptionEntityUID,List<EntitiesPath> entitiesPathList) {
         this.setPadding(false);
@@ -40,6 +45,28 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
         this.entitiesPathList = entitiesPathList;
+        entitiesPathDisplayIconMap = new HashMap<>();
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entitiesPath -> {
+            Icon queryIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
+            queryIcon.setSize("16px");
+            Button queryConceptionKind = new Button(queryIcon, event -> {
+                if(entitiesPath instanceof EntitiesPath){
+                    showEntitiesPathInfo((EntitiesPath)entitiesPath);
+                }
+            });
+            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            queryConceptionKind.setTooltipText("显示路径详情");
+
+            HorizontalLayout buttons = new HorizontalLayout(queryConceptionKind);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(15,Unit.PIXELS);
+            buttons.setWidth(40,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
 
         containerLayout = new HorizontalLayout();
         add(containerLayout);
@@ -48,30 +75,35 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
         entitiesPathGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         entitiesPathGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 
+        entitiesPathGrid.addComponentColumn(new EntitiesPathDisplayValueProvider()).setHeader("").setKey("idx").setFlexGrow(0).setWidth("35px").setResizable(false);
         entitiesPathGrid.addComponentColumn(new PathStartConceptionEntityValueProvider()).setHeader("起点概念实体").setKey("idx_0").setResizable(true).setFlexGrow(1);
-        entitiesPathGrid.addColumn(EntitiesPath::getPathJumps).setHeader("跳数").setKey("idx_1").setResizable(true).setFlexGrow(0).setWidth("80px");
-        //entitiesPathGrid.addColumn(EntitiesPath::getPathWeight).setHeader("权重").setKey("idx_2").setResizable(true).setWidth("20px");
+        entitiesPathGrid.addColumn(EntitiesPath::getPathJumps).setHeader("").setKey("idx_1").setResizable(true).setFlexGrow(0).setWidth("50px");
         entitiesPathGrid.addComponentColumn(new PathEndConceptionEntityValueProvider()).setHeader("终点概念实体").setKey("idx_3").setResizable(true).setFlexGrow(1);
+        entitiesPathGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("60px").setResizable(false);
 
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.SUN_RISE,"起点概念实体");
         entitiesPathGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx1).setSortable(false);
-        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(LineAwesomeIconsSvg.RUNNING_SOLID.create(),"跳数");
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(LineAwesomeIconsSvg.RUNNING_SOLID.create(),"");
         entitiesPathGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx2).setSortable(true);
-        //GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.CONNECT_O,"权重");
-        //entitiesPathGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx3).setSortable(true);
         GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.SUN_DOWN.create(),"终点概念实体");
         entitiesPathGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx4).setSortable(false);
+        GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
+        entitiesPathGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx5);
+
         entitiesPathGrid.setItems(this.entitiesPathList);
         containerLayout.add(entitiesPathGrid);
 
         entitiesPathGrid.addSelectionListener(new SelectionListener<Grid<EntitiesPath>, EntitiesPath>() {
             @Override
             public void selectionChange(SelectionEvent<Grid<EntitiesPath>, EntitiesPath> selectionEvent) {
-                //conceptionEntityExpandPathsChart.clearData();
                 if(selectionEvent != null){
-                    EntitiesPath selectedPath = selectionEvent.getAllSelectedItems().iterator().next();
-                    conceptionEntityExpandPathsChart.setData(selectedPath.getPathRelationEntities()
-                    );
+                    if(selectionEvent.getAllSelectedItems() != null && selectionEvent.getAllSelectedItems().size() > 0){
+                        EntitiesPath selectedPath = selectionEvent.getAllSelectedItems().iterator().next();
+                        conceptionEntityExpandPathsChart.setData(selectedPath.getPathRelationEntities());
+                        if(entitiesPathDisplayIconMap.containsKey(selectedPath)){
+                            entitiesPathDisplayIconMap.get(selectedPath).getStyle().set("color","#3D9970");
+                        }
+                    }
                 }
             }
         });
@@ -109,6 +141,7 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
     protected void onDetach(DetachEvent detachEvent) {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
+        entitiesPathDisplayIconMap.clear();
         super.onDetach(detachEvent);
     }
 
@@ -152,5 +185,22 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
             entityInfoFootprintMessageBar.getStyle().set("font-size","10px");
             return entityInfoFootprintMessageBar;
         }
+    }
+
+    private class EntitiesPathDisplayValueProvider implements ValueProvider<EntitiesPath,Icon>{
+        @Override
+        public Icon apply(EntitiesPath entitiesPath) {
+            Icon entitiesPathDisplayIcon = VaadinIcon.LAPTOP.create();
+            entitiesPathDisplayIcon.setSize("12px");
+            entitiesPathDisplayIcon.getStyle().set("color","#CCCCCC");
+            entitiesPathDisplayIconMap.put(entitiesPath,entitiesPathDisplayIcon);
+            return entitiesPathDisplayIcon;
+        }
+    }
+
+    private void showEntitiesPathInfo(EntitiesPath entitiesPath){
+        if(this.EntitiesPathInfoPopover == null){}
+
+
     }
 }
