@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -49,16 +50,19 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entitiesPath -> {
             Icon queryIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
             queryIcon.setSize("16px");
-            Button queryConceptionKind = new Button(queryIcon, event -> {
-                if(entitiesPath instanceof EntitiesPath){
-                    showEntitiesPathInfo((EntitiesPath)entitiesPath);
+            Button pathInfoDisplayButton = new Button(queryIcon);
+            pathInfoDisplayButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    showEntitiesPathInfo((EntitiesPath)entitiesPath,pathInfoDisplayButton);
                 }
             });
-            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            queryConceptionKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            queryConceptionKind.setTooltipText("显示路径详情");
 
-            HorizontalLayout buttons = new HorizontalLayout(queryConceptionKind);
+            pathInfoDisplayButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            pathInfoDisplayButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            pathInfoDisplayButton.setTooltipText("显示路径详情");
+
+            HorizontalLayout buttons = new HorizontalLayout(pathInfoDisplayButton);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -198,9 +202,12 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
         }
     }
 
-    private void showEntitiesPathInfo(EntitiesPath entitiesPath){
-        if(this.EntitiesPathInfoPopover == null){}
-
-
+    private void showEntitiesPathInfo(EntitiesPath entitiesPath,Button popupTarget){
+        if(this.EntitiesPathInfoPopover == null){
+            this.EntitiesPathInfoPopover = new Popover();
+        }
+        this.EntitiesPathInfoPopover.setTarget(popupTarget);
+        this.EntitiesPathInfoPopover.add(new NativeLabel("1234567"));
+        this.EntitiesPathInfoPopover.open();
     }
 }
