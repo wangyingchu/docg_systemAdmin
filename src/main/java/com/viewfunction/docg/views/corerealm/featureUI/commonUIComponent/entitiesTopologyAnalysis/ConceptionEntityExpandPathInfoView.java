@@ -11,6 +11,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
@@ -36,7 +37,7 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
     private HorizontalLayout containerLayout;
     private ConceptionEntityExpandPathsChart conceptionEntityExpandPathsChart;
     private Map<EntitiesPath,Icon> entitiesPathDisplayIconMap;
-    private Popover EntitiesPathInfoPopover;
+    private Map<EntitiesPath,Popover> entitiesPathInfoPopoverMap;
 
     public ConceptionEntityExpandPathInfoView(String conceptionKind,String conceptionEntityUID,List<EntitiesPath> entitiesPathList) {
         this.setPadding(false);
@@ -47,6 +48,7 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
         this.conceptionEntityUID = conceptionEntityUID;
         this.entitiesPathList = entitiesPathList;
         entitiesPathDisplayIconMap = new HashMap<>();
+        entitiesPathInfoPopoverMap = new HashMap<>();
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entitiesPath -> {
             Icon queryIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
             queryIcon.setSize("16px");
@@ -202,12 +204,22 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
         }
     }
 
-    private void showEntitiesPathInfo(EntitiesPath entitiesPath,Button popupTarget){
-        if(this.EntitiesPathInfoPopover == null){
-            this.EntitiesPathInfoPopover = new Popover();
+    private void showEntitiesPathInfo(EntitiesPath entitiesPath,Button popupTarget) {
+        if(!entitiesPathInfoPopoverMap.containsKey(entitiesPath)){
+            Popover popover = new Popover();
+            popover.setModal(true, true);
+            popover.setTarget(popupTarget);
+            popover.removeAll();
+            popover.add(new NativeLabel("1234567"));
+            popover.addThemeVariants(PopoverVariant.ARROW);
+            popover.addDetachListener(new ComponentEventListener<DetachEvent>() {
+                @Override
+                public void onComponentEvent(DetachEvent detachEvent) {
+                    popover.removeAll();
+                }
+            });
+            entitiesPathInfoPopoverMap.put(entitiesPath,popover);
         }
-        this.EntitiesPathInfoPopover.setTarget(popupTarget);
-        this.EntitiesPathInfoPopover.add(new NativeLabel("1234567"));
-        this.EntitiesPathInfoPopover.open();
+        entitiesPathInfoPopoverMap.get(entitiesPath).open();
     }
 }

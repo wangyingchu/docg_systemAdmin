@@ -312,7 +312,7 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
             addRelationMatchLogicButtonPopover.setPosition(PopoverPosition.BOTTOM);
             addRelationMatchLogicButtonPopover.add(addRelationMatchLogicUI);
             addRelationMatchLogicButtonPopover.setAutofocus(true);
-            addRelationMatchLogicButtonPopover.setModal(true);
+            addRelationMatchLogicButtonPopover.setModal(true,true);
         }
         addRelationMatchLogicButtonPopover.open();
 
@@ -337,7 +337,7 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
             addConceptionMatchLogicButtonPopover.setPosition(PopoverPosition.TOP);
             addConceptionMatchLogicButtonPopover.add(addConceptionMatchLogicUI);
             addConceptionMatchLogicButtonPopover.setAutofocus(true);
-            addConceptionMatchLogicButtonPopover.setModal(true);
+            addConceptionMatchLogicButtonPopover.setModal(true,true);
         }
         addConceptionMatchLogicButtonPopover.open();
 
