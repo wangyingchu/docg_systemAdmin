@@ -9,9 +9,7 @@ public class EntitiesPathInfoView extends VerticalLayout {
 
     public EntitiesPathInfoView(EntitiesPath entitiesPath) {
         this.setWidth(400, Unit.PIXELS);
-        this.setHeight(600, Unit.PIXELS);
-
-
+        this.setHeight(500, Unit.PIXELS);
         this.add(new NativeLabel(entitiesPath.getEndConceptionEntityType()+" "+entitiesPath.getPathJumps()));
     }
 }
