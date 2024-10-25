@@ -5,7 +5,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -210,7 +209,8 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
             popover.setModal(true, true);
             popover.setTarget(popupTarget);
             popover.removeAll();
-            popover.add(new NativeLabel("1234567"));
+            EntitiesPathInfoView currentPathView = new EntitiesPathInfoView(entitiesPath);
+            popover.add(currentPathView);
             popover.addThemeVariants(PopoverVariant.ARROW);
             popover.addDetachListener(new ComponentEventListener<DetachEvent>() {
                 @Override
