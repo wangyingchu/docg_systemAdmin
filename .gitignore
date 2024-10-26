@@ -21,3 +21,6 @@ error-screenshots/
 webpack.generated.js
 /tempFilesStorage/
 /ignite/
+/node/node
+/node/npm
+/node/npm.cmd
