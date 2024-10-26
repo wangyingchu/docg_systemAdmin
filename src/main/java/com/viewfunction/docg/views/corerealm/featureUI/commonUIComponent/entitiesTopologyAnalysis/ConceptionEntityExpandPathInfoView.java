@@ -38,6 +38,8 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
     private Map<EntitiesPath,Icon> entitiesPathDisplayIconMap;
     private Map<EntitiesPath,Popover> entitiesPathInfoPopoverMap;
 
+    private int browserDisplayAreaHeight;
+
     public ConceptionEntityExpandPathInfoView(String conceptionKind,String conceptionEntityUID,List<EntitiesPath> entitiesPathList) {
         this.setPadding(false);
         this.setMargin(false);
@@ -125,6 +127,7 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             entitiesPathGrid.setHeight(event.getHeight()-120, Unit.PIXELS);
+            browserDisplayAreaHeight = event.getHeight();
             if(conceptionEntityExpandPathsChart != null){
                 conceptionEntityExpandPathsChart.setHeight(event.getHeight()-120, Unit.PIXELS);
                 conceptionEntityExpandPathsChart.setWidth(event.getWidth()-940, Unit.PIXELS);
@@ -134,6 +137,7 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             int browserWidth = receiver.getBodyClientWidth();
+            browserDisplayAreaHeight = browserHeight;
             entitiesPathGrid.setHeight(browserHeight-120,Unit.PIXELS);
             if(conceptionEntityExpandPathsChart != null){
                 conceptionEntityExpandPathsChart.setHeight(browserHeight-120,Unit.PIXELS);
@@ -209,7 +213,7 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
             popover.setModal(true, true);
             popover.setTarget(popupTarget);
             popover.removeAll();
-            EntitiesPathInfoView currentPathView = new EntitiesPathInfoView(entitiesPath);
+            EntitiesPathInfoView currentPathView = new EntitiesPathInfoView(entitiesPath,browserDisplayAreaHeight/2);
             popover.add(currentPathView);
             popover.addThemeVariants(PopoverVariant.ARROW);
             popover.addDetachListener(new ComponentEventListener<DetachEvent>() {
