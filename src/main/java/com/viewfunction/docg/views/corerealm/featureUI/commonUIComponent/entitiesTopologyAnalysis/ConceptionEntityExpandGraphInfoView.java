@@ -37,7 +37,6 @@ public class ConceptionEntityExpandGraphInfoView extends VerticalLayout {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         if(this.entitiesGraph != null){
-            this.entitiesGraph.getGraphRelationEntities();
             conceptionEntityExpandPathsChart = new ConceptionEntityExpandPathsChart(this.conceptionKind,this.conceptionEntityUID);
             containerLayout.add(conceptionEntityExpandPathsChart);
             conceptionEntityExpandPathsChart.setData(this.entitiesGraph.getGraphRelationEntities());

@@ -6,6 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesGraph;
 import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesPath;
+import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesSpanningTree;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
@@ -72,7 +73,8 @@ public class ConceptionEntityTopologyTravelableResultView extends VerticalLayout
                     ConceptionEntityExpandGraphInfoView conceptionEntityExpandGraphInfoView = new ConceptionEntityExpandGraphInfoView(conceptionKind,conceptionEntityUID,entitiesGraph);
                     add(conceptionEntityExpandGraphInfoView);
                 }else if(ConceptionEntityTopologyTravelableView.PathExpandType.ExpandSpanningTree.equals(pathExpandType)){
-                    ConceptionEntityExpandSpanningTreeInfoView conceptionEntityExpandSpanningTreeInfoView = new ConceptionEntityExpandSpanningTreeInfoView();
+                    EntitiesSpanningTree entitiesSpanningTree = targetConceptionEntity.expandSpanningTree(event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.getMaxJump());
+                    ConceptionEntityExpandSpanningTreeInfoView conceptionEntityExpandSpanningTreeInfoView = new ConceptionEntityExpandSpanningTreeInfoView(conceptionKind,conceptionEntityUID,entitiesSpanningTree);
                     add(conceptionEntityExpandSpanningTreeInfoView);
                 }
             }

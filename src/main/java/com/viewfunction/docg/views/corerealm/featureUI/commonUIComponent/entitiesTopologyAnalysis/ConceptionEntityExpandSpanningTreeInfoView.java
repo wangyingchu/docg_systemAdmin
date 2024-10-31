@@ -1,12 +1,71 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis;
 
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesGraph;
+import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesSpanningTree;
 
 public class ConceptionEntityExpandSpanningTreeInfoView extends VerticalLayout {
 
-    public ConceptionEntityExpandSpanningTreeInfoView() {
+    private Registration listener;
+    private String conceptionKind;
+    private String conceptionEntityUID;
+    EntitiesSpanningTree entitiesSpanningTree;
+    private ConceptionEntityExpandPathsChart conceptionEntityExpandPathsChart;
+    private HorizontalLayout containerLayout;
+
+    public ConceptionEntityExpandSpanningTreeInfoView(String conceptionKind, String conceptionEntityUID, EntitiesSpanningTree entitiesSpanningTree) {
+        this.setPadding(false);
+        this.setMargin(false);
+        this.setPadding(false);
         setSizeFull();
-        add(new NativeLabel("Conception Entity Expand Spanning Tree Info"));
+        this.conceptionKind = conceptionKind;
+        this.conceptionEntityUID = conceptionEntityUID;
+        this.entitiesSpanningTree = entitiesSpanningTree;
+        containerLayout = new HorizontalLayout();
+        add(containerLayout);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        if(this.entitiesSpanningTree != null){
+            conceptionEntityExpandPathsChart = new ConceptionEntityExpandPathsChart(this.conceptionKind,this.conceptionEntityUID);
+            containerLayout.add(conceptionEntityExpandPathsChart);
+            conceptionEntityExpandPathsChart.setData(this.entitiesSpanningTree.getTreeRelationEntities());
+        }
+
+        // Add browser window listener to observe size change
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            //entitiesPathGrid.setHeight(event.getHeight()-120, Unit.PIXELS);
+            //browserDisplayAreaHeight = event.getHeight();
+            if(conceptionEntityExpandPathsChart != null){
+                conceptionEntityExpandPathsChart.setHeight(event.getHeight()-120, Unit.PIXELS);
+                conceptionEntityExpandPathsChart.setWidth(event.getWidth()-940, Unit.PIXELS);
+            }
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            int browserHeight = receiver.getBodyClientHeight();
+            int browserWidth = receiver.getBodyClientWidth();
+            //browserDisplayAreaHeight = browserHeight;
+            //entitiesPathGrid.setHeight(browserHeight-120,Unit.PIXELS);
+            if(conceptionEntityExpandPathsChart != null){
+                conceptionEntityExpandPathsChart.setHeight(browserHeight-120,Unit.PIXELS);
+                conceptionEntityExpandPathsChart.setWidth(browserWidth-940, Unit.PIXELS);
+            }
+        }));
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
+        super.onDetach(detachEvent);
     }
 }
