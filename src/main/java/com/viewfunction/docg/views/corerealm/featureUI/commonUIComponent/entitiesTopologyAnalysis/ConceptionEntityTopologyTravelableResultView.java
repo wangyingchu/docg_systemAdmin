@@ -67,10 +67,9 @@ public class ConceptionEntityTopologyTravelableResultView extends VerticalLayout
                     ConceptionEntityExpandPathInfoView conceptionEntityExpandPathInfoView = new ConceptionEntityExpandPathInfoView(conceptionKind,conceptionEntityUID,entitiesPathList);
                     add(conceptionEntityExpandPathInfoView);
                 }else if(ConceptionEntityTopologyTravelableView.PathExpandType.ExpandGraph.equals(pathExpandType)){
-                    EntitiesGraph entitiesGraph = targetConceptionEntity.expandGraph(event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.isContainsSelf(),event.getMaxJump());
-                    System.out.println(entitiesGraph);
-                    System.out.println(entitiesGraph.getGraphConceptionKindsDataStatistic());
-                    ConceptionEntityExpandGraphInfoView conceptionEntityExpandGraphInfoView = new ConceptionEntityExpandGraphInfoView();
+                    EntitiesGraph entitiesGraph = targetConceptionEntity.expandGraph(
+                            event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.isContainsSelf(),event.getMaxJump());
+                    ConceptionEntityExpandGraphInfoView conceptionEntityExpandGraphInfoView = new ConceptionEntityExpandGraphInfoView(conceptionKind,conceptionEntityUID,entitiesGraph);
                     add(conceptionEntityExpandGraphInfoView);
                 }else if(ConceptionEntityTopologyTravelableView.PathExpandType.ExpandSpanningTree.equals(pathExpandType)){
                     ConceptionEntityExpandSpanningTreeInfoView conceptionEntityExpandSpanningTreeInfoView = new ConceptionEntityExpandSpanningTreeInfoView();
