@@ -34,7 +34,7 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
     private List<EntitiesPath> entitiesPathList;
     private Grid<EntitiesPath> entitiesPathGrid;
     private HorizontalLayout containerLayout;
-    private ConceptionEntityExpandPathsChart conceptionEntityExpandPathsChart;
+    private ConceptionEntityExpandTopologyChart conceptionEntityExpandTopologyChart;
     private Map<EntitiesPath,Icon> entitiesPathDisplayIconMap;
     private Map<EntitiesPath,Popover> entitiesPathInfoPopoverMap;
 
@@ -106,7 +106,7 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
                 if(selectionEvent != null){
                     if(selectionEvent.getAllSelectedItems() != null && selectionEvent.getAllSelectedItems().size() > 0){
                         EntitiesPath selectedPath = selectionEvent.getAllSelectedItems().iterator().next();
-                        conceptionEntityExpandPathsChart.setData(selectedPath.getPathRelationEntities());
+                        conceptionEntityExpandTopologyChart.setData(selectedPath.getPathRelationEntities());
                         if(entitiesPathDisplayIconMap.containsKey(selectedPath)){
                             entitiesPathDisplayIconMap.get(selectedPath).getStyle().set("color","#3D9970");
                         }
@@ -120,17 +120,17 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         if(!this.entitiesPathList.isEmpty()){
-            conceptionEntityExpandPathsChart = new ConceptionEntityExpandPathsChart(this.conceptionKind,this.conceptionEntityUID);
-            containerLayout.add(conceptionEntityExpandPathsChart);
+            conceptionEntityExpandTopologyChart = new ConceptionEntityExpandTopologyChart(this.conceptionKind,this.conceptionEntityUID);
+            containerLayout.add(conceptionEntityExpandTopologyChart);
         }
 
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             entitiesPathGrid.setHeight(event.getHeight()-120, Unit.PIXELS);
             browserDisplayAreaHeight = event.getHeight();
-            if(conceptionEntityExpandPathsChart != null){
-                conceptionEntityExpandPathsChart.setHeight(event.getHeight()-120, Unit.PIXELS);
-                conceptionEntityExpandPathsChart.setWidth(event.getWidth()-940, Unit.PIXELS);
+            if(conceptionEntityExpandTopologyChart != null){
+                conceptionEntityExpandTopologyChart.setHeight(event.getHeight()-120, Unit.PIXELS);
+                conceptionEntityExpandTopologyChart.setWidth(event.getWidth()-940, Unit.PIXELS);
             }
         }));
         // Adjust size according to initial width of the screen
@@ -139,9 +139,9 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
             int browserWidth = receiver.getBodyClientWidth();
             browserDisplayAreaHeight = browserHeight;
             entitiesPathGrid.setHeight(browserHeight-120,Unit.PIXELS);
-            if(conceptionEntityExpandPathsChart != null){
-                conceptionEntityExpandPathsChart.setHeight(browserHeight-120,Unit.PIXELS);
-                conceptionEntityExpandPathsChart.setWidth(browserWidth-940, Unit.PIXELS);
+            if(conceptionEntityExpandTopologyChart != null){
+                conceptionEntityExpandTopologyChart.setHeight(browserHeight-120,Unit.PIXELS);
+                conceptionEntityExpandTopologyChart.setWidth(browserWidth-940, Unit.PIXELS);
             }
         }));
     }
