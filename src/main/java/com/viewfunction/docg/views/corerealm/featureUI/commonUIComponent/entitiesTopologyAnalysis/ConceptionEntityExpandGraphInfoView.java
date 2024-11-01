@@ -3,14 +3,12 @@ package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entiti
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
-import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesGraph;
-import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesPath;
 
-import java.util.List;
+import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesGraph;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.EntitySyntheticAbstractInfoView;
 
 public class ConceptionEntityExpandGraphInfoView extends VerticalLayout {
 
@@ -19,6 +17,7 @@ public class ConceptionEntityExpandGraphInfoView extends VerticalLayout {
     private String conceptionEntityUID;
     private EntitiesGraph entitiesGraph;
     private ConceptionEntityExpandPathsChart conceptionEntityExpandPathsChart;
+    private EntitySyntheticAbstractInfoView entitySyntheticAbstractInfoView;
     private HorizontalLayout containerLayout;
 
     public ConceptionEntityExpandGraphInfoView(String conceptionKind, String conceptionEntityUID, EntitiesGraph entitiesGraph) {
@@ -30,6 +29,10 @@ public class ConceptionEntityExpandGraphInfoView extends VerticalLayout {
         this.conceptionEntityUID = conceptionEntityUID;
         this.entitiesGraph = entitiesGraph;
         containerLayout = new HorizontalLayout();
+        containerLayout.setPadding(false);
+        containerLayout.setSpacing(false);
+        containerLayout.setMargin(false);
+        containerLayout.setWidthFull();
         add(containerLayout);
     }
 
@@ -40,26 +43,23 @@ public class ConceptionEntityExpandGraphInfoView extends VerticalLayout {
             conceptionEntityExpandPathsChart = new ConceptionEntityExpandPathsChart(this.conceptionKind,this.conceptionEntityUID);
             containerLayout.add(conceptionEntityExpandPathsChart);
             conceptionEntityExpandPathsChart.setData(this.entitiesGraph.getGraphRelationEntities());
+            entitySyntheticAbstractInfoView = new EntitySyntheticAbstractInfoView(330);
+            entitySyntheticAbstractInfoView.setWidth(350,Unit.PIXELS);
+            containerLayout.add(this.entitySyntheticAbstractInfoView);
+            containerLayout.setFlexGrow(1,this.conceptionEntityExpandPathsChart);
         }
 
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            //entitiesPathGrid.setHeight(event.getHeight()-120, Unit.PIXELS);
-            //browserDisplayAreaHeight = event.getHeight();
             if(conceptionEntityExpandPathsChart != null){
                 conceptionEntityExpandPathsChart.setHeight(event.getHeight()-120, Unit.PIXELS);
-                conceptionEntityExpandPathsChart.setWidth(event.getWidth()-940, Unit.PIXELS);
             }
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            int browserWidth = receiver.getBodyClientWidth();
-            //browserDisplayAreaHeight = browserHeight;
-            //entitiesPathGrid.setHeight(browserHeight-120,Unit.PIXELS);
             if(conceptionEntityExpandPathsChart != null){
                 conceptionEntityExpandPathsChart.setHeight(browserHeight-120,Unit.PIXELS);
-                conceptionEntityExpandPathsChart.setWidth(browserWidth-940, Unit.PIXELS);
             }
         }));
     }
