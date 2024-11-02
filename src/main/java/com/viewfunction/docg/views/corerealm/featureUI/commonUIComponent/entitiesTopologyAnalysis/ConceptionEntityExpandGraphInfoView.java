@@ -10,7 +10,7 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesGraph;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.EntitySyntheticAbstractInfoView;
 
-public class ConceptionEntityExpandGraphInfoView extends VerticalLayout implements ConceptionEntityExpandTopologyChart.ConceptionEntityExpandTopologyChartOperationHandler{
+public class ConceptionEntityExpandGraphInfoView extends VerticalLayout implements ConceptionEntityExpandTopologyChart.ConceptionEntityExpandTopologyChartOperationHandler {
 
     private Registration listener;
     private String conceptionKind;
