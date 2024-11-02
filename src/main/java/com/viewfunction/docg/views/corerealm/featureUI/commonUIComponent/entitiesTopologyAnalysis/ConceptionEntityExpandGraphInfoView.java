@@ -56,6 +56,7 @@ public class ConceptionEntityExpandGraphInfoView extends VerticalLayout implemen
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             if(conceptionEntityExpandTopologyChart != null){
                 conceptionEntityExpandTopologyChart.setHeight(event.getHeight()-120, Unit.PIXELS);
+                entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(event.getHeight()-320);
             }
         }));
         // Adjust size according to initial width of the screen
@@ -63,6 +64,7 @@ public class ConceptionEntityExpandGraphInfoView extends VerticalLayout implemen
             int browserHeight = receiver.getBodyClientHeight();
             if(conceptionEntityExpandTopologyChart != null){
                 conceptionEntityExpandTopologyChart.setHeight(browserHeight-120,Unit.PIXELS);
+                entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(browserHeight-320);
             }
         }));
     }
