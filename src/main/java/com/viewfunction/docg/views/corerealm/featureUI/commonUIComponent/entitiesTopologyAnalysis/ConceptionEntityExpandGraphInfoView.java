@@ -42,10 +42,11 @@ public class ConceptionEntityExpandGraphInfoView extends VerticalLayout implemen
         if(this.entitiesGraph != null){
             conceptionEntityExpandTopologyChart = new ConceptionEntityExpandTopologyChart(this.conceptionKind,this.conceptionEntityUID);
             conceptionEntityExpandTopologyChart.setConceptionEntityExpandTopologyChartOperationHandler(this);
+            conceptionEntityExpandTopologyChart.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
             containerLayout.add(conceptionEntityExpandTopologyChart);
             conceptionEntityExpandTopologyChart.setData(this.entitiesGraph.getGraphRelationEntities());
             entitySyntheticAbstractInfoView = new EntitySyntheticAbstractInfoView(330);
-            entitySyntheticAbstractInfoView.getStyle().set("border-left", "1px solid var(--lumo-contrast-20pct)");
+            entitySyntheticAbstractInfoView.getStyle().set("padding-left", "8px");
             entitySyntheticAbstractInfoView.setWidth(350,Unit.PIXELS);
             containerLayout.add(this.entitySyntheticAbstractInfoView);
             containerLayout.setFlexGrow(1,this.conceptionEntityExpandTopologyChart);
