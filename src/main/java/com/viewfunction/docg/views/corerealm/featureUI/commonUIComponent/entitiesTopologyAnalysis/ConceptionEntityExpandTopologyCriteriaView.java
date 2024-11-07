@@ -15,6 +15,8 @@ import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
 import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.select.SelectVariant;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 
@@ -220,6 +222,18 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
         buttonsContainerLayout.setPadding(false);
         add(buttonsContainerLayout);
 
+        Select<String> select = new Select<>();
+        select.addThemeVariants(SelectVariant.LUMO_SMALL);
+        select.setWidth(95,Unit.PIXELS);
+        select.setItems("拓展路径", "拓展子图", "拓展生成树");
+        select.setValue("拓展路径");
+        buttonsContainerLayout.add(select);
+
+        Button executExpandButton = new Button("执行拓展");
+        executExpandButton.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
+        executExpandButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,ButtonVariant.LUMO_SMALL);
+        buttonsContainerLayout.add(executExpandButton);
+
         Button expandPathButton = new Button("拓展路径");
         expandPathButton.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
         expandPathButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -228,7 +242,7 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
                 executeConceptionEntityExpand(PathExpandType.ExpandPath);
             }
         });
-        buttonsContainerLayout.add(expandPathButton);
+        //buttonsContainerLayout.add(expandPathButton);
 
         Button expandSubGraphButton = new Button("拓展子图");
         expandSubGraphButton.setIcon(LineAwesomeIconsSvg.SHARE_ALT_SOLID.create());
@@ -238,7 +252,7 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
                 executeConceptionEntityExpand(PathExpandType.ExpandGraph);
             }
         });
-        buttonsContainerLayout.add(expandSubGraphButton);
+        //buttonsContainerLayout.add(expandSubGraphButton);
 
         Button expandSpanTreeButton = new Button("拓展生成树");
         expandSpanTreeButton.setIcon(LineAwesomeIconsSvg.SITEMAP_SOLID.create());
@@ -248,7 +262,7 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
                 executeConceptionEntityExpand(PathExpandType.ExpandSpanningTree);
             }
         });
-        buttonsContainerLayout.add(expandSpanTreeButton);
+        //buttonsContainerLayout.add(expandSpanTreeButton);
 
     }
 
