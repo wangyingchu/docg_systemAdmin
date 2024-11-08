@@ -394,11 +394,13 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
 
     private void renderResultSetConfig(){
         if(resultSetConfigButtonPopover == null){
-            ExpandResultSetConfigView expandResultSetConfigView = new ExpandResultSetConfigView();
             resultSetConfigButtonPopover = new Popover();
+            ExpandParameters expandParameters = new ExpandParameters();
+            ExpandResultSetConfigView expandResultSetConfigView = new ExpandResultSetConfigView(expandParameters);
+            expandResultSetConfigView.setContainerPopover(resultSetConfigButtonPopover);
             resultSetConfigButtonPopover.setTarget(resultSetConfigButton);
-            resultSetConfigButtonPopover.setWidth("500px");
-            resultSetConfigButtonPopover.setHeight("220px");
+            resultSetConfigButtonPopover.setWidth("250px");
+            resultSetConfigButtonPopover.setHeight("300px");
             resultSetConfigButtonPopover.addThemeVariants(PopoverVariant.ARROW);
             resultSetConfigButtonPopover.setPosition(PopoverPosition.TOP);
             resultSetConfigButtonPopover.add(expandResultSetConfigView);
