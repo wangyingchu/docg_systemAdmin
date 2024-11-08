@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -54,6 +55,8 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
     private Popover addRelationMatchLogicButtonPopover;
     private Button addConceptionMatchLogicButton;
     private Popover addConceptionMatchLogicButtonPopover;
+    private Button resultSetConfigButton;
+    private Popover resultSetConfigButtonPopover;
 
     public ConceptionEntityExpandTopologyCriteriaView(String conceptionKind, String conceptionEntityUID, PathExpandType pathExpandType) {
         this.conceptionKind = conceptionKind;
@@ -208,7 +211,6 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
         Scroller queryConditionItemsScroller2 = new Scroller(conceptionMatchLogicCriteriaItemsContainer);
         queryConditionItemsScroller2.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         queryConditionItemsScroller2.setHeight(245,Unit.PIXELS);
-        //scroller.getStyle().set("padding", "var(--lumo-space-m)");
         configCriteriaContainerLayout.add(queryConditionItemsScroller2);
 
         HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
@@ -222,17 +224,43 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
         buttonsContainerLayout.setPadding(false);
         add(buttonsContainerLayout);
 
-        Select<String> select = new Select<>();
-        select.addThemeVariants(SelectVariant.LUMO_SMALL);
-        select.setWidth(95,Unit.PIXELS);
-        select.setItems("拓展路径", "拓展子图", "拓展生成树");
-        select.setValue("拓展路径");
-        buttonsContainerLayout.add(select);
+        Select<String> commandSelect = new Select<>();
+        commandSelect.addThemeVariants(SelectVariant.LUMO_SMALL);
+        commandSelect.setWidth(95,Unit.PIXELS);
+        commandSelect.setItems("拓展路径", "拓展子图", "拓展生成树");
+        commandSelect.setValue("拓展路径");
+        buttonsContainerLayout.add(commandSelect);
 
         Button executExpandButton = new Button("执行拓展");
         executExpandButton.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
         executExpandButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,ButtonVariant.LUMO_SMALL);
         buttonsContainerLayout.add(executExpandButton);
+        executExpandButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                String expandCommand = commandSelect.getValue();
+                if("拓展路径".equals(expandCommand)){
+                    executeConceptionEntityExpand(PathExpandType.ExpandPath);
+                }
+                if("拓展子图".equals(expandCommand)){
+                    executeConceptionEntityExpand(PathExpandType.ExpandGraph);
+                }
+                if("拓展生成树".equals(expandCommand)){
+                    executeConceptionEntityExpand(PathExpandType.ExpandSpanningTree);
+                }
+            }
+        });
+
+        resultSetConfigButton = new Button("设置运行参数",new Icon(VaadinIcon.COG_O));
+        resultSetConfigButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
+        resultSetConfigButton.getStyle().set("font-size","10px");
+        buttonsContainerLayout.add(resultSetConfigButton);
+        resultSetConfigButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderResultSetConfig();
+            }
+        });
 
         Button expandPathButton = new Button("拓展路径");
         expandPathButton.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
@@ -362,6 +390,22 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
         addConceptionMatchLogicUI.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
         */
+    }
+
+    private void renderResultSetConfig(){
+        if(resultSetConfigButtonPopover == null){
+            ExpandResultSetConfigView expandResultSetConfigView = new ExpandResultSetConfigView();
+            resultSetConfigButtonPopover = new Popover();
+            resultSetConfigButtonPopover.setTarget(resultSetConfigButton);
+            resultSetConfigButtonPopover.setWidth("500px");
+            resultSetConfigButtonPopover.setHeight("220px");
+            resultSetConfigButtonPopover.addThemeVariants(PopoverVariant.ARROW);
+            resultSetConfigButtonPopover.setPosition(PopoverPosition.TOP);
+            resultSetConfigButtonPopover.add(expandResultSetConfigView);
+            resultSetConfigButtonPopover.setAutofocus(true);
+            resultSetConfigButtonPopover.setModal(true,true);
+        }
+        resultSetConfigButtonPopover.open();
     }
 
     private boolean checkConceptionKindMatchLogicNotExist(String conceptionKindName, ConceptionKindMatchLogic.ConceptionKindExistenceRule conceptionKindExistenceRule){
