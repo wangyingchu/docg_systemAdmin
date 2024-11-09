@@ -27,7 +27,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
-import com.viewfunction.docg.element.eventHandling.ConceptionEntityExpandPathEvent;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntityExpandTopologyEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.AddRelationMatchLogicUI.AddRelationMatchLogicHelper;
@@ -57,11 +57,13 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
     private Popover addConceptionMatchLogicButtonPopover;
     private Button resultSetConfigButton;
     private Popover resultSetConfigButtonPopover;
+    private ExpandParameters expandParameters;
 
     public ConceptionEntityExpandTopologyCriteriaView(String conceptionKind, String conceptionEntityUID, PathExpandType pathExpandType) {
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
         this.pathExpandType = pathExpandType;
+        this.expandParameters = new ExpandParameters();
 
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(LineAwesomeIconsSvg.VECTOR_SQUARE_SOLID.create(),"路径扩展条件");
         add(filterTitle1);
@@ -395,7 +397,6 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
     private void renderResultSetConfig(){
         if(resultSetConfigButtonPopover == null){
             resultSetConfigButtonPopover = new Popover();
-            ExpandParameters expandParameters = new ExpandParameters();
             ExpandResultSetConfigView expandResultSetConfigView = new ExpandResultSetConfigView(expandParameters);
             expandResultSetConfigView.setContainerPopover(resultSetConfigButtonPopover);
             resultSetConfigButtonPopover.setTarget(resultSetConfigButton);
@@ -506,21 +507,22 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
         Integer maxJump = this.maxJumpField.getValue();
         Integer minJump = this.minJumpField.getValue();
 
-        ConceptionEntityExpandPathEvent conceptionEntityExpandPathEvent =new ConceptionEntityExpandPathEvent();
-        conceptionEntityExpandPathEvent.setConceptionEntityUID(this.conceptionEntityUID);
-        conceptionEntityExpandPathEvent.setConceptionKind(this.conceptionKind);
+        ConceptionEntityExpandTopologyEvent conceptionEntityExpandTopologyEvent =new ConceptionEntityExpandTopologyEvent();
+        conceptionEntityExpandTopologyEvent.setConceptionEntityUID(this.conceptionEntityUID);
+        conceptionEntityExpandTopologyEvent.setConceptionKind(this.conceptionKind);
+        conceptionEntityExpandTopologyEvent.setExpandParameters(this.expandParameters);
 
         if(this.pathExpandType != null){
-            conceptionEntityExpandPathEvent.setPathExpandType(this.pathExpandType);
+            conceptionEntityExpandTopologyEvent.setPathExpandType(this.pathExpandType);
         }else{
-            conceptionEntityExpandPathEvent.setPathExpandType(pathExpandType);
+            conceptionEntityExpandTopologyEvent.setPathExpandType(pathExpandType);
         }
-        conceptionEntityExpandPathEvent.setRelationKindMatchLogics(relationKindMatchLogicList);
-        conceptionEntityExpandPathEvent.setDefaultDirectionForNoneRelationKindMatch(defaultRelationDirection);
-        conceptionEntityExpandPathEvent.setConceptionKindMatchLogics(conceptionKindMatchLogicList);
-        conceptionEntityExpandPathEvent.setContainsSelf(containsSelf);
-        conceptionEntityExpandPathEvent.setMaxJump(maxJump);
-        conceptionEntityExpandPathEvent.setMinJump(minJump);
-        ResourceHolder.getApplicationBlackboard().fire(conceptionEntityExpandPathEvent);
+        conceptionEntityExpandTopologyEvent.setRelationKindMatchLogics(relationKindMatchLogicList);
+        conceptionEntityExpandTopologyEvent.setDefaultDirectionForNoneRelationKindMatch(defaultRelationDirection);
+        conceptionEntityExpandTopologyEvent.setConceptionKindMatchLogics(conceptionKindMatchLogicList);
+        conceptionEntityExpandTopologyEvent.setContainsSelf(containsSelf);
+        conceptionEntityExpandTopologyEvent.setMaxJump(maxJump);
+        conceptionEntityExpandTopologyEvent.setMinJump(minJump);
+        ResourceHolder.getApplicationBlackboard().fire(conceptionEntityExpandTopologyEvent);
     }
 }

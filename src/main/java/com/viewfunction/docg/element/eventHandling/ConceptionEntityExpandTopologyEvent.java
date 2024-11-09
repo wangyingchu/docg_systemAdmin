@@ -6,9 +6,11 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.Conceptio
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.RelationKindMatchLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.ConceptionEntityTopologyTravelableView.PathExpandType;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.ExpandParameters;
+
 import java.util.List;
 
-public class ConceptionEntityExpandPathEvent implements Event {
+public class ConceptionEntityExpandTopologyEvent implements Event {
 
     private String conceptionEntityUID;
     private String conceptionKind;
@@ -19,6 +21,7 @@ public class ConceptionEntityExpandPathEvent implements Event {
     private Integer minJump;
     private Integer maxJump;
     private boolean containsSelf;
+    private ExpandParameters expandParameters;
 
     public String getConceptionEntityUID() {
         return conceptionEntityUID;
@@ -92,7 +95,15 @@ public class ConceptionEntityExpandPathEvent implements Event {
         this.containsSelf = containsSelf;
     }
 
-    public interface ConceptionEntityExpandPathListener extends Listener {
-        public void receivedConceptionEntityExpandPathEvent(final ConceptionEntityExpandPathEvent event);
+    public ExpandParameters getExpandParameters() {
+        return expandParameters;
+    }
+
+    public void setExpandParameters(ExpandParameters expandParameters) {
+        this.expandParameters = expandParameters;
+    }
+
+    public interface ConceptionEntityExpandTopologyListener extends Listener {
+        public void receivedConceptionEntityExpandTopologyEvent(final ConceptionEntityExpandTopologyEvent event);
     }
 }

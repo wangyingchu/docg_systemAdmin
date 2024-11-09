@@ -2,9 +2,9 @@ package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entiti
 
 public class ExpandParameters {
 
-    private int expandPathResultMaxPathCount = 100;
-    private int expandGraphResultMaxConceptionEntityCount = 200;
-    private int expandSpanningTreeResultMaxConceptionEntityCount = 200;
+    private int expandPathResultMaxPathCount = 20;
+    private int expandGraphResultMaxConceptionEntityCount = 50;
+    private int expandSpanningTreeResultMaxConceptionEntityCount = 50;
 
     public int getExpandPathResultMaxPathCount() {
         return expandPathResultMaxPathCount;

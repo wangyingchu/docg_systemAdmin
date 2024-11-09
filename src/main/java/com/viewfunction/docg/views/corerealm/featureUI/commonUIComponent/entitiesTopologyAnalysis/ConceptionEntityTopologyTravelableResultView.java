@@ -11,12 +11,12 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.eventHandling.ConceptionEntityExpandPathEvent;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntityExpandTopologyEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.List;
 
-public class ConceptionEntityTopologyTravelableResultView extends VerticalLayout implements ConceptionEntityExpandPathEvent.ConceptionEntityExpandPathListener {
+public class ConceptionEntityTopologyTravelableResultView extends VerticalLayout implements ConceptionEntityExpandTopologyEvent.ConceptionEntityExpandTopologyListener {
 
     public ConceptionEntityTopologyTravelableResultView() {
         this.setPadding(false);
@@ -50,7 +50,7 @@ public class ConceptionEntityTopologyTravelableResultView extends VerticalLayout
     }
 
     @Override
-    public void receivedConceptionEntityExpandPathEvent(ConceptionEntityExpandPathEvent event) {
+    public void receivedConceptionEntityExpandTopologyEvent(ConceptionEntityExpandTopologyEvent event) {
         this.removeAll();
 
         String conceptionKind = event.getConceptionKind();
@@ -61,19 +61,21 @@ public class ConceptionEntityTopologyTravelableResultView extends VerticalLayout
             ConceptionEntity targetConceptionEntity = targetConception.getEntityByUID(conceptionEntityUID);
             if(targetConceptionEntity != null){
                 ConceptionEntityTopologyTravelableView.PathExpandType pathExpandType = event.getPathExpandType();
+                ExpandParameters expandParameters = event.getExpandParameters();
                 if(ConceptionEntityTopologyTravelableView.PathExpandType.ExpandPath.equals(pathExpandType)){
                     int minJump = event.getMinJump() != null ? event.getMinJump() : 0;
-                    List<EntitiesPath> entitiesPathList = targetConceptionEntity.expandPath(
-                            event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),minJump,event.getMaxJump(),20);
+                    List<EntitiesPath> entitiesPathList = targetConceptionEntity.expandPath(event.getRelationKindMatchLogics(),
+                            event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),minJump,event.getMaxJump(),expandParameters.getExpandPathResultMaxPathCount());
                     ConceptionEntityExpandPathInfoView conceptionEntityExpandPathInfoView = new ConceptionEntityExpandPathInfoView(conceptionKind,conceptionEntityUID,entitiesPathList);
                     add(conceptionEntityExpandPathInfoView);
                 }else if(ConceptionEntityTopologyTravelableView.PathExpandType.ExpandGraph.equals(pathExpandType)){
-                    EntitiesGraph entitiesGraph = targetConceptionEntity.expandGraph(
-                            event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.isContainsSelf(),event.getMaxJump(),200);
+                    EntitiesGraph entitiesGraph = targetConceptionEntity.expandGraph(event.getRelationKindMatchLogics(),
+                            event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.isContainsSelf(),event.getMaxJump(),expandParameters.getExpandGraphResultMaxConceptionEntityCount());
                     ConceptionEntityExpandGraphInfoView conceptionEntityExpandGraphInfoView = new ConceptionEntityExpandGraphInfoView(conceptionKind,conceptionEntityUID,entitiesGraph);
                     add(conceptionEntityExpandGraphInfoView);
                 }else if(ConceptionEntityTopologyTravelableView.PathExpandType.ExpandSpanningTree.equals(pathExpandType)){
-                    EntitiesSpanningTree entitiesSpanningTree = targetConceptionEntity.expandSpanningTree(event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.getMaxJump(),200);
+                    EntitiesSpanningTree entitiesSpanningTree = targetConceptionEntity.expandSpanningTree(
+                            event.getRelationKindMatchLogics(),event.getDefaultDirectionForNoneRelationKindMatch(),event.getConceptionKindMatchLogics(),event.getMaxJump(),expandParameters.getExpandSpanningTreeResultMaxConceptionEntityCount());
                     ConceptionEntityExpandSpanningTreeInfoView conceptionEntityExpandSpanningTreeInfoView = new ConceptionEntityExpandSpanningTreeInfoView(conceptionKind,conceptionEntityUID,entitiesSpanningTree);
                     add(conceptionEntityExpandSpanningTreeInfoView);
                 }
