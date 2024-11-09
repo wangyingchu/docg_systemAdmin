@@ -32,7 +32,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.AddRelationMatchLogicUI.AddRelationMatchLogicHelper;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.AddConceptionMatchLogicUI.AddConceptionMatchLogicHelper;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.ConceptionEntityTopologyTravelableView.PathExpandType;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.ConceptionEntityTopologyTravelableView.TopologyExpandType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
 
     private String conceptionEntityUID;
     private String conceptionKind;
-    private PathExpandType pathExpandType;
+    private TopologyExpandType topologyExpandType;
 
     private Button addRelationMatchLogicButton;
     private Popover addRelationMatchLogicButtonPopover;
@@ -59,10 +59,10 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
     private Popover resultSetConfigButtonPopover;
     private ExpandParameters expandParameters;
 
-    public ConceptionEntityExpandTopologyCriteriaView(String conceptionKind, String conceptionEntityUID, PathExpandType pathExpandType) {
+    public ConceptionEntityExpandTopologyCriteriaView(String conceptionKind, String conceptionEntityUID, TopologyExpandType topologyExpandType) {
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
-        this.pathExpandType = pathExpandType;
+        this.topologyExpandType = topologyExpandType;
         this.expandParameters = new ExpandParameters();
 
         SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(LineAwesomeIconsSvg.VECTOR_SQUARE_SOLID.create(),"路径扩展条件");
@@ -242,13 +242,13 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 String expandCommand = commandSelect.getValue();
                 if("拓展路径".equals(expandCommand)){
-                    executeConceptionEntityExpand(PathExpandType.ExpandPath);
+                    executeConceptionEntityExpand(TopologyExpandType.ExpandPath);
                 }
                 if("拓展子图".equals(expandCommand)){
-                    executeConceptionEntityExpand(PathExpandType.ExpandGraph);
+                    executeConceptionEntityExpand(TopologyExpandType.ExpandGraph);
                 }
                 if("拓展生成树".equals(expandCommand)){
-                    executeConceptionEntityExpand(PathExpandType.ExpandSpanningTree);
+                    executeConceptionEntityExpand(TopologyExpandType.ExpandSpanningTree);
                 }
             }
         });
@@ -269,7 +269,7 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
         expandPathButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                executeConceptionEntityExpand(PathExpandType.ExpandPath);
+                executeConceptionEntityExpand(TopologyExpandType.ExpandPath);
             }
         });
         //buttonsContainerLayout.add(expandPathButton);
@@ -279,7 +279,7 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
         expandSubGraphButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                executeConceptionEntityExpand(PathExpandType.ExpandGraph);
+                executeConceptionEntityExpand(TopologyExpandType.ExpandGraph);
             }
         });
         //buttonsContainerLayout.add(expandSubGraphButton);
@@ -289,7 +289,7 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
         expandSpanTreeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                executeConceptionEntityExpand(PathExpandType.ExpandSpanningTree);
+                executeConceptionEntityExpand(TopologyExpandType.ExpandSpanningTree);
             }
         });
         //buttonsContainerLayout.add(expandSpanTreeButton);
@@ -459,7 +459,7 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
         }
     }
 
-    private void executeConceptionEntityExpand(PathExpandType pathExpandType){
+    private void executeConceptionEntityExpand(TopologyExpandType topologyExpandType){
         boolean includeSelf = includeSelfCheckBox.getValue();
         if(maxJumpField.getValue() == null){
             CommonUIOperationUtil.showPopupNotification("请输入最大跳数", NotificationVariant.LUMO_ERROR);
@@ -512,10 +512,10 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
         conceptionEntityExpandTopologyEvent.setConceptionKind(this.conceptionKind);
         conceptionEntityExpandTopologyEvent.setExpandParameters(this.expandParameters);
 
-        if(this.pathExpandType != null){
-            conceptionEntityExpandTopologyEvent.setPathExpandType(this.pathExpandType);
+        if(this.topologyExpandType != null){
+            conceptionEntityExpandTopologyEvent.setPathExpandType(this.topologyExpandType);
         }else{
-            conceptionEntityExpandTopologyEvent.setPathExpandType(pathExpandType);
+            conceptionEntityExpandTopologyEvent.setPathExpandType(topologyExpandType);
         }
         conceptionEntityExpandTopologyEvent.setRelationKindMatchLogics(relationKindMatchLogicList);
         conceptionEntityExpandTopologyEvent.setDefaultDirectionForNoneRelationKindMatch(defaultRelationDirection);

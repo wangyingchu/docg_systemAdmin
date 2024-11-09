@@ -1,8 +1,10 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
@@ -10,6 +12,9 @@ import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.WebBrowser;
 
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +25,7 @@ public class ConceptionEntityTopologyTravelableView extends VerticalLayout {
     private String conceptionEntityUID;
     private VerticalLayout queryFieldsContainer;
     private VerticalLayout queryResultContainer;
-    public enum PathExpandType {ExpandPath,ExpandGraph,ExpandSpanningTree}
+    public enum TopologyExpandType {ExpandPath,ExpandGraph,ExpandSpanningTree}
 
     public ConceptionEntityTopologyTravelableView(String conceptionKind, String conceptionEntityUID){
 
@@ -37,6 +42,29 @@ public class ConceptionEntityTopologyTravelableView extends VerticalLayout {
         footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(conceptionEntityIcon,this.conceptionEntityUID));
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
+
+        HorizontalLayout toolbarLayout = new HorizontalLayout();
+        add(toolbarLayout);
+        HorizontalLayout titleLayout = new HorizontalLayout();
+        toolbarLayout.add(titleLayout);
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create(),"拓展结果");
+        titleLayout.add(filterTitle2);
+
+        SecondaryKeyValueDisplayItem topologyExpandTypeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"拓展类型","-");
+
+        SecondaryKeyValueDisplayItem startTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"运行开始时间","-");
+        SecondaryKeyValueDisplayItem finishTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"运行结束时间","-");
+        SecondaryKeyValueDisplayItem dataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"结果集数据量","-");
+
+        toolbarLayout.getStyle()
+                .set("padding-left","50px")
+                .set("top","2px").set("position","relative");
+
+        entityInfoFootprintMessageBar.addAdditionalComponent(toolbarLayout);
+
+
+
+
 
         queryFieldsContainer = new VerticalLayout();
         queryFieldsContainer.setPadding(false);

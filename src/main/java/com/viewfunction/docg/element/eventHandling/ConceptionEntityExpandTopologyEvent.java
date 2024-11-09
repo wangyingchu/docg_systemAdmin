@@ -5,7 +5,7 @@ import com.github.wolfie.blackboard.Listener;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.ConceptionKindMatchLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.RelationKindMatchLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationDirection;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.ConceptionEntityTopologyTravelableView.PathExpandType;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.ConceptionEntityTopologyTravelableView.TopologyExpandType;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.ExpandParameters;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public class ConceptionEntityExpandTopologyEvent implements Event {
 
     private String conceptionEntityUID;
     private String conceptionKind;
-    private PathExpandType pathExpandType;
+    private TopologyExpandType topologyExpandType;
     private List<RelationKindMatchLogic> relationKindMatchLogics;
     private RelationDirection defaultDirectionForNoneRelationKindMatch;
     private List<ConceptionKindMatchLogic> conceptionKindMatchLogics;
@@ -39,12 +39,12 @@ public class ConceptionEntityExpandTopologyEvent implements Event {
         this.conceptionKind = conceptionKind;
     }
 
-    public PathExpandType getPathExpandType() {
-        return pathExpandType;
+    public TopologyExpandType getPathExpandType() {
+        return topologyExpandType;
     }
 
-    public void setPathExpandType(PathExpandType pathExpandType) {
-        this.pathExpandType = pathExpandType;
+    public void setPathExpandType(TopologyExpandType topologyExpandType) {
+        this.topologyExpandType = topologyExpandType;
     }
 
     public List<RelationKindMatchLogic> getRelationKindMatchLogics() {
