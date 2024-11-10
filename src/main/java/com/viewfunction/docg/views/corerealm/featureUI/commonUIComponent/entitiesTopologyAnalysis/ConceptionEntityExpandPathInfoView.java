@@ -106,7 +106,7 @@ public class ConceptionEntityExpandPathInfoView extends VerticalLayout {
                 if(selectionEvent != null){
                     if(selectionEvent.getAllSelectedItems() != null && selectionEvent.getAllSelectedItems().size() > 0){
                         EntitiesPath selectedPath = selectionEvent.getAllSelectedItems().iterator().next();
-                        conceptionEntityExpandTopologyChart.setData(selectedPath.getPathRelationEntities());
+                        conceptionEntityExpandTopologyChart.setData(selectedPath.getPathRelationEntities(),selectedPath.getPathConceptionEntities());
                         if(entitiesPathDisplayIconMap.containsKey(selectedPath)){
                             entitiesPathDisplayIconMap.get(selectedPath).getStyle().set("color","#3D9970");
                         }

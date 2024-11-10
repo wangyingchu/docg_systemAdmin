@@ -44,7 +44,7 @@ public class ConceptionEntityExpandSpanningTreeInfoView extends VerticalLayout i
             conceptionEntityExpandTopologyChart.setConceptionEntityExpandTopologyChartOperationHandler(this);
             conceptionEntityExpandTopologyChart.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
             containerLayout.add(conceptionEntityExpandTopologyChart);
-            conceptionEntityExpandTopologyChart.setData(this.entitiesSpanningTree.getTreeRelationEntities());
+            conceptionEntityExpandTopologyChart.setData(this.entitiesSpanningTree.getTreeRelationEntities(),this.entitiesSpanningTree.getTreeConceptionEntities());
             entitySyntheticAbstractInfoView = new EntitySyntheticAbstractInfoView(330);
             entitySyntheticAbstractInfoView.getStyle().set("padding-left", "8px");
             entitySyntheticAbstractInfoView.setWidth(350,Unit.PIXELS);

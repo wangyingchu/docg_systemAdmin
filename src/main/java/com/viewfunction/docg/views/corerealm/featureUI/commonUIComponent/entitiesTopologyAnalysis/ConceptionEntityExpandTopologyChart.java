@@ -79,7 +79,17 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.clearData", "null"));
     }
 
-    public void setData(List<RelationEntity> conceptionEntityRelationEntityList){
+    public void setData(List<RelationEntity> conceptionEntityRelationEntityList,List<ConceptionEntity> conceptionEntityList){
+
+        if(conceptionEntityList!= null){
+            List<String> attachedConceptionKinds = new ArrayList<>();
+            for(ConceptionEntity currentConceptionEntity : conceptionEntityList){
+                attachedConceptionKinds.add(currentConceptionEntity.getConceptionKindName());
+            }
+            generateConceptionKindColorMap(attachedConceptionKinds);
+        }
+
+
         if(conceptionEntityRelationEntityList != null){
             for(RelationEntity currentRelationEntity:conceptionEntityRelationEntityList){
                 String relationKind = currentRelationEntity.getRelationKindName();
@@ -327,7 +337,7 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
                         totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
                     }
                     if(totalKindsRelationEntitiesList.size()>0){
-                        setData(totalKindsRelationEntitiesList);
+                        setData(totalKindsRelationEntitiesList,null);
                         initLayoutGraph();
                         currentEntityQueryPage++;
                         targetConceptionEntityRelationCurrentQueryPageMap.put(this.conceptionEntityUID,currentEntityQueryPage);
@@ -385,7 +395,7 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
                     }
                     if(executeGraphIncreaseOperation){
                         lockGraph();
-                        setData(totalKindsRelationEntitiesList);
+                        setData(totalKindsRelationEntitiesList,null);
                         currentEntityQueryPage++;
                         targetConceptionEntityRelationCurrentQueryPageMap.put(conceptionEntityUID,currentEntityQueryPage);
                         layoutGraph();
