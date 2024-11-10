@@ -27,6 +27,13 @@ public class ConceptionEntityTopologyTravelableView extends VerticalLayout {
     private VerticalLayout queryResultContainer;
     public enum TopologyExpandType {ExpandPath,ExpandGraph,ExpandSpanningTree}
 
+    public SecondaryKeyValueDisplayItem topologyExpandTypeDisplayItem;
+    public SecondaryKeyValueDisplayItem startTimeDisplayItem;
+    public SecondaryKeyValueDisplayItem finishTimeDisplayItem;
+    public SecondaryKeyValueDisplayItem pathDataCountDisplayItem;
+    public SecondaryKeyValueDisplayItem conceptionEntityDataCountDisplayItem;
+    public SecondaryKeyValueDisplayItem relationEntityDataCountDisplayItem;
+
     public ConceptionEntityTopologyTravelableView(String conceptionKind, String conceptionEntityUID){
 
         this.conceptionKind = conceptionKind;
@@ -50,25 +57,18 @@ public class ConceptionEntityTopologyTravelableView extends VerticalLayout {
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(VaadinIcon.PLAY.create(),"拓展结果");
         titleLayout.add(filterTitle2);
 
-        SecondaryKeyValueDisplayItem topologyExpandTypeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, LineAwesomeIconsSvg.HUBSPOT.create(),"拓展类型","-");
-
-        SecondaryKeyValueDisplayItem startTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"运行开始时间","-");
-        SecondaryKeyValueDisplayItem finishTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"运行结束时间","-");
-        SecondaryKeyValueDisplayItem pathDataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create(),"路径数量","-");
-
-        SecondaryKeyValueDisplayItem conceptionEntityDataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CUBE.create(),"概念实体数量","-");
-        SecondaryKeyValueDisplayItem relationEntityDataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CONNECT_O.create(),"关系实体数量","-");
-
+        topologyExpandTypeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, LineAwesomeIconsSvg.HUBSPOT.create(),"拓展类型","-");
+        startTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"运行开始时间","-");
+        finishTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"运行结束时间","-");
+        pathDataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create(),"路径数量","-");
+        conceptionEntityDataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CUBE.create(),"概念实体数量","-");
+        relationEntityDataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CONNECT_O.create(),"关系实体数量","-");
 
         toolbarLayout.getStyle()
                 .set("padding-left","100px")
                 .set("top","2px").set("position","relative");
 
         entityInfoFootprintMessageBar.addAdditionalComponent(toolbarLayout);
-
-
-
-
 
         queryFieldsContainer = new VerticalLayout();
         queryFieldsContainer.setPadding(false);
@@ -95,7 +95,7 @@ public class ConceptionEntityTopologyTravelableView extends VerticalLayout {
 
         ConceptionEntityTopologyTravelableResultView conceptionEntityTopologyTravelableResultView = new ConceptionEntityTopologyTravelableResultView();
         queryResultContainer.add(conceptionEntityTopologyTravelableResultView);
-
+        conceptionEntityTopologyTravelableResultView.setContainerConceptionEntityTopologyTravelableView(this);
         SplitLayout splitLayout = new SplitLayout(queryFieldsContainer, queryResultContainer);
         splitLayout.setSplitterPosition(0);
         splitLayout.setSizeFull();
