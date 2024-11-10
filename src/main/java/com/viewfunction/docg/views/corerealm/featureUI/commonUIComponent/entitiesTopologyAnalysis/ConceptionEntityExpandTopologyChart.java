@@ -80,7 +80,6 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
     }
 
     public void setData(List<RelationEntity> conceptionEntityRelationEntityList,List<ConceptionEntity> conceptionEntityList){
-
         if(conceptionEntityList!= null){
             List<String> attachedConceptionKinds = new ArrayList<>();
             for(ConceptionEntity currentConceptionEntity : conceptionEntityList){
@@ -88,8 +87,6 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
             }
             generateConceptionKindColorMap(attachedConceptionKinds);
         }
-
-
         if(conceptionEntityRelationEntityList != null){
             for(RelationEntity currentRelationEntity:conceptionEntityRelationEntityList){
                 String relationKind = currentRelationEntity.getRelationKindName();
@@ -352,9 +349,6 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
             CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
         }
         coreRealm.closeGlobalSession();
-        if(conceptionEntityExpandTopologyChartOperationHandler != null){
-            //containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
-        }
     }
 
     private void loadAdditionalTargetConceptionEntityRelationData(String conceptionKind,String conceptionEntityUID){
@@ -410,17 +404,11 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
             CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
         }
         coreRealm.closeGlobalSession();
-        if(conceptionEntityExpandTopologyChartOperationHandler != null){
-            //containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
-            int pageIndex = targetConceptionEntityRelationCurrentQueryPageMap.containsKey(conceptionEntityUID) ?
-                    targetConceptionEntityRelationCurrentQueryPageMap.get(conceptionEntityUID) : 1 ;
-            //containerConceptionEntityRelationTopologyView.enableControlActionButtons(pageIndex);
-        }
     }
 
     private Map<String,String> generateConceptionKindColorMap(List<String> attachedConceptionKinds){
         String[] colorList =new String[]{
-                "#EA2027","#006266","#1B1464","#5758BB","#6F1E51","#EE5A24","#009432","##0652DD","#9980FA","#833471",
+                "#CE0000","#EA2027","#006266","#1B1464","#5758BB","#6F1E51","#EE5A24","#009432","##0652DD","#9980FA","#833471",
                 "#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67"
         };
 
@@ -459,10 +447,6 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
                     this.conception_relationEntityUIDMap.removeAll(this.selectedConceptionEntityUID);
                     this.selectedConceptionEntityUID = null;
                     this.selectedConceptionEntityKind = null;
-
-                    if(conceptionEntityExpandTopologyChartOperationHandler != null){
-                        //containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
-                    }
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
@@ -517,9 +501,6 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
                     this.selectedConceptionEntityUID = null;
                     this.selectedConceptionEntityKind = null;
 
-                    if(conceptionEntityExpandTopologyChartOperationHandler != null){
-                        //containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
-                    }
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
@@ -569,9 +550,6 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
                     }
                     needDeletedConceptionEntitiesUID.remove(this.selectedConceptionEntityUID);
                     this.conceptionEntityUIDList.removeAll(needDeletedConceptionEntitiesUID);
-                    if(conceptionEntityExpandTopologyChartOperationHandler != null){
-                        //containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
-                    }
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
