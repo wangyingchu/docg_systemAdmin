@@ -28,17 +28,6 @@ public class ConceptionEntityTopologyTravelableResultView extends VerticalLayout
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         ResourceHolder.getApplicationBlackboard().addListener(this);
-        /*
-        // Add browser window listener to observe size change
-        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            queryResultGrid.setHeight(event.getHeight()-140, Unit.PIXELS);
-        }));
-        // Adjust size according to initial width of the screen
-        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            int browserHeight = receiver.getBodyClientHeight();
-            queryResultGrid.setHeight(browserHeight-140,Unit.PIXELS);
-        }));
-        */
     }
 
     @Override

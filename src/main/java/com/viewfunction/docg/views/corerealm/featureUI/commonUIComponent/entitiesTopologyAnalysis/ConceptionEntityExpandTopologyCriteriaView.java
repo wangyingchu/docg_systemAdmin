@@ -234,7 +234,7 @@ public class ConceptionEntityExpandTopologyCriteriaView extends VerticalLayout {
         buttonsContainerLayout.add(commandSelect);
 
         Button executExpandButton = new Button("执行拓展");
-        executExpandButton.setIcon(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create());
+        executExpandButton.setIcon(VaadinIcon.PLAY.create());
         executExpandButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,ButtonVariant.LUMO_SMALL);
         buttonsContainerLayout.add(executExpandButton);
         executExpandButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {

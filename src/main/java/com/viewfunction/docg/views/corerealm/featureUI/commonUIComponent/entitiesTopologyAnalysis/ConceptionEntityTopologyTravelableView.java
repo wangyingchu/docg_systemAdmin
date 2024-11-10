@@ -47,17 +47,21 @@ public class ConceptionEntityTopologyTravelableView extends VerticalLayout {
         add(toolbarLayout);
         HorizontalLayout titleLayout = new HorizontalLayout();
         toolbarLayout.add(titleLayout);
-        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create(),"拓展结果");
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(VaadinIcon.PLAY.create(),"拓展结果");
         titleLayout.add(filterTitle2);
 
-        SecondaryKeyValueDisplayItem topologyExpandTypeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"拓展类型","-");
+        SecondaryKeyValueDisplayItem topologyExpandTypeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, LineAwesomeIconsSvg.HUBSPOT.create(),"拓展类型","-");
 
         SecondaryKeyValueDisplayItem startTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"运行开始时间","-");
         SecondaryKeyValueDisplayItem finishTimeDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, FontAwesome.Regular.CLOCK.create(),"运行结束时间","-");
-        SecondaryKeyValueDisplayItem dataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.LIST_OL.create(),"结果集数据量","-");
+        SecondaryKeyValueDisplayItem pathDataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create(),"路径数量","-");
+
+        SecondaryKeyValueDisplayItem conceptionEntityDataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CUBE.create(),"概念实体数量","-");
+        SecondaryKeyValueDisplayItem relationEntityDataCountDisplayItem = new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CONNECT_O.create(),"关系实体数量","-");
+
 
         toolbarLayout.getStyle()
-                .set("padding-left","50px")
+                .set("padding-left","100px")
                 .set("top","2px").set("position","relative");
 
         entityInfoFootprintMessageBar.addAdditionalComponent(toolbarLayout);
