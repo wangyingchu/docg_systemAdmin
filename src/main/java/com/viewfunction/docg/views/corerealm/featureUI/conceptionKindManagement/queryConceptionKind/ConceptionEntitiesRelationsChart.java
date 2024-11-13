@@ -3,47 +3,71 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeEdgePayload;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeNodePayload;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityRelationTopologyView;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.BiConsumer;
 
-@StyleSheet("webApps/timeFlowCorrelationInfoChart/style.css")
-@JavaScript("./visualization/feature/conceptionEntitiesRelationsChart-connector.js")
+@JavaScript("./visualization/feature/conceptionEntityRelationsChart-connector.js")
 public class ConceptionEntitiesRelationsChart extends VerticalLayout {
 
-    private Map<String,String> relationKindColorMap;
+    private List<String> conceptionEntityUIDList;
+    private List<String> relationEntityUIDList;
+    private String conceptionEntityUID;
+    private String conceptionKind;
+    private Map<String,String> conceptionKindColorMap;
+    private int currentQueryPageSize = 10;
+    private Map<String,Integer> targetConceptionEntityRelationCurrentQueryPageMap;
+    private int colorIndex = 0;
+    private ConceptionEntityRelationTopologyView containerConceptionEntityRelationTopologyView;
+    private String selectedConceptionEntityUID;
+    private String selectedConceptionEntityKind;
+    private Multimap<String,String> conception_relationEntityUIDMap;
+    private String selectedRelationEntityUID;
+    private String selectedRelationEntityKind;
 
-    public ConceptionEntitiesRelationsChart() {
-        //link to download latest 3d-force-graph build js: https://unpkg.com/3d-force-graph
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/three.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/three-spritetext.min.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/CSS2DRenderer.js");
-        UI.getCurrent().getPage().addJavaScript("js/3d-force-graph/1.73.3/dist/3d-force-graph.min.js");
+    public ConceptionEntitiesRelationsChart(String conceptionKind,String conceptionEntityUID) {
+        this.conceptionEntityUIDList = new ArrayList<>();
+        this.relationEntityUIDList = new ArrayList<>();
+        this.targetConceptionEntityRelationCurrentQueryPageMap = new HashMap<>();
+        this.conceptionKindColorMap = new HashMap<>();
+        this.conception_relationEntityUIDMap = ArrayListMultimap.create();
+        this.conceptionEntityUID = conceptionEntityUID;
+        this.conceptionKind = conceptionKind;
+        UI.getCurrent().getPage().addJavaScript("js/cytoscape/3.23.0/dist/cytoscape.min.js");
         this.setWidthFull();
         this.setSpacing(false);
         this.setMargin(false);
         this.setPadding(false);
-        this.relationKindColorMap = new HashMap<>();
         initConnector();
     }
 
     private void initConnector() {
         runBeforeClientResponse(ui -> ui.getPage().executeJs(
-                "window.Vaadin.Flow.feature_ConceptionEntitiesRelationsChart.initLazy($0)", getElement()));
+                "window.Vaadin.Flow.feature_ConceptionEntityRelationsChart.initLazy($0)", getElement()));
     }
 
     private void runBeforeClientResponse(SerializableConsumer<UI> command) {
@@ -51,100 +75,551 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
                 .beforeClientResponse(this, context -> command.accept(ui)));
     }
 
-    protected void onAttach(AttachEvent attachEvent) {
-        super.onAttach(attachEvent);
+    public void clearData(){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.clearData", "null"));
     }
 
-    @Override
-    protected void onDetach(DetachEvent detachEvent) {
-        runBeforeClientResponse(ui -> {
-            try {
-                getElement().callJsFunction("$connector.emptyGraph",
-                        new Serializable[]{(new ObjectMapper()).writeValueAsString("")});
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        super.onDetach(detachEvent);
-    }
 
-    public void renderConceptionEntitiesList(Set<ConceptionEntity> conceptionEntitiesSet){
+    public void renderConceptionEntitiesList(Set<ConceptionEntity> conceptionEntitySet){
+
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
         List<String> conceptionEntityUIDList = new ArrayList<>();
-        conceptionEntitiesSet.forEach(conceptionEntity -> {
+        conceptionEntitySet.forEach(conceptionEntity -> {
                     conceptionEntityUIDList.add(conceptionEntity.getConceptionEntityUID());
                 }
         );
-        try {
-            List<RelationEntity> relationEntityList = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionEntityUIDList);
 
-            List<Map<String,String>> nodeInfoList = new ArrayList<>();
-            List<Map<String,String>> edgeInfoList = new ArrayList<>();
 
-            for(ConceptionEntity currentConceptionEntity:conceptionEntitiesSet){
-                Map<String,String> currentNodeInfo = new HashMap<>();
-                currentNodeInfo.put("id",currentConceptionEntity.getConceptionEntityUID());
-                currentNodeInfo.put("size","14");
-                currentNodeInfo.put("color",getRandomColor());
-                nodeInfoList.add(currentNodeInfo);
+
+
+
+    }
+
+
+
+    public void setData(List<RelationEntity> conceptionEntityRelationEntityList){
+        if(conceptionEntityRelationEntityList != null){
+            for(RelationEntity currentRelationEntity:conceptionEntityRelationEntityList){
+                String relationKind = currentRelationEntity.getRelationKindName();
+                String relationEntityUID = currentRelationEntity.getRelationEntityUID();
+
+                List<String> fromConceptionEntityKind = currentRelationEntity.getFromConceptionEntityKinds();
+                String fromConceptionEntityUID = currentRelationEntity.getFromConceptionEntityUID();
+
+                List<String> toConceptionEntityKind = currentRelationEntity.getToConceptionEntityKinds();
+                String toConceptionEntityUID = currentRelationEntity.getToConceptionEntityUID();
+
+                if(!conception_relationEntityUIDMap.containsKey(fromConceptionEntityUID)){
+                    conception_relationEntityUIDMap.put(fromConceptionEntityUID,relationEntityUID);
+                }else{
+                    if(!conception_relationEntityUIDMap.get(fromConceptionEntityUID).contains(relationEntityUID)){
+                        conception_relationEntityUIDMap.put(fromConceptionEntityUID,relationEntityUID);
+                    }
+                }
+                if(!conception_relationEntityUIDMap.containsKey(toConceptionEntityUID)){
+                    conception_relationEntityUIDMap.put(toConceptionEntityUID,relationEntityUID);
+                }else{
+                    if(!conception_relationEntityUIDMap.get(toConceptionEntityUID).contains(relationEntityUID)){
+                        conception_relationEntityUIDMap.put(toConceptionEntityUID,relationEntityUID);
+                    }
+                }
+
+                if(!conceptionEntityUIDList.contains(fromConceptionEntityUID)){
+                    conceptionEntityUIDList.add(fromConceptionEntityUID);
+                    CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
+                    cytoscapeNodePayload.getData().put("shape","ellipse");
+                    cytoscapeNodePayload.getData().put("background_color","#c00");
+                    cytoscapeNodePayload.getData().put("size","4");
+                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0))!=null){
+                        cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0)));
+                    }
+                    if(this.conceptionEntityUID.equals(fromConceptionEntityUID)){
+                        cytoscapeNodePayload.getData().put("shape","pentagon");
+                        cytoscapeNodePayload.getData().put("background_color","#555555");
+                        cytoscapeNodePayload.getData().put("size","5");
+                    }
+                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEventClass)){
+                        cytoscapeNodePayload.getData().put("shape","round-diamond");
+                        cytoscapeNodePayload.getData().put("size","3");
+                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                    }
+                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEntityClass)){
+                        cytoscapeNodePayload.getData().put("shape","barrel");
+                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                    }
+                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEventClass)){
+                        cytoscapeNodePayload.getData().put("shape","round-diamond");
+                        cytoscapeNodePayload.getData().put("size","3");
+                        cytoscapeNodePayload.getData().put("background_color","#C71585");
+                    }
+                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEntityClass)){
+                        cytoscapeNodePayload.getData().put("shape","barrel");
+                        cytoscapeNodePayload.getData().put("background_color","#C71585");
+                    }
+
+                    cytoscapeNodePayload.getData().put("id",fromConceptionEntityUID);
+                    cytoscapeNodePayload.getData().put("kind",fromConceptionEntityKind.get(0));
+                    cytoscapeNodePayload.getData().put("desc",fromConceptionEntityKind.get(0)+":\n"+fromConceptionEntityUID);
+                    runBeforeClientResponse(ui -> {
+                        try {
+                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+                if(!conceptionEntityUIDList.contains(toConceptionEntityUID)){
+                    conceptionEntityUIDList.add(toConceptionEntityUID);
+                    CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
+                    cytoscapeNodePayload.getData().put("shape","ellipse");
+                    cytoscapeNodePayload.getData().put("background_color","#c00");
+                    cytoscapeNodePayload.getData().put("size","4");
+                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(toConceptionEntityKind.get(0))!=null){
+                        cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(toConceptionEntityKind.get(0)));
+                    }
+                    if(this.conceptionEntityUID.equals(toConceptionEntityUID)){
+                        cytoscapeNodePayload.getData().put("shape","pentagon");
+                        cytoscapeNodePayload.getData().put("background_color","#555555");
+                        cytoscapeNodePayload.getData().put("size","5");
+                    }
+                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEventClass)){
+                        cytoscapeNodePayload.getData().put("shape","round-diamond");
+                        cytoscapeNodePayload.getData().put("size","3");
+                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                    }
+                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEntityClass)){
+                        cytoscapeNodePayload.getData().put("shape","barrel");
+                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                    }
+                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEventClass)){
+                        cytoscapeNodePayload.getData().put("shape","round-diamond");
+                        cytoscapeNodePayload.getData().put("size","3");
+                        cytoscapeNodePayload.getData().put("background_color","#C71585");
+                    }
+                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEntityClass)){
+                        cytoscapeNodePayload.getData().put("shape","barrel");
+                        cytoscapeNodePayload.getData().put("background_color","#C71585");
+                    }
+                    cytoscapeNodePayload.getData().put("id",toConceptionEntityUID);
+                    cytoscapeNodePayload.getData().put("kind",toConceptionEntityKind.get(0));
+                    cytoscapeNodePayload.getData().put("desc",toConceptionEntityKind.get(0)+":\n"+toConceptionEntityUID);
+                    runBeforeClientResponse(ui -> {
+                        try {
+                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+                if(!relationEntityUIDList.contains(relationEntityUID)){
+                    relationEntityUIDList.add(relationEntityUID);
+                    CytoscapeEdgePayload cytoscapeEdgePayload =new CytoscapeEdgePayload();
+                    cytoscapeEdgePayload.getData().put("type", relationKind+":"+relationEntityUID);
+                    cytoscapeEdgePayload.getData().put("source", fromConceptionEntityUID);
+                    cytoscapeEdgePayload.getData().put("target", toConceptionEntityUID);
+                    runBeforeClientResponse(ui -> {
+                        try {
+                            getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
             }
-            for(RelationEntity currentRelationEntity:relationEntityList){
-                Map<String,String> currentEdgeInfo = new HashMap<>();
-                currentEdgeInfo.put("source",currentRelationEntity.getFromConceptionEntityUID());
-                currentEdgeInfo.put("target",currentRelationEntity.getToConceptionEntityUID());
-                currentEdgeInfo.put("entityKind",currentRelationEntity.getRelationKindName());
-                currentEdgeInfo.put("id",currentRelationEntity.getRelationEntityUID());
-                currentEdgeInfo.put("color",getRelationKindColor(currentRelationEntity.getRelationKindName()));
-                edgeInfoList.add(currentEdgeInfo);
-            }
-
-            getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-                generateGraph(receiver.getBodyClientHeight()-20,receiver.getBodyClientWidth()-550, nodeInfoList, edgeInfoList);
-            }));
-        } catch (CoreRealmServiceEntityExploreException e) {
-            throw new RuntimeException(e);
         }
     }
 
-    private void generateGraph(int height, int width, List<Map<String,String>> nodeInfoList, List<Map<String,String>> edgeInfoList){
+    private void initLayoutGraph(){
         runBeforeClientResponse(ui -> {
             try {
-                Map<String,Object> valueMap =new HashMap<>();
-                valueMap.put("graphHeight",height-120);
-                valueMap.put("graphWidth",width- 40);
-                valueMap.put("nodesInfo",nodeInfoList);
-                valueMap.put("edgesInfo",edgeInfoList);
-                getElement().callJsFunction("$connector.generateGraph",
-                        new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
+                getElement().callJsFunction("$connector.initLayoutGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    public void clearData(){
+    private void layoutGraph(){
         runBeforeClientResponse(ui -> {
             try {
-                getElement().callJsFunction("$connector.emptyGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+                getElement().callJsFunction("$connector.layoutGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    private String getRelationKindColor(String relationKindName){
-        if(!this.relationKindColorMap.containsKey(relationKindName)){
-            this.relationKindColorMap.put(relationKindName,getRandomColor());
-        }
-        return this.relationKindColorMap.get(relationKindName);
+    private void clearGraph(){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.clearData", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
-    private String getRandomColor(){
+    private void lockGraph(){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.lockGraph", new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    @ClientCallable
+    public void addConceptionEntityRelations(String entityType,String entityUID) {
+        loadAdditionalTargetConceptionEntityRelationData(entityType,entityUID);
+    }
+
+    @ClientCallable
+    public void unselectConceptionEntity(String entityType,String entityUID) {
+        this.selectedConceptionEntityKind = null;
+        this.selectedConceptionEntityUID = null;
+        if(containerConceptionEntityRelationTopologyView != null){
+            containerConceptionEntityRelationTopologyView.disableControlActionButtons();
+            containerConceptionEntityRelationTopologyView.clearConceptionEntityAbstractInfo();
+        }
+    }
+
+    @ClientCallable
+    public void selectConceptionEntity(String entityType,String entityUID) {
+        this.selectedConceptionEntityKind = entityType;
+        this.selectedConceptionEntityUID = entityUID;
+        if(containerConceptionEntityRelationTopologyView != null){
+            int pageIndex = targetConceptionEntityRelationCurrentQueryPageMap.containsKey(entityUID) ?
+                    targetConceptionEntityRelationCurrentQueryPageMap.get(entityUID) : 1 ;
+            containerConceptionEntityRelationTopologyView.enableControlActionButtons(pageIndex);
+            containerConceptionEntityRelationTopologyView.renderSelectedConceptionEntityAbstractInfo(entityType,entityUID);
+        }
+    }
+
+    @ClientCallable
+    public void unselectRelationEntity(String entityTypeAnUIDStr) {
+        String[] entityIDInfoArray = entityTypeAnUIDStr.split(":");
+        String relationEntityType = entityIDInfoArray[0];
+        String relationEntityUID = entityIDInfoArray[1];
+        this.selectedRelationEntityKind = null;
+        this.selectedRelationEntityUID = null;
+        if(containerConceptionEntityRelationTopologyView != null){
+            containerConceptionEntityRelationTopologyView.clearRelationEntityAbstractInfo();
+        }
+    }
+
+    @ClientCallable
+    public void selectRelationEntity(String entityTypeAnUIDStr) {
+        String[] entityIDInfoArray = entityTypeAnUIDStr.split(":");
+        String relationEntityType = entityIDInfoArray[0];
+        String relationEntityUID = entityIDInfoArray[1];
+        this.selectedRelationEntityKind = relationEntityType;
+        this.selectedRelationEntityUID = relationEntityUID;
+        if(containerConceptionEntityRelationTopologyView != null){
+            containerConceptionEntityRelationTopologyView.renderSelectedRelationEntityAbstractInfo(selectedRelationEntityKind,selectedRelationEntityUID);
+        }
+    }
+
+    public void initLoadTargetConceptionEntityRelationData(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        if(targetConceptionKind != null) {
+            try {
+                ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+                if (targetEntity != null) {
+                    List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
+                    List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
+                    List<String> attachedConceptionKinds = targetEntity.listAttachedConceptionKinds();
+                    generateConceptionKindColorMap(attachedConceptionKinds);
+                    QueryParameters relationshipQueryParameters = new QueryParameters();
+                    int currentEntityQueryPage = 1;
+                    if(targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.conceptionEntityUID)){
+                        currentEntityQueryPage = targetConceptionEntityRelationCurrentQueryPageMap.get(this.conceptionEntityUID);
+                    }
+                    relationshipQueryParameters.setStartPage(currentEntityQueryPage);
+                    relationshipQueryParameters.setEndPage(currentEntityQueryPage+1);
+                    relationshipQueryParameters.setPageSize(currentQueryPageSize);
+                    for (String currentRelationKind : attachedRelationKinds) {
+                        relationshipQueryParameters.setEntityKind(currentRelationKind);
+                        List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
+                        totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
+                    }
+                    if(totalKindsRelationEntitiesList.size()>0){
+                        setData(totalKindsRelationEntitiesList);
+                        initLayoutGraph();
+                        currentEntityQueryPage++;
+                        targetConceptionEntityRelationCurrentQueryPageMap.put(this.conceptionEntityUID,currentEntityQueryPage);
+                    }
+                }else{
+                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
+                }
+            } catch (CoreRealmServiceRuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
+        }
+        coreRealm.closeGlobalSession();
+        if(containerConceptionEntityRelationTopologyView != null){
+            containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
+        }
+    }
+
+    private void loadAdditionalTargetConceptionEntityRelationData(String conceptionKind,String conceptionEntityUID){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
+        if(targetConceptionKind != null) {
+            try {
+                ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(conceptionEntityUID);
+                if (targetEntity != null) {
+                    int currentEntityQueryPage = 1;
+                    if(targetConceptionEntityRelationCurrentQueryPageMap.containsKey(conceptionEntityUID)){
+                        currentEntityQueryPage = targetConceptionEntityRelationCurrentQueryPageMap.get(conceptionEntityUID);
+                    }
+                    List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
+                    List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
+                    List<String> attachedConceptionKinds = targetEntity.listAttachedConceptionKinds();
+                    generateConceptionKindColorMap(attachedConceptionKinds);
+                    QueryParameters relationshipQueryParameters = new QueryParameters();
+                    relationshipQueryParameters.setStartPage(currentEntityQueryPage);
+                    relationshipQueryParameters.setEndPage(currentEntityQueryPage+1);
+                    relationshipQueryParameters.setPageSize(currentQueryPageSize);
+                    for (String currentRelationKind : attachedRelationKinds) {
+                        relationshipQueryParameters.setEntityKind(currentRelationKind);
+                        List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
+                        totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
+                    }
+                    boolean executeGraphIncreaseOperation = false;
+                    if(totalKindsRelationEntitiesList.size() == 1){
+                        RelationEntity resultRelationEntity = totalKindsRelationEntitiesList.get(0);
+                        String relationUID = resultRelationEntity.getRelationEntityUID();
+                        if(!relationEntityUIDList.contains(relationUID)){
+                            executeGraphIncreaseOperation = true;
+                        }
+                    }
+                    if(totalKindsRelationEntitiesList.size() > 1){
+                        executeGraphIncreaseOperation = true;
+                    }
+                    if(executeGraphIncreaseOperation){
+                        lockGraph();
+                        setData(totalKindsRelationEntitiesList);
+                        currentEntityQueryPage++;
+                        targetConceptionEntityRelationCurrentQueryPageMap.put(conceptionEntityUID,currentEntityQueryPage);
+                        layoutGraph();
+                    }
+                }else{
+                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
+                }
+            } catch (CoreRealmServiceRuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
+        }
+        coreRealm.closeGlobalSession();
+        if(containerConceptionEntityRelationTopologyView != null){
+            containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
+            int pageIndex = targetConceptionEntityRelationCurrentQueryPageMap.containsKey(conceptionEntityUID) ?
+                    targetConceptionEntityRelationCurrentQueryPageMap.get(conceptionEntityUID) : 1 ;
+            containerConceptionEntityRelationTopologyView.enableControlActionButtons(pageIndex);
+        }
+    }
+
+    private Map<String,String> generateConceptionKindColorMap(List<String> attachedConceptionKinds){
         String[] colorList =new String[]{
-                "#EA2027","#006266","#1B1464","#6F1E51","#EE5A24","#009432","#0652DD","#9980FA","#833471",
+                "#EA2027","#006266","#1B1464","#5758BB","#6F1E51","#EE5A24","#009432","##0652DD","#9980FA","#833471",
                 "#F79F1F","#A3CB38","#1289A7","#D980FA","#B53471","#FFC312","#C4E538","#12CBC4","#FDA7DF","#ED4C67"
         };
-        return colorList[new Random().nextInt(colorList.length)];
+
+        for(int i=0;i<attachedConceptionKinds.size();i++){
+            if(colorIndex>=colorList.length){
+                colorIndex = 0;
+            }
+            String currentConceptionKindName = attachedConceptionKinds.get(i);
+            if(!conceptionKindColorMap.containsKey(currentConceptionKindName)){
+                conceptionKindColorMap.put(currentConceptionKindName,colorList[colorIndex]);
+            }
+            colorIndex++;
+        }
+        return conceptionKindColorMap;
+    }
+
+    public void reload(){
+        this.conceptionEntityUIDList.clear();
+        this.relationEntityUIDList.clear();
+        this.targetConceptionEntityRelationCurrentQueryPageMap.clear();
+        clearGraph();
+        initLoadTargetConceptionEntityRelationData();
+    }
+
+    public void deleteSelectedConceptionEntity(){
+        if(this.selectedConceptionEntityUID != null){
+            runBeforeClientResponse(ui -> {
+                try {
+                    getElement().callJsFunction("$connector.deleteNode", new Serializable[]{(new ObjectMapper()).writeValueAsString(this.selectedConceptionEntityUID)});
+                    this.conceptionEntityUIDList.remove(this.selectedConceptionEntityUID);
+                    this.targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
+                    Collection<String> attachedRelationUIDs = this.conception_relationEntityUIDMap.get(this.selectedConceptionEntityUID);
+                    if(attachedRelationUIDs != null){
+                        relationEntityUIDList.removeAll(attachedRelationUIDs);
+                    }
+                    this.conception_relationEntityUIDMap.removeAll(this.selectedConceptionEntityUID);
+                    this.selectedConceptionEntityUID = null;
+                    this.selectedConceptionEntityKind = null;
+
+                    if(containerConceptionEntityRelationTopologyView != null){
+                        containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
+                    }
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
+
+    public void deleteSelectedAndDirectlyRelatedConceptionEntities(){
+        if(this.selectedConceptionEntityUID != null){
+            runBeforeClientResponse(ui -> {
+                try {
+                    Map<String,String> valueMap =new HashMap<>();
+                    valueMap.put("ignoreNodeId",this.conceptionEntityUID);
+                    valueMap.put("targetNodeId",this.selectedConceptionEntityUID);
+                    getElement().callJsFunction("$connector.deleteNodeWithOneDegreeConnection",
+                            new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
+                    //所有需要删除的节点
+                    List<String> needDeletedConceptionEntitiesUID = new ArrayList<>();
+                    needDeletedConceptionEntitiesUID.add(this.selectedConceptionEntityUID);
+                    //由选择的节点找到所有相连的边
+                    Collection<String> needDeletedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(this.selectedConceptionEntityUID);
+                    //找到所有与连接的边相关的需要删除的节点
+                    if(needDeletedRelationEntityUIDs != null && needDeletedRelationEntityUIDs.size()>0) {
+                        this.conception_relationEntityUIDMap.forEach(new BiConsumer<String, String>() {
+                            @Override
+                            public void accept(String currentConceptionEntityUID, String currentRelationEntityUID) {
+                                if(needDeletedRelationEntityUIDs.contains(currentRelationEntityUID) && !needDeletedConceptionEntitiesUID.contains(currentConceptionEntityUID)){
+                                    if(!conceptionEntityUID.equals(currentConceptionEntityUID)){
+                                        //当前主概念实体不能通过一度关系的关联而被间接的删除
+                                        needDeletedConceptionEntitiesUID.add(currentConceptionEntityUID);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    if(needDeletedConceptionEntitiesUID.size()>0){
+                        for(String currentConceptionEntity:needDeletedConceptionEntitiesUID){
+                            Collection<String> currentAttachedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(currentConceptionEntity);
+                            if(currentAttachedRelationEntityUIDs != null && currentAttachedRelationEntityUIDs.size() > 0){
+                                needDeletedRelationEntityUIDs.addAll(currentAttachedRelationEntityUIDs);
+                            }
+                        }
+                    }
+
+                    this.relationEntityUIDList.removeAll(needDeletedRelationEntityUIDs);
+                    for(String currentNeedDeletedConceptionEntityUID:needDeletedConceptionEntitiesUID){
+                        this.targetConceptionEntityRelationCurrentQueryPageMap.remove(currentNeedDeletedConceptionEntityUID);
+                        this.conception_relationEntityUIDMap.removeAll(currentNeedDeletedConceptionEntityUID);
+                    }
+
+                    this.conceptionEntityUIDList.removeAll(needDeletedConceptionEntitiesUID);
+                    this.selectedConceptionEntityUID = null;
+                    this.selectedConceptionEntityKind = null;
+
+                    if(containerConceptionEntityRelationTopologyView != null){
+                        containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
+                    }
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
+
+    public void deleteOneDegreeRelatedConceptionEntitiesOfSelectedConceptionEntity(){
+        if(this.selectedConceptionEntityUID != null){
+            runBeforeClientResponse(ui -> {
+                try {
+                    Map<String,String> valueMap =new HashMap<>();
+                    valueMap.put("ignoreNodeId",this.conceptionEntityUID);
+                    valueMap.put("targetNodeId",this.selectedConceptionEntityUID);
+                    getElement().callJsFunction("$connector.deleteOneDegreeConnectionNodes",
+                            new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
+                    //所有需要删除的节点
+                    List<String> needDeletedConceptionEntitiesUID = new ArrayList<>();
+                    //由选择的节点找到所有相连的边
+                    Collection<String> needDeletedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(this.selectedConceptionEntityUID);
+                    //找到所有与连接的边相关的需要删除的节点
+                    if(needDeletedRelationEntityUIDs != null && needDeletedRelationEntityUIDs.size()>0) {
+                        this.conception_relationEntityUIDMap.forEach(new BiConsumer<String, String>() {
+                            @Override
+                            public void accept(String currentConceptionEntityUID, String currentRelationEntityUID) {
+                                if(needDeletedRelationEntityUIDs.contains(currentRelationEntityUID) && !needDeletedConceptionEntitiesUID.contains(currentConceptionEntityUID)){
+                                    if(!conceptionEntityUID.equals(currentConceptionEntityUID) && !conceptionEntityUID.equals(selectedConceptionEntityUID)){
+                                        //当前主概念实体不能通过一度关系的关联而被间接的删除
+                                        needDeletedConceptionEntitiesUID.add(currentConceptionEntityUID);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    if(needDeletedConceptionEntitiesUID.size()>0){
+                        for(String currentConceptionEntity:needDeletedConceptionEntitiesUID){
+                            Collection<String> currentAttachedRelationEntityUIDs = this.conception_relationEntityUIDMap.get(currentConceptionEntity);
+                            if(currentAttachedRelationEntityUIDs != null && currentAttachedRelationEntityUIDs.size() > 0){
+                                needDeletedRelationEntityUIDs.addAll(currentAttachedRelationEntityUIDs);
+                            }
+                        }
+                    }
+                    this.relationEntityUIDList.removeAll(needDeletedRelationEntityUIDs);
+                    for(String currentNeedDeletedConceptionEntityUID:needDeletedConceptionEntitiesUID){
+                        this.targetConceptionEntityRelationCurrentQueryPageMap.remove(currentNeedDeletedConceptionEntityUID);
+                        this.conception_relationEntityUIDMap.removeAll(currentNeedDeletedConceptionEntityUID);
+                    }
+                    needDeletedConceptionEntitiesUID.remove(this.selectedConceptionEntityUID);
+                    this.conceptionEntityUIDList.removeAll(needDeletedConceptionEntitiesUID);
+                    if(containerConceptionEntityRelationTopologyView != null){
+                        containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
+                    }
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
+
+    public void setContainerConceptionEntityRelationTopologyView(ConceptionEntityRelationTopologyView containerConceptionEntityRelationTopologyView) {
+        this.containerConceptionEntityRelationTopologyView = containerConceptionEntityRelationTopologyView;
+    }
+
+    public void expandSelectedEntityOneDegreeRelations() {
+        loadAdditionalTargetConceptionEntityRelationData(this.selectedConceptionEntityKind,this.selectedConceptionEntityUID);
+    }
+
+    public void resetConceptionEntityRelationQueryPageIndex(){
+        if(this.targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.selectedConceptionEntityUID)){
+            this.targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
+        }
+    }
+
+    public void addConceptionEntityRelationQueryPageIndex(){
+        if(this.targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.selectedConceptionEntityUID)){
+            int currentValue = this.targetConceptionEntityRelationCurrentQueryPageMap.get(this.selectedConceptionEntityUID);
+            this.targetConceptionEntityRelationCurrentQueryPageMap.put(this.selectedConceptionEntityUID,currentValue+1);
+        }else{
+            this.targetConceptionEntityRelationCurrentQueryPageMap.put(this.selectedConceptionEntityUID,1);
+        }
+    }
+
+    public void minusConceptionEntityRelationQueryPageIndex(){
+        if(this.targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.selectedConceptionEntityUID)){
+            int currentValue = this.targetConceptionEntityRelationCurrentQueryPageMap.get(this.selectedConceptionEntityUID);
+            if(currentValue -1 >1){
+                this.targetConceptionEntityRelationCurrentQueryPageMap.put(this.selectedConceptionEntityUID,currentValue -1);
+            }else{
+                this.targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
+            }
+        }
     }
 }

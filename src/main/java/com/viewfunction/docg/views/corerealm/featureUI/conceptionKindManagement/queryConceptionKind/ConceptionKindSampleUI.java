@@ -122,7 +122,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         };
         this.conceptionEntitiesListView.setSelectConceptionEntityListener(selectConceptionEntityListener);
 
-        this.conceptionEntitiesRelationsChart = new ConceptionEntitiesRelationsChart();
+        this.conceptionEntitiesRelationsChart = new ConceptionEntitiesRelationsChart(null,null);
         rightSideContainer.add(this.conceptionEntitiesRelationsChart);
 
         VerticalLayout attributesInfoSideContainer = new VerticalLayout();
