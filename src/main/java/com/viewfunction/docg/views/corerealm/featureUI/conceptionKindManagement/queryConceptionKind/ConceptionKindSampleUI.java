@@ -23,6 +23,7 @@ import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.EntitySyntheticAbstractInfoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
     private ConceptionEntitiesRelationsChart conceptionEntitiesRelationsChart;
     private Grid<AttributeValue> entityAttributesInfoGrid;
     private NativeLabel selectedConceptionEntityUIDLabel;
+    private EntitySyntheticAbstractInfoView entitySyntheticAbstractInfoView;
 
     public ConceptionKindSampleUI(String conceptionKind, int sampleCount) {
         this.conceptionKind = conceptionKind;
@@ -125,6 +127,18 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         this.conceptionEntitiesRelationsChart = new ConceptionEntitiesRelationsChart();
         rightSideContainer.add(this.conceptionEntitiesRelationsChart);
 
+
+
+
+        entitySyntheticAbstractInfoView = new EntitySyntheticAbstractInfoView(330);
+        entitySyntheticAbstractInfoView.getStyle().set("padding-left", "8px");
+        entitySyntheticAbstractInfoView.setWidth(350,Unit.PIXELS);
+        rightSideContainer.add(this.entitySyntheticAbstractInfoView);
+        rightSideContainer.setFlexGrow(1,this.conceptionEntitiesRelationsChart);
+
+
+
+/*
         VerticalLayout attributesInfoSideContainer = new VerticalLayout();
         attributesInfoSideContainer.getStyle().set("border-left", "1px solid var(--lumo-contrast-20pct)");
         attributesInfoSideContainer.setSpacing(true);
@@ -167,6 +181,9 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         entityAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
 
         attributesInfoSideContainer.add(entityAttributesInfoGrid);
+
+
+        */
     }
 
     @Override
@@ -175,7 +192,8 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         super.onAttach(attachEvent);
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             this.conceptionEntitiesListView.setHeight(receiver.getBodyClientHeight()-145, Unit.PIXELS);
-            this.entityAttributesInfoGrid.setHeight(receiver.getBodyClientHeight()-175, Unit.PIXELS);
+            //this.entityAttributesInfoGrid.setHeight(receiver.getBodyClientHeight()-175, Unit.PIXELS);
+            this.conceptionEntitiesRelationsChart.setWidth(receiver.getBodyClientWidth()-700, Unit.PIXELS);
         }));
         doConceptionEntitiesSample();
     }
