@@ -5,12 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClientCallable;
-import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.JavaScript;
-import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
@@ -73,6 +70,11 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
 
     public void clearData(){
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.clearData", "null"));
+        conceptionEntityUIDList.clear();
+        relationEntityUIDList.clear();
+        conception_relationEntityUIDMap.clear();
+        conceptionKindColorMap.clear();
+        targetConceptionEntityRelationCurrentQueryPageMap.clear();
     }
 
     public void renderConceptionEntitiesList(Set<ConceptionEntity> conceptionEntitySet){

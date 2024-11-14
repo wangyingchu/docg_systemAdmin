@@ -61,7 +61,6 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         resampleButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                conceptionEntitiesRelationsChart.clearData();
                 doConceptionEntitiesSample();
             }
         });
@@ -161,6 +160,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
                 int resultConceptionEntitiesCount = conceptionEntitySet.size();
                 this.resultNumberValue.setText(""+resultConceptionEntitiesCount);
                 this.conceptionEntitiesListView.renderConceptionEntitiesList(conceptionEntitySet);
+                this.conceptionEntitiesRelationsChart.clearData();
                 this.conceptionEntitiesRelationsChart.renderConceptionEntitiesList(conceptionEntitySet);
             } catch (CoreRealmServiceEntityExploreException e) {
                 throw new RuntimeException(e);
