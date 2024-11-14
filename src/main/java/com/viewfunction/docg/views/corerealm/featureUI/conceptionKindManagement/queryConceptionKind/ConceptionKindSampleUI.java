@@ -3,10 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -14,15 +11,14 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.topology.EntitySyntheticAbstractInfoView;
 
 import java.util.ArrayList;
@@ -38,8 +34,6 @@ public class ConceptionKindSampleUI extends VerticalLayout {
     private NativeLabel resultNumberValue;
     private ConceptionEntitiesListView conceptionEntitiesListView;
     private ConceptionEntitiesRelationsChart conceptionEntitiesRelationsChart;
-    private Grid<AttributeValue> entityAttributesInfoGrid;
-    private NativeLabel selectedConceptionEntityUIDLabel;
     private EntitySyntheticAbstractInfoView entitySyntheticAbstractInfoView;
 
     public ConceptionKindSampleUI(String conceptionKind, int sampleCount) {
@@ -111,15 +105,20 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         ConceptionEntitiesListView.SelectConceptionEntityListener selectConceptionEntityListener = new ConceptionEntitiesListView.SelectConceptionEntityListener() {
             @Override
             public void onSelectConceptionEntity(ConceptionEntity conceptionEntity) {
-                List<AttributeValue> allAttributesList = conceptionEntity.getAttributes();
-                entityAttributesInfoGrid.setItems(allAttributesList);
-                selectedConceptionEntityUIDLabel.setText(conceptionEntity.getConceptionEntityUID());
+
+
+
+
+
             }
 
             @Override
             public void onUnSelectConceptionEntity() {
-                entityAttributesInfoGrid.setItems(new ArrayList<>());
-                selectedConceptionEntityUIDLabel.setText("-");
+
+
+
+
+
             }
         };
         this.conceptionEntitiesListView.setSelectConceptionEntityListener(selectConceptionEntityListener);
@@ -127,63 +126,11 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         this.conceptionEntitiesRelationsChart = new ConceptionEntitiesRelationsChart();
         rightSideContainer.add(this.conceptionEntitiesRelationsChart);
 
-
-
-
         entitySyntheticAbstractInfoView = new EntitySyntheticAbstractInfoView(330);
         entitySyntheticAbstractInfoView.getStyle().set("padding-left", "8px");
         entitySyntheticAbstractInfoView.setWidth(350,Unit.PIXELS);
         rightSideContainer.add(this.entitySyntheticAbstractInfoView);
         rightSideContainer.setFlexGrow(1,this.conceptionEntitiesRelationsChart);
-
-
-
-/*
-        VerticalLayout attributesInfoSideContainer = new VerticalLayout();
-        attributesInfoSideContainer.getStyle().set("border-left", "1px solid var(--lumo-contrast-20pct)");
-        attributesInfoSideContainer.setSpacing(true);
-        attributesInfoSideContainer.setMargin(false);
-        attributesInfoSideContainer.setPadding(false);
-        rightSideContainer.add(attributesInfoSideContainer);
-
-        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(VaadinIcon.CUBE.create(),"选中概念类型实体信息");
-        filterTitle2.getStyle().set("padding-left","5px");
-        attributesInfoSideContainer.add(filterTitle2);
-
-        HorizontalLayout titleDetailLayout = new HorizontalLayout();
-        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        titleDetailLayout.setSpacing(false);
-        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
-        spaceDivLayout4.setWidth(5,Unit.PIXELS);
-        titleDetailLayout.add(spaceDivLayout4);
-        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
-        conceptionEntityIcon.setSize("10px");
-        titleDetailLayout.add(conceptionEntityIcon);
-        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
-        spaceDivLayout5.setWidth(5,Unit.PIXELS);
-        titleDetailLayout.add(spaceDivLayout5);
-        selectedConceptionEntityUIDLabel = new NativeLabel("-");
-        titleDetailLayout.add(selectedConceptionEntityUIDLabel);
-
-        attributesInfoSideContainer.add(titleDetailLayout);
-
-        entityAttributesInfoGrid = new Grid<>();
-        entityAttributesInfoGrid.setWidthFull();
-        entityAttributesInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
-        entityAttributesInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
-        entityAttributesInfoGrid.addColumn(AttributeValue::getAttributeName).setHeader("属性名称").setKey("idx_0");
-        entityAttributesInfoGrid.addColumn(AttributeValue::getAttributeValue).setHeader("属性值").setKey("idx_1").setFlexGrow(1).setResizable(true);
-        entityAttributesInfoGrid.getStyle().set("padding-top", "100px");
-
-        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
-        entityAttributesInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
-        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.INPUT,"属性值");
-        entityAttributesInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
-
-        attributesInfoSideContainer.add(entityAttributesInfoGrid);
-
-
-        */
     }
 
     @Override
@@ -192,7 +139,6 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         super.onAttach(attachEvent);
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             this.conceptionEntitiesListView.setHeight(receiver.getBodyClientHeight()-145, Unit.PIXELS);
-            //this.entityAttributesInfoGrid.setHeight(receiver.getBodyClientHeight()-175, Unit.PIXELS);
             this.conceptionEntitiesRelationsChart.setWidth(receiver.getBodyClientWidth()-700, Unit.PIXELS);
         }));
         doConceptionEntitiesSample();
