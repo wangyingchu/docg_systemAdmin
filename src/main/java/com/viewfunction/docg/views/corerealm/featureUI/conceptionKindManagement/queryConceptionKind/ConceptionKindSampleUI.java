@@ -111,6 +111,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
             @Override
             public void onUnSelectConceptionEntity() {
                 entitySyntheticAbstractInfoView.cleanAbstractInfo();
+                conceptionEntitiesRelationsChart.unSelectElement();
             }
         };
         this.conceptionEntitiesListView.setSelectConceptionEntityListener(selectConceptionEntityListener);

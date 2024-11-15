@@ -500,9 +500,6 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
         if(conceptionEntityUID != null){
             runBeforeClientResponse(ui -> {
                 try {
-                    Map<String,String> valueMap =new HashMap<>();
-
-                    valueMap.put("targetNodeId",conceptionEntityUID);
                     getElement().callJsFunction("$connector.selectNode",
                             new Serializable[]{(new ObjectMapper()).writeValueAsString(conceptionEntityUID)});
                 } catch (JsonProcessingException e) {
@@ -513,8 +510,13 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
     }
 
     public void unSelectElement(){
+        runBeforeClientResponse(ui -> {
+            try {
+                getElement().callJsFunction("$connector.unselectNode",
+                        new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
-
-
-
 }
