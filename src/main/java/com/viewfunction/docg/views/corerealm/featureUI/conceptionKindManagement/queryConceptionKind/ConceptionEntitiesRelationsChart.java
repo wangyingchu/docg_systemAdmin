@@ -36,8 +36,6 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
     private Map<String,Integer> targetConceptionEntityRelationCurrentQueryPageMap;
     private int colorIndex = 0;
     private ConceptionKindSampleUI containerConceptionKindSampleUI;
-    private String selectedConceptionEntityUID;
-    private String selectedConceptionEntityKind;
     private Multimap<String,String> conception_relationEntityUIDMap;
     private String selectedRelationEntityUID;
     private String selectedRelationEntityKind;
@@ -309,8 +307,6 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
 
     @ClientCallable
     public void unselectConceptionEntity(String entityType,String entityUID) {
-        this.selectedConceptionEntityKind = null;
-        this.selectedConceptionEntityUID = null;
         if(containerConceptionKindSampleUI != null){
             containerConceptionKindSampleUI.renderUnselectConceptionEntityLogic();
         }
@@ -318,8 +314,6 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
 
     @ClientCallable
     public void selectConceptionEntity(String entityType,String entityUID) {
-        this.selectedConceptionEntityKind = entityType;
-        this.selectedConceptionEntityUID = entityUID;
         if(containerConceptionKindSampleUI != null){
             containerConceptionKindSampleUI.renderSelectConceptionEntityLogic(entityType,entityUID);
         }
@@ -435,61 +429,6 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
         this.targetConceptionEntityRelationCurrentQueryPageMap.clear();
         clearGraph();
         initLoadTargetConceptionEntityRelationData();
-    }
-
-    public void deleteSelectedConceptionEntity(){
-        if(this.selectedConceptionEntityUID != null){
-            runBeforeClientResponse(ui -> {
-                try {
-                    getElement().callJsFunction("$connector.deleteNode", new Serializable[]{(new ObjectMapper()).writeValueAsString(this.selectedConceptionEntityUID)});
-                    this.conceptionEntityUIDList.remove(this.selectedConceptionEntityUID);
-                    this.targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
-                    Collection<String> attachedRelationUIDs = this.conception_relationEntityUIDMap.get(this.selectedConceptionEntityUID);
-                    if(attachedRelationUIDs != null){
-                        relationEntityUIDList.removeAll(attachedRelationUIDs);
-                    }
-                    this.conception_relationEntityUIDMap.removeAll(this.selectedConceptionEntityUID);
-                    this.selectedConceptionEntityUID = null;
-                    this.selectedConceptionEntityKind = null;
-
-                    if(containerConceptionKindSampleUI != null){
-
-                    }
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }
-    }
-
-    public void expandSelectedEntityOneDegreeRelations() {
-        loadAdditionalTargetConceptionEntityRelationData(this.selectedConceptionEntityKind,this.selectedConceptionEntityUID);
-    }
-
-    public void resetConceptionEntityRelationQueryPageIndex(){
-        if(this.targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.selectedConceptionEntityUID)){
-            this.targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
-        }
-    }
-
-    public void addConceptionEntityRelationQueryPageIndex(){
-        if(this.targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.selectedConceptionEntityUID)){
-            int currentValue = this.targetConceptionEntityRelationCurrentQueryPageMap.get(this.selectedConceptionEntityUID);
-            this.targetConceptionEntityRelationCurrentQueryPageMap.put(this.selectedConceptionEntityUID,currentValue+1);
-        }else{
-            this.targetConceptionEntityRelationCurrentQueryPageMap.put(this.selectedConceptionEntityUID,1);
-        }
-    }
-
-    public void minusConceptionEntityRelationQueryPageIndex(){
-        if(this.targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.selectedConceptionEntityUID)){
-            int currentValue = this.targetConceptionEntityRelationCurrentQueryPageMap.get(this.selectedConceptionEntityUID);
-            if(currentValue -1 >1){
-                this.targetConceptionEntityRelationCurrentQueryPageMap.put(this.selectedConceptionEntityUID,currentValue -1);
-            }else{
-                this.targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
-            }
-        }
     }
 
     public void setContainerConceptionKindSampleUI(ConceptionKindSampleUI containerConceptionKindSampleUI) {

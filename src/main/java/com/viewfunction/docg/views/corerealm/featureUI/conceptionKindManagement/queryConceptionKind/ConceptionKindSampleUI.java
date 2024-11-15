@@ -105,13 +105,13 @@ public class ConceptionKindSampleUI extends VerticalLayout {
             @Override
             public void onSelectConceptionEntity(ConceptionEntity conceptionEntity) {
                 entitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(conceptionEntity.getConceptionKindName(),conceptionEntity.getConceptionEntityUID());
-                conceptionEntitiesRelationsChart.selectConceptionEntity(conceptionEntity.getConceptionEntityUID());
+                //conceptionEntitiesRelationsChart.selectConceptionEntity(conceptionEntity.getConceptionEntityUID());
             }
 
             @Override
             public void onUnSelectConceptionEntity() {
                 entitySyntheticAbstractInfoView.cleanAbstractInfo();
-                conceptionEntitiesRelationsChart.unSelectElement();
+                //conceptionEntitiesRelationsChart.unSelectElement();
             }
         };
         this.conceptionEntitiesListView.setSelectConceptionEntityListener(selectConceptionEntityListener);
