@@ -312,7 +312,7 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
         this.selectedConceptionEntityKind = null;
         this.selectedConceptionEntityUID = null;
         if(containerConceptionKindSampleUI != null){
-            containerConceptionKindSampleUI.clearConceptionEntityAbstractInfo();
+            containerConceptionKindSampleUI.renderUnselectConceptionEntityLogic();
         }
     }
 
@@ -321,7 +321,7 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
         this.selectedConceptionEntityKind = entityType;
         this.selectedConceptionEntityUID = entityUID;
         if(containerConceptionKindSampleUI != null){
-            containerConceptionKindSampleUI.renderSelectedConceptionEntityAbstractInfo(entityType,entityUID);
+            containerConceptionKindSampleUI.renderSelectConceptionEntityLogic(entityType,entityUID);
         }
     }
 
@@ -333,7 +333,7 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
         this.selectedRelationEntityKind = null;
         this.selectedRelationEntityUID = null;
         if(containerConceptionKindSampleUI != null){
-            containerConceptionKindSampleUI.clearRelationEntityAbstractInfo();
+            containerConceptionKindSampleUI.renderUnselectRelationEntityLogic();
         }
     }
 
@@ -345,57 +345,11 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
         this.selectedRelationEntityKind = relationEntityType;
         this.selectedRelationEntityUID = relationEntityUID;
         if(containerConceptionKindSampleUI != null){
-            containerConceptionKindSampleUI.renderSelectedRelationEntityAbstractInfo(selectedRelationEntityKind,selectedRelationEntityUID);
+            containerConceptionKindSampleUI.renderSelectRelationEntityLogic(selectedRelationEntityKind,selectedRelationEntityUID);
         }
     }
 
     public void initLoadTargetConceptionEntityRelationData(){
-        /*
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        coreRealm.openGlobalSession();
-        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
-        if(targetConceptionKind != null) {
-            try {
-                ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
-                if (targetEntity != null) {
-                    List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
-                    List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
-                    List<String> attachedConceptionKinds = targetEntity.listAttachedConceptionKinds();
-                    generateConceptionKindColorMap(attachedConceptionKinds);
-                    QueryParameters relationshipQueryParameters = new QueryParameters();
-                    int currentEntityQueryPage = 1;
-                    if(targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.conceptionEntityUID)){
-                        currentEntityQueryPage = targetConceptionEntityRelationCurrentQueryPageMap.get(this.conceptionEntityUID);
-                    }
-                    relationshipQueryParameters.setStartPage(currentEntityQueryPage);
-                    relationshipQueryParameters.setEndPage(currentEntityQueryPage+1);
-                    relationshipQueryParameters.setPageSize(currentQueryPageSize);
-                    for (String currentRelationKind : attachedRelationKinds) {
-                        relationshipQueryParameters.setEntityKind(currentRelationKind);
-                        List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
-                        totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
-                    }
-                    if(totalKindsRelationEntitiesList.size()>0){
-                        setData(totalKindsRelationEntitiesList);
-                        initLayoutGraph();
-                        currentEntityQueryPage++;
-                        targetConceptionEntityRelationCurrentQueryPageMap.put(this.conceptionEntityUID,currentEntityQueryPage);
-                    }
-                }else{
-                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
-                }
-            } catch (CoreRealmServiceRuntimeException e) {
-                throw new RuntimeException(e);
-            }
-        }else{
-            CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
-        }
-        coreRealm.closeGlobalSession();
-        if(containerConceptionEntityRelationTopologyView != null){
-            containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
-        }
-
-        */
     }
 
     private void loadAdditionalTargetConceptionEntityRelationData(String conceptionKind,String conceptionEntityUID){

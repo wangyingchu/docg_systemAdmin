@@ -24,8 +24,10 @@ import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class ConceptionEntitiesListView extends VerticalLayout {
 
@@ -170,5 +172,22 @@ public class ConceptionEntitiesListView extends VerticalLayout {
 
     public void setSelectConceptionEntityListener(SelectConceptionEntityListener selectConceptionEntityListener) {
         this.selectConceptionEntityListener = selectConceptionEntityListener;
+    }
+
+    public void selectConceptionEntity(String conceptionEntityUID){
+        this.displayedConceptionEntitiesGrid.select(null);
+        ListDataProvider dataProvider = (ListDataProvider)displayedConceptionEntitiesGrid.getDataProvider();
+        Collection<ConceptionEntity> conceptionEntities = dataProvider.getItems();
+        for(ConceptionEntity currentConceptionEntity : conceptionEntities){
+            if(currentConceptionEntity.getConceptionEntityUID().equals(conceptionEntityUID)){
+                this.displayedConceptionEntitiesGrid.select(currentConceptionEntity);
+                this.displayedConceptionEntitiesGrid.scrollToItem(currentConceptionEntity);
+                return;
+            }
+        }
+    }
+
+    public void unSelectConceptionEntity(){
+        this.displayedConceptionEntitiesGrid.select(null);
     }
 }
