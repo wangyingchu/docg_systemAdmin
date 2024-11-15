@@ -105,6 +105,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
             @Override
             public void onSelectConceptionEntity(ConceptionEntity conceptionEntity) {
                 entitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(conceptionEntity.getConceptionKindName(),conceptionEntity.getConceptionEntityUID());
+                conceptionEntitiesRelationsChart.selectConceptionEntity(conceptionEntity.getConceptionEntityUID());
             }
 
             @Override

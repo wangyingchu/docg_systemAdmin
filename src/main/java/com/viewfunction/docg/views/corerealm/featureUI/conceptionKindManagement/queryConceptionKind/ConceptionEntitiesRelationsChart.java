@@ -495,4 +495,26 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
     public void setContainerConceptionKindSampleUI(ConceptionKindSampleUI containerConceptionKindSampleUI) {
         this.containerConceptionKindSampleUI = containerConceptionKindSampleUI;
     }
+
+    public void selectConceptionEntity(String conceptionEntityUID){
+        if(conceptionEntityUID != null){
+            runBeforeClientResponse(ui -> {
+                try {
+                    Map<String,String> valueMap =new HashMap<>();
+
+                    valueMap.put("targetNodeId",conceptionEntityUID);
+                    getElement().callJsFunction("$connector.selectNode",
+                            new Serializable[]{(new ObjectMapper()).writeValueAsString(conceptionEntityUID)});
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
+
+    public void unSelectElement(){
+    }
+
+
+
 }
