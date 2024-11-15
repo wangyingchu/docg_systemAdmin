@@ -22,7 +22,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeEdgePayload;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.CytoscapeNodePayload;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityRelationTopologyView;
 
 import java.io.Serializable;
 import java.util.*;
@@ -36,7 +35,7 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
     private int currentQueryPageSize = 10;
     private Map<String,Integer> targetConceptionEntityRelationCurrentQueryPageMap;
     private int colorIndex = 0;
-    private ConceptionEntityRelationTopologyView containerConceptionEntityRelationTopologyView;
+    private ConceptionKindSampleUI containerConceptionKindSampleUI;
     private String selectedConceptionEntityUID;
     private String selectedConceptionEntityKind;
     private Multimap<String,String> conception_relationEntityUIDMap;
@@ -93,7 +92,6 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
             throw new RuntimeException(e);
         }
     }
-
 
     public void setData(Set<ConceptionEntity> conceptionEntitySet,List<RelationEntity> conceptionEntityRelationEntityList){
        if(conceptionEntitySet != null && !conceptionEntitySet.isEmpty()){
@@ -313,9 +311,8 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
     public void unselectConceptionEntity(String entityType,String entityUID) {
         this.selectedConceptionEntityKind = null;
         this.selectedConceptionEntityUID = null;
-        if(containerConceptionEntityRelationTopologyView != null){
-            containerConceptionEntityRelationTopologyView.disableControlActionButtons();
-            containerConceptionEntityRelationTopologyView.clearConceptionEntityAbstractInfo();
+        if(containerConceptionKindSampleUI != null){
+            containerConceptionKindSampleUI.clearConceptionEntityAbstractInfo();
         }
     }
 
@@ -323,11 +320,8 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
     public void selectConceptionEntity(String entityType,String entityUID) {
         this.selectedConceptionEntityKind = entityType;
         this.selectedConceptionEntityUID = entityUID;
-        if(containerConceptionEntityRelationTopologyView != null){
-            int pageIndex = targetConceptionEntityRelationCurrentQueryPageMap.containsKey(entityUID) ?
-                    targetConceptionEntityRelationCurrentQueryPageMap.get(entityUID) : 1 ;
-            containerConceptionEntityRelationTopologyView.enableControlActionButtons(pageIndex);
-            containerConceptionEntityRelationTopologyView.renderSelectedConceptionEntityAbstractInfo(entityType,entityUID);
+        if(containerConceptionKindSampleUI != null){
+            containerConceptionKindSampleUI.renderSelectedConceptionEntityAbstractInfo(entityType,entityUID);
         }
     }
 
@@ -338,8 +332,8 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
         String relationEntityUID = entityIDInfoArray[1];
         this.selectedRelationEntityKind = null;
         this.selectedRelationEntityUID = null;
-        if(containerConceptionEntityRelationTopologyView != null){
-            containerConceptionEntityRelationTopologyView.clearRelationEntityAbstractInfo();
+        if(containerConceptionKindSampleUI != null){
+            containerConceptionKindSampleUI.clearRelationEntityAbstractInfo();
         }
     }
 
@@ -350,8 +344,8 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
         String relationEntityUID = entityIDInfoArray[1];
         this.selectedRelationEntityKind = relationEntityType;
         this.selectedRelationEntityUID = relationEntityUID;
-        if(containerConceptionEntityRelationTopologyView != null){
-            containerConceptionEntityRelationTopologyView.renderSelectedRelationEntityAbstractInfo(selectedRelationEntityKind,selectedRelationEntityUID);
+        if(containerConceptionKindSampleUI != null){
+            containerConceptionKindSampleUI.renderSelectedRelationEntityAbstractInfo(selectedRelationEntityKind,selectedRelationEntityUID);
         }
     }
 
@@ -457,11 +451,8 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
             CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
         }
         coreRealm.closeGlobalSession();
-        if(containerConceptionEntityRelationTopologyView != null){
-            containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
-            int pageIndex = targetConceptionEntityRelationCurrentQueryPageMap.containsKey(conceptionEntityUID) ?
-                    targetConceptionEntityRelationCurrentQueryPageMap.get(conceptionEntityUID) : 1 ;
-            containerConceptionEntityRelationTopologyView.enableControlActionButtons(pageIndex);
+        if(containerConceptionKindSampleUI != null){
+
         }
     }
 
@@ -507,18 +498,14 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
                     this.selectedConceptionEntityUID = null;
                     this.selectedConceptionEntityKind = null;
 
-                    if(containerConceptionEntityRelationTopologyView != null){
-                        containerConceptionEntityRelationTopologyView.updateEntitiesMetaStaticInfo(conceptionEntityUIDList.size(),relationEntityUIDList.size());
+                    if(containerConceptionKindSampleUI != null){
+
                     }
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
             });
         }
-    }
-
-    public void setContainerConceptionEntityRelationTopologyView(ConceptionEntityRelationTopologyView containerConceptionEntityRelationTopologyView) {
-        this.containerConceptionEntityRelationTopologyView = containerConceptionEntityRelationTopologyView;
     }
 
     public void expandSelectedEntityOneDegreeRelations() {
@@ -549,5 +536,9 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
                 this.targetConceptionEntityRelationCurrentQueryPageMap.remove(this.selectedConceptionEntityUID);
             }
         }
+    }
+
+    public void setContainerConceptionKindSampleUI(ConceptionKindSampleUI containerConceptionKindSampleUI) {
+        this.containerConceptionKindSampleUI = containerConceptionKindSampleUI;
     }
 }

@@ -104,30 +104,24 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         ConceptionEntitiesListView.SelectConceptionEntityListener selectConceptionEntityListener = new ConceptionEntitiesListView.SelectConceptionEntityListener() {
             @Override
             public void onSelectConceptionEntity(ConceptionEntity conceptionEntity) {
-
-
-
-
-
+                entitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(conceptionEntity.getConceptionKindName(),conceptionEntity.getConceptionEntityUID());
             }
 
             @Override
             public void onUnSelectConceptionEntity() {
-
-
-
-
-
+                entitySyntheticAbstractInfoView.cleanAbstractInfo();
             }
         };
         this.conceptionEntitiesListView.setSelectConceptionEntityListener(selectConceptionEntityListener);
 
         this.conceptionEntitiesRelationsChart = new ConceptionEntitiesRelationsChart();
+        this.conceptionEntitiesRelationsChart.setContainerConceptionKindSampleUI(this);
         rightSideContainer.add(this.conceptionEntitiesRelationsChart);
 
-        entitySyntheticAbstractInfoView = new EntitySyntheticAbstractInfoView(330);
-        entitySyntheticAbstractInfoView.getStyle().set("padding-left", "8px");
-        entitySyntheticAbstractInfoView.setWidth(350,Unit.PIXELS);
+        this.entitySyntheticAbstractInfoView = new EntitySyntheticAbstractInfoView(330);
+        this.entitySyntheticAbstractInfoView.getStyle().set("padding-left", "8px");
+        this.entitySyntheticAbstractInfoView.setWidth(350,Unit.PIXELS);
+        this.entitySyntheticAbstractInfoView.getStyle().set("border-left", "1px solid var(--lumo-contrast-20pct)");
         rightSideContainer.add(this.entitySyntheticAbstractInfoView);
         rightSideContainer.setFlexGrow(1,this.conceptionEntitiesRelationsChart);
     }
@@ -138,6 +132,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         super.onAttach(attachEvent);
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             this.conceptionEntitiesListView.setHeight(receiver.getBodyClientHeight()-145, Unit.PIXELS);
+            this.entitySyntheticAbstractInfoView.setEntityAttributesInfoGridHeight(receiver.getBodyClientHeight()-330);
             this.conceptionEntitiesRelationsChart.setWidth(receiver.getBodyClientWidth()-700, Unit.PIXELS);
         }));
         doConceptionEntitiesSample();
@@ -166,5 +161,21 @@ public class ConceptionKindSampleUI extends VerticalLayout {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public void renderSelectedConceptionEntityAbstractInfo(String entityType,String entityUID){
+        entitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(entityType,entityUID);
+    }
+
+    public void clearConceptionEntityAbstractInfo(){
+        entitySyntheticAbstractInfoView.cleanAbstractInfo();
+    }
+
+    public void renderSelectedRelationEntityAbstractInfo(String entityType,String entityUID){
+        entitySyntheticAbstractInfoView.renderRelationEntitySyntheticAbstractInfo(entityType,entityUID);
+    }
+
+    public void clearRelationEntityAbstractInfo(){
+        entitySyntheticAbstractInfoView.cleanAbstractInfo();
     }
 }
