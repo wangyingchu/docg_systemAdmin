@@ -448,11 +448,11 @@ public class ConceptionEntitiesRelationsChart extends VerticalLayout {
         }
     }
 
-    public void unSelectElement(){
+    public void unSelectConceptionEntity(String conceptionEntityUID){
         runBeforeClientResponse(ui -> {
             try {
                 getElement().callJsFunction("$connector.unselectNode",
-                        new Serializable[]{(new ObjectMapper()).writeValueAsString("null")});
+                        new Serializable[]{(new ObjectMapper()).writeValueAsString(conceptionEntityUID)});
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }

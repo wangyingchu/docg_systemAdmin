@@ -35,6 +35,7 @@ public class ConceptionKindSampleUI extends VerticalLayout {
     private ConceptionEntitiesListView conceptionEntitiesListView;
     private ConceptionEntitiesRelationsChart conceptionEntitiesRelationsChart;
     private EntitySyntheticAbstractInfoView entitySyntheticAbstractInfoView;
+    private boolean conceptionEntitySelectionInfoActiveByRelationsChart = false;
 
     public ConceptionKindSampleUI(String conceptionKind, int sampleCount) {
         this.conceptionKind = conceptionKind;
@@ -104,14 +105,24 @@ public class ConceptionKindSampleUI extends VerticalLayout {
         ConceptionEntitiesListView.SelectConceptionEntityListener selectConceptionEntityListener = new ConceptionEntitiesListView.SelectConceptionEntityListener() {
             @Override
             public void onSelectConceptionEntity(ConceptionEntity conceptionEntity) {
-                entitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(conceptionEntity.getConceptionKindName(),conceptionEntity.getConceptionEntityUID());
-                //conceptionEntitiesRelationsChart.selectConceptionEntity(conceptionEntity.getConceptionEntityUID());
+                if(!conceptionEntitySelectionInfoActiveByRelationsChart){
+                    entitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(conceptionEntity.getConceptionKindName(),conceptionEntity.getConceptionEntityUID());
+                    conceptionEntitiesRelationsChart.selectConceptionEntity(conceptionEntity.getConceptionEntityUID());
+                }//else{
+                    conceptionEntitySelectionInfoActiveByRelationsChart = false;
+                //}
             }
 
             @Override
-            public void onUnSelectConceptionEntity() {
-                entitySyntheticAbstractInfoView.cleanAbstractInfo();
-                //conceptionEntitiesRelationsChart.unSelectElement();
+            public void onUnSelectConceptionEntity(ConceptionEntity conceptionEntity) {
+                if(!conceptionEntitySelectionInfoActiveByRelationsChart){
+                    entitySyntheticAbstractInfoView.cleanAbstractInfo();
+                    if(conceptionEntity!= null){
+                        conceptionEntitiesRelationsChart.unSelectConceptionEntity(conceptionEntity.getConceptionEntityUID());
+                    }
+                }//else{
+                    conceptionEntitySelectionInfoActiveByRelationsChart = false;
+                //}
             }
         };
         this.conceptionEntitiesListView.setSelectConceptionEntityListener(selectConceptionEntityListener);
@@ -166,17 +177,20 @@ public class ConceptionKindSampleUI extends VerticalLayout {
     }
 
     public void renderSelectConceptionEntityLogic(String entityType, String entityUID){
+        conceptionEntitySelectionInfoActiveByRelationsChart = true;
         entitySyntheticAbstractInfoView.renderConceptionEntitySyntheticAbstractInfo(entityType,entityUID);
         conceptionEntitiesListView.selectConceptionEntity(entityUID);
     }
 
     public void renderUnselectConceptionEntityLogic(){
+        conceptionEntitySelectionInfoActiveByRelationsChart = true;
         entitySyntheticAbstractInfoView.cleanAbstractInfo();
         conceptionEntitiesListView.unSelectConceptionEntity();
     }
 
     public void renderSelectRelationEntityLogic(String entityType, String entityUID){
         entitySyntheticAbstractInfoView.renderRelationEntitySyntheticAbstractInfo(entityType,entityUID);
+        conceptionEntitiesListView.unSelectConceptionEntity();
     }
 
     public void renderUnselectRelationEntityLogic(){

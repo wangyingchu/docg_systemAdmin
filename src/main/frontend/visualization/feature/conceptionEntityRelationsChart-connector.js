@@ -25,8 +25,9 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                 let targetNode = cy.filter('[id = '+data+']');
                 cy.$(targetNode).select();
             },
-            unselectNode : function() {
-                cy.$().unselect();
+            unselectNode : function(data) {
+                let targetNode = cy.filter('[id = '+data+']');
+                cy.$(targetNode).unselect();
             },
             deleteNodeWithOneDegreeConnection : function(data) {
                 let dataObj = eval("(" + data + ")");
