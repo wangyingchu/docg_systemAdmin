@@ -8,14 +8,13 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.ItemClickEvent;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.data.selection.SelectionEvent;
-import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.function.ValueProvider;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public class ConceptionEntitiesListView extends VerticalLayout {
 
@@ -62,20 +60,30 @@ public class ConceptionEntitiesListView extends VerticalLayout {
         this.displayedConceptionEntitiesGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
         GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.WRENCH,"操作");
         this.displayedConceptionEntitiesGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(false);
-        this.displayedConceptionEntitiesGrid.addSelectionListener(new SelectionListener<Grid<ConceptionEntity>, ConceptionEntity>() {
+
+        this.displayedConceptionEntitiesGrid.addItemClickListener(new ComponentEventListener<ItemClickEvent<ConceptionEntity>>() {
             @Override
-            public void selectionChange(SelectionEvent<Grid<ConceptionEntity>, ConceptionEntity> selectionEvent) {
-                Set<ConceptionEntity> selectedEntities = selectionEvent.getAllSelectedItems();
-                if(!selectedEntities.isEmpty()){
+            public void onComponentEvent(ItemClickEvent<ConceptionEntity> conceptionEntityItemClickEvent) {
+                ConceptionEntity currentClickedConceptionEntity = conceptionEntityItemClickEvent.getItem();
+                if(lastSelectedConceptionEntity == null){
+                    lastSelectedConceptionEntity = currentClickedConceptionEntity;
+                    // first select conceptionEntity operation
                     if(selectConceptionEntityListener != null){
-                        ConceptionEntity selectedConceptionEntity = selectionEvent.getFirstSelectedItem().get();
-                        selectConceptionEntityListener.onSelectConceptionEntity(selectedConceptionEntity);
-                        lastSelectedConceptionEntity = selectedConceptionEntity;
+                        selectConceptionEntityListener.onSelectConceptionEntity(lastSelectedConceptionEntity);
                     }
                 }else{
-                    if(selectConceptionEntityListener != null){
-                        selectConceptionEntityListener.onUnSelectConceptionEntity(lastSelectedConceptionEntity);
+                    if(currentClickedConceptionEntity.getConceptionEntityUID().equals(lastSelectedConceptionEntity.getConceptionEntityUID())){
+                        //unselect already selected ConceptionEntity
+                        if(selectConceptionEntityListener != null){
+                            selectConceptionEntityListener.onUnSelectConceptionEntity(lastSelectedConceptionEntity);
+                        }
                         lastSelectedConceptionEntity = null;
+                    }else{
+                        //directly select another ConceptionEntity
+                        lastSelectedConceptionEntity = currentClickedConceptionEntity;
+                        if(selectConceptionEntityListener != null){
+                            selectConceptionEntityListener.onSelectConceptionEntity(lastSelectedConceptionEntity);
+                        }
                     }
                 }
             }
