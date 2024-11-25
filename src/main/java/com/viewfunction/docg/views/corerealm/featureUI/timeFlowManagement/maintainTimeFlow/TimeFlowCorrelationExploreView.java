@@ -205,7 +205,7 @@ public class TimeFlowCorrelationExploreView extends VerticalLayout {
 
         selectedTimeScaleEntityOperationButtonPopover = new Popover();
         selectedTimeScaleEntityOperationButtonPopover.setTarget(selectedTimeScaleEntityOperationButton);
-        selectedTimeScaleEntityOperationButtonPopover.setWidth("300px");
+        selectedTimeScaleEntityOperationButtonPopover.setWidth("310px");
         selectedTimeScaleEntityOperationButtonPopover.setHeight("340px");
         selectedTimeScaleEntityOperationButtonPopover.addThemeVariants(PopoverVariant.ARROW);
         selectedTimeScaleEntityOperationButtonPopover.setPosition(PopoverPosition.BOTTOM);
