@@ -297,7 +297,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
 
         VerticalLayout rightSideLayout = new VerticalLayout();
         rightSideLayout.setMargin(false);
-        rightSideLayout.setWidth(545,Unit.PIXELS);
+        rightSideLayout.setWidth(590,Unit.PIXELS);
         dataSlicesInfoContainerLayout.add(rightSideLayout);
         rightSideLayout.getStyle().set("left","0px").set("top","-2px").set("position","relative");
 
