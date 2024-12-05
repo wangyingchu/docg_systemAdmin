@@ -40,6 +40,10 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.GeospatialRegion
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.exception.ComputeGridException;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.payload.ComputeGridRealtimeStatisticsInfo;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.term.ComputeGrid;
+import com.viewfunction.docg.dataCompute.dataComputeServiceCore.util.factory.ComputeGridTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.GeospatialRegionRefreshEvent;
@@ -102,6 +106,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
     private Button querySelectedVillageEntitiesButton;
     private Button executeQueryButton;
     private MenuItem initGeoSpatialDataActionItem;
+    private MenuItem syncGeospatialRegionToDataSliceActionItem;
     private GeospatialRegionCorrelationExploreView geospatialRegionCorrelationExploreView;
 
     public GeospatialRegionDetailUI(){
@@ -229,6 +234,27 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
                 renderGenerateGeospatialRegionIndexesUI();
             }
         });
+
+        HorizontalLayout action2Layout = new HorizontalLayout();
+        action2Layout.setPadding(false);
+        action2Layout.setSpacing(false);
+        action2Layout.setMargin(false);
+        action2Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        Icon action2Icon = LineAwesomeIconsSvg.BUFFER.create();
+        action2Icon.setSize("10px");
+        Span action2Space = new Span();
+        action2Space.setWidth(6,Unit.PIXELS);
+        NativeLabel action2Label = new NativeLabel("同步地理空间区域数据至数据切片");
+        action2Label.addClassNames("text-xs","font-semibold","text-secondary");
+        action2Layout.add(action2Icon,action2Space,action2Label);
+        syncGeospatialRegionToDataSliceActionItem = operationSubItems.addItem(action2Layout);
+        syncGeospatialRegionToDataSliceActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                //renderGenerateGeospatialRegionIndexesUI();
+            }
+        });
+        syncGeospatialRegionToDataSliceActionItem.setEnabled(false);
 
         List<Component> actionComponentsList = new ArrayList<>();
         actionComponentsList.add(geospatialRegionOperationMenuBar);
@@ -1121,6 +1147,16 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
 
         if(allContinentEntityList.size() == 0){
             initGeoSpatialDataActionItem.setEnabled(true);
+        }
+
+        ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
+        try {
+            ComputeGridRealtimeStatisticsInfo computeGridRealtimeStatisticsInfo = targetComputeGrid.getGridRealtimeStatisticsInfo();
+            if(computeGridRealtimeStatisticsInfo.getYoungestUnitId() != null){
+                syncGeospatialRegionToDataSliceActionItem.setEnabled(true);
+            }
+        } catch (ComputeGridException e) {
+            //CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据计算网格", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
         }
 
         for(GeospatialScaleEntity currentGeospatialScaleEntity : allContinentEntityList){

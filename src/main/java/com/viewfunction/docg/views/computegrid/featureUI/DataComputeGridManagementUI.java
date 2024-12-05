@@ -77,7 +77,8 @@ public class DataComputeGridManagementUI extends VerticalLayout implements
 
         leftSideContentContainerLayout = new VerticalLayout();
         leftSideContentContainerLayout.setSpacing(false);
-        leftSideContentContainerLayout.setWidth(700, Unit.PIXELS);
+        leftSideContentContainerLayout.setMaxWidth(630, Unit.PIXELS);
+        leftSideContentContainerLayout.setMinWidth(630, Unit.PIXELS);
         leftSideContentContainerLayout.getStyle()
                 .set("border-right", "1px solid var(--lumo-contrast-20pct)");
         contentContainerLayout.add(leftSideContentContainerLayout);
