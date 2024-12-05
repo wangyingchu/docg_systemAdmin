@@ -49,6 +49,7 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.element.eventHandling.GeospatialRegionRefreshEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.util.helper.DataSliceOperationHelper;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.text.NumberFormat;
@@ -251,7 +252,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         syncGeospatialRegionToDataSliceActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                //renderGenerateGeospatialRegionIndexesUI();
+                renderSyncGeospatialRegionToDataSliceUI();
             }
         });
         syncGeospatialRegionToDataSliceActionItem.setEnabled(false);
@@ -1535,6 +1536,32 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         });
     }
 
+    private void renderSyncGeospatialRegionToDataSliceUI(){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认同步数据切片",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","本操作将当前地理空间区域中的数据同步至 Data Slice 数据切片中，请确认是否执行同步操作",actionButtonList,570,180);
+        confirmWindow.open();
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doSyncDataSlices(confirmWindow);
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+
+    }
+
     private void doCreateTimeFlowIndexes(ConfirmWindow confirmWindow){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
@@ -1543,6 +1570,16 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             showPopupNotification(generatedIndexesSet,NotificationVariant.LUMO_SUCCESS);
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
+        }
+        confirmWindow.closeConfirmWindow();
+    }
+
+    private void doSyncDataSlices(ConfirmWindow confirmWindow){
+        DataSliceOperationHelper.DataSliceOperationResult dataSliceOperationResult = DataSliceOperationHelper.syncGeospatialRegionToDataSlice(this.geospatialRegionName);
+        if(dataSliceOperationResult.getOperationResult()){
+            showPopupNotification(dataSliceOperationResult,NotificationVariant.LUMO_SUCCESS);
+        }else{
+            CommonUIOperationUtil.showPopupNotification("地理空间区域数据同步数据切片错误: "+dataSliceOperationResult.getOperationMessage(), NotificationVariant.LUMO_ERROR);
         }
         confirmWindow.closeConfirmWindow();
     }
@@ -1611,6 +1648,30 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             for(String currentIndex:generatedIndexesSet){
                 notificationMessageContainer.add(new Div(new Text("索引: "+currentIndex +" 创建成功")));
             }
+        }
+        notification.add(notificationMessageContainer);
+        notification.setDuration(8000);
+        notification.open();
+    }
+
+    private void showPopupNotification(DataSliceOperationHelper.DataSliceOperationResult dataSliceOperationResult,NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text("地理空间区域数据同步数据切片操作成功"));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
+
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        if(dataSliceOperationResult != null){
+            notificationMessageContainer.add(new Div(new Text("开始时间: "+dataSliceOperationResult.getOperationStartTime())));
+            notificationMessageContainer.add(new Div(new Text("结束时间: "+dataSliceOperationResult.getOperationEndTime())));
         }
         notification.add(notificationMessageContainer);
         notification.setDuration(8000);
