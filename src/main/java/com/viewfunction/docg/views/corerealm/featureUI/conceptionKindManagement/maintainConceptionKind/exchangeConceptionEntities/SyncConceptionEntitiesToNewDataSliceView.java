@@ -29,15 +29,14 @@ import com.viewfunction.docg.dataCompute.dataComputeServiceCore.term.ComputeGrid
 import com.viewfunction.docg.dataCompute.dataComputeServiceCore.term.DataSlicePropertyType;
 import com.viewfunction.docg.dataCompute.dataComputeServiceCore.util.common.CoreRealmOperationUtil;
 import com.viewfunction.docg.dataCompute.dataComputeServiceCore.util.factory.ComputeGridTermFactory;
-import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
-import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
-import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
-import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
+import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.helper.DataSliceOperationHelper;
 
 import java.util.*;
+
+import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLINE;
 
 public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
     private String conceptionKindName;
@@ -215,7 +214,7 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
         List<Button> actionButtonList = new ArrayList<>();
         Button confirmButton = new Button("确认导出实体数据至数据切片",new Icon(VaadinIcon.CHECK_CIRCLE));
         Button cancelButton = new Button("取消操作");
-        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        cancelButton.addThemeVariants(LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
         actionButtonList.add(confirmButton);
         actionButtonList.add(cancelButton);
 
@@ -277,33 +276,23 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
             if(this.containerDialog != null){
                 this.containerDialog.close();
             }
-            showPopupNotification(dataSliceOperationResult,NotificationVariant.LUMO_SUCCESS);
+            showPopupNotification(dataSliceOperationResult);
+
         }else{
             CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKindName+" 导出实体数据至数据切片操作失败 ", NotificationVariant.LUMO_ERROR,0, Notification.Position.BOTTOM_START);
         }
     }
 
-    private void showPopupNotification(DataSliceOperationResult dataSliceOperationResult, NotificationVariant notificationVariant){
-        Notification notification = new Notification();
-        notification.addThemeVariants(notificationVariant);
-        Div text = new Div(new Text("概念类型 "+conceptionKindName+" 导出实体数据至数据切片操作完成"));
-        Button closeButton = new Button(new Icon("lumo", "cross"));
-        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-        closeButton.addClickListener(event -> {
-            notification.close();
-        });
-        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
-        layout.setWidth(100, Unit.PERCENTAGE);
-        layout.setFlexGrow(1,text);
-        notification.add(layout);
-
+    private void showPopupNotification(DataSliceOperationResult dataSliceOperationResult){
         VerticalLayout notificationMessageContainer = new VerticalLayout();
         notificationMessageContainer.add(new Div(new Text("导出成功实体数: "+dataSliceOperationResult.getSuccessItemsCount())));
         notificationMessageContainer.add(new Div(new Text("导出失败实体数: "+dataSliceOperationResult.getFailItemsCount())));
         notificationMessageContainer.add(new Div(new Text("操作开始时间: "+dataSliceOperationResult.getStartTime())));
         notificationMessageContainer.add(new Div(new Text("操作结束时间: "+dataSliceOperationResult.getFinishTime())));
-        notification.add(notificationMessageContainer);
-        notification.setDuration(0);
-        notification.open();
+        MessageWindow messageWindow = new MessageWindow(new Icon(VaadinIcon.CHECK_CIRCLE),
+                "概念类型 "+conceptionKindName+" 导出实体数据至数据切片操作完成",
+                notificationMessageContainer,"确定",550,250);
+        messageWindow.open();
+
     }
 }
