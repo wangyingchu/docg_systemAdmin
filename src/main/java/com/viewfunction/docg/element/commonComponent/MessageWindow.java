@@ -53,7 +53,7 @@ public class MessageWindow extends Dialog {
         titleElementsContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER,titleElementsContainer);
         titleElementsContainer.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
-        Icon closeIcon = new Icon(VaadinIcon.CLOSE_SMALL);
+        Icon closeIcon = new Icon(VaadinIcon.CHECK_CIRCLE);
         Button closeButton = new Button(closeIcon, e -> this.close());
         closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         closeButton.addThemeVariants(ButtonVariant.LUMO_SMALL);

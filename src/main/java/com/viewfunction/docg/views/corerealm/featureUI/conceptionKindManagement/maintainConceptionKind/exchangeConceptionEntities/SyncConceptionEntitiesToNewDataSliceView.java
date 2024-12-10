@@ -289,10 +289,9 @@ public class SyncConceptionEntitiesToNewDataSliceView extends VerticalLayout {
         notificationMessageContainer.add(new Div(new Text("导出失败实体数: "+dataSliceOperationResult.getFailItemsCount())));
         notificationMessageContainer.add(new Div(new Text("操作开始时间: "+dataSliceOperationResult.getStartTime())));
         notificationMessageContainer.add(new Div(new Text("操作结束时间: "+dataSliceOperationResult.getFinishTime())));
-        MessageWindow messageWindow = new MessageWindow(new Icon(VaadinIcon.CHECK_CIRCLE),
+        MessageWindow messageWindow = new MessageWindow(new Icon(VaadinIcon.INFO_CIRCLE),
                 "概念类型 "+conceptionKindName+" 导出实体数据至数据切片操作完成",
                 notificationMessageContainer,"确定",550,250);
         messageWindow.open();
-
     }
 }

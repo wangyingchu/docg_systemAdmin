@@ -323,33 +323,21 @@ public class SyncConceptionEntitiesToExistingDataSliceView extends VerticalLayou
             if(this.containerDialog != null){
                 this.containerDialog.close();
             }
-            showPopupNotification(dataSliceOperationResult,NotificationVariant.LUMO_SUCCESS);
+            showPopupNotification(dataSliceOperationResult);
         }else{
             CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKindName+" 导出实体数据至数据切片操作失败 ", NotificationVariant.LUMO_ERROR,0, Notification.Position.BOTTOM_START);
         }
     }
 
-    private void showPopupNotification(DataSliceOperationResult dataSliceOperationResult, NotificationVariant notificationVariant){
-        Notification notification = new Notification();
-        notification.addThemeVariants(notificationVariant);
-        Div text = new Div(new Text("概念类型 "+conceptionKindName+" 导出实体数据至数据切片操作完成"));
-        Button closeButton = new Button(new Icon("lumo", "cross"));
-        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-        closeButton.addClickListener(event -> {
-            notification.close();
-        });
-        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
-        layout.setWidth(100, Unit.PERCENTAGE);
-        layout.setFlexGrow(1,text);
-        notification.add(layout);
-
+    private void showPopupNotification(DataSliceOperationResult dataSliceOperationResult){
         VerticalLayout notificationMessageContainer = new VerticalLayout();
         notificationMessageContainer.add(new Div(new Text("导出成功实体数: "+dataSliceOperationResult.getSuccessItemsCount())));
         notificationMessageContainer.add(new Div(new Text("导出失败实体数: "+dataSliceOperationResult.getFailItemsCount())));
         notificationMessageContainer.add(new Div(new Text("操作开始时间: "+dataSliceOperationResult.getStartTime())));
         notificationMessageContainer.add(new Div(new Text("操作结束时间: "+dataSliceOperationResult.getFinishTime())));
-        notification.add(notificationMessageContainer);
-        notification.setDuration(0);
-        notification.open();
+        MessageWindow messageWindow = new MessageWindow(new Icon(VaadinIcon.INFO_CIRCLE),
+                "概念类型 "+conceptionKindName+" 导出实体数据至数据切片操作完成",
+                notificationMessageContainer,"确定",550,250);
+        messageWindow.open();
     }
 }
