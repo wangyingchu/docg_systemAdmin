@@ -364,6 +364,8 @@ public class MainLayout extends AppLayout {
                 DataSliceQueriedEvent.class);
         _BLACKBOARD.register(ConceptionEntityExpandTopologyEvent.ConceptionEntityExpandTopologyListener.class,
                 ConceptionEntityExpandTopologyEvent.class);
+        _BLACKBOARD.register(AnalysisProviderRefreshEvent.AnalysisProviderRefreshEventListener.class,
+                AnalysisProviderRefreshEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

@@ -9,18 +9,19 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
-import com.viewfunction.docg.element.eventHandling.ComputeGridRefreshEvent;
+import com.viewfunction.docg.element.eventHandling.AnalysisProviderRefreshEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
-        ComputeGridRefreshEvent.ComputeGridRefreshEventListener{
+        AnalysisProviderRefreshEvent.AnalysisProviderRefreshEventListener {
 
     private Registration listener;
     private VerticalLayout leftSideContentContainerLayout;
@@ -33,8 +34,8 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
-            ComputeGridRefreshEvent computeGridRefreshEvent = new ComputeGridRefreshEvent();
-            ResourceHolder.getApplicationBlackboard().fire(computeGridRefreshEvent);
+            AnalysisProviderRefreshEvent analysisProviderRefreshEvent = new AnalysisProviderRefreshEvent();
+            ResourceHolder.getApplicationBlackboard().fire(analysisProviderRefreshEvent);
         });
 
         List<Component> buttonList = new ArrayList<>();
@@ -145,7 +146,6 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
     }
 
     @Override
-    public void receivedComputeGridRefreshEvent(ComputeGridRefreshEvent event) {
-
+    public void receivedAnalysisProviderRefreshEvent(AnalysisProviderRefreshEvent event) {
     }
 }
