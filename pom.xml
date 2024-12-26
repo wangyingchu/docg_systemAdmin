@@ -172,6 +172,11 @@
             <artifactId>docg_dataCompute</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.viewfunction</groupId>
+            <artifactId>docg_analysisClient</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <!-- Need add H2 lib to enable docg_dataCompute function-->
         <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
         <dependency>

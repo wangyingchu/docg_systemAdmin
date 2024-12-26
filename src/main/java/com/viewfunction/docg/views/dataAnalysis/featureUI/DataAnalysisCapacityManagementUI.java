@@ -10,6 +10,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.analysisProvider.client.AnalysisProviderAdminClient;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
@@ -147,5 +148,23 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
 
     @Override
     public void receivedAnalysisProviderRefreshEvent(AnalysisProviderRefreshEvent event) {
+
+        System.out.println("receivedAnalysisProviderRefreshEvent");
+
+        AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient("127.0.0.1",9999);
+
+        AnalysisProviderAdminClient.PingAnalysisProviderCallback pingAnalysisProviderCallback = new AnalysisProviderAdminClient.PingAnalysisProviderCallback() {
+            @Override
+            public void onPingSuccess() {
+                System.out.println("Ping Success");
+            }
+
+            @Override
+            public void onPingFail() {
+                System.out.println("Ping Fail");
+            }
+        };
+        analysisProviderAdminClient.pingAnalysisProvider(pingAnalysisProviderCallback,5);
+
     }
 }
