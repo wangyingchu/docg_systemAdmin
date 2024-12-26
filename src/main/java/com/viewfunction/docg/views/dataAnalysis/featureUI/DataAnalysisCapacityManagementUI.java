@@ -6,6 +6,8 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
@@ -16,6 +18,7 @@ import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.AnalysisProviderRefreshEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
@@ -162,6 +165,10 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
             @Override
             public void onPingFail() {
                 System.out.println("Ping Fail");
+
+
+
+                CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据分析服务", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
             }
         };
         analysisProviderAdminClient.pingAnalysisProvider(pingAnalysisProviderCallback,5);
