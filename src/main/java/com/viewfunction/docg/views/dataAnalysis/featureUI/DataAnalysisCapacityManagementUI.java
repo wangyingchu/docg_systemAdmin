@@ -13,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.analysisProvider.client.AnalysisProviderAdminClient;
+import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.FunctionalFeatureInfo;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.TitleActionBar;
@@ -22,7 +23,13 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         AnalysisProviderRefreshEvent.AnalysisProviderRefreshEventListener {
@@ -102,27 +109,6 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         Icon icon = new Icon(VaadinIcon.LIST);
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"分析功能特性定义:",dataAnalysisProviderManagementOperationButtonList);
         rightSideContentContainerLayout.add(sectionActionBar);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
     @Override
@@ -139,6 +125,7 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
             int browserHeight = receiver.getBodyClientHeight();
             this.leftSideContentContainerLayout.setHeight(browserHeight-170,Unit.PIXELS);
         }));
+        refreshAnalysisProviderStatus();
     }
 
     @Override
@@ -151,27 +138,99 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
 
     @Override
     public void receivedAnalysisProviderRefreshEvent(AnalysisProviderRefreshEvent event) {
+       // refreshAnalysisProviderStatus();
+        //retrieveXXStatus();
+        retrieveXXStatus2();
+    }
 
-        System.out.println("receivedAnalysisProviderRefreshEvent");
-
+    private void refreshAnalysisProviderStatus(){
+        UI currentUI = UI.getCurrent();
         AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient("127.0.0.1",9999);
-
         AnalysisProviderAdminClient.PingAnalysisProviderCallback pingAnalysisProviderCallback = new AnalysisProviderAdminClient.PingAnalysisProviderCallback() {
             @Override
             public void onPingSuccess() {
-                System.out.println("Ping Success");
+                currentUI.access(() -> {
+                    //CommonUIOperationUtil.showPopupNotification("检测到运行中的数据分析服务", NotificationVariant.LUMO_SUCCESS,-1, Notification.Position.MIDDLE);
+                });
             }
 
             @Override
             public void onPingFail() {
-                System.out.println("Ping Fail");
-
-
-
-                CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据分析服务", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
+                currentUI.access(() -> {
+                    CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据分析服务", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
+                });
             }
         };
         analysisProviderAdminClient.pingAnalysisProvider(pingAnalysisProviderCallback,5);
+    }
+
+
+    private void retrieveXXStatus(){
+        UI currentUI = UI.getCurrent();
+
+            final AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient("127.0.0.1",9999);
+            Map<String,List<FunctionalFeatureInfo>> resultDataMap = new HashMap<>();
+            final String listFunctionalFeaturesKey = "functionalFeatureInfoList";
+
+            ExecutorService executor = Executors.newFixedThreadPool(1);
+            java.util.concurrent.Future<String> future = executor.submit(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    AnalysisProviderAdminClient.ListFunctionalFeaturesCallback listFunctionalFeaturesCallback = new AnalysisProviderAdminClient.ListFunctionalFeaturesCallback() {
+                        @Override
+                        public void onExecutionSuccess(List<FunctionalFeatureInfo> functionalFeatureInfoList) {
+                            if(functionalFeatureInfoList != null){
+                                resultDataMap.put(listFunctionalFeaturesKey,functionalFeatureInfoList);
+
+                            }
+                            System.out.println(functionalFeatureInfoList);
+                            System.out.println(functionalFeatureInfoList);
+                            System.out.println(functionalFeatureInfoList);
+                            //CommonUIOperationUtil.showPopupNotification("检测到运行中的数据分析服务", NotificationVariant.LUMO_SUCCESS,-1, Notification.Position.MIDDLE);
+
+                            currentUI.access(() -> {
+                                CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据分析服务", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
+                            });
+                        }
+
+                        @Override
+                        public void onExecutionFail() {}
+                    };
+                    analysisProviderAdminClient.listFunctionalFeatures(listFunctionalFeaturesCallback,10);
+                    return "";
+                }
+            });
+
+            try {
+                // 同步等待异步操作结果
+                //String result = future.get();
+                future.get();
+                //if(resultDataMap.containsKey(listFunctionalFeaturesKey)){
+
+               // }
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } finally {
+                // 关闭ExecutorService
+                executor.shutdown();
+            }
+
+        CommonUIOperationUtil.showPopupNotification("检测到运行中的数据分析服务", NotificationVariant.LUMO_SUCCESS,-1, Notification.Position.MIDDLE);
+    }
+
+
+    private void retrieveXXStatus2(){
+
+        AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient("127.0.0.1",9999);
+        List<FunctionalFeatureInfo> functionalFeatureInfoList = analysisProviderAdminClient.listFunctionalFeatures();
+        System.out.println(functionalFeatureInfoList);
+        if(functionalFeatureInfoList != null){
+            CommonUIOperationUtil.showPopupNotification("检测到运行中的数据分析服务", NotificationVariant.LUMO_SUCCESS,-1, Notification.Position.MIDDLE);
+        }
 
     }
+
+
 }
