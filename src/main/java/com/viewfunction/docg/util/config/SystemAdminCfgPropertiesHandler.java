@@ -13,6 +13,8 @@ public class SystemAdminCfgPropertiesHandler {
     public static String ENABLE_USER_LOCK_APPLICATION = "ENABLE_USER_LOCK_APPLICATION";
     public static String USER_NAME = "USER_NAME";
     public static String USER_PWD = "USER_PWD";
+    public static String ANALYSIS_CLIENT_HOST_NAME = "ANALYSIS_CLIENT_HOST_NAME";
+    public static String ANALYSIS_CLIENT_HOST_PORT = "ANALYSIS_CLIENT_HOST_PORT";
     private static Properties _properties;
 
     public static String getPropertyValue(String propertyName) {
