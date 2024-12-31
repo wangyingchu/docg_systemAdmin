@@ -25,12 +25,14 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindDataCapabilityInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
@@ -67,6 +69,9 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
     private TextField conceptionKindNameFilterField;
     private TextField conceptionKindDescFilterField;
     private GridListDataView<EntityStatisticsInfo> conceptionKindsMetaInfoView;
+    private Icon containsGeospatialAttributeIcon;
+    private Icon attachedToGeospatialScaleEventIcon;
+    private Icon attachedToTimeScaleEventIcon;
 
     public ConceptionKindManagementUI(){
         Button refreshDataButton = new Button("刷新概念类型数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -403,7 +408,24 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         singleConceptionKindInfoElementsContainerLayout.add(filterTitle2);
         singleConceptionKindInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
 
-        secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null);
+        List<Component> dataCapabilityStatisticsInfoList = new ArrayList<>();
+        containsGeospatialAttributeIcon = LineAwesomeIconsSvg.MAP_MARKED_ALT_SOLID.create();
+        containsGeospatialAttributeIcon.setSize("12px");
+        containsGeospatialAttributeIcon.setTooltipText("概念类型实体包含地理空间属性");
+        containsGeospatialAttributeIcon.setVisible(false);
+        attachedToGeospatialScaleEventIcon = LineAwesomeIconsSvg.GLOBE_ASIA_SOLID.create();
+        attachedToGeospatialScaleEventIcon.setSize("12px");
+        attachedToGeospatialScaleEventIcon.setTooltipText("概念类型实体关联地理空间事件");
+        attachedToGeospatialScaleEventIcon.setVisible(false);
+        attachedToTimeScaleEventIcon = LineAwesomeIconsSvg.CALENDAR.create();
+        attachedToTimeScaleEventIcon.setSize("12px");
+        attachedToTimeScaleEventIcon.setTooltipText("概念类型实体关联时间流事件");
+        attachedToTimeScaleEventIcon.setVisible(false);
+        dataCapabilityStatisticsInfoList.add(containsGeospatialAttributeIcon);
+        dataCapabilityStatisticsInfoList.add(attachedToGeospatialScaleEventIcon);
+        dataCapabilityStatisticsInfoList.add(attachedToTimeScaleEventIcon);
+
+        secondaryTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",dataCapabilityStatisticsInfoList,null);
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
         singleConceptionKindSummaryInfoContainerLayout.add(secondaryTitleActionBar);
 
@@ -518,6 +540,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         List<KindEntityAttributeRuntimeStatistics> kindEntityAttributeRuntimeStatisticsList = targetConceptionKind.statisticEntityAttributesDistribution(entityAttributesDistributionStatisticSampleRatio);
 
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = targetConceptionKind.getKindRelationDistributionStatistics();
+        ConceptionKindDataCapabilityInfo conceptionKindDataCapabilityInfo = targetConceptionKind.getConceptionKindDataCapabilityStatistics();
         coreRealm.closeGlobalSession();
 
         conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
@@ -526,12 +549,19 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
         String conceptionNameText = conceptionKindName+ " ( "+conceptionKindDesc+" )";
         this.secondaryTitleActionBar.updateTitleContent(conceptionNameText);
+
+        containsGeospatialAttributeIcon.setVisible(conceptionKindDataCapabilityInfo.containsGeospatialAttribute());
+        attachedToGeospatialScaleEventIcon.setVisible(conceptionKindDataCapabilityInfo.attachedToGeospatialScaleEvent());
+        attachedToTimeScaleEventIcon.setVisible(conceptionKindDataCapabilityInfo.attachedToTimeScaleEvent());
     }
 
     private void resetSingleConceptionKindSummaryInfoArea(){
         this.conceptionKindAttributesInfoGrid.setItems(new ArrayList<>());
         this.secondaryTitleActionBar.updateTitleContent(" - ");
         this.conceptionKindCorrelationInfoChart.clearData();
+        this.containsGeospatialAttributeIcon.setVisible(false);
+        this.attachedToGeospatialScaleEventIcon.setVisible(false);
+        this.attachedToTimeScaleEventIcon.setVisible(false);
     }
 
     private void renderConceptionKindConfigurationUI(EntityStatisticsInfo entityStatisticsInfo){
