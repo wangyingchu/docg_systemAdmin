@@ -33,6 +33,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.userInterfaceUtil.StringToTimeStampConverter;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class QueryConditionItemWidget extends VerticalLayout {
     private boolean reverseCondition = false;
@@ -996,13 +997,13 @@ public class QueryConditionItemWidget extends VerticalLayout {
             }
         }else if(propertyDataType.equals(""+AttributeDataType.TIMESTAMP)) {
             if (singleQueryValue != null) {
-                singleQueryValueObj = singleQueryValue;
+                singleQueryValueObj = new Date(Long.valueOf(singleQueryValue.toString()));
             }
             if (betweenQueryFromValue != null) {
-                betweenQueryFromValueObj = betweenQueryFromValue;
+                betweenQueryFromValueObj = new Date(Long.valueOf(betweenQueryFromValue.toString()));
             }
             if (betweenQueryToValue != null) {
-                betweenQueryToValueObj = betweenQueryToValue;
+                betweenQueryToValueObj = new Date(Long.valueOf(betweenQueryToValue.toString()));
             }
         }else if(propertyDataType.equals(""+AttributeDataType.STRING)){
             if (singleQueryValue != null) {
