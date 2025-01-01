@@ -501,12 +501,12 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
             this.conceptionKindsMetaInfoView = conceptionKindMetaInfoGrid.setItems(conceptionKindEntityStatisticsInfoList);
             //logic to filter ConceptionKinds already loaded from server
             this.conceptionKindsMetaInfoView.addFilter(item->{
-                String entityKindName = item.getEntityKindName();
-                String entityKindDesc = item.getEntityKindDesc();
+                String entityKindName = item.getEntityKindName().toUpperCase();
+                String entityKindDesc = item.getEntityKindDesc().toUpperCase();
 
                 boolean conceptionKindNameFilterResult = true;
                 if(!conceptionKindNameFilterField.getValue().trim().equals("")){
-                    if(entityKindName.contains(conceptionKindNameFilterField.getValue().trim())){
+                    if(entityKindName.contains(conceptionKindNameFilterField.getValue().trim().toUpperCase())){
                         conceptionKindNameFilterResult = true;
                     }else{
                         conceptionKindNameFilterResult = false;
@@ -515,7 +515,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
                 boolean conceptionKindDescFilterResult = true;
                 if(!conceptionKindDescFilterField.getValue().trim().equals("")){
-                    if(entityKindDesc.contains(conceptionKindDescFilterField.getValue().trim())){
+                    if(entityKindDesc.contains(conceptionKindDescFilterField.getValue().trim().toUpperCase())){
                         conceptionKindDescFilterResult = true;
                     }else{
                         conceptionKindDescFilterResult = false;
