@@ -996,13 +996,13 @@ public class QueryConditionItemWidget extends VerticalLayout {
                 betweenQueryToValueObj = betweenQueryToValue;
             }
         }else if(propertyDataType.equals(""+AttributeDataType.TIMESTAMP)) {
-            if (singleQueryValue != null) {
+            if (singleQueryValue != null && !singleQueryValue.equals("")) {
                 singleQueryValueObj = new Date(Long.valueOf(singleQueryValue.toString()));
             }
-            if (betweenQueryFromValue != null) {
+            if (betweenQueryFromValue != null && !betweenQueryFromValue.equals("")) {
                 betweenQueryFromValueObj = new Date(Long.valueOf(betweenQueryFromValue.toString()));
             }
-            if (betweenQueryToValue != null) {
+            if (betweenQueryToValue != null  && !betweenQueryToValue.equals("")) {
                 betweenQueryToValueObj = new Date(Long.valueOf(betweenQueryToValue.toString()));
             }
         }else if(propertyDataType.equals(""+AttributeDataType.STRING)){
