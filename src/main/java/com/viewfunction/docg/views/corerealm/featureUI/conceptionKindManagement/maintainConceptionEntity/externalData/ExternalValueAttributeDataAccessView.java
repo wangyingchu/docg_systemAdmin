@@ -26,6 +26,7 @@ public class ExternalValueAttributeDataAccessView extends VerticalLayout {
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
         this.attributesViewKind = attributesViewKind;
+        this.conceptionEntityExternalDataViewHeightOffset = conceptionEntityExternalDataViewHeightOffset;
 
         setPadding(false);
         setSpacing(false);
@@ -65,16 +66,15 @@ public class ExternalValueAttributeDataAccessView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            queryFieldsContainer.setHeight(event.getHeight()-110,Unit.PIXELS);
+            queryFieldsContainer.setHeight(event.getHeight() - conceptionEntityExternalDataViewHeightOffset + 60,Unit.PIXELS);
            // queryResultContainer.setHeight(event.getHeight()-110,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            queryFieldsContainer.setHeight(browserHeight-110,Unit.PIXELS);
+            queryFieldsContainer.setHeight(browserHeight - conceptionEntityExternalDataViewHeightOffset + 60,Unit.PIXELS);
           //  queryResultContainer.setHeight(browserHeight-110,Unit.PIXELS);
         }));
     }
