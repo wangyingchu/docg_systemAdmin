@@ -24,7 +24,6 @@ import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.AddCustomQueryCriteriaUI;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.KindQueryCriteriaView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.QueryConditionItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.QueryResultSetConfigView;
@@ -45,10 +44,12 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
     private boolean defaultQueryConditionIsSet = true;
     private boolean otherQueryConditionsAreSet = false;
     private AttributesViewKind attributesViewKind;
+    private int conceptionEntityExternalDataViewHeightOffset;
 
-    public ConceptionEntityExternalDataQueryCriteriaView(String conceptionKindName, AttributesViewKind attributesViewKind){
+    public ConceptionEntityExternalDataQueryCriteriaView(String conceptionKindName, AttributesViewKind attributesViewKind,int conceptionEntityExternalDataViewHeightOffset){
         this.conceptionKindName = conceptionKindName;
         this.attributesViewKind = attributesViewKind;
+        this.conceptionEntityExternalDataViewHeightOffset = conceptionEntityExternalDataViewHeightOffset;
 
         VerticalLayout filterDropdownSelectorContainerLayout = new VerticalLayout();
         filterDropdownSelectorContainerLayout.setPadding(false);
@@ -123,7 +124,7 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
         buttonsContainerLayout.setPadding(false);
         add(buttonsContainerLayout);
 
-        Button executeQueryButton = new Button("查询概念实体");
+        Button executeQueryButton = new Button("查询外部属性");
         executeQueryButton.setIcon(new Icon(VaadinIcon.SEARCH));
         executeQueryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -195,12 +196,12 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            //criteriaItemsContainer.setHeight(event.getHeight()-250,Unit.PIXELS);
+            criteriaItemsContainer.setMaxHeight(event.getHeight() - conceptionEntityExternalDataViewHeightOffset - 70 ,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            //criteriaItemsContainer.setHeight(browserHeight-250,Unit.PIXELS);
+            criteriaItemsContainer.setMaxHeight(browserHeight - conceptionEntityExternalDataViewHeightOffset - 70,Unit.PIXELS);
         }));
         loadQueryCriteriaComboBox();
     }
@@ -252,16 +253,6 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
         fixSizeWindow.setWindowContent(queryResultSetConfigView);
         fixSizeWindow.setModel(true);
         queryResultSetConfigView.setContainerDialog(fixSizeWindow);
-        fixSizeWindow.show();
-    }
-
-    private void renderAddCustomQueryCriteriaUI(){
-        AddCustomQueryCriteriaUI addCustomQueryCriteriaUI = new AddCustomQueryCriteriaUI();
-        addCustomQueryCriteriaUI.setKindQueryCriteriaView(this);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"添加自定义查询/显示属性",null,true,470,150,false);
-        fixSizeWindow.setWindowContent(addCustomQueryCriteriaUI);
-        fixSizeWindow.setModel(true);
-        addCustomQueryCriteriaUI.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
     }
 

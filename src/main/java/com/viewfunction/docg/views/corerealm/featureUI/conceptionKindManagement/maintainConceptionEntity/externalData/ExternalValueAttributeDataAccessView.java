@@ -36,7 +36,7 @@ public class ExternalValueAttributeDataAccessView extends VerticalLayout {
         queryFieldsContainer.setPadding(false);
         queryFieldsContainer.setSpacing(false);
         queryFieldsContainer.setMargin(false);
-        ConceptionEntityExternalDataQueryCriteriaView conceptionEntityExternalDataQueryCriteriaView = new ConceptionEntityExternalDataQueryCriteriaView(this.conceptionKind,this.attributesViewKind);
+        ConceptionEntityExternalDataQueryCriteriaView conceptionEntityExternalDataQueryCriteriaView = new ConceptionEntityExternalDataQueryCriteriaView(this.conceptionKind,this.attributesViewKind,this.conceptionEntityExternalDataViewHeightOffset);
         queryFieldsContainer.add(conceptionEntityExternalDataQueryCriteriaView);
 
         WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
@@ -52,6 +52,7 @@ public class ExternalValueAttributeDataAccessView extends VerticalLayout {
         queryResultContainer.setPadding(false);
         queryResultContainer.setSpacing(false);
         queryResultContainer.setMargin(false);
+
         //ConceptionKindQueryResultsView conceptionKindQueryResultsView = new ConceptionKindQueryResultsView(this.conceptionKind);
        // queryResultContainer.add(conceptionKindQueryResultsView);
 
