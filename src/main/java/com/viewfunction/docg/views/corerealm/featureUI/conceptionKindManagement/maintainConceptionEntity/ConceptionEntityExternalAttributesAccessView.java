@@ -26,9 +26,8 @@ public class ConceptionEntityExternalAttributesAccessView extends VerticalLayout
 
     private String conceptionKind;
     private String conceptionEntityUID;
-    private int conceptionEntitySpatialInfoViewHeightOffset;
+    private int conceptionEntityExternalDataViewHeightOffset;
     private HorizontalLayout doesNotContainsSpatialInfoMessage;
-    private Registration listener;
     private ConceptionEntityExternalDataView conceptionEntityExternalDataView;
 
     public ConceptionEntityExternalAttributesAccessView(String conceptionKind, String conceptionEntityUID, int conceptionEntityIntegratedInfoViewHeightOffset){
@@ -39,7 +38,7 @@ public class ConceptionEntityExternalAttributesAccessView extends VerticalLayout
 
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
-        this.conceptionEntitySpatialInfoViewHeightOffset = conceptionEntitySpatialInfoViewHeightOffset +106;
+        this.conceptionEntityExternalDataViewHeightOffset = conceptionEntityIntegratedInfoViewHeightOffset +106;
 
         doesNotContainsSpatialInfoMessage = new HorizontalLayout();
         doesNotContainsSpatialInfoMessage.setSpacing(true);
@@ -56,7 +55,7 @@ public class ConceptionEntityExternalAttributesAccessView extends VerticalLayout
         doesNotContainsSpatialInfoMessage.add(messageLogo,messageLabel);
         add(doesNotContainsSpatialInfoMessage);
 
-        conceptionEntityExternalDataView = new ConceptionEntityExternalDataView(this.conceptionKind,this.conceptionEntityUID,this.conceptionEntitySpatialInfoViewHeightOffset);
+        conceptionEntityExternalDataView = new ConceptionEntityExternalDataView(this.conceptionKind,this.conceptionEntityUID,this.conceptionEntityExternalDataViewHeightOffset);
         conceptionEntityExternalDataView.setContainerExternalAttributesAccessView(this);
         add(conceptionEntityExternalDataView);
     }
@@ -64,23 +63,11 @@ public class ConceptionEntityExternalAttributesAccessView extends VerticalLayout
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-
-        }));
-        // Adjust size according to initial width of the screen
-        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            int browserHeight = receiver.getBodyClientHeight();
-            int browserWidth = receiver.getBodyClientWidth();
-
-        }));
-
         renderExternalDataAccessUI();
     }
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
-        // Listener needs to be eventually removed in order to avoid resource leak
-        listener.remove();
         super.onDetach(detachEvent);
     }
 

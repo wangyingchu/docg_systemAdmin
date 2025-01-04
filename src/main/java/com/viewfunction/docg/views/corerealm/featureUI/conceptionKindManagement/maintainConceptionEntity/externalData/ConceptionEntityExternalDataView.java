@@ -18,12 +18,12 @@ public class ConceptionEntityExternalDataView extends VerticalLayout {
     private String conceptionEntityUID;
     private ConceptionEntityExternalAttributesAccessView containerConceptionEntityExternalAttributesAccessView;
     private TabSheet externalDataAccessViewTabSheet;
-    private int conceptionEntitySpatialInfoViewHeightOffset;
+    private int conceptionEntityExternalDataViewHeightOffset;
 
-    public ConceptionEntityExternalDataView(String conceptionKind,String conceptionEntityUID,int conceptionEntitySpatialInfoViewHeightOffset){
+    public ConceptionEntityExternalDataView(String conceptionKind,String conceptionEntityUID,int conceptionEntityExternalDataViewHeightOffset){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
-        this.conceptionEntitySpatialInfoViewHeightOffset = conceptionEntitySpatialInfoViewHeightOffset;
+        this.conceptionEntityExternalDataViewHeightOffset = conceptionEntityExternalDataViewHeightOffset;
         this.setPadding(false);
         this.setSpacing(false);
         this.setMargin(false);
@@ -45,7 +45,7 @@ public class ConceptionEntityExternalDataView extends VerticalLayout {
 
         for(AttributesViewKind attributesViewKind:conceptionKindExternalAttributeViewList){
             ExternalValueAttributeDataAccessView currentExternalValueAttributeDataAccessView =
-                    new ExternalValueAttributeDataAccessView(this.conceptionKind,this.conceptionEntityUID,attributesViewKind,this.conceptionEntitySpatialInfoViewHeightOffset);
+                    new ExternalValueAttributeDataAccessView(this.conceptionKind,this.conceptionEntityUID,attributesViewKind,this.conceptionEntityExternalDataViewHeightOffset);
             externalDataAccessViewTabSheet.
                     add(generateTabTitle(VaadinIcon.TASKS,attributesViewKind.getAttributesViewKindName(),attributesViewKind.getAttributesViewKindDesc()),currentExternalValueAttributeDataAccessView);
         }

@@ -20,8 +20,9 @@ public class ExternalValueAttributeDataAccessView extends VerticalLayout {
     private VerticalLayout queryFieldsContainer;
     private VerticalLayout queryResultContainer;
     private Registration listener;
+    private int conceptionEntityExternalDataViewHeightOffset;
 
-    public ExternalValueAttributeDataAccessView(String conceptionKind,String conceptionEntityUID,AttributesViewKind attributesViewKind,int conceptionEntitySpatialInfoViewHeightOffset){
+    public ExternalValueAttributeDataAccessView(String conceptionKind,String conceptionEntityUID,AttributesViewKind attributesViewKind,int conceptionEntityExternalDataViewHeightOffset){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
         this.attributesViewKind = attributesViewKind;
@@ -50,8 +51,8 @@ public class ExternalValueAttributeDataAccessView extends VerticalLayout {
         queryResultContainer.setPadding(false);
         queryResultContainer.setSpacing(false);
         queryResultContainer.setMargin(false);
-        ConceptionKindQueryResultsView conceptionKindQueryResultsView = new ConceptionKindQueryResultsView(this.conceptionKind);
-        queryResultContainer.add(conceptionKindQueryResultsView);
+        //ConceptionKindQueryResultsView conceptionKindQueryResultsView = new ConceptionKindQueryResultsView(this.conceptionKind);
+       // queryResultContainer.add(conceptionKindQueryResultsView);
 
         SplitLayout splitLayout = new SplitLayout(queryFieldsContainer, queryResultContainer);
         splitLayout.setSplitterPosition(0);
@@ -68,13 +69,13 @@ public class ExternalValueAttributeDataAccessView extends VerticalLayout {
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             queryFieldsContainer.setHeight(event.getHeight()-110,Unit.PIXELS);
-            queryResultContainer.setHeight(event.getHeight()-110,Unit.PIXELS);
+           // queryResultContainer.setHeight(event.getHeight()-110,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             queryFieldsContainer.setHeight(browserHeight-110,Unit.PIXELS);
-            queryResultContainer.setHeight(browserHeight-110,Unit.PIXELS);
+          //  queryResultContainer.setHeight(browserHeight-110,Unit.PIXELS);
         }));
     }
 
