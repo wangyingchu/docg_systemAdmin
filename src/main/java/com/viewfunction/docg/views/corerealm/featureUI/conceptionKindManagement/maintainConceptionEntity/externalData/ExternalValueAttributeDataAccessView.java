@@ -9,8 +9,8 @@ import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.WebBrowser;
 import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryResultsView;
 
 public class ExternalValueAttributeDataAccessView extends VerticalLayout {
 
@@ -38,6 +38,7 @@ public class ExternalValueAttributeDataAccessView extends VerticalLayout {
         queryFieldsContainer.setMargin(false);
         ConceptionEntityExternalDataQueryCriteriaView conceptionEntityExternalDataQueryCriteriaView = new ConceptionEntityExternalDataQueryCriteriaView(this.conceptionKind,this.attributesViewKind,this.conceptionEntityExternalDataViewHeightOffset);
         queryFieldsContainer.add(conceptionEntityExternalDataQueryCriteriaView);
+        conceptionEntityExternalDataQueryCriteriaView.setContainerExternalValueAttributeDataAccessView(this);
 
         WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
         if(webBrowser.isChrome()){
@@ -62,6 +63,10 @@ public class ExternalValueAttributeDataAccessView extends VerticalLayout {
         splitLayout.addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
         add(splitLayout);
 
+    }
+
+    public void queryExternalValueAttributesViewData(QueryParameters queryParameters){
+        System.out.println(queryParameters);
     }
 
     @Override

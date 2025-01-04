@@ -13,6 +13,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -20,6 +21,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 public class QueryResultSetConfigView extends VerticalLayout {
 
     private Dialog containerDialog;
+    private Popover containerPopover;
     private IntegerField pageSizeField;
     private IntegerField startPageField;
     private IntegerField endPageField;
@@ -171,6 +173,14 @@ public class QueryResultSetConfigView extends VerticalLayout {
         this.containerDialog = containerDialog;
     }
 
+    public Popover getContainerPopover() {
+        return containerPopover;
+    }
+
+    public void setContainerPopover(Popover containerPopover) {
+        this.containerPopover = containerPopover;
+    }
+
     private void doConfigQueryParameters(){
         boolean isValidInput = false;
         if(this.resultNumberField.isInvalid() ||
@@ -214,6 +224,9 @@ public class QueryResultSetConfigView extends VerticalLayout {
         if(isValidInput){
             if(getContainerDialog() != null){
                 getContainerDialog().close();
+            }
+            if(getContainerPopover() != null){
+                getContainerPopover().close();
             }
         }
     }

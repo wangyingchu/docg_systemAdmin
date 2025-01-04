@@ -11,6 +11,9 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverPosition;
+import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
@@ -19,11 +22,8 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.FilteringItem;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
-import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
-import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.KindQueryCriteriaView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.QueryConditionItemWidget;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.QueryResultSetConfigView;
@@ -45,6 +45,9 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
     private boolean otherQueryConditionsAreSet = false;
     private AttributesViewKind attributesViewKind;
     private int conceptionEntityExternalDataViewHeightOffset;
+    private Button resultSetConfigButton;
+    private Popover resultSetConfigButtonPopover;
+    private ExternalValueAttributeDataAccessView containerExternalValueAttributeDataAccessView;
 
     public ConceptionEntityExternalDataQueryCriteriaView(String conceptionKindName, AttributesViewKind attributesViewKind,int conceptionEntityExternalDataViewHeightOffset){
         this.conceptionKindName = conceptionKindName;
@@ -135,12 +138,16 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
         });
         buttonsContainerLayout.add(executeQueryButton);
 
-        Button resultSetConfigButton = new Button("设置查询结果集参数",new Icon(VaadinIcon.COG_O));
+        resultSetConfigButton = new Button("设置查询结果集参数",new Icon(VaadinIcon.COG_O));
         resultSetConfigButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL);
         resultSetConfigButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderQueryResultSetConfigUI();
+                QueryResultSetConfigView queryResultSetConfigView = new QueryResultSetConfigView(queryParameters);
+                queryResultSetConfigView.setContainerPopover(resultSetConfigButtonPopover);
+                resultSetConfigButtonPopover.removeAll();
+                resultSetConfigButtonPopover.add(queryResultSetConfigView);
+                resultSetConfigButtonPopover.open();
             }
         });
         resultSetConfigButton.getStyle()
@@ -150,6 +157,15 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
 
         this.queryParameters = new QueryParameters();
         this.queryConditionDataBinder = new Binder<>();
+
+        resultSetConfigButtonPopover = new Popover();
+        resultSetConfigButtonPopover.setTarget(resultSetConfigButton);
+        resultSetConfigButtonPopover.setWidth("350px");
+        resultSetConfigButtonPopover.setHeight("440px");
+        resultSetConfigButtonPopover.addThemeVariants(PopoverVariant.ARROW);
+        resultSetConfigButtonPopover.setPosition(PopoverPosition.TOP_START);
+        resultSetConfigButtonPopover.setAutofocus(true);
+        resultSetConfigButtonPopover.setModal(true,true);
     }
 
     private void queryConceptionEntities(){
@@ -183,11 +199,9 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
         if(!defaultQueryConditionIsSet & otherQueryConditionsAreSet){
             CommonUIOperationUtil.showPopupNotification("请设定默认查询条件的属性过滤值", NotificationVariant.LUMO_ERROR);
         }else{
-            ConceptionKindQueriedEvent conceptionKindQueriedEvent = new ConceptionKindQueriedEvent();
-            conceptionKindQueriedEvent.setConceptionKindName(this.conceptionKindName);
-            conceptionKindQueriedEvent.setResultAttributesList(this.resultAttributesList);
-            conceptionKindQueriedEvent.setQueryParameters(this.queryParameters);
-            ResourceHolder.getApplicationBlackboard().fire(conceptionKindQueriedEvent);
+            if(containerExternalValueAttributeDataAccessView != null){
+                containerExternalValueAttributeDataAccessView.queryExternalValueAttributesViewData(this.queryParameters);
+            }
         }
     }
 
@@ -247,15 +261,6 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
         }
     }
 
-    private void renderQueryResultSetConfigUI(){
-        QueryResultSetConfigView queryResultSetConfigView = new QueryResultSetConfigView(this.queryParameters);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"查询结果集参数",null,true,350,500,false);
-        fixSizeWindow.setWindowContent(queryResultSetConfigView);
-        fixSizeWindow.setModel(true);
-        queryResultSetConfigView.setContainerDialog(fixSizeWindow);
-        fixSizeWindow.show();
-    }
-
     @Override
     public void addQueryConditionItem(String attributeName, AttributeDataType attributeDataType){
         if(!resultAttributesList.contains(attributeName)){
@@ -276,5 +281,9 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
 
     private void setOtherQueryConditionsAreSet(boolean otherQueryConditionsAreSet) {
         this.otherQueryConditionsAreSet = otherQueryConditionsAreSet;
+    }
+
+    public void setContainerExternalValueAttributeDataAccessView(ExternalValueAttributeDataAccessView containerExternalValueAttributeDataAccessView) {
+        this.containerExternalValueAttributeDataAccessView = containerExternalValueAttributeDataAccessView;
     }
 }
