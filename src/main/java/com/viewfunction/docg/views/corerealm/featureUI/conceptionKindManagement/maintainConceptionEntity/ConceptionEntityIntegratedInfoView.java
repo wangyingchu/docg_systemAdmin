@@ -6,6 +6,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import org.vaadin.tabs.PagedTabs;
 
 import java.util.function.Consumer;
@@ -19,6 +20,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
     private ConceptionEntitySpatialAttributeView conceptionEntitySpatialAttributeView;
     private ConceptionEntityTemporalInfoView conceptionEntityTemporalInfoView;
     private ConceptionEntitySpatialInfoView conceptionEntitySpatialInfoView;
+    private ConceptionEntityExternalAttributesAccessView conceptionEntityExternalAttributesAccessView;
     private boolean conceptionEntityRelationTopologyViewFirstRendered = false;
     private boolean conceptionEntitySpatialAttributeViewFirstRendered = false;
     private boolean conceptionEntityTemporalInfoViewFirstRendered = false;
@@ -39,6 +41,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         this.conceptionEntitySpatialAttributeView = new ConceptionEntitySpatialAttributeView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
         this.conceptionEntityTemporalInfoView = new ConceptionEntityTemporalInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
         this.conceptionEntitySpatialInfoView = new ConceptionEntitySpatialInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
+        this.conceptionEntityExternalAttributesAccessView = new ConceptionEntityExternalAttributesAccessView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
 
         Tab tab0 = tabs.add("", conceptionEntityRelationInfoView,false);
         Span relationInfoSpan =new Span();
@@ -79,6 +82,14 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         NativeLabel spatialInfoLabel = new NativeLabel(" 实体地理空间相关信息");
         spatialInfoSpan.add(spatialInfoIcon,spatialInfoLabel);
         tab4.add(spatialInfoSpan);
+
+        Tab tab5 = tabs.add("", conceptionEntityExternalAttributesAccessView,false);
+        Span externalDataSpan =new Span();
+        Icon externalDataIcon = LineAwesomeIconsSvg.SERVER_SOLID.create();
+        externalDataIcon.setSize("20px");
+        NativeLabel externalDataLabel = new NativeLabel(" 外部属性视图数据");
+        externalDataSpan.add(externalDataIcon,externalDataLabel);
+        tab5.add(externalDataSpan);
 
         add(tabs,container);
 
