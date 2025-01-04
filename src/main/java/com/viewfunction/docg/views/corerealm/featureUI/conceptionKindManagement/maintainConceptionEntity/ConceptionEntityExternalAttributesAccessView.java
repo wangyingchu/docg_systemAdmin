@@ -56,7 +56,7 @@ public class ConceptionEntityExternalAttributesAccessView extends VerticalLayout
         doesNotContainsSpatialInfoMessage.add(messageLogo,messageLabel);
         add(doesNotContainsSpatialInfoMessage);
 
-        conceptionEntityExternalDataView = new ConceptionEntityExternalDataView(this.conceptionKind,this.conceptionEntityUID);
+        conceptionEntityExternalDataView = new ConceptionEntityExternalDataView(this.conceptionKind,this.conceptionEntityUID,this.conceptionEntitySpatialInfoViewHeightOffset);
         conceptionEntityExternalDataView.setContainerExternalAttributesAccessView(this);
         add(conceptionEntityExternalDataView);
     }
@@ -65,13 +65,13 @@ public class ConceptionEntityExternalAttributesAccessView extends VerticalLayout
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            //conceptionEntityExternalDataView.setWidth(event.getWidth() - 820,Unit.PIXELS);
+
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             int browserWidth = receiver.getBodyClientWidth();
-            //conceptionEntitySpatialDataView.setWidth(browserWidth - 820,Unit.PIXELS);
+
         }));
 
         renderExternalDataAccessUI();
