@@ -182,11 +182,14 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
 
         @Override
         public Object apply(Map<String, Object> stringObjectMap) {
-            if(valueKey != null){
-                return stringObjectMap.get(valueKey);
-            }else{
-                return null;
-            }
+
+            System.out.println(valueKey);
+            System.out.println(stringObjectMap);
+            System.out.println(stringObjectMap);
+            Object resultObject = stringObjectMap.getOrDefault(valueKey, null);
+            System.out.println(resultObject);
+            System.out.println("----------------------------");
+            return "resultObject";
         }
     }
 
