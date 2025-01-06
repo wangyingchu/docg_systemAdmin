@@ -8,9 +8,7 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -19,41 +17,23 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityExternalAttributesValueRetrieveResult;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
-import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
-import com.viewfunction.docg.element.eventHandling.ConceptionEntityDeletedEvent;
-import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
-import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialInfoAnalysis.ConceptionEntitiesGeospatialInfoAnalysisView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.AddConceptionEntityToProcessingListView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.DeleteConceptionEntityView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryResultsView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.DownloadArrowFormatQueryResultsView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.DownloadCSVFormatQueryResultsView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.DownloadExcelFormatQueryResultsView;
 
 import java.text.NumberFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout {
 
@@ -61,18 +41,13 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
     private String conceptionEntityUID;
     private AttributesViewKind attributesViewKind;
     private Registration listener;
-    private Grid<ConceptionEntityValue> queryResultGrid;
+    private Grid<Map<String,Object>> queryResultGrid;
     private SecondaryKeyValueDisplayItem startTimeDisplayItem;
     private SecondaryKeyValueDisplayItem finishTimeDisplayItem;
     private SecondaryKeyValueDisplayItem dataCountDisplayItem;
     private final ZoneId id = ZoneId.systemDefault();
-    private final String _rowIndexPropertyName = "ROW_INDEX";
     private MenuBar queryResultOperationMenuBar;
-    private List<String> currentRowKeyList;
-    private ConceptionEntitiesAttributesRetrieveResult lastConceptionEntitiesAttributesRetrieveResult;
-    private  List<String> lastQueryAttributesList;
     private NumberFormat numberFormat;
-
     private int conceptionEntityExternalDataViewHeightOffset;
 
     public ConceptionEntityExternalDataQueryResultsView(String conceptionKindName,String conceptionEntityUID,AttributesViewKind attributesViewKind,int conceptionEntityExternalDataViewHeightOffset){
@@ -147,16 +122,18 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
         for (AttributeKind currentAttributeKind : this.attributesViewKind.getContainsAttributeKinds()) {
             String columnKey = "idx_" + currentAttributeKind.getAttributeKindUID();
             String columnName = " "+currentAttributeKind.getAttributeKindName();
-            queryResultGrid.addColumn(ConceptionEntityValue::getConceptionEntityUID).setHeader(columnName).setKey(columnKey).setResizable(true);
+            MapValueValueProvider currentMapValueValueProvider =new MapValueValueProvider();
+            currentMapValueValueProvider.setValueKey(columnName);
+            queryResultGrid.addColumn(currentMapValueValueProvider).setHeader(columnName).setKey(columnKey).setResizable(true);
             GridColumnHeader gridColumnHeader_idx = new GridColumnHeader(LineAwesomeIconsSvg.CIRCLE.create(),columnName);
             queryResultGrid.getColumnByKey(columnKey).setHeader(gridColumnHeader_idx).setSortable(false);
         }
         add(queryResultGrid);
-
-        this.currentRowKeyList = new ArrayList<>();
     }
 
     public void queryExternalValueAttributesViewData(QueryParameters queryParameters){
+        queryResultOperationMenuBar.setEnabled(false);
+
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
@@ -180,31 +157,8 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
                         finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
                         dataCountDisplayItem.updateDisplayValue("" + numberFormat.format(conceptionEntityExternalAttributesValueRetrieveResult.getResultRowsCount()));
 
-                        /*
-                        List<ConceptionEntityValue> conceptionEntityValueList = conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
-                        for (int i = 0; i < conceptionEntityValueList.size(); i++) {
-                            ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
-                            currentConceptionEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName, i + 1);
-                        }
-                        if (attributesList != null && attributesList.size() > 0) {
-                            for (String currentProperty : attributesList) {
-                                if (!currentProperty.equals(_rowIndexPropertyName)) {
-                                    queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
-                                        @Override
-                                        public Object apply(ConceptionEntityValue conceptionEntityValue) {
-                                            return conceptionEntityValue.getEntityAttributesValue().get(currentProperty);
-                                        }
-                                    }).setHeader(" " + currentProperty).setKey(currentProperty + "_KEY");
-                                    queryResultGrid.getColumnByKey(currentProperty + "_KEY").setSortable(true).setResizable(true);
-                                }
-
-                                this.currentRowKeyList.add(currentProperty + "_KEY");
-                            }
-                        }
-                        queryResultGrid.setItems(conceptionEntityValueList);
-                        */
-
-
+                        List<Map<String,Object>> externalDataRecords = conceptionEntityExternalAttributesValueRetrieveResult.getExternalAttributesValue();
+                        queryResultGrid.setItems(externalDataRecords);
                         queryResultOperationMenuBar.setEnabled(true);
                     }
                 } catch (CoreRealmServiceEntityExploreException e) {
@@ -215,85 +169,27 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
         coreRealm.closeGlobalSession();
     }
 
+    private class  MapValueValueProvider implements ValueProvider<Map<String,Object>,Object>{
+        private String valueKey;
 
-
-
-    /*
-    @Override
-    public void receivedConceptionKindQueriedEvent(ConceptionKindQueriedEvent event) {
-        for(String currentExistingRowKey:this.currentRowKeyList){
-            queryResultGrid.removeColumnByKey(currentExistingRowKey);
+        public void setValueKey(String valueKey) {
+            this.valueKey = valueKey;
         }
-        queryResultGrid.setItems(new ArrayList<>());
-        this.currentRowKeyList.clear();
-        this.lastQueryAttributesList = null;
-        String conceptionKindName = event.getConceptionKindName();
-        List<String> resultAttributesList = event.getResultAttributesList();
-        QueryParameters eventQueryParameters = event.getQueryParameters();
-        if(conceptionKindName.equals(this.conceptionKindName)){
-            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-            ConceptionKind targetConception = coreRealm.getConceptionKind(conceptionKindName);
-            QueryParameters queryParameters = eventQueryParameters != null ? eventQueryParameters : new QueryParameters();
-            try {
-                List<String> attributesList = new ArrayList<>();
-                if(resultAttributesList != null && resultAttributesList.size() > 0){
-                    attributesList.addAll(resultAttributesList);
-                }else{
-                    attributesList.add(RealmConstant._createDateProperty);
-                    attributesList.add(RealmConstant._lastModifyDateProperty);
-                    attributesList.add(RealmConstant._creatorIdProperty);
-                    attributesList.add(RealmConstant._dataOriginProperty);
-                }
 
-                this.lastQueryAttributesList = attributesList;
+        public String getValueKey() {
+            return valueKey;
+        }
 
-                ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
-                        targetConception.getSingleValueEntityAttributesByAttributeNames(attributesList,queryParameters);
-                if(conceptionEntitiesAttributesRetrieveResult != null && conceptionEntitiesAttributesRetrieveResult.getOperationStatistics() != null){
-                    showPopupNotification(conceptionEntitiesAttributesRetrieveResult, NotificationVariant.LUMO_SUCCESS);
-                    Date startDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getStartTime();
-                    ZonedDateTime startZonedDateTime = ZonedDateTime.ofInstant(startDateTime.toInstant(), id);
-                    String startTimeStr = startZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
-                    startTimeDisplayItem.updateDisplayValue(startTimeStr);
-                    Date finishDateTime = conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getFinishTime();
-                    ZonedDateTime finishZonedDateTime = ZonedDateTime.ofInstant(finishDateTime.toInstant(), id);
-                    String finishTimeStr = finishZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
-                    finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
-                    dataCountDisplayItem.updateDisplayValue(""+   numberFormat.format(conceptionEntitiesAttributesRetrieveResult.getOperationStatistics().getResultEntitiesCount()));
-
-                    List<ConceptionEntityValue> conceptionEntityValueList = conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues();
-                    for(int i=0 ; i<conceptionEntityValueList.size();i++){
-                        ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
-                        currentConceptionEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName,i+1);
-                    }
-                    if (attributesList != null && attributesList.size() > 0) {
-                        for (String currentProperty : attributesList) {
-                            if (!currentProperty.equals(_rowIndexPropertyName)) {
-                                queryResultGrid.addColumn(new ValueProvider<ConceptionEntityValue, Object>() {
-                                    @Override
-                                    public Object apply(ConceptionEntityValue conceptionEntityValue) {
-                                        return conceptionEntityValue.getEntityAttributesValue().get(currentProperty);
-                                    }
-                                }).setHeader(" " + currentProperty).setKey(currentProperty + "_KEY");
-                                queryResultGrid.getColumnByKey(currentProperty + "_KEY").setSortable(true).setResizable(true);
-                            }
-
-                            this.currentRowKeyList.add(currentProperty + "_KEY");
-                        }
-                    }
-                    queryResultGrid.setItems(conceptionEntityValueList);
-                    queryResultOperationMenuBar.setEnabled(true);
-
-                    lastConceptionEntitiesAttributesRetrieveResult = conceptionEntitiesAttributesRetrieveResult;
-                }
-            } catch (CoreRealmServiceEntityExploreException e) {
-                throw new RuntimeException(e);
+        @Override
+        public Object apply(Map<String, Object> stringObjectMap) {
+            if(valueKey != null){
+                return stringObjectMap.get(valueKey);
+            }else{
+                return null;
             }
-        }else{
-            lastConceptionEntitiesAttributesRetrieveResult = null;
         }
     }
-*/
+
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
@@ -337,6 +233,7 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
     }
 
     private void exportCSVQueryResult(){
+        /*
         DownloadCSVFormatQueryResultsView downloadCSVFormatQueryResultsView = new DownloadCSVFormatQueryResultsView(this.conceptionKindName,this.lastConceptionEntitiesAttributesRetrieveResult,this.lastQueryAttributesList,500);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 CSV 格式概念类型实体数据查询结果",null,true,550,290,false);
         fixSizeWindow.disableCloseButton();
@@ -344,9 +241,11 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
         fixSizeWindow.setModel(true);
         downloadCSVFormatQueryResultsView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+        */
     }
 
     private void exportExcelQueryResult(){
+        /*
         DownloadExcelFormatQueryResultsView downloadExcelFormatQueryResultsView = new DownloadExcelFormatQueryResultsView(this.conceptionKindName,this.lastConceptionEntitiesAttributesRetrieveResult,this.lastQueryAttributesList,500);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 EXCEL 格式概念类型实体数据查询结果",null,true,550,290,false);
         fixSizeWindow.disableCloseButton();
@@ -354,5 +253,6 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
         fixSizeWindow.setModel(true);
         downloadExcelFormatQueryResultsView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+        */
     }
 }
