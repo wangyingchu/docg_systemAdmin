@@ -77,6 +77,7 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
         divIcon.getStyle().set("top","-5px").set("position","relative");
         actionButtonLayout.add(divIcon);
         actionButtonLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+        divIcon.setVisible(false);
 
         queryResultOperationMenuBar = new MenuBar();
         queryResultOperationMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
