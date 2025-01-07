@@ -16,9 +16,7 @@ import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.analysisProvider.client.AnalysisProviderAdminClient;
-import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.FunctionalFeatureInfo;
 import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.ProviderRunningInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RuntimeRelationAndConceptionKindAttachInfo;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.AnalysisProviderRefreshEvent;
@@ -26,11 +24,8 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 
-import java.time.ZoneId;
-import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.format.DateTimeFormatter;
 
 public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         AnalysisProviderRefreshEvent.AnalysisProviderRefreshEventListener {
@@ -108,31 +103,16 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
 
 
 
-
-
-        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"运行历史记录");
-
-        providerRuntimeStatusInfoLayout.add(filterTitle2);
-
-
-
-
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"运行历史记录");
+        providerRuntimeStatusInfoLayout.add(filterTitle);
 
         providerRunningInfoGrid = new Grid<>();
         providerRunningInfoGrid.setWidth(410,Unit.PIXELS);
         providerRunningInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
         providerRunningInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
-
-
-//DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(providerRunningInfo -> providerRunningInfo.getProviderStartTime(), String.valueOf(formatter))).setKey("idx_00").setResizable(true);
-
-
-        providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStartTime)).setHeader("开始时间").setKey("idx_0").setResizable(true)
+        providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStartTime,"yyyy-MM-dd HH:mm:ss")).setHeader("开始时间").setKey("idx_0").setResizable(true)
                 .setTooltipGenerator(runtimeRelationAndConceptionKindAttachInfo -> runtimeRelationAndConceptionKindAttachInfo.getProviderStartTime() != null ? runtimeRelationAndConceptionKindAttachInfo.getProviderStartTime().toString(): null);
-        providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStopTime)).setHeader("结束时间").setKey("idx_1").setResizable(true)
+        providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStopTime,"yyyy-MM-dd HH:mm:ss")).setHeader("结束时间").setKey("idx_1").setResizable(true)
                 .setTooltipGenerator(runtimeRelationAndConceptionKindAttachInfo -> runtimeRelationAndConceptionKindAttachInfo.getProviderStopTime() != null ? runtimeRelationAndConceptionKindAttachInfo.getProviderStopTime().toString(): null);
 
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.FLIGHT_TAKEOFF,"开始时间");
