@@ -3,6 +3,8 @@ package com.viewfunction.docg.views.dataAnalysis.featureUI;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -10,21 +12,25 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.analysisProvider.client.AnalysisProviderAdminClient;
 import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.FunctionalFeatureInfo;
-import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
-import com.viewfunction.docg.element.commonComponent.SectionActionBar;
-import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.ProviderRunningInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RuntimeRelationAndConceptionKindAttachInfo;
+import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.AnalysisProviderRefreshEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 
+import java.time.ZoneId;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         AnalysisProviderRefreshEvent.AnalysisProviderRefreshEventListener {
@@ -35,6 +41,8 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
     private final String ANALYSIS_CLIENT_HOST_NAME =
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ANALYSIS_CLIENT_HOST_NAME);
     private final int ANALYSIS_CLIENT_HOST_PORT = Integer.parseInt(SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ANALYSIS_CLIENT_HOST_PORT));
+    private Grid<ProviderRunningInfo> providerRunningInfoGrid;
+
 
     public DataAnalysisCapacityManagementUI() {
         Button refreshDataButton = new Button("刷新分析服务统计信息",new Icon(VaadinIcon.REFRESH));
@@ -91,6 +99,51 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         SecondaryTitleActionBar providerRuntimeStatusActionBar = new SecondaryTitleActionBar(providerRuntimeStatusIcon,"服务运行信息",null,actionComponentsList);
         leftSideContentContainerLayout.add(providerRuntimeStatusActionBar);
 
+        VerticalLayout providerRuntimeStatusInfoLayout = new VerticalLayout();
+        leftSideContentContainerLayout.add(providerRuntimeStatusInfoLayout);
+
+
+        SecondaryKeyValueDisplayItem gridStartDatetimeDisplayItem = new SecondaryKeyValueDisplayItem(providerRuntimeStatusInfoLayout,
+                VaadinIcon.FLIGHT_TAKEOFF.create(),"分析服务运行状态:", "-");
+
+
+
+
+
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"运行历史记录");
+
+        providerRuntimeStatusInfoLayout.add(filterTitle2);
+
+
+
+
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        providerRunningInfoGrid = new Grid<>();
+        providerRunningInfoGrid.setWidth(410,Unit.PIXELS);
+        providerRunningInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        providerRunningInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
+
+
+//DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(providerRunningInfo -> providerRunningInfo.getProviderStartTime(), String.valueOf(formatter))).setKey("idx_00").setResizable(true);
+
+
+        providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStartTime)).setHeader("开始时间").setKey("idx_0").setResizable(true)
+                .setTooltipGenerator(runtimeRelationAndConceptionKindAttachInfo -> runtimeRelationAndConceptionKindAttachInfo.getProviderStartTime() != null ? runtimeRelationAndConceptionKindAttachInfo.getProviderStartTime().toString(): null);
+        providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStopTime)).setHeader("结束时间").setKey("idx_1").setResizable(true)
+                .setTooltipGenerator(runtimeRelationAndConceptionKindAttachInfo -> runtimeRelationAndConceptionKindAttachInfo.getProviderStopTime() != null ? runtimeRelationAndConceptionKindAttachInfo.getProviderStopTime().toString(): null);
+
+        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.FLIGHT_TAKEOFF,"开始时间");
+        providerRunningInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.FLIGHT_LANDING,"结束时间");
+        providerRunningInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+
+        providerRuntimeStatusInfoLayout.add(providerRunningInfoGrid);
+
+
+
         List<Component> dataAnalysisProviderManagementOperationButtonList = new ArrayList<>();
 
         Button registerAnalysisFunctionalFeatureButton = new Button("注册分析功能特性", LineAwesomeIconsSvg.CLIPBOARD_LIST_SOLID.create());
@@ -142,6 +195,46 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
     private void refreshAnalysisProviderStatus(){
         UI currentUI = UI.getCurrent();
         AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
+
+        AnalysisProviderAdminClient.ListProviderRunningStatusCallback listProviderRunningStatusCallback = new AnalysisProviderAdminClient.ListProviderRunningStatusCallback() {
+            @Override
+            public void onExecutionSuccess(List<ProviderRunningInfo> providerRunningInfoList) {
+                if(providerRunningInfoList != null){
+
+
+                    currentUI.access(() -> {
+                        providerRunningInfoGrid.setItems(providerRunningInfoList);
+                    });
+
+
+
+
+                    for(ProviderRunningInfo providerRunningInfoItem:providerRunningInfoList){
+                        System.out.println(providerRunningInfoItem.getProviderRunningUUID());
+                        System.out.println(providerRunningInfoItem.getProviderStartTime());
+                        System.out.println(providerRunningInfoItem.getProviderStopTime());
+                        System.out.println("-------------------------");
+
+
+                    }
+                }
+            }
+
+            @Override
+            public void onExecutionFail() {
+                currentUI.access(() -> {
+                    CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据分析服务", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
+                });
+            }
+        };
+        analysisProviderAdminClient.listProviderRunningStatus(listProviderRunningStatusCallback,5);
+
+
+
+
+
+        /*
+
         AnalysisProviderAdminClient.PingAnalysisProviderCallback pingAnalysisProviderCallback = new AnalysisProviderAdminClient.PingAnalysisProviderCallback() {
             @Override
             public void onPingSuccess() {
@@ -156,10 +249,44 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
             }
         };
         analysisProviderAdminClient.pingAnalysisProvider(pingAnalysisProviderCallback,3);
+        */
+
+
+
+
+
+
+
     }
 
     private void renderAnalysisProviderInfo(){
         System.out.println("renderAnalysisProviderInfo");
+
+
+        AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
+
+        AnalysisProviderAdminClient.ListProviderRunningStatusCallback listProviderRunningStatusCallback = new AnalysisProviderAdminClient.ListProviderRunningStatusCallback() {
+            @Override
+            public void onExecutionSuccess(List<ProviderRunningInfo> providerRunningInfoList) {
+                if(providerRunningInfoList != null){
+                    for(ProviderRunningInfo providerRunningInfoItem:providerRunningInfoList){
+                        System.out.println(providerRunningInfoItem.getProviderRunningUUID());
+                        System.out.println(providerRunningInfoItem.getProviderStartTime());
+                        System.out.println(providerRunningInfoItem.getProviderStopTime());
+                        System.out.println("-------------------------");
+                    }
+
+                }
+            }
+
+            @Override
+            public void onExecutionFail() {
+
+            }
+        };
+        //analysisProviderAdminClient.listProviderRunningStatus(listProviderRunningStatusCallback,3);
+
+
 
     }
 }

@@ -63,7 +63,6 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
 
         runtimeRelationAndConceptionKindAttachInfoGrid = new Grid<>();
         runtimeRelationAndConceptionKindAttachInfoGrid.setWidth(410,Unit.PIXELS);
-        runtimeRelationAndConceptionKindAttachInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         runtimeRelationAndConceptionKindAttachInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
         runtimeRelationAndConceptionKindAttachInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         runtimeRelationAndConceptionKindAttachInfoGrid.addColumn(RuntimeRelationAndConceptionKindAttachInfo::getConceptionKind).setHeader("概念类型").setKey("idx_0").setResizable(true)
