@@ -82,6 +82,7 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
         queryResultOperationMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
         queryResultOperationMenuBar.getStyle().set("top","-5px").set("position","relative");
         queryResultOperationMenuBar.setEnabled(false);
+        queryResultOperationMenuBar.setVisible(false);
 
         actionButtonLayout.add(queryResultOperationMenuBar);
         actionButtonLayout.setVerticalComponentAlignment(Alignment.START,queryResultOperationMenuBar);
@@ -121,10 +122,10 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
 
         for (AttributeKind currentAttributeKind : this.attributesViewKind.getContainsAttributeKinds()) {
             String columnKey = "idx_" + currentAttributeKind.getAttributeKindUID();
-            String columnName = " "+currentAttributeKind.getAttributeKindName();
-            MapValueValueProvider currentMapValueValueProvider =new MapValueValueProvider();
-            currentMapValueValueProvider.setValueKey(columnName);
-            queryResultGrid.addColumn(currentMapValueValueProvider).setHeader(columnName).setKey(columnKey).setResizable(true);
+            String columnName = currentAttributeKind.getAttributeKindName();
+            MapValueProvider currentMapValueProvider =new MapValueProvider();
+            currentMapValueProvider.setValueKey(columnName);
+            queryResultGrid.addColumn(currentMapValueProvider).setHeader(columnName).setKey(columnKey).setResizable(true);
             GridColumnHeader gridColumnHeader_idx = new GridColumnHeader(LineAwesomeIconsSvg.CIRCLE.create(),columnName);
             queryResultGrid.getColumnByKey(columnKey).setHeader(gridColumnHeader_idx).setSortable(false);
         }
@@ -169,7 +170,7 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
         coreRealm.closeGlobalSession();
     }
 
-    private class  MapValueValueProvider implements ValueProvider<Map<String,Object>,Object>{
+    private class MapValueProvider implements ValueProvider<Map<String,Object>,Object>{
         private String valueKey;
 
         public void setValueKey(String valueKey) {
@@ -182,14 +183,8 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
 
         @Override
         public Object apply(Map<String, Object> stringObjectMap) {
-
-            System.out.println(valueKey);
-            System.out.println(stringObjectMap);
-            System.out.println(stringObjectMap);
             Object resultObject = stringObjectMap.getOrDefault(valueKey, null);
-            System.out.println(resultObject);
-            System.out.println("----------------------------");
-            return "resultObject";
+            return resultObject;
         }
     }
 
