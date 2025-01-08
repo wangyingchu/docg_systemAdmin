@@ -1,5 +1,7 @@
 package com.viewfunction.docg.views.dataAnalysis.featureUI;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
+
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -25,6 +27,7 @@ import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
@@ -37,7 +40,8 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ANALYSIS_CLIENT_HOST_NAME);
     private final int ANALYSIS_CLIENT_HOST_PORT = Integer.parseInt(SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ANALYSIS_CLIENT_HOST_PORT));
     private Grid<ProviderRunningInfo> providerRunningInfoGrid;
-
+    private HorizontalLayout runningStatusLayout;
+    private HorizontalLayout notRunningStatusLayout;
 
     public DataAnalysisCapacityManagementUI() {
         Button refreshDataButton = new Button("刷新分析服务统计信息",new Icon(VaadinIcon.REFRESH));
@@ -67,8 +71,8 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
 
         leftSideContentContainerLayout = new VerticalLayout();
         leftSideContentContainerLayout.setSpacing(false);
-        leftSideContentContainerLayout.setMaxWidth(300, Unit.PIXELS);
-        leftSideContentContainerLayout.setMinWidth(300, Unit.PIXELS);
+        leftSideContentContainerLayout.setMaxWidth(295, Unit.PIXELS);
+        leftSideContentContainerLayout.setMinWidth(295, Unit.PIXELS);
         leftSideContentContainerLayout.getStyle()
                 .set("border-right", "1px solid var(--lumo-contrast-20pct)");
         contentContainerLayout.add(leftSideContentContainerLayout);
@@ -97,17 +101,43 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         VerticalLayout providerRuntimeStatusInfoLayout = new VerticalLayout();
         leftSideContentContainerLayout.add(providerRuntimeStatusInfoLayout);
 
+        SecondaryIconTitle sectionTitle1 = new SecondaryIconTitle(FontAwesome.Solid.HEART_PULSE.create(),"分析服务运行状态");
+        providerRuntimeStatusInfoLayout.add(sectionTitle1);
 
-        SecondaryKeyValueDisplayItem gridStartDatetimeDisplayItem = new SecondaryKeyValueDisplayItem(providerRuntimeStatusInfoLayout,
-                VaadinIcon.FLIGHT_TAKEOFF.create(),"分析服务运行状态:", "-");
+        runningStatusLayout = new HorizontalLayout();
+        providerRuntimeStatusInfoLayout.add(runningStatusLayout);
+        runningStatusLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        runningStatusLayout.getStyle().set("margin-left","var(--lumo-space-m)").set("margin-bottom","var(--lumo-space-m)");
 
+        Icon runningStatusIcon = LineAwesomeIconsSvg.FIGHTER_JET_SOLID.create();
+        runningStatusIcon.setSize("32px");
+        runningStatusIcon.getStyle().set("color", "var(--lumo-success-color)");
+        runningStatusLayout.add(runningStatusIcon);
 
+        NativeLabel runningTextLabel = new NativeLabel("运行中");
+        runningTextLabel.addClassNames("text-xs","font-semibold","text-secondary");
+        runningTextLabel.getStyle().set("color", "var(--lumo-success-color)");
+        runningStatusLayout.add(runningTextLabel);
+        runningStatusLayout.setVisible(false);
 
-        SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"运行历史记录");
-        providerRuntimeStatusInfoLayout.add(filterTitle);
+        notRunningStatusLayout = new HorizontalLayout();
+        providerRuntimeStatusInfoLayout.add(notRunningStatusLayout);
+        notRunningStatusLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        notRunningStatusLayout.getStyle().set("margin-left","var(--lumo-space-m)").set("margin-bottom","var(--lumo-space-m)");
+
+        Icon notRunningStatusIcon = LineAwesomeIconsSvg.FIGHTER_JET_SOLID.create();
+        notRunningStatusIcon.setSize("32px");
+        notRunningStatusLayout.add(notRunningStatusIcon);
+
+        NativeLabel notRunningTextLabel = new NativeLabel("未运行");
+        notRunningTextLabel.addClassNames("text-xs","font-semibold","text-secondary");
+        notRunningStatusLayout.add(notRunningTextLabel);
+
+        SecondaryIconTitle sectionTitle2 = new SecondaryIconTitle(LineAwesomeIconsSvg.CLIPBOARD_LIST_SOLID.create(), "服务运行历史记录");
+        providerRuntimeStatusInfoLayout.add(sectionTitle2);
 
         providerRunningInfoGrid = new Grid<>();
-        providerRunningInfoGrid.setWidth(410,Unit.PIXELS);
+        providerRunningInfoGrid.setWidth(265,Unit.PIXELS);
         providerRunningInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
         providerRunningInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStartTime,"yyyy-MM-dd HH:mm:ss")).setHeader("开始时间").setKey("idx_0").setResizable(true)
@@ -116,13 +146,11 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
                 .setTooltipGenerator(runtimeRelationAndConceptionKindAttachInfo -> runtimeRelationAndConceptionKindAttachInfo.getProviderStopTime() != null ? runtimeRelationAndConceptionKindAttachInfo.getProviderStopTime().toString(): null);
 
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.FLIGHT_TAKEOFF,"开始时间");
-        providerRunningInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
+        providerRunningInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(false);
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.FLIGHT_LANDING,"结束时间");
-        providerRunningInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+        providerRunningInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(false);
 
         providerRuntimeStatusInfoLayout.add(providerRunningInfoGrid);
-
-
 
         List<Component> dataAnalysisProviderManagementOperationButtonList = new ArrayList<>();
 
@@ -149,12 +177,14 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             this.leftSideContentContainerLayout.setHeight(event.getHeight()-170,Unit.PIXELS);
+            this.providerRunningInfoGrid.setHeight(event.getHeight()-320,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserWidth = receiver.getBodyClientWidth();
             int browserHeight = receiver.getBodyClientHeight();
             this.leftSideContentContainerLayout.setHeight(browserHeight-170,Unit.PIXELS);
+            this.providerRunningInfoGrid.setHeight(browserHeight-320,Unit.PIXELS);
         }));
         refreshAnalysisProviderStatus();
     }
@@ -180,71 +210,43 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
             @Override
             public void onExecutionSuccess(List<ProviderRunningInfo> providerRunningInfoList) {
                 if(providerRunningInfoList != null){
-
-
-                    currentUI.access(() -> {
-                        providerRunningInfoGrid.setItems(providerRunningInfoList);
+                    providerRunningInfoList.sort(new Comparator<ProviderRunningInfo>() {
+                        @Override
+                        public int compare(ProviderRunningInfo o1, ProviderRunningInfo o2) {
+                            return 0 - o1.getProviderStartTime().compareTo(o2.getProviderStartTime());
+                        }
                     });
 
-
-
-
-                    for(ProviderRunningInfo providerRunningInfoItem:providerRunningInfoList){
-                        System.out.println(providerRunningInfoItem.getProviderRunningUUID());
-                        System.out.println(providerRunningInfoItem.getProviderStartTime());
-                        System.out.println(providerRunningInfoItem.getProviderStopTime());
-                        System.out.println("-------------------------");
-
-
-                    }
+                    currentUI.access(() -> {
+                        runningStatusLayout.setVisible(true);
+                        notRunningStatusLayout.setVisible(false);
+                        providerRunningInfoGrid.setItems(providerRunningInfoList);
+                    });
+                }else{
+                    currentUI.access(() -> {
+                        runningStatusLayout.setVisible(false);
+                        notRunningStatusLayout.setVisible(true);
+                        CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据分析服务", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
+                    });
                 }
             }
 
             @Override
             public void onExecutionFail() {
                 currentUI.access(() -> {
+                    runningStatusLayout.setVisible(false);
+                    notRunningStatusLayout.setVisible(true);
                     CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据分析服务", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
                 });
             }
         };
         analysisProviderAdminClient.listProviderRunningStatus(listProviderRunningStatusCallback,5);
-
-
-
-
-
-        /*
-
-        AnalysisProviderAdminClient.PingAnalysisProviderCallback pingAnalysisProviderCallback = new AnalysisProviderAdminClient.PingAnalysisProviderCallback() {
-            @Override
-            public void onPingSuccess() {
-                renderAnalysisProviderInfo();
-            }
-
-            @Override
-            public void onPingFail() {
-                currentUI.access(() -> {
-                    CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据分析服务", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
-                });
-            }
-        };
-        analysisProviderAdminClient.pingAnalysisProvider(pingAnalysisProviderCallback,3);
-        */
-
-
-
-
-
-
-
     }
 
     private void renderAnalysisProviderInfo(){
         System.out.println("renderAnalysisProviderInfo");
 
-
         AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
-
         AnalysisProviderAdminClient.ListProviderRunningStatusCallback listProviderRunningStatusCallback = new AnalysisProviderAdminClient.ListProviderRunningStatusCallback() {
             @Override
             public void onExecutionSuccess(List<ProviderRunningInfo> providerRunningInfoList) {
@@ -265,8 +267,5 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
             }
         };
         //analysisProviderAdminClient.listProviderRunningStatus(listProviderRunningStatusCallback,3);
-
-
-
     }
 }
