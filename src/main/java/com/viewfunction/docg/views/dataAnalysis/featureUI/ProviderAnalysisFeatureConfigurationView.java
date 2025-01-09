@@ -48,7 +48,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     private TextField dataSliceNameFilterField;
     private TextField dataSliceGroupFilterField;
     private int currentDataSliceCount;
-    //private Grid<FunctionalFeatureInfo> dataSlicePropertyDefinitionsGrid;
+    private Grid<FeatureRunningInfo> dataSlicePropertyDefinitionsGrid;
     private final int ANALYSIS_CLIENT_HOST_PORT = Integer.parseInt(SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ANALYSIS_CLIENT_HOST_PORT))+2;
     private final String ANALYSIS_CLIENT_HOST_NAME =
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ANALYSIS_CLIENT_HOST_NAME);
@@ -250,15 +250,16 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"数据切片属性定义");
         rightSideLayout.add(infoTitle);
 
-/*
+
         dataSlicePropertyDefinitionsGrid = new Grid<>();
         dataSlicePropertyDefinitionsGrid.setWidth(100,Unit.PERCENTAGE);
         dataSlicePropertyDefinitionsGrid.setSelectionMode(Grid.SelectionMode.NONE);
         dataSlicePropertyDefinitionsGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
-        dataSlicePropertyDefinitionsGrid.addColumn(FunctionalFeatureInfo::getFunctionalFeatureName).setHeader("属性名称").setKey("idx_0");
-       dataSlicePropertyDefinitionsGrid.addColumn(FunctionalFeatureInfo::getFunctionalFeatureDescription).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("100px").setResizable(false);
-        //dataSlicePropertyDefinitionsGrid.addColumn(ComputeGridDataSliceConfigurationView.DataSlicePropertyDefinitionVO::isPrimaryKey).setHeader("切片主键").setKey("idx_2").setFlexGrow(0).setWidth("80px").setResizable(false);
-*/
+        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getFeatureName).setHeader("属性名称").setKey("idx_0");
+        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getFeatureRunningStatus).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("100px").setResizable(false);
+        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getRequestTime).setHeader("切片主键").setKey("idx_2").setFlexGrow(0).setWidth("80px").setResizable(false);
+        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getResponseDataForm).setHeader("切片主键").setKey("idx_3").setFlexGrow(0).setWidth("80px").setResizable(false);
+
         /*
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
         dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
@@ -266,8 +267,9 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(LineAwesomeIconsSvg.KEY_SOLID.create(),"切片主键");
         dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
-        rightSideLayout.add(dataSlicePropertyDefinitionsGrid);
+
         */
+        rightSideLayout.add(dataSlicePropertyDefinitionsGrid);
 
         VerticalLayout spaceHolderLayout = new VerticalLayout();
         rightSideLayout.add(spaceHolderLayout);
@@ -278,14 +280,14 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            dataSliceMetaInfoGrid.setHeight(event.getHeight()-385,Unit.PIXELS);
-            //dataSlicePropertyDefinitionsGrid.setHeight(event.getHeight()-650,Unit.PIXELS);
+            dataSliceMetaInfoGrid.setHeight(event.getHeight()-380,Unit.PIXELS);
+            dataSlicePropertyDefinitionsGrid.setHeight(event.getHeight()-650,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            dataSliceMetaInfoGrid.setHeight(browserHeight-385,Unit.PIXELS);
-            //dataSlicePropertyDefinitionsGrid.setHeight(browserHeight-650,Unit.PIXELS);
+            dataSliceMetaInfoGrid.setHeight(browserHeight-380,Unit.PIXELS);
+            dataSlicePropertyDefinitionsGrid.setHeight(browserHeight-650,Unit.PIXELS);
         }));
         renderFunctionalFeatureInfo();
     }
@@ -330,7 +332,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
                             }
                             return dataSliceNameFilterResult & dataSliceGroupFilterResult;
                         });
-                        queryFeatureRunningStatusInfo(currentUI);
+                        queryFeatureRunningStatusInfo(analysisProviderAdminClient,currentUI);
                     });
                 }
             }
@@ -345,7 +347,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         analysisProviderAdminClient.listFunctionalFeatures(listFunctionalFeaturesCallback,3);
     }
 
-    private void queryFeatureRunningStatusInfo(UI currentUI){
+    private void queryFeatureRunningStatusInfo(AnalysisProviderAdminClient analysisProviderAdminClient,UI currentUI){
         AnalysisProviderAdminClient.ListFeatureRunningStatusCallback listFeatureRunningStatusCallback = new AnalysisProviderAdminClient.ListFeatureRunningStatusCallback() {
             @Override
             public void onExecutionSuccess(List<FeatureRunningInfo> featureRunningInfo) {
@@ -365,8 +367,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
                 });
             }
         };
-        //analysisProviderAdminClient.listFeatureRunningStatus(listFeatureRunningStatusCallback,3);
-
+        analysisProviderAdminClient.listFeatureRunningStatus(listFeatureRunningStatusCallback,3);
     }
 
     private void filterDataSlices(){
