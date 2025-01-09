@@ -254,7 +254,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         dataSlicePropertyDefinitionsGrid = new Grid<>();
         dataSlicePropertyDefinitionsGrid.setWidth(100,Unit.PERCENTAGE);
         dataSlicePropertyDefinitionsGrid.setSelectionMode(Grid.SelectionMode.NONE);
-        dataSlicePropertyDefinitionsGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
+        //dataSlicePropertyDefinitionsGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getFeatureName).setHeader("属性名称").setKey("idx_0");
         dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getFeatureRunningStatus).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("100px").setResizable(false);
         dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getRequestTime).setHeader("切片主键").setKey("idx_2").setFlexGrow(0).setWidth("80px").setResizable(false);
@@ -271,8 +271,8 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         */
         rightSideLayout.add(dataSlicePropertyDefinitionsGrid);
 
-        VerticalLayout spaceHolderLayout = new VerticalLayout();
-        rightSideLayout.add(spaceHolderLayout);
+        //VerticalLayout spaceHolderLayout = new VerticalLayout();
+        //rightSideLayout.add(spaceHolderLayout);
     }
 
     @Override
@@ -280,13 +280,13 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            dataSliceMetaInfoGrid.setHeight(event.getHeight()-380,Unit.PIXELS);
+            dataSliceMetaInfoGrid.setHeight(event.getHeight()-385,Unit.PIXELS);
             dataSlicePropertyDefinitionsGrid.setHeight(event.getHeight()-650,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            dataSliceMetaInfoGrid.setHeight(browserHeight-380,Unit.PIXELS);
+            dataSliceMetaInfoGrid.setHeight(browserHeight-385,Unit.PIXELS);
             dataSlicePropertyDefinitionsGrid.setHeight(browserHeight-650,Unit.PIXELS);
         }));
         renderFunctionalFeatureInfo();
