@@ -14,6 +14,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.shared.Registration;
 
@@ -42,6 +43,7 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
     private Grid<ProviderRunningInfo> providerRunningInfoGrid;
     private HorizontalLayout runningStatusLayout;
     private HorizontalLayout notRunningStatusLayout;
+    private ProviderAnalysisFeatureConfigurationView providerAnalysisFeatureConfigurationView;
 
     public DataAnalysisCapacityManagementUI() {
         Button refreshDataButton = new Button("刷新分析服务统计信息",new Icon(VaadinIcon.REFRESH));
@@ -91,6 +93,7 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         refreshProviderRuntimeInfoButton.addClickListener((ClickEvent<Button> click) ->{
             //checkAnalysisProviderStatusInfo();
         });
+        refreshProviderRuntimeInfoButton.setVisible(false);
         actionComponentsList.add(refreshProviderRuntimeInfoButton);
 
         Icon providerRuntimeStatusIcon = new Icon(VaadinIcon.SPARK_LINE);
@@ -152,22 +155,13 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
 
         providerRuntimeStatusInfoLayout.add(providerRunningInfoGrid);
 
-        List<Component> dataAnalysisProviderManagementOperationButtonList = new ArrayList<>();
+        TabSheet providerConfigurationTabSheet = new TabSheet();
+        providerConfigurationTabSheet.setWidthFull();
+        rightSideContentContainerLayout.add(providerConfigurationTabSheet);
+        rightSideContentContainerLayout.setFlexGrow(1,providerConfigurationTabSheet);
 
-        Button registerAnalysisFunctionalFeatureButton = new Button("注册分析功能特性", LineAwesomeIconsSvg.CLIPBOARD_LIST_SOLID.create());
-        registerAnalysisFunctionalFeatureButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        registerAnalysisFunctionalFeatureButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        dataAnalysisProviderManagementOperationButtonList.add(registerAnalysisFunctionalFeatureButton);
-        registerAnalysisFunctionalFeatureButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderCreateConceptionKindUI();
-            }
-        });
-
-        Icon icon = new Icon(VaadinIcon.LIST);
-        SectionActionBar sectionActionBar = new SectionActionBar(icon,"分析功能特性定义:",dataAnalysisProviderManagementOperationButtonList);
-        rightSideContentContainerLayout.add(sectionActionBar);
+        providerAnalysisFeatureConfigurationView = new ProviderAnalysisFeatureConfigurationView();
+        providerConfigurationTabSheet.add(generateConfigurationTabTitle(LineAwesomeIconsSvg.BONG_SOLID.create(),"分析功能特性配置"), providerAnalysisFeatureConfigurationView);
     }
 
     @Override
@@ -206,6 +200,27 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         UI currentUI = UI.getCurrent();
         AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
 
+
+        List<ProviderRunningInfo> providerRunningInfoList =analysisProviderAdminClient.listProviderRunningStatus();
+
+        if(providerRunningInfoList != null){
+            providerRunningInfoList.sort(new Comparator<ProviderRunningInfo>() {
+                @Override
+                public int compare(ProviderRunningInfo o1, ProviderRunningInfo o2) {
+                    return 0 - o1.getProviderStartTime().compareTo(o2.getProviderStartTime());
+                }
+            });
+            runningStatusLayout.setVisible(true);
+            notRunningStatusLayout.setVisible(false);
+            providerRunningInfoGrid.setItems(providerRunningInfoList);
+
+        }else{
+            runningStatusLayout.setVisible(false);
+            notRunningStatusLayout.setVisible(true);
+            CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据分析服务", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
+        }
+
+/*
         AnalysisProviderAdminClient.ListProviderRunningStatusCallback listProviderRunningStatusCallback = new AnalysisProviderAdminClient.ListProviderRunningStatusCallback() {
             @Override
             public void onExecutionSuccess(List<ProviderRunningInfo> providerRunningInfoList) {
@@ -241,6 +256,7 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
             }
         };
         analysisProviderAdminClient.listProviderRunningStatus(listProviderRunningStatusCallback,5);
+        */
     }
 
     private void renderAnalysisProviderInfo(){
@@ -267,5 +283,18 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
             }
         };
         //analysisProviderAdminClient.listProviderRunningStatus(listProviderRunningStatusCallback,3);
+    }
+
+    private HorizontalLayout generateConfigurationTabTitle(Icon tabIcon, String tabTitleTxt){
+        HorizontalLayout  kindConfigTabLayout = new HorizontalLayout();
+        kindConfigTabLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        kindConfigTabLayout.setHeight(26,Unit.PIXELS);
+        tabIcon.setSize("12px");
+        NativeLabel configTabLabel = new NativeLabel(" "+tabTitleTxt);
+        configTabLabel.getStyle()
+                . set("font-size","var(--lumo-font-size-s)")
+                .set("font-weight", "bold");
+        kindConfigTabLayout.add(tabIcon,configTabLabel);
+        return kindConfigTabLayout;
     }
 }
