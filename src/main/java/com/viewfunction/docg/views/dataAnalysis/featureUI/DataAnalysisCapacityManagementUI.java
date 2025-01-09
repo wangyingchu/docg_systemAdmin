@@ -199,10 +199,7 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
     private void refreshAnalysisProviderStatus(){
         UI currentUI = UI.getCurrent();
         AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
-
-
         List<ProviderRunningInfo> providerRunningInfoList =analysisProviderAdminClient.listProviderRunningStatus();
-
         if(providerRunningInfoList != null){
             providerRunningInfoList.sort(new Comparator<ProviderRunningInfo>() {
                 @Override
@@ -219,70 +216,6 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
             notRunningStatusLayout.setVisible(true);
             CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据分析服务", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
         }
-
-/*
-        AnalysisProviderAdminClient.ListProviderRunningStatusCallback listProviderRunningStatusCallback = new AnalysisProviderAdminClient.ListProviderRunningStatusCallback() {
-            @Override
-            public void onExecutionSuccess(List<ProviderRunningInfo> providerRunningInfoList) {
-                if(providerRunningInfoList != null){
-                    providerRunningInfoList.sort(new Comparator<ProviderRunningInfo>() {
-                        @Override
-                        public int compare(ProviderRunningInfo o1, ProviderRunningInfo o2) {
-                            return 0 - o1.getProviderStartTime().compareTo(o2.getProviderStartTime());
-                        }
-                    });
-
-                    currentUI.access(() -> {
-                        runningStatusLayout.setVisible(true);
-                        notRunningStatusLayout.setVisible(false);
-                        providerRunningInfoGrid.setItems(providerRunningInfoList);
-                    });
-                }else{
-                    currentUI.access(() -> {
-                        runningStatusLayout.setVisible(false);
-                        notRunningStatusLayout.setVisible(true);
-                        CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据分析服务", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
-                    });
-                }
-            }
-
-            @Override
-            public void onExecutionFail() {
-                currentUI.access(() -> {
-                    runningStatusLayout.setVisible(false);
-                    notRunningStatusLayout.setVisible(true);
-                    CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据分析服务", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
-                });
-            }
-        };
-        analysisProviderAdminClient.listProviderRunningStatus(listProviderRunningStatusCallback,5);
-        */
-    }
-
-    private void renderAnalysisProviderInfo(){
-        System.out.println("renderAnalysisProviderInfo");
-
-        AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
-        AnalysisProviderAdminClient.ListProviderRunningStatusCallback listProviderRunningStatusCallback = new AnalysisProviderAdminClient.ListProviderRunningStatusCallback() {
-            @Override
-            public void onExecutionSuccess(List<ProviderRunningInfo> providerRunningInfoList) {
-                if(providerRunningInfoList != null){
-                    for(ProviderRunningInfo providerRunningInfoItem:providerRunningInfoList){
-                        System.out.println(providerRunningInfoItem.getProviderRunningUUID());
-                        System.out.println(providerRunningInfoItem.getProviderStartTime());
-                        System.out.println(providerRunningInfoItem.getProviderStopTime());
-                        System.out.println("-------------------------");
-                    }
-
-                }
-            }
-
-            @Override
-            public void onExecutionFail() {
-
-            }
-        };
-        //analysisProviderAdminClient.listProviderRunningStatus(listProviderRunningStatusCallback,3);
     }
 
     private HorizontalLayout generateConfigurationTabTitle(Icon tabIcon, String tabTitleTxt){
