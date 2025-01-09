@@ -194,10 +194,10 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
     @Override
     public void receivedAnalysisProviderRefreshEvent(AnalysisProviderRefreshEvent event) {
         refreshAnalysisProviderStatus();
+        providerAnalysisFeatureConfigurationView.renderFunctionalFeatureInfo();
     }
 
     private void refreshAnalysisProviderStatus(){
-        UI currentUI = UI.getCurrent();
         AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
         List<ProviderRunningInfo> providerRunningInfoList =analysisProviderAdminClient.listProviderRunningStatus();
         if(providerRunningInfoList != null){

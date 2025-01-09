@@ -9,16 +9,20 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.analysisProvider.client.AnalysisProviderAdminClient;
+import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.FeatureRunningInfo;
 import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.FunctionalFeatureInfo;
 import com.viewfunction.docg.dataCompute.dataComputeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 
 import java.text.NumberFormat;
@@ -32,7 +36,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     private SecondaryTitleActionBar dataSliceInfoActionBar;
     private Registration listener;
     private Grid<FunctionalFeatureInfo> dataSliceMetaInfoGrid;
-    private GridListDataView<DataSliceMetaInfo> dataSliceMetaInfoView;
+    private GridListDataView<FunctionalFeatureInfo> dataSliceMetaInfoView;
     private DataSliceMetaInfo lastSelectedDataSliceMetaInfo;
     private SecondaryKeyValueDisplayItem groupNameDisplayItem;
     private SecondaryKeyValueDisplayItem primaryDataCountDisplayItem;
@@ -48,6 +52,8 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     private final int ANALYSIS_CLIENT_HOST_PORT = Integer.parseInt(SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ANALYSIS_CLIENT_HOST_PORT))+2;
     private final String ANALYSIS_CLIENT_HOST_NAME =
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ANALYSIS_CLIENT_HOST_NAME);
+    private List<FeatureRunningInfo> currentFeatureRunningInfoList;
+
     public ProviderAnalysisFeatureConfigurationView() {
 
         SecondaryIconTitle sectionTitle = new SecondaryIconTitle(LineAwesomeIconsSvg.CLONE.create(),"数据分析功能特性配置");
@@ -146,7 +152,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         searchDataSlicesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //filterDataSlices();
+                filterDataSlices();
             }
         });
 
@@ -164,7 +170,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //cancelFilterDataSlices();
+                cancelFilterDataSlices();
             }
         });
 
@@ -281,56 +287,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             dataSliceMetaInfoGrid.setHeight(browserHeight-385,Unit.PIXELS);
             //dataSlicePropertyDefinitionsGrid.setHeight(browserHeight-650,Unit.PIXELS);
         }));
-        //renderGridDateSlicesInfo();
-
-
-        AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
-        List<FunctionalFeatureInfo> functionalFeatureInfoList = analysisProviderAdminClient.listFunctionalFeatures();
-
-        if(functionalFeatureInfoList != null){
-            dataSliceMetaInfoGrid.setItems(functionalFeatureInfoList);
-            this.gridDataSlicesCountDisplayItem.updateDisplayValue(""+functionalFeatureInfoList.size());
-        }
-
-        /*
-        AnalysisProviderAdminClient.ListProviderRunningStatusCallback listProviderRunningStatusCallback = new AnalysisProviderAdminClient.ListProviderRunningStatusCallback() {
-            @Override
-            public void onExecutionSuccess(List<ProviderRunningInfo> providerRunningInfoList) {
-                if(providerRunningInfoList != null){
-                    providerRunningInfoList.sort(new Comparator<ProviderRunningInfo>() {
-                        @Override
-                        public int compare(ProviderRunningInfo o1, ProviderRunningInfo o2) {
-                            return 0 - o1.getProviderStartTime().compareTo(o2.getProviderStartTime());
-                        }
-                    });
-
-                    currentUI.access(() -> {
-                        runningStatusLayout.setVisible(true);
-                        notRunningStatusLayout.setVisible(false);
-                        providerRunningInfoGrid.setItems(providerRunningInfoList);
-                    });
-                }else{
-                    currentUI.access(() -> {
-                        runningStatusLayout.setVisible(false);
-                        notRunningStatusLayout.setVisible(true);
-                        CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据分析服务", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
-                    });
-                }
-            }
-
-            @Override
-            public void onExecutionFail() {
-                currentUI.access(() -> {
-                    runningStatusLayout.setVisible(false);
-                    notRunningStatusLayout.setVisible(true);
-                    CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据分析服务", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
-                });
-            }
-        };
-        analysisProviderAdminClient.listProviderRunningStatus(listProviderRunningStatusCallback,5);
-        */
-
-
+        renderFunctionalFeatureInfo();
     }
 
     @Override
@@ -340,8 +297,91 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         super.onDetach(detachEvent);
     }
 
+    public void renderFunctionalFeatureInfo(){
+        AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
+        UI currentUI = UI.getCurrent();
+        AnalysisProviderAdminClient.ListFunctionalFeaturesCallback listFunctionalFeaturesCallback = new AnalysisProviderAdminClient.ListFunctionalFeaturesCallback() {
+            @Override
+            public void onExecutionSuccess(List<FunctionalFeatureInfo> functionalFeatureInfoList) {
+                if(functionalFeatureInfoList != null){
+                    currentUI.access(() -> {
+                        gridDataSlicesCountDisplayItem.updateDisplayValue(""+functionalFeatureInfoList.size());
+                        dataSliceMetaInfoView = dataSliceMetaInfoGrid.setItems(functionalFeatureInfoList);
+                        dataSliceMetaInfoView.addFilter(item->{
+                            String dataSliceName = item.getFunctionalFeatureName();
+                            String dataSliceGroup = item.getFunctionalFeatureDescription();
 
+                            boolean dataSliceNameFilterResult = true;
+                            if(!dataSliceNameFilterField.getValue().trim().equals("")){
+                                if(dataSliceName.toUpperCase().contains(dataSliceNameFilterField.getValue().trim().toUpperCase())){
+                                    dataSliceNameFilterResult = true;
+                                }else{
+                                    dataSliceNameFilterResult = false;
+                                }
+                            }
 
+                            boolean dataSliceGroupFilterResult = true;
+                            if(!dataSliceGroupFilterField.getValue().trim().equals("")){
+                                if(dataSliceGroup.toUpperCase().contains(dataSliceGroupFilterField.getValue().trim().toUpperCase())){
+                                    dataSliceGroupFilterResult = true;
+                                }else{
+                                    dataSliceGroupFilterResult = false;
+                                }
+                            }
+                            return dataSliceNameFilterResult & dataSliceGroupFilterResult;
+                        });
+                        queryFeatureRunningStatusInfo(currentUI);
+                    });
+                }
+            }
 
+            @Override
+            public void onExecutionFail() {
+                currentUI.access(() -> {
+                    CommonUIOperationUtil.showPopupNotification("未获取到分析功能特性列表信息", NotificationVariant.LUMO_ERROR,-1, Notification.Position.BOTTOM_START);
+                });
+            }
+        };
+        analysisProviderAdminClient.listFunctionalFeatures(listFunctionalFeaturesCallback,3);
+    }
 
+    private void queryFeatureRunningStatusInfo(UI currentUI){
+        AnalysisProviderAdminClient.ListFeatureRunningStatusCallback listFeatureRunningStatusCallback = new AnalysisProviderAdminClient.ListFeatureRunningStatusCallback() {
+            @Override
+            public void onExecutionSuccess(List<FeatureRunningInfo> featureRunningInfo) {
+                if(featureRunningInfo != null){
+                    currentFeatureRunningInfoList = featureRunningInfo;
+                }else{
+                    currentUI.access(() -> {
+                        CommonUIOperationUtil.showPopupNotification("未获取到分析功能特性运行状态信息", NotificationVariant.LUMO_ERROR,-1, Notification.Position.BOTTOM_START);
+                    });
+                }
+            }
+
+            @Override
+            public void onExecutionFail() {
+                currentUI.access(() -> {
+                    CommonUIOperationUtil.showPopupNotification("未获取到分析功能特性运行状态信息", NotificationVariant.LUMO_ERROR,-1, Notification.Position.BOTTOM_START);
+                });
+            }
+        };
+        //analysisProviderAdminClient.listFeatureRunningStatus(listFeatureRunningStatusCallback,3);
+
+    }
+
+    private void filterDataSlices(){
+        String dataSliceNameFilterValue = dataSliceNameFilterField.getValue().trim();
+        String dataSliceGroupFilterValue = dataSliceGroupFilterField.getValue().trim();
+        if(dataSliceNameFilterValue.equals("")&dataSliceGroupFilterValue.equals("")){
+            CommonUIOperationUtil.showPopupNotification("请输入分析功能特性名称 和/或 分析功能特性描述", NotificationVariant.LUMO_ERROR);
+        }else{
+            this.dataSliceMetaInfoView.refreshAll();
+        }
+    }
+
+    private void cancelFilterDataSlices(){
+        dataSliceNameFilterField.setValue("");
+        dataSliceGroupFilterField.setValue("");
+        this.dataSliceMetaInfoView.refreshAll();
+    }
 }
