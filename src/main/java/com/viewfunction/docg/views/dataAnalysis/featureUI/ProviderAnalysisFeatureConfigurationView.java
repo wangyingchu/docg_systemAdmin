@@ -15,11 +15,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.analysisProvider.client.AnalysisProviderAdminClient;
 import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.FeatureRunningInfo;
 import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.FunctionalFeatureInfo;
-import com.viewfunction.docg.dataCompute.dataComputeServiceCore.payload.DataSliceMetaInfo;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -28,16 +30,16 @@ import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
 
     private NumberFormat numberFormat;
-    private PrimaryKeyValueDisplayItem gridDataSlicesCountDisplayItem;
-    private SecondaryTitleActionBar dataSliceInfoActionBar;
+    private PrimaryKeyValueDisplayItem analysisFeatureCountDisplayItem;
+    private SecondaryTitleActionBar analysisFeatureInfoActionBar;
     private Registration listener;
-    private Grid<FunctionalFeatureInfo> dataSliceMetaInfoGrid;
-    private GridListDataView<FunctionalFeatureInfo> dataSliceMetaInfoView;
-    private DataSliceMetaInfo lastSelectedDataSliceMetaInfo;
+    private Grid<FunctionalFeatureInfo> functionalFeatureInfoGrid;
+    private GridListDataView<FunctionalFeatureInfo> functionalFeatureInfoDataView;
     private SecondaryKeyValueDisplayItem groupNameDisplayItem;
     private SecondaryKeyValueDisplayItem primaryDataCountDisplayItem;
     private SecondaryKeyValueDisplayItem backupDataCountDisplayItem;
@@ -45,20 +47,17 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     private SecondaryKeyValueDisplayItem sliceAtomicityDisplayItem;
     private SecondaryKeyValueDisplayItem backupNumberDisplayItem;
     private SecondaryKeyValueDisplayItem sliceStorageModeDisplayItem;
-    private TextField dataSliceNameFilterField;
-    private TextField dataSliceGroupFilterField;
-    private int currentDataSliceCount;
+    private TextField functionalFeatureNameFilterField;
+    private TextField functionalFeatureDescFilterField;
     private Grid<FeatureRunningInfo> dataSlicePropertyDefinitionsGrid;
     private final int ANALYSIS_CLIENT_HOST_PORT = Integer.parseInt(SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ANALYSIS_CLIENT_HOST_PORT))+2;
     private final String ANALYSIS_CLIENT_HOST_NAME =
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ANALYSIS_CLIENT_HOST_NAME);
     private List<FeatureRunningInfo> currentFeatureRunningInfoList;
+    private FunctionalFeatureInfo lastSelectedFunctionalFeatureInfo;
+    private HorizontalLayout functionalFeaturesInfoContainerLayout;
 
     public ProviderAnalysisFeatureConfigurationView() {
-
-        SecondaryIconTitle sectionTitle = new SecondaryIconTitle(LineAwesomeIconsSvg.CLONE.create(),"数据分析功能特性配置");
-        add(sectionTitle);
-
         HorizontalLayout infoContainer = new HorizontalLayout();
         infoContainer.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         infoContainer.setWidthFull();
@@ -69,7 +68,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
 
         this.numberFormat = NumberFormat.getInstance();
 
-        this.gridDataSlicesCountDisplayItem =
+        this.analysisFeatureCountDisplayItem =
                 new PrimaryKeyValueDisplayItem(infoContainer, FontAwesome.Solid.CIRCLE.create()," 分析功能特性数量:","-");
 
         HorizontalLayout horSpaceDiv = new HorizontalLayout();
@@ -104,15 +103,16 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"分析功能特性定义:",null);
         add(sectionActionBar);
 
-        HorizontalLayout dataSlicesInfoContainerLayout = new HorizontalLayout();
-        dataSlicesInfoContainerLayout.setPadding(false);
-        dataSlicesInfoContainerLayout.setMargin(false);
-        add(dataSlicesInfoContainerLayout);
+        functionalFeaturesInfoContainerLayout = new HorizontalLayout();
+        functionalFeaturesInfoContainerLayout.setPadding(false);
+        functionalFeaturesInfoContainerLayout.setMargin(false);
+        add(functionalFeaturesInfoContainerLayout);
 
         VerticalLayout leftSideLayout = new VerticalLayout();
         leftSideLayout.setPadding(false);
         leftSideLayout.setMargin(false);
-        dataSlicesInfoContainerLayout.add(leftSideLayout);
+        leftSideLayout.setWidth(950,Unit.PIXELS);
+        functionalFeaturesInfoContainerLayout.add(leftSideLayout);
 
         HorizontalLayout dataSlicesSearchElementsContainerLayout = new HorizontalLayout();
         dataSlicesSearchElementsContainerLayout.setSpacing(false);
@@ -124,24 +124,24 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
         filterTitle.setWidth(80,Unit.PIXELS);
 
-        dataSliceNameFilterField = new TextField();
-        dataSliceNameFilterField.setPlaceholder("分析功能特性名称");
-        dataSliceNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        dataSliceNameFilterField.setWidth(150,Unit.PIXELS);
-        dataSlicesSearchElementsContainerLayout.add(dataSliceNameFilterField);
-        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,dataSliceNameFilterField);
+        functionalFeatureNameFilterField = new TextField();
+        functionalFeatureNameFilterField.setPlaceholder("分析功能特性名称");
+        functionalFeatureNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        functionalFeatureNameFilterField.setWidth(150,Unit.PIXELS);
+        dataSlicesSearchElementsContainerLayout.add(functionalFeatureNameFilterField);
+        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, functionalFeatureNameFilterField);
 
         Icon plusIcon = new Icon(VaadinIcon.PLUS);
         plusIcon.setSize("12px");
         dataSlicesSearchElementsContainerLayout.add(plusIcon);
         dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
 
-        dataSliceGroupFilterField = new TextField();
-        dataSliceGroupFilterField.setPlaceholder("分析功能特性描述");
-        dataSliceGroupFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        dataSliceGroupFilterField.setWidth(150,Unit.PIXELS);
-        dataSlicesSearchElementsContainerLayout.add(dataSliceGroupFilterField);
-        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,dataSliceGroupFilterField);
+        functionalFeatureDescFilterField = new TextField();
+        functionalFeatureDescFilterField.setPlaceholder("分析功能特性描述");
+        functionalFeatureDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        functionalFeatureDescFilterField.setWidth(150,Unit.PIXELS);
+        dataSlicesSearchElementsContainerLayout.add(functionalFeatureDescFilterField);
+        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, functionalFeatureDescFilterField);
 
         Button searchDataSlicesButton = new Button("查找分析功能特性",new Icon(VaadinIcon.SEARCH));
         searchDataSlicesButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -174,39 +174,52 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             }
         });
 
-        dataSliceMetaInfoGrid = new Grid<>();
-        dataSliceMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-        dataSliceMetaInfoGrid.addColumn(FunctionalFeatureInfo::getFunctionalFeatureName).setHeader("分析功能特性名称").setKey("idx_0").setFlexGrow(1).setTooltipGenerator(new ItemLabelGenerator<FunctionalFeatureInfo>() {
+        functionalFeatureInfoGrid = new Grid<>();
+        functionalFeatureInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        functionalFeatureInfoGrid.addColumn(FunctionalFeatureInfo::getFunctionalFeatureName).setHeader("分析功能特性名称").setKey("idx_0").setFlexGrow(1).setTooltipGenerator(new ItemLabelGenerator<FunctionalFeatureInfo>() {
             @Override
             public String apply(FunctionalFeatureInfo functionalFeatureInfo) {
                 return functionalFeatureInfo.getFunctionalFeatureName();
             }
         });
-        dataSliceMetaInfoGrid.addColumn(FunctionalFeatureInfo::getFunctionalFeatureDescription).setHeader("分析功能特性描述").setKey("idx_1").setFlexGrow(1).setTooltipGenerator(new ItemLabelGenerator<FunctionalFeatureInfo>() {
+        functionalFeatureInfoGrid.addColumn(FunctionalFeatureInfo::getFunctionalFeatureDescription).setHeader("分析功能特性描述").setKey("idx_1").setFlexGrow(1).setTooltipGenerator(new ItemLabelGenerator<FunctionalFeatureInfo>() {
             @Override
             public String apply(FunctionalFeatureInfo functionalFeatureInfo) {
                 return functionalFeatureInfo.getFunctionalFeatureDescription();
             }
         });
         LightGridColumnHeader gridColumnHeader_idx0 = new LightGridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"分析功能特性名称");
-        dataSliceMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
+        functionalFeatureInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
         LightGridColumnHeader gridColumnHeader_idx1 = new LightGridColumnHeader(VaadinIcon.DESKTOP,"分析功能特性描述");
-        dataSliceMetaInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+        functionalFeatureInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+        functionalFeatureInfoGrid.addSelectionListener(new SelectionListener<Grid<FunctionalFeatureInfo>, FunctionalFeatureInfo>() {
+            @Override
+            public void selectionChange(SelectionEvent<Grid<FunctionalFeatureInfo>, FunctionalFeatureInfo> selectionEvent) {
+                Set<FunctionalFeatureInfo> selectedItemSet = selectionEvent.getAllSelectedItems();
+                if(selectedItemSet.size() == 0){
+                    // don't allow to unselect item, just reselect last selected item
+                    functionalFeatureInfoGrid.select(lastSelectedFunctionalFeatureInfo);
+                }else{
+                    FunctionalFeatureInfo selectedEntityStatisticsInfo = selectedItemSet.iterator().next();
+                    renderFunctionalFeatureRunningOverview(selectedEntityStatisticsInfo);
+                    lastSelectedFunctionalFeatureInfo = selectedEntityStatisticsInfo;
+                }
+            }
+        });
 
-        leftSideLayout.add(dataSliceMetaInfoGrid);
+        leftSideLayout.add(functionalFeatureInfoGrid);
 
         VerticalLayout rightSideLayout = new VerticalLayout();
         rightSideLayout.setMargin(false);
-        rightSideLayout.setWidth(590,Unit.PIXELS);
-        dataSlicesInfoContainerLayout.add(rightSideLayout);
+        functionalFeaturesInfoContainerLayout.add(rightSideLayout);
         rightSideLayout.getStyle().set("left","0px").set("top","-2px").set("position","relative");
 
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"分析功能特性概览");
         rightSideLayout.add(filterTitle2);
 
-        dataSliceInfoActionBar = new SecondaryTitleActionBar(LineAwesomeIconsSvg.CLONE.create(),"-",null,null);
-        dataSliceInfoActionBar.setWidth(100,Unit.PERCENTAGE);
-        rightSideLayout.add(dataSliceInfoActionBar);
+        analysisFeatureInfoActionBar = new SecondaryTitleActionBar(LineAwesomeIconsSvg.CLONE.create(),"-",null,null);
+        analysisFeatureInfoActionBar.setWidth(100,Unit.PERCENTAGE);
+        rightSideLayout.add(analysisFeatureInfoActionBar);
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.DASHBOARD),"分析功能特性指标");
         rightSideLayout.add(infoTitle2);
@@ -250,9 +263,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"数据切片属性定义");
         rightSideLayout.add(infoTitle);
 
-
         dataSlicePropertyDefinitionsGrid = new Grid<>();
-        dataSlicePropertyDefinitionsGrid.setWidth(100,Unit.PERCENTAGE);
         dataSlicePropertyDefinitionsGrid.setSelectionMode(Grid.SelectionMode.NONE);
         //dataSlicePropertyDefinitionsGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getFeatureName).setHeader("属性名称").setKey("idx_0");
@@ -280,14 +291,17 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            dataSliceMetaInfoGrid.setHeight(event.getHeight()-385,Unit.PIXELS);
-            dataSlicePropertyDefinitionsGrid.setHeight(event.getHeight()-650,Unit.PIXELS);
+            functionalFeatureInfoGrid.setHeight(event.getHeight()-360,Unit.PIXELS);
+            dataSlicePropertyDefinitionsGrid.setHeight(event.getHeight()-570,Unit.PIXELS);
+            functionalFeaturesInfoContainerLayout.setWidth(event.getWidth()-350,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            dataSliceMetaInfoGrid.setHeight(browserHeight-385,Unit.PIXELS);
-            dataSlicePropertyDefinitionsGrid.setHeight(browserHeight-650,Unit.PIXELS);
+            int browserWidth = receiver.getBodyClientWidth();
+            functionalFeatureInfoGrid.setHeight(browserHeight-360,Unit.PIXELS);
+            dataSlicePropertyDefinitionsGrid.setHeight(browserHeight-570,Unit.PIXELS);
+            functionalFeaturesInfoContainerLayout.setWidth(browserWidth-350,Unit.PIXELS);
         }));
         renderFunctionalFeatureInfo();
     }
@@ -302,20 +316,21 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     public void renderFunctionalFeatureInfo(){
         AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
         UI currentUI = UI.getCurrent();
+        //dataSlicePropertyDefinitionsGrid.setItems(new ArrayList<>());
         AnalysisProviderAdminClient.ListFunctionalFeaturesCallback listFunctionalFeaturesCallback = new AnalysisProviderAdminClient.ListFunctionalFeaturesCallback() {
             @Override
             public void onExecutionSuccess(List<FunctionalFeatureInfo> functionalFeatureInfoList) {
                 if(functionalFeatureInfoList != null){
                     currentUI.access(() -> {
-                        gridDataSlicesCountDisplayItem.updateDisplayValue(""+functionalFeatureInfoList.size());
-                        dataSliceMetaInfoView = dataSliceMetaInfoGrid.setItems(functionalFeatureInfoList);
-                        dataSliceMetaInfoView.addFilter(item->{
+                        analysisFeatureCountDisplayItem.updateDisplayValue(""+functionalFeatureInfoList.size());
+                        functionalFeatureInfoDataView = functionalFeatureInfoGrid.setItems(functionalFeatureInfoList);
+                        functionalFeatureInfoDataView.addFilter(item->{
                             String dataSliceName = item.getFunctionalFeatureName();
                             String dataSliceGroup = item.getFunctionalFeatureDescription();
 
                             boolean dataSliceNameFilterResult = true;
-                            if(!dataSliceNameFilterField.getValue().trim().equals("")){
-                                if(dataSliceName.toUpperCase().contains(dataSliceNameFilterField.getValue().trim().toUpperCase())){
+                            if(!functionalFeatureNameFilterField.getValue().trim().equals("")){
+                                if(dataSliceName.toUpperCase().contains(functionalFeatureNameFilterField.getValue().trim().toUpperCase())){
                                     dataSliceNameFilterResult = true;
                                 }else{
                                     dataSliceNameFilterResult = false;
@@ -323,8 +338,8 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
                             }
 
                             boolean dataSliceGroupFilterResult = true;
-                            if(!dataSliceGroupFilterField.getValue().trim().equals("")){
-                                if(dataSliceGroup.toUpperCase().contains(dataSliceGroupFilterField.getValue().trim().toUpperCase())){
+                            if(!functionalFeatureDescFilterField.getValue().trim().equals("")){
+                                if(dataSliceGroup.toUpperCase().contains(functionalFeatureDescFilterField.getValue().trim().toUpperCase())){
                                     dataSliceGroupFilterResult = true;
                                 }else{
                                     dataSliceGroupFilterResult = false;
@@ -371,18 +386,33 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     }
 
     private void filterDataSlices(){
-        String dataSliceNameFilterValue = dataSliceNameFilterField.getValue().trim();
-        String dataSliceGroupFilterValue = dataSliceGroupFilterField.getValue().trim();
+        String dataSliceNameFilterValue = functionalFeatureNameFilterField.getValue().trim();
+        String dataSliceGroupFilterValue = functionalFeatureDescFilterField.getValue().trim();
         if(dataSliceNameFilterValue.equals("")&dataSliceGroupFilterValue.equals("")){
             CommonUIOperationUtil.showPopupNotification("请输入分析功能特性名称 和/或 分析功能特性描述", NotificationVariant.LUMO_ERROR);
         }else{
-            this.dataSliceMetaInfoView.refreshAll();
+            this.functionalFeatureInfoDataView.refreshAll();
         }
     }
 
     private void cancelFilterDataSlices(){
-        dataSliceNameFilterField.setValue("");
-        dataSliceGroupFilterField.setValue("");
-        this.dataSliceMetaInfoView.refreshAll();
+        functionalFeatureNameFilterField.setValue("");
+        functionalFeatureDescFilterField.setValue("");
+        this.functionalFeatureInfoDataView.refreshAll();
+    }
+
+    private void renderFunctionalFeatureRunningOverview(FunctionalFeatureInfo functionalFeatureInfo){
+        analysisFeatureInfoActionBar.updateTitleContent(functionalFeatureInfo.getFunctionalFeatureName().trim()+
+                " ("+ functionalFeatureInfo.getFunctionalFeatureDescription().trim()+")");
+
+        List<FeatureRunningInfo> selectedFeatureRunningInfoList = new ArrayList<>();
+        if(currentFeatureRunningInfoList!= null){
+            for(FeatureRunningInfo featureRunningInfo : currentFeatureRunningInfoList) {
+                if(featureRunningInfo.getFeatureName().trim().equals(functionalFeatureInfo.getFunctionalFeatureName().trim())){
+                    selectedFeatureRunningInfoList.add(featureRunningInfo);
+                }
+            }
+        }
+        dataSlicePropertyDefinitionsGrid.setItems(selectedFeatureRunningInfoList);
     }
 }
