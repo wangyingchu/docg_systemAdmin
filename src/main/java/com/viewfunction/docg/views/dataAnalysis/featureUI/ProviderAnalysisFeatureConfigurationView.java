@@ -49,7 +49,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     private SecondaryKeyValueDisplayItem sliceStorageModeDisplayItem;
     private TextField functionalFeatureNameFilterField;
     private TextField functionalFeatureDescFilterField;
-    private Grid<FeatureRunningInfo> dataSlicePropertyDefinitionsGrid;
+    private Grid<FeatureRunningInfo> analysisFeatureRunningInfoGrid;
     private final int ANALYSIS_CLIENT_HOST_PORT = Integer.parseInt(SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ANALYSIS_CLIENT_HOST_PORT))+2;
     private final String ANALYSIS_CLIENT_HOST_NAME =
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ANALYSIS_CLIENT_HOST_NAME);
@@ -75,11 +75,11 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         horSpaceDiv.setWidth(30, Unit.PIXELS);
         infoContainer.add(horSpaceDiv);
 
-        Button addGridDataSliceButton= new Button("注册分析功能特性");
-        addGridDataSliceButton.setIcon(LineAwesomeIconsSvg.CLIPBOARD_LIST_SOLID.create());
-        addGridDataSliceButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        infoContainer.add(addGridDataSliceButton);
-        addGridDataSliceButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button registerFeatureButton= new Button("注册分析功能特性");
+        registerFeatureButton.setIcon(LineAwesomeIconsSvg.CLIPBOARD_LIST_SOLID.create());
+        registerFeatureButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        infoContainer.add(registerFeatureButton);
+        registerFeatureButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 //renderCreateDataSliceView();
@@ -114,63 +114,63 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         leftSideLayout.setWidth(950,Unit.PIXELS);
         functionalFeaturesInfoContainerLayout.add(leftSideLayout);
 
-        HorizontalLayout dataSlicesSearchElementsContainerLayout = new HorizontalLayout();
-        dataSlicesSearchElementsContainerLayout.setSpacing(false);
-        dataSlicesSearchElementsContainerLayout.setMargin(false);
-        leftSideLayout.add(dataSlicesSearchElementsContainerLayout);
+        HorizontalLayout functionalFeaturesSearchElementsContainerLayout = new HorizontalLayout();
+        functionalFeaturesSearchElementsContainerLayout.setSpacing(false);
+        functionalFeaturesSearchElementsContainerLayout.setMargin(false);
+        leftSideLayout.add(functionalFeaturesSearchElementsContainerLayout);
 
         SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
-        dataSlicesSearchElementsContainerLayout.add(filterTitle);
-        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
+        functionalFeaturesSearchElementsContainerLayout.add(filterTitle);
+        functionalFeaturesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
         filterTitle.setWidth(80,Unit.PIXELS);
 
         functionalFeatureNameFilterField = new TextField();
         functionalFeatureNameFilterField.setPlaceholder("分析功能特性名称");
         functionalFeatureNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         functionalFeatureNameFilterField.setWidth(150,Unit.PIXELS);
-        dataSlicesSearchElementsContainerLayout.add(functionalFeatureNameFilterField);
-        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, functionalFeatureNameFilterField);
+        functionalFeaturesSearchElementsContainerLayout.add(functionalFeatureNameFilterField);
+        functionalFeaturesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, functionalFeatureNameFilterField);
 
         Icon plusIcon = new Icon(VaadinIcon.PLUS);
         plusIcon.setSize("12px");
-        dataSlicesSearchElementsContainerLayout.add(plusIcon);
-        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
+        functionalFeaturesSearchElementsContainerLayout.add(plusIcon);
+        functionalFeaturesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
 
         functionalFeatureDescFilterField = new TextField();
         functionalFeatureDescFilterField.setPlaceholder("分析功能特性描述");
         functionalFeatureDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         functionalFeatureDescFilterField.setWidth(150,Unit.PIXELS);
-        dataSlicesSearchElementsContainerLayout.add(functionalFeatureDescFilterField);
-        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, functionalFeatureDescFilterField);
+        functionalFeaturesSearchElementsContainerLayout.add(functionalFeatureDescFilterField);
+        functionalFeaturesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, functionalFeatureDescFilterField);
 
-        Button searchDataSlicesButton = new Button("查找分析功能特性",new Icon(VaadinIcon.SEARCH));
-        searchDataSlicesButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        searchDataSlicesButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        dataSlicesSearchElementsContainerLayout.add(searchDataSlicesButton);
-        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchDataSlicesButton);
-        searchDataSlicesButton.setWidth(130,Unit.PIXELS);
-        searchDataSlicesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button searchFunctionalFeaturesButton = new Button("查找分析功能特性",new Icon(VaadinIcon.SEARCH));
+        searchFunctionalFeaturesButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        searchFunctionalFeaturesButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        functionalFeaturesSearchElementsContainerLayout.add(searchFunctionalFeaturesButton);
+        functionalFeaturesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchFunctionalFeaturesButton);
+        searchFunctionalFeaturesButton.setWidth(130,Unit.PIXELS);
+        searchFunctionalFeaturesButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                filterDataSlices();
+                filterFunctionalFeatures();
             }
         });
 
         Icon divIcon = new Icon(VaadinIcon.LINE_V);
         divIcon.setSize("8px");
-        dataSlicesSearchElementsContainerLayout.add(divIcon);
-        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+        functionalFeaturesSearchElementsContainerLayout.add(divIcon);
+        functionalFeaturesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
 
         Button clearSearchCriteriaButton = new Button("清除查询条件",new Icon(VaadinIcon.ERASER));
         clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        dataSlicesSearchElementsContainerLayout.add(clearSearchCriteriaButton);
-        dataSlicesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
+        functionalFeaturesSearchElementsContainerLayout.add(clearSearchCriteriaButton);
+        functionalFeaturesSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
         clearSearchCriteriaButton.setWidth(120,Unit.PIXELS);
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                cancelFilterDataSlices();
+                cancelFilterFunctionalFeatures();
             }
         });
 
@@ -263,34 +263,34 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"数据切片属性定义");
         rightSideLayout.add(infoTitle);
 
-        dataSlicePropertyDefinitionsGrid = new Grid<>();
-        dataSlicePropertyDefinitionsGrid.setSelectionMode(Grid.SelectionMode.NONE);
-        dataSlicePropertyDefinitionsGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
+        analysisFeatureRunningInfoGrid = new Grid<>();
+        analysisFeatureRunningInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        analysisFeatureRunningInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
 
-        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getFeatureRunningStatus).setHeader("执行状态").setKey("idx_1").setResizable(true).setWidth("60px");
-        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getResponseDataForm).setHeader("返回数据形式").setKey("idx_2").setResizable(true).setWidth("100px");
-        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getRequestTime).setHeader("请求时间").setKey("idx_3").setResizable(true).setTooltipGenerator(item -> "请求时间: "+item.getRequestTime());
-        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getRequestUUID).setHeader("请求 UID").setKey("idx_4").setResizable(true).setTooltipGenerator(item -> "请求 UID: "+item.getRequestUUID());
-        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getResponseUUID).setHeader("响应 UID").setKey("idx_5").setResizable(true).setTooltipGenerator(item -> "响应 UID: "+item.getResponseUUID());
-        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getRunningStartTime).setHeader("分析开始时间").setKey("idx_6").setResizable(true).setTooltipGenerator(item -> "分析开始时间: "+item.getRunningStartTime());
-        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getRunningFinishTime).setHeader("分析结束时间").setKey("idx_7").setResizable(true).setTooltipGenerator(item -> "分析结束时间: "+item.getRunningFinishTime());
+        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getFeatureRunningStatus).setHeader("执行状态").setKey("idx_1").setResizable(true).setWidth("60px");
+        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getResponseDataForm).setHeader("返回数据形式").setKey("idx_2").setResizable(true).setWidth("100px");
+        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getRequestTime).setHeader("请求时间").setKey("idx_3").setResizable(true).setTooltipGenerator(item -> "请求时间: "+item.getRequestTime());
+        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getRequestUUID).setHeader("请求 UID").setKey("idx_4").setResizable(true).setTooltipGenerator(item -> "请求 UID: "+item.getRequestUUID());
+        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getResponseUUID).setHeader("响应 UID").setKey("idx_5").setResizable(true).setTooltipGenerator(item -> "响应 UID: "+item.getResponseUUID());
+        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getRunningStartTime).setHeader("分析开始时间").setKey("idx_6").setResizable(true).setTooltipGenerator(item -> "分析开始时间: "+item.getRunningStartTime());
+        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getRunningFinishTime).setHeader("分析结束时间").setKey("idx_7").setResizable(true).setTooltipGenerator(item -> "分析结束时间: "+item.getRunningFinishTime());
 
         LightGridColumnHeader gridColumnHeader2_idx1 = new LightGridColumnHeader(LineAwesomeIconsSvg.BOLT_SOLID.create(),"执行状态");
-        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader2_idx1).setSortable(true);
+        analysisFeatureRunningInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader2_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader2_idx2 = new LightGridColumnHeader(VaadinIcon.FORM,"返回数据形式");
-        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader2_idx2).setSortable(true);
+        analysisFeatureRunningInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader2_idx2).setSortable(true);
         LightGridColumnHeader gridColumnHeader2_idx3 = new LightGridColumnHeader(VaadinIcon.TIMER,"请求时间");
-        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader2_idx3).setSortable(true);
+        analysisFeatureRunningInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader2_idx3).setSortable(true);
         LightGridColumnHeader gridColumnHeader2_idx4 = new LightGridColumnHeader(VaadinIcon.KEY,"请求 UID");
-        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader2_idx4).setSortable(true);
+        analysisFeatureRunningInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader2_idx4).setSortable(true);
         LightGridColumnHeader gridColumnHeader2_idx5 = new LightGridColumnHeader(VaadinIcon.KEY_O,"响应 UID");
-        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader2_idx5).setSortable(true);
+        analysisFeatureRunningInfoGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader2_idx5).setSortable(true);
         LightGridColumnHeader gridColumnHeader2_idx6 = new LightGridColumnHeader(VaadinIcon.FLIGHT_TAKEOFF,"分析开始时间");
-        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_6").setHeader(gridColumnHeader2_idx6).setSortable(true);
+        analysisFeatureRunningInfoGrid.getColumnByKey("idx_6").setHeader(gridColumnHeader2_idx6).setSortable(true);
         LightGridColumnHeader gridColumnHeader2_idx7 = new LightGridColumnHeader(VaadinIcon.FLIGHT_LANDING,"分析结束时间");
-        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_7").setHeader(gridColumnHeader2_idx7).setSortable(true);
+        analysisFeatureRunningInfoGrid.getColumnByKey("idx_7").setHeader(gridColumnHeader2_idx7).setSortable(true);
 
-        rightSideLayout.add(dataSlicePropertyDefinitionsGrid);
+        rightSideLayout.add(analysisFeatureRunningInfoGrid);
     }
 
     @Override
@@ -299,7 +299,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             functionalFeatureInfoGrid.setHeight(event.getHeight()-360,Unit.PIXELS);
-            dataSlicePropertyDefinitionsGrid.setHeight(event.getHeight()-570,Unit.PIXELS);
+            analysisFeatureRunningInfoGrid.setHeight(event.getHeight()-570,Unit.PIXELS);
             functionalFeaturesInfoContainerLayout.setWidth(event.getWidth()-350,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
@@ -307,7 +307,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             int browserHeight = receiver.getBodyClientHeight();
             int browserWidth = receiver.getBodyClientWidth();
             functionalFeatureInfoGrid.setHeight(browserHeight-360,Unit.PIXELS);
-            dataSlicePropertyDefinitionsGrid.setHeight(browserHeight-570,Unit.PIXELS);
+            analysisFeatureRunningInfoGrid.setHeight(browserHeight-570,Unit.PIXELS);
             functionalFeaturesInfoContainerLayout.setWidth(browserWidth-350,Unit.PIXELS);
         }));
         renderFunctionalFeatureInfo();
@@ -332,27 +332,27 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
                         analysisFeatureCountDisplayItem.updateDisplayValue(""+functionalFeatureInfoList.size());
                         functionalFeatureInfoDataView = functionalFeatureInfoGrid.setItems(functionalFeatureInfoList);
                         functionalFeatureInfoDataView.addFilter(item->{
-                            String dataSliceName = item.getFunctionalFeatureName();
-                            String dataSliceGroup = item.getFunctionalFeatureDescription();
+                            String featureName = item.getFunctionalFeatureName();
+                            String featureDesc = item.getFunctionalFeatureDescription();
 
-                            boolean dataSliceNameFilterResult = true;
+                            boolean featureNameFilterResult = true;
                             if(!functionalFeatureNameFilterField.getValue().trim().equals("")){
-                                if(dataSliceName.toUpperCase().contains(functionalFeatureNameFilterField.getValue().trim().toUpperCase())){
-                                    dataSliceNameFilterResult = true;
+                                if(featureName.toUpperCase().contains(functionalFeatureNameFilterField.getValue().trim().toUpperCase())){
+                                    featureNameFilterResult = true;
                                 }else{
-                                    dataSliceNameFilterResult = false;
+                                    featureNameFilterResult = false;
                                 }
                             }
 
-                            boolean dataSliceGroupFilterResult = true;
+                            boolean featureDescFilterResult = true;
                             if(!functionalFeatureDescFilterField.getValue().trim().equals("")){
-                                if(dataSliceGroup.toUpperCase().contains(functionalFeatureDescFilterField.getValue().trim().toUpperCase())){
-                                    dataSliceGroupFilterResult = true;
+                                if(featureDesc.toUpperCase().contains(functionalFeatureDescFilterField.getValue().trim().toUpperCase())){
+                                    featureDescFilterResult = true;
                                 }else{
-                                    dataSliceGroupFilterResult = false;
+                                    featureDescFilterResult = false;
                                 }
                             }
-                            return dataSliceNameFilterResult & dataSliceGroupFilterResult;
+                            return featureNameFilterResult & featureDescFilterResult;
                         });
                         queryFeatureRunningStatusInfo(analysisProviderAdminClient,currentUI);
                     });
@@ -392,17 +392,17 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         analysisProviderAdminClient.listFeatureRunningStatus(listFeatureRunningStatusCallback,3);
     }
 
-    private void filterDataSlices(){
-        String dataSliceNameFilterValue = functionalFeatureNameFilterField.getValue().trim();
-        String dataSliceGroupFilterValue = functionalFeatureDescFilterField.getValue().trim();
-        if(dataSliceNameFilterValue.equals("")&dataSliceGroupFilterValue.equals("")){
+    private void filterFunctionalFeatures(){
+        String featureNameFilterValue = functionalFeatureNameFilterField.getValue().trim();
+        String featureDescFilterValue = functionalFeatureDescFilterField.getValue().trim();
+        if(featureNameFilterValue.equals("")&featureDescFilterValue.equals("")){
             CommonUIOperationUtil.showPopupNotification("请输入分析功能特性名称 和/或 分析功能特性描述", NotificationVariant.LUMO_ERROR);
         }else{
             this.functionalFeatureInfoDataView.refreshAll();
         }
     }
 
-    private void cancelFilterDataSlices(){
+    private void cancelFilterFunctionalFeatures(){
         functionalFeatureNameFilterField.setValue("");
         functionalFeatureDescFilterField.setValue("");
         this.functionalFeatureInfoDataView.refreshAll();
@@ -420,6 +420,6 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
                 }
             }
         }
-        dataSlicePropertyDefinitionsGrid.setItems(selectedFeatureRunningInfoList);
+        analysisFeatureRunningInfoGrid.setItems(selectedFeatureRunningInfoList);
     }
 }
