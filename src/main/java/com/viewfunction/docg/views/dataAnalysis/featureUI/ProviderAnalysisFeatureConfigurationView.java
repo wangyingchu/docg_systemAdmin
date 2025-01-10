@@ -265,25 +265,32 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
 
         dataSlicePropertyDefinitionsGrid = new Grid<>();
         dataSlicePropertyDefinitionsGrid.setSelectionMode(Grid.SelectionMode.NONE);
-        //dataSlicePropertyDefinitionsGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
-        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getFeatureName).setHeader("属性名称").setKey("idx_0");
-        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getFeatureRunningStatus).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("100px").setResizable(false);
-        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getRequestTime).setHeader("切片主键").setKey("idx_2").setFlexGrow(0).setWidth("80px").setResizable(false);
-        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getResponseDataForm).setHeader("切片主键").setKey("idx_3").setFlexGrow(0).setWidth("80px").setResizable(false);
+        dataSlicePropertyDefinitionsGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
 
-        /*
-        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
-        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
-        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.PASSWORD,"属性数据类型");
-        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
-        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(LineAwesomeIconsSvg.KEY_SOLID.create(),"切片主键");
-        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
+        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getFeatureRunningStatus).setHeader("执行状态").setKey("idx_1").setResizable(true).setWidth("60px");
+        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getResponseDataForm).setHeader("返回数据形式").setKey("idx_2").setResizable(true).setWidth("100px");
+        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getRequestTime).setHeader("请求时间").setKey("idx_3").setResizable(true).setTooltipGenerator(item -> "请求时间: "+item.getRequestTime());
+        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getRequestUUID).setHeader("请求 UID").setKey("idx_4").setResizable(true).setTooltipGenerator(item -> "请求 UID: "+item.getRequestUUID());
+        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getResponseUUID).setHeader("响应 UID").setKey("idx_5").setResizable(true).setTooltipGenerator(item -> "响应 UID: "+item.getResponseUUID());
+        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getRunningStartTime).setHeader("分析开始时间").setKey("idx_6").setResizable(true).setTooltipGenerator(item -> "分析开始时间: "+item.getRunningStartTime());
+        dataSlicePropertyDefinitionsGrid.addColumn(FeatureRunningInfo::getRunningFinishTime).setHeader("分析结束时间").setKey("idx_7").setResizable(true).setTooltipGenerator(item -> "分析结束时间: "+item.getRunningFinishTime());
 
-        */
+        LightGridColumnHeader gridColumnHeader2_idx1 = new LightGridColumnHeader(LineAwesomeIconsSvg.BOLT_SOLID.create(),"执行状态");
+        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader2_idx1).setSortable(true);
+        LightGridColumnHeader gridColumnHeader2_idx2 = new LightGridColumnHeader(VaadinIcon.FORM,"返回数据形式");
+        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader2_idx2).setSortable(true);
+        LightGridColumnHeader gridColumnHeader2_idx3 = new LightGridColumnHeader(VaadinIcon.TIMER,"请求时间");
+        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader2_idx3).setSortable(true);
+        LightGridColumnHeader gridColumnHeader2_idx4 = new LightGridColumnHeader(VaadinIcon.KEY,"请求 UID");
+        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader2_idx4).setSortable(true);
+        LightGridColumnHeader gridColumnHeader2_idx5 = new LightGridColumnHeader(VaadinIcon.KEY_O,"响应 UID");
+        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader2_idx5).setSortable(true);
+        LightGridColumnHeader gridColumnHeader2_idx6 = new LightGridColumnHeader(VaadinIcon.FLIGHT_TAKEOFF,"分析开始时间");
+        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_6").setHeader(gridColumnHeader2_idx6).setSortable(true);
+        LightGridColumnHeader gridColumnHeader2_idx7 = new LightGridColumnHeader(VaadinIcon.FLIGHT_LANDING,"分析结束时间");
+        dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_7").setHeader(gridColumnHeader2_idx7).setSortable(true);
+
         rightSideLayout.add(dataSlicePropertyDefinitionsGrid);
-
-        //VerticalLayout spaceHolderLayout = new VerticalLayout();
-        //rightSideLayout.add(spaceHolderLayout);
     }
 
     @Override
