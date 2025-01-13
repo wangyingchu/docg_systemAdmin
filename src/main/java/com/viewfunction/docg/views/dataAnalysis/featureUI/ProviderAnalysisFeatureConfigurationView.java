@@ -34,6 +34,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -474,12 +475,15 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             Duration totalDuration = finishedRunningDurationList.stream().reduce(Duration.ZERO, Duration::plus);
             totalRunningDurationDisplayItem.updateDisplayValue(formateDuration(totalDuration));
 
+            long[] secondNumbers = new long[finishedRunningDurationList.size()];
             long totalTimeInSeconds = totalDuration.getSeconds();
             long shortestTimeInSeconds = finishedRunningDurationList.get(0).getSeconds();
             long longestTimeInSeconds = finishedRunningDurationList.get(0).getSeconds();
 
+            int i = 0;
             for(Duration currentDuration:finishedRunningDurationList){
-                totalTimeInSeconds = totalTimeInSeconds + currentDuration.getSeconds();
+                secondNumbers[i] = currentDuration.getSeconds();
+                i++;
                 if(currentDuration.getSeconds() < shortestTimeInSeconds){
                     shortestTimeInSeconds = currentDuration.getSeconds();
                 }
@@ -491,11 +495,9 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             Duration avgDuration = Duration.ofSeconds(averageTimeInSeconds);
             avgRunningDurationDisplayItem.updateDisplayValue(formateDuration(avgDuration));
 
-
-
-            medianRunningDurationDisplayItem.updateDisplayValue(formateDuration(avgDuration));
-
-
+            long medianTimeInSeconds = calculateMedian(secondNumbers);
+            Duration medianDuration = Duration.ofSeconds(medianTimeInSeconds);
+            medianRunningDurationDisplayItem.updateDisplayValue(formateDuration(medianDuration));
 
             Duration shortestDuration = Duration.ofSeconds(shortestTimeInSeconds);
             shortestRunningDurationDisplayItem.updateDisplayValue(formateDuration(shortestDuration));
@@ -525,5 +527,19 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         // 格式化输出
         String formattedDuration = String.format("%02d:%02d:%02d", hours, minutes, seconds);
         return formattedDuration;
+    }
+
+    public long calculateMedian(long[] numbers) {
+        // 对数组进行排序
+        Arrays.sort(numbers);
+
+        int middle = numbers.length / 2;
+        if (numbers.length % 2 == 1) {
+            // 如果数组长度是奇数，中位数是中间的数字
+            return numbers[middle];
+        } else {
+            // 如果数组长度是偶数，中位数是中间两个数字的平均值
+            return (long) ((numbers[middle - 1] + numbers[middle]) / 2.0);
+        }
     }
 }
