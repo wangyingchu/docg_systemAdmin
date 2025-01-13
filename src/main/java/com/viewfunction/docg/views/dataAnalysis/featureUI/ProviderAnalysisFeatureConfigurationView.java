@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
@@ -22,6 +23,7 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.analysisProvider.client.AnalysisProviderAdminClient;
 import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.FeatureRunningInfo;
 import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.FunctionalFeatureInfo;
+import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.ProviderRunningInfo;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -287,14 +289,16 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         analysisFeatureRunningInfoGrid = new Grid<>();
         analysisFeatureRunningInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
         analysisFeatureRunningInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
-
         analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getFeatureRunningStatus).setHeader("执行状态").setKey("idx_1").setResizable(true).setWidth("60px");
         analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getResponseDataForm).setHeader("返回数据形式").setKey("idx_2").setResizable(true).setWidth("100px");
-        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getRequestTime).setHeader("请求时间").setKey("idx_3").setResizable(true).setTooltipGenerator(item -> "请求时间: "+item.getRequestTime());
+        analysisFeatureRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(FeatureRunningInfo::getRequestTime,"yyyy-MM-dd HH:mm:ss")).setHeader("请求时间").setKey("idx_3").setResizable(true)
+                .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRequestTime() != null ? featureRunningInfo.getRequestTime().toString(): null);
         analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getRequestUUID).setHeader("请求 UID").setKey("idx_4").setResizable(true).setTooltipGenerator(item -> "请求 UID: "+item.getRequestUUID());
         analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getResponseUUID).setHeader("响应 UID").setKey("idx_5").setResizable(true).setTooltipGenerator(item -> "响应 UID: "+item.getResponseUUID());
-        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getRunningStartTime).setHeader("分析开始时间").setKey("idx_6").setResizable(true).setTooltipGenerator(item -> "分析开始时间: "+item.getRunningStartTime());
-        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getRunningFinishTime).setHeader("分析结束时间").setKey("idx_7").setResizable(true).setTooltipGenerator(item -> "分析结束时间: "+item.getRunningFinishTime());
+        analysisFeatureRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(FeatureRunningInfo::getRunningStartTime,"yyyy-MM-dd HH:mm:ss")).setHeader("分析开始时间").setKey("idx_6").setResizable(true)
+                .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRunningStartTime() != null ? featureRunningInfo.getRunningStartTime().toString(): null);
+        analysisFeatureRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(FeatureRunningInfo::getRunningFinishTime,"yyyy-MM-dd HH:mm:ss")).setHeader("分析结束时间").setKey("idx_7").setResizable(true)
+                .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRunningFinishTime() != null ? featureRunningInfo.getRunningFinishTime().toString(): null);
 
         LightGridColumnHeader gridColumnHeader2_idx1 = new LightGridColumnHeader(LineAwesomeIconsSvg.BOLT_SOLID.create(),"执行状态");
         analysisFeatureRunningInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader2_idx1).setSortable(true);
@@ -320,7 +324,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             functionalFeatureInfoGrid.setHeight(event.getHeight()-360,Unit.PIXELS);
-            analysisFeatureRunningInfoGrid.setHeight(event.getHeight()-570,Unit.PIXELS);
+            analysisFeatureRunningInfoGrid.setHeight(event.getHeight()-550,Unit.PIXELS);
             functionalFeaturesInfoContainerLayout.setWidth(event.getWidth()-350,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
@@ -328,7 +332,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             int browserHeight = receiver.getBodyClientHeight();
             int browserWidth = receiver.getBodyClientWidth();
             functionalFeatureInfoGrid.setHeight(browserHeight-360,Unit.PIXELS);
-            analysisFeatureRunningInfoGrid.setHeight(browserHeight-570,Unit.PIXELS);
+            analysisFeatureRunningInfoGrid.setHeight(browserHeight-550,Unit.PIXELS);
             functionalFeaturesInfoContainerLayout.setWidth(browserWidth-350,Unit.PIXELS);
         }));
         renderFunctionalFeatureInfo();

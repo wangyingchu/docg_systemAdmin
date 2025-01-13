@@ -140,7 +140,7 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         providerRuntimeStatusInfoLayout.add(sectionTitle2);
 
         providerRunningInfoGrid = new Grid<>();
-        providerRunningInfoGrid.setWidth(265,Unit.PIXELS);
+        providerRunningInfoGrid.setWidth(275,Unit.PIXELS);
         providerRunningInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
         providerRunningInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStartTime,"yyyy-MM-dd HH:mm:ss")).setHeader("开始时间").setKey("idx_0").setResizable(true)
