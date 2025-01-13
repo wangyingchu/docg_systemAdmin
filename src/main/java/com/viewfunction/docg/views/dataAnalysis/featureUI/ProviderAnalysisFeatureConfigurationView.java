@@ -28,6 +28,9 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 
 import java.text.NumberFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -40,13 +43,18 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     private Registration listener;
     private Grid<FunctionalFeatureInfo> functionalFeatureInfoGrid;
     private GridListDataView<FunctionalFeatureInfo> functionalFeatureInfoDataView;
-    private SecondaryKeyValueDisplayItem groupNameDisplayItem;
-    private SecondaryKeyValueDisplayItem primaryDataCountDisplayItem;
-    private SecondaryKeyValueDisplayItem backupDataCountDisplayItem;
-    private SecondaryKeyValueDisplayItem totalDataCountDisplayItem;
-    private SecondaryKeyValueDisplayItem sliceAtomicityDisplayItem;
-    private SecondaryKeyValueDisplayItem backupNumberDisplayItem;
-    private SecondaryKeyValueDisplayItem sliceStorageModeDisplayItem;
+
+    private SecondaryKeyValueDisplayItem totalRunTimesDisplayItem;
+    private SecondaryKeyValueDisplayItem finishedRunTimeDisplayItem;
+    private SecondaryKeyValueDisplayItem unfinishedRunTimeDisplayItem;
+    private SecondaryKeyValueDisplayItem firstRunTimeDisplayItem;
+    private SecondaryKeyValueDisplayItem lastRunTimeDisplayItem;
+    private SecondaryKeyValueDisplayItem totalRunningDurationDisplayItem;
+    private SecondaryKeyValueDisplayItem avgRunningDurationDisplayItem;
+    private SecondaryKeyValueDisplayItem medianRunningDurationDisplayItem;
+    private SecondaryKeyValueDisplayItem shortestRunningDurationDisplayItem;
+    private SecondaryKeyValueDisplayItem longestRunningDurationDisplayItem;
+
     private TextField functionalFeatureNameFilterField;
     private TextField functionalFeatureDescFilterField;
     private Grid<FeatureRunningInfo> analysisFeatureRunningInfoGrid;
@@ -56,6 +64,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     private List<FeatureRunningInfo> currentFeatureRunningInfoList;
     private FunctionalFeatureInfo lastSelectedFunctionalFeatureInfo;
     private HorizontalLayout functionalFeaturesInfoContainerLayout;
+    private DateTimeFormatter localDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public ProviderAnalysisFeatureConfigurationView() {
         HorizontalLayout infoContainer = new HorizontalLayout();
@@ -83,19 +92,6 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 //renderCreateDataSliceView();
-            }
-        });
-
-        List<Component> dataAnalysisProviderManagementOperationButtonList = new ArrayList<>();
-
-        Button registerAnalysisFunctionalFeatureButton = new Button("注册分析功能特性", LineAwesomeIconsSvg.CLIPBOARD_LIST_SOLID.create());
-        registerAnalysisFunctionalFeatureButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        registerAnalysisFunctionalFeatureButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        dataAnalysisProviderManagementOperationButtonList.add(registerAnalysisFunctionalFeatureButton);
-        registerAnalysisFunctionalFeatureButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-            @Override
-            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderCreateConceptionKindUI();
             }
         });
 
@@ -224,41 +220,66 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.DASHBOARD),"分析功能特性指标");
         rightSideLayout.add(infoTitle2);
 
-        HorizontalLayout displayItemContainer4 = new HorizontalLayout();
-        displayItemContainer4.getStyle().set("padding-left","5px");
-        rightSideLayout.add(displayItemContainer4);
-        groupNameDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer4, VaadinIcon.ARCHIVES.create(),"切片组名称:","-");
+        HorizontalLayout displayItemContainer_a = new HorizontalLayout();
+        displayItemContainer_a.getStyle().set("padding-left","5px");
+        rightSideLayout.add(displayItemContainer_a);
+        totalRunTimesDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_a, VaadinIcon.BOLT.create(),"总运行次数:","-");
 
-        HorizontalLayout displayItemContainer1 = new HorizontalLayout();
-        displayItemContainer1.getStyle().set("padding-left","5px");
-        rightSideLayout.add(displayItemContainer1);
-        primaryDataCountDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer1, VaadinIcon.STOCK.create(),"主数据量:","-");
+        HorizontalLayout spaceDivLayouta0 = new HorizontalLayout();
+        spaceDivLayouta0.setWidth(5,Unit.PIXELS);
+        displayItemContainer_a.add(spaceDivLayouta0);
 
-        HorizontalLayout spaceDivLayout01 = new HorizontalLayout();
-        spaceDivLayout01.setWidth(5,Unit.PIXELS);
-        displayItemContainer1.add(spaceDivLayout01);
-        backupDataCountDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer1, VaadinIcon.STOCK.create(),"备份数据量:","-");
+        Icon successRunningIcon = VaadinIcon.BOLT.create();
+        successRunningIcon.getStyle().set("color", "var(--lumo-success-color)");
+        finishedRunTimeDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_a,successRunningIcon ,"运行成功次数:","-");
 
-        HorizontalLayout displayItemContainer3 = new HorizontalLayout();
-        displayItemContainer3.getStyle().set("padding-left","5px");
-        rightSideLayout.add(displayItemContainer3);
-        totalDataCountDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer3, VaadinIcon.STOCK.create(),"总数据量:","-");
+        HorizontalLayout spaceDivLayouta1 = new HorizontalLayout();
+        spaceDivLayouta1.setWidth(5,Unit.PIXELS);
+        displayItemContainer_a.add(spaceDivLayouta1);
 
-        HorizontalLayout spaceDivLayout02 = new HorizontalLayout();
-        spaceDivLayout02.setWidth(5,Unit.PIXELS);
-        displayItemContainer3.add(spaceDivLayout02);
-        backupNumberDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer3, VaadinIcon.FLIP_H.create(),"切片备份数:","-");
+        Icon unsuccessRunningIcon = VaadinIcon.BOLT.create();
+        unsuccessRunningIcon.getStyle().set("color", "var(--lumo-error-color)");
+        unfinishedRunTimeDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_a, unsuccessRunningIcon,"未完成运行次数:","-");
 
-        HorizontalLayout displayItemContainer5 = new HorizontalLayout();
-        displayItemContainer5.getStyle().set("padding-left","5px");
-        rightSideLayout.add(displayItemContainer5);
-        sliceAtomicityDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer5, VaadinIcon.RHOMBUS.create(),"原子类型模式:","-");
+        HorizontalLayout displayItemContainer_b = new HorizontalLayout();
+        displayItemContainer_b.getStyle().set("padding-left","5px");
+        rightSideLayout.add(displayItemContainer_b);
 
-        HorizontalLayout spaceDivLayout03 = new HorizontalLayout();
-        spaceDivLayout03.setWidth(5,Unit.PIXELS);
-        displayItemContainer5.add(spaceDivLayout03);
+        firstRunTimeDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_b, VaadinIcon.CALENDAR.create(),"首次运行时间:","-");
 
-        sliceStorageModeDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer5, VaadinIcon.SERVER.create(),"数据存储类型:","-");
+        HorizontalLayout spaceDivLayoutb1 = new HorizontalLayout();
+        spaceDivLayoutb1.setWidth(5,Unit.PIXELS);
+        displayItemContainer_b.add(spaceDivLayoutb1);
+        lastRunTimeDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_b, VaadinIcon.CALENDAR.create(),"末次运行时间:","-");
+
+        HorizontalLayout displayItemContainer_c = new HorizontalLayout();
+        displayItemContainer_c.getStyle().set("padding-left","5px");
+        rightSideLayout.add(displayItemContainer_c);
+        totalRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_c, VaadinIcon.TIME_FORWARD.create(),"成功运行总时长:","-");
+
+        HorizontalLayout spaceDivLayoutc1 = new HorizontalLayout();
+        spaceDivLayoutc1.setWidth(5,Unit.PIXELS);
+        displayItemContainer_c.add(spaceDivLayoutc1);
+        avgRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_c, VaadinIcon.CALC.create(),"成功运行平均时长:","-");
+
+        HorizontalLayout spaceDivLayoutc2 = new HorizontalLayout();
+        spaceDivLayoutc2.setWidth(5,Unit.PIXELS);
+        displayItemContainer_c.add(spaceDivLayoutc2);
+        medianRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_c, VaadinIcon.ELLIPSIS_DOTS_H.create(),"成功运行中位数时长:","-");
+
+        HorizontalLayout displayItemContainer_d = new HorizontalLayout();
+        displayItemContainer_d.getStyle().set("padding-left","5px");
+        rightSideLayout.add(displayItemContainer_d);
+        Icon shortestRunningDurationIcon = VaadinIcon.STOPWATCH.create();
+        shortestRunningDurationIcon.getStyle().set("color", "var(--lumo-success-color)");
+        shortestRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_d, shortestRunningDurationIcon,"成功运行最短时长:","-");
+
+        HorizontalLayout spaceDivLayoutd1 = new HorizontalLayout();
+        spaceDivLayoutd1.setWidth(5,Unit.PIXELS);
+        displayItemContainer_d.add(spaceDivLayoutd1);
+        Icon longestRunningDurationIcon = VaadinIcon.STOPWATCH.create();
+        longestRunningDurationIcon.getStyle().set("color", "var(--lumo-primary-color)");
+        longestRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_d, longestRunningDurationIcon,"成功运行最长时长:","-");
 
         ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CLIPBOARD_LIST_SOLID.create(),"分析功能特性运行记录");
         rightSideLayout.add(infoTitle);
@@ -413,13 +434,92 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
                 " ("+ functionalFeatureInfo.getFunctionalFeatureDescription().trim()+")");
 
         List<FeatureRunningInfo> selectedFeatureRunningInfoList = new ArrayList<>();
+        List<Duration> finishedRunningDurationList = new ArrayList<>();
+        int finishedRunningTimes = 0;
         if(currentFeatureRunningInfoList!= null){
             for(FeatureRunningInfo featureRunningInfo : currentFeatureRunningInfoList) {
                 if(featureRunningInfo.getFeatureName().trim().equals(functionalFeatureInfo.getFunctionalFeatureName().trim())){
                     selectedFeatureRunningInfoList.add(featureRunningInfo);
+                    if("FINISHED".equals(featureRunningInfo.getFeatureRunningStatus())) {
+                        LocalDateTime startDateTime = featureRunningInfo.getRunningStartTime();
+                        LocalDateTime finishDateTime = featureRunningInfo.getRunningFinishTime();
+                        Duration duration = Duration.between(startDateTime, finishDateTime);
+                        finishedRunningDurationList.add(duration);
+                        finishedRunningTimes++;
+                    }
                 }
             }
         }
         analysisFeatureRunningInfoGrid.setItems(selectedFeatureRunningInfoList);
+
+        if(selectedFeatureRunningInfoList.size() > 0){
+            totalRunTimesDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()));
+            finishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(finishedRunningTimes));
+            unfinishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()-finishedRunningTimes));
+            firstRunTimeDisplayItem.updateDisplayValue(selectedFeatureRunningInfoList.get(0).getRunningStartTime().format(localDateTimeFormatter));
+            lastRunTimeDisplayItem.updateDisplayValue(selectedFeatureRunningInfoList.get(selectedFeatureRunningInfoList.size()-1).getRunningStartTime().format(localDateTimeFormatter));
+        }else{
+            totalRunTimesDisplayItem.updateDisplayValue("0");
+            finishedRunTimeDisplayItem.updateDisplayValue("0");
+            unfinishedRunTimeDisplayItem.updateDisplayValue("0");
+            firstRunTimeDisplayItem.updateDisplayValue("-");
+            lastRunTimeDisplayItem.updateDisplayValue("-");
+        }
+
+        if(finishedRunningDurationList.size() > 0){
+            Duration totalDuration = finishedRunningDurationList.stream().reduce(Duration.ZERO, Duration::plus);
+            totalRunningDurationDisplayItem.updateDisplayValue(formateDuration(totalDuration));
+
+            long totalTimeInSeconds = totalDuration.getSeconds();
+            long shortestTimeInSeconds = finishedRunningDurationList.get(0).getSeconds();
+            long longestTimeInSeconds = finishedRunningDurationList.get(0).getSeconds();
+
+            for(Duration currentDuration:finishedRunningDurationList){
+                totalTimeInSeconds = totalTimeInSeconds + currentDuration.getSeconds();
+                if(currentDuration.getSeconds() < shortestTimeInSeconds){
+                    shortestTimeInSeconds = currentDuration.getSeconds();
+                }
+                if(currentDuration.getSeconds()> longestTimeInSeconds){
+                    longestTimeInSeconds = currentDuration.getSeconds();
+                }
+            }
+            long averageTimeInSeconds = totalTimeInSeconds/finishedRunningDurationList.size();
+            Duration avgDuration = Duration.ofSeconds(averageTimeInSeconds);
+            avgRunningDurationDisplayItem.updateDisplayValue(formateDuration(avgDuration));
+
+
+
+            medianRunningDurationDisplayItem.updateDisplayValue(formateDuration(avgDuration));
+
+
+
+            Duration shortestDuration = Duration.ofSeconds(shortestTimeInSeconds);
+            shortestRunningDurationDisplayItem.updateDisplayValue(formateDuration(shortestDuration));
+
+            Duration longestDuration = Duration.ofSeconds(longestTimeInSeconds);
+            longestRunningDurationDisplayItem.updateDisplayValue(formateDuration(longestDuration));
+        }else{
+            totalRunningDurationDisplayItem.updateDisplayValue("-");
+            avgRunningDurationDisplayItem.updateDisplayValue("-");
+            medianRunningDurationDisplayItem.updateDisplayValue("-");
+            shortestRunningDurationDisplayItem.updateDisplayValue("-");
+            longestRunningDurationDisplayItem.updateDisplayValue("-");
+        }
+    }
+
+    private String formateDuration(Duration duration ) {
+        // 获取总秒数
+        long totalSeconds = duration.getSeconds();
+        // 计算小时数
+        long hours = totalSeconds / 3600;
+        // 计算剩余的秒数
+        long remainingSeconds = totalSeconds % 3600;
+        // 计算分钟数
+        long minutes = remainingSeconds / 60;
+        // 计算剩余的秒数
+        long seconds = remainingSeconds % 60;
+        // 格式化输出
+        String formattedDuration = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        return formattedDuration;
     }
 }
