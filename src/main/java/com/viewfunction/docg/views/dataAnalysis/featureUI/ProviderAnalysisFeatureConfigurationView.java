@@ -76,7 +76,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         infoContainer.add(horSpaceDiv);
 
         Button registerFeatureButton= new Button("注册分析功能特性");
-        registerFeatureButton.setIcon(LineAwesomeIconsSvg.CLIPBOARD_LIST_SOLID.create());
+        registerFeatureButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
         registerFeatureButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         infoContainer.add(registerFeatureButton);
         registerFeatureButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -260,7 +260,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
 
         sliceStorageModeDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer5, VaadinIcon.SERVER.create(),"数据存储类型:","-");
 
-        ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(new Icon(VaadinIcon.ALIGN_LEFT),"数据切片属性定义");
+        ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CLIPBOARD_LIST_SOLID.create(),"分析功能特性运行记录");
         rightSideLayout.add(infoTitle);
 
         analysisFeatureRunningInfoGrid = new Grid<>();

@@ -11,6 +11,7 @@ import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -572,7 +573,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
                         renderDataSliceOverview(dataSliceMetaInfo);
                     }
 
-                    CommonUIOperationUtil.showPopupNotification("清除数据切片 "+dataSliceMetaInfo.getDataSliceName()+" 中的所有数据成功", NotificationVariant.LUMO_SUCCESS);
+                    CommonUIOperationUtil.showPopupNotification("清除数据切片 "+dataSliceMetaInfo.getDataSliceName()+" 中的所有数据成功", NotificationVariant.LUMO_SUCCESS,5000, Notification.Position.BOTTOM_START);
                     confirmWindow.closeConfirmWindow();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -618,7 +619,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
                         lastSelectedDataSliceMetaInfo = null;
                     }
 
-                    CommonUIOperationUtil.showPopupNotification("删除数据切片 "+dataSliceMetaInfo.getDataSliceName()+" 成功", NotificationVariant.LUMO_SUCCESS);
+                    CommonUIOperationUtil.showPopupNotification("删除数据切片 "+dataSliceMetaInfo.getDataSliceName()+" 成功", NotificationVariant.LUMO_SUCCESS,5000, Notification.Position.BOTTOM_START);
                     confirmWindow.closeConfirmWindow();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
