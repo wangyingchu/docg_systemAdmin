@@ -240,6 +240,12 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         refreshDataButton.setEnabled(false);
         List<Component> buttonList = new ArrayList<>();
         buttonList.add(refreshDataButton);
+        refreshDataButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                refreshFunctionalFeatureRunningStatus();
+            }
+        });
 
         analysisFeatureInfoActionBar = new SecondaryTitleActionBar(LineAwesomeIconsSvg.CLONE.create(),"-",null,buttonList);
         analysisFeatureInfoActionBar.setWidth(100,Unit.PERCENTAGE);
@@ -579,6 +585,20 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         } else {
             // 如果数组长度是偶数，中位数是中间两个数字的平均值
             return (long) ((numbers[middle - 1] + numbers[middle]) / 2.0);
+        }
+    }
+
+    private void refreshFunctionalFeatureRunningStatus(){
+        if(lastSelectedFunctionalFeatureInfo!= null){
+            AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
+            List<FeatureRunningInfo> currentRealtimeFeatureRunningInfoList = analysisProviderAdminClient.listFeatureRunningStatus();
+            if(currentRealtimeFeatureRunningInfoList != null){
+                currentFeatureRunningInfoList = currentRealtimeFeatureRunningInfoList;
+                UI currentUI = UI.getCurrent();
+                currentUI.access(() -> {
+                    renderFunctionalFeatureRunningOverview(lastSelectedFunctionalFeatureInfo);
+                });
+            }
         }
     }
 }
