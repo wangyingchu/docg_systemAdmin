@@ -13,6 +13,9 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverPosition;
+import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
@@ -67,6 +70,9 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     private FunctionalFeatureInfo lastSelectedFunctionalFeatureInfo;
     private HorizontalLayout functionalFeaturesInfoContainerLayout;
     private DateTimeFormatter localDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private Button registerFeatureButton;
+    private Popover registerFunctionalFeatureOperationButtonPopover;
+    private RegisterFunctionalFeatureView registerFunctionalFeatureView;
 
     public ProviderAnalysisFeatureConfigurationView() {
         HorizontalLayout infoContainer = new HorizontalLayout();
@@ -86,16 +92,27 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         horSpaceDiv.setWidth(30, Unit.PIXELS);
         infoContainer.add(horSpaceDiv);
 
-        Button registerFeatureButton= new Button("注册分析功能特性");
+        registerFeatureButton = new Button("注册分析功能特性");
         registerFeatureButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
         registerFeatureButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         infoContainer.add(registerFeatureButton);
         registerFeatureButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderCreateDataSliceView();
+                registerFunctionalFeatureOperationButtonPopover.open();
             }
         });
+
+        registerFunctionalFeatureView = new RegisterFunctionalFeatureView();
+        registerFunctionalFeatureOperationButtonPopover = new Popover();
+        registerFunctionalFeatureOperationButtonPopover.setTarget(registerFeatureButton);
+        registerFunctionalFeatureOperationButtonPopover.setWidth("450px");
+        registerFunctionalFeatureOperationButtonPopover.setHeight("230px");
+        registerFunctionalFeatureOperationButtonPopover.addThemeVariants(PopoverVariant.ARROW);
+        registerFunctionalFeatureOperationButtonPopover.setPosition(PopoverPosition.BOTTOM);
+        registerFunctionalFeatureOperationButtonPopover.add(registerFunctionalFeatureView);
+        registerFunctionalFeatureOperationButtonPopover.setAutofocus(true);
+        registerFunctionalFeatureOperationButtonPopover.setModal(true);
 
         Icon icon = new Icon(VaadinIcon.LIST);
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"分析功能特性定义:",null);
