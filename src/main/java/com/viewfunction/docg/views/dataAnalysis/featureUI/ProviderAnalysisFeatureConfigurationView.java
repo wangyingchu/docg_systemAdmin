@@ -73,6 +73,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     private Button registerFeatureButton;
     private Popover registerFunctionalFeatureOperationButtonPopover;
     private RegisterFunctionalFeatureView registerFunctionalFeatureView;
+    private Button refreshDataButton;
 
     public ProviderAnalysisFeatureConfigurationView() {
         HorizontalLayout infoContainer = new HorizontalLayout();
@@ -232,7 +233,15 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"分析功能特性概览");
         rightSideLayout.add(filterTitle2);
 
-        analysisFeatureInfoActionBar = new SecondaryTitleActionBar(LineAwesomeIconsSvg.CLONE.create(),"-",null,null);
+        refreshDataButton = new Button(new Icon(VaadinIcon.REFRESH));
+        refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        refreshDataButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        refreshDataButton.setTooltipText("刷新分析功能特性运行数据");
+        refreshDataButton.setEnabled(false);
+        List<Component> buttonList = new ArrayList<>();
+        buttonList.add(refreshDataButton);
+
+        analysisFeatureInfoActionBar = new SecondaryTitleActionBar(LineAwesomeIconsSvg.CLONE.create(),"-",null,buttonList);
         analysisFeatureInfoActionBar.setWidth(100,Unit.PERCENTAGE);
         rightSideLayout.add(analysisFeatureInfoActionBar);
 
@@ -341,7 +350,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             functionalFeatureInfoGrid.setHeight(event.getHeight()-360,Unit.PIXELS);
-            analysisFeatureRunningInfoGrid.setHeight(event.getHeight()-550,Unit.PIXELS);
+            analysisFeatureRunningInfoGrid.setHeight(event.getHeight()-560,Unit.PIXELS);
             functionalFeaturesInfoContainerLayout.setWidth(event.getWidth()-350,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
@@ -349,7 +358,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             int browserHeight = receiver.getBodyClientHeight();
             int browserWidth = receiver.getBodyClientWidth();
             functionalFeatureInfoGrid.setHeight(browserHeight-360,Unit.PIXELS);
-            analysisFeatureRunningInfoGrid.setHeight(browserHeight-550,Unit.PIXELS);
+            analysisFeatureRunningInfoGrid.setHeight(browserHeight-560,Unit.PIXELS);
             functionalFeaturesInfoContainerLayout.setWidth(browserWidth-350,Unit.PIXELS);
         }));
         renderFunctionalFeatureInfo();
@@ -363,9 +372,23 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     }
 
     public void renderFunctionalFeatureInfo(){
+        lastSelectedFunctionalFeatureInfo = null;
+        refreshDataButton.setEnabled(false);
+        totalRunTimesDisplayItem.updateDisplayValue("-");
+        finishedRunTimeDisplayItem.updateDisplayValue("-");
+        unfinishedRunTimeDisplayItem.updateDisplayValue("-");
+        firstRunTimeDisplayItem.updateDisplayValue("-");
+        lastRunTimeDisplayItem.updateDisplayValue("-");
+        totalRunningDurationDisplayItem.updateDisplayValue("-");
+        avgRunningDurationDisplayItem.updateDisplayValue("-");
+        medianRunningDurationDisplayItem.updateDisplayValue("-");
+        shortestRunningDurationDisplayItem.updateDisplayValue("-");
+        longestRunningDurationDisplayItem.updateDisplayValue("-");
+        analysisFeatureRunningInfoGrid.setItems(new ArrayList<>());
+        analysisFeatureInfoActionBar.updateTitleContent("-");
+
         AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
         UI currentUI = UI.getCurrent();
-        //dataSlicePropertyDefinitionsGrid.setItems(new ArrayList<>());
         AnalysisProviderAdminClient.ListFunctionalFeaturesCallback listFunctionalFeaturesCallback = new AnalysisProviderAdminClient.ListFunctionalFeaturesCallback() {
             @Override
             public void onExecutionSuccess(List<FunctionalFeatureInfo> functionalFeatureInfoList) {
@@ -453,7 +476,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     private void renderFunctionalFeatureRunningOverview(FunctionalFeatureInfo functionalFeatureInfo){
         analysisFeatureInfoActionBar.updateTitleContent(functionalFeatureInfo.getFunctionalFeatureName().trim()+
                 " ("+ functionalFeatureInfo.getFunctionalFeatureDescription().trim()+")");
-
+        refreshDataButton.setEnabled(true);
         List<FeatureRunningInfo> selectedFeatureRunningInfoList = new ArrayList<>();
         List<Duration> finishedRunningDurationList = new ArrayList<>();
         int finishedRunningTimes = 0;

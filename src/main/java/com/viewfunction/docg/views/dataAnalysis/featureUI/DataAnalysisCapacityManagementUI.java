@@ -210,7 +210,6 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
             runningStatusLayout.setVisible(true);
             notRunningStatusLayout.setVisible(false);
             providerRunningInfoGrid.setItems(providerRunningInfoList);
-
         }else{
             runningStatusLayout.setVisible(false);
             notRunningStatusLayout.setVisible(true);
