@@ -18,6 +18,7 @@ import com.vaadin.flow.component.popover.PopoverPosition;
 import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
@@ -35,10 +36,7 @@ import java.text.NumberFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
 
@@ -104,7 +102,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             }
         });
 
-        registerFunctionalFeatureView = new RegisterFunctionalFeatureView();
+        registerFunctionalFeatureView = new RegisterFunctionalFeatureView(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
         registerFunctionalFeatureOperationButtonPopover = new Popover();
         registerFunctionalFeatureOperationButtonPopover.setTarget(registerFeatureButton);
         registerFunctionalFeatureOperationButtonPopover.setWidth("450px");
@@ -114,6 +112,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         registerFunctionalFeatureOperationButtonPopover.add(registerFunctionalFeatureView);
         registerFunctionalFeatureOperationButtonPopover.setAutofocus(true);
         registerFunctionalFeatureOperationButtonPopover.setModal(true);
+        registerFunctionalFeatureView.setContainerPopover(registerFunctionalFeatureOperationButtonPopover);
 
         Icon icon = new Icon(VaadinIcon.LIST);
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"分析功能特性定义:",null);
@@ -224,6 +223,18 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         });
 
         leftSideLayout.add(functionalFeatureInfoGrid);
+
+        RegisterFunctionalFeatureView.RegisterFunctionalFeatureSuccessCallback registerFunctionalFeatureSuccessCallback = new RegisterFunctionalFeatureView.RegisterFunctionalFeatureSuccessCallback() {
+            @Override
+            public void onExecutionSuccess(String functionalFeatureName, String functionalFeatureDesc) {
+                FunctionalFeatureInfo newFunctionalFeatureInfo = new FunctionalFeatureInfo(functionalFeatureName,functionalFeatureDesc);
+                ListDataProvider dtaProvider=(ListDataProvider)functionalFeatureInfoGrid.getDataProvider();
+                Collection<FunctionalFeatureInfo> functionalFeaturesList = dtaProvider.getItems();
+                functionalFeaturesList.add(newFunctionalFeatureInfo);
+                functionalFeatureInfoGrid.getDataProvider().refreshAll();
+            }
+        };
+        registerFunctionalFeatureView.setRegisterFunctionalFeatureSuccessCallback(registerFunctionalFeatureSuccessCallback);
 
         VerticalLayout rightSideLayout = new VerticalLayout();
         rightSideLayout.setMargin(false);

@@ -10,8 +10,10 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.textfield.TextField;
 
+import com.viewfunction.docg.analysisProvider.client.AnalysisProviderAdminClient;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 public class RegisterFunctionalFeatureView extends VerticalLayout {
@@ -19,8 +21,18 @@ public class RegisterFunctionalFeatureView extends VerticalLayout {
     private H6 errorMessage;
     private TextField functionalFeatureNameField;
     private TextField functionalFeatureDescField;
+    private int ANALYSIS_CLIENT_HOST_PORT;
+    private String ANALYSIS_CLIENT_HOST_NAME;
+    private Popover containerPopover;
+    private RegisterFunctionalFeatureSuccessCallback registerFunctionalFeatureSuccessCallback;
 
-    public RegisterFunctionalFeatureView(){
+    public interface RegisterFunctionalFeatureSuccessCallback {
+        public void onExecutionSuccess(String functionalFeatureName,String functionalFeatureDesc);
+    }
+
+    public RegisterFunctionalFeatureView(String ANALYSIS_CLIENT_HOST_NAME,int ANALYSIS_CLIENT_HOST_PORT){
+        this.ANALYSIS_CLIENT_HOST_NAME = ANALYSIS_CLIENT_HOST_NAME;
+        this.ANALYSIS_CLIENT_HOST_PORT = ANALYSIS_CLIENT_HOST_PORT;
         this.setWidthFull();
         HorizontalLayout messageContainerLayout = new HorizontalLayout();
         add(messageContainerLayout);
@@ -67,72 +79,38 @@ public class RegisterFunctionalFeatureView extends VerticalLayout {
     }
 
     private void doRegisterFunctionalFeature(){
-        String dataSliceName = this.functionalFeatureNameField.getValue();
-        String dataSliceGroup = this.functionalFeatureDescField.getValue();
+        String functionalFeatureName = this.functionalFeatureNameField.getValue();
+        String functionalFeatureDesc = this.functionalFeatureDescField.getValue();
 
         boolean inputValidateResult = true;
-        if(dataSliceName.equals("")){
+        if(functionalFeatureName.equals("")){
             inputValidateResult = false;
             this.functionalFeatureNameField.setInvalid(true);
         }
-        if(dataSliceGroup.equals("")){
+        if(functionalFeatureDesc.equals("")){
             inputValidateResult = false;
             this.functionalFeatureDescField.setInvalid(true);
         }
 
         if(inputValidateResult){
             hideErrorMessage();
-
-            /*
-            ComputeGrid targetComputeGrid = ComputeGridTermFactory.getComputeGrid();
-            try {
-                Set<DataSliceMetaInfo> dataSliceMetaInfoSet = targetComputeGrid.listDataSlice();
-                if(dataSliceMetaInfoSet != null){
-                    for(DataSliceMetaInfo currentDataSliceMetaInfo : dataSliceMetaInfoSet){
-                        if(dataSliceName.toUpperCase().equals(currentDataSliceMetaInfo.getDataSliceName().toUpperCase())){
-                            showErrorMessage("数据切片 "+dataSliceName+" 已经存在");
-                            return;
-                        }
-                    }
+            AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
+            boolean registerResult = analysisProviderAdminClient.registerFunctionalFeature(functionalFeatureName,functionalFeatureDesc,3);
+            if(!registerResult){
+                showErrorMessage("分析功能特性 "+functionalFeatureName+" 已经存在");
+            }else{
+                this.functionalFeatureNameField.setValue("");
+                this.functionalFeatureDescField.setValue("");
+                hideErrorMessage();
+                if(registerFunctionalFeatureSuccessCallback != null){
+                    registerFunctionalFeatureSuccessCallback.onExecutionSuccess(functionalFeatureName,functionalFeatureDesc);
                 }
-            } catch (ComputeGridException e) {
-                throw new RuntimeException(e);
+                if(this.containerPopover != null){
+                    this.containerPopover.close();
+                }
+                CommonUIOperationUtil.showPopupNotification("分析功能特性 "+functionalFeatureName+" 注册成功", NotificationVariant.LUMO_SUCCESS);
             }
-            try(ComputeGridObserver computeGridObserver = ComputeGridObserver.getObserverInstance()) {
-                Map<String, DataSlicePropertyType> dataSlicePropertyMap = new HashMap<>();
-                List<String> pkList = new ArrayList<>();
-                for(DataSlicePropertyValueObject currentDataSlicePropertyValueObject:dataSlicePropertyValueObjectsCollection){
-                    dataSlicePropertyMap.put(currentDataSlicePropertyValueObject.getPropertyName(),currentDataSlicePropertyValueObject.getDataSlicePropertyType());
-                    if(currentDataSlicePropertyValueObject.isPrimaryKey()){
-                        pkList.add(currentDataSlicePropertyValueObject.getPropertyName());
-                    }
-                }
-
-                DataSliceMetaInfo targetDataSlice = null;
-
-                if(storageMode.equals("Grid")){
-                    targetDataSlice = computeGridObserver.createGridDataSlice(dataSliceName, dataSliceGroup,dataSlicePropertyMap,pkList);
-                }else if(storageMode.equals("PerUnit")){
-                    targetDataSlice = computeGridObserver.createPerUnitDataSlice(dataSliceName, dataSliceGroup,dataSlicePropertyMap,pkList);
-                }
-
-                if(targetDataSlice != null & targetDataSlice.getDataSliceName().equals(dataSliceName)){
-                    DataSliceCreatedEvent dataSliceCreatedEvent = new DataSliceCreatedEvent();
-                    dataSliceCreatedEvent.setDataSliceName(targetDataSlice.getDataSliceName());
-                    dataSliceCreatedEvent.setDataSliceGroup(targetDataSlice.getSliceGroupName());
-                    dataSliceCreatedEvent.setDataSliceMetaInfo(targetDataSlice);
-                    ResourceHolder.getApplicationBlackboard().fire(dataSliceCreatedEvent);
-                    if(this.containerDialog != null){
-                        this.containerDialog.close();
-                    }
-                    CommonUIOperationUtil.showPopupNotification("数据切片 "+dataSliceName+" 创建成功", NotificationVariant.LUMO_SUCCESS);
-                }
-            } catch (Exception e) {
-                CommonUIOperationUtil.showPopupNotification("创建数据切片异常: "+e.getMessage(), NotificationVariant.LUMO_ERROR);
-                throw new RuntimeException(e);
-            }
-            */
-        }else{
+        } else{
             showErrorMessage("请输入分析功能特性名称和描述信息");
             CommonUIOperationUtil.showPopupNotification("分析功能特性信息输入错误",NotificationVariant.LUMO_ERROR);
         }
@@ -145,5 +123,13 @@ public class RegisterFunctionalFeatureView extends VerticalLayout {
 
     private void hideErrorMessage(){
         this.errorMessage.setVisible(false);
+    }
+
+    public void setContainerPopover(Popover containerPopover) {
+        this.containerPopover = containerPopover;
+    }
+
+    public void setRegisterFunctionalFeatureSuccessCallback(RegisterFunctionalFeatureSuccessCallback registerFunctionalFeatureSuccessCallback) {
+        this.registerFunctionalFeatureSuccessCallback = registerFunctionalFeatureSuccessCallback;
     }
 }
