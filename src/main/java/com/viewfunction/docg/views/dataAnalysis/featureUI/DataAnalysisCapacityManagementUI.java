@@ -148,9 +148,9 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStopTime,"yyyy-MM-dd HH:mm:ss")).setHeader("结束时间").setKey("idx_1").setResizable(true)
                 .setTooltipGenerator(runtimeRelationAndConceptionKindAttachInfo -> runtimeRelationAndConceptionKindAttachInfo.getProviderStopTime() != null ? runtimeRelationAndConceptionKindAttachInfo.getProviderStopTime().toString(): null);
 
-        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.FLIGHT_TAKEOFF,"开始时间");
+        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.SUN_RISE,"开始时间");
         providerRunningInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(false);
-        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.FLIGHT_LANDING,"结束时间");
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.SUN_DOWN,"结束时间");
         providerRunningInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(false);
 
         providerRuntimeStatusInfoLayout.add(providerRunningInfoGrid);
