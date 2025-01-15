@@ -27,6 +27,8 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.analysisProvider.client.AnalysisProviderAdminClient;
 import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.FeatureRunningInfo;
 import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.FunctionalFeatureInfo;
+import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.ProviderRunningInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -35,6 +37,7 @@ import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 import java.text.NumberFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -329,19 +332,82 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CLIPBOARD_LIST_SOLID.create(),"分析功能特性运行记录");
         rightSideLayout.add(infoTitle);
 
+        Comparator requestTimeComparator = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(((FeatureRunningInfo)o1).getRequestTime()!= null && ((FeatureRunningInfo)o2).getRequestTime()!= null &&
+                        ((FeatureRunningInfo)o1).getRequestTime() instanceof LocalDateTime &&
+                        ((FeatureRunningInfo)o2).getRequestTime() instanceof LocalDateTime){
+                    if(((FeatureRunningInfo)o1).getRequestTime().isBefore(((FeatureRunningInfo)o2).getRequestTime())){
+                        return -1;
+                    }if(((FeatureRunningInfo)o1).getRequestTime().isAfter(((FeatureRunningInfo)o2).getRequestTime())){
+                        return 1;
+                    }
+                }
+                return 0;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return false;
+            }
+        };
+
+        Comparator runningStartTimeComparator = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(((FeatureRunningInfo)o1).getRunningStartTime()!= null && ((FeatureRunningInfo)o2).getRunningStartTime()!= null &&
+                        ((FeatureRunningInfo)o1).getRunningStartTime() instanceof LocalDateTime &&
+                        ((FeatureRunningInfo)o2).getRunningStartTime() instanceof LocalDateTime){
+                    if(((FeatureRunningInfo)o1).getRunningStartTime().isBefore(((FeatureRunningInfo)o2).getRunningStartTime())){
+                        return -1;
+                    }if(((FeatureRunningInfo)o1).getRunningStartTime().isAfter(((FeatureRunningInfo)o2).getRunningStartTime())){
+                        return 1;
+                    }
+                }
+                return 0;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return false;
+            }
+        };
+
+        Comparator runningFinishTimeComparator = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(((FeatureRunningInfo)o1).getRunningFinishTime()!= null && ((FeatureRunningInfo)o2).getRunningFinishTime()!= null &&
+                        ((FeatureRunningInfo)o1).getRunningFinishTime() instanceof LocalDateTime &&
+                        ((FeatureRunningInfo)o2).getRunningFinishTime() instanceof LocalDateTime){
+                    if(((FeatureRunningInfo)o1).getRunningFinishTime().isBefore(((FeatureRunningInfo)o2).getRunningFinishTime())){
+                        return -1;
+                    }if(((FeatureRunningInfo)o1).getRunningFinishTime().isAfter(((FeatureRunningInfo)o2).getRunningFinishTime())){
+                        return 1;
+                    }
+                }
+                return 0;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return false;
+            }
+        };
+
         analysisFeatureRunningInfoGrid = new Grid<>();
         analysisFeatureRunningInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
         analysisFeatureRunningInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getFeatureRunningStatus).setHeader("执行状态").setKey("idx_1").setResizable(true).setWidth("60px");
         analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getResponseDataForm).setHeader("返回数据形式").setKey("idx_2").setResizable(true).setWidth("100px");
         analysisFeatureRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(FeatureRunningInfo::getRequestTime,"yyyy-MM-dd HH:mm:ss")).setHeader("请求时间").setKey("idx_3").setResizable(true)
-                .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRequestTime() != null ? featureRunningInfo.getRequestTime().toString(): null);
-        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getRequestUUID).setHeader("请求 UID").setKey("idx_4").setResizable(true).setTooltipGenerator(item -> "请求 UID: "+item.getRequestUUID());
-        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getResponseUUID).setHeader("响应 UID").setKey("idx_5").setResizable(true).setTooltipGenerator(item -> "响应 UID: "+item.getResponseUUID());
+                .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRequestTime() != null ? featureRunningInfo.getRequestTime().toString(): null).setComparator(requestTimeComparator);
+        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getRequestUUID).setHeader("请求 UID").setKey("idx_4").setResizable(true).setTooltipGenerator(item -> item.getRequestUUID());
+        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getResponseUUID).setHeader("响应 UID").setKey("idx_5").setResizable(true).setTooltipGenerator(item -> item.getResponseUUID());
         analysisFeatureRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(FeatureRunningInfo::getRunningStartTime,"yyyy-MM-dd HH:mm:ss")).setHeader("分析开始时间").setKey("idx_6").setResizable(true)
-                .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRunningStartTime() != null ? featureRunningInfo.getRunningStartTime().toString(): null);
+                .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRunningStartTime() != null ? featureRunningInfo.getRunningStartTime().toString(): null).setComparator(runningStartTimeComparator);
         analysisFeatureRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(FeatureRunningInfo::getRunningFinishTime,"yyyy-MM-dd HH:mm:ss")).setHeader("分析结束时间").setKey("idx_7").setResizable(true)
-                .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRunningFinishTime() != null ? featureRunningInfo.getRunningFinishTime().toString(): null);
+                .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRunningFinishTime() != null ? featureRunningInfo.getRunningFinishTime().toString(): null).setComparator(runningFinishTimeComparator);
 
         LightGridColumnHeader gridColumnHeader2_idx1 = new LightGridColumnHeader(LineAwesomeIconsSvg.BOLT_SOLID.create(),"执行状态");
         analysisFeatureRunningInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader2_idx1).setSortable(true);
@@ -511,6 +577,12 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
                 }
             }
         }
+        selectedFeatureRunningInfoList.sort(new Comparator<FeatureRunningInfo>() {
+            @Override
+            public int compare(FeatureRunningInfo o1, FeatureRunningInfo o2) {
+                return 0 - o1.getRequestTime().compareTo(o2.getRequestTime());
+            }
+        });
         analysisFeatureRunningInfoGrid.setItems(selectedFeatureRunningInfoList);
 
         if(selectedFeatureRunningInfoList.size() > 0){
