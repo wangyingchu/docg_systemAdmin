@@ -394,24 +394,74 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         };
 
         ComponentRenderer _runningStatusComponentRenderer = new ComponentRenderer<>(featureRunningInfo -> {
-
-
+            Icon statusIcon = null;
             if(featureRunningInfo instanceof FeatureRunningInfo){
-                ((FeatureRunningInfo) featureRunningInfo).getFeatureRunningStatus();
+                //"ACCEPT" "EXECUTING" "FINISHED"
+                String featureRunningStatus = ((FeatureRunningInfo) featureRunningInfo).getFeatureRunningStatus();
+                if("ACCEPT".equals(featureRunningStatus)){
+                    statusIcon = LineAwesomeIconsSvg.PLUG_SOLID.create();
+                    statusIcon.setSize("12px");
+                }else if("EXECUTING".equals(featureRunningStatus)){
+                    statusIcon = LineAwesomeIconsSvg.CLOCK_SOLID.create();
+                    statusIcon.setSize("20px");
+                    statusIcon.getStyle().set("color", "var(--lumo-error-color)");
+                }else if("FINISHED".equals(featureRunningStatus)){
+                    statusIcon = VaadinIcon.CHECK_CIRCLE_O.create();
+                    statusIcon.setSize("11px");
+                    statusIcon.getStyle().set("color", "var(--lumo-success-color)");
+                }else{
+                    statusIcon = VaadinIcon.QUESTION_CIRCLE_O.create();
+                    statusIcon.setSize("12px");
+                }
+                statusIcon.setTooltipText(featureRunningStatus);
             }
 
+            HorizontalLayout spacingLayout = new HorizontalLayout();
+            spacingLayout.setWidth(8,Unit.PIXELS);
+            spacingLayout.setPadding(false);
+            spacingLayout.setSpacing(false);
+            spacingLayout.setMargin(false);
 
-            Icon queryIcon = LineAwesomeIconsSvg.CLIPBOARD_SOLID.create();
-
-            queryIcon.setSize("14px");
-
-            return queryIcon;
+            HorizontalLayout buttons = new HorizontalLayout(spacingLayout,statusIcon);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setHeight(10,Unit.PIXELS);
+            buttons.setWidth(20,Unit.PIXELS);
+            return new VerticalLayout(buttons);
         });
+
+        Comparator runningStatusComparator = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(((FeatureRunningInfo)o1).getRunningFinishTime()!= null && ((FeatureRunningInfo)o2).getRunningFinishTime()!= null &&
+                        ((FeatureRunningInfo)o1).getRunningFinishTime() instanceof LocalDateTime &&
+                        ((FeatureRunningInfo)o2).getRunningFinishTime() instanceof LocalDateTime){
+                    if(((FeatureRunningInfo)o1).getRunningFinishTime().isBefore(((FeatureRunningInfo)o2).getRunningFinishTime())){
+                        return -1;
+                    }if(((FeatureRunningInfo)o1).getRunningFinishTime().isAfter(((FeatureRunningInfo)o2).getRunningFinishTime())){
+                        return 1;
+                    }
+                }
+                return 0;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return false;
+            }
+        };
 
         analysisFeatureRunningInfoGrid = new Grid<>();
         analysisFeatureRunningInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
         analysisFeatureRunningInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
-        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getFeatureRunningStatus).setHeader("执行状态").setKey("idx_1").setResizable(true).setWidth("60px");
+        analysisFeatureRunningInfoGrid.addColumn(_runningStatusComponentRenderer).setHeader("状态").setKey("idx_1").setWidth("30px").setComparator(new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                return ((FeatureRunningInfo)o1).getFeatureRunningStatus().compareTo(((FeatureRunningInfo)o2).getFeatureRunningStatus());
+            }
+        }).setResizable(false);
         analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getResponseDataForm).setHeader("返回数据形式").setKey("idx_2").setResizable(true).setWidth("100px");
         analysisFeatureRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(FeatureRunningInfo::getRequestTime,"yyyy-MM-dd HH:mm:ss")).setHeader("请求时间").setKey("idx_3").setResizable(true)
                 .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRequestTime() != null ? featureRunningInfo.getRequestTime().toString(): null).setComparator(requestTimeComparator);
@@ -422,7 +472,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         analysisFeatureRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(FeatureRunningInfo::getRunningFinishTime,"yyyy-MM-dd HH:mm:ss")).setHeader("分析结束时间").setKey("idx_7").setResizable(true)
                 .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRunningFinishTime() != null ? featureRunningInfo.getRunningFinishTime().toString(): null).setComparator(runningFinishTimeComparator);
 
-        LightGridColumnHeader gridColumnHeader2_idx1 = new LightGridColumnHeader(LineAwesomeIconsSvg.BOLT_SOLID.create(),"执行状态");
+        LightGridColumnHeader gridColumnHeader2_idx1 = new LightGridColumnHeader(LineAwesomeIconsSvg.BOLT_SOLID.create(),"状态");
         analysisFeatureRunningInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader2_idx1).setSortable(true);
         LightGridColumnHeader gridColumnHeader2_idx2 = new LightGridColumnHeader(VaadinIcon.FORM,"返回数据形式");
         analysisFeatureRunningInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader2_idx2).setSortable(true);
