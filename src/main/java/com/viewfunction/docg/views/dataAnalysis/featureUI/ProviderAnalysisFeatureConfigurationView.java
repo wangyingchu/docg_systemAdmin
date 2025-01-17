@@ -70,8 +70,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     private List<FeatureRunningInfo> currentFeatureRunningInfoList;
     private FunctionalFeatureInfo lastSelectedFunctionalFeatureInfo;
     private HorizontalLayout functionalFeaturesInfoContainerLayout;
-    private DateTimeFormatter localDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private DateTimeFormatter localDateTimeFormatter2 = DateTimeFormatter.ofPattern("yy/MM/dd HH:mm:ss");
+    private DateTimeFormatter localDateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd HH:mm:ss");
     private Button registerFeatureButton;
     private Popover registerFunctionalFeatureOperationButtonPopover;
     private RegisterFunctionalFeatureView registerFunctionalFeatureView;
@@ -695,11 +694,11 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         analysisFeatureRunningInfoGrid.setItems(selectedFeatureRunningInfoList);
 
         if(selectedFeatureRunningInfoList.size() > 0){
-            totalRunTimesDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()+9988763));
-            finishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(finishedRunningTimes+9988763));
-            unfinishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()-finishedRunningTimes+9988763));
-            firstRunTimeDisplayItem.updateDisplayValue(selectedFeatureRunningInfoList.get(0).getRunningStartTime().format(localDateTimeFormatter2));
-            lastRunTimeDisplayItem.updateDisplayValue(selectedFeatureRunningInfoList.get(selectedFeatureRunningInfoList.size()-1).getRunningStartTime().format(localDateTimeFormatter2));
+            totalRunTimesDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()));
+            finishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(finishedRunningTimes));
+            unfinishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()-finishedRunningTimes));
+            firstRunTimeDisplayItem.updateDisplayValue(selectedFeatureRunningInfoList.get(0).getRunningStartTime().format(localDateTimeFormatter));
+            lastRunTimeDisplayItem.updateDisplayValue(selectedFeatureRunningInfoList.get(selectedFeatureRunningInfoList.size()-1).getRunningStartTime().format(localDateTimeFormatter));
         }else{
             totalRunTimesDisplayItem.updateDisplayValue("0");
             finishedRunTimeDisplayItem.updateDisplayValue("0");
