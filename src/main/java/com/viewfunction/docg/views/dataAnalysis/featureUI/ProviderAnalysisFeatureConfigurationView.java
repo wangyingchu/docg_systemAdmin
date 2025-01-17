@@ -267,9 +267,30 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.DASHBOARD),"分析功能特性指标");
         rightSideLayout.add(infoTitle2);
 
+        HorizontalLayout statusDisplayContainer = new HorizontalLayout();
+        statusDisplayContainer.setSpacing(false);
+        statusDisplayContainer.setMargin(false);
+        statusDisplayContainer.setPadding(false);
+        statusDisplayContainer.setWidthFull();
+        rightSideLayout.add(statusDisplayContainer);
+
+        VerticalLayout displayItemsContainerLayout = new VerticalLayout();
+        displayItemsContainerLayout.setMinWidth(500,Unit.PIXELS);
+        displayItemsContainerLayout.setMaxWidth(500,Unit.PIXELS);
+        displayItemsContainerLayout.setSpacing(true);
+        displayItemsContainerLayout.setMargin(false);
+        displayItemsContainerLayout.setPadding(false);
+        statusDisplayContainer.add(displayItemsContainerLayout);
+
+        VerticalLayout chartContainerLayout = new VerticalLayout();
+        chartContainerLayout.setSpacing(false);
+        chartContainerLayout.setMargin(false);
+        chartContainerLayout.setPadding(false);
+        statusDisplayContainer.add(chartContainerLayout);
+
         HorizontalLayout displayItemContainer_a = new HorizontalLayout();
         displayItemContainer_a.getStyle().set("padding-left","5px");
-        rightSideLayout.add(displayItemContainer_a);
+        displayItemsContainerLayout.add(displayItemContainer_a);
         totalRunTimesDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_a, VaadinIcon.BOLT.create(),"总运行次数:","-");
 
         HorizontalLayout spaceDivLayouta0 = new HorizontalLayout();
@@ -290,8 +311,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
 
         HorizontalLayout displayItemContainer_b = new HorizontalLayout();
         displayItemContainer_b.getStyle().set("padding-left","5px");
-        rightSideLayout.add(displayItemContainer_b);
-
+        displayItemsContainerLayout.add(displayItemContainer_b);
         firstRunTimeDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_b, VaadinIcon.CALENDAR.create(),"首次运行时间:","-");
 
         HorizontalLayout spaceDivLayoutb1 = new HorizontalLayout();
@@ -301,7 +321,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
 
         HorizontalLayout displayItemContainer_c = new HorizontalLayout();
         displayItemContainer_c.getStyle().set("padding-left","5px");
-        rightSideLayout.add(displayItemContainer_c);
+        displayItemsContainerLayout.add(displayItemContainer_c);
         totalRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_c, VaadinIcon.TIME_FORWARD.create(),"成功运行总时长:","-");
 
         HorizontalLayout spaceDivLayoutc1 = new HorizontalLayout();
@@ -309,20 +329,14 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         displayItemContainer_c.add(spaceDivLayoutc1);
         avgRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_c, VaadinIcon.CALC.create(),"成功运行平均时长:","-");
 
-
         HorizontalLayout displayItemContainer_d = new HorizontalLayout();
         displayItemContainer_d.getStyle().set("padding-left","5px");
-        rightSideLayout.add(displayItemContainer_d);
+        displayItemsContainerLayout.add(displayItemContainer_d);
         medianRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_d, VaadinIcon.ELLIPSIS_DOTS_H.create(),"成功运行中位数时长:","-");
-
-        //HorizontalLayout spaceDivLayoutc2 = new HorizontalLayout();
-        //spaceDivLayoutc2.setWidth(5,Unit.PIXELS);
-        //displayItemContainer_c.add(spaceDivLayoutc2);
-
 
         HorizontalLayout displayItemContainer_e = new HorizontalLayout();
         displayItemContainer_e.getStyle().set("padding-left","5px");
-        rightSideLayout.add(displayItemContainer_e);
+        displayItemsContainerLayout.add(displayItemContainer_e);
         Icon shortestRunningDurationIcon = VaadinIcon.STOPWATCH.create();
         shortestRunningDurationIcon.getStyle().set("color", "var(--lumo-success-color)");
         shortestRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_e, shortestRunningDurationIcon,"成功运行最短时长:","-");
@@ -335,7 +349,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         longestRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_e, longestRunningDurationIcon,"成功运行最长时长:","-");
 
         ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CLIPBOARD_LIST_SOLID.create(),"分析功能特性运行记录");
-        rightSideLayout.add(infoTitle);
+        displayItemsContainerLayout.add(infoTitle);
 
         Comparator requestTimeComparator = new Comparator() {
             @Override
@@ -676,9 +690,9 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         analysisFeatureRunningInfoGrid.setItems(selectedFeatureRunningInfoList);
 
         if(selectedFeatureRunningInfoList.size() > 0){
-            totalRunTimesDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()+997834));
-            finishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(finishedRunningTimes+987834));
-            unfinishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()-finishedRunningTimes+987834));
+            totalRunTimesDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()));
+            finishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(finishedRunningTimes));
+            unfinishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()-finishedRunningTimes));
             firstRunTimeDisplayItem.updateDisplayValue(selectedFeatureRunningInfoList.get(0).getRunningStartTime().format(localDateTimeFormatter));
             lastRunTimeDisplayItem.updateDisplayValue(selectedFeatureRunningInfoList.get(selectedFeatureRunningInfoList.size()-1).getRunningStartTime().format(localDateTimeFormatter));
         }else{
