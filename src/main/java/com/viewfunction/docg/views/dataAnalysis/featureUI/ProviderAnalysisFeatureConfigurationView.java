@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -432,26 +433,37 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             return new VerticalLayout(buttons);
         });
 
-        Comparator runningStatusComparator = new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                if(((FeatureRunningInfo)o1).getRunningFinishTime()!= null && ((FeatureRunningInfo)o2).getRunningFinishTime()!= null &&
-                        ((FeatureRunningInfo)o1).getRunningFinishTime() instanceof LocalDateTime &&
-                        ((FeatureRunningInfo)o2).getRunningFinishTime() instanceof LocalDateTime){
-                    if(((FeatureRunningInfo)o1).getRunningFinishTime().isBefore(((FeatureRunningInfo)o2).getRunningFinishTime())){
-                        return -1;
-                    }if(((FeatureRunningInfo)o1).getRunningFinishTime().isAfter(((FeatureRunningInfo)o2).getRunningFinishTime())){
-                        return 1;
-                    }
-                }
-                return 0;
+        ComponentRenderer _returnDataFormatComponentRenderer = new ComponentRenderer<>(featureRunningInfo -> {
+            if(featureRunningInfo instanceof FeatureRunningInfo){
+                NativeLabel returnDataFormatLabel = new NativeLabel(((FeatureRunningInfo) featureRunningInfo).getResponseDataForm());
+                returnDataFormatLabel.getStyle().set("font-size","var(--lumo-font-size-xxs)");
+                returnDataFormatLabel.getElement().getThemeList().add("badge contrast");
+                return returnDataFormatLabel;
             }
+            return null;
+        });
 
-            @Override
-            public boolean equals(Object obj) {
-                return false;
-            }
-        };
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(featureRunningInfo -> {
+            Icon queryIcon = LineAwesomeIconsSvg.POLL_H_SOLID.create();
+            queryIcon.setSize("18px");
+            Button listExecutionLogButton = new Button(queryIcon, event -> {
+                if(featureRunningInfo instanceof FeatureRunningInfo){
+
+                }
+            });
+            listExecutionLogButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            listExecutionLogButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            listExecutionLogButton.setTooltipText("显示分析运行日志");
+
+            HorizontalLayout buttons = new HorizontalLayout(listExecutionLogButton);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(15,Unit.PIXELS);
+            buttons.setWidth(60,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
 
         analysisFeatureRunningInfoGrid = new Grid<>();
         analysisFeatureRunningInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
@@ -462,15 +474,22 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
                 return ((FeatureRunningInfo)o1).getFeatureRunningStatus().compareTo(((FeatureRunningInfo)o2).getFeatureRunningStatus());
             }
         }).setResizable(false);
-        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getResponseDataForm).setHeader("返回数据形式").setKey("idx_2").setResizable(true).setWidth("100px");
+        analysisFeatureRunningInfoGrid.addColumn(_returnDataFormatComponentRenderer).setHeader("返回数据形式").setKey("idx_2").setWidth("80px").setComparator(new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                return ((FeatureRunningInfo)o1).getResponseDataForm().compareTo(((FeatureRunningInfo)o2).getResponseDataForm());
+            }
+        }).setResizable(true);
         analysisFeatureRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(FeatureRunningInfo::getRequestTime,"yyyy-MM-dd HH:mm:ss")).setHeader("请求时间").setKey("idx_3").setResizable(true)
                 .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRequestTime() != null ? featureRunningInfo.getRequestTime().toString(): null).setComparator(requestTimeComparator);
-        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getRequestUUID).setHeader("请求 UID").setKey("idx_4").setResizable(true).setTooltipGenerator(item -> item.getRequestUUID());
-        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getResponseUUID).setHeader("响应 UID").setKey("idx_5").setResizable(true).setTooltipGenerator(item -> item.getResponseUUID());
+        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getRequestUUID).setHeader("请求 UID").setKey("idx_4").setResizable(true).setTooltipGenerator(item -> item.getRequestUUID()).setWidth("80px");
+        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getResponseUUID).setHeader("响应 UID").setKey("idx_5").setResizable(true).setTooltipGenerator(item -> item.getResponseUUID()).setWidth("80px");
         analysisFeatureRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(FeatureRunningInfo::getRunningStartTime,"yyyy-MM-dd HH:mm:ss")).setHeader("分析开始时间").setKey("idx_6").setResizable(true)
                 .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRunningStartTime() != null ? featureRunningInfo.getRunningStartTime().toString(): null).setComparator(runningStartTimeComparator);
         analysisFeatureRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(FeatureRunningInfo::getRunningFinishTime,"yyyy-MM-dd HH:mm:ss")).setHeader("分析结束时间").setKey("idx_7").setResizable(true)
                 .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRunningFinishTime() != null ? featureRunningInfo.getRunningFinishTime().toString(): null).setComparator(runningFinishTimeComparator);
+        analysisFeatureRunningInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_8")
+                .setFlexGrow(0).setWidth("50px").setResizable(false);
 
         LightGridColumnHeader gridColumnHeader2_idx1 = new LightGridColumnHeader(LineAwesomeIconsSvg.BOLT_SOLID.create(),"状态");
         analysisFeatureRunningInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader2_idx1).setSortable(true);
@@ -486,6 +505,8 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         analysisFeatureRunningInfoGrid.getColumnByKey("idx_6").setHeader(gridColumnHeader2_idx6).setSortable(true);
         LightGridColumnHeader gridColumnHeader2_idx7 = new LightGridColumnHeader(VaadinIcon.FLIGHT_LANDING,"分析结束时间");
         analysisFeatureRunningInfoGrid.getColumnByKey("idx_7").setHeader(gridColumnHeader2_idx7).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_idx8 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
+        analysisFeatureRunningInfoGrid.getColumnByKey("idx_8").setHeader(gridColumnHeader_idx8);
 
         rightSideLayout.add(analysisFeatureRunningInfoGrid);
     }
