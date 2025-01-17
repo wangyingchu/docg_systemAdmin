@@ -30,6 +30,7 @@ import com.viewfunction.docg.analysisProvider.client.AnalysisProviderAdminClient
 import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.FeatureRunningInfo;
 import com.viewfunction.docg.analysisProvider.service.analysisProviderServiceCore.payload.FunctionalFeatureInfo;
 import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.chart.TimeSequenceBarChart;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
@@ -70,10 +71,12 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
     private FunctionalFeatureInfo lastSelectedFunctionalFeatureInfo;
     private HorizontalLayout functionalFeaturesInfoContainerLayout;
     private DateTimeFormatter localDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private DateTimeFormatter localDateTimeFormatter2 = DateTimeFormatter.ofPattern("yy/MM/dd HH:mm:ss");
     private Button registerFeatureButton;
     private Popover registerFunctionalFeatureOperationButtonPopover;
     private RegisterFunctionalFeatureView registerFunctionalFeatureView;
     private Button refreshDataButton;
+    private TimeSequenceBarChart featureRunningInfoTimeSequenceBarChart;
 
     public ProviderAnalysisFeatureConfigurationView() {
         HorizontalLayout infoContainer = new HorizontalLayout();
@@ -275,8 +278,8 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         rightSideLayout.add(statusDisplayContainer);
 
         VerticalLayout displayItemsContainerLayout = new VerticalLayout();
-        displayItemsContainerLayout.setMinWidth(500,Unit.PIXELS);
-        displayItemsContainerLayout.setMaxWidth(500,Unit.PIXELS);
+        displayItemsContainerLayout.setMinWidth(490,Unit.PIXELS);
+        displayItemsContainerLayout.setMaxWidth(490,Unit.PIXELS);
         displayItemsContainerLayout.setSpacing(true);
         displayItemsContainerLayout.setMargin(false);
         displayItemsContainerLayout.setPadding(false);
@@ -287,6 +290,8 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         chartContainerLayout.setMargin(false);
         chartContainerLayout.setPadding(false);
         statusDisplayContainer.add(chartContainerLayout);
+        featureRunningInfoTimeSequenceBarChart = new TimeSequenceBarChart(400,150);
+        chartContainerLayout.add(featureRunningInfoTimeSequenceBarChart);
 
         HorizontalLayout displayItemContainer_a = new HorizontalLayout();
         displayItemContainer_a.getStyle().set("padding-left","5px");
@@ -294,7 +299,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         totalRunTimesDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_a, VaadinIcon.BOLT.create(),"总运行次数:","-");
 
         HorizontalLayout spaceDivLayouta0 = new HorizontalLayout();
-        spaceDivLayouta0.setWidth(5,Unit.PIXELS);
+        spaceDivLayouta0.setWidth(3,Unit.PIXELS);
         displayItemContainer_a.add(spaceDivLayouta0);
 
         Icon successRunningIcon = VaadinIcon.BOLT.create();
@@ -302,7 +307,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         finishedRunTimeDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_a,successRunningIcon ,"运行成功次数:","-");
 
         HorizontalLayout spaceDivLayouta1 = new HorizontalLayout();
-        spaceDivLayouta1.setWidth(5,Unit.PIXELS);
+        spaceDivLayouta1.setWidth(3,Unit.PIXELS);
         displayItemContainer_a.add(spaceDivLayouta1);
 
         Icon unsuccessRunningIcon = VaadinIcon.BOLT.create();
@@ -690,11 +695,11 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         analysisFeatureRunningInfoGrid.setItems(selectedFeatureRunningInfoList);
 
         if(selectedFeatureRunningInfoList.size() > 0){
-            totalRunTimesDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()));
-            finishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(finishedRunningTimes));
-            unfinishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()-finishedRunningTimes));
-            firstRunTimeDisplayItem.updateDisplayValue(selectedFeatureRunningInfoList.get(0).getRunningStartTime().format(localDateTimeFormatter));
-            lastRunTimeDisplayItem.updateDisplayValue(selectedFeatureRunningInfoList.get(selectedFeatureRunningInfoList.size()-1).getRunningStartTime().format(localDateTimeFormatter));
+            totalRunTimesDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()+9988763));
+            finishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(finishedRunningTimes+9988763));
+            unfinishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()-finishedRunningTimes+9988763));
+            firstRunTimeDisplayItem.updateDisplayValue(selectedFeatureRunningInfoList.get(0).getRunningStartTime().format(localDateTimeFormatter2));
+            lastRunTimeDisplayItem.updateDisplayValue(selectedFeatureRunningInfoList.get(selectedFeatureRunningInfoList.size()-1).getRunningStartTime().format(localDateTimeFormatter2));
         }else{
             totalRunTimesDisplayItem.updateDisplayValue("0");
             finishedRunTimeDisplayItem.updateDisplayValue("0");
@@ -705,7 +710,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
 
         if(finishedRunningDurationList.size() > 0){
             Duration totalDuration = finishedRunningDurationList.stream().reduce(Duration.ZERO, Duration::plus);
-            totalRunningDurationDisplayItem.updateDisplayValue(formateDuration(totalDuration));
+            totalRunningDurationDisplayItem.updateDisplayValue(formatDuration(totalDuration));
 
             long[] secondNumbers = new long[finishedRunningDurationList.size()];
             long totalTimeInSeconds = totalDuration.getSeconds();
@@ -725,17 +730,17 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             }
             long averageTimeInSeconds = totalTimeInSeconds/finishedRunningDurationList.size();
             Duration avgDuration = Duration.ofSeconds(averageTimeInSeconds);
-            avgRunningDurationDisplayItem.updateDisplayValue(formateDuration(avgDuration));
+            avgRunningDurationDisplayItem.updateDisplayValue(formatDuration(avgDuration));
 
             long medianTimeInSeconds = calculateMedian(secondNumbers);
             Duration medianDuration = Duration.ofSeconds(medianTimeInSeconds);
-            medianRunningDurationDisplayItem.updateDisplayValue(formateDuration(medianDuration));
+            medianRunningDurationDisplayItem.updateDisplayValue(formatDuration(medianDuration));
 
             Duration shortestDuration = Duration.ofSeconds(shortestTimeInSeconds);
-            shortestRunningDurationDisplayItem.updateDisplayValue(formateDuration(shortestDuration));
+            shortestRunningDurationDisplayItem.updateDisplayValue(formatDuration(shortestDuration));
 
             Duration longestDuration = Duration.ofSeconds(longestTimeInSeconds);
-            longestRunningDurationDisplayItem.updateDisplayValue(formateDuration(longestDuration));
+            longestRunningDurationDisplayItem.updateDisplayValue(formatDuration(longestDuration));
         }else{
             totalRunningDurationDisplayItem.updateDisplayValue("-");
             avgRunningDurationDisplayItem.updateDisplayValue("-");
@@ -745,7 +750,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         }
     }
 
-    private String formateDuration(Duration duration ) {
+    private String formatDuration(Duration duration ) {
         // 获取总秒数
         long totalSeconds = duration.getSeconds();
         // 计算小时数
