@@ -309,24 +309,30 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         displayItemContainer_c.add(spaceDivLayoutc1);
         avgRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_c, VaadinIcon.CALC.create(),"成功运行平均时长:","-");
 
-        HorizontalLayout spaceDivLayoutc2 = new HorizontalLayout();
-        spaceDivLayoutc2.setWidth(5,Unit.PIXELS);
-        displayItemContainer_c.add(spaceDivLayoutc2);
-        medianRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_c, VaadinIcon.ELLIPSIS_DOTS_H.create(),"成功运行中位数时长:","-");
 
         HorizontalLayout displayItemContainer_d = new HorizontalLayout();
         displayItemContainer_d.getStyle().set("padding-left","5px");
         rightSideLayout.add(displayItemContainer_d);
+        medianRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_d, VaadinIcon.ELLIPSIS_DOTS_H.create(),"成功运行中位数时长:","-");
+
+        //HorizontalLayout spaceDivLayoutc2 = new HorizontalLayout();
+        //spaceDivLayoutc2.setWidth(5,Unit.PIXELS);
+        //displayItemContainer_c.add(spaceDivLayoutc2);
+
+
+        HorizontalLayout displayItemContainer_e = new HorizontalLayout();
+        displayItemContainer_e.getStyle().set("padding-left","5px");
+        rightSideLayout.add(displayItemContainer_e);
         Icon shortestRunningDurationIcon = VaadinIcon.STOPWATCH.create();
         shortestRunningDurationIcon.getStyle().set("color", "var(--lumo-success-color)");
-        shortestRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_d, shortestRunningDurationIcon,"成功运行最短时长:","-");
+        shortestRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_e, shortestRunningDurationIcon,"成功运行最短时长:","-");
 
         HorizontalLayout spaceDivLayoutd1 = new HorizontalLayout();
         spaceDivLayoutd1.setWidth(5,Unit.PIXELS);
-        displayItemContainer_d.add(spaceDivLayoutd1);
+        displayItemContainer_e.add(spaceDivLayoutd1);
         Icon longestRunningDurationIcon = VaadinIcon.STOPWATCH.create();
         longestRunningDurationIcon.getStyle().set("color", "var(--lumo-primary-color)");
-        longestRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_d, longestRunningDurationIcon,"成功运行最长时长:","-");
+        longestRunningDurationDisplayItem = new SecondaryKeyValueDisplayItem(displayItemContainer_e, longestRunningDurationIcon,"成功运行最长时长:","-");
 
         ThirdLevelIconTitle infoTitle = new ThirdLevelIconTitle(LineAwesomeIconsSvg.CLIPBOARD_LIST_SOLID.create(),"分析功能特性运行记录");
         rightSideLayout.add(infoTitle);
@@ -517,7 +523,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             functionalFeatureInfoGrid.setHeight(event.getHeight()-360,Unit.PIXELS);
-            analysisFeatureRunningInfoGrid.setHeight(event.getHeight()-560,Unit.PIXELS);
+            analysisFeatureRunningInfoGrid.setHeight(event.getHeight()-590,Unit.PIXELS);
             functionalFeaturesInfoContainerLayout.setWidth(event.getWidth()-350,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
@@ -525,7 +531,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             int browserHeight = receiver.getBodyClientHeight();
             int browserWidth = receiver.getBodyClientWidth();
             functionalFeatureInfoGrid.setHeight(browserHeight-360,Unit.PIXELS);
-            analysisFeatureRunningInfoGrid.setHeight(browserHeight-560,Unit.PIXELS);
+            analysisFeatureRunningInfoGrid.setHeight(browserHeight-590,Unit.PIXELS);
             functionalFeaturesInfoContainerLayout.setWidth(browserWidth-350,Unit.PIXELS);
         }));
         renderFunctionalFeatureInfo();
@@ -670,9 +676,9 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         analysisFeatureRunningInfoGrid.setItems(selectedFeatureRunningInfoList);
 
         if(selectedFeatureRunningInfoList.size() > 0){
-            totalRunTimesDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()));
-            finishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(finishedRunningTimes));
-            unfinishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()-finishedRunningTimes));
+            totalRunTimesDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()+997834));
+            finishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(finishedRunningTimes+987834));
+            unfinishedRunTimeDisplayItem.updateDisplayValue(numberFormat.format(selectedFeatureRunningInfoList.size()-finishedRunningTimes+987834));
             firstRunTimeDisplayItem.updateDisplayValue(selectedFeatureRunningInfoList.get(0).getRunningStartTime().format(localDateTimeFormatter));
             lastRunTimeDisplayItem.updateDisplayValue(selectedFeatureRunningInfoList.get(selectedFeatureRunningInfoList.size()-1).getRunningStartTime().format(localDateTimeFormatter));
         }else{
