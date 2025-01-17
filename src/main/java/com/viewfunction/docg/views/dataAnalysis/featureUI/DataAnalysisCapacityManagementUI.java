@@ -15,6 +15,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.shared.Registration;
 
@@ -73,8 +74,8 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
 
         leftSideContentContainerLayout = new VerticalLayout();
         leftSideContentContainerLayout.setSpacing(false);
-        leftSideContentContainerLayout.setMaxWidth(295, Unit.PIXELS);
-        leftSideContentContainerLayout.setMinWidth(295, Unit.PIXELS);
+        leftSideContentContainerLayout.setMaxWidth(297, Unit.PIXELS);
+        leftSideContentContainerLayout.setMinWidth(297, Unit.PIXELS);
         leftSideContentContainerLayout.getStyle()
                 .set("border-right", "1px solid var(--lumo-contrast-20pct)");
         contentContainerLayout.add(leftSideContentContainerLayout);
@@ -139,19 +140,37 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         SecondaryIconTitle sectionTitle2 = new SecondaryIconTitle(LineAwesomeIconsSvg.CLIPBOARD_LIST_SOLID.create(), "服务运行历史记录");
         providerRuntimeStatusInfoLayout.add(sectionTitle2);
 
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(providerRunningInfo -> {
+            Icon queryIcon = LineAwesomeIconsSvg.CLIPBOARD_SOLID.create();
+            queryIcon.setSize("14px");
+            Button listExecutedServicesButton = new Button(queryIcon, event -> {
+                if(providerRunningInfo instanceof ProviderRunningInfo){
+
+                }
+            });
+            listExecutedServicesButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            listExecutedServicesButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            listExecutedServicesButton.setTooltipText("显示运行期间执行的分析功能");
+            return listExecutedServicesButton;
+        });
+
         providerRunningInfoGrid = new Grid<>();
-        providerRunningInfoGrid.setWidth(275,Unit.PIXELS);
+        providerRunningInfoGrid.setWidth(276,Unit.PIXELS);
         providerRunningInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
         providerRunningInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
-        providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStartTime,"yyyy-MM-dd HH:mm:ss")).setHeader("开始时间").setKey("idx_0").setResizable(true)
+        providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStartTime,"yyyy-MM-dd HH:mm")).setHeader("开始时间").setKey("idx_0").setResizable(true)
                 .setTooltipGenerator(runtimeRelationAndConceptionKindAttachInfo -> runtimeRelationAndConceptionKindAttachInfo.getProviderStartTime() != null ? runtimeRelationAndConceptionKindAttachInfo.getProviderStartTime().toString(): null);
-        providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStopTime,"yyyy-MM-dd HH:mm:ss")).setHeader("结束时间").setKey("idx_1").setResizable(true)
+        providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStopTime,"yyyy-MM-dd HH:mm")).setHeader("结束时间").setKey("idx_1").setResizable(true)
                 .setTooltipGenerator(runtimeRelationAndConceptionKindAttachInfo -> runtimeRelationAndConceptionKindAttachInfo.getProviderStopTime() != null ? runtimeRelationAndConceptionKindAttachInfo.getProviderStopTime().toString(): null);
+        providerRunningInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_2")
+                .setFlexGrow(0).setWidth("41px").setResizable(false);
 
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.SUN_RISE,"开始时间");
         providerRunningInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(false);
         LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.SUN_DOWN,"结束时间");
         providerRunningInfoGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(false);
+        LightGridColumnHeader gridColumnHeader_idx2 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
+        providerRunningInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2);
 
         providerRuntimeStatusInfoLayout.add(providerRunningInfoGrid);
 

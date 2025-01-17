@@ -19,6 +19,7 @@ import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
@@ -391,6 +392,21 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
                 return false;
             }
         };
+
+        ComponentRenderer _runningStatusComponentRenderer = new ComponentRenderer<>(featureRunningInfo -> {
+
+
+            if(featureRunningInfo instanceof FeatureRunningInfo){
+                ((FeatureRunningInfo) featureRunningInfo).getFeatureRunningStatus();
+            }
+
+
+            Icon queryIcon = LineAwesomeIconsSvg.CLIPBOARD_SOLID.create();
+
+            queryIcon.setSize("14px");
+
+            return queryIcon;
+        });
 
         analysisFeatureRunningInfoGrid = new Grid<>();
         analysisFeatureRunningInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
