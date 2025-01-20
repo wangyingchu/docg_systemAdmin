@@ -42,15 +42,15 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
             },
             grid: [
                 {
-                    left: '10%',
-                    right: '10%',
+                    left: 5,
+                    right: 5,
                     bottom: 200
                 },
                 {
-                    left: '10%',
-                    right: '10%',
-                    height: 80,
-                    bottom: 80
+                    left: 5,
+                    right: 5,
+                    height: 50,
+                    bottom: 5
                 }
             ],
             xAxis: [
