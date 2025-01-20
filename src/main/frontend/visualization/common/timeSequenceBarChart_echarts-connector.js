@@ -49,8 +49,8 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                 {
                     left: 5,
                     right: 5,
-                    height: 50,
-                    bottom: 5
+                    height: 80,
+                    bottom: 80
                 }
             ],
             xAxis: [
