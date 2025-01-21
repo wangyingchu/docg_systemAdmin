@@ -14,6 +14,7 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                 c.$connector.option.series[0].name = propertyDesc;
             },
             setData: function (data) {
+                console.log(data);
                 //c.$connector.option.dataset.source = data.value;
                 c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
             }

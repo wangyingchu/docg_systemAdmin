@@ -37,8 +37,8 @@ public class TimeSequenceBarChart extends Div {
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setPropertyDesc", propertyDesc));
     }
 
-    public void setDate(ArrayList<Map<LocalDateTime,Long>> timeAndValueMappingList){
-        EchartsTimeSequenceBarChartPayload echartsTimeSequenceBarChartPayload = new EchartsTimeSequenceBarChartPayload(timeAndValueMappingList);
+    public void setDate(Map<LocalDateTime,Long> timeAndValueMapping){
+        EchartsTimeSequenceBarChartPayload echartsTimeSequenceBarChartPayload = new EchartsTimeSequenceBarChartPayload(timeAndValueMapping);
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", echartsTimeSequenceBarChartPayload.toJson()));
     }
 
