@@ -16,6 +16,19 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
             setData: function (data) {
                 console.log(data);
                 //c.$connector.option.dataset.source = data.value;
+
+                let chartData = [];
+
+                for(let i=0;i<data.length;i++){
+                    let xValue = +new Date(data[i]["year"], data[i]["month"], data[i]["day"],data[i]["hour"],data[i]["minute"],data[i]["second"]);
+                    chartData[i] = [
+                        echarts.format.formatTime('yyyy-MM-dd\nhh:mm:ss', xValue),
+                        data[i]["value"],
+                        1
+                    ];
+
+                }
+                c.$connector.option.dataset.source = chartData;
                 c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
             }
         };

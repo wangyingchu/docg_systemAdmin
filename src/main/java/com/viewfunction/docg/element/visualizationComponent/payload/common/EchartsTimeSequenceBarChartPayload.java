@@ -15,7 +15,6 @@ public class EchartsTimeSequenceBarChartPayload implements JsonSerializable {
 
     public EchartsTimeSequenceBarChartPayload(Map<LocalDateTime,Long> timeAndValueMapping) {
         this.timeAndValueMapping = timeAndValueMapping;
-        //System.out.println(timeAndValueMapping);
     }
 
     public EchartsTimeSequenceBarChartPayload() {}
@@ -29,20 +28,20 @@ public class EchartsTimeSequenceBarChartPayload implements JsonSerializable {
         if(timeAndValueMapping != null && !timeAndValueMapping.isEmpty()){
             Set<LocalDateTime> dateTimeSet = timeAndValueMapping.keySet();
             int index = 0;
-
-            /*
-            while(dateTimeSet.iterator().hasNext()){
-                LocalDateTime currentDateTime = dateTimeSet.iterator().next();
+            for(LocalDateTime currentDateTime : dateTimeSet){
                 Long currentValue = timeAndValueMapping.get(currentDateTime);
 
                 JsonObject currentValueObj = Json.createObject();
-                currentValueObj.put("time",currentDateTime.toString());
+                currentValueObj.put("year",currentDateTime.getYear());
+                currentValueObj.put("month",currentDateTime.getMonthValue());
+                currentValueObj.put("day",currentDateTime.getDayOfMonth());
+                currentValueObj.put("hour",currentDateTime.getHour());
+                currentValueObj.put("minute",currentDateTime.getMinute());
+                currentValueObj.put("second",currentDateTime.getSecond());
                 currentValueObj.put("value",currentValue);
                 valueArray.set(index,currentValueObj);
                 index++;
             }
-            */
-
         }
         return obj;
     }
