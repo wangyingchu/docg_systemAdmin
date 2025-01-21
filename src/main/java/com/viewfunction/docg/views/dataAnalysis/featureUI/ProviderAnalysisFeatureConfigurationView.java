@@ -673,6 +673,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         List<FeatureRunningInfo> selectedFeatureRunningInfoList = new ArrayList<>();
         List<Duration> finishedRunningDurationList = new ArrayList<>();
         int finishedRunningTimes = 0;
+        ArrayList<Map<LocalDateTime,Long>> requestAndDurationMappingList = new ArrayList<>();
         if(currentFeatureRunningInfoList!= null){
             for(FeatureRunningInfo featureRunningInfo : currentFeatureRunningInfoList) {
                 if(featureRunningInfo.getFeatureName().trim().equals(functionalFeatureInfo.getFunctionalFeatureName().trim())){
@@ -683,6 +684,10 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
                         Duration duration = Duration.between(startDateTime, finishDateTime);
                         finishedRunningDurationList.add(duration);
                         finishedRunningTimes++;
+
+                        Map<LocalDateTime,Long> requestAndDurationMapping = new HashMap<>();
+                        requestAndDurationMapping.put(featureRunningInfo.getRequestTime(),duration.toSeconds());
+                        requestAndDurationMappingList.add(requestAndDurationMapping);
                     }
                 }
             }
@@ -750,10 +755,10 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             longestRunningDurationDisplayItem.updateDisplayValue("-");
         }
 
-        featureRunningInfoTimeSequenceBarChart.setDate();
+        featureRunningInfoTimeSequenceBarChart.setDate(requestAndDurationMappingList);
     }
 
-    private String formatDuration(Duration duration ) {
+    private String formatDuration(Duration duration) {
         // 获取总秒数
         long totalSeconds = duration.getSeconds();
         // 计算小时数

@@ -8,8 +8,14 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsBarChartPayload;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsTimeSequenceBarChartPayload;
 import elemental.json.Json;
 import elemental.json.JsonArray;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Map;
 
 @JavaScript("./visualization/common/timeSequenceBarChart_echarts-connector.js")
 public class TimeSequenceBarChart extends Div {
@@ -29,6 +35,11 @@ public class TimeSequenceBarChart extends Div {
 
     public void setPropertyDesc(String propertyDesc){
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setPropertyDesc", propertyDesc));
+    }
+
+    public void setDate(ArrayList<Map<LocalDateTime,Long>> timeAndValueMappingList){
+        EchartsTimeSequenceBarChartPayload echartsTimeSequenceBarChartPayload = new EchartsTimeSequenceBarChartPayload(timeAndValueMappingList);
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", echartsTimeSequenceBarChartPayload.toJson()));
     }
 
     public void setDate(){
