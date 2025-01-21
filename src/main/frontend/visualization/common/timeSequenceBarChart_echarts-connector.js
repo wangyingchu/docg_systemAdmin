@@ -93,7 +93,7 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                 {
                     type: 'inside',
                     xAxisIndex: [0, 1],
-                    start: 10,
+                    start: 0,
                     end: 100
                 },
                 {
@@ -101,25 +101,11 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                     xAxisIndex: [0, 1],
                     type: 'slider',
                     bottom: 10,
-                    start: 10,
+                    start: 0,
                     end: 100
                 }
             ],
-            visualMap: {
-                show: false,
-                seriesIndex: 1,
-                dimension: 6,
-                pieces: [
-                    {
-                        value: 1,
-                        color: upColor
-                    },
-                    {
-                        value: -1,
-                        color: downColor
-                    }
-                ]
-            },
+
             series: [
                 {
                     name: 'Volumn',
@@ -127,7 +113,7 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                     xAxisIndex: 1,
                     yAxisIndex: 1,
                     itemStyle: {
-                        color: '#0099FF'
+                        color: '#FF4500'
                     },
                     large: true,
                     encode: {
@@ -159,7 +145,7 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                 // ['open', 'close', 'lowest', 'highest', 'volumn']
                 // [1, 4, 3, 2]
                 data[i] = [
-                    echarts.format.formatTime('yy/MM/dd\nhh:mm:ss', (xValue += minute)),
+                    echarts.format.formatTime('yyyy-MM-dd\nhh:mm:ss', (xValue += minute)),
                     +boxVals[openIdx].toFixed(2),
                     +boxVals[3].toFixed(2),
                     +boxVals[0].toFixed(2),
