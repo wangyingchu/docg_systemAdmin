@@ -6,16 +6,22 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
             return;
         }
         c.$connector = {
-
+            // functions
+            setBarColor:function(barColor){
+                c.$connector.option.series[0].itemStyle.color = barColor;
+            },
+            setPropertyDesc:function(propertyDesc){
+                c.$connector.option.series[0].name = propertyDesc;
+            },
+            setData: function (data) {
+                //c.$connector.option.dataset.source = data.value;
+                c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
+            }
         };
 
         c.$connector.myChart = echarts.init(c);
         c.$connector.option;
 
-        const upColor = '#ec0000';
-        const upBorderColor = '#8A0000';
-        const downColor = '#00da3c';
-        const downBorderColor = '#008F28';
         const dataCount = 600;
         const data = generateOHLC(dataCount);
         c.$connector.option = {
@@ -105,15 +111,14 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                     end: 100
                 }
             ],
-
             series: [
                 {
-                    name: 'Volumn',
+                    name: '-',
                     type: 'bar',
                     xAxisIndex: 1,
                     yAxisIndex: 1,
                     itemStyle: {
-                        color: '#FF4500'
+                        color: '#0099FF'
                     },
                     large: true,
                     encode: {
@@ -125,7 +130,7 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
         };
         function generateOHLC(count) {
             let data = [];
-            let xValue = +new Date(2011, 0, 1);
+            let xValue = +new Date(2011, 0, 1,6,11,25);
             let minute = 60 * 1000;
             let baseValue = Math.random() * 12000;
             let boxVals = new Array(4);
@@ -146,35 +151,11 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                 // [1, 4, 3, 2]
                 data[i] = [
                     echarts.format.formatTime('yyyy-MM-dd\nhh:mm:ss', (xValue += minute)),
-                    +boxVals[openIdx].toFixed(2),
-                    +boxVals[3].toFixed(2),
-                    +boxVals[0].toFixed(2),
-                    +boxVals[closeIdx].toFixed(2),
                     +volumn.toFixed(0),
-                    getSign(data, i, +boxVals[openIdx], +boxVals[closeIdx], 4) // sign
+                    1
                 ];
             }
             return data;
-            function getSign(data, dataIndex, openVal, closeVal, closeDimIdx) {
-                var sign;
-                if (openVal > closeVal) {
-                    sign = -1;
-                } else if (openVal < closeVal) {
-                    sign = 1;
-                } else {
-                    sign =
-                        dataIndex > 0
-                            ? // If close === open, compare with close of last record
-                            data[dataIndex - 1][closeDimIdx] <= closeVal
-                                ? 1
-                                : -1
-                            : // No record of previous, set to be positive
-                            1;
-                }
-                return sign;
-            }
         }
-
-        c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
     }
 }

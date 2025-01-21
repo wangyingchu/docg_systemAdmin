@@ -290,6 +290,8 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         chartContainerLayout.setPadding(false);
         statusDisplayContainer.add(chartContainerLayout);
         featureRunningInfoTimeSequenceBarChart = new TimeSequenceBarChart(400,150);
+        featureRunningInfoTimeSequenceBarChart.setBarColor("#FF4500");
+        featureRunningInfoTimeSequenceBarChart.setPropertyDesc("运行时长（秒）");
         chartContainerLayout.add(featureRunningInfoTimeSequenceBarChart);
 
         HorizontalLayout displayItemContainer_a = new HorizontalLayout();
@@ -747,6 +749,8 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             shortestRunningDurationDisplayItem.updateDisplayValue("-");
             longestRunningDurationDisplayItem.updateDisplayValue("-");
         }
+
+        featureRunningInfoTimeSequenceBarChart.setDate();
     }
 
     private String formatDuration(Duration duration ) {
