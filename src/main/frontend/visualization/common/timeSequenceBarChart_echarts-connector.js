@@ -1,6 +1,4 @@
 import * as echarts from 'echarts';
-
-
 window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
     initLazy: function (c) {
         // Check whether the connector was already initialized
@@ -18,14 +16,11 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
         const upBorderColor = '#8A0000';
         const downColor = '#00da3c';
         const downBorderColor = '#008F28';
-        const dataCount = 2e5;
+        const dataCount = 600;
         const data = generateOHLC(dataCount);
         c.$connector.option = {
             dataset: {
                 source: data
-            },
-            title: {
-                text: 'Data Amount: ' + echarts.format.addCommas(dataCount)
             },
             tooltip: {
                 trigger: 'axis',
@@ -33,6 +28,7 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                     type: 'line'
                 }
             },
+            /*
             toolbox: {
                 feature: {
                     dataZoom: {
@@ -40,6 +36,7 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                     }
                 }
             },
+            */
             grid: [
                 {
                     left: 5,
@@ -49,8 +46,8 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                 {
                     left: 5,
                     right: 5,
-                    height: 80,
-                    bottom: 80
+                    height: 120,
+                    bottom: 45
                 }
             ],
             xAxis: [
@@ -69,7 +66,7 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                     boundaryGap: false,
                     axisLine: { onZero: false },
                     axisTick: { show: false },
-                    splitLine: { show: false },
+                    splitLine: { show: true },
                     axisLabel: { show: false },
                     min: 'dataMin',
                     max: 'dataMax'
@@ -89,7 +86,7 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                     axisLabel: { show: false },
                     axisLine: { show: false },
                     axisTick: { show: false },
-                    splitLine: { show: false }
+                    splitLine: { show: true }
                 }
             ],
             dataZoom: [
@@ -125,25 +122,12 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
             },
             series: [
                 {
-                    type: 'candlestick',
-                    itemStyle: {
-                        color: upColor,
-                        color0: downColor,
-                        borderColor: upBorderColor,
-                        borderColor0: downBorderColor
-                    },
-                    encode: {
-                        x: 0,
-                        y: [1, 4, 3, 2]
-                    }
-                },
-                {
                     name: 'Volumn',
                     type: 'bar',
                     xAxisIndex: 1,
                     yAxisIndex: 1,
                     itemStyle: {
-                        color: '#7fbe9e'
+                        color: '#0099FF'
                     },
                     large: true,
                     encode: {
@@ -175,7 +159,7 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                 // ['open', 'close', 'lowest', 'highest', 'volumn']
                 // [1, 4, 3, 2]
                 data[i] = [
-                    echarts.format.formatTime('yyyy-MM-dd\nhh:mm:ss', (xValue += minute)),
+                    echarts.format.formatTime('yy/MM/dd\nhh:mm:ss', (xValue += minute)),
                     +boxVals[openIdx].toFixed(2),
                     +boxVals[3].toFixed(2),
                     +boxVals[0].toFixed(2),
