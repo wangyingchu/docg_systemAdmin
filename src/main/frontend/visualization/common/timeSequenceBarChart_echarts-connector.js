@@ -29,6 +29,11 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                 }
                 c.$connector.option.dataset.source = chartData;
                 c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
+            },
+            clearData: function (dataObj){
+                let chartData = [];
+                c.$connector.option.dataset.source = chartData;
+                c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
             }
         };
 

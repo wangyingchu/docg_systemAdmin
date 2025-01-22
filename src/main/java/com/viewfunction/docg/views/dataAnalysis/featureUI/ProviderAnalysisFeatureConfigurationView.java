@@ -579,6 +579,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         longestRunningDurationDisplayItem.updateDisplayValue("-");
         analysisFeatureRunningInfoGrid.setItems(new ArrayList<>());
         analysisFeatureInfoActionBar.updateTitleContent("-");
+        featureRunningInfoTimeSequenceBarChart.clearData();
 
         AnalysisProviderAdminClient analysisProviderAdminClient = new AnalysisProviderAdminClient(ANALYSIS_CLIENT_HOST_NAME,ANALYSIS_CLIENT_HOST_PORT);
         UI currentUI = UI.getCurrent();
