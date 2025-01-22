@@ -13,20 +13,19 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
             setPropertyDesc:function(propertyDesc){
                 c.$connector.option.series[0].name = propertyDesc;
             },
-            setData: function (data) {
-                console.log(data);
-                //c.$connector.option.dataset.source = data.value;
-
+            setData: function (dataObj) {
                 let chartData = [];
+                let data = dataObj.data;
+                if(data){
+                    for(let i=0;i<dataObj.data.length;i++){
+                        let xValue = +new Date(data[i]["year"], data[i]["month"], data[i]["day"],data[i]["hour"],data[i]["minute"],data[i]["second"]);
+                        chartData[i] = [
+                            echarts.format.formatTime('yyyy-MM-dd\nhh:mm:ss', xValue),
+                            data[i]["value"],
+                            1
+                        ];
 
-                for(let i=0;i<data.length;i++){
-                    let xValue = +new Date(data[i]["year"], data[i]["month"], data[i]["day"],data[i]["hour"],data[i]["minute"],data[i]["second"]);
-                    chartData[i] = [
-                        echarts.format.formatTime('yyyy-MM-dd\nhh:mm:ss', xValue),
-                        data[i]["value"],
-                        1
-                    ];
-
+                    }
                 }
                 c.$connector.option.dataset.source = chartData;
                 c.$connector.option && c.$connector.myChart.setOption(c.$connector.option);
@@ -36,8 +35,9 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
         c.$connector.myChart = echarts.init(c);
         c.$connector.option;
 
-        const dataCount = 600;
-        const data = generateOHLC(dataCount);
+        const dataCount = 100;
+        const data = generateSampleData(dataCount);
+
         c.$connector.option = {
             dataset: {
                 source: data
@@ -142,27 +142,12 @@ window.Vaadin.Flow.common_TimeSequenceBarChart_echarts = {
                 }
             ]
         };
-        function generateOHLC(count) {
+        function generateSampleData(count) {
             let data = [];
             let xValue = +new Date(2011, 0, 1,6,11,25);
             let minute = 60 * 1000;
-            let baseValue = Math.random() * 12000;
-            let boxVals = new Array(4);
-            let dayRange = 12;
             for (let i = 0; i < count; i++) {
-                baseValue = baseValue + Math.random() * 20 - 10;
-                for (let j = 0; j < 4; j++) {
-                    boxVals[j] = (Math.random() - 0.5) * dayRange + baseValue;
-                }
-                boxVals.sort();
-                let openIdx = Math.round(Math.random() * 3);
-                let closeIdx = Math.round(Math.random() * 2);
-                if (closeIdx === openIdx) {
-                    closeIdx++;
-                }
-                let volumn = boxVals[3] * (1000 + Math.random() * 500);
-                // ['open', 'close', 'lowest', 'highest', 'volumn']
-                // [1, 4, 3, 2]
+                let volumn = 1 * (1000 + Math.random() * 500);
                 data[i] = [
                     echarts.format.formatTime('yyyy-MM-dd\nhh:mm:ss', (xValue += minute)),
                     +volumn.toFixed(0),

@@ -676,15 +676,17 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         Map<LocalDateTime,Long> requestAndDurationMapping = new HashMap<>();
         if(currentFeatureRunningInfoList!= null){
             for(FeatureRunningInfo featureRunningInfo : currentFeatureRunningInfoList) {
-                if(featureRunningInfo.getFeatureName().trim().equals(functionalFeatureInfo.getFunctionalFeatureName().trim())){
-                    selectedFeatureRunningInfoList.add(featureRunningInfo);
-                    if("FINISHED".equals(featureRunningInfo.getFeatureRunningStatus())) {
-                        LocalDateTime startDateTime = featureRunningInfo.getRunningStartTime();
-                        LocalDateTime finishDateTime = featureRunningInfo.getRunningFinishTime();
-                        Duration duration = Duration.between(startDateTime, finishDateTime);
-                        finishedRunningDurationList.add(duration);
-                        finishedRunningTimes++;
-                        requestAndDurationMapping.put(featureRunningInfo.getRequestTime(),duration.toSeconds());
+                if(featureRunningInfo.getFeatureName() != null){
+                    if(featureRunningInfo.getFeatureName().trim().equals(functionalFeatureInfo.getFunctionalFeatureName().trim())){
+                        selectedFeatureRunningInfoList.add(featureRunningInfo);
+                        if("FINISHED".equals(featureRunningInfo.getFeatureRunningStatus())) {
+                            LocalDateTime startDateTime = featureRunningInfo.getRunningStartTime();
+                            LocalDateTime finishDateTime = featureRunningInfo.getRunningFinishTime();
+                            Duration duration = Duration.between(startDateTime, finishDateTime);
+                            finishedRunningDurationList.add(duration);
+                            finishedRunningTimes++;
+                            requestAndDurationMapping.put(featureRunningInfo.getRequestTime(),duration.toSeconds());
+                        }
                     }
                 }
             }
