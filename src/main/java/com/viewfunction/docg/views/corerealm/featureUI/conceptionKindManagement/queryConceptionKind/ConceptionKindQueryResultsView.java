@@ -171,6 +171,14 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             }
         });
 
+        MenuItem maintenanceDataSubMenu = subMenu.addItem(LineAwesomeIconsSvg.DOLLY_SOLID.create());
+        maintenanceDataSubMenu.add(" 数据维护");
+
+        Icon eleteResultEntitiesIcon = VaadinIcon.TRASH.create();
+        eleteResultEntitiesIcon.getStyle().set("color","hsl(3,89%,42%)");
+        MenuItem deleteResultEntities = maintenanceDataSubMenu.getSubMenu().addItem(eleteResultEntitiesIcon);
+        deleteResultEntities.add("删除查询结果中的概念实体");
+
         queryResultGrid = new Grid<>();
         queryResultGrid.setWidth(100,Unit.PERCENTAGE);
         queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
