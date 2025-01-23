@@ -47,7 +47,7 @@ import java.util.*;
 
 public class AddEntityAttributeView extends VerticalLayout {
 
-    public enum KindType {ConceptionKind,RelationKind,Classification}
+    public enum KindType {ConceptionKind,RelationKind,Classification,EntitiesSet}
 
     private Dialog containerDialog;
     private NativeLabel errorMessage;
@@ -62,6 +62,7 @@ public class AddEntityAttributeView extends VerticalLayout {
     private MetaConfigItemFeatureSupportable metaConfigItemFeatureSupportable;
     private boolean isKindScopeAttribute = false;
     private FootprintMessageBar entityInfoFootprintMessageBar;
+    private Set<String> entityUIDsSet;
 
     public AddEntityAttributeView(String kindName, String entityUID,KindType entityKindType){
         this.setMargin(false);
@@ -77,6 +78,7 @@ public class AddEntityAttributeView extends VerticalLayout {
             case ConceptionKind ->  kindIcon = VaadinIcon.CUBE.create();
             case RelationKind -> kindIcon = VaadinIcon.CONNECT_O.create();
             case Classification -> kindIcon = VaadinIcon.TAGS.create();
+            case EntitiesSet -> kindIcon = VaadinIcon.CUBES.create();
         }
         kindIcon.setSize("12px");
         kindIcon.getStyle().set("padding-right","3px");
@@ -84,7 +86,8 @@ public class AddEntityAttributeView extends VerticalLayout {
         entityIcon.setSize("18px");
         entityIcon.getStyle().set("padding-right","3px").set("padding-left","5px");
         List<FootprintMessageBar.FootprintMessageVO> footprintMessageVOList = new ArrayList<>();
-        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(kindIcon, kindName));
+        String kindNameStr = kindName != null ? kindName : "[...]";
+        footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(kindIcon, kindNameStr));
         if(this.entityUID != null && !this.entityKindType.equals(KindType.Classification)){
             footprintMessageVOList.add(new FootprintMessageBar.FootprintMessageVO(entityIcon, entityUID));
         }
@@ -233,11 +236,11 @@ public class AddEntityAttributeView extends VerticalLayout {
                                         throw new RuntimeException(e);
                                     }
                                 }
-                            }else{
-                                if(kindName != null && entityUID != null){
+                            }else if(kindName != null && entityUID != null){
                                     addEntityAttribute();
-                                }
-                            }
+                            }else if(entityUIDsSet != null){
+                                addEntitiesAttribute();
+                            }else{}
                         }
                         if(attributeValueOperateHandler != null){
                             attributeValueOperateHandler.handleAttributeValue(getAttributeValue());
@@ -824,6 +827,14 @@ public class AddEntityAttributeView extends VerticalLayout {
         }
     }
 
+    private void addEntitiesAttribute(){
+        if(this.entityUIDsSet == null || this.entityUIDsSet.isEmpty()){
+            CommonUIOperationUtil.showPopupNotification("请输入至少一项实体 UID", NotificationVariant.LUMO_ERROR);
+        }else{
+
+        }
+    }
+
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
@@ -847,5 +858,9 @@ public class AddEntityAttributeView extends VerticalLayout {
         if(kindScopeAttribute){
             entityInfoFootprintMessageBar.setVisible(true);
         }
+    }
+
+    public void setEntityUIDsSet(Set<String> entityUIDsSet) {
+        this.entityUIDsSet = entityUIDsSet;
     }
 }

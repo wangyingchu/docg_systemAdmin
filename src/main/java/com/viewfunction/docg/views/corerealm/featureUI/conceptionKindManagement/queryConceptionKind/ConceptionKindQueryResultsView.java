@@ -37,6 +37,7 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityDeletedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialInfoAnalysis.ConceptionEntitiesGeospatialInfoAnalysisView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.AddConceptionEntityToProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.DeleteConceptionEntityView;
@@ -63,8 +64,9 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     private MenuBar queryResultOperationMenuBar;
     private List<String> currentRowKeyList;
     private ConceptionEntitiesAttributesRetrieveResult lastConceptionEntitiesAttributesRetrieveResult;
-    private  List<String> lastQueryAttributesList;
+    private List<String> lastQueryAttributesList;
     private NumberFormat numberFormat;
+    private Set<String> queryResultEntityUIDSet;
 
     public ConceptionKindQueryResultsView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
@@ -179,6 +181,23 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         MenuItem deleteResultEntities = maintenanceDataSubMenu.getSubMenu().addItem(eleteResultEntitiesIcon);
         deleteResultEntities.add("删除查询结果中的概念实体");
 
+        MenuItem addEntitiesNewAttribute = maintenanceDataSubMenu.getSubMenu().addItem(VaadinIcon.TEXT_INPUT.create());
+        addEntitiesNewAttribute.add("在查询结果概念实体中添加属性");
+
+        deleteResultEntities.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                deleteResultEntities();
+            }
+        });
+
+        addEntitiesNewAttribute.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                addConceptionEntitiesAttribute();
+            }
+        });
+
         queryResultGrid = new Grid<>();
         queryResultGrid.setWidth(100,Unit.PERCENTAGE);
         queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
@@ -211,6 +230,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         });
 
         this.currentRowKeyList = new ArrayList<>();
+        this.queryResultEntityUIDSet = new HashSet<>();
     }
 
     @Override
@@ -220,6 +240,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         }
         queryResultGrid.setItems(new ArrayList<>());
         this.currentRowKeyList.clear();
+        this.queryResultEntityUIDSet.clear();
         this.lastQueryAttributesList = null;
         String conceptionKindName = event.getConceptionKindName();
         List<String> resultAttributesList = event.getResultAttributesList();
@@ -259,6 +280,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                     for(int i=0 ; i<conceptionEntityValueList.size();i++){
                         ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
                         currentConceptionEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName,i+1);
+                        this.queryResultEntityUIDSet.add(currentConceptionEntityValue.getConceptionEntityUID());
                     }
                     if (attributesList != null && attributesList.size() > 0) {
                         for (String currentProperty : attributesList) {
@@ -533,5 +555,20 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         ConceptionEntitiesGeospatialInfoAnalysisView conceptionEntitiesGeospatialInfoAnalysisView = new ConceptionEntitiesGeospatialInfoAnalysisView(this.conceptionKindName,spatialScaleLevel,this.lastConceptionEntitiesAttributesRetrieveResult);
         fullScreenWindow.setWindowContent(conceptionEntitiesGeospatialInfoAnalysisView);
         fullScreenWindow.show();
+    }
+
+    private void deleteResultEntities(){
+        System.out.println(queryResultEntityUIDSet);
+    }
+
+    private void addConceptionEntitiesAttribute(){
+        System.out.println(queryResultEntityUIDSet);
+        AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.conceptionKindName,null, AddEntityAttributeView.KindType.EntitiesSet);
+        addEntityAttributeView.setEntityUIDsSet(this.queryResultEntityUIDSet);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TEXT_INPUT),"添加概念实体属性",null,true,480,200,false);
+        addEntityAttributeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setWindowContent(addEntityAttributeView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }
