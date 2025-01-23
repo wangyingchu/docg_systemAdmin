@@ -26,8 +26,10 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
@@ -36,6 +38,7 @@ import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.ConceptionEntityDeletedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialInfoAnalysis.ConceptionEntitiesGeospatialInfoAnalysisView;
@@ -65,6 +68,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     private List<String> currentRowKeyList;
     private ConceptionEntitiesAttributesRetrieveResult lastConceptionEntitiesAttributesRetrieveResult;
     private List<String> lastQueryAttributesList;
+    private QueryParameters lastQueryParameters;
     private NumberFormat numberFormat;
     private List<String> queryResultEntityUIDList;
 
@@ -261,6 +265,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                 }
 
                 this.lastQueryAttributesList = attributesList;
+                this.lastQueryParameters = eventQueryParameters;
 
                 ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
                         targetConception.getSingleValueEntityAttributesByAttributeNames(attributesList,queryParameters);
@@ -559,6 +564,30 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
     private void deleteResultEntities(){
         System.out.println(queryResultEntityUIDList);
+
+
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认删除概念实体",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认是否删除查询结果中的全部概念实体",actionButtonList,450,180);
+        confirmWindow.open();
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doDeleteConceptionEntities(confirmWindow);
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
     }
 
     private void addConceptionEntitiesAttribute(){
@@ -569,5 +598,49 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
+    }
+
+    private void doDeleteConceptionEntities(ConfirmWindow confirmWindow){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
+        try {
+            EntitiesOperationStatistics entitiesOperationStatistics = crossKindDataOperator.deleteConceptionEntitiesByUIDs(this.queryResultEntityUIDList);
+            if(entitiesOperationStatistics != null){
+                Notification notification = new Notification();
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                Div text = new Div(new Text("概念实体删除操作完成"));
+                Button closeButton = new Button(new Icon("lumo", "cross"));
+                closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+                closeButton.addClickListener(event -> {
+                    notification.close();
+                });
+                HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+                layout.setWidth(100, Unit.PERCENTAGE);
+                layout.setFlexGrow(1,text);
+                notification.add(layout);
+
+                ConceptionKindQueriedEvent conceptionKindQueriedEvent = new ConceptionKindQueriedEvent();
+                conceptionKindQueriedEvent.setConceptionKindName(this.conceptionKindName);
+                conceptionKindQueriedEvent.setResultAttributesList(this.lastQueryAttributesList);
+                conceptionKindQueriedEvent.setQueryParameters(this.lastQueryParameters);
+                ResourceHolder.getApplicationBlackboard().fire(conceptionKindQueriedEvent);
+
+                VerticalLayout notificationMessageContainer = new VerticalLayout();
+                notificationMessageContainer.add(new Div(new Text("查询返回实体数: "+entitiesOperationStatistics.getSuccessItemsCount())));
+                notificationMessageContainer.add(new Div(new Text("操作开始时间: "+entitiesOperationStatistics.getStartTime())));
+                notificationMessageContainer.add(new Div(new Text("操作结束时间: "+entitiesOperationStatistics.getFinishTime())));
+                notification.add(notificationMessageContainer);
+                notification.setDuration(3000);
+                notification.open();
+
+                confirmWindow.closeConfirmWindow();
+
+
+            }else{
+                CommonUIOperationUtil.showPopupNotification("概念实体删除操作失败", NotificationVariant.LUMO_ERROR);
+            }
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
