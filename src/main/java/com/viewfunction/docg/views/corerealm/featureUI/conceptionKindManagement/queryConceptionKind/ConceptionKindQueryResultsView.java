@@ -30,6 +30,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOp
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
@@ -68,7 +69,6 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     private List<String> currentRowKeyList;
     private ConceptionEntitiesAttributesRetrieveResult lastConceptionEntitiesAttributesRetrieveResult;
     private List<String> lastQueryAttributesList;
-    private QueryParameters lastQueryParameters;
     private NumberFormat numberFormat;
     private List<String> queryResultEntityUIDList;
 
@@ -265,8 +265,6 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                 }
 
                 this.lastQueryAttributesList = attributesList;
-                this.lastQueryParameters = eventQueryParameters;
-
                 ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult =
                         targetConception.getSingleValueEntityAttributesByAttributeNames(attributesList,queryParameters);
                 if(conceptionEntitiesAttributesRetrieveResult != null && conceptionEntitiesAttributesRetrieveResult.getOperationStatistics() != null){
@@ -303,7 +301,12 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                         }
                     }
                     queryResultGrid.setItems(conceptionEntityValueList);
-                    queryResultOperationMenuBar.setEnabled(true);
+
+                    if(conceptionEntityValueList.size() > 0){
+                        queryResultOperationMenuBar.setEnabled(true);
+                    }else{
+                        queryResultOperationMenuBar.setEnabled(false);
+                    }
 
                     lastConceptionEntitiesAttributesRetrieveResult = conceptionEntitiesAttributesRetrieveResult;
                 }
@@ -563,9 +566,6 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     }
 
     private void deleteResultEntities(){
-        System.out.println(queryResultEntityUIDList);
-
-
         List<Button> actionButtonList = new ArrayList<>();
         Button confirmButton = new Button("确认删除概念实体",new Icon(VaadinIcon.CHECK_CIRCLE));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -619,11 +619,31 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                 layout.setFlexGrow(1,text);
                 notification.add(layout);
 
-                ConceptionKindQueriedEvent conceptionKindQueriedEvent = new ConceptionKindQueriedEvent();
-                conceptionKindQueriedEvent.setConceptionKindName(this.conceptionKindName);
-                conceptionKindQueriedEvent.setResultAttributesList(this.lastQueryAttributesList);
-                conceptionKindQueriedEvent.setQueryParameters(this.lastQueryParameters);
-                ResourceHolder.getApplicationBlackboard().fire(conceptionKindQueriedEvent);
+                startTimeDisplayItem.updateDisplayValue("-");
+                finishTimeDisplayItem.updateDisplayValue("-");
+                dataCountDisplayItem.updateDisplayValue("-");
+
+                ListDataProvider dataProvider = (ListDataProvider)queryResultGrid.getDataProvider();
+                if(this.queryResultEntityUIDList.size() == entitiesOperationStatistics.getSuccessItemsCount()){
+                    dataProvider.getItems().clear();
+                    queryResultOperationMenuBar.setEnabled(false);
+                }else {
+                    List<ConceptionEntity> conceptionEntityList = crossKindDataOperator.getConceptionEntitiesByUIDs(this.queryResultEntityUIDList);
+                    dataCountDisplayItem.updateDisplayValue(""+ numberFormat.format(conceptionEntityList.size()));
+                    List<String> existingEntitiesUIDList = new ArrayList<>();
+                    conceptionEntityList.forEach(conceptionEntity -> {
+                        String conceptionEntityUID = conceptionEntity.getConceptionEntityUID();
+                        existingEntitiesUIDList.add(conceptionEntityUID);
+                    });
+
+                    Collection<ConceptionEntityValue> conceptionEntityValueList = dataProvider.getItems();
+                    for(ConceptionEntityValue currentConceptionEntityValue:conceptionEntityValueList){
+                        if(!existingEntitiesUIDList.contains(currentConceptionEntityValue.getConceptionEntityUID())){
+                            dataProvider.getItems().remove(currentConceptionEntityValue);
+                        }
+                    }
+                }
+                dataProvider.refreshAll();
 
                 VerticalLayout notificationMessageContainer = new VerticalLayout();
                 notificationMessageContainer.add(new Div(new Text("查询返回实体数: "+entitiesOperationStatistics.getSuccessItemsCount())));
@@ -634,8 +654,6 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                 notification.open();
 
                 confirmWindow.closeConfirmWindow();
-
-
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念实体删除操作失败", NotificationVariant.LUMO_ERROR);
             }
