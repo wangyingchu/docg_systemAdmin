@@ -22,10 +22,13 @@ import com.vaadin.flow.data.converter.*;
 import com.vaadin.flow.data.validator.*;
 import com.vaadin.flow.function.ValueProvider;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.AttributesMeasurable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.MetaConfigItemFeatureSupportable;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -47,7 +50,7 @@ import java.util.*;
 
 public class AddEntityAttributeView extends VerticalLayout {
 
-    public enum KindType {ConceptionKind,RelationKind,Classification,EntitiesSet}
+    public enum KindType {ConceptionKind,RelationKind,Classification}
 
     private Dialog containerDialog;
     private NativeLabel errorMessage;
@@ -62,7 +65,7 @@ public class AddEntityAttributeView extends VerticalLayout {
     private MetaConfigItemFeatureSupportable metaConfigItemFeatureSupportable;
     private boolean isKindScopeAttribute = false;
     private FootprintMessageBar entityInfoFootprintMessageBar;
-    private Set<String> entityUIDsSet;
+    private List<String> entityUIDsList;
 
     public AddEntityAttributeView(String kindName, String entityUID,KindType entityKindType){
         this.setMargin(false);
@@ -78,7 +81,6 @@ public class AddEntityAttributeView extends VerticalLayout {
             case ConceptionKind ->  kindIcon = VaadinIcon.CUBE.create();
             case RelationKind -> kindIcon = VaadinIcon.CONNECT_O.create();
             case Classification -> kindIcon = VaadinIcon.TAGS.create();
-            case EntitiesSet -> kindIcon = VaadinIcon.CUBES.create();
         }
         kindIcon.setSize("12px");
         kindIcon.getStyle().set("padding-right","3px");
@@ -238,7 +240,7 @@ public class AddEntityAttributeView extends VerticalLayout {
                                 }
                             }else if(kindName != null && entityUID != null){
                                     addEntityAttribute();
-                            }else if(entityUIDsSet != null){
+                            }else if(entityUIDsList != null && !entityUIDsList.isEmpty()){
                                 addEntitiesAttribute();
                             }else{}
                         }
@@ -827,11 +829,41 @@ public class AddEntityAttributeView extends VerticalLayout {
         }
     }
 
-    private void addEntitiesAttribute(){
-        if(this.entityUIDsSet == null || this.entityUIDsSet.isEmpty()){
+    private void addEntitiesAttribute() {
+        if (this.entityUIDsList == null || this.entityUIDsList.isEmpty()) {
             CommonUIOperationUtil.showPopupNotification("请输入至少一项实体 UID", NotificationVariant.LUMO_ERROR);
-        }else{
+        } else {
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
 
+            String attributeName = attributeNameField.getValue();
+            Object newEntityAttributeValue = getAttributeValueObject();
+            Map<String, Object> attributesMap = new HashMap<>();
+
+            attributesMap.put(attributeName, newEntityAttributeValue);
+            CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
+            EntitiesOperationStatistics entitiesOperationStatistics = null;
+            String messageHead = "-";
+            try {
+                switch (entityKindType) {
+                    case ConceptionKind :
+                        entitiesOperationStatistics = crossKindDataOperator.setConceptionEntitiesAttributesByUIDs(entityUIDsList, attributesMap);
+                        messageHead = "概念实体";
+                        break;
+                    case RelationKind :
+                            entitiesOperationStatistics = crossKindDataOperator.setRelationEntitiesAttributesByUIDs(entityUIDsList, attributesMap);
+                        messageHead = "关系实体";
+                }
+            } catch (CoreRealmServiceEntityExploreException e) {
+                throw new RuntimeException(e);
+            }
+            if(entitiesOperationStatistics != null){
+                CommonUIOperationUtil.showPopupNotification("向"+messageHead+"添加属性 "+ attributeName +" : "+newEntityAttributeValue +" 完成,成功添加属性实体数: "+entitiesOperationStatistics.getSuccessItemsCount(), NotificationVariant.LUMO_SUCCESS);
+                if(containerDialog != null){
+                    containerDialog.close();
+                }
+            }else{
+                CommonUIOperationUtil.showPopupNotification("向"+messageHead+" 添加属性 "+ attributeName +" : "+newEntityAttributeValue +" 失败", NotificationVariant.LUMO_ERROR);
+            }
         }
     }
 
@@ -860,7 +892,7 @@ public class AddEntityAttributeView extends VerticalLayout {
         }
     }
 
-    public void setEntityUIDsSet(Set<String> entityUIDsSet) {
-        this.entityUIDsSet = entityUIDsSet;
+    public void setEntityUIDsSet(List<String> entityUIDsList) {
+        this.entityUIDsList = entityUIDsList;
     }
 }

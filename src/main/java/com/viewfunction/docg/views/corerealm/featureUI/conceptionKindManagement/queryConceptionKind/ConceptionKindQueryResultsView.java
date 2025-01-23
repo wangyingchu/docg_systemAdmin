@@ -66,7 +66,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     private ConceptionEntitiesAttributesRetrieveResult lastConceptionEntitiesAttributesRetrieveResult;
     private List<String> lastQueryAttributesList;
     private NumberFormat numberFormat;
-    private Set<String> queryResultEntityUIDSet;
+    private List<String> queryResultEntityUIDList;
 
     public ConceptionKindQueryResultsView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
@@ -230,7 +230,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         });
 
         this.currentRowKeyList = new ArrayList<>();
-        this.queryResultEntityUIDSet = new HashSet<>();
+        this.queryResultEntityUIDList = new ArrayList<>();
     }
 
     @Override
@@ -240,7 +240,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         }
         queryResultGrid.setItems(new ArrayList<>());
         this.currentRowKeyList.clear();
-        this.queryResultEntityUIDSet.clear();
+        this.queryResultEntityUIDList.clear();
         this.lastQueryAttributesList = null;
         String conceptionKindName = event.getConceptionKindName();
         List<String> resultAttributesList = event.getResultAttributesList();
@@ -280,7 +280,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                     for(int i=0 ; i<conceptionEntityValueList.size();i++){
                         ConceptionEntityValue currentConceptionEntityValue = conceptionEntityValueList.get(i);
                         currentConceptionEntityValue.getEntityAttributesValue().put(_rowIndexPropertyName,i+1);
-                        this.queryResultEntityUIDSet.add(currentConceptionEntityValue.getConceptionEntityUID());
+                        this.queryResultEntityUIDList.add(currentConceptionEntityValue.getConceptionEntityUID());
                     }
                     if (attributesList != null && attributesList.size() > 0) {
                         for (String currentProperty : attributesList) {
@@ -558,13 +558,12 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     }
 
     private void deleteResultEntities(){
-        System.out.println(queryResultEntityUIDSet);
+        System.out.println(queryResultEntityUIDList);
     }
 
     private void addConceptionEntitiesAttribute(){
-        System.out.println(queryResultEntityUIDSet);
-        AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.conceptionKindName,null, AddEntityAttributeView.KindType.EntitiesSet);
-        addEntityAttributeView.setEntityUIDsSet(this.queryResultEntityUIDSet);
+        AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.conceptionKindName,null, AddEntityAttributeView.KindType.ConceptionKind);
+        addEntityAttributeView.setEntityUIDsSet(this.queryResultEntityUIDList);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TEXT_INPUT),"添加概念实体属性",null,true,480,200,false);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
