@@ -500,7 +500,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
                 return ((FeatureRunningInfo)o1).getFeatureRunningStatus().compareTo(((FeatureRunningInfo)o2).getFeatureRunningStatus());
             }
         }).setResizable(false);
-        analysisFeatureRunningInfoGrid.addColumn(_returnDataFormatComponentRenderer).setHeader("返回数据形式").setKey("idx_2").setWidth("80px").setComparator(new Comparator() {
+        analysisFeatureRunningInfoGrid.addColumn(_returnDataFormatComponentRenderer).setHeader("返回数据形式").setKey("idx_2").setWidth("130px").setComparator(new Comparator() {
             @Override
             public int compare(Object o1, Object o2) {
                 return ((FeatureRunningInfo)o1).getResponseDataForm().compareTo(((FeatureRunningInfo)o2).getResponseDataForm());
@@ -508,8 +508,8 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         }).setResizable(true);
         analysisFeatureRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(FeatureRunningInfo::getRequestTime,"yyyy-MM-dd HH:mm:ss")).setHeader("请求时间").setKey("idx_3").setResizable(true)
                 .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRequestTime() != null ? featureRunningInfo.getRequestTime().toString(): null).setComparator(requestTimeComparator);
-        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getRequestUUID).setHeader("请求 UID").setKey("idx_4").setResizable(true).setTooltipGenerator(item -> item.getRequestUUID()).setWidth("80px");
-        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getResponseUUID).setHeader("响应 UID").setKey("idx_5").setResizable(true).setTooltipGenerator(item -> item.getResponseUUID()).setWidth("80px");
+        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getRequestUUID).setHeader("请求 UID").setKey("idx_4").setResizable(true).setTooltipGenerator(item -> item.getRequestUUID()).setWidth("55px");
+        analysisFeatureRunningInfoGrid.addColumn(FeatureRunningInfo::getResponseUUID).setHeader("响应 UID").setKey("idx_5").setResizable(true).setTooltipGenerator(item -> item.getResponseUUID()).setWidth("55px");
         analysisFeatureRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(FeatureRunningInfo::getRunningStartTime,"yyyy-MM-dd HH:mm:ss")).setHeader("分析开始时间").setKey("idx_6").setResizable(true)
                 .setTooltipGenerator(featureRunningInfo -> featureRunningInfo.getRunningStartTime() != null ? featureRunningInfo.getRunningStartTime().toString(): null).setComparator(runningStartTimeComparator);
         analysisFeatureRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(FeatureRunningInfo::getRunningFinishTime,"yyyy-MM-dd HH:mm:ss")).setHeader("分析结束时间").setKey("idx_7").setResizable(true)
