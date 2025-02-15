@@ -1,9 +1,6 @@
 package com.viewfunction.docg.element.commonComponent;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -17,11 +14,16 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class FullScreenWindow extends Dialog {
 
     private VerticalLayout windowsContentContainerLayout;
     private Button closeButton;
+    private int closeWindowDelayInMicroSecond; //default 0 seconds
+    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     public interface CloseFullScreenWindowListener {
         void beforeCloseWindow();
@@ -110,6 +112,7 @@ public class FullScreenWindow extends Dialog {
     }
 
     public FullScreenWindow(Icon titleIcon, String titleContent,List<Component> titleComponentsList, List<Component> actionComponentsList, CloseFullScreenWindowListener closeFullScreenWindowListener){
+        UI currentUI = UI.getCurrent();
         this.setModal(false);
         this.setResizable(false);
         this.setCloseOnEsc(false);
@@ -179,8 +182,18 @@ public class FullScreenWindow extends Dialog {
             this.closeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    closeFullScreenWindowListener.beforeCloseWindow();
-                    close();
+                    if(closeWindowDelayInMicroSecond <= 0){
+                        closeFullScreenWindowListener.beforeCloseWindow();
+                        close();
+                    }else{
+                        closeFullScreenWindowListener.beforeCloseWindow();
+                        executorService.schedule(() -> {
+                            currentUI.access(() -> {
+                                close();
+                            });
+
+                        }, closeWindowDelayInMicroSecond, TimeUnit.MICROSECONDS);
+                    }
                 };
             });
             titleElementsContainer.add(this.closeButton);
@@ -208,5 +221,17 @@ public class FullScreenWindow extends Dialog {
 
     public void show(){
         this.open();
+    }
+
+    public void setCloseWindowDelayInMicroSecond(int closeWindowDelayInMicroSecond) {
+        this.closeWindowDelayInMicroSecond = closeWindowDelayInMicroSecond;
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        if(executorService != null){
+            executorService.shutdown();
+        }
     }
 }

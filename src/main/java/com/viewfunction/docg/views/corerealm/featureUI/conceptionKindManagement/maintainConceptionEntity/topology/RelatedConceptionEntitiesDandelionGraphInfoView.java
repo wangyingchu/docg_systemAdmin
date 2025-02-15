@@ -20,6 +20,7 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
 
     private String conceptionKind;
     private String conceptionEntityUID;
+    private RelatedConceptionEntitiesDandelionGraphChart_ReactManualInit relatedConceptionEntitiesDandelionGraphChart;
 
     public RelatedConceptionEntitiesDandelionGraphInfoView(String conceptionKind, String conceptionEntityUID){
         this.conceptionKind = conceptionKind;
@@ -71,10 +72,8 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
                     conceptionEntityUIDList.add(this.conceptionEntityUID);
                     if(conceptionEntityUIDList.size()>=2){
                         List<RelationEntity> relationEntityList = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionEntityUIDList);
-                        RelatedConceptionEntitiesDandelionGraphChart relatedConceptionEntitiesDandelionGraphChart = new RelatedConceptionEntitiesDandelionGraphChart();
-                        relatedConceptionEntitiesDandelionGraphChart.setChartHeight(windowHeight-110);
-                        relatedConceptionEntitiesDandelionGraphChart.setChartWidth(windowWidth-35);
-                        relatedConceptionEntitiesDandelionGraphChart.setDandelionGraphChartData(this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
+                        relatedConceptionEntitiesDandelionGraphChart = new RelatedConceptionEntitiesDandelionGraphChart_ReactManualInit(
+                                windowWidth-35,windowHeight-110,this.conceptionKind,this.conceptionEntityUID,relatedConceptionEntityList,relationEntityList);
                         add(relatedConceptionEntitiesDandelionGraphChart);
                     }
                 } catch (CoreRealmServiceEntityExploreException e) {
@@ -88,5 +87,8 @@ public class RelatedConceptionEntitiesDandelionGraphInfoView extends VerticalLay
 
     public void cleanGraphResource(){
         // do clean resource operation
+        if(relatedConceptionEntitiesDandelionGraphChart != null){
+            relatedConceptionEntitiesDandelionGraphChart.destroyReactComponent();
+        }
     }
 }

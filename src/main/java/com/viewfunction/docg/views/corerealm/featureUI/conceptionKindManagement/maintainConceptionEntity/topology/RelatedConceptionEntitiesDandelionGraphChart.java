@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 //https://www.npmjs.com/package/react-force-graph
-@NpmPackage(value = "react-force-graph", version = "1.44.4")
-@NpmPackage(value = "three", version = "0.166.1")
-@NpmPackage(value = "three-spritetext", version = "1.8.2")
+@NpmPackage(value = "react-force-graph", version = "1.46.0")
+@NpmPackage(value = "three", version = "0.173.0")
+@NpmPackage(value = "three-spritetext", version = "1.9.4")
 @JsModule("./externalTech/flow/integration/react/relatedConceptionEntitiesDandelionGraphChart/related-conception-entities-dandelion-graph-chart.tsx")
 @StyleSheet("webApps/relatedConceptionEntitiesDandelionGraphChart/style.css")
 @Tag("related-conception-entities-dandelion-graph-chart")

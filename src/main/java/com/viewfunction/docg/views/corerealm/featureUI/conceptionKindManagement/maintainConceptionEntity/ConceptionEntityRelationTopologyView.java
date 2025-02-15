@@ -375,6 +375,7 @@ public class ConceptionEntityRelationTopologyView extends VerticalLayout {
         };
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.ASTERISK),"关联实体全量蒲公英图",null,null,closeFullScreenWindowListener);
         fullScreenWindow.setWindowContent(relatedConceptionEntitiesDandelionGraphInfoView);
+        fullScreenWindow.setCloseWindowDelayInMicroSecond(1000);
         fullScreenWindow.show();
     }
 
