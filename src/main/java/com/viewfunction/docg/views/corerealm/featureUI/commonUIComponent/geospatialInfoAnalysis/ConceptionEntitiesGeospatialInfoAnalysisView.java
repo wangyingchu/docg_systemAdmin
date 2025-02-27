@@ -1,6 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialInfoAnalysis;
 
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
+import com.tc.text.StringUtils;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -26,11 +27,14 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntiti
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTReader;
 
 import java.util.*;
 
@@ -45,9 +49,51 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
     private HorizontalLayout doesNotContainsSpatialInfoMessage;
     private HorizontalLayout mainLayout;
 
+    public static Double area(ConceptionEntityValue conceptionEntityValue,GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel) {
+        String attr = "";
+        switch(spatialScaleLevel){
+            case Global :
+                attr = RealmConstant._GeospatialGLGeometryContent;
+                break;
+            case Country:
+                attr = RealmConstant._GeospatialCLGeometryBorder;
+                break;
+            case Local:
+                attr = RealmConstant._GeospatialLLGeometryContent;
+                break;
+        }
+        Map<String, Object> stringObjectMap = conceptionEntityValue.getEntityAttributesValue();
+        WKTReader reader = new WKTReader();
+        if (stringObjectMap.get(attr) == null) {
+            return 0.0;
+        }
+        String text = stringObjectMap.get(attr).toString();
+        if (StringUtils.isBlank(text)) {
+            return 0.0;
+        }
+        try {
+            Geometry read = reader.read(text);
+            return read.getArea();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+
     public ConceptionEntitiesGeospatialInfoAnalysisView(String kindName, GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel,
                                                         ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult) {
         this.conceptionEntitiesAttributesRetrieveResult = conceptionEntitiesAttributesRetrieveResult;
+
+        Collections.sort(this.conceptionEntitiesAttributesRetrieveResult.getConceptionEntityValues(), new Comparator<ConceptionEntityValue>() {
+            @Override
+            public int compare(ConceptionEntityValue cev1, ConceptionEntityValue cev2) {
+                if (area(cev2,spatialScaleLevel) > area(cev1,spatialScaleLevel)) {
+                    return 1;
+                } else
+                    return -1;
+            }
+        });
+
         List<Component> actionElementsList = new ArrayList<>();
 
         NativeLabel currentDisplayCountInfoMessage = new NativeLabel("当前采样数量:");
