@@ -32,7 +32,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.GridRuntimeInfoWidget;
 import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.maintainDataSlice.ComputeGridDataSliceConfigurationView;
-
+import com.viewfunction.docg.views.computegrid.featureUI.dataComputeGridManagement.maintainComputeService.ComputeGridComputeServiceConfigurationView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -46,6 +46,7 @@ public class DataComputeGridManagementUI extends VerticalLayout implements
     private GridRuntimeInfoWidget gridRuntimeInfoWidget;
     private Grid<DataComputeUnitMetaInfo> computeUnitGrid;
     private ComputeGridDataSliceConfigurationView computeGridDataSliceConfigurationView;
+    private ComputeGridComputeServiceConfigurationView computeGridComputeServiceConfigurationView;
 
     public DataComputeGridManagementUI(){
 
@@ -186,7 +187,8 @@ public class DataComputeGridManagementUI extends VerticalLayout implements
 
         computeGridDataSliceConfigurationView = new ComputeGridDataSliceConfigurationView();
         gridConfigurationTabSheet.add(generateConfigurationTabTitle(LineAwesomeIconsSvg.BUFFER.create(),"网格数据切片配置"), computeGridDataSliceConfigurationView);
-        gridConfigurationTabSheet.add(generateConfigurationTabTitle(LineAwesomeIconsSvg.COGS_SOLID.create(),"网格计算服务配置"),new HorizontalLayout());
+        computeGridComputeServiceConfigurationView = new ComputeGridComputeServiceConfigurationView();
+        gridConfigurationTabSheet.add(generateConfigurationTabTitle(LineAwesomeIconsSvg.COGS_SOLID.create(),"网格计算服务配置"),computeGridComputeServiceConfigurationView);
     }
 
     @Override
