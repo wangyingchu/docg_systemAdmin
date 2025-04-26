@@ -7,6 +7,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -74,13 +75,13 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         ResourceHolder.getApplicationBlackboard().addListener(this);
+        metaConfigItemsConfigView.setViewHeight(350);
     }
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
         super.onDetach(detachEvent);
         ResourceHolder.getApplicationBlackboard().removeListener(this);
-        metaConfigItemsConfigView.setViewHeight(280);
     }
 
     @Override
@@ -93,6 +94,6 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
     }
 
     public void setViewHeight(int viewHeight){
-        this.classificationConfigView.setHeight(viewHeight - 425,Unit.PIXELS);
+        this.classificationConfigView.setHeight(viewHeight - 575,Unit.PIXELS);
     }
 }
