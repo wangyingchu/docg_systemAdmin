@@ -1,10 +1,15 @@
 package com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.contextmenu.HasMenuItems;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
@@ -12,6 +17,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindDescriptionUpdatedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
@@ -63,6 +69,37 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
 
         metaConfigItemsConfigView = new MetaConfigItemsConfigView(MetaConfigItemsConfigView.MetaConfigItemType.AttributesViewKind,this.attributesViewKindUID);
         metaConfigItemsConfigView.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        if(AttributesViewKind.AttributesViewKindDataForm.EXTERNAL_VALUE.equals(targetAttributesViewKind.getAttributesViewKindDataForm())){
+            MenuBar setupExternalDataSourceMenuBar = new MenuBar();
+            setupExternalDataSourceMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL);
+            MenuItem setupExternalDataSourceDataMenu = createIconItem(setupExternalDataSourceMenuBar, LineAwesomeIconsSvg.HDD.create(), " 配置 External Value 属性视图数据源", null);
+            Icon downArrowIcon1 = new Icon(VaadinIcon.CHEVRON_DOWN);
+            downArrowIcon1.setSize("12px");
+            setupExternalDataSourceDataMenu.add(downArrowIcon1);
+
+            SubMenu setupExternalDataSourceSubItems = setupExternalDataSourceDataMenu.getSubMenu();
+            HorizontalLayout action0Layout = new HorizontalLayout();
+            action0Layout.setPadding(false);
+            action0Layout.setSpacing(false);
+            action0Layout.setMargin(false);
+            action0Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action0Icon = VaadinIcon.DATABASE.create();
+            action0Icon.setSize("10px");
+            Span action0Space = new Span();
+            action0Space.setWidth(6,Unit.PIXELS);
+            NativeLabel action0Label = new NativeLabel(" 配置 RelationDB");
+            action0Layout.add(action0Icon,action0Space,action0Label);
+
+            MenuItem setupRelationDBItem = setupExternalDataSourceSubItems.addItem(action0Layout);
+            setupRelationDBItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    //renderAttachToGeospatialRegionByGeoPropertyViewView();
+                }
+            });
+
+            metaConfigItemsConfigView.setCustomizeComponent(setupExternalDataSourceMenuBar);
+        }
         add(metaConfigItemsConfigView);
 
         classificationConfigView = new ClassificationConfigView(ClassificationConfigView.ClassificationRelatedObjectType.AttributesViewKind,this.attributesViewKindUID);
@@ -94,5 +131,26 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
 
     public void setViewHeight(int viewHeight){
         this.classificationConfigView.setHeight(viewHeight - 575,Unit.PIXELS);
+    }
+
+    private MenuItem createIconItem(HasMenuItems menu, Icon icon, String label, String ariaLabel) {
+        return createIconItem(menu, icon, label, ariaLabel, false);
+    }
+
+    private MenuItem createIconItem(HasMenuItems menu, Icon icon,String label, String ariaLabel, boolean isChild) {
+        if (isChild) {
+            icon.getStyle().set("width", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("height", "var(--lumo-icon-size-s)");
+            icon.getStyle().set("marginRight", "var(--lumo-space-s)");
+        }
+        MenuItem item = menu.addItem(icon, e -> {
+        });
+        if (ariaLabel != null) {
+            item.getElement().setAttribute("aria-label", ariaLabel);
+        }
+        if (label != null) {
+            item.add(new Text(label));
+        }
+        return item;
     }
 }

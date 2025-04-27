@@ -79,6 +79,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
     private String metaConfigItemName;
     private Grid<MetaConfigItemValueObject> metaConfigItemValueGrid;
     private MetaConfigItemFeatureSupportable metaConfigItemFeatureSupportable;
+    private Component customizeComponent;
 
     public MetaConfigItemsConfigView(String metaConfigItemUID){
         this.metaConfigItemUID = metaConfigItemUID;
@@ -97,6 +98,10 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         this.setWidth(100,Unit.PERCENTAGE);
         List<Component> secTitleElementsList = new ArrayList<>();
         List<Component> buttonList = new ArrayList<>();
+
+        if(this.customizeComponent != null){
+            buttonList.add(this.customizeComponent);
+        }
 
         Button createMetaConfigItemButton= new Button("添加元属性");
         createMetaConfigItemButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
@@ -383,5 +388,9 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
 
     public void setViewHeight(int viewHeight){
         this.metaConfigItemValueGrid.setHeight(viewHeight - 50,Unit.PIXELS);
+    }
+
+    public void setCustomizeComponent(Component customizeComponent){
+        this.customizeComponent = customizeComponent;
     }
 }
