@@ -15,11 +15,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.PrimaryKeyValueDisplayItem;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindDescriptionUpdatedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.externalValueViewKindConfig.RelationDBDataSourceConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
@@ -29,6 +31,7 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
     private MetaConfigItemsConfigView metaConfigItemsConfigView;
     private ClassificationConfigView classificationConfigView;
     private PrimaryKeyValueDisplayItem attributesViewKindDescTxt;
+    private AttributesViewKind targetAttributesViewKind;
 
     public AttributesViewKindRuntimeConfigurationView(String attributesViewKindUID){
         this.attributesViewKindUID = attributesViewKindUID;
@@ -41,7 +44,7 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
         add(infoContainer0);
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
+        targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
 
         new PrimaryKeyValueDisplayItem(infoContainer0, VaadinIcon.INFO_CIRCLE_O.create(),"属性视图类型名称:",targetAttributesViewKind.getAttributesViewKindName());
         HorizontalLayout horSpaceDiv0 = new HorizontalLayout();
@@ -94,7 +97,7 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
             setupRelationDBItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                    //renderAttachToGeospatialRegionByGeoPropertyViewView();
+                    renderRelationDBDataSourceConfigView();
                 }
             });
 
@@ -152,5 +155,18 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
             item.add(new Text(label));
         }
         return item;
+    }
+
+    private void renderRelationDBDataSourceConfigView(){
+        RelationDBDataSourceConfigView relationDBDataSourceConfigView = new RelationDBDataSourceConfigView(targetAttributesViewKind);
+
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.HDD.create(),"配置 RelationDB 数据源",null,true,500,695,false);
+        fixSizeWindow.setWindowContent(relationDBDataSourceConfigView);
+        //relationDBDataSourceConfigView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+
+
+
     }
 }

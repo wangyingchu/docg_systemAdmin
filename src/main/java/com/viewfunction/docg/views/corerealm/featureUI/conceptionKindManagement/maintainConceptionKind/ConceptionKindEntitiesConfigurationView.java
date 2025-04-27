@@ -253,7 +253,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         linkByGeoPropertyActionItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                renderAttachToGeospatialRegionByGeoPropertyViewView();
+                renderAttachToGeospatialRegionByGeoPropertyView();
             }
         });
 
@@ -583,7 +583,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
         classificationConfigView.setHeight(viewHeight-500,Unit.PIXELS);
     }
 
-    private void renderAttachToGeospatialRegionByGeoPropertyViewView(){
+    private void renderAttachToGeospatialRegionByGeoPropertyView(){
         AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView attachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView =
                 new AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView(this.conceptionKindName);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.GLOBE_WIRE.create(),"链接概念类型实体至地理空间区域",null,true,500,695,false);
