@@ -27,6 +27,18 @@ public class RelationDBDataSourceConfigView extends VerticalLayout {
         FootprintMessageBar entityInfoFootprintMessageBar = new FootprintMessageBar(footprintMessageVOList);
         add(entityInfoFootprintMessageBar);
 
+        /*
+        *
+        DOCG_ExternalRelationDB_Host
+        DOCG_ExternalRelationDBPORT_UserPWD
+        DOCG_ExternalAttributesValueAccessProcessorID
+        DOCG_ExternalRelationDB_DefaultDBName
+        DOCG_ExternalRelationDBPORT_UserName
+        DOCG_ExternalRelationDB_DefaultTableName
+        DOCG_ExternalRelationDB_Port
+        *
+        */
+
         TextField eventCommentField = new TextField("Database Address");
         eventCommentField.setRequired(true);
         eventCommentField.setRequiredIndicatorVisible(true);
