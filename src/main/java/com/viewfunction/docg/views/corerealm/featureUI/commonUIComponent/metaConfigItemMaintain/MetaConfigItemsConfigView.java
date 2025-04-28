@@ -130,7 +130,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             editIcon.setSize("18px");
             Button addItemButton = new Button(editIcon, event -> {
                 if(metaConfigItemValueObjectInfo instanceof MetaConfigItemValueObject){
-
+                    renderUpdateConfigItemUI((MetaConfigItemValueObject)metaConfigItemValueObjectInfo);
                 }
             });
             addItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
@@ -334,6 +334,17 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
                 confirmWindow.closeConfirmWindow();
             }
         });
+    }
+
+    private void renderUpdateConfigItemUI(MetaConfigItemValueObject metaConfigItemValueObject){
+        UpdateMetaConfigItemValueView updateMetaConfigItemValueView =
+                new UpdateMetaConfigItemValueView(this.metaConfigItemFeatureSupportable,metaConfigItemValueObject.itemName,metaConfigItemValueObject.itemType,metaConfigItemValueObject.itemValue);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.EDIT.create(),"更新元属性",null,true,480,180,false);
+        fixSizeWindow.setWindowContent(updateMetaConfigItemValueView);
+        updateMetaConfigItemValueView.setContainerDialog(fixSizeWindow);
+        updateMetaConfigItemValueView.setContainerMetaConfigItemsConfigView(this);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 
     private void doDeleteConfigItem(MetaConfigItemValueObject metaConfigItemValueObject,ConfirmWindow confirmWindow){
