@@ -292,6 +292,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             @Override
             public void handleAttributeValue(AttributeValue attributeValue) {
                 if(attributeValue != null){
+                    /*
                     String configItemName = attributeValue.getAttributeName();
                     Object configItemValue = attributeValue.getAttributeValue();
                     AttributeDataType attributeDataType = checkAttributeDataType(configItemValue);
@@ -300,6 +301,9 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
                     ListDataProvider dtaProvider=(ListDataProvider)metaConfigItemValueGrid.getDataProvider();
                     dtaProvider.getItems().add(newMetaConfigItemValueObject);
                     dtaProvider.refreshAll();
+                    */
+                    //just refresh grid to get rid of already exist same name config item
+                    refreshMetaConfigItemsInfo();
                 }
             }
         });
