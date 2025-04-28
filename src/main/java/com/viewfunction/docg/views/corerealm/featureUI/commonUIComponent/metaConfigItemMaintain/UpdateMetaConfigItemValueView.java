@@ -392,7 +392,11 @@ public class UpdateMetaConfigItemValueView extends VerticalLayout {
             case TIMESTAMP:
                 currentConditionValueEditor = new TextField();
                 if(this.isFirstTimeOpenView){
-                    ((TextField) currentConditionValueEditor).setValue(this.orgItemValue.toString());
+                    System.out.println(this.orgItemValue);
+                    System.out.println(this.orgItemValue.getClass());
+
+
+                    ((TextField)currentConditionValueEditor).setValue(""+((Date)this.orgItemValue).getTime());
                     this.isFirstTimeOpenView = false;
                 }
                 ((TextField)currentConditionValueEditor).setWidth(340,Unit.PIXELS);
