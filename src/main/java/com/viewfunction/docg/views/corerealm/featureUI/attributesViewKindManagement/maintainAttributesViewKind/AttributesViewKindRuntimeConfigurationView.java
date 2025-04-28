@@ -159,14 +159,11 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
 
     private void renderRelationDBDataSourceConfigView(){
         RelationDBDataSourceConfigView relationDBDataSourceConfigView = new RelationDBDataSourceConfigView(targetAttributesViewKind);
-
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.HDD.create(),"配置 RelationDB 数据源",null,true,500,695,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.HDD.create(),"配置 RelationDB 数据源",null,true,400,670,false);
         fixSizeWindow.setWindowContent(relationDBDataSourceConfigView);
-        //relationDBDataSourceConfigView.setContainerDialog(fixSizeWindow);
+        relationDBDataSourceConfigView.setContainerDialog(fixSizeWindow);
+        relationDBDataSourceConfigView.setRelatedMetaConfigItemsConfigView(metaConfigItemsConfigView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
-
-
-
     }
 }
