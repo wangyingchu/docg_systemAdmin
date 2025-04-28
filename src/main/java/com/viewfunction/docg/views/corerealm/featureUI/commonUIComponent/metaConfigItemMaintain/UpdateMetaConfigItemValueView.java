@@ -71,7 +71,7 @@ public class UpdateMetaConfigItemValueView extends VerticalLayout {
         errorMessageContainer.setMargin(false);
         errorMessageContainer.getStyle().set("padding-top","3px").set("padding-bottom","3px");
 
-        NativeLabel viewTitle = new NativeLabel("新属性信息:");
+        NativeLabel viewTitle = new NativeLabel("待更新属性信息:");
         viewTitle.getStyle().set("color","var(--lumo-contrast-50pct)").set("font-size","0.8rem");
         errorMessageContainer.add(viewTitle);
 
@@ -252,7 +252,7 @@ public class UpdateMetaConfigItemValueView extends VerticalLayout {
             case LONG:
                 currentConditionValueEditor = new TextField();
                 if(this.isFirstTimeOpenView){
-
+                    ((TextField) currentConditionValueEditor).setValue(this.orgItemValue.toString());
                     this.isFirstTimeOpenView = false;
                 }
                 ((TextField)currentConditionValueEditor).setWidth(340,Unit.PIXELS);

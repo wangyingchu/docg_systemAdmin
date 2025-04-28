@@ -339,7 +339,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
     private void renderUpdateConfigItemUI(MetaConfigItemValueObject metaConfigItemValueObject){
         UpdateMetaConfigItemValueView updateMetaConfigItemValueView =
                 new UpdateMetaConfigItemValueView(this.metaConfigItemFeatureSupportable,metaConfigItemValueObject.itemName,metaConfigItemValueObject.itemType,metaConfigItemValueObject.itemValue);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.EDIT.create(),"更新元属性",null,true,480,180,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.EDIT.create(),"更新元属性",null,true,480,190,false);
         fixSizeWindow.setWindowContent(updateMetaConfigItemValueView);
         updateMetaConfigItemValueView.setContainerDialog(fixSizeWindow);
         updateMetaConfigItemValueView.setContainerMetaConfigItemsConfigView(this);
