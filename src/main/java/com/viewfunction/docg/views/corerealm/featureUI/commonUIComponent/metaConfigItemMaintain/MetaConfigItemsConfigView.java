@@ -125,18 +125,17 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
         add(metaConfigItemConfigActionBar);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(metaConfigItemValueObjectInfo -> {
-            /*
+
             Icon editIcon = new Icon(VaadinIcon.EDIT);
-            editIcon.setSize("20px");
+            editIcon.setSize("18px");
             Button addItemButton = new Button(editIcon, event -> {
-                if(entityStatisticsInfo instanceof MetaConfigItemValueObject){
+                if(metaConfigItemValueObjectInfo instanceof MetaConfigItemValueObject){
 
                 }
             });
-            addItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            addItemButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            Tooltips.getCurrent().setTooltip(addItemButton, "更新元属性值");
-            */
+            addItemButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+            addItemButton.setTooltipText("更新元属性值");
+
             Icon removeIcon = new Icon(VaadinIcon.ERASER);
             removeIcon.setSize("20px");
             Button removeItemButton = new Button(removeIcon, event -> {
@@ -149,8 +148,7 @@ public class MetaConfigItemsConfigView extends VerticalLayout {
             removeItemButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
             removeItemButton.setTooltipText("删除元属性");
 
-            //HorizontalLayout buttons = new HorizontalLayout(addItemButton,removeItemButton);
-            HorizontalLayout buttons = new HorizontalLayout(removeItemButton);
+            HorizontalLayout buttons = new HorizontalLayout(addItemButton,removeItemButton);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
