@@ -101,6 +101,46 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
                 }
             });
 
+            HorizontalLayout action1Layout = new HorizontalLayout();
+            action1Layout.setPadding(false);
+            action1Layout.setSpacing(false);
+            action1Layout.setMargin(false);
+            action1Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action1Icon = LineAwesomeIconsSvg.BOX_SOLID.create();
+            action1Icon.setSize("12px");
+            Span action1Space = new Span();
+            action1Space.setWidth(6,Unit.PIXELS);
+            NativeLabel action1Label = new NativeLabel(" 配置 ObjectStore");
+            action1Layout.add(action1Icon,action1Space,action1Label);
+
+            MenuItem setupObjectStoreItem = setupExternalDataSourceSubItems.addItem(action1Layout);
+            setupObjectStoreItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    //renderRelationDBDataSourceConfigView();
+                }
+            });
+
+            HorizontalLayout action2Layout = new HorizontalLayout();
+            action2Layout.setPadding(false);
+            action2Layout.setSpacing(false);
+            action2Layout.setMargin(false);
+            action2Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action2Icon = VaadinIcon.ALARM.create();
+            action2Icon.setSize("10px");
+            Span action2Space = new Span();
+            action2Space.setWidth(6,Unit.PIXELS);
+            NativeLabel action2Label = new NativeLabel(" 配置 TimeSeriesDB");
+            action2Layout.add(action2Icon,action2Space,action2Label);
+
+            MenuItem setupTimeSeriesDBItem = setupExternalDataSourceSubItems.addItem(action2Layout);
+            setupTimeSeriesDBItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    //renderRelationDBDataSourceConfigView();
+                }
+            });
+
             metaConfigItemsConfigView.setCustomizeComponent(setupExternalDataSourceMenuBar);
         }
         add(metaConfigItemsConfigView);
