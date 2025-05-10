@@ -438,11 +438,11 @@ public class ClassificationManagementUI extends VerticalLayout implements
             this.classificationMetaInfosMetaInfoFilterView = classificationsMetaInfoFilterGrid.setItems(classificationsMetaInfoList);
             //logic to filter AttributeKinds already loaded from server
             this.classificationMetaInfosMetaInfoFilterView.addFilter(item->{
-                String entityKindName = item.getClassificationName();
-                String entityKindDesc = item.getClassificationDesc();
+                String entityKindName = item.getClassificationName().toUpperCase();
+                String entityKindDesc = item.getClassificationDesc().toUpperCase();
                 boolean attributeKindNameFilterResult = true;
                 if(!classificationNameFilterField.getValue().trim().equals("")){
-                    if(entityKindName.contains(classificationNameFilterField.getValue().trim())){
+                    if(entityKindName.contains(classificationNameFilterField.getValue().trim().toUpperCase())){
                         attributeKindNameFilterResult = true;
                     }else{
                         attributeKindNameFilterResult = false;
@@ -450,7 +450,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
                 }
                 boolean attributeKindDescFilterResult = true;
                 if(!classificationDescFilterField.getValue().trim().equals("")){
-                    if(entityKindDesc.contains(classificationDescFilterField.getValue().trim())){
+                    if(entityKindDesc.contains(classificationDescFilterField.getValue().trim().toUpperCase())){
                         attributeKindDescFilterResult = true;
                     }else{
                         attributeKindDescFilterResult = false;

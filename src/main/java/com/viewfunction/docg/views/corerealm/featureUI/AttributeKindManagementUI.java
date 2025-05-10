@@ -498,12 +498,12 @@ public class AttributeKindManagementUI extends VerticalLayout implements
             this.attributeKindsMetaInfoView = attributeKindMetaInfoGrid.setItems(gridAttributeKindMetaInfoList);
             //logic to filter AttributeKinds already loaded from server
             this.attributeKindsMetaInfoView.addFilter(item->{
-                String entityKindName = item.getKindName();
-                String entityKindDesc = item.getKindDesc();
+                String entityKindName = item.getKindName().toUpperCase();
+                String entityKindDesc = item.getKindDesc().toUpperCase();
                 String entityDataType = item.getAttributeDataType();
                 boolean attributeKindNameFilterResult = true;
                 if(!attributeKindNameFilterField.getValue().trim().equals("")){
-                    if(entityKindName.contains(attributeKindNameFilterField.getValue().trim())){
+                    if(entityKindName.contains(attributeKindNameFilterField.getValue().trim().toUpperCase())){
                         attributeKindNameFilterResult = true;
                     }else{
                         attributeKindNameFilterResult = false;
@@ -512,7 +512,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements
 
                 boolean attributeKindDescFilterResult = true;
                 if(!attributeKindDescFilterField.getValue().trim().equals("")){
-                    if(entityKindDesc.contains(attributeKindDescFilterField.getValue().trim())){
+                    if(entityKindDesc.contains(attributeKindDescFilterField.getValue().trim().toUpperCase())){
                         attributeKindDescFilterResult = true;
                     }else{
                         attributeKindDescFilterResult = false;

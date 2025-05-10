@@ -474,12 +474,12 @@ public class RelationKindManagementUI extends VerticalLayout implements
         this.relationKindsMetaInfoView = relationKindMetaInfoGrid.setItems(relationKindEntityStatisticsInfoList);
         //logic to filter RelationKinds already loaded from server
         this.relationKindsMetaInfoView.addFilter(item->{
-            String entityKindName = item.getEntityKindName();
-            String entityKindDesc = item.getEntityKindDesc();
+            String entityKindName = item.getEntityKindName().toUpperCase();
+            String entityKindDesc = item.getEntityKindDesc().toUpperCase();
 
             boolean relationKindNameFilterResult = true;
             if(!relationKindNameFilterField.getValue().trim().equals("")){
-                if(entityKindName.contains(relationKindNameFilterField.getValue().trim())){
+                if(entityKindName.contains(relationKindNameFilterField.getValue().trim().toUpperCase())){
                     relationKindNameFilterResult = true;
                 }else{
                     relationKindNameFilterResult = false;
@@ -488,7 +488,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
 
             boolean relationKindDescFilterResult = true;
             if(!relationKindDescFilterField.getValue().trim().equals("")){
-                if(entityKindDesc.contains(relationKindDescFilterField.getValue().trim())){
+                if(entityKindDesc.contains(relationKindDescFilterField.getValue().trim().toUpperCase())){
                     relationKindDescFilterResult = true;
                 }else{
                     relationKindDescFilterResult = false;
