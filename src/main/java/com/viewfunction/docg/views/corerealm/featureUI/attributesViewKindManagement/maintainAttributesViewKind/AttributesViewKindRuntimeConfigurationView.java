@@ -21,6 +21,7 @@ import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindDescriptionUpdatedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.externalValueViewKindConfig.ObjectStoreDataSourceConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.externalValueViewKindConfig.RelationDBDataSourceConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
@@ -117,7 +118,7 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
             setupObjectStoreItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                    //renderRelationDBDataSourceConfigView();
+                    renderObjectStoreDataSourceConfigView();
                 }
             });
 
@@ -203,6 +204,16 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
         fixSizeWindow.setWindowContent(relationDBDataSourceConfigView);
         relationDBDataSourceConfigView.setContainerDialog(fixSizeWindow);
         relationDBDataSourceConfigView.setRelatedMetaConfigItemsConfigView(metaConfigItemsConfigView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderObjectStoreDataSourceConfigView(){
+        ObjectStoreDataSourceConfigView ObjectStoreDataSourceConfigView = new ObjectStoreDataSourceConfigView(targetAttributesViewKind);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BOX_SOLID.create(),"配置 ObjectStore 数据源",null,true,400,670,false);
+        fixSizeWindow.setWindowContent(ObjectStoreDataSourceConfigView);
+        ObjectStoreDataSourceConfigView.setContainerDialog(fixSizeWindow);
+        ObjectStoreDataSourceConfigView.setRelatedMetaConfigItemsConfigView(metaConfigItemsConfigView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
