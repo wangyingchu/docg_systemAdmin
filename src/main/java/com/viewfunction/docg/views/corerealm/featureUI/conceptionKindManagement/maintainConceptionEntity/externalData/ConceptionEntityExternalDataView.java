@@ -72,9 +72,11 @@ public class ConceptionEntityExternalDataView extends VerticalLayout {
 
     private String getExternalDataType(String processorID){
         if(processorID.equals("com.viewfunction.docg.coreRealm.realmServiceCore.external.dataExchange.relationDB.DefaultRelationDBExternalAttributesValueAccessProcessor")){
-            return "Relation Database";
+            return "RelationDB 数据源";
         }else if(processorID.equals("com.viewfunction.docg.coreRealm.realmServiceCore.external.dataExchange.objectStore.DefaultObjectStoreExternalAttributesValueAccessProcessor")){
-            return "Object Store";
+            return "ObjectStore 数据源";
+        }else if(processorID.equals("com.viewfunction.docg.coreRealm.realmServiceCore.external.dataExchange.timeSeriesDB.DefaultTimeSeriesDBExternalAttributesValueAccessProcessor")){
+            return "TimeSeriesDB 数据源";
         }else{
             return null;
         }
