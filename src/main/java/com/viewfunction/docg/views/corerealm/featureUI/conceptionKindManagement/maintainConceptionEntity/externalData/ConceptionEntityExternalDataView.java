@@ -46,15 +46,20 @@ public class ConceptionEntityExternalDataView extends VerticalLayout {
         for(AttributesViewKind attributesViewKind:conceptionKindExternalAttributeViewList){
             ExternalValueAttributeDataAccessView currentExternalValueAttributeDataAccessView =
                     new ExternalValueAttributeDataAccessView(this.conceptionKind,this.conceptionEntityUID,attributesViewKind,this.conceptionEntityExternalDataViewHeightOffset);
+            Object processorID = attributesViewKind.getMetaConfigItem("DOCG_ExternalAttributesValueAccessProcessorID");
+            String externalDataType = processorID != null ? getExternalDataType(processorID.toString()):null;
             externalDataAccessViewTabSheet.
-                    add(generateTabTitle(VaadinIcon.TASKS,attributesViewKind.getAttributesViewKindName(),attributesViewKind.getAttributesViewKindDesc()),currentExternalValueAttributeDataAccessView);
+                    add(generateTabTitle(VaadinIcon.TASKS,attributesViewKind.getAttributesViewKindName(),attributesViewKind.getAttributesViewKindDesc(),externalDataType),currentExternalValueAttributeDataAccessView);
         }
     }
 
-    private HorizontalLayout generateTabTitle(VaadinIcon tabIcon, String tabTitleTxt,String tabTooltipTxt){
+    private HorizontalLayout generateTabTitle(VaadinIcon tabIcon, String tabTitleTxt,String tabTooltipTxt,String externalDataType){
         HorizontalLayout  tabTitleLayout = new HorizontalLayout();
         tabTitleLayout.setDefaultVerticalComponentAlignment(Alignment.START);
         Icon tabTitleIcon = new Icon(tabIcon);
+        if(externalDataType != null){
+            tabTitleTxt = tabTitleTxt+" ("+externalDataType+")";
+        }
         tabTitleIcon.setTooltipText(tabTooltipTxt);
         tabTitleIcon.setSize("8px");
         NativeLabel tabTitleLabel = new NativeLabel(" "+tabTitleTxt);
@@ -63,5 +68,15 @@ public class ConceptionEntityExternalDataView extends VerticalLayout {
                 .set("font-weight", "bold");
         tabTitleLayout.add(tabTitleIcon,tabTitleLabel);
         return tabTitleLayout;
+    }
+
+    private String getExternalDataType(String processorID){
+        if(processorID.equals("com.viewfunction.docg.coreRealm.realmServiceCore.external.dataExchange.relationDB.DefaultRelationDBExternalAttributesValueAccessProcessor")){
+            return "Relation Database";
+        }else if(processorID.equals("com.viewfunction.docg.coreRealm.realmServiceCore.external.dataExchange.objectStore.DefaultObjectStoreExternalAttributesValueAccessProcessor")){
+            return "Object Store";
+        }else{
+            return null;
+        }
     }
 }
