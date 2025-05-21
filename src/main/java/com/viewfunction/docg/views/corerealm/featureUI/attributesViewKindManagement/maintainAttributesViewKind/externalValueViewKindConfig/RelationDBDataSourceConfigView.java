@@ -88,14 +88,14 @@ public class RelationDBDataSourceConfigView extends VerticalLayout {
         userNameField = new TextField("User Name");
         userNameField.setRequired(true);
         userNameField.setRequiredIndicatorVisible(true);
-        userNameField.setHelperText("DOCG_ExternalRelationDBPORT_UserName");
+        userNameField.setHelperText("DOCG_ExternalRelationDB_UserName");
         userNameField.setWidthFull();
         add(userNameField);
 
         userPasswordField = new TextField("User Password");
         userPasswordField.setRequired(true);
         userPasswordField.setRequiredIndicatorVisible(true);
-        userPasswordField.setHelperText("DOCG_ExternalRelationDBPORT_UserPWD");
+        userPasswordField.setHelperText("DOCG_ExternalRelationDB_UserPWD");
         userPasswordField.setWidthFull();
         add(userPasswordField);
 
@@ -159,10 +159,10 @@ public class RelationDBDataSourceConfigView extends VerticalLayout {
             */
 
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalRelationDB_Host",dbHostField);
-            attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalRelationDBPORT_UserPWD",userPasswordField);
+            attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalRelationDB_UserPWD",userPasswordField);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalAttributesValueAccessProcessorID","com.viewfunction.docg.coreRealm.realmServiceCore.external.dataExchange.relationDB.DefaultRelationDBExternalAttributesValueAccessProcessor");
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalRelationDB_DefaultDBName",databaseNameField);
-            attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalRelationDBPORT_UserName",userNameField);
+            attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalRelationDB_UserName",userNameField);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalRelationDB_DefaultTableName",tableNameField);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalRelationDB_Port",dbPortField);
 
