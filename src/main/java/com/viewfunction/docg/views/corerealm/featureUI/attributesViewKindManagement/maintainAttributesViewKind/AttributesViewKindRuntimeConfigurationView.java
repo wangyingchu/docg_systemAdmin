@@ -23,6 +23,7 @@ import com.viewfunction.docg.element.eventHandling.AttributesViewKindDescription
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.externalValueViewKindConfig.ObjectStoreDataSourceConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.externalValueViewKindConfig.RelationDBDataSourceConfigView;
+import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.externalValueViewKindConfig.TimeSeriesDBDataSourceConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
 
@@ -138,7 +139,7 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
             setupTimeSeriesDBItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                    //renderRelationDBDataSourceConfigView();
+                    renderTimeSeriesDBDataSourceConfigView();
                 }
             });
 
@@ -200,7 +201,7 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
 
     private void renderRelationDBDataSourceConfigView(){
         RelationDBDataSourceConfigView relationDBDataSourceConfigView = new RelationDBDataSourceConfigView(targetAttributesViewKind);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.HDD.create(),"配置 RelationDB 数据源",null,true,400,670,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.DATABASE.create(),"配置 RelationDB 数据源",null,true,400,670,false);
         fixSizeWindow.setWindowContent(relationDBDataSourceConfigView);
         relationDBDataSourceConfigView.setContainerDialog(fixSizeWindow);
         relationDBDataSourceConfigView.setRelatedMetaConfigItemsConfigView(metaConfigItemsConfigView);
@@ -214,6 +215,16 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
         fixSizeWindow.setWindowContent(ObjectStoreDataSourceConfigView);
         ObjectStoreDataSourceConfigView.setContainerDialog(fixSizeWindow);
         ObjectStoreDataSourceConfigView.setRelatedMetaConfigItemsConfigView(metaConfigItemsConfigView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderTimeSeriesDBDataSourceConfigView(){
+        TimeSeriesDBDataSourceConfigView timeSeriesDBDataSourceConfigView = new TimeSeriesDBDataSourceConfigView(targetAttributesViewKind);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.ALARM.create(),"配置 TimeSeries 数据源",null,true,400,670,false);
+        fixSizeWindow.setWindowContent(timeSeriesDBDataSourceConfigView);
+        timeSeriesDBDataSourceConfigView.setContainerDialog(fixSizeWindow);
+        timeSeriesDBDataSourceConfigView.setRelatedMetaConfigItemsConfigView(metaConfigItemsConfigView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
