@@ -42,6 +42,7 @@ import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.RemoveEntitiesAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialInfoAnalysis.ConceptionEntitiesGeospatialInfoAnalysisView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.AddConceptionEntityToProcessingListView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.DeleteConceptionEntityView;
@@ -185,8 +186,15 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         MenuItem deleteResultEntities = maintenanceDataSubMenu.getSubMenu().addItem(eleteResultEntitiesIcon);
         deleteResultEntities.add("删除查询结果中的概念实体");
 
+        maintenanceDataSubMenu.getSubMenu().addSeparator();
+
         MenuItem addEntitiesNewAttribute = maintenanceDataSubMenu.getSubMenu().addItem(VaadinIcon.TEXT_INPUT.create());
-        addEntitiesNewAttribute.add("在查询结果概念实体中添加属性");
+        addEntitiesNewAttribute.add("在查询结果概念实体中添加或更新属性");
+
+        Icon eleteResultEntitiesAttributeIcon = VaadinIcon.ERASER.create();
+        eleteResultEntitiesAttributeIcon.getStyle().set("color","hsl(3,89%,42%)");
+        MenuItem deleteEntitiesExistingAttribute = maintenanceDataSubMenu.getSubMenu().addItem(eleteResultEntitiesAttributeIcon);
+        deleteEntitiesExistingAttribute.add("在查询结果概念实体中删除已有属性");
 
         deleteResultEntities.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
@@ -199,6 +207,13 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
                 addConceptionEntitiesAttribute();
+            }
+        });
+
+        deleteEntitiesExistingAttribute.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                removeConceptionEntitiesAttribute();
             }
         });
 
@@ -593,7 +608,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     private void addConceptionEntitiesAttribute(){
         AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.conceptionKindName,null, AddEntityAttributeView.KindType.ConceptionKind);
         addEntityAttributeView.setEntityUIDsSet(this.queryResultEntityUIDList);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TEXT_INPUT),"添加概念实体属性",null,true,480,200,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TEXT_INPUT),"添加或更新概念实体属性",null,true,480,200,false);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
@@ -660,5 +675,14 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void removeConceptionEntitiesAttribute(){
+        RemoveEntitiesAttributeView removeEntitiesAttributeView = new RemoveEntitiesAttributeView(this.conceptionKindName,this.queryResultEntityUIDList, RemoveEntitiesAttributeView.KindType.ConceptionKind);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除概念实体已有属性",null,true,480,140,false);
+        removeEntitiesAttributeView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setWindowContent(removeEntitiesAttributeView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 }
