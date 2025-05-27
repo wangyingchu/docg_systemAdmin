@@ -30,6 +30,11 @@ import java.util.List;
 
 public class RemoveEntitiesAttributeView extends VerticalLayout {
 
+    public interface EntitiesAttributeRemovedListener{
+        public void entitiesAttributeRemovedAction(String attributeName,EntitiesOperationStatistics entitiesOperationStatistics);
+    }
+
+    private EntitiesAttributeRemovedListener entitiesAttributeRemovedListener;
     public enum KindType {ConceptionKind,RelationKind,Classification}
     private Dialog containerDialog;
     private List<String> entityUIDsList;
@@ -203,11 +208,18 @@ public class RemoveEntitiesAttributeView extends VerticalLayout {
                 if(this.containerDialog != null){
                     this.containerDialog.close();
                 }
+                if(this.entitiesAttributeRemovedListener != null){
+                    this.entitiesAttributeRemovedListener.entitiesAttributeRemovedAction(attributeName,entitiesOperationStatistics);
+                }
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念实体属性删除操作失败", NotificationVariant.LUMO_ERROR);
             }
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setEntitiesAttributeRemovedListener(EntitiesAttributeRemovedListener entitiesAttributeRemovedListener) {
+        this.entitiesAttributeRemovedListener = entitiesAttributeRemovedListener;
     }
 }

@@ -678,7 +678,17 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     }
 
     private void removeConceptionEntitiesAttribute(){
+        RemoveEntitiesAttributeView.EntitiesAttributeRemovedListener entitiesAttributeRemovedListener = new RemoveEntitiesAttributeView.EntitiesAttributeRemovedListener() {
+            @Override
+            public void entitiesAttributeRemovedAction(String attributeName,EntitiesOperationStatistics entitiesOperationStatistics) {
+                if(currentRowKeyList.contains(attributeName + "_KEY")){
+                    queryResultGrid.removeColumnByKey(attributeName + "_KEY");
+                    currentRowKeyList.remove(attributeName + "_KEY");
+                }
+            }
+        };
         RemoveEntitiesAttributeView removeEntitiesAttributeView = new RemoveEntitiesAttributeView(this.conceptionKindName,this.queryResultEntityUIDList, RemoveEntitiesAttributeView.KindType.ConceptionKind);
+        removeEntitiesAttributeView.setEntitiesAttributeRemovedListener(entitiesAttributeRemovedListener);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除概念实体已有属性",null,true,480,165,false);
         removeEntitiesAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setWindowContent(removeEntitiesAttributeView);
