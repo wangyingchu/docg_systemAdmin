@@ -51,7 +51,19 @@ public class ConceptionKindQueryCriteriaView extends VerticalLayout implements K
 
     public ConceptionKindQueryCriteriaView(String conceptionKindName){
         this.conceptionKindName = conceptionKindName;
-        SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.SEARCH),"查询条件");
+
+        Icon refreshIcon = VaadinIcon.REFRESH.create();
+        refreshIcon.setTooltipText("刷新概念类型属性信息");
+        refreshIcon.setSize("10px");
+        refreshIcon.addClassName("text-primary");
+        refreshIcon.addClickListener(new ComponentEventListener<ClickEvent<Icon>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Icon> iconClickEvent) {
+                loadQueryCriteriaComboBox();
+            }
+        });
+
+        SecondaryIconTitle filterTitle1 = new SecondaryIconTitle(new Icon(VaadinIcon.SEARCH),"查询条件",refreshIcon);
         add(filterTitle1);
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
