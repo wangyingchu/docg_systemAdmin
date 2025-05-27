@@ -661,7 +661,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
                 dataProvider.refreshAll();
 
                 VerticalLayout notificationMessageContainer = new VerticalLayout();
-                notificationMessageContainer.add(new Div(new Text("查询返回实体数: "+entitiesOperationStatistics.getSuccessItemsCount())));
+                notificationMessageContainer.add(new Div(new Text("概念实体删除成功数: "+entitiesOperationStatistics.getSuccessItemsCount())));
                 notificationMessageContainer.add(new Div(new Text("操作开始时间: "+entitiesOperationStatistics.getStartTime())));
                 notificationMessageContainer.add(new Div(new Text("操作结束时间: "+entitiesOperationStatistics.getFinishTime())));
                 notification.add(notificationMessageContainer);
@@ -679,7 +679,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
     private void removeConceptionEntitiesAttribute(){
         RemoveEntitiesAttributeView removeEntitiesAttributeView = new RemoveEntitiesAttributeView(this.conceptionKindName,this.queryResultEntityUIDList, RemoveEntitiesAttributeView.KindType.ConceptionKind);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除概念实体已有属性",null,true,480,160,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除概念实体已有属性",null,true,480,165,false);
         removeEntitiesAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setWindowContent(removeEntitiesAttributeView);
         fixSizeWindow.setModel(true);

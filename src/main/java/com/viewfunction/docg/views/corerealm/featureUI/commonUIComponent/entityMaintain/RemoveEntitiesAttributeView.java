@@ -14,13 +14,10 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindEntityAttributeRuntimeStatistics;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -29,7 +26,6 @@ import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class RemoveEntitiesAttributeView extends VerticalLayout {
@@ -49,6 +45,7 @@ public class RemoveEntitiesAttributeView extends VerticalLayout {
 
         this.kindName = kindName;
         this.entityKindType = entityKindType;
+        this.entityUIDsList = entityUIDsList;
 
         if(entityKindType != null){
             this.entityKindType = entityKindType;
@@ -174,15 +171,16 @@ public class RemoveEntitiesAttributeView extends VerticalLayout {
     }
 
     private void doDeleteConceptionEntitiesAttributes(ConfirmWindow confirmWindow,String attributeName){
-        /*
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
         try {
-            EntitiesOperationStatistics entitiesOperationStatistics = crossKindDataOperator.deleteConceptionEntitiesByUIDs(this.queryResultEntityUIDList);
+            List<String> attributeNameList = new ArrayList<>();
+            attributeNameList.add(attributeName);
+            EntitiesOperationStatistics entitiesOperationStatistics = crossKindDataOperator.removeConceptionEntitiesAttributesByUIDs(this.entityUIDsList,attributeNameList);
             if(entitiesOperationStatistics != null){
                 Notification notification = new Notification();
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                Div text = new Div(new Text("概念实体删除操作完成"));
+                Div text = new Div(new Text("概念实体属性删除操作完成"));
                 Button closeButton = new Button(new Icon("lumo", "cross"));
                 closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
                 closeButton.addClickListener(event -> {
@@ -193,34 +191,8 @@ public class RemoveEntitiesAttributeView extends VerticalLayout {
                 layout.setFlexGrow(1,text);
                 notification.add(layout);
 
-                startTimeDisplayItem.updateDisplayValue("-");
-                finishTimeDisplayItem.updateDisplayValue("-");
-                dataCountDisplayItem.updateDisplayValue("-");
-
-                ListDataProvider dataProvider = (ListDataProvider)queryResultGrid.getDataProvider();
-                if(this.queryResultEntityUIDList.size() == entitiesOperationStatistics.getSuccessItemsCount()){
-                    dataProvider.getItems().clear();
-                    queryResultOperationMenuBar.setEnabled(false);
-                }else {
-                    List<ConceptionEntity> conceptionEntityList = crossKindDataOperator.getConceptionEntitiesByUIDs(this.queryResultEntityUIDList);
-                    dataCountDisplayItem.updateDisplayValue(""+ numberFormat.format(conceptionEntityList.size()));
-                    List<String> existingEntitiesUIDList = new ArrayList<>();
-                    conceptionEntityList.forEach(conceptionEntity -> {
-                        String conceptionEntityUID = conceptionEntity.getConceptionEntityUID();
-                        existingEntitiesUIDList.add(conceptionEntityUID);
-                    });
-
-                    Collection<ConceptionEntityValue> conceptionEntityValueList = dataProvider.getItems();
-                    for(ConceptionEntityValue currentConceptionEntityValue:conceptionEntityValueList){
-                        if(!existingEntitiesUIDList.contains(currentConceptionEntityValue.getConceptionEntityUID())){
-                            dataProvider.getItems().remove(currentConceptionEntityValue);
-                        }
-                    }
-                }
-                dataProvider.refreshAll();
-
                 VerticalLayout notificationMessageContainer = new VerticalLayout();
-                notificationMessageContainer.add(new Div(new Text("查询返回实体数: "+entitiesOperationStatistics.getSuccessItemsCount())));
+                notificationMessageContainer.add(new Div(new Text("概念实体属性删除成功数: "+entitiesOperationStatistics.getSuccessItemsCount())));
                 notificationMessageContainer.add(new Div(new Text("操作开始时间: "+entitiesOperationStatistics.getStartTime())));
                 notificationMessageContainer.add(new Div(new Text("操作结束时间: "+entitiesOperationStatistics.getFinishTime())));
                 notification.add(notificationMessageContainer);
@@ -228,12 +200,14 @@ public class RemoveEntitiesAttributeView extends VerticalLayout {
                 notification.open();
 
                 confirmWindow.closeConfirmWindow();
+                if(this.containerDialog != null){
+                    this.containerDialog.close();
+                }
             }else{
-                CommonUIOperationUtil.showPopupNotification("概念实体删除操作失败", NotificationVariant.LUMO_ERROR);
+                CommonUIOperationUtil.showPopupNotification("概念实体属性删除操作失败", NotificationVariant.LUMO_ERROR);
             }
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
-        */
     }
 }
