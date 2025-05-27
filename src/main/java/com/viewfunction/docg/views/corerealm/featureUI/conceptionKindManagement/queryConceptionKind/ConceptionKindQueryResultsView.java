@@ -679,7 +679,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
 
     private void removeConceptionEntitiesAttribute(){
         RemoveEntitiesAttributeView removeEntitiesAttributeView = new RemoveEntitiesAttributeView(this.conceptionKindName,this.queryResultEntityUIDList, RemoveEntitiesAttributeView.KindType.ConceptionKind);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除概念实体已有属性",null,true,480,140,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除概念实体已有属性",null,true,480,160,false);
         removeEntitiesAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setWindowContent(removeEntitiesAttributeView);
         fixSizeWindow.setModel(true);
