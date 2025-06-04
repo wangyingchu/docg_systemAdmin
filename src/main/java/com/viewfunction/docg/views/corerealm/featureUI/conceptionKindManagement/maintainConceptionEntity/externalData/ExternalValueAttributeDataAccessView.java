@@ -19,6 +19,8 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelTitleActionBar;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.AttributesViewKindDetailUI;
@@ -31,17 +33,21 @@ public class ExternalValueAttributeDataAccessView extends VerticalLayout {
     private String conceptionKind;
     private String conceptionEntityUID;
     private AttributesViewKind attributesViewKind;
+    private String attributesViewKindUID;
     private VerticalLayout queryFieldsContainer;
     private VerticalLayout queryResultContainer;
     private Registration listener;
     private int conceptionEntityExternalDataViewHeightOffset;
     private ConceptionEntityExternalDataQueryResultsView conceptionEntityExternalDataQueryResultsView;
 
-    public ExternalValueAttributeDataAccessView(String conceptionKind,String conceptionEntityUID,AttributesViewKind attributesViewKind,int conceptionEntityExternalDataViewHeightOffset){
+    public ExternalValueAttributeDataAccessView(String conceptionKind,String conceptionEntityUID,String attributesViewKindUID,int conceptionEntityExternalDataViewHeightOffset){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
-        this.attributesViewKind = attributesViewKind;
+        this.attributesViewKindUID = attributesViewKindUID;
         this.conceptionEntityExternalDataViewHeightOffset = conceptionEntityExternalDataViewHeightOffset;
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        this.attributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
 
         setPadding(false);
         setSpacing(false);

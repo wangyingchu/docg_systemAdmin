@@ -45,7 +45,7 @@ public class ConceptionEntityExternalDataView extends VerticalLayout {
 
         for(AttributesViewKind attributesViewKind:conceptionKindExternalAttributeViewList){
             ExternalValueAttributeDataAccessView currentExternalValueAttributeDataAccessView =
-                    new ExternalValueAttributeDataAccessView(this.conceptionKind,this.conceptionEntityUID,attributesViewKind,this.conceptionEntityExternalDataViewHeightOffset);
+                    new ExternalValueAttributeDataAccessView(this.conceptionKind,this.conceptionEntityUID,attributesViewKind.getAttributesViewKindUID(),this.conceptionEntityExternalDataViewHeightOffset);
             Object processorID = attributesViewKind.getMetaConfigItem("DOCG_ExternalAttributesValueAccessProcessorID");
             String externalDataType = processorID != null ? getExternalDataType(processorID.toString()):null;
             externalDataAccessViewTabSheet.
