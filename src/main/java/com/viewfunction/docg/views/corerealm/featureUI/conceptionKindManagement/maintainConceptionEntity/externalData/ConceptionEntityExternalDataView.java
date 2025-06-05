@@ -9,6 +9,7 @@ import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabSheetVariant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityExternalAttributesAccessView;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 
 import java.util.List;
 
@@ -71,11 +72,11 @@ public class ConceptionEntityExternalDataView extends VerticalLayout {
     }
 
     private String getExternalDataType(String processorID){
-        if(processorID.equals("com.viewfunction.docg.coreRealm.realmServiceCore.external.dataExchange.relationDB.DefaultRelationDBExternalAttributesValueAccessProcessor")){
+        if(processorID.equals(RealmConstant.DefaultRelationDBExternalAttributesValueAccessProcessorID)){
             return "RelationDB 数据源";
-        }else if(processorID.equals("com.viewfunction.docg.coreRealm.realmServiceCore.external.dataExchange.objectStore.DefaultObjectStoreExternalAttributesValueAccessProcessor")){
+        }else if(processorID.equals(RealmConstant.DefaultObjectStoreExternalAttributesValueAccessProcessorID)){
             return "ObjectStore 数据源";
-        }else if(processorID.equals("com.viewfunction.docg.coreRealm.realmServiceCore.external.dataExchange.timeSeriesDB.DefaultTimeSeriesDBExternalAttributesValueAccessProcessor")){
+        }else if(processorID.equals(RealmConstant.DefaultTimeSeriesDBExternalAttributesValueAccessProcessorID)){
             return "TimeSeriesDB 数据源";
         }else{
             return null;

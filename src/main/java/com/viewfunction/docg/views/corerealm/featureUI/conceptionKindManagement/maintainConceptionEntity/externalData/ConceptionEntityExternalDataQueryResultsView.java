@@ -27,6 +27,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 
 import java.text.NumberFormat;
 import java.time.ZoneId;
@@ -120,6 +121,23 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
         queryResultGrid.setWidth(100, Unit.PERCENTAGE);
         queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         queryResultGrid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
+
+        AttributesViewKind.AttributesViewKindDataForm attributesViewKindDataForm = this.attributesViewKind.getAttributesViewKindDataForm();
+        if(attributesViewKindDataForm.equals(AttributesViewKind.AttributesViewKindDataForm.EXTERNAL_VALUE)){
+            Object _ExternalAttributesValueAccessProcessor = this.attributesViewKind.getMetaConfigItem(RealmConstant.ExternalAttributesValueAccessProcessorID);
+            if(_ExternalAttributesValueAccessProcessor != null){
+                String externalAttributesValueAccessProcessor = _ExternalAttributesValueAccessProcessor.toString();
+                if(externalAttributesValueAccessProcessor.equals(RealmConstant.DefaultTimeSeriesDBExternalAttributesValueAccessProcessorID)){
+                    String columnKey = "idx_" + "Time";
+                    String columnName = "Time";
+                    MapValueProvider currentMapValueProvider =new MapValueProvider();
+                    currentMapValueProvider.setValueKey(columnName);
+                    queryResultGrid.addColumn(currentMapValueProvider).setHeader(columnName).setKey(columnKey).setResizable(true).setWidth("160px");
+                    GridColumnHeader gridColumnHeader_idx = new GridColumnHeader(LineAwesomeIconsSvg.CLOCK.create(),columnName);
+                    queryResultGrid.getColumnByKey(columnKey).setHeader(gridColumnHeader_idx).setSortable(false);
+                }
+            }
+        }
 
         for (AttributeKind currentAttributeKind : this.attributesViewKind.getContainsAttributeKinds()) {
             String columnKey = "idx_" + currentAttributeKind.getAttributeKindUID();

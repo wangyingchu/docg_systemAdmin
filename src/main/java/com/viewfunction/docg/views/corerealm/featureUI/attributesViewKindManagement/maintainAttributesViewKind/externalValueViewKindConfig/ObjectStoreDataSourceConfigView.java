@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
@@ -159,7 +160,7 @@ public class ObjectStoreDataSourceConfigView extends VerticalLayout {
 
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalObjectStore_Host",storeHostField);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalObjectStore_UserPWD",userPasswordField);
-            attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalAttributesValueAccessProcessorID","com.viewfunction.docg.coreRealm.realmServiceCore.external.dataExchange.objectStore.DefaultObjectStoreExternalAttributesValueAccessProcessor");
+            attributesViewKind.addOrUpdateMetaConfigItem(RealmConstant.ExternalAttributesValueAccessProcessorID,RealmConstant.DefaultObjectStoreExternalAttributesValueAccessProcessorID);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalObjectStore_StoreRoot",storeRootField);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalObjectStore_UserName",userNameField);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalObjectStore_BaseFolder",baseFolderField);

@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
@@ -160,7 +161,7 @@ public class RelationDBDataSourceConfigView extends VerticalLayout {
 
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalRelationDB_Host",dbHostField);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalRelationDB_UserPWD",userPasswordField);
-            attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalAttributesValueAccessProcessorID","com.viewfunction.docg.coreRealm.realmServiceCore.external.dataExchange.relationDB.DefaultRelationDBExternalAttributesValueAccessProcessor");
+            attributesViewKind.addOrUpdateMetaConfigItem(RealmConstant.ExternalAttributesValueAccessProcessorID,RealmConstant.DefaultRelationDBExternalAttributesValueAccessProcessorID);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalRelationDB_DefaultDBName",databaseNameField);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalRelationDB_UserName",userNameField);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalRelationDB_DefaultTableName",tableNameField);

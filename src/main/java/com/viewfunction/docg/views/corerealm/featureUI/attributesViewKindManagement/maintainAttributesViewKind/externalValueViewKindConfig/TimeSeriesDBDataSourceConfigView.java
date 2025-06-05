@@ -13,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.metaConfigItemMaintain.MetaConfigItemsConfigView;
@@ -150,7 +151,7 @@ public class TimeSeriesDBDataSourceConfigView extends VerticalLayout {
 
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalTimeSeriesDB_Host",dbHostField);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalTimeSeriesDB_UserPWD",userPasswordField);
-            attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalAttributesValueAccessProcessorID","com.viewfunction.docg.coreRealm.realmServiceCore.external.dataExchange.timeSeriesDB.DefaultTimeSeriesDBExternalAttributesValueAccessProcessor");
+            attributesViewKind.addOrUpdateMetaConfigItem(RealmConstant.ExternalAttributesValueAccessProcessorID,RealmConstant.DefaultTimeSeriesDBExternalAttributesValueAccessProcessorID);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalTimeSeriesDB_DefaultDBName",databaseNameField);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalTimeSeriesDB_UserName",userNameField);
             attributesViewKind.addOrUpdateMetaConfigItem("DOCG_ExternalTimeSeriesDB_DefaultTableName",tableNameField);
