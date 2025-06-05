@@ -23,7 +23,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryPara
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.FilteringItem;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.spi.neo4j.termImpl.Neo4JAttributeKindImpl;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.KindQueryCriteriaView;
@@ -242,9 +244,14 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
                 }
             }
         }
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        CoreRealmStorageImplTech coreRealmStorageImplTech = coreRealm.getStorageImplTech();
+
         if(this.externalAttributesValueAccessProcessorID != null && this.externalAttributesValueAccessProcessorID.equals(RealmConstant.DefaultTimeSeriesDBExternalAttributesValueAccessProcessorID)){
-            Neo4JAttributeKindImpl neo4jAttributeKindImpl = new Neo4JAttributeKindImpl(null, "Time", "数据采集时间", AttributeDataType.TIMESTAMP, "-");
-            attributeKindList.add(neo4jAttributeKindImpl);
+            if(coreRealmStorageImplTech.equals(CoreRealmStorageImplTech.NEO4J)){
+                Neo4JAttributeKindImpl neo4jAttributeKindImpl = new Neo4JAttributeKindImpl(null, RealmConstant.DefaultTimeSeriesDBExternalTimeAttributeName, "数据采集时间", AttributeDataType.TIMESTAMP, "-");
+                attributeKindList.add(neo4jAttributeKindImpl);
+            }
         }
         queryCriteriaFilterSelect.setItems(attributeKindList);
     }

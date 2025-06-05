@@ -135,8 +135,8 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
         }
 
         if(this.externalAttributesValueAccessProcessorID != null && this.externalAttributesValueAccessProcessorID.equals(RealmConstant.DefaultTimeSeriesDBExternalAttributesValueAccessProcessorID)){
-            String columnKey = "idx_" + "Time";
-            String columnName = "Time";
+            String columnKey = "idx_" + RealmConstant.DefaultTimeSeriesDBExternalTimeAttributeName;
+            String columnName = RealmConstant.DefaultTimeSeriesDBExternalTimeAttributeName;
             MapValueProvider currentMapValueProvider =new MapValueProvider();
             currentMapValueProvider.setValueKey(columnName);
             queryResultGrid.addColumn(currentMapValueProvider).setHeader(columnName).setKey(columnKey).setResizable(true).setWidth("180px");
