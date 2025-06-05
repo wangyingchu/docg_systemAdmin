@@ -39,12 +39,14 @@ public class ExternalValueAttributeDataAccessView extends VerticalLayout {
     private Registration listener;
     private int conceptionEntityExternalDataViewHeightOffset;
     private ConceptionEntityExternalDataQueryResultsView conceptionEntityExternalDataQueryResultsView;
+    private String externalAttributesValueAccessProcessorID;
 
-    public ExternalValueAttributeDataAccessView(String conceptionKind,String conceptionEntityUID,String attributesViewKindUID,int conceptionEntityExternalDataViewHeightOffset){
+    public ExternalValueAttributeDataAccessView(String conceptionKind,String conceptionEntityUID,String attributesViewKindUID,String externalAttributesValueAccessProcessorID,int conceptionEntityExternalDataViewHeightOffset){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
         this.attributesViewKindUID = attributesViewKindUID;
         this.conceptionEntityExternalDataViewHeightOffset = conceptionEntityExternalDataViewHeightOffset;
+        this.externalAttributesValueAccessProcessorID = externalAttributesValueAccessProcessorID;
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         this.attributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
@@ -87,7 +89,7 @@ public class ExternalValueAttributeDataAccessView extends VerticalLayout {
         secondaryTitleActionBar2.setWidth(100,Unit.PERCENTAGE);
         attributesViewKindInfoContainer.add(secondaryTitleActionBar2);
 
-        ConceptionEntityExternalDataQueryCriteriaView conceptionEntityExternalDataQueryCriteriaView = new ConceptionEntityExternalDataQueryCriteriaView(this.conceptionKind,this.attributesViewKind,this.conceptionEntityExternalDataViewHeightOffset);
+        ConceptionEntityExternalDataQueryCriteriaView conceptionEntityExternalDataQueryCriteriaView = new ConceptionEntityExternalDataQueryCriteriaView(this.conceptionKind,this.attributesViewKind,this.externalAttributesValueAccessProcessorID,this.conceptionEntityExternalDataViewHeightOffset);
         queryFieldsContainer.add(conceptionEntityExternalDataQueryCriteriaView);
         conceptionEntityExternalDataQueryCriteriaView.setContainerExternalValueAttributeDataAccessView(this);
 
@@ -105,7 +107,7 @@ public class ExternalValueAttributeDataAccessView extends VerticalLayout {
         queryResultContainer.setSpacing(false);
         queryResultContainer.setMargin(false);
 
-        conceptionEntityExternalDataQueryResultsView = new ConceptionEntityExternalDataQueryResultsView(this.conceptionKind,this.conceptionEntityUID,this.attributesViewKind,this.conceptionEntityExternalDataViewHeightOffset);
+        conceptionEntityExternalDataQueryResultsView = new ConceptionEntityExternalDataQueryResultsView(this.conceptionKind,this.conceptionEntityUID,this.attributesViewKind,this.externalAttributesValueAccessProcessorID,this.conceptionEntityExternalDataViewHeightOffset);
         queryResultContainer.add(conceptionEntityExternalDataQueryResultsView);
 
         SplitLayout splitLayout = new SplitLayout(queryFieldsContainer, queryResultContainer);

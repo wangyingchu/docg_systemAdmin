@@ -50,12 +50,14 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
     private MenuBar queryResultOperationMenuBar;
     private NumberFormat numberFormat;
     private int conceptionEntityExternalDataViewHeightOffset;
+    private String externalAttributesValueAccessProcessorID;
 
-    public ConceptionEntityExternalDataQueryResultsView(String conceptionKindName,String conceptionEntityUID,AttributesViewKind attributesViewKind,int conceptionEntityExternalDataViewHeightOffset){
+    public ConceptionEntityExternalDataQueryResultsView(String conceptionKindName,String conceptionEntityUID,AttributesViewKind attributesViewKind,String externalAttributesValueAccessProcessorID,int conceptionEntityExternalDataViewHeightOffset){
         this.conceptionKindName = conceptionKindName;
         this.conceptionEntityUID = conceptionEntityUID;
         this.attributesViewKind = attributesViewKind;
         this.conceptionEntityExternalDataViewHeightOffset = conceptionEntityExternalDataViewHeightOffset;
+        this.externalAttributesValueAccessProcessorID = externalAttributesValueAccessProcessorID;
         this.setPadding(true);
         this.setSpacing(true);
 
@@ -122,21 +124,24 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
         queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         queryResultGrid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
 
-        AttributesViewKind.AttributesViewKindDataForm attributesViewKindDataForm = this.attributesViewKind.getAttributesViewKindDataForm();
-        if(attributesViewKindDataForm.equals(AttributesViewKind.AttributesViewKindDataForm.EXTERNAL_VALUE)){
-            Object _ExternalAttributesValueAccessProcessor = this.attributesViewKind.getMetaConfigItem(RealmConstant.ExternalAttributesValueAccessProcessorID);
-            if(_ExternalAttributesValueAccessProcessor != null){
-                String externalAttributesValueAccessProcessor = _ExternalAttributesValueAccessProcessor.toString();
-                if(externalAttributesValueAccessProcessor.equals(RealmConstant.DefaultTimeSeriesDBExternalAttributesValueAccessProcessorID)){
-                    String columnKey = "idx_" + "Time";
-                    String columnName = "Time";
-                    MapValueProvider currentMapValueProvider =new MapValueProvider();
-                    currentMapValueProvider.setValueKey(columnName);
-                    queryResultGrid.addColumn(currentMapValueProvider).setHeader(columnName).setKey(columnKey).setResizable(true).setWidth("160px");
-                    GridColumnHeader gridColumnHeader_idx = new GridColumnHeader(LineAwesomeIconsSvg.CLOCK.create(),columnName);
-                    queryResultGrid.getColumnByKey(columnKey).setHeader(gridColumnHeader_idx).setSortable(false);
+        if(this.externalAttributesValueAccessProcessorID == null){
+            AttributesViewKind.AttributesViewKindDataForm attributesViewKindDataForm = this.attributesViewKind.getAttributesViewKindDataForm();
+            if(attributesViewKindDataForm.equals(AttributesViewKind.AttributesViewKindDataForm.EXTERNAL_VALUE)){
+                Object _ExternalAttributesValueAccessProcessor = this.attributesViewKind.getMetaConfigItem(RealmConstant.ExternalAttributesValueAccessProcessorID);
+                if(_ExternalAttributesValueAccessProcessor != null){
+                    this.externalAttributesValueAccessProcessorID = _ExternalAttributesValueAccessProcessor.toString();
                 }
             }
+        }
+
+        if(this.externalAttributesValueAccessProcessorID != null && this.externalAttributesValueAccessProcessorID.equals(RealmConstant.DefaultTimeSeriesDBExternalAttributesValueAccessProcessorID)){
+            String columnKey = "idx_" + "Time";
+            String columnName = "Time";
+            MapValueProvider currentMapValueProvider =new MapValueProvider();
+            currentMapValueProvider.setValueKey(columnName);
+            queryResultGrid.addColumn(currentMapValueProvider).setHeader(columnName).setKey(columnKey).setResizable(true).setWidth("180px");
+            GridColumnHeader gridColumnHeader_idx = new GridColumnHeader(LineAwesomeIconsSvg.CLOCK.create(),columnName);
+            queryResultGrid.getColumnByKey(columnKey).setHeader(gridColumnHeader_idx).setSortable(false);
         }
 
         for (AttributeKind currentAttributeKind : this.attributesViewKind.getContainsAttributeKinds()) {

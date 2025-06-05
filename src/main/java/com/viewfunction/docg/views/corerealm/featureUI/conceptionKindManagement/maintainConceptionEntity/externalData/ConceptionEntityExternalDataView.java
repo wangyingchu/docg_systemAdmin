@@ -45,10 +45,11 @@ public class ConceptionEntityExternalDataView extends VerticalLayout {
         add(externalDataAccessViewTabSheet);
 
         for(AttributesViewKind attributesViewKind:conceptionKindExternalAttributeViewList){
-            ExternalValueAttributeDataAccessView currentExternalValueAttributeDataAccessView =
-                    new ExternalValueAttributeDataAccessView(this.conceptionKind,this.conceptionEntityUID,attributesViewKind.getAttributesViewKindUID(),this.conceptionEntityExternalDataViewHeightOffset);
-            Object processorID = attributesViewKind.getMetaConfigItem("DOCG_ExternalAttributesValueAccessProcessorID");
+            Object processorID = attributesViewKind.getMetaConfigItem(RealmConstant.ExternalAttributesValueAccessProcessorID);
+            String externalProcessorIDStr = processorID != null ? processorID.toString() : null;
             String externalDataType = processorID != null ? getExternalDataType(processorID.toString()):null;
+            ExternalValueAttributeDataAccessView currentExternalValueAttributeDataAccessView =
+                    new ExternalValueAttributeDataAccessView(this.conceptionKind,this.conceptionEntityUID,attributesViewKind.getAttributesViewKindUID(),externalProcessorIDStr,this.conceptionEntityExternalDataViewHeightOffset);
             externalDataAccessViewTabSheet.
                     add(generateTabTitle(VaadinIcon.TASKS,attributesViewKind.getAttributesViewKindName(),attributesViewKind.getAttributesViewKindDesc(),externalDataType),currentExternalValueAttributeDataAccessView);
         }

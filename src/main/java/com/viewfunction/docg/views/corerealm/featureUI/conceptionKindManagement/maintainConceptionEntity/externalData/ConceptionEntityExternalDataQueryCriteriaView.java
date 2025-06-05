@@ -22,6 +22,8 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.FilteringItem;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.spi.neo4j.termImpl.Neo4JAttributeKindImpl;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindQuery.KindQueryCriteriaView;
@@ -48,11 +50,13 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
     private Button resultSetConfigButton;
     private Popover resultSetConfigButtonPopover;
     private ExternalValueAttributeDataAccessView containerExternalValueAttributeDataAccessView;
+    private String externalAttributesValueAccessProcessorID;
 
-    public ConceptionEntityExternalDataQueryCriteriaView(String conceptionKindName, AttributesViewKind attributesViewKind,int conceptionEntityExternalDataViewHeightOffset){
+    public ConceptionEntityExternalDataQueryCriteriaView(String conceptionKindName, AttributesViewKind attributesViewKind,String externalAttributesValueAccessProcessorID,int conceptionEntityExternalDataViewHeightOffset){
         this.conceptionKindName = conceptionKindName;
         this.attributesViewKind = attributesViewKind;
         this.conceptionEntityExternalDataViewHeightOffset = conceptionEntityExternalDataViewHeightOffset;
+        this.externalAttributesValueAccessProcessorID = externalAttributesValueAccessProcessorID;
 
         VerticalLayout filterDropdownSelectorContainerLayout = new VerticalLayout();
         filterDropdownSelectorContainerLayout.setPadding(false);
@@ -229,6 +233,19 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
 
     private void loadQueryCriteriaComboBox(){
         List<AttributeKind> attributeKindList = this.attributesViewKind.getContainsAttributeKinds();
+        if(this.externalAttributesValueAccessProcessorID == null){
+            AttributesViewKind.AttributesViewKindDataForm attributesViewKindDataForm = this.attributesViewKind.getAttributesViewKindDataForm();
+            if(attributesViewKindDataForm.equals(AttributesViewKind.AttributesViewKindDataForm.EXTERNAL_VALUE)){
+                Object _ExternalAttributesValueAccessProcessor = this.attributesViewKind.getMetaConfigItem(RealmConstant.ExternalAttributesValueAccessProcessorID);
+                if(_ExternalAttributesValueAccessProcessor != null){
+                    this.externalAttributesValueAccessProcessorID = _ExternalAttributesValueAccessProcessor.toString();
+                }
+            }
+        }
+        if(this.externalAttributesValueAccessProcessorID != null && this.externalAttributesValueAccessProcessorID.equals(RealmConstant.DefaultTimeSeriesDBExternalAttributesValueAccessProcessorID)){
+            Neo4JAttributeKindImpl neo4jAttributeKindImpl = new Neo4JAttributeKindImpl(null, "Time", "数据采集时间", AttributeDataType.TIMESTAMP, "-");
+            attributeKindList.add(neo4jAttributeKindImpl);
+        }
         queryCriteriaFilterSelect.setItems(attributeKindList);
     }
 
