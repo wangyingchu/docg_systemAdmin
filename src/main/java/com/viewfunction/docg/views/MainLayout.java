@@ -34,7 +34,7 @@ import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 import com.viewfunction.docg.views.corerealm.CoreRealmView;
 import com.viewfunction.docg.views.computegrid.ComputeGridView;
 import com.viewfunction.docg.views.dataAnalysis.DataAnalysisView;
-import com.viewfunction.docg.views.knowledgefusion.KnowledgeFusionView;
+import com.viewfunction.docg.views.dataFabric.DataFabricView;
 import com.viewfunction.docg.views.about.AboutView;
 import com.vaadin.flow.component.avatar.Avatar;
 
@@ -174,7 +174,7 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo(LineAwesomeIconsSvg.CONNECTDEVELOP.create(),"核心领域模型 [Core Realm]", CoreRealmView.class),
                 new MenuItemInfo(LineAwesomeIconsSvg.NETWORK_WIRED_SOLID.create(),"计算网格 [Compute Grid]", ComputeGridView.class),
                 new MenuItemInfo(LineAwesomeIconsSvg.FLASK_SOLID.create(),"数据分析 [Data Analysis]", DataAnalysisView.class),
-                new MenuItemInfo(LineAwesomeIconsSvg.WINDOW_RESTORE.create(),"知识融合 [Knowledge Fusion]", KnowledgeFusionView.class),
+                new MenuItemInfo(LineAwesomeIconsSvg.COMPRESS_ARROWS_ALT_SOLID.create(),"数据编织 [Data Fabric]", DataFabricView.class),
                 new MenuItemInfo(LineAwesomeIconsSvg.FINGERPRINT_SOLID.create(),"关于 [About]",  AboutView.class),
         };
         List<Tab> tabs = new ArrayList<>();
@@ -218,8 +218,8 @@ public class MainLayout extends AppLayout {
         if(currentPageTitle.equals("数海云图 - 数据分析 [ Data Analysis ]")){
             viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.FLASK_SOLID.create(),"数据分析 [ Data Analysis ]"));
         }
-        if(currentPageTitle.equals("数海云图 - 知识融合 [ Knowledge Fusion ]")){
-            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.WINDOW_RESTORE.create(),"知识融合 [ Knowledge Fusion ]"));
+        if(currentPageTitle.equals("数海云图 - 数据编织 [ Data Fabric ]")){
+            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.COMPRESS_ARROWS_ALT_SOLID.create(),"数据编织 [ Data Fabric ]"));
         }
         if(currentPageTitle.equals("数海云图 - 关于 [ About ]")){
             viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.FINGERPRINT_SOLID.create(),"关于 [ About ]"));
