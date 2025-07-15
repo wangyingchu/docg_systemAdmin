@@ -52,6 +52,13 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
     private Button show2DChartButton;
     public CoreRealmDataUI(){
 
+        Button AIDataAnalyisisButton = new Button("智能分析",LineAwesomeIconsSvg.BRAIN_SOLID.create());
+        AIDataAnalyisisButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        AIDataAnalyisisButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        AIDataAnalyisisButton.addClickListener((ClickEvent<Button> click) ->{
+
+        });
+
         Button refreshDataButton = new Button("刷新领域数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -77,6 +84,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         });
         advancedConfigItemsMenuBar.setEnabled(false);
         List<Component> buttonList = new ArrayList<>();
+        buttonList.add(AIDataAnalyisisButton);
         buttonList.add(refreshDataButton);
         buttonList.add(advancedConfigItemsMenuBar);
 
