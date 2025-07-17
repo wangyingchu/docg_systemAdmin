@@ -28,6 +28,7 @@ import com.viewfunction.docg.element.eventHandling.CheckSystemRuntimeInfoEvent;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.*;
 import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.exchangeCoreRealmEntities.DownloadARROWFormatCoreRealmEntitiesView;
+import com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis.IntelligentAnalysisView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,11 +53,11 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
     private Button show2DChartButton;
     public CoreRealmDataUI(){
 
-        Button AIDataAnalyisisButton = new Button("智能分析",LineAwesomeIconsSvg.BRAIN_SOLID.create());
+        Button AIDataAnalyisisButton = new Button("领域模型智能分析",LineAwesomeIconsSvg.BRAIN_SOLID.create());
         AIDataAnalyisisButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         AIDataAnalyisisButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         AIDataAnalyisisButton.addClickListener((ClickEvent<Button> click) ->{
-
+            renderIntelligentAnalysisView();
         });
 
         Button refreshDataButton = new Button("刷新领域数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -395,5 +396,17 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         fixSizeWindow.setModel(true);
         downloadARROWFormatCoreRealmEntitiesView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    private void renderIntelligentAnalysisView(){
+        IntelligentAnalysisView intelligentAnalysisView = new IntelligentAnalysisView();
+        FullScreenWindow fullSizeWindow = new FullScreenWindow(LineAwesomeIconsSvg.BRAIN_SOLID.create(),"领域模型智能分析",null,null,true);
+        fullSizeWindow.setModel(true);
+        fullSizeWindow.setWindowContent(intelligentAnalysisView);
+        fullSizeWindow.show();
+        fullSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
+            @Override
+            public void onComponentEvent(DetachEvent detachEvent) {}
+        });
     }
 }
