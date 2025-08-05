@@ -74,6 +74,12 @@ public class DataRelationDistributionChart_PureJavascript extends VerticalLayout
                         && !currentConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
                         && !currentConceptionKindName.equals(RealmConstant.RelationAttachKindClass)
                         && !currentConceptionKindName.equals(RealmConstant.RelationAttachLinkLogicClass)
+                        && !currentConceptionKindName.equals(RealmConstant.ConceptionKindCorrelationInfoStaticClass)
+                        && !currentConceptionKindName.equals(RealmConstant.ConceptionEntitiesInfoStaticClass)
+                        && !currentConceptionKindName.equals(RealmConstant.RelationEntitiesInfoStaticClass)
+                        && !currentConceptionKindName.equals(RealmConstant.ConceptionKindsAttributesSystemInfoStaticClass)
+                        && !currentConceptionKindName.equals(RealmConstant.RelationKindsAttributesSystemInfoStaticClass)
+                        && !currentConceptionKindName.equals(RealmConstant.RelationKindsAttributesSystemInfoStaticClass)
                 ){
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
                     cytoscapeNodePayload.getData().put("shape","round-octagon");
