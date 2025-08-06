@@ -12,6 +12,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.IconFactory;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
@@ -63,6 +64,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMai
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.RelationAttachKindsConfigurationView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityExternalAttributesAccessView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindQueryUI;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.queryConceptionKind.ConceptionKindSampleUI;
 
@@ -100,6 +102,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
     private RelatedAttributesViewKindRuntimeConfigurationInfoView relatedAttributesViewKindRuntimeConfigurationInfoView;
     private ConceptionKindEntitiesConfigurationView conceptionKindEntitiesConfigurationView;
     private RelationAttachKindsConfigurationView relationAttachKindsConfigurationView;
+    private ConceptionEntityExternalAttributesAccessView conceptionEntityExternalAttributesAccessView;
 
     public ConceptionKindDetailUI(){}
 
@@ -129,6 +132,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewWidth(event.getWidth()-820);
             this.relationAttachKindsConfigurationView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -75);
             this.relationAttachKindsConfigurationView.setViewWidth(event.getWidth()-820);
+            this.conceptionEntityExternalAttributesAccessView.setHeight("400px");
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -139,6 +143,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewWidth(receiver.getBodyClientWidth()-820);
             this.relationAttachKindsConfigurationView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -75);
             this.relationAttachKindsConfigurationView.setViewWidth(receiver.getBodyClientWidth()-820);
+            this.conceptionEntityExternalAttributesAccessView.setHeight("400px");
         }));
         renderKindCorrelationInfoTabContent();
         ResourceHolder.getApplicationBlackboard().addListener(this);
@@ -700,10 +705,12 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         relatedAttributesViewKindRuntimeConfigurationInfoView = new RelatedAttributesViewKindRuntimeConfigurationInfoView(
                 RelatedAttributesViewKindRuntimeConfigurationInfoView.KindTypeOfRelatedPair.ConceptionKind,this.conceptionKind);
         relationAttachKindsConfigurationView = new RelationAttachKindsConfigurationView(RelationAttachKindsConfigurationView.RelatedKindType.ConceptionKind,this.conceptionKind);
+        conceptionEntityExternalAttributesAccessView = new ConceptionEntityExternalAttributesAccessView(this.conceptionKind,null,100);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"概念类型运行时配置"),conceptionKindEntitiesConfigurationView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),relatedAttributesViewKindRuntimeConfigurationInfoView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),relationAttachKindsConfigurationView);
         //kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.CALC,"统计与评估计算"),new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(LineAwesomeIconsSvg.SERVER_SOLID,"外部属性视图数据"),conceptionEntityExternalAttributesAccessView);
     }
 
     private void loadConceptionKindInfoData(){
@@ -715,11 +722,11 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         conceptionKindAttributesInfoGrid.setItems(kindEntityAttributeRuntimeStatisticsList);
     }
 
-    private HorizontalLayout generateKindConfigurationTabTitle(VaadinIcon tabIcon,String tabTitleTxt){
+    private HorizontalLayout generateKindConfigurationTabTitle(IconFactory tabIcon, String tabTitleTxt){
         HorizontalLayout  kindConfigTabLayout = new HorizontalLayout();
         kindConfigTabLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         kindConfigTabLayout.setHeight(26,Unit.PIXELS);
-        Icon configTabIcon = new Icon(tabIcon);
+        Icon configTabIcon = tabIcon.create();
         configTabIcon.setSize("12px");
         NativeLabel configTabLabel = new NativeLabel(" "+tabTitleTxt);
         configTabLabel.getStyle()

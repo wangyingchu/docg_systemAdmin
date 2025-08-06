@@ -139,7 +139,7 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
         executeQueryButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                queryConceptionEntities();
+                queryExternalAttributes();
             }
         });
         buttonsContainerLayout.add(executeQueryButton);
@@ -174,7 +174,7 @@ public class ConceptionEntityExternalDataQueryCriteriaView extends VerticalLayou
         resultSetConfigButtonPopover.setModal(true,true);
     }
 
-    private void queryConceptionEntities(){
+    private void queryExternalAttributes(){
         queryParameters.getAndFilteringItemsList().clear();
         queryParameters.getOrFilteringItemsList().clear();
         queryParameters.setDefaultFilteringItem(null);

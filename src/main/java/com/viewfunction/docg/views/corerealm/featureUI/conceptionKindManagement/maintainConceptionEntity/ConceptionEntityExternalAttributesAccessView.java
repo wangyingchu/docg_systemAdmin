@@ -11,7 +11,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -20,6 +19,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ConceptionEntityExternalAttributesAccessView extends VerticalLayout {
 
@@ -37,6 +37,12 @@ public class ConceptionEntityExternalAttributesAccessView extends VerticalLayout
 
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
+
+        String emptyMessage = " 当前概念实体所属概念类型中未配置 External Value 类型属性视图";
+        if(this.conceptionEntityUID == null) {
+            //conceptionEntityUID 为空，表示当前操作对象为概念类型的外部属性视图对象
+            emptyMessage = " 当前概念类型中未配置 External Value 类型属性视图";
+        }
         this.conceptionEntityExternalDataViewHeightOffset = conceptionEntityIntegratedInfoViewHeightOffset +106;
 
         doesNotContainsSpatialInfoMessage = new HorizontalLayout();
@@ -49,7 +55,7 @@ public class ConceptionEntityExternalAttributesAccessView extends VerticalLayout
         messageLogo.getStyle()
                 .set("color","#2e4e7e").set("padding-right", "5px");
         messageLogo.setSize("30px");
-        NativeLabel messageLabel = new NativeLabel(" 当前概念实体所属概念类型中未配置 External Value 类型属性视图");
+        NativeLabel messageLabel = new NativeLabel(emptyMessage);
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
         doesNotContainsSpatialInfoMessage.add(messageLogo,messageLabel);
         add(doesNotContainsSpatialInfoMessage);
@@ -76,28 +82,16 @@ public class ConceptionEntityExternalAttributesAccessView extends VerticalLayout
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
         try {
             if(targetConceptionKind != null){
-                ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
-                if(targetEntity != null){
-                    List<AttributesViewKind> attributesViewKindList = targetConceptionKind.getContainsAttributesViewKinds();
-                    List<AttributesViewKind> conceptionKindExternalAttributeViewList = new ArrayList<>();
-                    if(attributesViewKindList != null){
-                        for(AttributesViewKind attributesViewKind : attributesViewKindList){
-                            if(AttributesViewKind.AttributesViewKindDataForm.EXTERNAL_VALUE.equals(attributesViewKind.getAttributesViewKindDataForm())){
-                                conceptionKindExternalAttributeViewList.add(attributesViewKind);
-                            }
-                        }
-                    }
-                    if(conceptionKindExternalAttributeViewList.size() == 0){
-                        //CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体所属概念类型中不包含External Value 类型属性视图", NotificationVariant.LUMO_CONTRAST,5000, Notification.Position.BOTTOM_START);
-                        conceptionEntityExternalDataView.setVisible(false);
-                        doesNotContainsSpatialInfoMessage.setVisible(true);
-                    }else{
-                        doesNotContainsSpatialInfoMessage.setVisible(false);
-                        conceptionEntityExternalDataView.setVisible(true);
-                        conceptionEntityExternalDataView.renderExternalAttributesAccessDataUI(conceptionKindExternalAttributeViewList);
-                    }
+                Set<AttributesViewKind> attributesViewKindSet = targetConceptionKind.getAvailableExternalValueAttributesViewKinds();
+                List<AttributesViewKind> conceptionKindExternalAttributeViewList = new ArrayList<>();
+                conceptionKindExternalAttributeViewList.addAll(attributesViewKindSet);
+                if(conceptionKindExternalAttributeViewList.size() == 0){
+                    conceptionEntityExternalDataView.setVisible(false);
+                    doesNotContainsSpatialInfoMessage.setVisible(true);
                 }else{
-                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
+                    doesNotContainsSpatialInfoMessage.setVisible(false);
+                    conceptionEntityExternalDataView.setVisible(true);
+                    conceptionEntityExternalDataView.renderExternalAttributesAccessDataUI(conceptionKindExternalAttributeViewList);
                 }
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);

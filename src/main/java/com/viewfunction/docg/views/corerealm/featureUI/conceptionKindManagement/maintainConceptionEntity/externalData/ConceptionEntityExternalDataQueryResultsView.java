@@ -164,12 +164,52 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKindName);
         AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKind.getAttributesViewKindUID());
         if(targetConceptionKind != null && targetAttributesViewKind != null){
-            ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+            if(this.conceptionEntityUID != null){
+                //query ConceptionEntities
+                ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+                if(targetConceptionEntity != null){
+                    try {
+                        ConceptionEntityExternalAttributesValueRetrieveResult conceptionEntityExternalAttributesValueRetrieveResult
+                                = targetConceptionEntity.getEntityExternalAttributesValues(targetAttributesViewKind,queryParameters);
+                        if(conceptionEntityExternalAttributesValueRetrieveResult != null ) {
+                            showPopupNotification(conceptionEntityExternalAttributesValueRetrieveResult, NotificationVariant.LUMO_SUCCESS);
+                            Date startDateTime = conceptionEntityExternalAttributesValueRetrieveResult.getStartTime();
+                            ZonedDateTime startZonedDateTime = ZonedDateTime.ofInstant(startDateTime.toInstant(), id);
+                            String startTimeStr = startZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
+                            startTimeDisplayItem.updateDisplayValue(startTimeStr);
+                            Date finishDateTime = conceptionEntityExternalAttributesValueRetrieveResult.getFinishTime();
+                            ZonedDateTime finishZonedDateTime = ZonedDateTime.ofInstant(finishDateTime.toInstant(), id);
+                            String finishTimeStr = finishZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM)));
+                            finishTimeDisplayItem.updateDisplayValue(finishTimeStr);
+                            dataCountDisplayItem.updateDisplayValue("" + numberFormat.format(conceptionEntityExternalAttributesValueRetrieveResult.getResultRowsCount()));
 
-            if(targetConceptionEntity != null){
+                            List<Map<String,Object>> externalDataRecords = conceptionEntityExternalAttributesValueRetrieveResult.getExternalAttributesValue();
+                            queryResultGrid.setItems(externalDataRecords);
+                            queryResultOperationMenuBar.setEnabled(true);
+                        }
+                    } catch (CoreRealmServiceEntityExploreException e) {
+                        Notification notification = new Notification();
+                        Div text = new Div(new Text("概念实体 "+this.conceptionEntityUID+" 外部属性视图数据查询操作错误: " + e.getCause().getMessage()));
+                        Button closeButton = new Button(new Icon("lumo", "cross"));
+                        closeButton.addClickListener(event -> {
+                            notification.close();
+                        });
+
+                        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+                        layout.setWidth(100, Unit.PERCENTAGE);
+                        layout.setFlexGrow(1,text);
+                        notification.add(layout);
+                        notification.setPosition(Notification.Position.BOTTOM_START);
+                        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                        notification.open();
+                        throw new RuntimeException(e);
+                    }
+                }
+            }else{
+                //query ConceptionKind
                 try {
                     ConceptionEntityExternalAttributesValueRetrieveResult conceptionEntityExternalAttributesValueRetrieveResult
-                            = targetConceptionEntity.getEntityExternalAttributesValues(targetAttributesViewKind,queryParameters);
+                            = targetConceptionKind.getEntityExternalAttributesValues(targetAttributesViewKind,queryParameters);
                     if(conceptionEntityExternalAttributesValueRetrieveResult != null ) {
                         showPopupNotification(conceptionEntityExternalAttributesValueRetrieveResult, NotificationVariant.LUMO_SUCCESS);
                         Date startDateTime = conceptionEntityExternalAttributesValueRetrieveResult.getStartTime();
@@ -188,7 +228,7 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
                     }
                 } catch (CoreRealmServiceEntityExploreException e) {
                     Notification notification = new Notification();
-                    Div text = new Div(new Text("概念实体 "+this.conceptionEntityUID+" 外部属性视图数据查询操作错误: " + e.getCause().getMessage()));
+                    Div text = new Div(new Text("概念类型 "+this.conceptionKindName+" 外部属性视图数据查询操作错误: " + e.getCause().getMessage()));
                     Button closeButton = new Button(new Icon("lumo", "cross"));
                     closeButton.addClickListener(event -> {
                         notification.close();
