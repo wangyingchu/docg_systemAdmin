@@ -132,7 +132,6 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewWidth(event.getWidth()-820);
             this.relationAttachKindsConfigurationView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -75);
             this.relationAttachKindsConfigurationView.setViewWidth(event.getWidth()-820);
-            this.conceptionEntityExternalAttributesAccessView.setHeight("400px");
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -143,7 +142,6 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             this.relatedAttributesViewKindRuntimeConfigurationInfoView.setViewWidth(receiver.getBodyClientWidth()-820);
             this.relationAttachKindsConfigurationView.setViewHeight(currentBrowserHeight- conceptionKindDetailViewHeightOffset -75);
             this.relationAttachKindsConfigurationView.setViewWidth(receiver.getBodyClientWidth()-820);
-            this.conceptionEntityExternalAttributesAccessView.setHeight("400px");
         }));
         renderKindCorrelationInfoTabContent();
         ResourceHolder.getApplicationBlackboard().addListener(this);
@@ -705,7 +703,8 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         relatedAttributesViewKindRuntimeConfigurationInfoView = new RelatedAttributesViewKindRuntimeConfigurationInfoView(
                 RelatedAttributesViewKindRuntimeConfigurationInfoView.KindTypeOfRelatedPair.ConceptionKind,this.conceptionKind);
         relationAttachKindsConfigurationView = new RelationAttachKindsConfigurationView(RelationAttachKindsConfigurationView.RelatedKindType.ConceptionKind,this.conceptionKind);
-        conceptionEntityExternalAttributesAccessView = new ConceptionEntityExternalAttributesAccessView(this.conceptionKind,null,100);
+        int conceptionEntityExternalAttributesAccessViewHeightOffset = this.conceptionKindDetailViewHeightOffset + 60;
+        conceptionEntityExternalAttributesAccessView = new ConceptionEntityExternalAttributesAccessView(this.conceptionKind,null,conceptionEntityExternalAttributesAccessViewHeightOffset);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"概念类型运行时配置"),conceptionKindEntitiesConfigurationView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),relatedAttributesViewKindRuntimeConfigurationInfoView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),relationAttachKindsConfigurationView);
