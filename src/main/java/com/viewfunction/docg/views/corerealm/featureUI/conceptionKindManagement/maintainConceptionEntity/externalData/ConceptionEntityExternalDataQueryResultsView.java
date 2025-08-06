@@ -184,7 +184,9 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
                             dataCountDisplayItem.updateDisplayValue("" + numberFormat.format(conceptionEntityExternalAttributesValueRetrieveResult.getResultRowsCount()));
 
                             List<Map<String,Object>> externalDataRecords = conceptionEntityExternalAttributesValueRetrieveResult.getExternalAttributesValue();
-                            queryResultGrid.setItems(externalDataRecords);
+                            if(externalDataRecords != null){
+                                queryResultGrid.setItems(externalDataRecords);
+                            }
                             queryResultOperationMenuBar.setEnabled(true);
                         }
                     } catch (CoreRealmServiceEntityExploreException e) {
@@ -223,7 +225,9 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
                         dataCountDisplayItem.updateDisplayValue("" + numberFormat.format(conceptionEntityExternalAttributesValueRetrieveResult.getResultRowsCount()));
 
                         List<Map<String,Object>> externalDataRecords = conceptionEntityExternalAttributesValueRetrieveResult.getExternalAttributesValue();
-                        queryResultGrid.setItems(externalDataRecords);
+                        if(externalDataRecords != null){
+                            queryResultGrid.setItems(externalDataRecords);
+                        }
                         queryResultOperationMenuBar.setEnabled(true);
                     }
                 } catch (CoreRealmServiceEntityExploreException e) {
