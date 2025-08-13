@@ -21,6 +21,7 @@ import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.AttributesViewKindDescriptionUpdatedEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.externalValueViewKindConfig.CustomizedDataSourceConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.externalValueViewKindConfig.ObjectStoreDataSourceConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.externalValueViewKindConfig.RelationDBDataSourceConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind.externalValueViewKindConfig.TimeSeriesDBDataSourceConfigView;
@@ -109,7 +110,7 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
             action1Layout.setMargin(false);
             action1Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
             Icon action1Icon = LineAwesomeIconsSvg.BOX_SOLID.create();
-            action1Icon.setSize("12px");
+            action1Icon.setSize("13px");
             Span action1Space = new Span();
             action1Space.setWidth(6,Unit.PIXELS);
             NativeLabel action1Label = new NativeLabel(" 配置 ObjectStore");
@@ -140,6 +141,26 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
                 @Override
                 public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
                     renderTimeSeriesDBDataSourceConfigView();
+                }
+            });
+
+            HorizontalLayout action3Layout = new HorizontalLayout();
+            action3Layout.setPadding(false);
+            action3Layout.setSpacing(false);
+            action3Layout.setMargin(false);
+            action3Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action3Icon = LineAwesomeIconsSvg.JAVA.create();
+            action3Icon.setSize("14px");
+            Span action3Space = new Span();
+            action3Space.setWidth(6,Unit.PIXELS);
+            NativeLabel action3Label = new NativeLabel(" 配置 自定义实现类");
+            action3Layout.add(action3Icon,action3Space,action3Label);
+
+            MenuItem setupCustomizedDSItem = setupExternalDataSourceSubItems.addItem(action3Layout);
+            setupCustomizedDSItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    renderCustomizedDataSourceConfigView();
                 }
             });
 
@@ -225,6 +246,16 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
         fixSizeWindow.setWindowContent(timeSeriesDBDataSourceConfigView);
         timeSeriesDBDataSourceConfigView.setContainerDialog(fixSizeWindow);
         timeSeriesDBDataSourceConfigView.setRelatedMetaConfigItemsConfigView(metaConfigItemsConfigView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void renderCustomizedDataSourceConfigView(){
+        CustomizedDataSourceConfigView customizedDataSourceConfigView = new CustomizedDataSourceConfigView(targetAttributesViewKind);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.JAVA.create(),"配置 自定义实现类",null,true,600,270,false);
+        fixSizeWindow.setWindowContent(customizedDataSourceConfigView);
+        customizedDataSourceConfigView.setContainerDialog(fixSizeWindow);
+        customizedDataSourceConfigView.setRelatedMetaConfigItemsConfigView(metaConfigItemsConfigView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
