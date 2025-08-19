@@ -9,16 +9,19 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverPosition;
+import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
-import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +34,12 @@ public class KindActionsDateView extends VerticalLayout {
     private String kindName;
     private int actionsDataViewHeightOffset;
     private KindType kindType;
-    private Grid<ConceptionAction> attributesViewKindGrid;
-    private ConceptionAction lastSelectedAttributesViewKind;
+    private Grid<ConceptionAction> kindActionsGrid;
+    private ConceptionAction lastSelectedKindAction;
     private Registration listener;
     private int currentBrowserHeight = 0;
+    private Popover registerActionViewPopover;
+    private Button registerKindActionButton;
 
     public KindActionsDateView(KindType kindType,String kindName,int actionsDataViewHeightOffset){
         this.kindName = kindName;
@@ -46,29 +51,28 @@ public class KindActionsDateView extends VerticalLayout {
         List<Component> secTitleElementsList = new ArrayList<>();
         List<Component> buttonList = new ArrayList<>();
 
-        Button attachAttributesViewKindButton= new Button("注册新的自定义动作");
-        attachAttributesViewKindButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
-        attachAttributesViewKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        attachAttributesViewKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        registerKindActionButton = new Button("注册新的自定义动作");
+        registerKindActionButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
+        registerKindActionButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        registerKindActionButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAttachNewAttributesViewKindUI();
+                renderRegisterActionUI();
             }
         });
-        buttonList.add(attachAttributesViewKindButton);
+        buttonList.add(registerKindActionButton);
 
-        Button refreshAttributesViewKindsButton = new Button("刷新自定义动作信息",new Icon(VaadinIcon.REFRESH));
-        refreshAttributesViewKindsButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        refreshAttributesViewKindsButton.addClickListener((ClickEvent<Button> click) ->{
-            //refreshAttributesViewKindsInfo();
+        Button refreshKindActionsButton = new Button("刷新自定义动作信息",new Icon(VaadinIcon.REFRESH));
+        refreshKindActionsButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        refreshKindActionsButton.addClickListener((ClickEvent<Button> click) ->{
+            refreshKindActionsInfo();
         });
-        buttonList.add(refreshAttributesViewKindsButton);
+        buttonList.add(refreshKindActionsButton);
 
-        SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONTROLLER),"自定义动作配置管理 ",secTitleElementsList,buttonList);
-        add(metaConfigItemConfigActionBar);
+        SecondaryTitleActionBar kindActionConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONTROLLER),"自定义动作配置管理 ",secTitleElementsList,buttonList);
+        add(kindActionConfigActionBar);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributesViewKind -> {
-
             Icon editIcon = new Icon(VaadinIcon.EDIT);
             editIcon.setSize("19px");
             Button editButton = new Button(editIcon, event -> {});
@@ -84,14 +88,14 @@ public class KindActionsDateView extends VerticalLayout {
                 }
             });
 
-            Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
-            deleteKindIcon.setSize("20px");
-            Button removeAttributeKindButton = new Button(deleteKindIcon, event -> {});
-            removeAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            removeAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            removeAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            removeAttributeKindButton.setTooltipText("移除属性视图类型");
-            removeAttributeKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            Icon deleteIcon = new Icon(VaadinIcon.TRASH);
+            deleteIcon.setSize("20px");
+            Button deleteButton = new Button(deleteIcon, event -> {});
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            deleteButton.setTooltipText("移除属性视图类型");
+            deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(attributesViewKind instanceof AttributesViewKind){
@@ -100,7 +104,7 @@ public class KindActionsDateView extends VerticalLayout {
                 }
             });
 
-            HorizontalLayout buttons = new HorizontalLayout(editButton,removeAttributeKindButton);
+            HorizontalLayout buttons = new HorizontalLayout(editButton,deleteButton);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -110,51 +114,46 @@ public class KindActionsDateView extends VerticalLayout {
             return new VerticalLayout(buttons);
         });
 
-        attributesViewKindGrid = new Grid<>();
-        attributesViewKindGrid.setWidth(100,Unit.PERCENTAGE);
-        attributesViewKindGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-        attributesViewKindGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        attributesViewKindGrid.addColumn(ConceptionAction::getActionName).setHeader("自定义动作名称").setKey("idx_0").setFlexGrow(0).setWidth("200px").setResizable(true)
+        kindActionsGrid = new Grid<>();
+        kindActionsGrid.setWidth(100,Unit.PERCENTAGE);
+        kindActionsGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        kindActionsGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        kindActionsGrid.addColumn(ConceptionAction::getActionName).setHeader("自定义动作名称").setKey("idx_0").setFlexGrow(0).setWidth("200px").setResizable(true)
                 .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getActionName());
-        attributesViewKindGrid.addColumn(ConceptionAction::getActionDesc).setHeader("自定义动作描述").setKey("idx_1").setFlexGrow(0).setWidth("300px").setResizable(true)
+        kindActionsGrid.addColumn(ConceptionAction::getActionDesc).setHeader("自定义动作描述").setKey("idx_1").setFlexGrow(0).setWidth("300px").setResizable(true)
                 .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getActionDesc());
-        attributesViewKindGrid.addColumn(ConceptionAction::getActionImplementationClass).setHeader("自定义动作类全名").setKey("idx_2").setFlexGrow(1).setResizable(true);
-        attributesViewKindGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("90px").setResizable(false);
+        kindActionsGrid.addColumn(ConceptionAction::getActionImplementationClass).setHeader("自定义动作类全名").setKey("idx_2").setFlexGrow(1).setResizable(true);
+        kindActionsGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("90px").setResizable(false);
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"自定义动作名称");
-        attributesViewKindGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
+        kindActionsGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"自定义动作描述");
-        attributesViewKindGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+        kindActionsGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
         GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(LineAwesomeIconsSvg.JAVA.create(),"自定义动作类全名");
-        attributesViewKindGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
+        kindActionsGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
         GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
-        attributesViewKindGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
+        kindActionsGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
 
-        attributesViewKindGrid.addSelectionListener(new SelectionListener<Grid<ConceptionAction>, ConceptionAction>() {
+        kindActionsGrid.addSelectionListener(new SelectionListener<Grid<ConceptionAction>, ConceptionAction>() {
             @Override
             public void selectionChange(SelectionEvent<Grid<ConceptionAction>, ConceptionAction> selectionEvent) {
                 Set<ConceptionAction> selectedItemSet = selectionEvent.getAllSelectedItems();
                 if(selectedItemSet.size() == 0){
                     // don't allow to unselect item, just reselect last selected item
-                    attributesViewKindGrid.select(lastSelectedAttributesViewKind);
+                    kindActionsGrid.select(lastSelectedKindAction);
                 }else{
                     ConceptionAction selectedAttributesViewKind = selectedItemSet.iterator().next();
-                    lastSelectedAttributesViewKind = selectedAttributesViewKind;
-
-
+                    lastSelectedKindAction = selectedAttributesViewKind;
                     /*
-
                     if(getAttributesViewKindSelectedListener() != null){
                         getAttributesViewKindSelectedListener().attributesViewKindSelectedAction(selectedAttributesViewKind);
                     }
                     */
-
-
                 }
             }
         });
 
-        attributesViewKindGrid.appendFooterRow();
-        add(attributesViewKindGrid);
+        kindActionsGrid.appendFooterRow();
+        add(kindActionsGrid);
     }
 
     @Override
@@ -164,13 +163,13 @@ public class KindActionsDateView extends VerticalLayout {
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             currentBrowserHeight = event.getHeight();
             int chartHeight = currentBrowserHeight - actionsDataViewHeightOffset + 31;
-            this.attributesViewKindGrid.setHeight(chartHeight,Unit.PIXELS);
+            this.kindActionsGrid.setHeight(chartHeight,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             currentBrowserHeight = receiver.getBodyClientHeight();
             int chartHeight = currentBrowserHeight - actionsDataViewHeightOffset + 31;
-            this.attributesViewKindGrid.setHeight(chartHeight,Unit.PIXELS);
+            this.kindActionsGrid.setHeight(chartHeight,Unit.PIXELS);
         }));
     }
 
@@ -182,6 +181,36 @@ public class KindActionsDateView extends VerticalLayout {
     }
 
     public void renderActionDataUI(Set<ConceptionAction> actionSet){
-        this.attributesViewKindGrid.setItems(actionSet);
+        this.kindActionsGrid.setItems(actionSet);
+    }
+
+    private void renderRegisterActionUI(){
+        if(registerActionViewPopover == null){
+            registerActionViewPopover = new Popover();
+            RegisterKindActionView registerKindActionView = new RegisterKindActionView(this.kindType,this.kindName);
+            registerKindActionView.setParentKindActionsDateView(this);
+            registerKindActionView.setContainerPopover(registerActionViewPopover);
+            registerActionViewPopover.setTarget(registerKindActionButton);
+            registerActionViewPopover.setWidth("700px");
+            registerActionViewPopover.setHeight("325px");
+            registerActionViewPopover.addThemeVariants(PopoverVariant.ARROW);
+            registerActionViewPopover.setPosition(PopoverPosition.TOP);
+            registerActionViewPopover.add(registerKindActionView);
+            registerActionViewPopover.setAutofocus(true);
+            registerActionViewPopover.setModal(true,true);
+        }
+        registerActionViewPopover.open();
+    }
+
+    public void refreshKindActionsInfo(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        switch (this.kindType){
+            case ConceptionKind :
+                ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(kindName);
+                Set<ConceptionAction> conceptionActionsSet = targetConceptionKind.getActions();
+                renderActionDataUI(conceptionActionsSet);
+                break;
+            case RelationKind : break;
+        }
     }
 }
