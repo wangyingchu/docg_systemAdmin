@@ -68,8 +68,24 @@ public class KindActionsDateView extends VerticalLayout {
         add(metaConfigItemConfigActionBar);
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributesViewKind -> {
+
+            Icon editIcon = new Icon(VaadinIcon.EDIT);
+            editIcon.setSize("19px");
+            Button editButton = new Button(editIcon, event -> {});
+            editButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            editButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            editButton.setTooltipText("移除属性视图类型");
+            editButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(attributesViewKind instanceof ConceptionAction){
+                        //renderDetachAttributesViewKindUI((AttributesViewKind)attributesViewKind);
+                    }
+                }
+            });
+
             Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
-            deleteKindIcon.setSize("21px");
+            deleteKindIcon.setSize("20px");
             Button removeAttributeKindButton = new Button(deleteKindIcon, event -> {});
             removeAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             removeAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -84,7 +100,7 @@ public class KindActionsDateView extends VerticalLayout {
                 }
             });
 
-            HorizontalLayout buttons = new HorizontalLayout(removeAttributeKindButton);
+            HorizontalLayout buttons = new HorizontalLayout(editButton,removeAttributeKindButton);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -98,13 +114,12 @@ public class KindActionsDateView extends VerticalLayout {
         attributesViewKindGrid.setWidth(100,Unit.PERCENTAGE);
         attributesViewKindGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         attributesViewKindGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        attributesViewKindGrid.addColumn(ConceptionAction::getActionName).setHeader("自定义动作名称").setKey("idx_0").setFlexGrow(0).setWidth("200px")
+        attributesViewKindGrid.addColumn(ConceptionAction::getActionName).setHeader("自定义动作名称").setKey("idx_0").setFlexGrow(0).setWidth("200px").setResizable(true)
                 .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getActionName());
-        attributesViewKindGrid.addColumn(ConceptionAction::getActionDesc).setHeader("自定义动作描述").setKey("idx_1").setFlexGrow(0).setWidth("300px")
+        attributesViewKindGrid.addColumn(ConceptionAction::getActionDesc).setHeader("自定义动作描述").setKey("idx_1").setFlexGrow(0).setWidth("300px").setResizable(true)
                 .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getActionDesc());
-        attributesViewKindGrid.addColumn(ConceptionAction::getActionImplementationClass).setHeader("自定义动作类全名").setKey("idx_2")
-                .setFlexGrow(1);
-        attributesViewKindGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("120px").setResizable(false);
+        attributesViewKindGrid.addColumn(ConceptionAction::getActionImplementationClass).setHeader("自定义动作类全名").setKey("idx_2").setFlexGrow(1).setResizable(true);
+        attributesViewKindGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("90px").setResizable(false);
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"自定义动作名称");
         attributesViewKindGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
         GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"自定义动作描述");
