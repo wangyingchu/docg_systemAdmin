@@ -1,17 +1,23 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindActionMaintain;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionAction;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
+import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +30,10 @@ public class KindActionsDateView extends VerticalLayout {
     private String kindName;
     private int actionsDataViewHeightOffset;
     private KindType kindType;
-    private VerticalLayout leftSideContainerLayout;
-    private VerticalLayout rightSideContainerLayout;
+    private Grid<AttributesViewKind> attributesViewKindGrid;
+    private AttributesViewKind lastSelectedAttributesViewKind;
+    private Registration listener;
+    private int currentBrowserHeight = 0;
 
     public KindActionsDateView(KindType kindType,String kindName,int actionsDataViewHeightOffset){
         this.kindName = kindName;
@@ -33,13 +41,6 @@ public class KindActionsDateView extends VerticalLayout {
         this.actionsDataViewHeightOffset = actionsDataViewHeightOffset;
 
         this.setWidth(100, Unit.PERCENTAGE);
-
-
-
-
-
-
-
 
         List<Component> secTitleElementsList = new ArrayList<>();
         List<Component> buttonList = new ArrayList<>();
@@ -65,13 +66,111 @@ public class KindActionsDateView extends VerticalLayout {
         SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONTROLLER),"自定义动作配置管理 ",secTitleElementsList,buttonList);
         add(metaConfigItemConfigActionBar);
 
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributesViewKind -> {
+            Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
+            deleteKindIcon.setSize("21px");
+            Button removeAttributeKindButton = new Button(deleteKindIcon, event -> {});
+            removeAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            removeAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            removeAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            removeAttributeKindButton.setTooltipText("移除属性视图类型");
+            removeAttributeKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    if(attributesViewKind instanceof AttributesViewKind){
+                        //renderDetachAttributesViewKindUI((AttributesViewKind)attributesViewKind);
+                    }
+                }
+            });
+
+            HorizontalLayout buttons = new HorizontalLayout(removeAttributeKindButton);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(15,Unit.PIXELS);
+            buttons.setWidth(80,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
+
+        attributesViewKindGrid = new Grid<>();
+        attributesViewKindGrid.setWidth(100,Unit.PERCENTAGE);
+        attributesViewKindGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        attributesViewKindGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        attributesViewKindGrid.addColumn(AttributesViewKind::getAttributesViewKindName).setHeader("属性视图类型名称").setKey("idx_0").setFlexGrow(1)
+                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getAttributesViewKindName());
+        attributesViewKindGrid.addColumn(AttributesViewKind::getAttributesViewKindDesc).setHeader("属性图类型描述").setKey("idx_1").setFlexGrow(1)
+                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getAttributesViewKindDesc());
+        attributesViewKindGrid.addColumn(AttributesViewKind::getAttributesViewKindDataForm).setHeader("视图存储结构").setKey("idx_2")
+                .setFlexGrow(0).setWidth("130px").setResizable(false);
+        attributesViewKindGrid.addColumn(AttributesViewKind::isCollectionAttributesViewKind).setHeader("集合视图").setKey("idx_3")
+                .setFlexGrow(0).setWidth("100px").setResizable(false);
+        attributesViewKindGrid.addColumn(AttributesViewKind::getAttributesViewKindUID).setHeader("视图类型 UID").setKey("idx_4")
+                .setFlexGrow(0).setWidth("130px").setResizable(false);
+        attributesViewKindGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_5").setFlexGrow(0).setWidth("70px").setResizable(false);
+        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"属性视图类型名称");
+        attributesViewKindGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"属性视图类型描述");
+        attributesViewKindGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.ELLIPSIS_H.create(),"视图存储结构");
+        attributesViewKindGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.COINS,"集合视图");
+        attributesViewKindGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.KEY_O,"视图类型 UID");
+        attributesViewKindGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
+        attributesViewKindGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5);
+
+        attributesViewKindGrid.addSelectionListener(new SelectionListener<Grid<AttributesViewKind>, AttributesViewKind>() {
+            @Override
+            public void selectionChange(SelectionEvent<Grid<AttributesViewKind>, AttributesViewKind> selectionEvent) {
+                Set<AttributesViewKind> selectedItemSet = selectionEvent.getAllSelectedItems();
+                if(selectedItemSet.size() == 0){
+                    // don't allow to unselect item, just reselect last selected item
+                    attributesViewKindGrid.select(lastSelectedAttributesViewKind);
+                }else{
+                    AttributesViewKind selectedAttributesViewKind = selectedItemSet.iterator().next();
+                    lastSelectedAttributesViewKind = selectedAttributesViewKind;
 
 
+                    /*
+
+                    if(getAttributesViewKindSelectedListener() != null){
+                        getAttributesViewKindSelectedListener().attributesViewKindSelectedAction(selectedAttributesViewKind);
+                    }
+                    */
 
 
+                }
+            }
+        });
 
+        attributesViewKindGrid.appendFooterRow();
+        add(attributesViewKindGrid);
+    }
 
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        // Add browser window listener to observe size change
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            currentBrowserHeight = event.getHeight();
+            int chartHeight = currentBrowserHeight - actionsDataViewHeightOffset + 31;
+            this.attributesViewKindGrid.setHeight(chartHeight,Unit.PIXELS);
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            currentBrowserHeight = receiver.getBodyClientHeight();
+            int chartHeight = currentBrowserHeight - actionsDataViewHeightOffset + 31;
+            this.attributesViewKindGrid.setHeight(chartHeight,Unit.PIXELS);
+        }));
+    }
 
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
+        super.onDetach(detachEvent);
     }
 
     public void renderActionDataUI(Set<ConceptionAction> actionSet){}
