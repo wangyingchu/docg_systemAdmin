@@ -17,6 +17,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
@@ -30,8 +31,8 @@ public class KindActionsDateView extends VerticalLayout {
     private String kindName;
     private int actionsDataViewHeightOffset;
     private KindType kindType;
-    private Grid<AttributesViewKind> attributesViewKindGrid;
-    private AttributesViewKind lastSelectedAttributesViewKind;
+    private Grid<ConceptionAction> attributesViewKindGrid;
+    private ConceptionAction lastSelectedAttributesViewKind;
     private Registration listener;
     private int currentBrowserHeight = 0;
 
@@ -97,39 +98,31 @@ public class KindActionsDateView extends VerticalLayout {
         attributesViewKindGrid.setWidth(100,Unit.PERCENTAGE);
         attributesViewKindGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         attributesViewKindGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        attributesViewKindGrid.addColumn(AttributesViewKind::getAttributesViewKindName).setHeader("属性视图类型名称").setKey("idx_0").setFlexGrow(1)
-                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getAttributesViewKindName());
-        attributesViewKindGrid.addColumn(AttributesViewKind::getAttributesViewKindDesc).setHeader("属性图类型描述").setKey("idx_1").setFlexGrow(1)
-                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getAttributesViewKindDesc());
-        attributesViewKindGrid.addColumn(AttributesViewKind::getAttributesViewKindDataForm).setHeader("视图存储结构").setKey("idx_2")
-                .setFlexGrow(0).setWidth("130px").setResizable(false);
-        attributesViewKindGrid.addColumn(AttributesViewKind::isCollectionAttributesViewKind).setHeader("集合视图").setKey("idx_3")
-                .setFlexGrow(0).setWidth("100px").setResizable(false);
-        attributesViewKindGrid.addColumn(AttributesViewKind::getAttributesViewKindUID).setHeader("视图类型 UID").setKey("idx_4")
-                .setFlexGrow(0).setWidth("130px").setResizable(false);
-        attributesViewKindGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_5").setFlexGrow(0).setWidth("70px").setResizable(false);
-        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"属性视图类型名称");
+        attributesViewKindGrid.addColumn(ConceptionAction::getActionName).setHeader("自定义动作名称").setKey("idx_0").setFlexGrow(0).setWidth("200px")
+                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getActionName());
+        attributesViewKindGrid.addColumn(ConceptionAction::getActionDesc).setHeader("自定义动作描述").setKey("idx_1").setFlexGrow(0).setWidth("300px")
+                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getActionDesc());
+        attributesViewKindGrid.addColumn(ConceptionAction::getActionImplementationClass).setHeader("自定义动作类全名").setKey("idx_2")
+                .setFlexGrow(1);
+        attributesViewKindGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("120px").setResizable(false);
+        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"自定义动作名称");
         attributesViewKindGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"属性视图类型描述");
+        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"自定义动作描述");
         attributesViewKindGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(VaadinIcon.ELLIPSIS_H.create(),"视图存储结构");
+        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(LineAwesomeIconsSvg.JAVA.create(),"自定义动作类全名");
         attributesViewKindGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.COINS,"集合视图");
-        attributesViewKindGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.KEY_O,"视图类型 UID");
-        attributesViewKindGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
-        attributesViewKindGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5);
+        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
+        attributesViewKindGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
 
-        attributesViewKindGrid.addSelectionListener(new SelectionListener<Grid<AttributesViewKind>, AttributesViewKind>() {
+        attributesViewKindGrid.addSelectionListener(new SelectionListener<Grid<ConceptionAction>, ConceptionAction>() {
             @Override
-            public void selectionChange(SelectionEvent<Grid<AttributesViewKind>, AttributesViewKind> selectionEvent) {
-                Set<AttributesViewKind> selectedItemSet = selectionEvent.getAllSelectedItems();
+            public void selectionChange(SelectionEvent<Grid<ConceptionAction>, ConceptionAction> selectionEvent) {
+                Set<ConceptionAction> selectedItemSet = selectionEvent.getAllSelectedItems();
                 if(selectedItemSet.size() == 0){
                     // don't allow to unselect item, just reselect last selected item
                     attributesViewKindGrid.select(lastSelectedAttributesViewKind);
                 }else{
-                    AttributesViewKind selectedAttributesViewKind = selectedItemSet.iterator().next();
+                    ConceptionAction selectedAttributesViewKind = selectedItemSet.iterator().next();
                     lastSelectedAttributesViewKind = selectedAttributesViewKind;
 
 
@@ -173,5 +166,7 @@ public class KindActionsDateView extends VerticalLayout {
         super.onDetach(detachEvent);
     }
 
-    public void renderActionDataUI(Set<ConceptionAction> actionSet){}
+    public void renderActionDataUI(Set<ConceptionAction> actionSet){
+        this.attributesViewKindGrid.setItems(actionSet);
+    }
 }
