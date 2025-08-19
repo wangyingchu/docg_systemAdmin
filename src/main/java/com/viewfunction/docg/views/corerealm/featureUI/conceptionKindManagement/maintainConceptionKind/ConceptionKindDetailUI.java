@@ -103,6 +103,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
     private ConceptionKindEntitiesConfigurationView conceptionKindEntitiesConfigurationView;
     private RelationAttachKindsConfigurationView relationAttachKindsConfigurationView;
     private ConceptionEntityExternalAttributesAccessView conceptionEntityExternalAttributesAccessView;
+    private ConceptionKindActionsConfigurationView conceptionKindActionsConfigurationView;
 
     public ConceptionKindDetailUI(){}
 
@@ -705,11 +706,13 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         relationAttachKindsConfigurationView = new RelationAttachKindsConfigurationView(RelationAttachKindsConfigurationView.RelatedKindType.ConceptionKind,this.conceptionKind);
         int conceptionEntityExternalAttributesAccessViewHeightOffset = this.conceptionKindDetailViewHeightOffset + 60;
         conceptionEntityExternalAttributesAccessView = new ConceptionEntityExternalAttributesAccessView(this.conceptionKind,null,conceptionEntityExternalAttributesAccessViewHeightOffset);
+        conceptionKindActionsConfigurationView = new ConceptionKindActionsConfigurationView(this.conceptionKind,conceptionEntityExternalAttributesAccessViewHeightOffset);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"概念类型运行时配置"),conceptionKindEntitiesConfigurationView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),relatedAttributesViewKindRuntimeConfigurationInfoView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),relationAttachKindsConfigurationView);
         //kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.CALC,"统计与评估计算"),new HorizontalLayout());
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(LineAwesomeIconsSvg.SERVER_SOLID,"外部属性视图数据"),conceptionEntityExternalAttributesAccessView);
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.CONTROLLER,"概念类型自定义动作配置"),conceptionKindActionsConfigurationView);
     }
 
     private void loadConceptionKindInfoData(){
