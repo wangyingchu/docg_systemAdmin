@@ -7,21 +7,27 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
 import com.vaadin.flow.component.popover.PopoverVariant;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
+import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,12 +84,12 @@ public class KindActionsDateView extends VerticalLayout {
             Button editButton = new Button(editIcon, event -> {});
             editButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             editButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-            editButton.setTooltipText("移除属性视图类型");
+            editButton.setTooltipText("更新自定义活动信息");
             editButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                     if(attributesViewKind instanceof ConceptionAction){
-                        //renderDetachAttributesViewKindUI((AttributesViewKind)attributesViewKind);
+                        renderEditActionUI((ConceptionAction)attributesViewKind);
                     }
                 }
             });
@@ -94,12 +100,12 @@ public class KindActionsDateView extends VerticalLayout {
             deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            deleteButton.setTooltipText("移除属性视图类型");
+            deleteButton.setTooltipText("注销自定义活动");
             deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(attributesViewKind instanceof AttributesViewKind){
-                        //renderDetachAttributesViewKindUI((AttributesViewKind)attributesViewKind);
+                    if(attributesViewKind instanceof ConceptionAction){
+                        renderUnregisterActionUI((ConceptionAction)attributesViewKind);
                     }
                 }
             });
@@ -143,11 +149,6 @@ public class KindActionsDateView extends VerticalLayout {
                 }else{
                     ConceptionAction selectedAttributesViewKind = selectedItemSet.iterator().next();
                     lastSelectedKindAction = selectedAttributesViewKind;
-                    /*
-                    if(getAttributesViewKindSelectedListener() != null){
-                        getAttributesViewKindSelectedListener().attributesViewKindSelectedAction(selectedAttributesViewKind);
-                    }
-                    */
                 }
             }
         });
@@ -200,6 +201,65 @@ public class KindActionsDateView extends VerticalLayout {
             registerActionViewPopover.setModal(true,true);
         }
         registerActionViewPopover.open();
+    }
+
+    private void renderUnregisterActionUI(ConceptionAction conceptionAction){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认注销自定义活动",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行注销自定义活动 "+conceptionAction.getActionName()+" 的操作",actionButtonList,500,175);
+        confirmWindow.open();
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doUnregisterAction(conceptionAction,confirmWindow);
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doUnregisterAction(ConceptionAction conceptionAction,ConfirmWindow confirmWindow){
+        try {
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            switch (this.kindType){
+                case ConceptionKind :
+                    ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(kindName);
+                    boolean unregisterResult = targetConceptionKind.unregisterAction(conceptionAction.getActionName());
+                    if(unregisterResult){
+                        CommonUIOperationUtil.showPopupNotification("注销自定义活动 "+ conceptionAction.getActionName() +" 成功", NotificationVariant.LUMO_SUCCESS);
+                        confirmWindow.closeConfirmWindow();
+                        ListDataProvider dtaProvider=(ListDataProvider)kindActionsGrid.getDataProvider();
+                        dtaProvider.getItems().remove(conceptionAction);
+                        dtaProvider.refreshAll();
+                    }else{
+                        CommonUIOperationUtil.showPopupNotification("注销自定义活动 "+ conceptionAction.getActionName() +" 失败", NotificationVariant.LUMO_ERROR);
+                    }
+                    break;
+                case RelationKind : break;
+            }
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void renderEditActionUI(ConceptionAction conceptionAction){
+        EditKindActionView editKindActionView = new EditKindActionView(conceptionAction.getActionName(),KindType.ConceptionKind,kindName);
+        editKindActionView.setParentKindActionsDateView(this);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.EDIT.create(),"更新自定义活动信息",null,true,700,380,false);
+        fixSizeWindow.setWindowContent(editKindActionView);
+        editKindActionView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 
     public void refreshKindActionsInfo(){
