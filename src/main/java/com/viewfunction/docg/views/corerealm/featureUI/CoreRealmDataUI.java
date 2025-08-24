@@ -76,14 +76,21 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         advancedConfigItemsMenuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY,MenuBarVariant.LUMO_ICON,MenuBarVariant.LUMO_SMALL,MenuBarVariant.LUMO_CONTRAST);
         MenuItem advancedConfigMenu = createIconItem(advancedConfigItemsMenuBar, VaadinIcon.AUTOMATION, null, null);
         SubMenu advancedConfigMenuItems = advancedConfigMenu.getSubMenu();
-        MenuItem arrowFormatDataExportItem = advancedConfigMenuItems.addItem("导出 ARROW 格式领域模型全量数据");
+
+        HorizontalLayout arrowFormatDataExportLayout = generateActionLayout(VaadinIcon.CURSOR_O.create(), "导出 ARROW 格式领域模型全量数据");
+        MenuItem arrowFormatDataExportItem = advancedConfigMenuItems.addItem(arrowFormatDataExportLayout);
+        arrowFormatDataExportItem.setEnabled(false);
         arrowFormatDataExportItem.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
                 renderDownloadARROWFormatCoreRealmEntitiesView();
             }
         });
-        advancedConfigItemsMenuBar.setEnabled(false);
+        //advancedConfigItemsMenuBar.setEnabled(false);
+
+        HorizontalLayout periodicTaskManagementLayout = generateActionLayout(LineAwesomeIconsSvg.CLOCK.create(), "周期性调度任务管理");
+        MenuItem periodicTaskManagementItem = advancedConfigMenuItems.addItem(periodicTaskManagementLayout);
+
         List<Component> buttonList = new ArrayList<>();
         buttonList.add(AIDataAnalyisisButton);
         buttonList.add(refreshDataButton);
@@ -408,5 +415,19 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
             @Override
             public void onComponentEvent(DetachEvent detachEvent) {}
         });
+    }
+
+    private HorizontalLayout generateActionLayout(Icon actionIcon,String actionText){
+        HorizontalLayout actionLayout = new HorizontalLayout();
+        actionLayout.setPadding(false);
+        actionLayout.setSpacing(false);
+        actionLayout.setMargin(false);
+        actionLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        actionIcon.setSize("10px");
+        Span actionSpace = new Span();
+        actionSpace.setWidth(6,Unit.PIXELS);
+        NativeLabel actionLabel = new NativeLabel(actionText);
+        actionLayout.add(actionIcon,actionSpace,actionLabel);
+        return actionLayout;
     }
 }
