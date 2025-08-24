@@ -77,6 +77,7 @@ public class DataRelationDistributionChart_PureJavascript extends VerticalLayout
                         && !currentConceptionKindName.equals(RealmConstant.ConceptionKindCorrelationInfoStaticClass)
                         && !currentConceptionKindName.equals(RealmConstant.ConceptionKindsAttributesSystemInfoStaticClass)
                         && !currentConceptionKindName.equals(RealmConstant.RelationKindsAttributesSystemInfoStaticClass)
+                        && !currentConceptionKindName.equals(RealmConstant.ActionClass)
                 ){
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
                     cytoscapeNodePayload.getData().put("shape","round-octagon");
@@ -140,7 +141,10 @@ public class DataRelationDistributionChart_PureJavascript extends VerticalLayout
                         && !relationKindName.equals(RealmConstant.ConceptionKind_AttributesViewKindRelationClass)
                         && !relationKindName.equals(RealmConstant.AttributesViewKind_AttributeKindRelationClass)
                         && !relationKindName.equals(RealmConstant.Classification_ClassificationRelationClass)
-                        && !relationKindName.equals(RealmConstant.RelationAttachKind_RelationAttachLinkLogicRelationClass)){
+                        && !relationKindName.equals(RealmConstant.RelationAttachKind_RelationAttachLinkLogicRelationClass)
+                        && !relationKindName.equals(RealmConstant.ConceptionKind_ActionRelationClass)
+                        && !relationKindName.equals(RealmConstant.RelationKind_ActionRelationClass)
+                ){
                     boolean linkToTGOrClassification = false;
                     if(sourceConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
                             ||sourceConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)

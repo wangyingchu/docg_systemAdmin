@@ -61,8 +61,10 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                         && !currentConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
                         && !currentConceptionKindName.equals(RealmConstant.RelationAttachKindClass)
                         && !currentConceptionKindName.equals(RealmConstant.RelationAttachLinkLogicClass)
-                        && !currentConceptionKindName.equals(RealmConstant.TimeFlowClass)
-                        && !currentConceptionKindName.equals(RealmConstant.GeospatialRegionClass)
+                        && !currentConceptionKindName.equals(RealmConstant.ConceptionKindCorrelationInfoStaticClass)
+                        && !currentConceptionKindName.equals(RealmConstant.ConceptionKindsAttributesSystemInfoStaticClass)
+                        && !currentConceptionKindName.equals(RealmConstant.RelationKindsAttributesSystemInfoStaticClass)
+                        && !currentConceptionKindName.equals(RealmConstant.ActionClass)
                 ){
                     Map<String,String> currentNodeInfo = new HashMap<>();
                     currentNodeInfo.put("id",currentConceptionKindName);
@@ -122,7 +124,10 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                         && !relationKindName.equals(RealmConstant.ConceptionKind_AttributesViewKindRelationClass)
                         && !relationKindName.equals(RealmConstant.AttributesViewKind_AttributeKindRelationClass)
                         && !relationKindName.equals(RealmConstant.Classification_ClassificationRelationClass)
-                        && !relationKindName.equals(RealmConstant.RelationAttachKind_RelationAttachLinkLogicRelationClass)){
+                        && !relationKindName.equals(RealmConstant.RelationAttachKind_RelationAttachLinkLogicRelationClass)
+                        && !relationKindName.equals(RealmConstant.ConceptionKind_ActionRelationClass)
+                        && !relationKindName.equals(RealmConstant.RelationKind_ActionRelationClass)
+                ){
                     boolean linkToTGOrClassification = false;
                     if(sourceConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
                             ||sourceConceptionKindName.equals(RealmConstant.TimeFlowClass)
