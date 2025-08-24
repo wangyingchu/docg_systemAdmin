@@ -40,8 +40,10 @@ public class KindActionsDateView extends VerticalLayout {
     private String kindName;
     private int actionsDataViewHeightOffset;
     private KindType kindType;
-    private Grid<ConceptionAction> kindActionsGrid;
-    private ConceptionAction lastSelectedKindAction;
+    private Grid<ConceptionAction> conceptionActionsGrid;
+    private ConceptionAction lastSelectedConceptionAction;
+    private Grid<RelationAction> relationActionsGrid;
+    private RelationAction lastSelectedRelationAction;
     private Registration listener;
     private int currentBrowserHeight = 0;
     private Popover registerActionViewPopover;
@@ -78,7 +80,7 @@ public class KindActionsDateView extends VerticalLayout {
         SecondaryTitleActionBar kindActionConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONTROLLER),"自定义动作配置管理 ",secTitleElementsList,buttonList);
         add(kindActionConfigActionBar);
 
-        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributesViewKind -> {
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(kindAction -> {
             Icon editIcon = new Icon(VaadinIcon.EDIT);
             editIcon.setSize("19px");
             Button editButton = new Button(editIcon, event -> {});
@@ -88,8 +90,11 @@ public class KindActionsDateView extends VerticalLayout {
             editButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(attributesViewKind instanceof ConceptionAction){
-                        renderEditActionUI((ConceptionAction)attributesViewKind);
+                    if(kindAction instanceof ConceptionAction){
+                        renderEditActionUI(((ConceptionAction)kindAction).getActionName());
+                    }
+                    if(kindAction instanceof RelationAction){
+                        renderEditActionUI(((RelationAction)kindAction).getActionName());
                     }
                 }
             });
@@ -104,8 +109,11 @@ public class KindActionsDateView extends VerticalLayout {
             deleteButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    if(attributesViewKind instanceof ConceptionAction){
-                        renderUnregisterActionUI((ConceptionAction)attributesViewKind);
+                    if(kindAction instanceof ConceptionAction){
+                        renderUnregisterActionUI(((ConceptionAction)kindAction).getActionName());
+                    }
+                    if(kindAction instanceof RelationAction){
+                        renderUnregisterActionUI(((RelationAction)kindAction).getActionName());
                     }
                 }
             });
@@ -120,41 +128,83 @@ public class KindActionsDateView extends VerticalLayout {
             return new VerticalLayout(buttons);
         });
 
-        kindActionsGrid = new Grid<>();
-        kindActionsGrid.setWidth(100,Unit.PERCENTAGE);
-        kindActionsGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-        kindActionsGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        kindActionsGrid.addColumn(ConceptionAction::getActionName).setHeader("自定义动作名称").setKey("idx_0").setFlexGrow(0).setWidth("200px").setResizable(true)
-                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getActionName());
-        kindActionsGrid.addColumn(ConceptionAction::getActionDesc).setHeader("自定义动作描述").setKey("idx_1").setFlexGrow(0).setWidth("300px").setResizable(true)
-                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getActionDesc());
-        kindActionsGrid.addColumn(ConceptionAction::getActionImplementationClass).setHeader("自定义动作类全名").setKey("idx_2").setFlexGrow(1).setResizable(true);
-        kindActionsGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("90px").setResizable(false);
-        GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"自定义动作名称");
-        kindActionsGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"自定义动作描述");
-        kindActionsGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(LineAwesomeIconsSvg.JAVA.create(),"自定义动作类全名");
-        kindActionsGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
-        kindActionsGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
+        switch(kindType){
+            case ConceptionKind :
+                conceptionActionsGrid = new Grid<>();
+                conceptionActionsGrid.setWidth(100,Unit.PERCENTAGE);
+                conceptionActionsGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+                conceptionActionsGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+                conceptionActionsGrid.addColumn(ConceptionAction::getActionName).setHeader("自定义动作名称").setKey("idx_0").setFlexGrow(0).setWidth("200px").setResizable(true)
+                        .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getActionName());
+                conceptionActionsGrid.addColumn(ConceptionAction::getActionDesc).setHeader("自定义动作描述").setKey("idx_1").setFlexGrow(0).setWidth("300px").setResizable(true)
+                        .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getActionDesc());
+                conceptionActionsGrid.addColumn(ConceptionAction::getActionImplementationClass).setHeader("自定义动作类全名").setKey("idx_2").setFlexGrow(1).setResizable(true);
+                conceptionActionsGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("90px").setResizable(false);
+                GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"自定义动作名称");
+                conceptionActionsGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
+                GridColumnHeader gridColumnHeader_idx1 = new GridColumnHeader(VaadinIcon.DESKTOP,"自定义动作描述");
+                conceptionActionsGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1).setSortable(true);
+                GridColumnHeader gridColumnHeader_idx2 = new GridColumnHeader(LineAwesomeIconsSvg.JAVA.create(),"自定义动作类全名");
+                conceptionActionsGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
+                GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
+                conceptionActionsGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3);
 
-        kindActionsGrid.addSelectionListener(new SelectionListener<Grid<ConceptionAction>, ConceptionAction>() {
-            @Override
-            public void selectionChange(SelectionEvent<Grid<ConceptionAction>, ConceptionAction> selectionEvent) {
-                Set<ConceptionAction> selectedItemSet = selectionEvent.getAllSelectedItems();
-                if(selectedItemSet.size() == 0){
-                    // don't allow to unselect item, just reselect last selected item
-                    kindActionsGrid.select(lastSelectedKindAction);
-                }else{
-                    ConceptionAction selectedAttributesViewKind = selectedItemSet.iterator().next();
-                    lastSelectedKindAction = selectedAttributesViewKind;
-                }
-            }
-        });
+                conceptionActionsGrid.addSelectionListener(new SelectionListener<Grid<ConceptionAction>, ConceptionAction>() {
+                    @Override
+                    public void selectionChange(SelectionEvent<Grid<ConceptionAction>, ConceptionAction> selectionEvent) {
+                        Set<ConceptionAction> selectedItemSet = selectionEvent.getAllSelectedItems();
+                        if(selectedItemSet.size() == 0){
+                            // don't allow to unselect item, just reselect last selected item
+                            conceptionActionsGrid.select(lastSelectedConceptionAction);
+                        }else{
+                            ConceptionAction selectedAttributesViewKind = selectedItemSet.iterator().next();
+                            lastSelectedConceptionAction = selectedAttributesViewKind;
+                        }
+                    }
+                });
 
-        kindActionsGrid.appendFooterRow();
-        add(kindActionsGrid);
+                conceptionActionsGrid.appendFooterRow();
+                add(conceptionActionsGrid);
+
+                break;
+            case RelationKind :
+                relationActionsGrid = new Grid<>();
+                relationActionsGrid.setWidth(100,Unit.PERCENTAGE);
+                relationActionsGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+                relationActionsGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+                relationActionsGrid.addColumn(RelationAction::getActionName).setHeader("自定义动作名称").setKey("idx_0").setFlexGrow(0).setWidth("200px").setResizable(true)
+                        .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getActionName());
+                relationActionsGrid.addColumn(RelationAction::getActionDesc).setHeader("自定义动作描述").setKey("idx_1").setFlexGrow(0).setWidth("300px").setResizable(true)
+                        .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getActionDesc());
+                relationActionsGrid.addColumn(RelationAction::getActionImplementationClass).setHeader("自定义动作类全名").setKey("idx_2").setFlexGrow(1).setResizable(true);
+                relationActionsGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_3").setFlexGrow(0).setWidth("90px").setResizable(false);
+                GridColumnHeader gridColumnHeader_idx0_r = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"自定义动作名称");
+                relationActionsGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0_r).setSortable(true);
+                GridColumnHeader gridColumnHeader_idx1_r = new GridColumnHeader(VaadinIcon.DESKTOP,"自定义动作描述");
+                relationActionsGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_idx1_r).setSortable(true);
+                GridColumnHeader gridColumnHeader_idx2_r = new GridColumnHeader(LineAwesomeIconsSvg.JAVA.create(),"自定义动作类全名");
+                relationActionsGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2_r).setSortable(true);
+                GridColumnHeader gridColumnHeader_idx3_r = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
+                relationActionsGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3_r);
+
+                relationActionsGrid.addSelectionListener(new SelectionListener<Grid<RelationAction>, RelationAction>() {
+                    @Override
+                    public void selectionChange(SelectionEvent<Grid<RelationAction>, RelationAction> selectionEvent) {
+                        Set<RelationAction> selectedItemSet = selectionEvent.getAllSelectedItems();
+                        if(selectedItemSet.size() == 0){
+                            // don't allow to unselect item, just reselect last selected item
+                            relationActionsGrid.select(lastSelectedRelationAction);
+                        }else{
+                            RelationAction selectedAttributesViewKind = selectedItemSet.iterator().next();
+                            lastSelectedRelationAction = selectedAttributesViewKind;
+                        }
+                    }
+                });
+
+                relationActionsGrid.appendFooterRow();
+                add(relationActionsGrid);
+                break;
+        }
     }
 
     @Override
@@ -164,13 +214,23 @@ public class KindActionsDateView extends VerticalLayout {
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             currentBrowserHeight = event.getHeight();
             int chartHeight = currentBrowserHeight - actionsDataViewHeightOffset + 31;
-            this.kindActionsGrid.setHeight(chartHeight,Unit.PIXELS);
+            if(this.conceptionActionsGrid != null){
+                this.conceptionActionsGrid.setHeight(chartHeight,Unit.PIXELS);
+            }
+            if(this.relationActionsGrid != null){
+                this.relationActionsGrid.setHeight(chartHeight,Unit.PIXELS);
+            }
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             currentBrowserHeight = receiver.getBodyClientHeight();
             int chartHeight = currentBrowserHeight - actionsDataViewHeightOffset + 31;
-            this.kindActionsGrid.setHeight(chartHeight,Unit.PIXELS);
+            if(this.conceptionActionsGrid != null){
+                this.conceptionActionsGrid.setHeight(chartHeight,Unit.PIXELS);
+            }
+            if(this.relationActionsGrid != null){
+                this.relationActionsGrid.setHeight(chartHeight,Unit.PIXELS);
+            }
         }));
     }
 
@@ -181,8 +241,12 @@ public class KindActionsDateView extends VerticalLayout {
         super.onDetach(detachEvent);
     }
 
-    public void renderActionDataUI(Set<ConceptionAction> actionSet){
-        this.kindActionsGrid.setItems(actionSet);
+    public void renderConceptionActionDataUI(Set<ConceptionAction> actionSet){
+        this.conceptionActionsGrid.setItems(actionSet);
+    }
+
+    public void renderRelationActionDataUI(Set<RelationAction> actionSet){
+        this.relationActionsGrid.setItems(actionSet);
     }
 
     private void renderRegisterActionUI(){
@@ -203,7 +267,7 @@ public class KindActionsDateView extends VerticalLayout {
         registerActionViewPopover.open();
     }
 
-    private void renderUnregisterActionUI(ConceptionAction conceptionAction){
+    private void renderUnregisterActionUI(String actionName){
         List<Button> actionButtonList = new ArrayList<>();
         Button confirmButton = new Button("确认注销自定义活动",new Icon(VaadinIcon.CHECK_CIRCLE));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -212,12 +276,12 @@ public class KindActionsDateView extends VerticalLayout {
         actionButtonList.add(confirmButton);
         actionButtonList.add(cancelButton);
 
-        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行注销自定义活动 "+conceptionAction.getActionName()+" 的操作",actionButtonList,500,175);
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行注销自定义活动 "+ actionName +" 的操作",actionButtonList,500,175);
         confirmWindow.open();
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                doUnregisterAction(conceptionAction,confirmWindow);
+                doUnregisterAction(actionName,confirmWindow);
             }
         });
         cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -228,32 +292,40 @@ public class KindActionsDateView extends VerticalLayout {
         });
     }
 
-    private void doUnregisterAction(ConceptionAction conceptionAction,ConfirmWindow confirmWindow){
+    private void doUnregisterAction(String actionName,ConfirmWindow confirmWindow){
         try {
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             switch (this.kindType){
                 case ConceptionKind :
                     ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(kindName);
-                    boolean unregisterResult = targetConceptionKind.unregisterAction(conceptionAction.getActionName());
+                    boolean unregisterResult = targetConceptionKind.unregisterAction(actionName);
                     if(unregisterResult){
-                        CommonUIOperationUtil.showPopupNotification("注销自定义活动 "+ conceptionAction.getActionName() +" 成功", NotificationVariant.LUMO_SUCCESS);
+                        CommonUIOperationUtil.showPopupNotification("注销自定义活动 "+ actionName +" 成功", NotificationVariant.LUMO_SUCCESS);
                         confirmWindow.closeConfirmWindow();
-                        ListDataProvider dtaProvider=(ListDataProvider)kindActionsGrid.getDataProvider();
-                        dtaProvider.getItems().remove(conceptionAction);
-                        dtaProvider.refreshAll();
+                        refreshKindActionsInfo();
                     }else{
-                        CommonUIOperationUtil.showPopupNotification("注销自定义活动 "+ conceptionAction.getActionName() +" 失败", NotificationVariant.LUMO_ERROR);
+                        CommonUIOperationUtil.showPopupNotification("注销自定义活动 "+ actionName +" 失败", NotificationVariant.LUMO_ERROR);
                     }
                     break;
-                case RelationKind : break;
+                case RelationKind :
+                    RelationKind targetRelationKind = coreRealm.getRelationKind(kindName);
+                    boolean unregisterResult2 = targetRelationKind.unregisterAction(actionName);
+                    if(unregisterResult2){
+                        CommonUIOperationUtil.showPopupNotification("注销自定义活动 "+ actionName +" 成功", NotificationVariant.LUMO_SUCCESS);
+                        confirmWindow.closeConfirmWindow();
+                        refreshKindActionsInfo();
+                    }else{
+                        CommonUIOperationUtil.showPopupNotification("注销自定义活动 "+ actionName +" 失败", NotificationVariant.LUMO_ERROR);
+                    }
+                    break;
             }
         } catch (CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void renderEditActionUI(ConceptionAction conceptionAction){
-        EditKindActionView editKindActionView = new EditKindActionView(conceptionAction.getActionName(),KindType.ConceptionKind,kindName);
+    private void renderEditActionUI(String actionName){
+        EditKindActionView editKindActionView = new EditKindActionView(actionName,this.kindType,kindName);
         editKindActionView.setParentKindActionsDateView(this);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.EDIT.create(),"更新自定义活动信息",null,true,700,380,false);
         fixSizeWindow.setWindowContent(editKindActionView);
@@ -268,9 +340,13 @@ public class KindActionsDateView extends VerticalLayout {
             case ConceptionKind :
                 ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(kindName);
                 Set<ConceptionAction> conceptionActionsSet = targetConceptionKind.getActions();
-                renderActionDataUI(conceptionActionsSet);
+                this.renderConceptionActionDataUI(conceptionActionsSet);
                 break;
-            case RelationKind : break;
+            case RelationKind :
+                RelationKind targetRelationKind = coreRealm.getRelationKind(kindName);
+                Set<RelationAction> relationActionsSet = targetRelationKind.getActions();
+                this.renderRelationActionDataUI(relationActionsSet);
+                break;
         }
     }
 }

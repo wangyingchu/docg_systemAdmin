@@ -14,9 +14,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionAction;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -130,7 +128,15 @@ public class EditKindActionView extends VerticalLayout {
                     actionFullClassNameField.setValue(targetAction.getActionImplementationClass());
                 }
                 break;
-            case RelationKind : break;
+            case RelationKind :
+                RelationKind targetRelationKind = coreRealm.getRelationKind(kindName);
+                RelationAction targetAction1 = targetRelationKind.getAction(actionName);
+                if(targetAction1 != null){
+                    actionNameField.setValue(targetAction1.getActionName());
+                    actionDescField.setValue(targetAction1.getActionDesc());
+                    actionFullClassNameField.setValue(targetAction1.getActionImplementationClass());
+                }
+                break;
         }
         coreRealm.closeGlobalSession();
     }
@@ -180,7 +186,28 @@ public class EditKindActionView extends VerticalLayout {
                         }
                     }
                     break;
-                case RelationKind : break;
+                case RelationKind :
+                    RelationKind targetRelationKind = coreRealm.getRelationKind(kindName);
+                    RelationAction targetAction1 = targetRelationKind.getAction(actionName);
+                    if(targetAction1 == null){
+                        this.actionNameField.setInvalid(true);
+                        showErrorMessage("关系类型 "+kindName+" 中未注册自定义动作 "+actionName);
+                    }else{
+                        boolean updateResult1 = targetAction1.updateActionDesc(actionDesc);
+                        boolean updateResult2 = targetAction1.updateActionImplementationClass(actionFullClassName);
+                        if(updateResult1 & updateResult2){
+                            CommonUIOperationUtil.showPopupNotification("自定义动作 "+actionName+" 信息更新成功", NotificationVariant.LUMO_SUCCESS);
+                            if(this.parentKindActionsDateView != null){
+                                this.parentKindActionsDateView.refreshKindActionsInfo();
+                            }
+                            if(this.containerDialog != null){
+                                this.containerDialog.close();
+                            }
+                        }else{
+                            CommonUIOperationUtil.showPopupNotification("自定义动作信息更新错误",NotificationVariant.LUMO_ERROR);
+                        }
+                    }
+                    break;
             }
             coreRealm.closeGlobalSession();
         }else{

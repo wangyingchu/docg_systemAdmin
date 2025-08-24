@@ -16,6 +16,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -154,7 +155,29 @@ public class RegisterKindActionView extends VerticalLayout {
                         }
                     }
                     break;
-                case RelationKind : break;
+                case RelationKind :
+                    RelationKind targetRelationKind = coreRealm.getRelationKind(kindName);
+                    if(targetRelationKind.getAction(actionName) != null){
+                        this.actionNameField.setInvalid(true);
+                        showErrorMessage("关系类型 "+kindName+" 中已经注册了自定义动作 "+actionName);
+                    }else{
+                        try {
+                            boolean registerResult = targetRelationKind.registerAction(actionName,actionDesc,actionFullClassName);
+                            if(registerResult){
+                                if(this.containerPopover != null){
+                                    this.containerPopover.close();
+                                }
+                                CommonUIOperationUtil.showPopupNotification("自定义动作 "+actionName+" 注册成功", NotificationVariant.LUMO_SUCCESS);
+                                if(this.parentKindActionsDateView != null){
+                                    this.parentKindActionsDateView.refreshKindActionsInfo();
+                                }
+                            }
+                        } catch (CoreRealmServiceRuntimeException e) {
+                            e.printStackTrace();
+                            CommonUIOperationUtil.showPopupNotification("自定义动作信息注册错误",NotificationVariant.LUMO_ERROR);
+                        }
+                    }
+                    break;
             }
             coreRealm.closeGlobalSession();
         }else{

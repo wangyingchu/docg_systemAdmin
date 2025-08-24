@@ -91,6 +91,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
     private boolean conceptionRealTimeInfoGridFirstLoaded = false;
     private boolean conceptionRealTimeChartFirstLoaded = false;
     private RelationAttachKindsConfigurationView relationAttachKindsConfigurationView;
+    private RelationKindActionsConfigurationView relationKindActionsConfigurationView;
 
     public RelationKindDetailUI(){}
 
@@ -589,9 +590,11 @@ public class RelationKindDetailUI extends VerticalLayout implements
 
         RelationKindEntitiesConfigurationView relationKindEntitiesConfigurationView = new RelationKindEntitiesConfigurationView(this.relationKind);
         relationAttachKindsConfigurationView = new RelationAttachKindsConfigurationView(RelationAttachKindsConfigurationView.RelatedKindType.RelationKind,this.relationKind);
+        relationKindActionsConfigurationView = new RelationKindActionsConfigurationView(this.relationKind,relationKindDetailViewHeightOffset);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"关系类型运行时配置"),relationKindEntitiesConfigurationView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),relationAttachKindsConfigurationView);
         //kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TASKS,"属性视图配置"),new HorizontalLayout());
+        kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.CONTROLLER,"关系类型自定义动作配置"),relationKindActionsConfigurationView);
     }
 
     private void loadRelationKindInfoData(){

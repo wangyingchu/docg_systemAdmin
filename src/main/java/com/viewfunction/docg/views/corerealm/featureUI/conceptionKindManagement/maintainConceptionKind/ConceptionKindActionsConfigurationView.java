@@ -2,7 +2,6 @@ package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionAction;
@@ -17,7 +16,6 @@ import java.util.Set;
 public class ConceptionKindActionsConfigurationView extends VerticalLayout {
 
     private String conceptionKind;
-    private HorizontalLayout doesNotContainsConceptionActionInfoMessage;
     private KindActionsDateView kindActionsDateView;
     private int conceptionActionsDataViewHeightOffset;
 
@@ -45,7 +43,7 @@ public class ConceptionKindActionsConfigurationView extends VerticalLayout {
         try {
             if(targetConceptionKind != null){
                 Set<ConceptionAction> actionSet = targetConceptionKind.getActions();
-                kindActionsDateView.renderActionDataUI(actionSet);
+                kindActionsDateView.renderConceptionActionDataUI(actionSet);
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
             }
