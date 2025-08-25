@@ -3,6 +3,9 @@ package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
+
+import java.util.List;
 
 public class ConceptionDataCorrelationRealtimeInfoWidget extends VerticalLayout {
     public ConceptionDataCorrelationRealtimeInfoWidget(){
@@ -19,6 +22,10 @@ public class ConceptionDataCorrelationRealtimeInfoWidget extends VerticalLayout 
         details.setOpened(true);
 
         add(details);
+    }
+
+    public void renderConceptionDataCorrelationRealtimeInfo(List<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoList){
+
     }
 
 }

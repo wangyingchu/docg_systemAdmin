@@ -3,6 +3,11 @@ package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
+
+import java.util.List;
+import java.util.Map;
 
 public class ConceptionDataRealtimeInfoWidget extends VerticalLayout {
 
@@ -20,5 +25,11 @@ public class ConceptionDataRealtimeInfoWidget extends VerticalLayout {
         details.setOpened(true);
 
         add(details);
+    }
+
+    public void renderConceptionDataRealtimeInfo(List<EntityStatisticsInfo> realtimeConceptionList,
+                                                 Map<String, List<AttributeSystemInfo>> conceptionKindsAttributesSystemInfo){
+
+
     }
 }

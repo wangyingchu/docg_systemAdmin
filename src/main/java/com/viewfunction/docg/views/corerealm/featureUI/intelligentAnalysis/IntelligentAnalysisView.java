@@ -4,9 +4,7 @@ import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.html.NativeLabel;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -93,8 +91,6 @@ public class IntelligentAnalysisView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-
-
         CoreRealm targetCoreRealm = RealmTermFactory.getDefaultCoreRealm();
         targetCoreRealm.openGlobalSession();
         try {
@@ -115,8 +111,8 @@ public class IntelligentAnalysisView extends VerticalLayout {
                     }
                 }
 
-
-                Map<String, List<AttributeSystemInfo>> relationKindsAttributesSystemInfo = systemMaintenanceOperator.getPeriodicCollectedRelationKindsAttributesSystemRuntimeInfo();
+                Map<String, List<AttributeSystemInfo>> relationKindsAttributesSystemInfo =
+                        systemMaintenanceOperator.getPeriodicCollectedRelationKindsAttributesSystemRuntimeInfo();
                 if(relationKindsAttributesSystemInfo == null || relationKindsAttributesSystemInfo.isEmpty()){
                     relationKindsAttributesSystemInfo = systemMaintenanceOperator.getAllRelationKindsAttributesSystemInfo();
                 }else{
@@ -127,7 +123,9 @@ public class IntelligentAnalysisView extends VerticalLayout {
                     }
                 }
 
-                List<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoList = systemMaintenanceOperator.getPeriodicCollectedConceptionKindCorrelationRuntimeInfo(SystemMaintenanceOperator.PeriodicCollectedInfoRetrieveLogic.LATEST);
+                List<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoList =
+                        systemMaintenanceOperator.
+                                getPeriodicCollectedConceptionKindCorrelationRuntimeInfo(SystemMaintenanceOperator.PeriodicCollectedInfoRetrieveLogic.LATEST);
                 if(conceptionKindCorrelationInfoList == null || conceptionKindCorrelationInfoList.isEmpty()){
                     conceptionKindCorrelationInfoList = systemMaintenanceOperator.getConceptionKindCorrelationRuntimeInfo(1);
                 }else{
@@ -137,6 +135,9 @@ public class IntelligentAnalysisView extends VerticalLayout {
                         conceptionKindCorrelationInfoList = systemMaintenanceOperator.getConceptionKindCorrelationRuntimeInfo(1);
                     }
                 }
+                this.conceptionDataRealtimeInfoWidget.renderConceptionDataRealtimeInfo(realtimeConceptionList,conceptionKindsAttributesSystemInfo);
+                this.relationDataRealtimeInfoWidget.renderRelationDataRealtimeInfo(realtimeRelationList,relationKindsAttributesSystemInfo);
+                this.conceptionDataCorrelationRealtimeInfoWidget.renderConceptionDataCorrelationRealtimeInfo(conceptionKindCorrelationInfoList);
             }
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
