@@ -45,20 +45,25 @@ public class IntelligentAnalysisView extends VerticalLayout {
 
         leftSideContainerLayout = new VerticalLayout();
         leftSideContainerLayout.setSpacing(false);
-        //leftSideContainerLayout.setPadding(false);
-        //leftSideContainerLayout.setMargin(false);
-
-        mainContainerLayout.add(leftSideContainerLayout);
-        leftSideContainerLayout.setWidth(500, Unit.PIXELS);
+        leftSideContainerLayout.setWidth(550, Unit.PIXELS);
         leftSideContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
+        mainContainerLayout.add(leftSideContainerLayout);
 
         List<Component> sectionAction2ComponentsList = new ArrayList<>();
         SectionActionBar sectionActionBar2 = new SectionActionBar(LineAwesomeIconsSvg.CHART_LINE_SOLID.create(),"全域数据实时分布",sectionAction2ComponentsList);
         leftSideContainerLayout.add(sectionActionBar2);
 
-
         SystemRuntimeInfoWidget systemRuntimeInfoWidget = new SystemRuntimeInfoWidget();
         leftSideContainerLayout.add(systemRuntimeInfoWidget);
+
+        conceptionDataCorrelationRealtimeInfoWidget = new ConceptionDataCorrelationRealtimeInfoWidget();
+        Icon dataRelationInfoTitleIcon = FontAwesome.Solid.CODE_FORK.create();
+        dataRelationInfoTitleIcon.setSize("18px");
+        NativeLabel dataRelationInfoTitleLabel = new NativeLabel("全域数据实时关联 数据分布");
+        dataRelationInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
+        SectionWallTitle dataRelationInfoSectionWallTitle = new SectionWallTitle(dataRelationInfoTitleIcon,dataRelationInfoTitleLabel);
+        SectionWallContainer dataRelationInfoSectionWallContainer = new SectionWallContainer(dataRelationInfoSectionWallTitle,conceptionDataCorrelationRealtimeInfoWidget);
+        leftSideContainerLayout.add(dataRelationInfoSectionWallContainer);
 
         conceptionDataRealtimeInfoWidget = new ConceptionDataRealtimeInfoWidget();
         Icon conceptionKindInfoTitleIcon = new Icon(VaadinIcon.CUBE);
@@ -77,15 +82,6 @@ public class IntelligentAnalysisView extends VerticalLayout {
         SectionWallTitle relationKindInfoSectionWallTitle = new SectionWallTitle(relationKindInfoTitleIcon,relationKindInfoTitleLabel);
         SectionWallContainer relationKindInfoSectionWallContainer = new SectionWallContainer(relationKindInfoSectionWallTitle,relationDataRealtimeInfoWidget);
         leftSideContainerLayout.add(relationKindInfoSectionWallContainer);
-
-        conceptionDataCorrelationRealtimeInfoWidget = new ConceptionDataCorrelationRealtimeInfoWidget();
-        Icon dataRelationInfoTitleIcon = FontAwesome.Solid.CODE_FORK.create();
-        relationKindInfoTitleIcon.setSize("18px");
-        NativeLabel dataRelationInfoTitleLabel = new NativeLabel("全域数据实时关联 数据分布");
-        dataRelationInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
-        SectionWallTitle dataRelationInfoSectionWallTitle = new SectionWallTitle(dataRelationInfoTitleIcon,dataRelationInfoTitleLabel);
-        SectionWallContainer dataRelationInfoSectionWallContainer = new SectionWallContainer(dataRelationInfoSectionWallTitle,conceptionDataCorrelationRealtimeInfoWidget);
-        leftSideContainerLayout.add(dataRelationInfoSectionWallContainer);
     }
 
     @Override
