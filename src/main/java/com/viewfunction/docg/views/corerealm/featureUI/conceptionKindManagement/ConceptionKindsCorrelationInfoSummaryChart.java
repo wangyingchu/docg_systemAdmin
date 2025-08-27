@@ -94,7 +94,7 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
                     && !targetKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
                     && !targetKindName.equals(RealmConstant.ClassificationClass))
             {
-                long relationCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
+                long relationCount = (long)(Math.log(currentConceptionKindCorrelationInfo.getRelationEntityCount())/2);
                 String relationKindDesc = relationKindDescMap.get(relationKindName) != null ? relationKindDescMap.get(relationKindName):"";
                 EchartsRelationshipEdgePayload currentEchartsRelationshipEdgePayload = new EchartsRelationshipEdgePayload(relationKindName,relationKindDesc,relationKindName+"_ID",sourceKindName+"_ID",targetKindName+"_ID",relationCount);
                 currentEchartsRelationshipEdgePayload.getData().put("sourceConceptionKind",sourceKindName);
@@ -158,5 +158,13 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
 
     public void showLegend(){
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.showLegend"));
+    }
+
+    public void enableDynamicRenderingEdgeWidth(){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.enableDynamicRenderingEdgeWidth"));
+    }
+
+    public void disableDynamicRenderingEdgeWidth(){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.disableDynamicRenderingEdgeWidth"));
     }
 }

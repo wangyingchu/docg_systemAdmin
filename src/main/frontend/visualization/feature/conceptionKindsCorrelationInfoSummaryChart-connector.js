@@ -21,6 +21,15 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
                     })
                 });
 
+                if(dynamicRenderingEdgeWidth){
+                    let linksData = data.links;
+                    linksData.forEach(function (link) {
+                        link.lineStyle = {};
+                        link.lineStyle.width = link.weight;
+                        link.lineStyle.opacity = 0.5;
+                    });
+                }
+
                 c.$connector.option.legend[0].data = categories.map(function (a) {
                     return a.name;
                 });
@@ -37,6 +46,12 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
             },
             showLegend: function () {
                 this.option.legend[0].show = true;
+            },
+            enableDynamicRenderingEdgeWidth:function(){
+                dynamicRenderingEdgeWidth = true;
+            },
+            disableDynamicRenderingEdgeWidth:function(){
+                dynamicRenderingEdgeWidth = false;
             }
         };
         c.$connector.myChart = echarts.init(c);
@@ -44,6 +59,7 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
         let categories = [];
         let data = [];
         let links=[];
+        let dynamicRenderingEdgeWidth = false
 
         c.$connector.option = {
             title: {},
