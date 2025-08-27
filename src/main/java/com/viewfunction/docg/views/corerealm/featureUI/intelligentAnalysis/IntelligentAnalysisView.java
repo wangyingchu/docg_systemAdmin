@@ -8,9 +8,13 @@ import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 
+import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
@@ -31,12 +35,15 @@ import java.util.List;
 import java.util.Map;
 
 @Route("coreRealmIntelligentAnalysis/")
-public class IntelligentAnalysisView extends VerticalLayout {
+public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnterObserver {
 
     private VerticalLayout leftSideContainerLayout;
     private ConceptionDataRealtimeInfoWidget conceptionDataRealtimeInfoWidget;
     private RelationDataRealtimeInfoWidget relationDataRealtimeInfoWidget;
     private ConceptionDataCorrelationRealtimeInfoWidget conceptionDataCorrelationRealtimeInfoWidget;
+    private Scroller leftSideScroller;
+    private Registration listener;
+    private int intelligentAnalysisViewHeightOffset = 110;
 
     public IntelligentAnalysisView() {
         HorizontalLayout mainContainerLayout = new HorizontalLayout();
@@ -56,14 +63,15 @@ public class IntelligentAnalysisView extends VerticalLayout {
         SystemRuntimeInfoWidget systemRuntimeInfoWidget = new SystemRuntimeInfoWidget();
         leftSideContainerLayout.add(systemRuntimeInfoWidget);
 
-        conceptionDataCorrelationRealtimeInfoWidget = new ConceptionDataCorrelationRealtimeInfoWidget();
-        Icon dataRelationInfoTitleIcon = FontAwesome.Solid.CODE_FORK.create();
-        dataRelationInfoTitleIcon.setSize("18px");
-        NativeLabel dataRelationInfoTitleLabel = new NativeLabel("全域数据实时关联 数据分布");
-        dataRelationInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
-        SectionWallTitle dataRelationInfoSectionWallTitle = new SectionWallTitle(dataRelationInfoTitleIcon,dataRelationInfoTitleLabel);
-        SectionWallContainer dataRelationInfoSectionWallContainer = new SectionWallContainer(dataRelationInfoSectionWallTitle,conceptionDataCorrelationRealtimeInfoWidget);
-        leftSideContainerLayout.add(dataRelationInfoSectionWallContainer);
+        leftSideScroller = new Scroller();
+        leftSideScroller.setWidthFull();
+        leftSideScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        leftSideContainerLayout.add(leftSideScroller);
+
+        VerticalLayout leftSideComponentsLayout = new VerticalLayout();
+        leftSideComponentsLayout.setWidthFull();
+        leftSideComponentsLayout.setSpacing(false);
+        leftSideScroller.setContent(leftSideComponentsLayout);
 
         conceptionDataRealtimeInfoWidget = new ConceptionDataRealtimeInfoWidget();
         Icon conceptionKindInfoTitleIcon = new Icon(VaadinIcon.CUBE);
@@ -72,7 +80,8 @@ public class IntelligentAnalysisView extends VerticalLayout {
         conceptionKindInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle conceptionKindInfoSectionWallTitle = new SectionWallTitle(conceptionKindInfoTitleIcon,conceptionKindInfoTitleLabel);
         SectionWallContainer conceptionKindInfoSectionWallContainer = new SectionWallContainer(conceptionKindInfoSectionWallTitle,conceptionDataRealtimeInfoWidget);
-        leftSideContainerLayout.add(conceptionKindInfoSectionWallContainer);
+        conceptionKindInfoSectionWallContainer.setOpened(false);
+        leftSideComponentsLayout.add(conceptionKindInfoSectionWallContainer);
 
         relationDataRealtimeInfoWidget = new RelationDataRealtimeInfoWidget();
         Icon relationKindInfoTitleIcon = new Icon(VaadinIcon.CONNECT_O);
@@ -81,12 +90,40 @@ public class IntelligentAnalysisView extends VerticalLayout {
         relationKindInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
         SectionWallTitle relationKindInfoSectionWallTitle = new SectionWallTitle(relationKindInfoTitleIcon,relationKindInfoTitleLabel);
         SectionWallContainer relationKindInfoSectionWallContainer = new SectionWallContainer(relationKindInfoSectionWallTitle,relationDataRealtimeInfoWidget);
-        leftSideContainerLayout.add(relationKindInfoSectionWallContainer);
+        relationKindInfoSectionWallContainer.setOpened(false);
+        leftSideComponentsLayout.add(relationKindInfoSectionWallContainer);
+
+        conceptionDataCorrelationRealtimeInfoWidget = new ConceptionDataCorrelationRealtimeInfoWidget();
+        Icon dataRelationInfoTitleIcon = FontAwesome.Solid.CODE_FORK.create();
+        dataRelationInfoTitleIcon.setSize("18px");
+        NativeLabel dataRelationInfoTitleLabel = new NativeLabel("全域数据实时关联 数据分布");
+        dataRelationInfoTitleLabel.getStyle().set("font-size","var(--lumo-font-size-m)");
+        SectionWallTitle dataRelationInfoSectionWallTitle = new SectionWallTitle(dataRelationInfoTitleIcon,dataRelationInfoTitleLabel);
+        SectionWallContainer dataRelationInfoSectionWallContainer = new SectionWallContainer(dataRelationInfoSectionWallTitle,conceptionDataCorrelationRealtimeInfoWidget);
+        dataRelationInfoSectionWallContainer.setOpened(false);
+        leftSideComponentsLayout.add(dataRelationInfoSectionWallContainer);
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        this.intelligentAnalysisViewHeightOffset = 50;
     }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            int currentBrowserHeight = event.getHeight();
+            int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 370;
+            leftSideScroller.setHeight(leftSideScrollHeight,Unit.PIXELS);
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            int currentBrowserHeight  = receiver.getBodyClientHeight();
+            int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 370;
+            leftSideScroller.setHeight(leftSideScrollHeight,Unit.PIXELS);
+        }));
+
         CoreRealm targetCoreRealm = RealmTermFactory.getDefaultCoreRealm();
         targetCoreRealm.openGlobalSession();
         try {
@@ -135,9 +172,7 @@ public class IntelligentAnalysisView extends VerticalLayout {
                 this.relationDataRealtimeInfoWidget.renderRelationDataRealtimeInfo(realtimeRelationList,relationKindsAttributesSystemInfo);
                 this.conceptionDataCorrelationRealtimeInfoWidget.renderConceptionDataCorrelationRealtimeInfo(conceptionKindCorrelationInfoList);
             }
-        } catch (CoreRealmServiceEntityExploreException e) {
-            throw new RuntimeException(e);
-        } catch (CoreRealmServiceRuntimeException e) {
+        } catch (CoreRealmServiceEntityExploreException | CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
         } finally {
             targetCoreRealm.closeGlobalSession();
