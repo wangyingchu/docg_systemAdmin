@@ -151,4 +151,12 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
 
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", obj));
     }
+
+    public void hideLegend(){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.hideLegend"));
+    }
+
+    public void showLegend(){
+        runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.showLegend"));
+    }
 }

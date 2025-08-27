@@ -32,6 +32,12 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
                     c.$connector.myChart.setOption(c.$connector.option, true);
                 }
             },
+            hideLegend: function () {
+                this.option.legend[0].show = false;
+            },
+            showLegend: function () {
+                this.option.legend[0].show = true;
+            }
         };
         c.$connector.myChart = echarts.init(c);
 
@@ -61,7 +67,8 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
             legend: [{
                 data: categories.map(function (a) {
                     return a.name;
-                })
+                }),
+                show: true
             }],
 
             animationDuration: 1500,

@@ -13,6 +13,7 @@ public class RealtimeConceptionDataCorrelationChartWidget extends VerticalLayout
     public RealtimeConceptionDataCorrelationChartWidget(int widgetWidth,int widgetHeight) {
         conceptionKindsCorrelationInfoSummaryChart =
                 new ConceptionKindsCorrelationInfoSummaryChart(widgetWidth,widgetHeight);
+        conceptionKindsCorrelationInfoSummaryChart.hideLegend();
         add(conceptionKindsCorrelationInfoSummaryChart);
     }
 
