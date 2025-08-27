@@ -13,8 +13,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
-
 import com.vaadin.flow.shared.Registration;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.SystemMaintenanceOperator;
@@ -39,6 +39,7 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
     private RelationDataRealtimeInfoWidget relationDataRealtimeInfoWidget;
     private ConceptionDataCorrelationRealtimeInfoWidget conceptionDataCorrelationRealtimeInfoWidget;
     private Scroller leftSideScroller;
+    private VerticalLayout rightSideContainerLayout;
     private Registration listener;
     private int intelligentAnalysisViewHeightOffset = 110;
     private RealtimeConceptionDataCorrelationChartWidget realtimeConceptionDataCorrelationChartWidget;
@@ -55,8 +56,8 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
         mainContainerLayout.add(leftSideContainerLayout);
 
         List<Component> sectionAction2ComponentsList = new ArrayList<>();
-        SectionActionBar sectionActionBar2 = new SectionActionBar(LineAwesomeIconsSvg.CHART_LINE_SOLID.create(),"全域数据实时分布",sectionAction2ComponentsList);
-        leftSideContainerLayout.add(sectionActionBar2);
+        SectionActionBar sectionActionBar1 = new SectionActionBar(LineAwesomeIconsSvg.CHART_LINE_SOLID.create(),"全域数据实时分布",sectionAction2ComponentsList);
+        leftSideContainerLayout.add(sectionActionBar1);
 
         realtimeConceptionDataCorrelationChartWidget = new RealtimeConceptionDataCorrelationChartWidget(570,380);
         leftSideContainerLayout.add(realtimeConceptionDataCorrelationChartWidget);
@@ -100,6 +101,15 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
         SectionWallContainer dataRelationInfoSectionWallContainer = new SectionWallContainer(dataRelationInfoSectionWallTitle,conceptionDataCorrelationRealtimeInfoWidget);
         dataRelationInfoSectionWallContainer.setOpened(false);
         leftSideComponentsLayout.add(dataRelationInfoSectionWallContainer);
+
+        rightSideContainerLayout = new VerticalLayout();
+        rightSideContainerLayout.setWidthFull();
+        rightSideContainerLayout.setSpacing(false);
+        mainContainerLayout.add(rightSideContainerLayout);
+
+        List<Component> sectionAction2ComponentsList2 = new ArrayList<>();
+        SectionActionBar sectionActionBar2 = new SectionActionBar(LineAwesomeIconsSvg.EYE.create(),"领域知识分析洞察",sectionAction2ComponentsList2);
+        rightSideContainerLayout.add(sectionActionBar2);
     }
 
     @Override
