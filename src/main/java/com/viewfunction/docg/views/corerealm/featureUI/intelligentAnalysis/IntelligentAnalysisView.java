@@ -27,12 +27,9 @@ import com.viewfunction.docg.element.commonComponent.SectionActionBar;
 import com.viewfunction.docg.element.commonComponent.SectionWallContainer;
 import com.viewfunction.docg.element.commonComponent.SectionWallTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
-import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.SystemRuntimeInfoWidget;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Route("coreRealmIntelligentAnalysis/")
 public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnterObserver {
@@ -44,6 +41,7 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
     private Scroller leftSideScroller;
     private Registration listener;
     private int intelligentAnalysisViewHeightOffset = 110;
+    private RealtimeConceptionDataCorrelationChartWidget realtimeConceptionDataCorrelationChartWidget;
 
     public IntelligentAnalysisView() {
         HorizontalLayout mainContainerLayout = new HorizontalLayout();
@@ -60,8 +58,8 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
         SectionActionBar sectionActionBar2 = new SectionActionBar(LineAwesomeIconsSvg.CHART_LINE_SOLID.create(),"全域数据实时分布",sectionAction2ComponentsList);
         leftSideContainerLayout.add(sectionActionBar2);
 
-        SystemRuntimeInfoWidget systemRuntimeInfoWidget = new SystemRuntimeInfoWidget();
-        leftSideContainerLayout.add(systemRuntimeInfoWidget);
+        realtimeConceptionDataCorrelationChartWidget = new RealtimeConceptionDataCorrelationChartWidget(520,350);
+        leftSideContainerLayout.add(realtimeConceptionDataCorrelationChartWidget);
 
         leftSideScroller = new Scroller();
         leftSideScroller.setWidthFull();
@@ -114,13 +112,13 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
         super.onAttach(attachEvent);
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             int currentBrowserHeight = event.getHeight();
-            int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 370;
+            int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 380;
             leftSideScroller.setHeight(leftSideScrollHeight,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int currentBrowserHeight  = receiver.getBodyClientHeight();
-            int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 370;
+            int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 380;
             leftSideScroller.setHeight(leftSideScrollHeight,Unit.PIXELS);
         }));
 
@@ -171,6 +169,9 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
                 this.conceptionDataRealtimeInfoWidget.renderConceptionDataRealtimeInfo(realtimeConceptionList,conceptionKindsAttributesSystemInfo);
                 this.relationDataRealtimeInfoWidget.renderRelationDataRealtimeInfo(realtimeRelationList,relationKindsAttributesSystemInfo);
                 this.conceptionDataCorrelationRealtimeInfoWidget.renderConceptionDataCorrelationRealtimeInfo(conceptionKindCorrelationInfoList);
+
+                Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = new HashSet<>(conceptionKindCorrelationInfoList);
+                this.realtimeConceptionDataCorrelationChartWidget.renderConceptionDataCorrelationRealtimeInfo(conceptionKindCorrelationInfoSet);
             }
         } catch (CoreRealmServiceEntityExploreException | CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);

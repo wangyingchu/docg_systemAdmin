@@ -44,7 +44,6 @@ public class DataRelationDistributionChart extends ReactAdapterComponent {
             generateConceptionKindColorMap(conceptionKindNameSet);
             for(String currentConceptionKindName:conceptionKindNameSet){
                 if(!currentConceptionKindName.equals(RealmConstant.ConceptionKindClass)
-                        && !currentConceptionKindName.equals(RealmConstant.AttributesViewKindClass)
                         && !currentConceptionKindName.equals(RealmConstant.AttributeKindClass)
                         && !currentConceptionKindName.equals(RealmConstant.RelationKindClass)
                         && !currentConceptionKindName.equals(RealmConstant.MetaConfigItemsStorageClass)
@@ -53,6 +52,10 @@ public class DataRelationDistributionChart extends ReactAdapterComponent {
                         && !currentConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
                         && !currentConceptionKindName.equals(RealmConstant.RelationAttachKindClass)
                         && !currentConceptionKindName.equals(RealmConstant.RelationAttachLinkLogicClass)
+                        && !currentConceptionKindName.equals(RealmConstant.ConceptionKindCorrelationInfoStaticClass)
+                        && !currentConceptionKindName.equals(RealmConstant.ConceptionKindsAttributesSystemInfoStaticClass)
+                        && !currentConceptionKindName.equals(RealmConstant.RelationKindsAttributesSystemInfoStaticClass)
+                        && !currentConceptionKindName.equals(RealmConstant.ActionClass)
                 ){
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
                     cytoscapeNodePayloadList.add(cytoscapeNodePayload);
@@ -108,7 +111,10 @@ public class DataRelationDistributionChart extends ReactAdapterComponent {
                         && !relationKindName.equals(RealmConstant.ConceptionKind_AttributesViewKindRelationClass)
                         && !relationKindName.equals(RealmConstant.AttributesViewKind_AttributeKindRelationClass)
                         && !relationKindName.equals(RealmConstant.Classification_ClassificationRelationClass)
-                        && !relationKindName.equals(RealmConstant.RelationAttachKind_RelationAttachLinkLogicRelationClass)){
+                        && !relationKindName.equals(RealmConstant.RelationAttachKind_RelationAttachLinkLogicRelationClass)
+                        && !relationKindName.equals(RealmConstant.ConceptionKind_ActionRelationClass)
+                        && !relationKindName.equals(RealmConstant.RelationKind_ActionRelationClass)
+                ){
                     boolean linkToTGOrClassification = false;
                     if(sourceConceptionKindName.equals(RealmConstant.TimeScaleEntityClass)
                             ||sourceConceptionKindName.equals(RealmConstant.GeospatialScaleEntityClass)
