@@ -99,6 +99,7 @@ public class ConceptionKindsCorrelationInfoSummaryChart extends Div {
                 EchartsRelationshipEdgePayload currentEchartsRelationshipEdgePayload = new EchartsRelationshipEdgePayload(relationKindName,relationKindDesc,relationKindName+"_ID",sourceKindName+"_ID",targetKindName+"_ID",relationCount);
                 currentEchartsRelationshipEdgePayload.getData().put("sourceConceptionKind",sourceKindName);
                 currentEchartsRelationshipEdgePayload.getData().put("targetConceptionKind",targetKindName);
+                currentEchartsRelationshipEdgePayload.getData().put("entityCount",currentConceptionKindCorrelationInfo.getRelationEntityCount());
                 JsonObject childJsonObject = currentEchartsRelationshipEdgePayload.toJson();
                 linkDataArray.set(idx_relation, childJsonObject);
                 idx_relation++;

@@ -76,6 +76,9 @@ window.Vaadin.Flow.feature_ConceptionKindsCorrelationInfoSummaryChart = {
                         var res=
                             '<div> 关系类型: '+labelData.name+'( '+labelData.desc+' )</div>'+
                             '<div> 关联的概念: '+ labelData.data.sourceConceptionKind+' -> '+labelData.data.targetConceptionKind+'</div>';
+                        if(labelData.weight) {
+                            res = res + '<div> 实体数量: '+labelData.data.entityCount+'</div>';
+                        }
                     }
                     return res;
                 }

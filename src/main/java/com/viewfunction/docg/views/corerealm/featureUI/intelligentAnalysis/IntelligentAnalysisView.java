@@ -50,7 +50,7 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
 
         leftSideContainerLayout = new VerticalLayout();
         leftSideContainerLayout.setSpacing(false);
-        leftSideContainerLayout.setWidth(550, Unit.PIXELS);
+        leftSideContainerLayout.setWidth(600, Unit.PIXELS);
         leftSideContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
         mainContainerLayout.add(leftSideContainerLayout);
 
@@ -58,7 +58,7 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
         SectionActionBar sectionActionBar2 = new SectionActionBar(LineAwesomeIconsSvg.CHART_LINE_SOLID.create(),"全域数据实时分布",sectionAction2ComponentsList);
         leftSideContainerLayout.add(sectionActionBar2);
 
-        realtimeConceptionDataCorrelationChartWidget = new RealtimeConceptionDataCorrelationChartWidget(520,350);
+        realtimeConceptionDataCorrelationChartWidget = new RealtimeConceptionDataCorrelationChartWidget(570,380);
         leftSideContainerLayout.add(realtimeConceptionDataCorrelationChartWidget);
 
         leftSideScroller = new Scroller();
@@ -112,13 +112,13 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
         super.onAttach(attachEvent);
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             int currentBrowserHeight = event.getHeight();
-            int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 380;
+            int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 410;
             leftSideScroller.setHeight(leftSideScrollHeight,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int currentBrowserHeight  = receiver.getBodyClientHeight();
-            int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 380;
+            int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 410;
             leftSideScroller.setHeight(leftSideScrollHeight,Unit.PIXELS);
         }));
 
