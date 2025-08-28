@@ -43,6 +43,7 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
     private Registration listener;
     private int intelligentAnalysisViewHeightOffset = 110;
     private RealtimeConceptionDataCorrelationChartWidget realtimeConceptionDataCorrelationChartWidget;
+    private InformationInsightView informationInsightView;
 
     public IntelligentAnalysisView() {
         HorizontalLayout mainContainerLayout = new HorizontalLayout();
@@ -61,6 +62,10 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
 
         realtimeConceptionDataCorrelationChartWidget = new RealtimeConceptionDataCorrelationChartWidget(570,380);
         leftSideContainerLayout.add(realtimeConceptionDataCorrelationChartWidget);
+
+        List<Component> sectionAction2ComponentsList2 = new ArrayList<>();
+        SectionActionBar sectionActionBar2 = new SectionActionBar(LineAwesomeIconsSvg.CLIPBOARD_LIST_SOLID.create(),"类型数据详情",sectionAction2ComponentsList2);
+        leftSideContainerLayout.add(sectionActionBar2);
 
         leftSideScroller = new Scroller();
         leftSideScroller.setWidthFull();
@@ -107,9 +112,12 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
         rightSideContainerLayout.setSpacing(false);
         mainContainerLayout.add(rightSideContainerLayout);
 
-        List<Component> sectionAction2ComponentsList2 = new ArrayList<>();
-        SectionActionBar sectionActionBar2 = new SectionActionBar(LineAwesomeIconsSvg.EYE.create(),"领域知识分析洞察",sectionAction2ComponentsList2);
-        rightSideContainerLayout.add(sectionActionBar2);
+        List<Component> sectionAction2ComponentsList3 = new ArrayList<>();
+        SectionActionBar sectionActionBar3 = new SectionActionBar(LineAwesomeIconsSvg.EYE.create(),"领域知识分析洞察",sectionAction2ComponentsList3);
+        rightSideContainerLayout.add(sectionActionBar3);
+
+        this.informationInsightView = new InformationInsightView();
+        rightSideContainerLayout.add(informationInsightView);
     }
 
     @Override
@@ -122,13 +130,13 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
         super.onAttach(attachEvent);
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             int currentBrowserHeight = event.getHeight();
-            int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 410;
+            int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 430;
             leftSideScroller.setHeight(leftSideScrollHeight,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int currentBrowserHeight  = receiver.getBodyClientHeight();
-            int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 410;
+            int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 430;
             leftSideScroller.setHeight(leftSideScrollHeight,Unit.PIXELS);
         }));
 
