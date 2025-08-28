@@ -132,12 +132,16 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
             int currentBrowserHeight = event.getHeight();
             int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 430;
             leftSideScroller.setHeight(leftSideScrollHeight,Unit.PIXELS);
+            int insightContentHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 195;
+            informationInsightView.setInsightContentHeight(insightContentHeight);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int currentBrowserHeight  = receiver.getBodyClientHeight();
             int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 430;
             leftSideScroller.setHeight(leftSideScrollHeight,Unit.PIXELS);
+            int insightContentHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 195;
+            informationInsightView.setInsightContentHeight(insightContentHeight);
         }));
 
         CoreRealm targetCoreRealm = RealmTermFactory.getDefaultCoreRealm();
