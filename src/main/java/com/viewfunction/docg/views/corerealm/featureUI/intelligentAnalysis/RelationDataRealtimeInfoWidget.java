@@ -63,13 +63,21 @@ public class RelationDataRealtimeInfoWidget extends VerticalLayout {
                 configRelationKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_CONTRAST);
                 configRelationKind.setTooltipText("配置关系类型定义");
 
+                Icon configIcon2 = LineAwesomeIconsSvg.AUDIBLE.create();
+                configIcon2.setSize("16px");
+                Button addToInsightScope = new Button(configIcon2, event -> {
+                    //renderConceptionKindConfigurationUI(conceptionKindName);
+                });
+                addToInsightScope.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_CONTRAST);
+                addToInsightScope.setTooltipText("加入知识洞察范围");
+
                 HorizontalLayout horizontalLayout = new HorizontalLayout();
                 horizontalLayout.setAlignItems(Alignment.CENTER);
 
                 if(isSystemKind){
-                    horizontalLayout.add(relationKindIcon,relationKindNameLabel,isInnerKindIcon,relationEntitiesCountBadge,configRelationKind);
+                    horizontalLayout.add(relationKindIcon,relationKindNameLabel,isInnerKindIcon,relationEntitiesCountBadge,configRelationKind,addToInsightScope);
                 }else{
-                    horizontalLayout.add(relationKindIcon,relationKindNameLabel,relationEntitiesCountBadge,configRelationKind);
+                    horizontalLayout.add(relationKindIcon,relationKindNameLabel,relationEntitiesCountBadge,configRelationKind,addToInsightScope);
                 }
 
                 Details relationKindAttributesDetails = new Details(horizontalLayout);

@@ -66,10 +66,18 @@ public class ConceptionDataRealtimeInfoWidget extends VerticalLayout {
                 configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_CONTRAST);
                 configConceptionKind.setTooltipText("配置概念类型定义");
 
+                Icon configIcon2 = LineAwesomeIconsSvg.AUDIBLE.create();
+                configIcon2.setSize("16px");
+                Button addToInsightScope = new Button(configIcon2, event -> {
+                    //renderConceptionKindConfigurationUI(conceptionKindName);
+                });
+                addToInsightScope.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_CONTRAST);
+                addToInsightScope.setTooltipText("加入知识洞察范围");
+
                 if(isSystemKind){
-                    horizontalLayout.add(conceptionKindIcon,conceptionKindNameLabel,isInnerKindIcon,conceptionEntitiesCountBadge,configConceptionKind);
+                    horizontalLayout.add(conceptionKindIcon,conceptionKindNameLabel,isInnerKindIcon,conceptionEntitiesCountBadge,configConceptionKind,addToInsightScope);
                 }else{
-                    horizontalLayout.add(conceptionKindIcon,conceptionKindNameLabel,conceptionEntitiesCountBadge,configConceptionKind);
+                    horizontalLayout.add(conceptionKindIcon,conceptionKindNameLabel,conceptionEntitiesCountBadge,configConceptionKind,addToInsightScope);
                 }
 
                 Details conceptionKindAttributesDetails = new Details(horizontalLayout);
