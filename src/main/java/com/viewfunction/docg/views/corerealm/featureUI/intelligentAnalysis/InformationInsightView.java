@@ -35,7 +35,7 @@ public class InformationInsightView extends VerticalLayout {
 
         this.questionTextArea = new TextArea();
         this.questionTextArea.setWidthFull();
-        this.questionTextArea.setHeight(160, Unit.PIXELS);
+        this.questionTextArea.setHeight(155, Unit.PIXELS);
         //questionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
         this.questionTextArea.addValueChangeListener(e -> {
             //e.getSource().setHelperText(e.getValue().length() + "/" + charLimit);
@@ -49,6 +49,7 @@ public class InformationInsightView extends VerticalLayout {
         inputElementContainerLayout.add(buttonsControllerLayout);
 
         Button askButton = new Button(" 对话");
+        askButton.getStyle().set("top","-15px").set("position","relative");
         askButton.setIcon(LineAwesomeIconsSvg.COMMENTS.create());
         askButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         askButton.setWidth(30,Unit.PIXELS);
