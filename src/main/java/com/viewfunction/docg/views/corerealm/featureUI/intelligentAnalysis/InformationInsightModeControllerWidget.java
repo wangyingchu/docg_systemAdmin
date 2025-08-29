@@ -13,7 +13,7 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 
 public class InformationInsightModeControllerWidget extends HorizontalLayout{
 
-    private Button setInsightAreaButton;
+    private Button setInsightScopeButton;
 
     public InformationInsightModeControllerWidget() {
         this.setSpacing(false);
@@ -42,19 +42,19 @@ public class InformationInsightModeControllerWidget extends HorizontalLayout{
             public void valueChanged(AbstractField.ComponentValueChangeEvent<RadioButtonGroup<String>, String> radioButtonGroupStringComponentValueChangeEvent) {
                 String newValue = radioButtonGroupStringComponentValueChangeEvent.getValue();
                 if("洞察".equals(newValue)){
-                    setInsightAreaButton.setEnabled(true);
+                    setInsightScopeButton.setEnabled(true);
                 }else{
-                    setInsightAreaButton.setEnabled(false);
+                    setInsightScopeButton.setEnabled(false);
                 }
             }
         });
         add(talkModeRadioGroup);
 
-        setInsightAreaButton = new Button();
-        setInsightAreaButton.setIcon(LineAwesomeIconsSvg.BUROMOBELEXPERTE.create());
-        setInsightAreaButton.setTooltipText("洞察范围");
-        setInsightAreaButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
-        setInsightAreaButton.setEnabled(false);
-        add(setInsightAreaButton);
+        setInsightScopeButton = new Button();
+        setInsightScopeButton.setIcon(LineAwesomeIconsSvg.BUROMOBELEXPERTE.create());
+        setInsightScopeButton.setTooltipText("洞察范围");
+        setInsightScopeButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
+        setInsightScopeButton.setEnabled(false);
+        add(setInsightScopeButton);
     }
 }

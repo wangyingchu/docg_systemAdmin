@@ -1,5 +1,9 @@
 package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
@@ -10,8 +14,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
+import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationKind.RelationKindDetailUI;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,15 +53,23 @@ public class RelationDataRealtimeInfoWidget extends VerticalLayout {
                 Icon isInnerKindIcon = LineAwesomeIconsSvg.COG_SOLID.create();
                 isInnerKindIcon.setSize("6px");
                 relationKindIcon.getStyle().set("padding-right","3px");
-                isInnerKindIcon.setTooltipText("系统内部概念类型");
+                isInnerKindIcon.setTooltipText("系统内部关系类型");
+
+                Icon configIcon = new Icon(VaadinIcon.COG);
+                configIcon.setSize("18px");
+                Button configRelationKind = new Button(configIcon, event -> {
+                    renderRelationKindConfigurationUI(relationKindName);
+                });
+                configRelationKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_CONTRAST);
+                configRelationKind.setTooltipText("配置关系类型定义");
 
                 HorizontalLayout horizontalLayout = new HorizontalLayout();
                 horizontalLayout.setAlignItems(Alignment.CENTER);
 
                 if(isSystemKind){
-                    horizontalLayout.add(relationKindIcon,relationKindNameLabel,isInnerKindIcon,relationEntitiesCountBadge);
+                    horizontalLayout.add(relationKindIcon,relationKindNameLabel,isInnerKindIcon,relationEntitiesCountBadge,configRelationKind);
                 }else{
-                    horizontalLayout.add(relationKindIcon,relationKindNameLabel,relationEntitiesCountBadge);
+                    horizontalLayout.add(relationKindIcon,relationKindNameLabel,relationEntitiesCountBadge,configRelationKind);
                 }
 
                 Details relationKindAttributesDetails = new Details(horizontalLayout);
@@ -79,5 +94,36 @@ public class RelationDataRealtimeInfoWidget extends VerticalLayout {
                 }
             }
         }
+    }
+
+    private void renderRelationKindConfigurationUI(String targetRelationKindName){
+        RelationKindDetailUI relationKindDetailUI = new RelationKindDetailUI(targetRelationKindName);
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8, Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+        relationKindIcon.setSize("10px");
+        titleDetailLayout.add(relationKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel relationKindName = new NativeLabel(targetRelationKindName);
+        titleDetailLayout.add(relationKindName);
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"关系类型配置",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(relationKindDetailUI);
+        fullScreenWindow.show();
     }
 }
