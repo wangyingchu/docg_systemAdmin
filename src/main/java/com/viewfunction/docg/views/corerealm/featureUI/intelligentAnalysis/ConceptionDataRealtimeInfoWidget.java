@@ -81,6 +81,7 @@ public class ConceptionDataRealtimeInfoWidget extends VerticalLayout {
                 }
 
                 Details conceptionKindAttributesDetails = new Details(horizontalLayout);
+                conceptionKindAttributesDetails.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
                 conceptionKindAttributesDetails.setOpened(false);
                 add(conceptionKindAttributesDetails);
 

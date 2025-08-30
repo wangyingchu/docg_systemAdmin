@@ -81,6 +81,7 @@ public class RelationDataRealtimeInfoWidget extends VerticalLayout {
                 }
 
                 Details relationKindAttributesDetails = new Details(horizontalLayout);
+                relationKindAttributesDetails.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
                 relationKindAttributesDetails.setOpened(false);
                 add(relationKindAttributesDetails);
 
