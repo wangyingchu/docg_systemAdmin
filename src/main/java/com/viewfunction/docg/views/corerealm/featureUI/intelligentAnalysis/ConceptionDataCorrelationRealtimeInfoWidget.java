@@ -48,6 +48,7 @@ public class ConceptionDataCorrelationRealtimeInfoWidget extends VerticalLayout 
 
         runtimeConceptionKindCorrelationInfoGrid = new Grid<>();
         runtimeConceptionKindCorrelationInfoGrid.setWidthFull();
+        runtimeConceptionKindCorrelationInfoGrid.setHeight(600,Unit.PIXELS);
         runtimeConceptionKindCorrelationInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         runtimeConceptionKindCorrelationInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         runtimeConceptionKindCorrelationInfoGrid.addColumn(ConceptionKindCorrelationInfo::getSourceConceptionKindName).setHeader("源概念类型").setKey("idx_0").setResizable(true)
