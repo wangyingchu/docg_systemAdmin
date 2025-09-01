@@ -14,12 +14,18 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCo
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class InformationInsightView extends VerticalLayout {
 
     private Scroller insightContentScroller;
     private VerticalLayout insightContentContainerLayout;
     private TextArea questionTextArea;
     private InformationInsightModeControllerWidget informationInsightModeControllerWidget;
+    private List<String> insightScopeConceptionKindList;
+    private List<String> insightScopeRelationKindList;
+    private List<ConceptionKindCorrelationInfo> insightScopeConceptionKindCorrelationList;
 
     public InformationInsightView() {
         this.setWidthFull();
@@ -29,7 +35,11 @@ public class InformationInsightView extends VerticalLayout {
         this.insightContentContainerLayout = new VerticalLayout();
         this.insightContentContainerLayout.setWidthFull();
         this.insightContentScroller.setContent(this.insightContentContainerLayout);
-        this.informationInsightModeControllerWidget = new InformationInsightModeControllerWidget();
+        this.insightScopeConceptionKindList = new ArrayList<>();
+        this.insightScopeRelationKindList = new ArrayList<>();
+        this.insightScopeConceptionKindCorrelationList = new ArrayList<>();
+        this.informationInsightModeControllerWidget = new InformationInsightModeControllerWidget(
+                this.insightScopeConceptionKindList,this.insightScopeRelationKindList,this.insightScopeConceptionKindCorrelationList);
 
         HorizontalLayout inputElementContainerLayout = new HorizontalLayout();
         inputElementContainerLayout.setWidthFull();
@@ -66,17 +76,30 @@ public class InformationInsightView extends VerticalLayout {
     }
 
     public void addConceptionKindToInsightScope(String conceptionKindName){
-        CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKindName+" 加入洞察范围", NotificationVariant.LUMO_SUCCESS,2000, Notification.Position.BOTTOM_START);
+        if(!insightScopeConceptionKindList.contains(conceptionKindName)){
+            insightScopeConceptionKindList.add(conceptionKindName);
+        }
+        CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKindName+" 加入洞察范围成功", NotificationVariant.LUMO_SUCCESS,2000, Notification.Position.BOTTOM_START);
     }
 
     public void addRelationKindToInsightScope(String relationKindName){
-        CommonUIOperationUtil.showPopupNotification("关系类型 "+relationKindName+" 加入洞察范围", NotificationVariant.LUMO_SUCCESS,2000, Notification.Position.BOTTOM_START);
+        if(!insightScopeRelationKindList.contains(relationKindName)){
+            insightScopeRelationKindList.add(relationKindName);
+        }
+        CommonUIOperationUtil.showPopupNotification("关系类型 "+relationKindName+" 加入洞察范围成功", NotificationVariant.LUMO_SUCCESS,2000, Notification.Position.BOTTOM_START);
     }
 
     public void addConceptionKindCorrelationToInsightScope(ConceptionKindCorrelationInfo conceptionKindCorrelationInfo){
-        System.out.println("conceptionKindCorrelationInfo "+conceptionKindCorrelationInfo);
         CommonUIOperationUtil.showPopupNotification("概念关联 "+conceptionKindCorrelationInfo.getSourceConceptionKindName()+
                 " - "+conceptionKindCorrelationInfo.getRelationKindName()+" - "+
-                conceptionKindCorrelationInfo.getTargetConceptionKindName()+" 加入洞察范围", NotificationVariant.LUMO_SUCCESS,2000, Notification.Position.BOTTOM_START);
+                conceptionKindCorrelationInfo.getTargetConceptionKindName()+" 加入洞察范围成功", NotificationVariant.LUMO_SUCCESS,2000, Notification.Position.BOTTOM_START);
+        String correlationPattern = conceptionKindCorrelationInfo.getSourceConceptionKindName()+" - "+conceptionKindCorrelationInfo.getRelationKindName()+" - "+conceptionKindCorrelationInfo.getTargetConceptionKindName();
+        for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:this.insightScopeConceptionKindCorrelationList){
+            String currentCorrelationPattern = currentConceptionKindCorrelationInfo.getSourceConceptionKindName()+" - "+currentConceptionKindCorrelationInfo.getRelationKindName()+" - "+currentConceptionKindCorrelationInfo.getTargetConceptionKindName();
+            if(currentCorrelationPattern.equals(correlationPattern)){
+                return;
+            }
+        }
+        this.insightScopeConceptionKindCorrelationList.add(conceptionKindCorrelationInfo);
     }
 }

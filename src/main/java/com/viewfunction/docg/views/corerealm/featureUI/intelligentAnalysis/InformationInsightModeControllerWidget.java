@@ -7,19 +7,33 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverPosition;
+import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+
+import java.util.List;
 
 public class InformationInsightModeControllerWidget extends HorizontalLayout{
 
     private Button setInsightScopeButton;
+    private InformationInsightScopeManagementWidget informationInsightScopeManagementWidget;
+    private List<String> insightScopeConceptionKindList;
+    private List<String> insightScopeRelationKindList;
+    private List<ConceptionKindCorrelationInfo> insightScopeConceptionKindCorrelationList;
 
-    public InformationInsightModeControllerWidget() {
+    public InformationInsightModeControllerWidget(List<String> insightScopeConceptionKindList,
+                                                  List<String> insightScopeRelationKindList,List<ConceptionKindCorrelationInfo> insightScopeConceptionKindCorrelationList) {
         this.setSpacing(false);
         this.setPadding(false);
         this.setMargin(false);
         this.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        this.insightScopeConceptionKindList = insightScopeConceptionKindList;
+        this.insightScopeRelationKindList = insightScopeRelationKindList;
+        this.insightScopeConceptionKindCorrelationList = insightScopeConceptionKindCorrelationList;
 
         Icon infoIcon = LineAwesomeIconsSvg.COMMENT.create();
         infoIcon.setSize("14px");
@@ -56,5 +70,17 @@ public class InformationInsightModeControllerWidget extends HorizontalLayout{
         setInsightScopeButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
         setInsightScopeButton.setEnabled(false);
         add(setInsightScopeButton);
+
+        informationInsightScopeManagementWidget = new InformationInsightScopeManagementWidget(
+                insightScopeConceptionKindList,insightScopeRelationKindList,insightScopeConceptionKindCorrelationList);
+
+        Popover popover = new Popover();
+        popover.setTarget(setInsightScopeButton);
+        popover.setWidth("1000px");
+        popover.setHeight("600px");
+        popover.addThemeVariants(PopoverVariant.ARROW,PopoverVariant.LUMO_NO_PADDING);
+        popover.setPosition(PopoverPosition.END_TOP);
+        popover.setModal(true,true);
+        popover.add(informationInsightScopeManagementWidget);
     }
 }
