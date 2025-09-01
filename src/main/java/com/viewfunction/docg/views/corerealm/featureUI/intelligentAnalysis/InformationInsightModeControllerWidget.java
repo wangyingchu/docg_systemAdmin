@@ -64,22 +64,25 @@ public class InformationInsightModeControllerWidget extends HorizontalLayout{
         });
         add(talkModeRadioGroup);
 
+        informationInsightScopeManagementWidget = new InformationInsightScopeManagementWidget(
+                insightScopeConceptionKindList,insightScopeRelationKindList,insightScopeConceptionKindCorrelationList);
+
         setInsightScopeButton = new Button();
         setInsightScopeButton.setIcon(LineAwesomeIconsSvg.BUROMOBELEXPERTE.create());
         setInsightScopeButton.setTooltipText("洞察范围");
         setInsightScopeButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
         setInsightScopeButton.setEnabled(false);
+        setInsightScopeButton.addClickListener(event -> {
+            informationInsightScopeManagementWidget.refreshScopeManagementUI();
+        });
         add(setInsightScopeButton);
-
-        informationInsightScopeManagementWidget = new InformationInsightScopeManagementWidget(
-                insightScopeConceptionKindList,insightScopeRelationKindList,insightScopeConceptionKindCorrelationList);
 
         Popover popover = new Popover();
         popover.setTarget(setInsightScopeButton);
-        popover.setWidth("1000px");
+        popover.setWidth("1600px");
         popover.setHeight("600px");
         popover.addThemeVariants(PopoverVariant.ARROW,PopoverVariant.LUMO_NO_PADDING);
-        popover.setPosition(PopoverPosition.END_TOP);
+        popover.setPosition(PopoverPosition.TOP);
         popover.setModal(true,true);
         popover.add(informationInsightScopeManagementWidget);
     }

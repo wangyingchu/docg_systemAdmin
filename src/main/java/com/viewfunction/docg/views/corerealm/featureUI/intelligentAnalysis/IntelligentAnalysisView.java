@@ -113,7 +113,7 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
         mainContainerLayout.add(rightSideContainerLayout);
 
         List<Component> sectionAction2ComponentsList3 = new ArrayList<>();
-        SectionActionBar sectionActionBar3 = new SectionActionBar(LineAwesomeIconsSvg.EYE.create(),"领域知识探索洞察",sectionAction2ComponentsList3);
+        SectionActionBar sectionActionBar3 = new SectionActionBar(LineAwesomeIconsSvg.EYE.create(),"领域知识探索与洞察",sectionAction2ComponentsList3);
         rightSideContainerLayout.add(sectionActionBar3);
 
         this.informationInsightView = new InformationInsightView();
