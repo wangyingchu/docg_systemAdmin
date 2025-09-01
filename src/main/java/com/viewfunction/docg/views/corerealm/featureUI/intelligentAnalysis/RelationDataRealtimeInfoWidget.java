@@ -24,9 +24,12 @@ import java.util.Map;
 
 public class RelationDataRealtimeInfoWidget extends VerticalLayout {
 
-    public RelationDataRealtimeInfoWidget(){
+    private IntelligentAnalysisView containerIntelligentAnalysisView;
+
+    public RelationDataRealtimeInfoWidget(IntelligentAnalysisView containerIntelligentAnalysisView){
         this.getStyle().set("background-color", "white");
         this.setSpacing(false);
+        this.containerIntelligentAnalysisView = containerIntelligentAnalysisView;
     }
 
     public void  renderRelationDataRealtimeInfo(List<EntityStatisticsInfo> realtimeRelationList,
@@ -66,7 +69,7 @@ public class RelationDataRealtimeInfoWidget extends VerticalLayout {
                 Icon configIcon2 = LineAwesomeIconsSvg.AUDIBLE.create();
                 configIcon2.setSize("16px");
                 Button addToInsightScope = new Button(configIcon2, event -> {
-                    //renderConceptionKindConfigurationUI(conceptionKindName);
+                    containerIntelligentAnalysisView.addRelationKindToInsightScope(relationKindName);
                 });
                 addToInsightScope.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_CONTRAST);
                 addToInsightScope.setTooltipText("加入知识洞察范围");

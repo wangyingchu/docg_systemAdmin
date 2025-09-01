@@ -24,9 +24,12 @@ import java.util.Map;
 
 public class ConceptionDataRealtimeInfoWidget extends VerticalLayout {
 
-    public ConceptionDataRealtimeInfoWidget(){
+    private IntelligentAnalysisView containerIntelligentAnalysisView;
+
+    public ConceptionDataRealtimeInfoWidget(IntelligentAnalysisView containerIntelligentAnalysisView){
         this.getStyle().set("background-color", "white");
         this.setSpacing(false);
+        this.containerIntelligentAnalysisView = containerIntelligentAnalysisView;
     }
 
     public void renderConceptionDataRealtimeInfo(List<EntityStatisticsInfo> realtimeConceptionList,
@@ -69,7 +72,7 @@ public class ConceptionDataRealtimeInfoWidget extends VerticalLayout {
                 Icon configIcon2 = LineAwesomeIconsSvg.AUDIBLE.create();
                 configIcon2.setSize("16px");
                 Button addToInsightScope = new Button(configIcon2, event -> {
-                    //renderConceptionKindConfigurationUI(conceptionKindName);
+                    containerIntelligentAnalysisView.addConceptionKindToInsightScope(conceptionKindName);
                 });
                 addToInsightScope.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_CONTRAST);
                 addToInsightScope.setTooltipText("加入知识洞察范围");

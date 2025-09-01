@@ -23,16 +23,18 @@ import java.util.List;
 public class ConceptionDataCorrelationRealtimeInfoWidget extends VerticalLayout {
 
     private Grid<ConceptionKindCorrelationInfo> runtimeConceptionKindCorrelationInfoGrid;
+    private IntelligentAnalysisView containerIntelligentAnalysisView;
 
-    public ConceptionDataCorrelationRealtimeInfoWidget(){
+    public ConceptionDataCorrelationRealtimeInfoWidget(IntelligentAnalysisView containerIntelligentAnalysisView){
         this.getStyle().set("background-color", "white");
         this.setSpacing(false);
+        this.containerIntelligentAnalysisView = containerIntelligentAnalysisView;
 
-        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(conceptionKindCorrelationInfo -> {
             Icon configIcon = LineAwesomeIconsSvg.AUDIBLE.create();
             configIcon.setSize("16px");
             Button addToInsightScope = new Button(configIcon, event -> {
-                //renderConceptionKindConfigurationUI(conceptionKindName);
+                containerIntelligentAnalysisView.addConceptionKindCorrelationToInsightScope((ConceptionKindCorrelationInfo)conceptionKindCorrelationInfo);
             });
             addToInsightScope.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_CONTRAST);
             addToInsightScope.setTooltipText("加入知识洞察范围");

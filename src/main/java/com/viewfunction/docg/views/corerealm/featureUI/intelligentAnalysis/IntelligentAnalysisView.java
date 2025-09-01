@@ -77,7 +77,7 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
         leftSideComponentsLayout.setSpacing(false);
         leftSideScroller.setContent(leftSideComponentsLayout);
 
-        conceptionDataRealtimeInfoWidget = new ConceptionDataRealtimeInfoWidget();
+        conceptionDataRealtimeInfoWidget = new ConceptionDataRealtimeInfoWidget(this);
         Icon conceptionKindInfoTitleIcon = new Icon(VaadinIcon.CUBE);
         conceptionKindInfoTitleIcon.setSize("18px");
         NativeLabel conceptionKindInfoTitleLabel = new NativeLabel("ConceptionKind(概念类型) 数据分布");
@@ -87,7 +87,7 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
         conceptionKindInfoSectionWallContainer.setOpened(false);
         leftSideComponentsLayout.add(conceptionKindInfoSectionWallContainer);
 
-        relationDataRealtimeInfoWidget = new RelationDataRealtimeInfoWidget();
+        relationDataRealtimeInfoWidget = new RelationDataRealtimeInfoWidget(this);
         Icon relationKindInfoTitleIcon = new Icon(VaadinIcon.CONNECT_O);
         relationKindInfoTitleIcon.setSize("18px");
         NativeLabel relationKindInfoTitleLabel = new NativeLabel("RelationKind(关系类型) 数据分布");
@@ -97,7 +97,7 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
         relationKindInfoSectionWallContainer.setOpened(false);
         leftSideComponentsLayout.add(relationKindInfoSectionWallContainer);
 
-        conceptionDataCorrelationRealtimeInfoWidget = new ConceptionDataCorrelationRealtimeInfoWidget();
+        conceptionDataCorrelationRealtimeInfoWidget = new ConceptionDataCorrelationRealtimeInfoWidget(this);
         Icon dataRelationInfoTitleIcon = FontAwesome.Solid.CODE_FORK.create();
         dataRelationInfoTitleIcon.setSize("18px");
         NativeLabel dataRelationInfoTitleLabel = new NativeLabel("全域数据实时关联 数据分布");
@@ -200,5 +200,17 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
         } finally {
             targetCoreRealm.closeGlobalSession();
         }
+    }
+
+    public void addConceptionKindToInsightScope(String conceptionKindName){
+        this.informationInsightView.addConceptionKindToInsightScope(conceptionKindName);
+    }
+
+    public void addRelationKindToInsightScope(String relationKindName){
+        this.informationInsightView.addRelationKindToInsightScope(relationKindName);
+    }
+
+    public void addConceptionKindCorrelationToInsightScope(ConceptionKindCorrelationInfo conceptionKindCorrelationInfo){
+        this.informationInsightView.addConceptionKindCorrelationToInsightScope(conceptionKindCorrelationInfo);
     }
 }

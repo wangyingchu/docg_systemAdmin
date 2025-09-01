@@ -3,12 +3,16 @@ package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 public class InformationInsightView extends VerticalLayout {
 
@@ -59,5 +63,20 @@ public class InformationInsightView extends VerticalLayout {
 
     public void setInsightContentHeight(int heightValue){
         this.insightContentScroller.setHeight(heightValue, Unit.PIXELS);
+    }
+
+    public void addConceptionKindToInsightScope(String conceptionKindName){
+        CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKindName+" 加入洞察范围", NotificationVariant.LUMO_SUCCESS,2000, Notification.Position.BOTTOM_START);
+    }
+
+    public void addRelationKindToInsightScope(String relationKindName){
+        CommonUIOperationUtil.showPopupNotification("关系类型 "+relationKindName+" 加入洞察范围", NotificationVariant.LUMO_SUCCESS,2000, Notification.Position.BOTTOM_START);
+    }
+
+    public void addConceptionKindCorrelationToInsightScope(ConceptionKindCorrelationInfo conceptionKindCorrelationInfo){
+        System.out.println("conceptionKindCorrelationInfo "+conceptionKindCorrelationInfo);
+        CommonUIOperationUtil.showPopupNotification("概念关联 "+conceptionKindCorrelationInfo.getSourceConceptionKindName()+
+                " - "+conceptionKindCorrelationInfo.getRelationKindName()+" - "+
+                conceptionKindCorrelationInfo.getTargetConceptionKindName()+" 加入洞察范围", NotificationVariant.LUMO_SUCCESS,2000, Notification.Position.BOTTOM_START);
     }
 }
