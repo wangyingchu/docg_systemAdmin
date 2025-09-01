@@ -1,8 +1,10 @@
 package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 
+import com.docg.ai.llm.naturalLanguageAnalysis.util.Text2QueryUtil;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -68,6 +70,9 @@ public class InformationInsightView extends VerticalLayout {
         askButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         askButton.setWidth(30,Unit.PIXELS);
         askButton.setHeight(70,Unit.PIXELS);
+        askButton.addClickListener(e -> {
+            doAITalk();
+        });
         buttonsControllerLayout.add(askButton);
     }
 
@@ -101,5 +106,15 @@ public class InformationInsightView extends VerticalLayout {
             }
         }
         this.insightScopeConceptionKindCorrelationList.add(conceptionKindCorrelationInfo);
+    }
+
+    private void doAITalk(){
+        String question = this.questionTextArea.getValue();
+        if(question == null || question.trim().length() == 0){
+            CommonUIOperationUtil.showPopupNotification("请输入问题", NotificationVariant.LUMO_ERROR,1500, Notification.Position.MIDDLE);
+        }else{
+            String cql = Text2QueryUtil.generateQueryCypher(question);
+            this.insightContentContainerLayout.add(new Span(cql));
+        }
     }
 }
