@@ -43,7 +43,9 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
     private Registration listener;
     private int intelligentAnalysisViewHeightOffset = 110;
     private RealtimeConceptionDataCorrelationChartWidget realtimeConceptionDataCorrelationChartWidget;
-    private InformationInsightView informationInsightView;
+    private InformationAnalysisView informationAnalysisView;
+
+    public enum InformationAnalysisMode { INSIGHT, EXPLORATION}
 
     public IntelligentAnalysisView() {
         HorizontalLayout mainContainerLayout = new HorizontalLayout();
@@ -116,8 +118,8 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
         SectionActionBar sectionActionBar3 = new SectionActionBar(LineAwesomeIconsSvg.EYE.create(),"领域知识探索与洞察",sectionAction2ComponentsList3);
         rightSideContainerLayout.add(sectionActionBar3);
 
-        this.informationInsightView = new InformationInsightView();
-        rightSideContainerLayout.add(informationInsightView);
+        this.informationAnalysisView = new InformationAnalysisView();
+        rightSideContainerLayout.add(informationAnalysisView);
     }
 
     @Override
@@ -133,7 +135,7 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
             int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 430;
             leftSideScroller.setHeight(leftSideScrollHeight,Unit.PIXELS);
             int insightContentHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 195;
-            informationInsightView.setInsightContentHeight(insightContentHeight);
+            informationAnalysisView.setInsightContentHeight(insightContentHeight);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -141,7 +143,7 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
             int leftSideScrollHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 430;
             leftSideScroller.setHeight(leftSideScrollHeight,Unit.PIXELS);
             int insightContentHeight = currentBrowserHeight - intelligentAnalysisViewHeightOffset - 195;
-            informationInsightView.setInsightContentHeight(insightContentHeight);
+            informationAnalysisView.setInsightContentHeight(insightContentHeight);
         }));
 
         CoreRealm targetCoreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -203,14 +205,14 @@ public class IntelligentAnalysisView extends VerticalLayout implements BeforeEnt
     }
 
     public void addConceptionKindToInsightScope(String conceptionKindName){
-        this.informationInsightView.addConceptionKindToInsightScope(conceptionKindName);
+        this.informationAnalysisView.addConceptionKindToInsightScope(conceptionKindName);
     }
 
     public void addRelationKindToInsightScope(String relationKindName){
-        this.informationInsightView.addRelationKindToInsightScope(relationKindName);
+        this.informationAnalysisView.addRelationKindToInsightScope(relationKindName);
     }
 
     public void addConceptionKindCorrelationToInsightScope(ConceptionKindCorrelationInfo conceptionKindCorrelationInfo){
-        this.informationInsightView.addConceptionKindCorrelationToInsightScope(conceptionKindCorrelationInfo);
+        this.informationAnalysisView.addConceptionKindCorrelationToInsightScope(conceptionKindCorrelationInfo);
     }
 }

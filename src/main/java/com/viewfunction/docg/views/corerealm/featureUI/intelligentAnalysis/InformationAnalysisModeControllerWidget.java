@@ -17,16 +17,17 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 
 import java.util.List;
 
-public class InformationInsightModeControllerWidget extends HorizontalLayout{
+public class InformationAnalysisModeControllerWidget extends HorizontalLayout{
 
     private Button setInsightScopeButton;
     private InformationInsightScopeManagementWidget informationInsightScopeManagementWidget;
     private List<String> insightScopeConceptionKindList;
     private List<String> insightScopeRelationKindList;
     private List<ConceptionKindCorrelationInfo> insightScopeConceptionKindCorrelationList;
+    private RadioButtonGroup talkModeRadioGroup;
 
-    public InformationInsightModeControllerWidget(List<String> insightScopeConceptionKindList,
-                                                  List<String> insightScopeRelationKindList,List<ConceptionKindCorrelationInfo> insightScopeConceptionKindCorrelationList) {
+    public InformationAnalysisModeControllerWidget(List<String> insightScopeConceptionKindList,
+                                                   List<String> insightScopeRelationKindList, List<ConceptionKindCorrelationInfo> insightScopeConceptionKindCorrelationList) {
         this.setSpacing(false);
         this.setPadding(false);
         this.setMargin(false);
@@ -44,7 +45,7 @@ public class InformationInsightModeControllerWidget extends HorizontalLayout{
         talkModeMessage.getStyle().set("font-size","8px");
         add(talkModeMessage);
 
-        RadioButtonGroup talkModeRadioGroup = new RadioButtonGroup<>();
+        talkModeRadioGroup = new RadioButtonGroup<>();
         //<theme-editor-local-classname>
         talkModeRadioGroup.addClassName("geospatial-region-detail-ui-radio-group-1");
         talkModeRadioGroup.getStyle().set("top","2px").set("position","relative");
@@ -85,5 +86,14 @@ public class InformationInsightModeControllerWidget extends HorizontalLayout{
         popover.setPosition(PopoverPosition.TOP);
         popover.setModal(true,true);
         popover.add(informationInsightScopeManagementWidget);
+    }
+
+    public IntelligentAnalysisView.InformationAnalysisMode getAnalysisMode(){
+        String mode = talkModeRadioGroup.getValue().toString();
+        if("探索".equals(mode)){
+            return IntelligentAnalysisView.InformationAnalysisMode.EXPLORATION;
+        }else{
+            return IntelligentAnalysisView.InformationAnalysisMode.INSIGHT;
+        }
     }
 }

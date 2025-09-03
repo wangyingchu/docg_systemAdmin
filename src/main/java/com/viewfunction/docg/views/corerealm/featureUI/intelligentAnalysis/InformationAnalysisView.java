@@ -19,17 +19,17 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InformationInsightView extends VerticalLayout {
+public class InformationAnalysisView extends VerticalLayout {
 
     private Scroller insightContentScroller;
     private VerticalLayout insightContentContainerLayout;
     private TextArea questionTextArea;
-    private InformationInsightModeControllerWidget informationInsightModeControllerWidget;
+    private InformationAnalysisModeControllerWidget informationAnalysisModeControllerWidget;
     private List<String> insightScopeConceptionKindList;
     private List<String> insightScopeRelationKindList;
     private List<ConceptionKindCorrelationInfo> insightScopeConceptionKindCorrelationList;
 
-    public InformationInsightView() {
+    public InformationAnalysisView() {
         this.setWidthFull();
         this.insightContentScroller = new Scroller();
         this.insightContentScroller.setWidthFull();
@@ -40,7 +40,7 @@ public class InformationInsightView extends VerticalLayout {
         this.insightScopeConceptionKindList = new ArrayList<>();
         this.insightScopeRelationKindList = new ArrayList<>();
         this.insightScopeConceptionKindCorrelationList = new ArrayList<>();
-        this.informationInsightModeControllerWidget = new InformationInsightModeControllerWidget(
+        this.informationAnalysisModeControllerWidget = new InformationAnalysisModeControllerWidget(
                 this.insightScopeConceptionKindList,this.insightScopeRelationKindList,this.insightScopeConceptionKindCorrelationList);
 
         HorizontalLayout inputElementContainerLayout = new HorizontalLayout();
@@ -56,7 +56,7 @@ public class InformationInsightView extends VerticalLayout {
         this.questionTextArea.addValueChangeListener(e -> {
             //e.getSource().setHelperText(e.getValue().length() + "/" + charLimit);
         });
-        this.questionTextArea.setHelperComponent(this.informationInsightModeControllerWidget);
+        this.questionTextArea.setHelperComponent(this.informationAnalysisModeControllerWidget);
         this.questionTextArea.setPlaceholder("Message for the bot");
 
         inputElementContainerLayout.add(this.questionTextArea);
@@ -113,8 +113,15 @@ public class InformationInsightView extends VerticalLayout {
         if(question == null || question.trim().length() == 0){
             CommonUIOperationUtil.showPopupNotification("请输入问题", NotificationVariant.LUMO_ERROR,1500, Notification.Position.MIDDLE);
         }else{
-            String cql = Text2QueryUtil.generateQueryCypher(question);
-            this.insightContentContainerLayout.add(new Span(cql));
+            IntelligentAnalysisView.InformationAnalysisMode informationAnalysisMode = this.informationAnalysisModeControllerWidget.getAnalysisMode();
+            switch(informationAnalysisMode){
+                case INSIGHT:break;
+                case EXPLORATION:
+                    String cql = Text2QueryUtil.generateQueryCypher(question);
+                    InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql);
+                    this.insightContentContainerLayout.add(informationExplorationWidget);
+                    break;
+            }
         }
     }
 }
