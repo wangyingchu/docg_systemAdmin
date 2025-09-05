@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -14,15 +15,26 @@ import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
 import com.vaadin.flow.component.popover.PopoverVariant;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentQueryResult;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
 
 public class InformationExplorationWidget extends VerticalLayout {
 
+    private String explorationQuery;
+
     public InformationExplorationWidget(String question,String explorationQuery){
         this.setWidthFull();
+        this.explorationQuery = explorationQuery;
 
         Icon operationIcon = LineAwesomeIconsSvg.SQUARE.create();
         operationIcon.setSize("12px");
@@ -73,5 +85,42 @@ public class InformationExplorationWidget extends VerticalLayout {
         popover.setPosition(PopoverPosition.BOTTOM_START);
         popover.setModal(true);
         popover.add(new ExplorationQueryInfoWidget(explorationQuery));
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        renderExplorationQueryResult();
+    }
+
+    private void renderExplorationQueryResult(){
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
+        try {
+            DynamicContentQueryResult dynamicContentQueryResult =crossKindDataOperator.executeAdhocQuery(explorationQuery);
+            if(dynamicContentQueryResult != null){
+                Map<String, DynamicContentValue.ContentValueType> contentValueMap =
+                        dynamicContentQueryResult.getDynamicContentAttributesValueTypeMap();
+
+                contentValueMap.forEach((key,value)->{
+
+
+
+
+
+                });
+
+                List<DynamicContentValue> dynamicContentValueList = dynamicContentQueryResult.getDynamicContentValueList();
+
+                long resultContentValue = dynamicContentQueryResult.getDynamicContentValuesCount();
+
+
+                System.out.println(contentValueMap);
+                System.out.println(contentValueMap);
+
+            }
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
