@@ -4,7 +4,6 @@ import com.docg.ai.llm.naturalLanguageAnalysis.util.Text2QueryUtil;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -117,7 +116,8 @@ public class InformationAnalysisView extends VerticalLayout {
             switch(informationAnalysisMode){
                 case INSIGHT:break;
                 case EXPLORATION:
-                    String cql = Text2QueryUtil.generateQueryCypher(question);
+                    //String cql = Text2QueryUtil.generateQueryCypher(question);
+                    String cql = "MATCH p=(:RiverSystem-Line)-[:ConnectedByWaterArea]->(:RiverSystem-Line) RETURN p LIMIT 100";
                     InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql);
                     this.insightContentContainerLayout.add(informationExplorationWidget);
                     break;
