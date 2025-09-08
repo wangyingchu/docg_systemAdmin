@@ -1,6 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -8,6 +9,7 @@ import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -17,24 +19,32 @@ import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
 import com.vaadin.flow.component.popover.PopoverVariant;
 
-import com.vaadin.flow.function.ValueProvider;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentQueryResult;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.*;
+import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesPath;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class InformationExplorationWidget extends VerticalLayout {
 
     private String explorationQuery;
-    private Grid<DynamicContentValue> queryResultGrid;
+    private Grid<Map<String,DynamicContentValue>> queryResultGrid;
     private Details informationExplorationResultDetails;
 
     public InformationExplorationWidget(String question,String explorationQuery){
@@ -106,28 +116,173 @@ public class InformationExplorationWidget extends VerticalLayout {
             if (dynamicContentQueryResult != null) {
                 Map<String, DynamicContentValue.ContentValueType> contentValueMap =
                         dynamicContentQueryResult.getDynamicContentAttributesValueTypeMap();
-
                 queryResultGrid = new Grid<>();
                 queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COLUMN_BORDERS,GridVariant.LUMO_COMPACT,GridVariant.LUMO_WRAP_CELL_CONTENT);
                 informationExplorationResultDetails.add(queryResultGrid);
-                List<DynamicContentValue> dynamicContentValueList = dynamicContentQueryResult.getDynamicContentValueList();
-
-                long resultContentValue = dynamicContentQueryResult.getDynamicContentValuesCount();
-
+                List<Map<String,DynamicContentValue>> dynamicContentValueResultList = dynamicContentQueryResult.getDynamicContentResultValueList();
+                //long resultContentValue = dynamicContentQueryResult.getDynamicContentValuesCount();
                 contentValueMap.forEach((key, value) -> {
-                    queryResultGrid.addColumn(new ValueProvider<DynamicContentValue, Object>() {
+                    ComponentRenderer dynamicContentValueComponentRenderer = new ComponentRenderer(dynamicContentValueObj -> {
+                        if(dynamicContentValueObj != null && dynamicContentValueObj instanceof Map){
+                            Map<String,DynamicContentValue> dynamicContentValueMap = (Map<String,DynamicContentValue>)dynamicContentValueObj;
+                            DynamicContentValue dynamicContentValue = dynamicContentValueMap.get(key);
+                            DynamicContentValue.ContentValueType contentValueType = dynamicContentValue.getValueType();
+                            Object contentObject = dynamicContentValue.getValueObject();
 
-                        @Override
-                        public Object apply(DynamicContentValue dynamicContentValue) {
-                            return dynamicContentValue.getValueObject();
+                            if(DynamicContentValue.ContentValueType.CONCEPTION_ENTITY.equals(contentValueType)){
+                                ConceptionEntity conceptionEntity = (ConceptionEntity)contentObject;
+                                Icon showConceptionEntityIcon = new Icon(VaadinIcon.CUBE);
+                                showConceptionEntityIcon.setSize("15px");
+                                Button showConceptionEntityButton = new Button(showConceptionEntityIcon, event -> {
+                                    renderConceptionEntityUI(conceptionEntity);
+                                });
+                                showConceptionEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
+                                showConceptionEntityButton.setTooltipText("显示概念实体详情");
+                                return showConceptionEntityButton;
+                            }else if(DynamicContentValue.ContentValueType.RELATION_ENTITY.equals(contentValueType)){
+                                RelationEntity relationEntity = (RelationEntity)contentObject;
+                                Icon showRelationEntityIcon = new Icon(VaadinIcon.CONNECT_O);
+                                showRelationEntityIcon.setSize("18px");
+                                Button showRelationEntityButton = new Button(showRelationEntityIcon, event -> {
+                                    renderRelationEntityUI(relationEntity);
+                                });
+                                showRelationEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
+                                showRelationEntityButton.setTooltipText("显示关系实体详情");
+                                return showRelationEntityButton;
+                            }else if(DynamicContentValue.ContentValueType.ENTITIES_PATH.equals(contentValueType)){
+                                EntitiesPath entitiesPath = (EntitiesPath)contentObject;
+                                return new NativeLabel("CC");
+                            }else{
+                                return new NativeLabel(dynamicContentValue.getValueObject().toString());
+                            }
+                        }else{
+                            return new NativeLabel("");
                         }
-                    }).setHeader(" " + key).setKey(key + "_KEY");
-                    queryResultGrid.getColumnByKey(key + "_KEY").setSortable(true).setResizable(true);;
+                    });
+                    queryResultGrid.addColumn(dynamicContentValueComponentRenderer).setHeader(" " + key).setKey(key + "_KEY");
+                    queryResultGrid.getColumnByKey(key + "_KEY").setSortable(true).setResizable(true);
                 });
-                queryResultGrid.setItems(dynamicContentValueList);
+                queryResultGrid.setItems(dynamicContentValueResultList);
             }
         } catch(CoreRealmServiceEntityExploreException e){
             throw new RuntimeException(e);
         }
+    }
+
+    private void renderConceptionEntityUI(ConceptionEntity conceptionEntity){
+        String conceptionKindName =conceptionEntity.getConceptionKindName();
+        String conceptionEntityUID = conceptionEntity.getConceptionEntityUID();
+
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(conceptionKindName,conceptionEntityUID);
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("10px");
+        titleDetailLayout.add(conceptionKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(conceptionKindName);
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+        conceptionEntityIcon.setSize("10px");
+        titleDetailLayout.add(conceptionEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel conceptionEntityUIDLabel = new NativeLabel(conceptionEntityUID);
+        titleDetailLayout.add(conceptionEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
+    }
+
+    private void renderRelationEntityUI(RelationEntity relationEntity){
+        String relationKindName =relationEntity.getRelationKindName();
+        String relationEntityUID = relationEntity.getRelationEntityUID();
+        RelationEntityDetailUI relationEntityDetailUI = new RelationEntityDetailUI(relationKindName,relationEntityUID);
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+        relationKindIcon.setSize("10px");
+        titleDetailLayout.add(relationKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(relationKindName);
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon relationEntityIcon = VaadinIcon.KEY_O.create();
+        relationEntityIcon.setSize("10px");
+        titleDetailLayout.add(relationEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel relationEntityUIDLabel = new NativeLabel(relationEntityUID);
+        titleDetailLayout.add(relationEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"关系实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(relationEntityDetailUI);
+        relationEntityDetailUI.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
     }
 }
