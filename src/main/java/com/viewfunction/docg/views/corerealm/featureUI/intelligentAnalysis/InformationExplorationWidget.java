@@ -6,6 +6,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.details.DetailsVariant;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -15,6 +17,7 @@ import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
 import com.vaadin.flow.component.popover.PopoverVariant;
 
+import com.vaadin.flow.function.ValueProvider;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentQueryResult;
@@ -31,6 +34,8 @@ import java.util.Map;
 public class InformationExplorationWidget extends VerticalLayout {
 
     private String explorationQuery;
+    private Grid<DynamicContentValue> queryResultGrid;
+    private Details informationExplorationResultDetails;
 
     public InformationExplorationWidget(String question,String explorationQuery){
         this.setWidthFull();
@@ -58,7 +63,7 @@ public class InformationExplorationWidget extends VerticalLayout {
         horizontalLayout.setAlignItems(Alignment.CENTER);
         horizontalLayout.add(operationIcon,timeSpan,explorationQuestionSpan);
 
-        Details informationExplorationResultDetails = new Details(horizontalLayout);
+        informationExplorationResultDetails = new Details(horizontalLayout);
         informationExplorationResultDetails.addThemeVariants(DetailsVariant.REVERSE);
         informationExplorationResultDetails.setWidthFull();
 
@@ -97,29 +102,31 @@ public class InformationExplorationWidget extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
         try {
-            DynamicContentQueryResult dynamicContentQueryResult =crossKindDataOperator.executeAdhocQuery(explorationQuery);
-            if(dynamicContentQueryResult != null){
+            DynamicContentQueryResult dynamicContentQueryResult = crossKindDataOperator.executeAdhocQuery(explorationQuery);
+            if (dynamicContentQueryResult != null) {
                 Map<String, DynamicContentValue.ContentValueType> contentValueMap =
                         dynamicContentQueryResult.getDynamicContentAttributesValueTypeMap();
 
-                contentValueMap.forEach((key,value)->{
-
-
-
-
-
-                });
-
+                queryResultGrid = new Grid<>();
+                queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COLUMN_BORDERS,GridVariant.LUMO_COMPACT,GridVariant.LUMO_WRAP_CELL_CONTENT);
+                informationExplorationResultDetails.add(queryResultGrid);
                 List<DynamicContentValue> dynamicContentValueList = dynamicContentQueryResult.getDynamicContentValueList();
 
                 long resultContentValue = dynamicContentQueryResult.getDynamicContentValuesCount();
 
+                contentValueMap.forEach((key, value) -> {
+                    queryResultGrid.addColumn(new ValueProvider<DynamicContentValue, Object>() {
 
-                System.out.println(contentValueMap);
-                System.out.println(contentValueMap);
-
+                        @Override
+                        public Object apply(DynamicContentValue dynamicContentValue) {
+                            return dynamicContentValue.getValueObject();
+                        }
+                    }).setHeader(" " + key).setKey(key + "_KEY");
+                    queryResultGrid.getColumnByKey(key + "_KEY").setSortable(true).setResizable(true);;
+                });
+                queryResultGrid.setItems(dynamicContentValueList);
             }
-        } catch (CoreRealmServiceEntityExploreException e) {
+        } catch(CoreRealmServiceEntityExploreException e){
             throw new RuntimeException(e);
         }
     }
