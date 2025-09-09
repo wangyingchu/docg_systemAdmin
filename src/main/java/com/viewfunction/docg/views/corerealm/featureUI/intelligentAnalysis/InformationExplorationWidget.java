@@ -2,6 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -9,6 +10,7 @@ import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -19,6 +21,7 @@ import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
 import com.vaadin.flow.component.popover.PopoverVariant;
 
+import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
@@ -86,20 +89,28 @@ public class InformationExplorationWidget extends VerticalLayout {
         explorationQueryControlLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         explorationQueryControlLayout.getStyle().set("background-color", "var(--lumo-contrast-5pct)");
 
-        Icon explorationQueryIcon = LineAwesomeIconsSvg.DIGITAL_TACHOGRAPH_SOLID.create();
-        explorationQueryIcon.getStyle().set("padding-left","5px");
-        explorationQueryControlLayout.add(explorationQueryIcon,reRunButton);
-
         informationExplorationResultDetails.add(explorationQueryControlLayout);
 
-        Popover popover = new Popover();
-        popover.setTarget(explorationQueryIcon);
-        popover.setWidth("500px");
-        popover.setHeight("280px");
-        popover.addThemeVariants(PopoverVariant.ARROW,PopoverVariant.LUMO_NO_PADDING);
-        popover.setPosition(PopoverPosition.BOTTOM_START);
-        popover.setModal(true);
-        popover.add(new ExplorationQueryInfoWidget(explorationQuery));
+        Icon explorationQueryIcon = LineAwesomeIconsSvg.DIGITAL_TACHOGRAPH_SOLID.create();
+        explorationQueryIcon.getStyle().set("padding-left","5px");
+
+        Popover popover1 = new Popover();
+        popover1.setTarget(explorationQueryIcon);
+        popover1.setWidth("500px");
+        popover1.setHeight("280px");
+        popover1.addThemeVariants(PopoverVariant.ARROW,PopoverVariant.LUMO_NO_PADDING);
+        popover1.setPosition(PopoverPosition.BOTTOM_START);
+        popover1.setModal(true);
+        popover1.add(new ExplorationQueryInfoWidget(explorationQuery));
+
+
+        Icon attributrValuesMapIcon = LineAwesomeIconsSvg.BARS_SOLID.create();
+        attributrValuesMapIcon.getStyle().set("padding-left","5px");
+
+        Icon queryResultStaticIcon = LineAwesomeIconsSvg.CHALKBOARD_SOLID.create();
+        queryResultStaticIcon.getStyle().set("padding-left","5px");
+
+        explorationQueryControlLayout.add(explorationQueryIcon,attributrValuesMapIcon,queryResultStaticIcon,reRunButton);
     }
 
     @Override
@@ -116,9 +127,16 @@ public class InformationExplorationWidget extends VerticalLayout {
             if (dynamicContentQueryResult != null) {
                 Map<String, DynamicContentValue.ContentValueType> contentValueMap =
                         dynamicContentQueryResult.getDynamicContentAttributesValueTypeMap();
+
                 queryResultGrid = new Grid<>();
                 queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COLUMN_BORDERS,GridVariant.LUMO_COMPACT,GridVariant.LUMO_WRAP_CELL_CONTENT);
-                informationExplorationResultDetails.add(queryResultGrid);
+                TabSheet tabSheet = new TabSheet();
+                tabSheet.add("数据", queryResultGrid);
+                tabSheet.add("图谱", new Div(new Text("This is the Graph tab content")));
+                tabSheet.add("解读", new Div(new Text("This is the Explanation tab content")));
+                add(tabSheet);
+                informationExplorationResultDetails.add(tabSheet);
+
                 List<Map<String,DynamicContentValue>> dynamicContentValueResultList = dynamicContentQueryResult.getDynamicContentResultValueList();
                 //long resultContentValue = dynamicContentQueryResult.getDynamicContentValuesCount();
                 contentValueMap.forEach((key, value) -> {
