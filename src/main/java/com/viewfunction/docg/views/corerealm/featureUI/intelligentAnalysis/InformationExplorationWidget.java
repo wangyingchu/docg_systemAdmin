@@ -93,7 +93,7 @@ public class InformationExplorationWidget extends VerticalLayout {
 
         Icon explorationQueryIcon = LineAwesomeIconsSvg.DIGITAL_TACHOGRAPH_SOLID.create();
         explorationQueryIcon.getStyle().set("padding-left","5px");
-
+        explorationQueryIcon.setTooltipText("探索查询语句");
         Popover popover1 = new Popover();
         popover1.setTarget(explorationQueryIcon);
         popover1.setWidth("500px");
@@ -103,12 +103,29 @@ public class InformationExplorationWidget extends VerticalLayout {
         popover1.setModal(true);
         popover1.add(new ExplorationQueryInfoWidget(explorationQuery));
 
-
         Icon attributrValuesMapIcon = LineAwesomeIconsSvg.BARS_SOLID.create();
         attributrValuesMapIcon.getStyle().set("padding-left","5px");
+        attributrValuesMapIcon.setTooltipText("探索结果属性值信息");
+        Popover popover2 = new Popover();
+        popover2.setTarget(attributrValuesMapIcon);
+        popover2.setWidth("500px");
+        popover2.setHeight("280px");
+        popover2.addThemeVariants(PopoverVariant.ARROW,PopoverVariant.LUMO_NO_PADDING);
+        popover2.setPosition(PopoverPosition.BOTTOM_START);
+        popover2.setModal(true);
+        popover2.add(new ExplorationQueryInfoWidget(explorationQuery));
 
         Icon queryResultStaticIcon = LineAwesomeIconsSvg.CHALKBOARD_SOLID.create();
         queryResultStaticIcon.getStyle().set("padding-left","5px");
+        queryResultStaticIcon.setTooltipText("探索结果内容解读");
+        Popover popover3 = new Popover();
+        popover3.setTarget(queryResultStaticIcon);
+        popover3.setWidth("500px");
+        popover3.setHeight("280px");
+        popover3.addThemeVariants(PopoverVariant.ARROW,PopoverVariant.LUMO_NO_PADDING);
+        popover3.setPosition(PopoverPosition.BOTTOM_START);
+        popover3.setModal(true);
+        popover3.add(new ExplorationQueryInfoWidget(explorationQuery));
 
         explorationQueryControlLayout.add(explorationQueryIcon,attributrValuesMapIcon,queryResultStaticIcon,reRunButton);
     }
