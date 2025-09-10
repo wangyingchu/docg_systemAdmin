@@ -20,8 +20,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
 import com.vaadin.flow.component.popover.PopoverVariant;
-
 import com.vaadin.flow.component.tabs.TabSheet;
+
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
@@ -56,8 +56,8 @@ public class InformationExplorationWidget extends VerticalLayout {
         this.setWidthFull();
         this.explorationQuery = explorationQuery;
 
-        Icon operationIcon = LineAwesomeIconsSvg.SQUARE.create();
-        operationIcon.setSize("12px");
+        Icon operationIcon = VaadinIcon.TABS.create();
+        operationIcon.setSize("16px");
         operationIcon.getStyle().set("padding-right","1px");
 
         Span explorationQuestionSpan = new Span(question);
@@ -85,6 +85,7 @@ public class InformationExplorationWidget extends VerticalLayout {
         informationExplorationResultDetails.setOpened(true);
         add(informationExplorationResultDetails);
         informationExplorationResultDetails.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        informationExplorationResultDetails.getStyle().set("border-top", "1px solid var(--lumo-contrast-20pct)");
 
         HorizontalLayout explorationQueryControlLayout = new HorizontalLayout();
         explorationQueryControlLayout.setHeight(20, Unit.PIXELS);
