@@ -49,6 +49,8 @@ public class InformationExplorationWidget extends VerticalLayout {
     private String explorationQuery;
     private Grid<Map<String,DynamicContentValue>> queryResultGrid;
     private Details informationExplorationResultDetails;
+    private Popover popover2;
+    private Popover popover3;
 
     public InformationExplorationWidget(String question,String explorationQuery){
         this.setWidthFull();
@@ -106,26 +108,24 @@ public class InformationExplorationWidget extends VerticalLayout {
         Icon attributrValuesMapIcon = LineAwesomeIconsSvg.BARS_SOLID.create();
         attributrValuesMapIcon.getStyle().set("padding-left","5px");
         attributrValuesMapIcon.setTooltipText("探索结果属性值信息");
-        Popover popover2 = new Popover();
+        popover2 = new Popover();
         popover2.setTarget(attributrValuesMapIcon);
         popover2.setWidth("500px");
         popover2.setHeight("280px");
         popover2.addThemeVariants(PopoverVariant.ARROW,PopoverVariant.LUMO_NO_PADDING);
         popover2.setPosition(PopoverPosition.BOTTOM_START);
         popover2.setModal(true);
-        popover2.add(new ExplorationQueryInfoWidget(explorationQuery));
 
         Icon queryResultStaticIcon = LineAwesomeIconsSvg.CHALKBOARD_SOLID.create();
         queryResultStaticIcon.getStyle().set("padding-left","5px");
-        queryResultStaticIcon.setTooltipText("探索结果内容解读");
-        Popover popover3 = new Popover();
+        queryResultStaticIcon.setTooltipText("探索查询统计信息");
+        popover3 = new Popover();
         popover3.setTarget(queryResultStaticIcon);
         popover3.setWidth("500px");
-        popover3.setHeight("280px");
+        popover3.setHeight("230px");
         popover3.addThemeVariants(PopoverVariant.ARROW,PopoverVariant.LUMO_NO_PADDING);
         popover3.setPosition(PopoverPosition.BOTTOM_START);
         popover3.setModal(true);
-        popover3.add(new ExplorationQueryInfoWidget(explorationQuery));
 
         explorationQueryControlLayout.add(explorationQueryIcon,attributrValuesMapIcon,queryResultStaticIcon,reRunButton);
     }
@@ -198,6 +198,13 @@ public class InformationExplorationWidget extends VerticalLayout {
                     queryResultGrid.getColumnByKey(key + "_KEY").setSortable(true).setResizable(true);
                 });
                 queryResultGrid.setItems(dynamicContentValueResultList);
+
+                QueryResultAttributeValuesInfoWidget queryResultAttributeValuesInfoWidget = new QueryResultAttributeValuesInfoWidget(contentValueMap);
+                popover2.add(queryResultAttributeValuesInfoWidget);
+
+                QueryResultStaticsInfoWidget queryResultStaticsInfoWidget = new QueryResultStaticsInfoWidget(
+                        dynamicContentQueryResult.getStartTime(),dynamicContentQueryResult.getFinishTime(),dynamicContentQueryResult.getDynamicContentValuesCount());
+                popover3.add(queryResultStaticsInfoWidget);
             }
         } catch(CoreRealmServiceEntityExploreException e){
             throw new RuntimeException(e);
