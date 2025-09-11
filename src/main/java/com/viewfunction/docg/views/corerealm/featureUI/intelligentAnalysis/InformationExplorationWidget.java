@@ -61,6 +61,10 @@ public class InformationExplorationWidget extends VerticalLayout {
         operationIcon.getStyle().set("padding-right","1px");
 
         Span explorationQuestionSpan = new Span(question);
+        explorationQuestionSpan.getStyle()
+                .set("font-size","var(--lumo-font-size-m)")
+                .set("font-weight","bolder")
+                .set("font-style","oblique");
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now =LocalDateTime.now();
