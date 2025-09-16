@@ -34,6 +34,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.maintainEntitiesPath.EntitiesPathDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
 
@@ -191,7 +192,14 @@ public class InformationExplorationWidget extends VerticalLayout {
                                 return showRelationEntityButton;
                             }else if(DynamicContentValue.ContentValueType.ENTITIES_PATH.equals(contentValueType)){
                                 EntitiesPath entitiesPath = (EntitiesPath)contentObject;
-                                return new NativeLabel("CC");
+                                Icon showEntitiesPathIcon = LineAwesomeIconsSvg.INFINITY_SOLID.create();
+                                showEntitiesPathIcon.setSize("14px");
+                                Button showEntitiesPathEntityButton = new Button(showEntitiesPathIcon, event -> {
+                                    renderEntitiesPathUI(entitiesPath);
+                                });
+                                showEntitiesPathEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
+                                showEntitiesPathEntityButton.setTooltipText("显示实体路径详情");
+                                return showEntitiesPathEntityButton;
                             }else{
                                 return new NativeLabel(dynamicContentValue.getValueObject().toString());
                             }
@@ -269,7 +277,7 @@ public class InformationExplorationWidget extends VerticalLayout {
 
         actionComponentList.add(titleDetailLayout);
 
-        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",actionComponentList,null,true);
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.CUBE),"概念实体详情",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
         conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
@@ -327,9 +335,65 @@ public class InformationExplorationWidget extends VerticalLayout {
 
         actionComponentList.add(titleDetailLayout);
 
-        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"关系实体详情",actionComponentList,null,true);
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.CONNECT_O),"关系实体详情",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(relationEntityDetailUI);
         relationEntityDetailUI.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
+    }
+
+    private void renderEntitiesPathUI(EntitiesPath entitiesPath){
+        EntitiesPathDetailUI entitiesPathDetailUI = new EntitiesPathDetailUI();
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("10px");
+        titleDetailLayout.add(conceptionKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionEntitiesCountLabel = new NativeLabel(entitiesPath.getPathConceptionEntities().size()+"个概念实体");
+        conceptionEntitiesCountLabel.getStyle().set("color","var(--lumo-contrast-50pct)").set("font-size","var(--lumo-font-size-xxs)");
+        titleDetailLayout.add(conceptionEntitiesCountLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.PLUS.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+        relationKindIcon.setSize("10px");
+        titleDetailLayout.add(relationKindIcon);
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel relationEntitiesCountLabel = new NativeLabel(entitiesPath.getPathRelationEntities().size()+"个关系实体");
+        relationEntitiesCountLabel.getStyle().set("color","var(--lumo-contrast-50pct)").set("font-size","var(--lumo-font-size-xxs)");
+        titleDetailLayout.add(relationEntitiesCountLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(LineAwesomeIconsSvg.INFINITY_SOLID.create(),"实体路径详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(entitiesPathDetailUI);
+        //conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
     }
 }
