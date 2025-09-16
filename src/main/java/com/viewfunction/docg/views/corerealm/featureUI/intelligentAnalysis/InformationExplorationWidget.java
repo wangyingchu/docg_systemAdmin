@@ -342,7 +342,6 @@ public class InformationExplorationWidget extends VerticalLayout {
     }
 
     private void renderEntitiesPathUI(EntitiesPath entitiesPath){
-        EntitiesPathDetailUI entitiesPathDetailUI = new EntitiesPathDetailUI();
         List<Component> actionComponentList = new ArrayList<>();
 
         HorizontalLayout titleDetailLayout = new HorizontalLayout();
@@ -391,9 +390,11 @@ public class InformationExplorationWidget extends VerticalLayout {
 
         actionComponentList.add(titleDetailLayout);
 
+        EntitiesPathDetailUI entitiesPathDetailUI = new EntitiesPathDetailUI(entitiesPath);
+
         FullScreenWindow fullScreenWindow = new FullScreenWindow(LineAwesomeIconsSvg.INFINITY_SOLID.create(),"实体路径详情",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(entitiesPathDetailUI);
-        //conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
+        entitiesPathDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
     }
 }
