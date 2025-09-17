@@ -119,7 +119,7 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
                     cytoscapeNodePayload.getData().put("shape","ellipse");
                     cytoscapeNodePayload.getData().put("background_color","#c00");
                     cytoscapeNodePayload.getData().put("size","4");
-                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0))!=null){
+                    if(this.conceptionKindColorMap != null && fromConceptionEntityKind != null && this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0))!=null){
                         cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0)));
                     }
                     if(this.conceptionEntityUID.equals(fromConceptionEntityUID)){
@@ -127,28 +127,31 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
                         cytoscapeNodePayload.getData().put("background_color","#555555");
                         cytoscapeNodePayload.getData().put("size","5");
                     }
-                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEventClass)){
-                        cytoscapeNodePayload.getData().put("shape","round-diamond");
-                        cytoscapeNodePayload.getData().put("size","3");
-                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
-                    }
-                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEntityClass)){
-                        cytoscapeNodePayload.getData().put("shape","barrel");
-                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
-                    }
-                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEventClass)){
-                        cytoscapeNodePayload.getData().put("shape","round-diamond");
-                        cytoscapeNodePayload.getData().put("size","3");
-                        cytoscapeNodePayload.getData().put("background_color","#C71585");
-                    }
-                    if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEntityClass)){
-                        cytoscapeNodePayload.getData().put("shape","barrel");
-                        cytoscapeNodePayload.getData().put("background_color","#C71585");
-                    }
 
-                    cytoscapeNodePayload.getData().put("id",fromConceptionEntityUID);
-                    cytoscapeNodePayload.getData().put("kind",fromConceptionEntityKind.get(0));
-                    cytoscapeNodePayload.getData().put("desc",fromConceptionEntityKind.get(0)+":\n"+fromConceptionEntityUID);
+                    if(fromConceptionEntityKind != null){
+                        if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEventClass)){
+                            cytoscapeNodePayload.getData().put("shape","round-diamond");
+                            cytoscapeNodePayload.getData().put("size","3");
+                            cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                        }
+                        if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEntityClass)){
+                            cytoscapeNodePayload.getData().put("shape","barrel");
+                            cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                        }
+                        if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEventClass)){
+                            cytoscapeNodePayload.getData().put("shape","round-diamond");
+                            cytoscapeNodePayload.getData().put("size","3");
+                            cytoscapeNodePayload.getData().put("background_color","#C71585");
+                        }
+                        if(fromConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEntityClass)){
+                            cytoscapeNodePayload.getData().put("shape","barrel");
+                            cytoscapeNodePayload.getData().put("background_color","#C71585");
+                        }
+
+                        cytoscapeNodePayload.getData().put("id",fromConceptionEntityUID);
+                        cytoscapeNodePayload.getData().put("kind",fromConceptionEntityKind.get(0));
+                        cytoscapeNodePayload.getData().put("desc",fromConceptionEntityKind.get(0)+":\n"+fromConceptionEntityUID);
+                    }
                     runBeforeClientResponse(ui -> {
                         try {
                             getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});
@@ -163,7 +166,7 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
                     cytoscapeNodePayload.getData().put("shape","ellipse");
                     cytoscapeNodePayload.getData().put("background_color","#c00");
                     cytoscapeNodePayload.getData().put("size","4");
-                    if(this.conceptionKindColorMap != null && this.conceptionKindColorMap.get(toConceptionEntityKind.get(0))!=null){
+                    if(this.conceptionKindColorMap != null && toConceptionEntityKind!= null && this.conceptionKindColorMap.get(toConceptionEntityKind.get(0))!=null){
                         cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(toConceptionEntityKind.get(0)));
                     }
                     if(this.conceptionEntityUID.equals(toConceptionEntityUID)){
@@ -171,27 +174,29 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
                         cytoscapeNodePayload.getData().put("background_color","#555555");
                         cytoscapeNodePayload.getData().put("size","5");
                     }
-                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEventClass)){
-                        cytoscapeNodePayload.getData().put("shape","round-diamond");
-                        cytoscapeNodePayload.getData().put("size","3");
-                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                    if(toConceptionEntityKind != null){
+                        if(toConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEventClass)){
+                            cytoscapeNodePayload.getData().put("shape","round-diamond");
+                            cytoscapeNodePayload.getData().put("size","3");
+                            cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                        }
+                        if(toConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEntityClass)){
+                            cytoscapeNodePayload.getData().put("shape","barrel");
+                            cytoscapeNodePayload.getData().put("background_color","#40E0D0");
+                        }
+                        if(toConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEventClass)){
+                            cytoscapeNodePayload.getData().put("shape","round-diamond");
+                            cytoscapeNodePayload.getData().put("size","3");
+                            cytoscapeNodePayload.getData().put("background_color","#C71585");
+                        }
+                        if(toConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEntityClass)){
+                            cytoscapeNodePayload.getData().put("shape","barrel");
+                            cytoscapeNodePayload.getData().put("background_color","#C71585");
+                        }
+                        cytoscapeNodePayload.getData().put("id",toConceptionEntityUID);
+                        cytoscapeNodePayload.getData().put("kind",toConceptionEntityKind.get(0));
+                        cytoscapeNodePayload.getData().put("desc",toConceptionEntityKind.get(0)+":\n"+toConceptionEntityUID);
                     }
-                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.TimeScaleEntityClass)){
-                        cytoscapeNodePayload.getData().put("shape","barrel");
-                        cytoscapeNodePayload.getData().put("background_color","#40E0D0");
-                    }
-                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEventClass)){
-                        cytoscapeNodePayload.getData().put("shape","round-diamond");
-                        cytoscapeNodePayload.getData().put("size","3");
-                        cytoscapeNodePayload.getData().put("background_color","#C71585");
-                    }
-                    if(toConceptionEntityKind.get(0).startsWith(RealmConstant.GeospatialScaleEntityClass)){
-                        cytoscapeNodePayload.getData().put("shape","barrel");
-                        cytoscapeNodePayload.getData().put("background_color","#C71585");
-                    }
-                    cytoscapeNodePayload.getData().put("id",toConceptionEntityUID);
-                    cytoscapeNodePayload.getData().put("kind",toConceptionEntityKind.get(0));
-                    cytoscapeNodePayload.getData().put("desc",toConceptionEntityKind.get(0)+":\n"+toConceptionEntityUID);
                     runBeforeClientResponse(ui -> {
                         try {
                             getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeNodePayload)});

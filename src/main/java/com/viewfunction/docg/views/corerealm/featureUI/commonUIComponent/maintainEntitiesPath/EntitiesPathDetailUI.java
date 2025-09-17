@@ -10,7 +10,7 @@ import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesPath;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.ConceptionEntityExpandPathInfoView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.ConceptionEntityExpandTopologyChart;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.EntitiesPathInfoView;
 
 import java.util.ArrayList;
@@ -64,9 +64,21 @@ public class EntitiesPathDetailUI extends VerticalLayout {
         List<EntitiesPath> entitiesPathList =new ArrayList<>();
         entitiesPathList.add(this.entitiesPath);
 
-        ConceptionEntityExpandPathInfoView conceptionEntityExpandPathInfoView =
-                new ConceptionEntityExpandPathInfoView(this.entitiesPath.getStartConceptionEntityType(),this.entitiesPath.getStartConceptionEntityUID(),entitiesPathList);
-        this.entitiesPathInfoContainer.add(conceptionEntityExpandPathInfoView);
+        //ConceptionEntityExpandPathInfoView conceptionEntityExpandPathInfoView =
+        //        new ConceptionEntityExpandPathInfoView(this.entitiesPath.getStartConceptionEntityType(),this.entitiesPath.getStartConceptionEntityUID(),entitiesPathList);
+
+
+
+
+        ConceptionEntityExpandTopologyChart conceptionEntityExpandTopologyChart =
+                new ConceptionEntityExpandTopologyChart(this.entitiesPath.getStartConceptionEntityType(),this.entitiesPath.getEndConceptionEntityUID());
+
+        conceptionEntityExpandTopologyChart.setHeight(600,Unit.PIXELS);
+        conceptionEntityExpandTopologyChart.setHeight(800,Unit.PIXELS);
+
+        conceptionEntityExpandTopologyChart.setData(this.entitiesPath.getPathRelationEntities(),this.entitiesPath.getPathConceptionEntities());
+
+        this.entitiesPathInfoContainer.add(conceptionEntityExpandTopologyChart);
 
         SplitLayout splitLayout = new SplitLayout(this.entitiesFieldsContainer, this.entitiesPathInfoContainer);
         splitLayout.setSplitterPosition(0);
