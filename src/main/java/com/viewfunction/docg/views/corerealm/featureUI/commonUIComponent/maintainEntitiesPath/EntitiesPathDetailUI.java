@@ -10,11 +10,12 @@ import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesPath;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.ConceptionEntityExpandTopologyChart;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.EntitiesPathInfoView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class EntitiesPathDetailUI extends VerticalLayout {
 
@@ -26,6 +27,26 @@ public class EntitiesPathDetailUI extends VerticalLayout {
 
     public EntitiesPathDetailUI(EntitiesPath entitiesPath){
         this.entitiesPath = entitiesPath;
+
+
+        LinkedList<ConceptionEntity> list1 =  this.entitiesPath.getPathConceptionEntities();
+        for(ConceptionEntity cConceptionEntity:list1){
+            System.out.println(cConceptionEntity.getAllConceptionKindNames());
+        }
+
+        Map<String,RelationEntity> relationEntityMap = new HashMap<>();
+
+        LinkedList<RelationEntity> list2 = this.entitiesPath.getPathRelationEntities();
+        for(RelationEntity cRelationEntity:list2){
+            System.out.println(cRelationEntity.getFromConceptionEntityKinds());
+            System.out.println(cRelationEntity.getToConceptionEntityKinds());
+        }
+
+
+
+
+
+
     }
 
     @Override
