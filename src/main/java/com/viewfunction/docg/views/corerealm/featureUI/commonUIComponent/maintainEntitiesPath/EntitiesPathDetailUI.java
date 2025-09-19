@@ -29,24 +29,20 @@ public class EntitiesPathDetailUI extends VerticalLayout {
         this.entitiesPath = entitiesPath;
 
 
+
         LinkedList<ConceptionEntity> list1 =  this.entitiesPath.getPathConceptionEntities();
         for(ConceptionEntity cConceptionEntity:list1){
             System.out.println(cConceptionEntity.getAllConceptionKindNames());
         }
-
-        Map<String,RelationEntity> relationEntityMap = new HashMap<>();
-
-        LinkedList<RelationEntity> list2 = this.entitiesPath.getPathRelationEntities();
-        for(RelationEntity cRelationEntity:list2){
-            System.out.println(cRelationEntity.getFromConceptionEntityKinds());
-            System.out.println(cRelationEntity.getToConceptionEntityKinds());
-        }
+        LinkedList<RelationEntity> pathRelationEntities0 = this.entitiesPath.getPathRelationEntities();
+        pathRelationEntities0.forEach(relationEntity -> {
 
 
+            System.out.println(relationEntity.getFromConceptionEntityKinds());
+            System.out.println(relationEntity.getToConceptionEntityKinds());
 
-
-
-
+            System.out.println("aaaaaaaaaaaaaaaaaaaaaa");
+        });
     }
 
     @Override
