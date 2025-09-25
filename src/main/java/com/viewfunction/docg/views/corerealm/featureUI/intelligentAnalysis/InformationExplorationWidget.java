@@ -152,11 +152,19 @@ public class InformationExplorationWidget extends VerticalLayout {
                         dynamicContentQueryResult.getDynamicContentAttributesValueTypeMap();
 
                 queryResultGrid = new Grid<>();
+                queryResultGrid.setPageSize(20);
                 queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COLUMN_BORDERS,GridVariant.LUMO_COMPACT,GridVariant.LUMO_WRAP_CELL_CONTENT);
+
+                Div graphContentDiv = new Div(new Text("This is the Graph tab content"));
+                graphContentDiv.setHeight(400,Unit.PIXELS);
+
+                Div readAndAnalyDiv = new Div(new Text("This is the Explanation tab content"));
+                readAndAnalyDiv.setHeight(400,Unit.PIXELS);
+
                 TabSheet tabSheet = new TabSheet();
                 tabSheet.add("数据", queryResultGrid);
-                tabSheet.add("图谱", new Div(new Text("This is the Graph tab content")));
-                tabSheet.add("解读", new Div(new Text("This is the Explanation tab content")));
+                tabSheet.add("图谱", graphContentDiv);
+                tabSheet.add("解读", readAndAnalyDiv);
                 add(tabSheet);
                 informationExplorationResultDetails.add(tabSheet);
 
