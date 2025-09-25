@@ -117,7 +117,7 @@ public class InformationAnalysisView extends VerticalLayout {
                 case INSIGHT:break;
                 case EXPLORATION:
                     //String cql = Text2QueryUtil.generateQueryCypher(question);
-                    String cql = "MATCH p=(r:`RiverSystem-Line`)-[c:ConnectedByWaterArea]->(:`RiverSystem-Line`) RETURN p,c,r,r.code LIMIT 10";
+                    String cql = "MATCH p=(r:`RiverSystem-Line`)-[c:ConnectedByWaterArea]->(:`RiverSystem-Line`)-[c2:ConnectedByWaterArea]->(:`RiverSystem-Line`)-[c3:ConnectedByWaterArea]->(:`RiverSystem-Line`) RETURN p,c,r,r.code,c2 LIMIT 10";
                     InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql);
                     this.insightContentContainerLayout.add(informationExplorationWidget);
                     break;

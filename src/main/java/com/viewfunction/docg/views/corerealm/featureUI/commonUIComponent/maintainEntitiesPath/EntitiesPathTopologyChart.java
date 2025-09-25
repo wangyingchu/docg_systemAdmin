@@ -123,7 +123,7 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
                     conceptionEntityUIDList.add(fromConceptionEntityUID);
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
                     cytoscapeNodePayload.getData().put("shape","ellipse");
-                    cytoscapeNodePayload.getData().put("background_color","#c00");
+                    cytoscapeNodePayload.getData().put("background_color","#555555");
                     cytoscapeNodePayload.getData().put("size","4");
                     if(this.conceptionKindColorMap != null && fromConceptionEntityKind != null && this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0))!=null){
                         cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0)));
@@ -175,7 +175,7 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
                     conceptionEntityUIDList.add(toConceptionEntityUID);
                     CytoscapeNodePayload cytoscapeNodePayload =new CytoscapeNodePayload();
                     cytoscapeNodePayload.getData().put("shape","ellipse");
-                    cytoscapeNodePayload.getData().put("background_color","#c00");
+                    cytoscapeNodePayload.getData().put("background_color","#555555");
                     cytoscapeNodePayload.getData().put("size","4");
                     if(this.conceptionKindColorMap != null && toConceptionEntityKind!= null && this.conceptionKindColorMap.get(toConceptionEntityKind.get(0))!=null){
                         cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(toConceptionEntityKind.get(0)));
