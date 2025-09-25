@@ -36,8 +36,10 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
 
     private List<String> conceptionEntityUIDList;
     private List<String> relationEntityUIDList;
-    private String conceptionEntityUID;
-    private String conceptionKind;
+    private String startConceptionEntityUID;
+    private String startConceptionKind;
+    private String endConceptionEntityUID;
+    private String endConceptionKind;
     private Map<String,String> conceptionKindColorMap;
     private int currentQueryPageSize = 10;
     private Map<String,Integer> targetConceptionEntityRelationCurrentQueryPageMap;
@@ -49,14 +51,18 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
     private String selectedRelationEntityKind;
     private EntitiesPathTopologyChartOperationHandler entitiesPathTopologyChartOperationHandler;
 
-    public EntitiesPathTopologyChart(String conceptionKind, String conceptionEntityUID){
+    public EntitiesPathTopologyChart(String startConceptionKind, String startConceptionEntityUID,
+                                     String endConceptionKind,String endConceptionEntityUID){
         this.conceptionEntityUIDList = new ArrayList<>();
         this.relationEntityUIDList = new ArrayList<>();
         this.targetConceptionEntityRelationCurrentQueryPageMap = new HashMap<>();
         this.conceptionKindColorMap = new HashMap<>();
         this.conception_relationEntityUIDMap = ArrayListMultimap.create();
-        this.conceptionEntityUID = conceptionEntityUID;
-        this.conceptionKind = conceptionKind;
+        this.startConceptionEntityUID = startConceptionEntityUID;
+        this.startConceptionKind = startConceptionKind;
+        this.endConceptionKind = endConceptionKind;
+        this.endConceptionEntityUID = endConceptionEntityUID;
+
         UI.getCurrent().getPage().addJavaScript("js/cytoscape/3.23.0/dist/cytoscape.min.js");
         this.setWidthFull();
         this.setSpacing(false);
@@ -122,8 +128,13 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
                     if(this.conceptionKindColorMap != null && fromConceptionEntityKind != null && this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0))!=null){
                         cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0)));
                     }
-                    if(this.conceptionEntityUID.equals(fromConceptionEntityUID)){
+                    if(this.startConceptionEntityUID.equals(fromConceptionEntityUID)){
                         cytoscapeNodePayload.getData().put("shape","pentagon");
+                        cytoscapeNodePayload.getData().put("background_color","#555555");
+                        cytoscapeNodePayload.getData().put("size","5");
+                    }
+                    if(this.endConceptionEntityUID.equals(fromConceptionEntityUID)){
+                        cytoscapeNodePayload.getData().put("shape","octagon");
                         cytoscapeNodePayload.getData().put("background_color","#555555");
                         cytoscapeNodePayload.getData().put("size","5");
                     }
@@ -169,8 +180,13 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
                     if(this.conceptionKindColorMap != null && toConceptionEntityKind!= null && this.conceptionKindColorMap.get(toConceptionEntityKind.get(0))!=null){
                         cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(toConceptionEntityKind.get(0)));
                     }
-                    if(this.conceptionEntityUID.equals(toConceptionEntityUID)){
+                    if(this.startConceptionEntityUID.equals(toConceptionEntityUID)){
                         cytoscapeNodePayload.getData().put("shape","pentagon");
+                        cytoscapeNodePayload.getData().put("background_color","#555555");
+                        cytoscapeNodePayload.getData().put("size","5");
+                    }
+                    if(this.endConceptionEntityUID.equals(toConceptionEntityUID)){
+                        cytoscapeNodePayload.getData().put("shape","octagon");
                         cytoscapeNodePayload.getData().put("background_color","#555555");
                         cytoscapeNodePayload.getData().put("size","5");
                     }
@@ -313,49 +329,6 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
         }
     }
 
-    public void initLoadTargetConceptionEntityRelationData(){
-        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        coreRealm.openGlobalSession();
-        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
-        if(targetConceptionKind != null) {
-            try {
-                ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
-                if (targetEntity != null) {
-                    List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
-                    List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
-                    List<String> attachedConceptionKinds = targetEntity.listAttachedConceptionKinds();
-                    generateConceptionKindColorMap(attachedConceptionKinds);
-                    QueryParameters relationshipQueryParameters = new QueryParameters();
-                    int currentEntityQueryPage = 1;
-                    if(targetConceptionEntityRelationCurrentQueryPageMap.containsKey(this.conceptionEntityUID)){
-                        currentEntityQueryPage = targetConceptionEntityRelationCurrentQueryPageMap.get(this.conceptionEntityUID);
-                    }
-                    relationshipQueryParameters.setStartPage(currentEntityQueryPage);
-                    relationshipQueryParameters.setEndPage(currentEntityQueryPage+1);
-                    relationshipQueryParameters.setPageSize(currentQueryPageSize);
-                    for (String currentRelationKind : attachedRelationKinds) {
-                        relationshipQueryParameters.setEntityKind(currentRelationKind);
-                        List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
-                        totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
-                    }
-                    if(totalKindsRelationEntitiesList.size()>0){
-                        setData(totalKindsRelationEntitiesList,null);
-                        initLayoutGraph();
-                        currentEntityQueryPage++;
-                        targetConceptionEntityRelationCurrentQueryPageMap.put(this.conceptionEntityUID,currentEntityQueryPage);
-                    }
-                }else{
-                    CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 中不存在 UID 为"+conceptionEntityUID+" 的概念实体", NotificationVariant.LUMO_ERROR);
-                }
-            } catch (CoreRealmServiceRuntimeException e) {
-                throw new RuntimeException(e);
-            }
-        }else{
-            CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
-        }
-        coreRealm.closeGlobalSession();
-    }
-
     private void loadAdditionalTargetConceptionEntityRelationData(String conceptionKind,String conceptionEntityUID){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
@@ -435,7 +408,6 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
         this.relationEntityUIDList.clear();
         this.targetConceptionEntityRelationCurrentQueryPageMap.clear();
         clearGraph();
-        initLoadTargetConceptionEntityRelationData();
     }
 
     public void deleteSelectedConceptionEntity(){
@@ -464,7 +436,7 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
             runBeforeClientResponse(ui -> {
                 try {
                     Map<String,String> valueMap =new HashMap<>();
-                    valueMap.put("ignoreNodeId",this.conceptionEntityUID);
+                    valueMap.put("ignoreNodeId",this.startConceptionEntityUID);
                     valueMap.put("targetNodeId",this.selectedConceptionEntityUID);
                     getElement().callJsFunction("$connector.deleteNodeWithOneDegreeConnection",
                             new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
@@ -479,7 +451,7 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
                             @Override
                             public void accept(String currentConceptionEntityUID, String currentRelationEntityUID) {
                                 if(needDeletedRelationEntityUIDs.contains(currentRelationEntityUID) && !needDeletedConceptionEntitiesUID.contains(currentConceptionEntityUID)){
-                                    if(!conceptionEntityUID.equals(currentConceptionEntityUID)){
+                                    if(!startConceptionEntityUID.equals(currentConceptionEntityUID)){
                                         //当前主概念实体不能通过一度关系的关联而被间接的删除
                                         needDeletedConceptionEntitiesUID.add(currentConceptionEntityUID);
                                     }
@@ -518,7 +490,7 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
             runBeforeClientResponse(ui -> {
                 try {
                     Map<String,String> valueMap =new HashMap<>();
-                    valueMap.put("ignoreNodeId",this.conceptionEntityUID);
+                    valueMap.put("ignoreNodeId",this.startConceptionEntityUID);
                     valueMap.put("targetNodeId",this.selectedConceptionEntityUID);
                     getElement().callJsFunction("$connector.deleteOneDegreeConnectionNodes",
                             new Serializable[]{(new ObjectMapper()).writeValueAsString(valueMap)});
@@ -532,7 +504,7 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
                             @Override
                             public void accept(String currentConceptionEntityUID, String currentRelationEntityUID) {
                                 if(needDeletedRelationEntityUIDs.contains(currentRelationEntityUID) && !needDeletedConceptionEntitiesUID.contains(currentConceptionEntityUID)){
-                                    if(!conceptionEntityUID.equals(currentConceptionEntityUID) && !conceptionEntityUID.equals(selectedConceptionEntityUID)){
+                                    if(!startConceptionEntityUID.equals(currentConceptionEntityUID) && !startConceptionEntityUID.equals(selectedConceptionEntityUID)){
                                         //当前主概念实体不能通过一度关系的关联而被间接的删除
                                         needDeletedConceptionEntitiesUID.add(currentConceptionEntityUID);
                                     }
