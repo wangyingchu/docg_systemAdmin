@@ -211,6 +211,7 @@ public class ConceptionEntityExpandTopologyChart extends VerticalLayout {
                     cytoscapeEdgePayload.getData().put("type", relationKind+":"+relationEntityUID);
                     cytoscapeEdgePayload.getData().put("source", fromConceptionEntityUID);
                     cytoscapeEdgePayload.getData().put("target", toConceptionEntityUID);
+                    cytoscapeEdgePayload.getData().put("width", "0.3");
                     runBeforeClientResponse(ui -> {
                         try {
                             getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});

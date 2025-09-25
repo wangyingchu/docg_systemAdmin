@@ -148,11 +148,11 @@ window.Vaadin.Flow.feature_ConceptionEntityRelationsChart = {
                 .selector('edge')
                 .css({
                     'content': 'data(type)',
-                    'width': 0.3,
+                    'width': 'data(width)' ,
                     'line-color': '#DDDDDD',
                     'source-arrow-color':'#DDDDDD',
                     'target-arrow-color':'#DDDDDD',
-                    'arrow-scale': 0.1,
+                    'arrow-scale': 0.2,
                     'line-style': 'solid',
                     //'curve-style': 'unbundled-bezier',
                     //'curve-style': 'segments',

@@ -48,6 +48,7 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
     private String selectedRelationEntityUID;
     private String selectedRelationEntityKind;
     private EntitiesPathTopologyChartOperationHandler entitiesPathTopologyChartOperationHandler;
+    private boolean isInitPathRender = true;
 
     public EntitiesPathTopologyChart(String startConceptionEntityUID,String endConceptionEntityUID){
         this.conceptionEntityUIDList = new ArrayList<>();
@@ -228,6 +229,11 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
                     cytoscapeEdgePayload.getData().put("type", relationKind+":"+relationEntityUID);
                     cytoscapeEdgePayload.getData().put("source", fromConceptionEntityUID);
                     cytoscapeEdgePayload.getData().put("target", toConceptionEntityUID);
+                    if(isInitPathRender){
+                        cytoscapeEdgePayload.getData().put("width", "0.6");
+                    }else{
+                        cytoscapeEdgePayload.getData().put("width", "0.3");
+                    }
                     runBeforeClientResponse(ui -> {
                         try {
                             getElement().callJsFunction("$connector.setData", new Serializable[]{(new ObjectMapper()).writeValueAsString(cytoscapeEdgePayload)});
@@ -239,6 +245,7 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
             }
             initLayoutGraph();
         }
+        isInitPathRender = false;
     }
 
     private void initLayoutGraph(){
