@@ -4,15 +4,17 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesPath;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.ConceptionEntityExpandTopologyChart;
+import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entitiesTopologyAnalysis.EntitiesPathInfoView;
 
 import java.util.*;
@@ -27,22 +29,6 @@ public class EntitiesPathDetailUI extends VerticalLayout {
 
     public EntitiesPathDetailUI(EntitiesPath entitiesPath){
         this.entitiesPath = entitiesPath;
-
-
-
-        LinkedList<ConceptionEntity> list1 =  this.entitiesPath.getPathConceptionEntities();
-        for(ConceptionEntity cConceptionEntity:list1){
-            System.out.println(cConceptionEntity.getAllConceptionKindNames());
-        }
-        LinkedList<RelationEntity> pathRelationEntities0 = this.entitiesPath.getPathRelationEntities();
-        pathRelationEntities0.forEach(relationEntity -> {
-
-
-            System.out.println(relationEntity.getFromConceptionEntityKinds());
-            System.out.println(relationEntity.getToConceptionEntityKinds());
-
-            System.out.println("aaaaaaaaaaaaaaaaaaaaaa");
-        });
     }
 
     @Override
@@ -73,29 +59,23 @@ public class EntitiesPathDetailUI extends VerticalLayout {
         this.entitiesFieldsContainer.setMargin(false);
         this.entitiesFieldsContainer.setMinWidth(450, Unit.PIXELS);
         this.entitiesFieldsContainer.setMaxWidth(450, Unit.PIXELS);
-
         EntitiesPathInfoView entitiesPathInfoView = new EntitiesPathInfoView(this.entitiesPath,viewHeight);
         this.entitiesFieldsContainer.add(entitiesPathInfoView);
+
         this.entitiesPathInfoContainer = new VerticalLayout();
+        HorizontalLayout titleLayout = new HorizontalLayout();
+        this.entitiesPathInfoContainer.add(titleLayout);
 
-        List<EntitiesPath> entitiesPathList =new ArrayList<>();
-        entitiesPathList.add(this.entitiesPath);
+        Icon pathIcon = LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create();
+        pathIcon.setSize("16px");
+        pathIcon.getStyle().set("padding-right","3px");
+        titleLayout.add(pathIcon);
+        new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CUBE.create(),"概念实体数量",""+this.entitiesPath.getPathConceptionEntities().size());
+        new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CONNECT_O.create(),"关系实体数量",""+this.entitiesPath.getPathRelationEntities().size());
 
-        //ConceptionEntityExpandPathInfoView conceptionEntityExpandPathInfoView =
-        //        new ConceptionEntityExpandPathInfoView(this.entitiesPath.getStartConceptionEntityType(),this.entitiesPath.getStartConceptionEntityUID(),entitiesPathList);
-
-
-
-
-        ConceptionEntityExpandTopologyChart conceptionEntityExpandTopologyChart =
-                new ConceptionEntityExpandTopologyChart(this.entitiesPath.getStartConceptionEntityType(),this.entitiesPath.getEndConceptionEntityUID());
-
-        conceptionEntityExpandTopologyChart.setHeight(600,Unit.PIXELS);
-        conceptionEntityExpandTopologyChart.setHeight(800,Unit.PIXELS);
-
-        conceptionEntityExpandTopologyChart.setData(this.entitiesPath.getPathRelationEntities(),this.entitiesPath.getPathConceptionEntities());
-
-        this.entitiesPathInfoContainer.add(conceptionEntityExpandTopologyChart);
+        EntitiesPathElementsInfoView entitiesPathElementsInfoView = new EntitiesPathElementsInfoView(this.entitiesPath,viewHeight);
+        entitiesPathElementsInfoView.setWidthFull();
+        this.entitiesPathInfoContainer.add(entitiesPathElementsInfoView);
 
         SplitLayout splitLayout = new SplitLayout(this.entitiesFieldsContainer, this.entitiesPathInfoContainer);
         splitLayout.setSplitterPosition(0);

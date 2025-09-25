@@ -192,7 +192,7 @@ public class InformationExplorationWidget extends VerticalLayout {
                                 return showRelationEntityButton;
                             }else if(DynamicContentValue.ContentValueType.ENTITIES_PATH.equals(contentValueType)){
                                 EntitiesPath entitiesPath = (EntitiesPath)contentObject;
-                                Icon showEntitiesPathIcon = LineAwesomeIconsSvg.INFINITY_SOLID.create();
+                                Icon showEntitiesPathIcon = LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create();
                                 showEntitiesPathIcon.setSize("14px");
                                 Button showEntitiesPathEntityButton = new Button(showEntitiesPathIcon, event -> {
                                     renderEntitiesPathUI(entitiesPath);
@@ -392,7 +392,7 @@ public class InformationExplorationWidget extends VerticalLayout {
 
         EntitiesPathDetailUI entitiesPathDetailUI = new EntitiesPathDetailUI(entitiesPath);
 
-        FullScreenWindow fullScreenWindow = new FullScreenWindow(LineAwesomeIconsSvg.INFINITY_SOLID.create(),"实体路径详情",actionComponentList,null,true);
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create(),"实体路径详情",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(entitiesPathDetailUI);
         entitiesPathDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
