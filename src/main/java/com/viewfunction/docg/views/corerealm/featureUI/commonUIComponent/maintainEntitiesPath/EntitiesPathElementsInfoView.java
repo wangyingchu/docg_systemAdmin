@@ -19,9 +19,7 @@ public class EntitiesPathElementsInfoView extends HorizontalLayout implements En
     public EntitiesPathElementsInfoView(EntitiesPath entitiesPath,int viewHeight) {
         this.entitiesPath = entitiesPath;
         entitiesPathTopologyChart =
-                new EntitiesPathTopologyChart(this.entitiesPath.getStartConceptionEntityType(),
-                        this.entitiesPath.getStartConceptionEntityUID(),this.entitiesPath.getEndConceptionEntityType(),
-                        this.entitiesPath.getEndConceptionEntityUID());
+                new EntitiesPathTopologyChart(this.entitiesPath.getStartConceptionEntityUID(),this.entitiesPath.getEndConceptionEntityUID());
         entitiesPathTopologyChart.setEntitiesPathTopologyChartOperationHandler(this);
         entitiesPathTopologyChart.setHeight(viewHeight-45, Unit.PIXELS);
         entitiesPathTopologyChart.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");

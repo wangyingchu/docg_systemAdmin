@@ -37,9 +37,7 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
     private List<String> conceptionEntityUIDList;
     private List<String> relationEntityUIDList;
     private String startConceptionEntityUID;
-    private String startConceptionKind;
     private String endConceptionEntityUID;
-    private String endConceptionKind;
     private Map<String,String> conceptionKindColorMap;
     private int currentQueryPageSize = 10;
     private Map<String,Integer> targetConceptionEntityRelationCurrentQueryPageMap;
@@ -51,16 +49,13 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
     private String selectedRelationEntityKind;
     private EntitiesPathTopologyChartOperationHandler entitiesPathTopologyChartOperationHandler;
 
-    public EntitiesPathTopologyChart(String startConceptionKind, String startConceptionEntityUID,
-                                     String endConceptionKind,String endConceptionEntityUID){
+    public EntitiesPathTopologyChart(String startConceptionEntityUID,String endConceptionEntityUID){
         this.conceptionEntityUIDList = new ArrayList<>();
         this.relationEntityUIDList = new ArrayList<>();
         this.targetConceptionEntityRelationCurrentQueryPageMap = new HashMap<>();
         this.conceptionKindColorMap = new HashMap<>();
         this.conception_relationEntityUIDMap = ArrayListMultimap.create();
         this.startConceptionEntityUID = startConceptionEntityUID;
-        this.startConceptionKind = startConceptionKind;
-        this.endConceptionKind = endConceptionKind;
         this.endConceptionEntityUID = endConceptionEntityUID;
 
         UI.getCurrent().getPage().addJavaScript("js/cytoscape/3.23.0/dist/cytoscape.min.js");
@@ -86,10 +81,12 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
     }
 
     public void setData(List<RelationEntity> conceptionEntityRelationEntityList, List<ConceptionEntity> conceptionEntityList){
+        List<String> pathConceptionEntityUIDList = new ArrayList<>();
         if(conceptionEntityList!= null){
             List<String> attachedConceptionKinds = new ArrayList<>();
             for(ConceptionEntity currentConceptionEntity : conceptionEntityList){
                 attachedConceptionKinds.add(currentConceptionEntity.getConceptionKindName());
+                pathConceptionEntityUIDList.add(currentConceptionEntity.getConceptionEntityUID());
             }
             generateConceptionKindColorMap(attachedConceptionKinds);
         }
@@ -125,8 +122,10 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
                     cytoscapeNodePayload.getData().put("shape","ellipse");
                     cytoscapeNodePayload.getData().put("background_color","#555555");
                     cytoscapeNodePayload.getData().put("size","4");
-                    if(this.conceptionKindColorMap != null && fromConceptionEntityKind != null && this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0))!=null){
-                        cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0)));
+                    if(!pathConceptionEntityUIDList.contains(fromConceptionEntityUID)){
+                        if(this.conceptionKindColorMap != null && fromConceptionEntityKind != null && this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0))!=null){
+                            cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(fromConceptionEntityKind.get(0)));
+                        }
                     }
                     if(this.startConceptionEntityUID.equals(fromConceptionEntityUID)){
                         cytoscapeNodePayload.getData().put("shape","pentagon");
@@ -177,8 +176,10 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
                     cytoscapeNodePayload.getData().put("shape","ellipse");
                     cytoscapeNodePayload.getData().put("background_color","#555555");
                     cytoscapeNodePayload.getData().put("size","4");
-                    if(this.conceptionKindColorMap != null && toConceptionEntityKind!= null && this.conceptionKindColorMap.get(toConceptionEntityKind.get(0))!=null){
-                        cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(toConceptionEntityKind.get(0)));
+                    if(!pathConceptionEntityUIDList.contains(toConceptionEntityUID)){
+                        if(this.conceptionKindColorMap != null && toConceptionEntityKind!= null && this.conceptionKindColorMap.get(toConceptionEntityKind.get(0))!=null){
+                            cytoscapeNodePayload.getData().put("background_color",this.conceptionKindColorMap.get(toConceptionEntityKind.get(0)));
+                        }
                     }
                     if(this.startConceptionEntityUID.equals(toConceptionEntityUID)){
                         cytoscapeNodePayload.getData().put("shape","pentagon");
