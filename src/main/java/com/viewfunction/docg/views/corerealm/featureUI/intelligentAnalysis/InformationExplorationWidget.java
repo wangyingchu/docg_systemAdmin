@@ -21,7 +21,6 @@ import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
 import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.tabs.TabSheet;
-
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
@@ -79,9 +78,20 @@ public class InformationExplorationWidget extends VerticalLayout {
         reRunButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
         reRunButton.setTooltipText("重新执行探索");
 
+        Icon closeIcon = new Icon(VaadinIcon.CLOSE_BIG);
+        closeIcon.setSize("14px");
+        Button closeButton = new Button(closeIcon, event -> {
+            informationExplorationResultDetails.setOpened(false);
+            removeSelf();
+        });
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_ERROR);
+        closeButton.setTooltipText("关闭探索");
+
         HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.setWidthFull();
         horizontalLayout.setAlignItems(Alignment.CENTER);
-        horizontalLayout.add(operationIcon,timeSpan,explorationQuestionSpan);
+        horizontalLayout.add(operationIcon,timeSpan,explorationQuestionSpan,closeButton);
+        this.setFlexGrow(1,explorationQuestionSpan);
 
         informationExplorationResultDetails = new Details(horizontalLayout);
         informationExplorationResultDetails.addThemeVariants(DetailsVariant.REVERSE);
@@ -412,5 +422,9 @@ public class InformationExplorationWidget extends VerticalLayout {
             informationExplorationResultDetails.remove(contentTabSheet);
         }
         renderExplorationQueryResult();
+    }
+
+    private void removeSelf(){
+        this.removeFromParent();
     }
 }
