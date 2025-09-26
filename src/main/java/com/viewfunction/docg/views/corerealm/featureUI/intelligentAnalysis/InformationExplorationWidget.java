@@ -52,7 +52,7 @@ public class InformationExplorationWidget extends VerticalLayout {
     private Details informationExplorationResultDetails;
     private Popover popover2;
     private Popover popover3;
-
+    private TabSheet contentTabSheet;
     public InformationExplorationWidget(String question,String explorationQuery){
         this.setWidthFull();
         this.explorationQuery = explorationQuery;
@@ -74,7 +74,7 @@ public class InformationExplorationWidget extends VerticalLayout {
         Icon reRunIcon = new Icon(VaadinIcon.REFRESH);
         reRunIcon.setSize("16px");
         Button reRunButton = new Button(reRunIcon, event -> {
-            //renderConceptionKindConfigurationUI(conceptionKindName);
+            reCalculateExplorationQuery();
         });
         reRunButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
         reRunButton.setTooltipText("重新执行探索");
@@ -161,12 +161,11 @@ public class InformationExplorationWidget extends VerticalLayout {
                 Div readAndAnalyDiv = new Div(new Text("This is the Explanation tab content"));
                 readAndAnalyDiv.setHeight(400,Unit.PIXELS);
 
-                TabSheet tabSheet = new TabSheet();
-                tabSheet.add("数据", queryResultGrid);
-                tabSheet.add("图谱", graphContentDiv);
-                tabSheet.add("解读", readAndAnalyDiv);
-                add(tabSheet);
-                informationExplorationResultDetails.add(tabSheet);
+                contentTabSheet = new TabSheet();
+                contentTabSheet.add("数据", queryResultGrid);
+                contentTabSheet.add("图谱", graphContentDiv);
+                contentTabSheet.add("解读", readAndAnalyDiv);
+                informationExplorationResultDetails.add(contentTabSheet);
 
                 List<Map<String,DynamicContentValue>> dynamicContentValueResultList = dynamicContentQueryResult.getDynamicContentResultValueList();
                 //long resultContentValue = dynamicContentQueryResult.getDynamicContentValuesCount();
@@ -221,10 +220,12 @@ public class InformationExplorationWidget extends VerticalLayout {
                 queryResultGrid.setItems(dynamicContentValueResultList);
 
                 QueryResultAttributeValuesInfoWidget queryResultAttributeValuesInfoWidget = new QueryResultAttributeValuesInfoWidget(contentValueMap);
+                popover2.removeAll();
                 popover2.add(queryResultAttributeValuesInfoWidget);
 
                 QueryResultStaticsInfoWidget queryResultStaticsInfoWidget = new QueryResultStaticsInfoWidget(
                         dynamicContentQueryResult.getStartTime(),dynamicContentQueryResult.getFinishTime(),dynamicContentQueryResult.getDynamicContentValuesCount());
+                popover3.removeAll();
                 popover3.add(queryResultStaticsInfoWidget);
             }
         } catch(CoreRealmServiceEntityExploreException e){
@@ -404,5 +405,12 @@ public class InformationExplorationWidget extends VerticalLayout {
         fullScreenWindow.setWindowContent(entitiesPathDetailUI);
         entitiesPathDetailUI.setContainerDialog(fullScreenWindow);
         fullScreenWindow.show();
+    }
+
+    private void reCalculateExplorationQuery(){
+        if(contentTabSheet != null){
+            informationExplorationResultDetails.remove(contentTabSheet);
+        }
+        renderExplorationQueryResult();
     }
 }
