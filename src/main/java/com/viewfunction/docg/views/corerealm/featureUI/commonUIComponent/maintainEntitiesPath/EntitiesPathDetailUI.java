@@ -3,6 +3,8 @@ package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.mainta
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -26,6 +28,7 @@ public class EntitiesPathDetailUI extends VerticalLayout {
     private VerticalLayout entitiesFieldsContainer;
     private VerticalLayout entitiesPathInfoContainer;
     private Registration listener;
+    private EntitiesPathElementsInfoView entitiesPathElementsInfoView;
 
     public EntitiesPathDetailUI(EntitiesPath entitiesPath){
         this.entitiesPath = entitiesPath;
@@ -73,7 +76,18 @@ public class EntitiesPathDetailUI extends VerticalLayout {
         new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CUBE.create(),"概念实体数量",""+this.entitiesPath.getPathConceptionEntities().size());
         new SecondaryKeyValueDisplayItem(titleLayout, VaadinIcon.CONNECT_O.create(),"关系实体数量",""+this.entitiesPath.getPathRelationEntities().size());
 
-        EntitiesPathElementsInfoView entitiesPathElementsInfoView = new EntitiesPathElementsInfoView(this.entitiesPath,viewHeight);
+        Icon reRunIcon = new Icon(VaadinIcon.REFRESH);
+        reRunIcon.setSize("16px");
+        Button reRunButton = new Button(reRunIcon, event -> {
+            refreshPathTopologyInfo();
+        });
+        reRunButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
+        reRunButton.setTooltipText("刷新路径拓扑图");
+        titleLayout.add(reRunButton);
+
+        titleLayout.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+
+        entitiesPathElementsInfoView = new EntitiesPathElementsInfoView(this.entitiesPath,viewHeight);
         entitiesPathElementsInfoView.setWidthFull();
         this.entitiesPathInfoContainer.add(entitiesPathElementsInfoView);
 
@@ -91,5 +105,9 @@ public class EntitiesPathDetailUI extends VerticalLayout {
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
+    }
+
+    private void refreshPathTopologyInfo(){
+        entitiesPathElementsInfoView.refreshPathTopologyInfo();
     }
 }

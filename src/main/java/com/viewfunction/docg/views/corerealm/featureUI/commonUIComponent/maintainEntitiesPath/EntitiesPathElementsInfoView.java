@@ -78,4 +78,14 @@ public class EntitiesPathElementsInfoView extends HorizontalLayout implements En
             entitySyntheticAbstractInfoView.cleanAbstractInfo();
         }
     }
+
+    public void refreshPathTopologyInfo(){
+        if(entitiesPathTopologyChart != null) {
+            entitiesPathTopologyChart.reload();
+            entitiesPathTopologyChart.setData(this.entitiesPath.getPathRelationEntities(), this.entitiesPath.getPathConceptionEntities());
+        }
+        if(entitySyntheticAbstractInfoView != null){
+            entitySyntheticAbstractInfoView.cleanAbstractInfo();
+        }
+    }
 }

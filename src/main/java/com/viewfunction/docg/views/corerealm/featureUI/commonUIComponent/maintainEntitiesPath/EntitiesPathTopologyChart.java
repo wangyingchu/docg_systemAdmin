@@ -412,6 +412,7 @@ public class EntitiesPathTopologyChart extends VerticalLayout {
     }
 
     public void reload(){
+        this.isInitPathRender = true;
         this.conceptionEntityUIDList.clear();
         this.relationEntityUIDList.clear();
         this.targetConceptionEntityRelationCurrentQueryPageMap.clear();
