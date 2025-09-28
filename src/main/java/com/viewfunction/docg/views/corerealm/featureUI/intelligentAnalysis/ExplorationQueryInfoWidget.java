@@ -71,7 +71,7 @@ public class ExplorationQueryInfoWidget extends VerticalLayout {
 
         insightContentScroller = new Scroller();
         insightContentScroller.setWidthFull();
-        insightContentScroller.setHeight(230, Unit.PIXELS);
+        insightContentScroller.setHeight(220, Unit.PIXELS);
         add(insightContentScroller);
 
         markdown = new Markdown(explorationQuery);
