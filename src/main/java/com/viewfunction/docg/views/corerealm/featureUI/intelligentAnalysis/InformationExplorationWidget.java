@@ -120,12 +120,13 @@ public class InformationExplorationWidget extends VerticalLayout {
         explorationQueryIcon.setTooltipText("探索查询语句");
         Popover popover1 = new Popover();
         popover1.setTarget(explorationQueryIcon);
-        popover1.setWidth("500px");
-        popover1.setHeight("280px");
+        popover1.setWidth("550px");
+        popover1.setHeight("310px");
         popover1.addThemeVariants(PopoverVariant.ARROW,PopoverVariant.LUMO_NO_PADDING);
         popover1.setPosition(PopoverPosition.BOTTOM_START);
         popover1.setModal(true);
         explorationQueryInfoWidget = new ExplorationQueryInfoWidget(explorationQuery);
+        explorationQueryInfoWidget.setParentInformationExplorationWidget(this);
         popover1.add(explorationQueryInfoWidget);
 
         Icon attributrValuesMapIcon = LineAwesomeIconsSvg.BARS_SOLID.create();
@@ -426,6 +427,15 @@ public class InformationExplorationWidget extends VerticalLayout {
 
     private void reCalculateExplorationQuery(){
         explorationQuery = Text2QueryUtil.generateQueryCypher(question);
+        explorationQueryInfoWidget.setExplorationQuery(explorationQuery);
+        if(contentTabSheet != null){
+            informationExplorationResultDetails.remove(contentTabSheet);
+        }
+        renderExplorationQueryResult();
+    }
+
+    public void doExplorationQuery(String newQuery){
+        explorationQuery = newQuery;
         explorationQueryInfoWidget.setExplorationQuery(explorationQuery);
         if(contentTabSheet != null){
             informationExplorationResultDetails.remove(contentTabSheet);
