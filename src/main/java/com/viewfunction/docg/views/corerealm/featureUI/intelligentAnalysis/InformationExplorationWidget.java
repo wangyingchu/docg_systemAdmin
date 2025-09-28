@@ -1,5 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 
+import com.docg.ai.llm.naturalLanguageAnalysis.util.Text2QueryUtil;
+
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -52,8 +54,12 @@ public class InformationExplorationWidget extends VerticalLayout {
     private Popover popover2;
     private Popover popover3;
     private TabSheet contentTabSheet;
+    private String question;
+    private ExplorationQueryInfoWidget explorationQueryInfoWidget;
+
     public InformationExplorationWidget(String question,String explorationQuery){
         this.setWidthFull();
+        this.question = question;
         this.explorationQuery = explorationQuery;
 
         Icon operationIcon = VaadinIcon.TABS.create();
@@ -119,7 +125,8 @@ public class InformationExplorationWidget extends VerticalLayout {
         popover1.addThemeVariants(PopoverVariant.ARROW,PopoverVariant.LUMO_NO_PADDING);
         popover1.setPosition(PopoverPosition.BOTTOM_START);
         popover1.setModal(true);
-        popover1.add(new ExplorationQueryInfoWidget(explorationQuery));
+        explorationQueryInfoWidget = new ExplorationQueryInfoWidget(explorationQuery);
+        popover1.add(explorationQueryInfoWidget);
 
         Icon attributrValuesMapIcon = LineAwesomeIconsSvg.BARS_SOLID.create();
         attributrValuesMapIcon.getStyle().set("padding-left","5px");
@@ -418,6 +425,8 @@ public class InformationExplorationWidget extends VerticalLayout {
     }
 
     private void reCalculateExplorationQuery(){
+        explorationQuery = Text2QueryUtil.generateQueryCypher(question);
+        explorationQueryInfoWidget.setExplorationQuery(explorationQuery);
         if(contentTabSheet != null){
             informationExplorationResultDetails.remove(contentTabSheet);
         }
