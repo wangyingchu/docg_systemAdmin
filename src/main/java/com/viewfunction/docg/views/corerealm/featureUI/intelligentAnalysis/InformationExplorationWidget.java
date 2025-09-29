@@ -2,10 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 
 import com.docg.ai.llm.naturalLanguageAnalysis.util.Text2QueryUtil;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.details.Details;
@@ -17,12 +14,16 @@ import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
 import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.tabs.TabSheet;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
@@ -35,6 +36,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.maintainEntitiesPath.EntitiesPathDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
@@ -57,6 +59,12 @@ public class InformationExplorationWidget extends VerticalLayout {
     private String question;
     private ExplorationQueryInfoWidget explorationQueryInfoWidget;
 
+    private Span questionSpan;
+    private Button editAndReQueryButton;
+    private Button cancelEditAndReQueryButton;
+    private Button confirmEditAndReQueryButton;
+    private TextField questionEditField;
+
     public InformationExplorationWidget(String question,String explorationQuery){
         this.setWidthFull();
         this.question = question;
@@ -66,11 +74,52 @@ public class InformationExplorationWidget extends VerticalLayout {
         operationIcon.setSize("16px");
         operationIcon.getStyle().set("padding-right","1px");
 
-        Span explorationQuestionSpan = new Span(question);
-        explorationQuestionSpan.getStyle()
+        questionEditField = new TextField();
+        questionEditField.setWidth(80,Unit.PERCENTAGE);
+        questionEditField.setValue(question);
+        questionEditField.setPrefixComponent(VaadinIcon.QUESTION.create());
+        questionEditField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        questionEditField.setVisible(false);
+
+        Icon editIcon = VaadinIcon.EDIT.create();
+        editIcon.setSize("14px");
+        editAndReQueryButton = new Button(editIcon);
+        editAndReQueryButton.setTooltipText("编辑探查问题并重新探索");
+        editAndReQueryButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
+        editAndReQueryButton.addClickListener((ClickEvent<Button> click) ->{
+            doEdit();
+        });
+
+        Icon arrowBackwardIcon = VaadinIcon.ARROW_BACKWARD.create();
+        arrowBackwardIcon.setSize("14px");
+        cancelEditAndReQueryButton = new Button(arrowBackwardIcon);
+        cancelEditAndReQueryButton.setTooltipText("取消编辑");
+        cancelEditAndReQueryButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        cancelEditAndReQueryButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        cancelEditAndReQueryButton.addThemeVariants(ButtonVariant.LUMO_ICON);
+        cancelEditAndReQueryButton.addClickListener((ClickEvent<Button> click) ->{
+            cancelEdit();
+        });
+        cancelEditAndReQueryButton.setVisible(false);
+
+        Icon checkIcon = VaadinIcon.CHECK.create();
+        checkIcon.setSize("14px");
+        confirmEditAndReQueryButton = new Button(checkIcon);
+        confirmEditAndReQueryButton.setTooltipText("确认编辑并重新探索");
+        confirmEditAndReQueryButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        confirmEditAndReQueryButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        confirmEditAndReQueryButton.addThemeVariants(ButtonVariant.LUMO_ICON);
+        confirmEditAndReQueryButton.addClickListener((ClickEvent<Button> click) ->{
+            confirmEditAndQuery();
+        });
+        confirmEditAndReQueryButton.setVisible(false);
+
+        questionSpan = new Span(question);
+        questionSpan.getStyle()
                 .set("font-size","var(--lumo-font-size-m)")
                 .set("font-weight","bolder")
-                .set("font-style","oblique");
+                .set("font-style","oblique").set("padding-right","5px");
+        Span explorationQuestionSpan = new Span(questionSpan,questionEditField,editAndReQueryButton,cancelEditAndReQueryButton,confirmEditAndReQueryButton);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now =LocalDateTime.now();
@@ -445,5 +494,48 @@ public class InformationExplorationWidget extends VerticalLayout {
 
     private void removeSelf(){
         this.removeFromParent();
+    }
+
+    private void doEdit(){
+        editAndReQueryButton.setVisible(false);
+        confirmEditAndReQueryButton.setVisible(true);
+        cancelEditAndReQueryButton.setVisible(true);
+
+        questionEditField.setVisible(true);
+        questionSpan.setVisible(false);
+    }
+
+    private void confirmEditAndQuery(){
+        if(questionEditField.getValue() != null && !questionEditField.getValue().trim().equals("")){
+            editAndReQueryButton.setVisible(true);
+            confirmEditAndReQueryButton.setVisible(false);
+            cancelEditAndReQueryButton.setVisible(false);
+
+            question = questionEditField.getValue();
+            questionEditField.setVisible(false);
+            questionSpan.removeAll();
+            questionSpan.add(question);
+            questionSpan.setVisible(true);
+
+            explorationQuery = Text2QueryUtil.generateQueryCypher(question);;
+            explorationQueryInfoWidget.setExplorationQuery(explorationQuery);
+            if(contentTabSheet != null){
+                informationExplorationResultDetails.remove(contentTabSheet);
+            }
+            renderExplorationQueryResult();
+            informationExplorationResultDetails.setOpened(true);
+        }else{
+            CommonUIOperationUtil.showPopupNotification("请输入问题", NotificationVariant.LUMO_ERROR,1500, Notification.Position.MIDDLE);
+        }
+    }
+
+    private void cancelEdit(){
+        editAndReQueryButton.setVisible(true);
+        confirmEditAndReQueryButton.setVisible(false);
+        cancelEditAndReQueryButton.setVisible(false);
+
+        questionEditField.setVisible(false);
+        questionSpan.setVisible(true);
+        questionEditField.setValue(this.question);
     }
 }
