@@ -298,6 +298,7 @@ public class InformationExplorationWidget extends VerticalLayout {
         } catch(CoreRealmServiceEntityExploreException e){
             throw new RuntimeException(e);
         }
+        scrollIntoView();
     }
 
     private void renderConceptionEntityUI(ConceptionEntity conceptionEntity){
