@@ -10,8 +10,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.markdown.Markdown;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-
 import com.vaadin.flow.component.textfield.TextArea;
+
 import com.viewfunction.docg.element.commonComponent.ThirdLevelIconTitle;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelTitleActionBar;
 
@@ -88,7 +88,9 @@ public class ExplorationQueryInfoWidget extends VerticalLayout {
     }
 
     public void setExplorationQuery(String explorationQuery){
-        markdown.setContent(explorationQuery);
+        this.markdown.setContent(explorationQuery);
+        this.explorationQuery = explorationQuery;
+        this.explorationQueryTextArea.setValue(this.explorationQuery);
     }
 
     private void doEdit(){
