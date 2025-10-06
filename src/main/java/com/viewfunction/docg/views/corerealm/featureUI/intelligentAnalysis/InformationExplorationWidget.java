@@ -142,10 +142,16 @@ public class InformationExplorationWidget extends VerticalLayout {
         closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_ERROR);
         closeButton.setTooltipText("关闭探索");
 
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(1,Unit.PIXELS);
+
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(1,Unit.PIXELS);
+
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setWidthFull();
         horizontalLayout.setAlignItems(Alignment.CENTER);
-        horizontalLayout.add(operationIcon,timeSpan,explorationQuestionSpan,closeButton);
+        horizontalLayout.add(spaceDivLayout1,operationIcon,timeSpan,explorationQuestionSpan,closeButton,spaceDivLayout2);
         this.setFlexGrow(1,explorationQuestionSpan);
 
         informationExplorationResultDetails = new Details(horizontalLayout);
@@ -156,6 +162,8 @@ public class InformationExplorationWidget extends VerticalLayout {
         add(informationExplorationResultDetails);
         informationExplorationResultDetails.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         informationExplorationResultDetails.getStyle().set("border-top", "1px solid var(--lumo-contrast-20pct)");
+        informationExplorationResultDetails.getStyle().set("border-left", "1px solid var(--lumo-contrast-20pct)");
+        informationExplorationResultDetails.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
         HorizontalLayout explorationQueryControlLayout = new HorizontalLayout();
         explorationQueryControlLayout.setHeight(20, Unit.PIXELS);
@@ -200,7 +208,10 @@ public class InformationExplorationWidget extends VerticalLayout {
         popover3.setPosition(PopoverPosition.BOTTOM_START);
         popover3.setModal(true);
 
-        explorationQueryControlLayout.add(explorationQueryIcon,attributrValuesMapIcon,queryResultStaticIcon,reRunButton);
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(1,Unit.PIXELS);
+
+        explorationQueryControlLayout.add(spaceDivLayout3,explorationQueryIcon,attributrValuesMapIcon,queryResultStaticIcon,reRunButton);
     }
 
     @Override

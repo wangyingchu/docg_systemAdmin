@@ -114,6 +114,7 @@ public class RelationDataRealtimeInfoWidget extends VerticalLayout {
                             spaceDiv.setWidth(4, Unit.PIXELS);
                             Icon infoIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
                             infoIcon.setSize("10px");
+                            infoIcon.setColor("hsl(214, 100%, 48%)");
                             infoIcon.setTooltipText("属性值随机采样 (100项)");
                             infoIcon.addClickListener(clickEvent -> {
                                 renderSampleRandomAttributesView(relationKindName,attributeName,attributeInfo);
