@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind.ConceptionKindDetailUI;
@@ -37,71 +38,73 @@ public class ConceptionDataRealtimeInfoWidget extends VerticalLayout {
         if(realtimeConceptionList != null && conceptionKindsAttributesSystemInfo != null){
             for(EntityStatisticsInfo currentEntityStatisticsInfo:realtimeConceptionList){
                 String conceptionKindName = currentEntityStatisticsInfo.getEntityKindName();
-                String conceptionKindDesc = currentEntityStatisticsInfo.getEntityKindDesc();
-                long conceptionEntitiesCount = currentEntityStatisticsInfo.getEntitiesCount();
-                boolean isSystemKind = currentEntityStatisticsInfo.isSystemKind();
+                if(!conceptionKindName.startsWith(RealmConstant.RealmInnerTypePerFix)){
+                    String conceptionKindDesc = currentEntityStatisticsInfo.getEntityKindDesc();
+                    long conceptionEntitiesCount = currentEntityStatisticsInfo.getEntitiesCount();
+                    boolean isSystemKind = currentEntityStatisticsInfo.isSystemKind();
 
-                Icon conceptionKindIcon = VaadinIcon.CUBE.create();
-                conceptionKindIcon.setSize("12px");
-                conceptionKindIcon.getStyle().set("padding-right","3px");
+                    Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+                    conceptionKindIcon.setSize("12px");
+                    conceptionKindIcon.getStyle().set("padding-right","3px");
 
-                NativeLabel conceptionKindNameLabel = conceptionKindDesc != null?
-                        new NativeLabel(conceptionKindName+"("+conceptionKindDesc+")")
-                        :
-                        new NativeLabel(conceptionKindName);
+                    NativeLabel conceptionKindNameLabel = conceptionKindDesc != null?
+                            new NativeLabel(conceptionKindName+"("+conceptionKindDesc+")")
+                            :
+                            new NativeLabel(conceptionKindName);
 
-                Span conceptionEntitiesCountBadge = new Span("" +conceptionEntitiesCount);
-                conceptionEntitiesCountBadge.getElement().getThemeList().add("badge success");
+                    Span conceptionEntitiesCountBadge = new Span("" +conceptionEntitiesCount);
+                    conceptionEntitiesCountBadge.getElement().getThemeList().add("badge success");
 
-                Icon isInnerKindIcon = LineAwesomeIconsSvg.COG_SOLID.create();
-                isInnerKindIcon.setSize("6px");
-                conceptionKindIcon.getStyle().set("padding-right","3px");
-                isInnerKindIcon.setTooltipText("系统内部概念类型");
+                    Icon isInnerKindIcon = LineAwesomeIconsSvg.COG_SOLID.create();
+                    isInnerKindIcon.setSize("6px");
+                    conceptionKindIcon.getStyle().set("padding-right","3px");
+                    isInnerKindIcon.setTooltipText("系统内部概念类型");
 
-                HorizontalLayout horizontalLayout = new HorizontalLayout();
-                horizontalLayout.setAlignItems(Alignment.CENTER);
+                    HorizontalLayout horizontalLayout = new HorizontalLayout();
+                    horizontalLayout.setAlignItems(Alignment.CENTER);
 
-                Icon configIcon = new Icon(VaadinIcon.COG);
-                configIcon.setSize("18px");
-                Button configConceptionKind = new Button(configIcon, event -> {
-                    renderConceptionKindConfigurationUI(conceptionKindName);
-                });
-                configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_CONTRAST);
-                configConceptionKind.setTooltipText("配置概念类型定义");
+                    Icon configIcon = new Icon(VaadinIcon.COG);
+                    configIcon.setSize("18px");
+                    Button configConceptionKind = new Button(configIcon, event -> {
+                        renderConceptionKindConfigurationUI(conceptionKindName);
+                    });
+                    configConceptionKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_CONTRAST);
+                    configConceptionKind.setTooltipText("配置概念类型定义");
 
-                Icon configIcon2 = LineAwesomeIconsSvg.AUDIBLE.create();
-                configIcon2.setSize("16px");
-                Button addToInsightScope = new Button(configIcon2, event -> {
-                    containerIntelligentAnalysisView.addConceptionKindToInsightScope(conceptionKindName);
-                });
-                addToInsightScope.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_CONTRAST);
-                addToInsightScope.setTooltipText("加入知识洞察范围");
+                    Icon configIcon2 = LineAwesomeIconsSvg.AUDIBLE.create();
+                    configIcon2.setSize("16px");
+                    Button addToInsightScope = new Button(configIcon2, event -> {
+                        containerIntelligentAnalysisView.addConceptionKindToInsightScope(conceptionKindName);
+                    });
+                    addToInsightScope.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_CONTRAST);
+                    addToInsightScope.setTooltipText("加入知识洞察范围");
 
-                if(isSystemKind){
-                    horizontalLayout.add(conceptionKindIcon,conceptionKindNameLabel,isInnerKindIcon,conceptionEntitiesCountBadge,configConceptionKind,addToInsightScope);
-                }else{
-                    horizontalLayout.add(conceptionKindIcon,conceptionKindNameLabel,conceptionEntitiesCountBadge,configConceptionKind,addToInsightScope);
-                }
+                    if(isSystemKind){
+                        horizontalLayout.add(conceptionKindIcon,conceptionKindNameLabel,isInnerKindIcon,conceptionEntitiesCountBadge,configConceptionKind,addToInsightScope);
+                    }else{
+                        horizontalLayout.add(conceptionKindIcon,conceptionKindNameLabel,conceptionEntitiesCountBadge,configConceptionKind,addToInsightScope);
+                    }
 
-                Details conceptionKindAttributesDetails = new Details(horizontalLayout);
-                conceptionKindAttributesDetails.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
-                conceptionKindAttributesDetails.setOpened(false);
-                add(conceptionKindAttributesDetails);
+                    Details conceptionKindAttributesDetails = new Details(horizontalLayout);
+                    conceptionKindAttributesDetails.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+                    conceptionKindAttributesDetails.setOpened(false);
+                    add(conceptionKindAttributesDetails);
 
-                if(conceptionKindsAttributesSystemInfo.containsKey(conceptionKindName)){
-                    List<AttributeSystemInfo> currentConceptionKindAttributesSysInfo = conceptionKindsAttributesSystemInfo.get(conceptionKindName);
+                    if(conceptionKindsAttributesSystemInfo.containsKey(conceptionKindName)){
+                        List<AttributeSystemInfo> currentConceptionKindAttributesSysInfo = conceptionKindsAttributesSystemInfo.get(conceptionKindName);
 
-                    for(AttributeSystemInfo currentAttributeSystemInfo :currentConceptionKindAttributesSysInfo){
-                        String attributeName = currentAttributeSystemInfo.getAttributeName();
-                        String dataType = currentAttributeSystemInfo.getDataType();
+                        for(AttributeSystemInfo currentAttributeSystemInfo :currentConceptionKindAttributesSysInfo){
+                            String attributeName = currentAttributeSystemInfo.getAttributeName();
+                            String dataType = currentAttributeSystemInfo.getDataType();
 
-                        Span attributeInfo = new Span(attributeName +" ("+dataType+")");
-                        attributeInfo.getElement().getThemeList().add("badge contrast");
-                        conceptionKindAttributesDetails.add(attributeInfo);
+                            Span attributeInfo = new Span(attributeName +" ("+dataType+")");
+                            attributeInfo.getElement().getThemeList().add("badge contrast");
+                            conceptionKindAttributesDetails.add(attributeInfo);
 
-                        Span spaceDivSpan = new Span(" ");
-                        spaceDivSpan.getElement().getStyle().set("padding-right","5px");
-                        conceptionKindAttributesDetails.add(spaceDivSpan);
+                            Span spaceDivSpan = new Span(" ");
+                            spaceDivSpan.getElement().getStyle().set("padding-right","5px");
+                            conceptionKindAttributesDetails.add(spaceDivSpan);
+                        }
                     }
                 }
             }

@@ -14,10 +14,12 @@ import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.function.ValueProvider;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConceptionDataCorrelationRealtimeInfoWidget extends VerticalLayout {
@@ -92,7 +94,15 @@ public class ConceptionDataCorrelationRealtimeInfoWidget extends VerticalLayout 
 
     public void renderConceptionDataCorrelationRealtimeInfo(List<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoList){
         if(conceptionKindCorrelationInfoList != null){
-            runtimeConceptionKindCorrelationInfoGrid.setItems(conceptionKindCorrelationInfoList);
+            List<ConceptionKindCorrelationInfo> filteredList = new ArrayList<>();
+            for(ConceptionKindCorrelationInfo currentConceptionKindCorrelationInfo:conceptionKindCorrelationInfoList){
+                if(currentConceptionKindCorrelationInfo.getSourceConceptionKindName().startsWith(RealmConstant.RealmInnerTypePerFix)&
+                currentConceptionKindCorrelationInfo.getTargetConceptionKindName().startsWith(RealmConstant.RealmInnerTypePerFix)){
+                }else{
+                    filteredList.add(currentConceptionKindCorrelationInfo);
+                }
+            }
+            runtimeConceptionKindCorrelationInfoGrid.setItems(filteredList);
         }
     }
 }
