@@ -11,12 +11,16 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverPosition;
+import com.vaadin.flow.component.popover.PopoverVariant;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeSystemInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationKind.RelationKindDetailUI;
 
 import java.util.ArrayList;
@@ -26,11 +30,19 @@ import java.util.Map;
 public class RelationDataRealtimeInfoWidget extends VerticalLayout {
 
     private IntelligentAnalysisView containerIntelligentAnalysisView;
+    private Popover popover;
 
     public RelationDataRealtimeInfoWidget(IntelligentAnalysisView containerIntelligentAnalysisView){
         this.getStyle().set("background-color", "white");
         this.setSpacing(false);
         this.containerIntelligentAnalysisView = containerIntelligentAnalysisView;
+
+        popover = new Popover();
+        popover.setWidth("500px");
+        popover.setHeight("470px");
+        popover.addThemeVariants(PopoverVariant.ARROW,PopoverVariant.LUMO_NO_PADDING);
+        popover.setPosition(PopoverPosition.TOP);
+        popover.setModal(true,true);
     }
 
     public void  renderRelationDataRealtimeInfo(List<EntityStatisticsInfo> realtimeRelationList,
@@ -98,6 +110,15 @@ public class RelationDataRealtimeInfoWidget extends VerticalLayout {
                             String dataType = currentAttributeSystemInfo.getDataType();
 
                             Span attributeInfo = new Span(attributeName +" ("+dataType+")");
+                            HorizontalLayout spaceDiv = new HorizontalLayout();
+                            spaceDiv.setWidth(4, Unit.PIXELS);
+                            Icon infoIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
+                            infoIcon.setSize("10px");
+                            infoIcon.setTooltipText("属性值随机采样 (100项)");
+                            infoIcon.addClickListener(clickEvent -> {
+                                renderSampleRandomAttributesView(relationKindName,attributeName,attributeInfo);
+                            });
+                            attributeInfo.add(spaceDiv,infoIcon);
                             attributeInfo.getElement().getThemeList().add("badge contrast");
                             relationKindAttributesDetails.add(attributeInfo);
 
@@ -140,5 +161,13 @@ public class RelationDataRealtimeInfoWidget extends VerticalLayout {
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.COG),"关系类型配置",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(relationKindDetailUI);
         fullScreenWindow.show();
+    }
+
+    private void renderSampleRandomAttributesView(String conceptionKind,String attributeName,Span attributeInfo){
+        AttributesValueListView attributesValueListView = new AttributesValueListView(AttributesValueListView.AttributeKindType.RelationKind,conceptionKind,attributeName);
+        popover.removeAll();
+        popover.add(attributesValueListView);
+        popover.setTarget(attributeInfo);
+        popover.open();
     }
 }
