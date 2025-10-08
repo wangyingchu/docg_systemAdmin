@@ -259,7 +259,7 @@ public class InformationExplorationWidget extends VerticalLayout {
                                 ConceptionEntity conceptionEntity = (ConceptionEntity)contentObject;
                                 Icon showConceptionEntityIcon = new Icon(VaadinIcon.CUBE);
                                 showConceptionEntityIcon.setSize("15px");
-                                Button showConceptionEntityButton = new Button(showConceptionEntityIcon, event -> {
+                                Button showConceptionEntityButton = new Button(conceptionEntity.getConceptionKindName(),showConceptionEntityIcon, event -> {
                                     renderConceptionEntityUI(conceptionEntity);
                                 });
                                 showConceptionEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
@@ -269,7 +269,7 @@ public class InformationExplorationWidget extends VerticalLayout {
                                 RelationEntity relationEntity = (RelationEntity)contentObject;
                                 Icon showRelationEntityIcon = new Icon(VaadinIcon.CONNECT_O);
                                 showRelationEntityIcon.setSize("18px");
-                                Button showRelationEntityButton = new Button(showRelationEntityIcon, event -> {
+                                Button showRelationEntityButton = new Button(relationEntity.getRelationKindName(),showRelationEntityIcon, event -> {
                                     renderRelationEntityUI(relationEntity);
                                 });
                                 showRelationEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
@@ -279,7 +279,7 @@ public class InformationExplorationWidget extends VerticalLayout {
                                 EntitiesPath entitiesPath = (EntitiesPath)contentObject;
                                 Icon showEntitiesPathIcon = LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create();
                                 showEntitiesPathIcon.setSize("14px");
-                                Button showEntitiesPathEntityButton = new Button(showEntitiesPathIcon, event -> {
+                                Button showEntitiesPathEntityButton = new Button(" "+entitiesPath.getPathJumps()+"跳",showEntitiesPathIcon, event -> {
                                     renderEntitiesPathUI(entitiesPath);
                                 });
                                 showEntitiesPathEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
