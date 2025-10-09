@@ -9,7 +9,6 @@ import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -66,7 +65,7 @@ public class InformationExplorationWidget extends VerticalLayout {
     private DynamicContentQueryResult dynamicContentQueryResult;
     private QueryResultInsightWidget queryResultInsightWidget;
     private QueryResultGraphWidget queryResultGraphWidget;
-
+    private HorizontalLayout doesNotContainsDataInfoMessage;
     public InformationExplorationWidget(String question,String explorationQuery){
         this.setWidthFull();
         this.question = question;
@@ -241,8 +240,30 @@ public class InformationExplorationWidget extends VerticalLayout {
                 queryResultGraphWidget = new QueryResultGraphWidget(dynamicContentQueryResult);
                 queryResultGraphWidget.setHeight(400,Unit.PIXELS);
 
+                doesNotContainsDataInfoMessage = new HorizontalLayout();
+                doesNotContainsDataInfoMessage.setSpacing(true);
+                doesNotContainsDataInfoMessage.setPadding(true);
+                doesNotContainsDataInfoMessage.setMargin(true);
+                doesNotContainsDataInfoMessage.setWidth(100, Unit.PERCENTAGE);
+                doesNotContainsDataInfoMessage.setHeight(300,Unit.PIXELS);
+                Icon messageLogo = new Icon(VaadinIcon.MAILBOX);
+                messageLogo.getStyle()
+                        .set("color","#2e4e7e").set("padding-right", "5px");
+                messageLogo.setSize("30px");
+                NativeLabel messageLabel = new NativeLabel(" 当前探索结果中不包含数据信息");
+                messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
+                doesNotContainsDataInfoMessage.add(messageLogo,messageLabel);
+                doesNotContainsDataInfoMessage.setVisible(false);
+
+                VerticalLayout dataResultContainerLayout = new VerticalLayout();
+                dataResultContainerLayout.setMargin(false);
+                dataResultContainerLayout.setPadding(false);
+                dataResultContainerLayout.setSpacing(false);
+                dataResultContainerLayout.setWidthFull();
+                dataResultContainerLayout.add(queryResultGrid,doesNotContainsDataInfoMessage);
+
                 contentTabSheet = new TabSheet();
-                contentTabSheet.add("数据", queryResultGrid);
+                contentTabSheet.add("数据", dataResultContainerLayout);
                 contentTabSheet.add("图谱", queryResultGraphWidget);
                 contentTabSheet.add("解读", queryResultInsightWidget);
                 contentTabSheet.addSelectedChangeListener(event -> {
@@ -307,6 +328,14 @@ public class InformationExplorationWidget extends VerticalLayout {
                     queryResultGrid.addColumn(dynamicContentValueComponentRenderer).setHeader(" " + key).setKey(key + "_KEY");
                     queryResultGrid.getColumnByKey(key + "_KEY").setSortable(true).setResizable(true);
                 });
+
+                if(dynamicContentValueResultList.isEmpty()){
+                    queryResultGrid.setVisible(false);
+                    doesNotContainsDataInfoMessage.setVisible(true);
+                }else{
+                    queryResultGrid.setVisible(true);
+                    doesNotContainsDataInfoMessage.setVisible(false);
+                }
                 queryResultGrid.setItems(dynamicContentValueResultList);
 
                 QueryResultAttributeValuesInfoWidget queryResultAttributeValuesInfoWidget = new QueryResultAttributeValuesInfoWidget(contentValueMap);

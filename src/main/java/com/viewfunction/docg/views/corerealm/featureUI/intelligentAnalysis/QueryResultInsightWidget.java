@@ -1,8 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -19,6 +17,9 @@ public class QueryResultInsightWidget extends VerticalLayout {
     public QueryResultInsightWidget(DynamicContentQueryResult dynamicContentQueryResult){
         this.setWidthFull();
         this.setHeightFull();
+        this.setMargin(false);
+        this.setPadding(false);
+        this.setSpacing(false);
         this.dynamicContentQueryResult = dynamicContentQueryResult;
 
         doesNotContainsInsightInfoMessage = new HorizontalLayout();

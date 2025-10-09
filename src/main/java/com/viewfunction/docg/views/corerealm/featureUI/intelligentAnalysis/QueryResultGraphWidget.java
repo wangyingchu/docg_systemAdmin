@@ -17,6 +17,9 @@ public class QueryResultGraphWidget extends VerticalLayout {
     public QueryResultGraphWidget(DynamicContentQueryResult dynamicContentQueryResult){
         this.setWidthFull();
         this.setHeightFull();
+        this.setMargin(false);
+        this.setPadding(false);
+        this.setSpacing(false);
         this.dynamicContentQueryResult = dynamicContentQueryResult;
 
         doesNotContainsGraphInfoMessage = new HorizontalLayout();
