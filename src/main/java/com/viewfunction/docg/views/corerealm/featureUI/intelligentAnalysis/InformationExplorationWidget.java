@@ -58,13 +58,14 @@ public class InformationExplorationWidget extends VerticalLayout {
     private TabSheet contentTabSheet;
     private String question;
     private ExplorationQueryInfoWidget explorationQueryInfoWidget;
-
     private Span questionSpan;
     private Button editAndReQueryButton;
     private Button cancelEditAndReQueryButton;
     private Button confirmEditAndReQueryButton;
     private TextField questionEditField;
     private DynamicContentQueryResult dynamicContentQueryResult;
+    private QueryResultInsightWidget queryResultInsightWidget;
+    private QueryResultGraphWidget queryResultGraphWidget;
 
     public InformationExplorationWidget(String question,String explorationQuery){
         this.setWidthFull();
@@ -234,16 +235,26 @@ public class InformationExplorationWidget extends VerticalLayout {
                 queryResultGrid.setPageSize(20);
                 queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COLUMN_BORDERS,GridVariant.LUMO_COMPACT,GridVariant.LUMO_WRAP_CELL_CONTENT);
 
-                Div graphContentDiv = new Div(new Text("This is the Graph tab content"));
-                graphContentDiv.setHeight(400,Unit.PIXELS);
+                queryResultInsightWidget = new QueryResultInsightWidget(dynamicContentQueryResult);
+                queryResultInsightWidget.setHeight(400,Unit.PIXELS);
 
-                Div readAndAnalyDiv = new Div(new Text("This is the Explanation tab content"));
-                readAndAnalyDiv.setHeight(400,Unit.PIXELS);
+                queryResultGraphWidget = new QueryResultGraphWidget(dynamicContentQueryResult);
+                queryResultGraphWidget.setHeight(400,Unit.PIXELS);
 
                 contentTabSheet = new TabSheet();
                 contentTabSheet.add("数据", queryResultGrid);
-                contentTabSheet.add("图谱", graphContentDiv);
-                contentTabSheet.add("解读", readAndAnalyDiv);
+                contentTabSheet.add("图谱", queryResultGraphWidget);
+                contentTabSheet.add("解读", queryResultInsightWidget);
+                contentTabSheet.addSelectedChangeListener(event -> {
+                    String selectedTab = event.getSelectedTab().getLabel();
+                    if("数据".equals(selectedTab)){
+
+                    }else if("图谱".equals(selectedTab)){
+                        queryResultGraphWidget.doDrawGraph();
+                    }else if("解读".equals(selectedTab)){
+                        queryResultInsightWidget.doInsight();
+                    }
+                });
                 informationExplorationResultDetails.add(contentTabSheet);
 
                 List<Map<String,DynamicContentValue>> dynamicContentValueResultList = dynamicContentQueryResult.getDynamicContentResultValueList();
