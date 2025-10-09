@@ -35,6 +35,10 @@ public class InformationAnalysisView extends VerticalLayout {
         this.add(this.insightContentScroller);
         this.insightContentContainerLayout = new VerticalLayout();
         this.insightContentContainerLayout.setWidthFull();
+        this.insightContentContainerLayout.setMargin(false);
+        this.insightContentContainerLayout.setPadding(false);
+        this.insightContentContainerLayout.setSpacing(false);
+
         this.insightContentScroller.setContent(this.insightContentContainerLayout);
         this.insightScopeConceptionKindList = new ArrayList<>();
         this.insightScopeRelationKindList = new ArrayList<>();

@@ -64,6 +64,7 @@ public class InformationExplorationWidget extends VerticalLayout {
     private Button cancelEditAndReQueryButton;
     private Button confirmEditAndReQueryButton;
     private TextField questionEditField;
+    private DynamicContentQueryResult dynamicContentQueryResult;
 
     public InformationExplorationWidget(String question,String explorationQuery){
         this.setWidthFull();
@@ -224,7 +225,7 @@ public class InformationExplorationWidget extends VerticalLayout {
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
         try {
-            DynamicContentQueryResult dynamicContentQueryResult = crossKindDataOperator.executeAdhocQuery(explorationQuery);
+            dynamicContentQueryResult = crossKindDataOperator.executeAdhocQuery(explorationQuery);
             if (dynamicContentQueryResult != null) {
                 Map<String, DynamicContentValue.ContentValueType> contentValueMap =
                         dynamicContentQueryResult.getDynamicContentAttributesValueTypeMap();
