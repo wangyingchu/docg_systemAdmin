@@ -6,7 +6,11 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentQueryResult;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentValue;
+
+import java.util.*;
 
 public class QueryResultInsightWidget extends VerticalLayout {
 
@@ -38,11 +42,45 @@ public class QueryResultInsightWidget extends VerticalLayout {
         add(doesNotContainsInsightInfoMessage);
     }
 
-
     public void doInsight(){
         System.out.println("execute do insight");
         if(!alreadyInsighted){
             alreadyInsighted = true;
+            List<Map<String, DynamicContentValue>> contentValueList = dynamicContentQueryResult.getDynamicContentResultValueList();
+            if(contentValueList != null && ! contentValueList.isEmpty()){
+                doesNotContainsInsightInfoMessage.setVisible(false);
+                doInsightLogic();
+            }
         }
+    }
+
+    private void doInsightLogic(){
+        List<Map<String, DynamicContentValue>> contentValueList = dynamicContentQueryResult.getDynamicContentResultValueList();
+        Map<String, DynamicContentValue.ContentValueType> contentValueTypeMap = dynamicContentQueryResult.getDynamicContentAttributesValueTypeMap();
+        List<String> fixedProperties = new ArrayList<>();
+        fixedProperties.addAll( contentValueTypeMap.keySet());
+
+        StringBuilder sb = new StringBuilder();
+
+        StringBuilder headerInfo = new StringBuilder();
+        fixedProperties.forEach( propertyName -> {
+            headerInfo.append(propertyName).append(",");
+        });
+        headerInfo.deleteCharAt(headerInfo.length() - 1);
+        sb.append(headerInfo).append("\n");
+
+        for(Map<String, DynamicContentValue> currentDataMap:contentValueList){
+            StringBuilder currentDataInfo = new StringBuilder();
+            fixedProperties.forEach( propertyName -> {
+                DynamicContentValue currentColumnContentValue = currentDataMap.get(propertyName);
+                currentDataInfo.append(currentColumnContentValue.getValueObject().toString()).append(",");
+            });
+            currentDataInfo.deleteCharAt(currentDataInfo.length() - 1);
+
+
+            sb.append(currentDataInfo).append("\n");
+        }
+        //分析以下CSV格式的数据内容：
+        System.out.println(sb.toString());
     }
 }
