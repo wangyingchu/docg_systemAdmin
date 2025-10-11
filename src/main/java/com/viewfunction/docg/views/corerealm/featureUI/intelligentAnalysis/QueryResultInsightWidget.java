@@ -1,9 +1,12 @@
 package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 
+import com.docg.ai.llm.naturalLanguageAnalysis.util.DynamicContentInsightUtil;
+
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.markdown.Markdown;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -17,6 +20,7 @@ public class QueryResultInsightWidget extends VerticalLayout {
     private DynamicContentQueryResult dynamicContentQueryResult;
     private boolean alreadyInsighted = false;
     private HorizontalLayout doesNotContainsInsightInfoMessage;
+    private Markdown insightResultMarkdown;
 
     public QueryResultInsightWidget(DynamicContentQueryResult dynamicContentQueryResult){
         this.setWidthFull();
@@ -40,6 +44,12 @@ public class QueryResultInsightWidget extends VerticalLayout {
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
         doesNotContainsInsightInfoMessage.add(messageLogo,messageLabel);
         add(doesNotContainsInsightInfoMessage);
+
+        insightResultMarkdown = new Markdown();
+        insightResultMarkdown.setWidth(100, Unit.PERCENTAGE);
+        insightResultMarkdown.setHeight(300,Unit.PIXELS);
+        add(insightResultMarkdown);
+        insightResultMarkdown.setVisible(false);
     }
 
     public void doInsight(){
@@ -55,32 +65,8 @@ public class QueryResultInsightWidget extends VerticalLayout {
     }
 
     private void doInsightLogic(){
-        List<Map<String, DynamicContentValue>> contentValueList = dynamicContentQueryResult.getDynamicContentResultValueList();
-        Map<String, DynamicContentValue.ContentValueType> contentValueTypeMap = dynamicContentQueryResult.getDynamicContentAttributesValueTypeMap();
-        List<String> fixedProperties = new ArrayList<>();
-        fixedProperties.addAll( contentValueTypeMap.keySet());
-
-        StringBuilder sb = new StringBuilder();
-
-        StringBuilder headerInfo = new StringBuilder();
-        fixedProperties.forEach( propertyName -> {
-            headerInfo.append(propertyName).append(",");
-        });
-        headerInfo.deleteCharAt(headerInfo.length() - 1);
-        sb.append(headerInfo).append("\n");
-
-        for(Map<String, DynamicContentValue> currentDataMap:contentValueList){
-            StringBuilder currentDataInfo = new StringBuilder();
-            fixedProperties.forEach( propertyName -> {
-                DynamicContentValue currentColumnContentValue = currentDataMap.get(propertyName);
-                currentDataInfo.append(currentColumnContentValue.getValueObject().toString()).append(",");
-            });
-            currentDataInfo.deleteCharAt(currentDataInfo.length() - 1);
-
-
-            sb.append(currentDataInfo).append("\n");
-        }
-        //分析以下CSV格式的数据内容：
-        System.out.println(sb.toString());
+        insightResultMarkdown.setVisible(true);
+        String insightResult = DynamicContentInsightUtil.insightToDynamicContent(dynamicContentQueryResult);
+        insightResultMarkdown.setContent(insightResult);
     }
 }
