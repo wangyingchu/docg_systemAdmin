@@ -279,51 +279,53 @@ public class InformationExplorationWidget extends VerticalLayout {
                 informationExplorationResultDetails.add(contentTabSheet);
 
                 List<Map<String,DynamicContentValue>> dynamicContentValueResultList = dynamicContentQueryResult.getDynamicContentResultValueList();
-                //long resultContentValue = dynamicContentQueryResult.getDynamicContentValuesCount();
                 contentValueMap.forEach((key, value) -> {
                     ComponentRenderer dynamicContentValueComponentRenderer = new ComponentRenderer(dynamicContentValueObj -> {
                         if(dynamicContentValueObj != null && dynamicContentValueObj instanceof Map){
                             Map<String,DynamicContentValue> dynamicContentValueMap = (Map<String,DynamicContentValue>)dynamicContentValueObj;
                             DynamicContentValue dynamicContentValue = dynamicContentValueMap.get(key);
-                            DynamicContentValue.ContentValueType contentValueType = dynamicContentValue.getValueType();
-                            Object contentObject = dynamicContentValue.getValueObject();
+                            if(dynamicContentValue != null){
+                                DynamicContentValue.ContentValueType contentValueType = dynamicContentValue.getValueType();
+                                Object contentObject = dynamicContentValue.getValueObject();
 
-                            if(DynamicContentValue.ContentValueType.CONCEPTION_ENTITY.equals(contentValueType)){
-                                ConceptionEntity conceptionEntity = (ConceptionEntity)contentObject;
-                                Icon showConceptionEntityIcon = new Icon(VaadinIcon.CUBE);
-                                showConceptionEntityIcon.setSize("15px");
-                                Button showConceptionEntityButton = new Button(conceptionEntity.getConceptionKindName(),showConceptionEntityIcon, event -> {
-                                    renderConceptionEntityUI(conceptionEntity);
-                                });
-                                showConceptionEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
-                                showConceptionEntityButton.setTooltipText("显示概念实体详情");
-                                return showConceptionEntityButton;
-                            }else if(DynamicContentValue.ContentValueType.RELATION_ENTITY.equals(contentValueType)){
-                                RelationEntity relationEntity = (RelationEntity)contentObject;
-                                Icon showRelationEntityIcon = new Icon(VaadinIcon.CONNECT_O);
-                                showRelationEntityIcon.setSize("18px");
-                                Button showRelationEntityButton = new Button(relationEntity.getRelationKindName(),showRelationEntityIcon, event -> {
-                                    renderRelationEntityUI(relationEntity);
-                                });
-                                showRelationEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
-                                showRelationEntityButton.setTooltipText("显示关系实体详情");
-                                return showRelationEntityButton;
-                            }else if(DynamicContentValue.ContentValueType.ENTITIES_PATH.equals(contentValueType)){
-                                EntitiesPath entitiesPath = (EntitiesPath)contentObject;
-                                Icon showEntitiesPathIcon = LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create();
-                                showEntitiesPathIcon.setSize("14px");
-                                Button showEntitiesPathEntityButton = new Button(" "+entitiesPath.getPathJumps()+"跳",showEntitiesPathIcon, event -> {
-                                    renderEntitiesPathUI(entitiesPath);
-                                });
-                                showEntitiesPathEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
-                                showEntitiesPathEntityButton.setTooltipText("显示实体路径详情");
-                                return showEntitiesPathEntityButton;
-                            }else{
-                                return new NativeLabel(dynamicContentValue.getValueObject().toString());
+                                if(DynamicContentValue.ContentValueType.CONCEPTION_ENTITY.equals(contentValueType)){
+                                    ConceptionEntity conceptionEntity = (ConceptionEntity)contentObject;
+                                    Icon showConceptionEntityIcon = new Icon(VaadinIcon.CUBE);
+                                    showConceptionEntityIcon.setSize("15px");
+                                    Button showConceptionEntityButton = new Button(conceptionEntity.getConceptionKindName(),showConceptionEntityIcon, event -> {
+                                        renderConceptionEntityUI(conceptionEntity);
+                                    });
+                                    showConceptionEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
+                                    showConceptionEntityButton.setTooltipText("显示概念实体详情");
+                                    return showConceptionEntityButton;
+                                }else if(DynamicContentValue.ContentValueType.RELATION_ENTITY.equals(contentValueType)){
+                                    RelationEntity relationEntity = (RelationEntity)contentObject;
+                                    Icon showRelationEntityIcon = new Icon(VaadinIcon.CONNECT_O);
+                                    showRelationEntityIcon.setSize("18px");
+                                    Button showRelationEntityButton = new Button(relationEntity.getRelationKindName(),showRelationEntityIcon, event -> {
+                                        renderRelationEntityUI(relationEntity);
+                                    });
+                                    showRelationEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
+                                    showRelationEntityButton.setTooltipText("显示关系实体详情");
+                                    return showRelationEntityButton;
+                                }else if(DynamicContentValue.ContentValueType.ENTITIES_PATH.equals(contentValueType)){
+                                    EntitiesPath entitiesPath = (EntitiesPath)contentObject;
+                                    Icon showEntitiesPathIcon = LineAwesomeIconsSvg.PROJECT_DIAGRAM_SOLID.create();
+                                    showEntitiesPathIcon.setSize("14px");
+                                    Button showEntitiesPathEntityButton = new Button(" "+entitiesPath.getPathJumps()+"跳",showEntitiesPathIcon, event -> {
+                                        renderEntitiesPathUI(entitiesPath);
+                                    });
+                                    showEntitiesPathEntityButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
+                                    showEntitiesPathEntityButton.setTooltipText("显示实体路径详情");
+                                    return showEntitiesPathEntityButton;
+                                }else{
+                                    return new NativeLabel(dynamicContentValue.getValueObject().toString());
+                                }
                             }
                         }else{
                             return new NativeLabel("");
                         }
+                        return new NativeLabel("");
                     });
                     queryResultGrid.addColumn(dynamicContentValueComponentRenderer).setHeader(" " + key).setKey(key + "_KEY");
                     queryResultGrid.getColumnByKey(key + "_KEY").setSortable(true).setResizable(true);
