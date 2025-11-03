@@ -380,6 +380,38 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
             actionOptionsSubItems.addSeparator();
 
+
+
+
+
+
+
+            HorizontalLayout action1_A_Layout = new HorizontalLayout();
+            action1_A_Layout.setPadding(false);
+            action1_A_Layout.setSpacing(false);
+            action1_A_Layout.setMargin(false);
+            action1_A_Layout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            Icon action1_A_Icon = LineAwesomeIconsSvg.BUROMOBELEXPERTE.create();
+            action1_A_Icon.setSize("10px");
+            Span action1_A_Space = new Span();
+            action1_A_Space.setWidth(6,Unit.PIXELS);
+            NativeLabel action1_A_Label = new NativeLabel("根据值分组加入新概念类型 ");
+            action1_A_Label.addClassNames("text-xs","font-semibold","text-secondary");
+            action1_A_Layout.add(action1_A_Icon,action1_A_Space,action1_A_Label);
+            MenuItem action1_A_Item = actionOptionsSubItems.addItem(action1_A_Layout);
+            action1_A_Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                    renderAddAttributeKindView(attributeInfo);
+                }
+            });
+
+
+
+
+
+            actionOptionsSubItems.addSeparator();
+
             HorizontalLayout action2Layout = new HorizontalLayout();
             action2Layout.setPadding(false);
             action2Layout.setSpacing(false);
