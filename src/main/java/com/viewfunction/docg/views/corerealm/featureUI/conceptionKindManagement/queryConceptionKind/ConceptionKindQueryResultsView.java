@@ -41,6 +41,7 @@ import com.viewfunction.docg.element.eventHandling.ConceptionEntityDeletedEvent;
 import com.viewfunction.docg.element.eventHandling.ConceptionKindQueriedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntitiesToConceptionKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.RemoveEntitiesAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialInfoAnalysis.ConceptionEntitiesGeospatialInfoAnalysisView;
@@ -181,10 +182,20 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         MenuItem maintenanceDataSubMenu = subMenu.addItem(LineAwesomeIconsSvg.DOLLY_SOLID.create());
         maintenanceDataSubMenu.add(" 数据维护");
 
-        Icon eleteResultEntitiesIcon = VaadinIcon.TRASH.create();
-        eleteResultEntitiesIcon.getStyle().set("color","hsl(3,89%,42%)");
-        MenuItem deleteResultEntities = maintenanceDataSubMenu.getSubMenu().addItem(eleteResultEntitiesIcon);
+        Icon deleteResultEntitiesIcon = VaadinIcon.TRASH.create();
+        deleteResultEntitiesIcon.getStyle().set("color","hsl(3,89%,42%)");
+        MenuItem deleteResultEntities = maintenanceDataSubMenu.getSubMenu().addItem(deleteResultEntitiesIcon);
         deleteResultEntities.add("删除查询结果中的概念实体");
+
+        maintenanceDataSubMenu.getSubMenu().addSeparator();
+
+        Icon addToNewConceptionKindIcon = LineAwesomeIconsSvg.OBJECT_GROUP.create();
+        MenuItem addResultEntitiesToNewKind = maintenanceDataSubMenu.getSubMenu().addItem(addToNewConceptionKindIcon);
+        addResultEntitiesToNewKind.add("将查询结果实体添加到新的概念类型");
+
+        Icon moveToNewConceptionKindIcon = LineAwesomeIconsSvg.OBJECT_UNGROUP.create();
+        MenuItem moveResultEntitiesToNewKind = maintenanceDataSubMenu.getSubMenu().addItem(moveToNewConceptionKindIcon);
+        moveResultEntitiesToNewKind.add("将查询结果实体移动到新的概念类型");
 
         maintenanceDataSubMenu.getSubMenu().addSeparator();
 
@@ -200,6 +211,20 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
             @Override
             public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
                 deleteResultEntities();
+            }
+        });
+
+        addResultEntitiesToNewKind.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                addResultEntitiesToNewKind();
+            }
+        });
+
+        moveResultEntitiesToNewKind.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
+                moveResultEntitiesToNewKind();
             }
         });
 
@@ -692,6 +717,32 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.ERASER),"删除概念实体已有属性",null,true,480,165,false);
         removeEntitiesAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setWindowContent(removeEntitiesAttributeView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void addResultEntitiesToNewKind(){
+        Set<String> ignoreConceptionKindsSet = new HashSet<>();
+        ignoreConceptionKindsSet.add(this.conceptionKindName);
+        AddEntitiesToConceptionKindView addEntitiesToConceptionKindView =
+                new AddEntitiesToConceptionKindView(com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntitiesToConceptionKindView.JoinType.ADD,
+                        ignoreConceptionKindsSet,this.queryResultEntityUIDList);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.OBJECT_GROUP.create(),"添加概念实体到新的概念类型",null,true,480,210,false);
+        addEntitiesToConceptionKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setWindowContent(addEntitiesToConceptionKindView);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
+    }
+
+    private void moveResultEntitiesToNewKind(){
+        Set<String> ignoreConceptionKindsSet = new HashSet<>();
+        ignoreConceptionKindsSet.add(this.conceptionKindName);
+        AddEntitiesToConceptionKindView addEntitiesToConceptionKindView =
+                new AddEntitiesToConceptionKindView(com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntitiesToConceptionKindView.JoinType.MOVE,
+                        ignoreConceptionKindsSet,this.queryResultEntityUIDList);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.OBJECT_UNGROUP.create(),"移动概念实体到新的概念类型",null,true,480,210,false);
+        addEntitiesToConceptionKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setWindowContent(addEntitiesToConceptionKindView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
     }
