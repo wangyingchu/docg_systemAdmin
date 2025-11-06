@@ -29,6 +29,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleC
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesAttributesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntityValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationStatistics;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
@@ -726,7 +727,7 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
         ignoreConceptionKindsSet.add(this.conceptionKindName);
         AddEntitiesToConceptionKindView addEntitiesToConceptionKindView =
                 new AddEntitiesToConceptionKindView(com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntitiesToConceptionKindView.JoinType.ADD,
-                        ignoreConceptionKindsSet,this.queryResultEntityUIDList);
+                        this.conceptionKindName,ignoreConceptionKindsSet,this.queryResultEntityUIDList);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.OBJECT_GROUP.create(),"添加概念实体到新的概念类型",null,true,480,210,false);
         addEntitiesToConceptionKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setWindowContent(addEntitiesToConceptionKindView);
@@ -735,11 +736,36 @@ public class ConceptionKindQueryResultsView extends VerticalLayout implements
     }
 
     private void moveResultEntitiesToNewKind(){
+        AddEntitiesToConceptionKindView.EntitiesAddedToConceptionKindsListener entitiesAddedToConceptionKindsListener =
+                new AddEntitiesToConceptionKindView.EntitiesAddedToConceptionKindsListener() {
+            @Override
+            public void entitiesAddedToConceptionsAction(String currentConceptionKind, Set<String> ignoreConceptionKinds, EntitiesOperationResult entitiesOperationResult) {
+                if(entitiesOperationResult != null){
+                    List<String> movedEntitiesUIDList = entitiesOperationResult.getSuccessEntityUIDs();
+                    if(movedEntitiesUIDList != null && !movedEntitiesUIDList.isEmpty()){
+                        ListDataProvider dataProvider = (ListDataProvider)queryResultGrid.getDataProvider();
+                        int remainedRecordCount = dataProvider.getItems().size() - movedEntitiesUIDList.size();
+                        Iterator<ConceptionEntityValue> iterator = dataProvider.getItems().iterator();
+                        while (iterator.hasNext()) {
+                            ConceptionEntityValue currentConceptionEntityValue = iterator.next();
+                            if(movedEntitiesUIDList.contains(currentConceptionEntityValue.getConceptionEntityUID())){
+                                iterator.remove(); // 使用迭代器的remove方法
+                            }
+                        }
+                        dataProvider.refreshAll();
+
+                        dataCountDisplayItem.updateDisplayValue(""+ numberFormat.format(remainedRecordCount));
+                    }
+                }
+            }
+        };
+
         Set<String> ignoreConceptionKindsSet = new HashSet<>();
         ignoreConceptionKindsSet.add(this.conceptionKindName);
         AddEntitiesToConceptionKindView addEntitiesToConceptionKindView =
                 new AddEntitiesToConceptionKindView(com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntitiesToConceptionKindView.JoinType.MOVE,
-                        ignoreConceptionKindsSet,this.queryResultEntityUIDList);
+                        this.conceptionKindName,ignoreConceptionKindsSet,this.queryResultEntityUIDList);
+        addEntitiesToConceptionKindView.setEntitiesAddedToConceptionKindsListener(entitiesAddedToConceptionKindsListener);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.OBJECT_UNGROUP.create(),"移动概念实体到新的概念类型",null,true,480,210,false);
         addEntitiesToConceptionKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setWindowContent(addEntitiesToConceptionKindView);
