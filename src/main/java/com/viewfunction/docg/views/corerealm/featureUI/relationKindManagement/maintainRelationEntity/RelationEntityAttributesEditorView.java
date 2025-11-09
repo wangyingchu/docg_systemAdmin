@@ -8,6 +8,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
@@ -19,6 +21,7 @@ import com.viewfunction.docg.element.eventHandling.RelationEntityAttributeDelete
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.EntityAttributesFilterView;
 
 import java.util.List;
 
@@ -30,6 +33,10 @@ public class RelationEntityAttributesEditorView extends VerticalLayout implement
     private VerticalLayout attributeEditorsContainer;
     private Registration listener;
     private int relationEntityAttributesEditorHeightOffset;
+    private Popover attributesFilterPopover;
+    private EntityAttributesFilterView entityAttributesFilterView;
+    private Icon filterIcon;
+
     public RelationEntityAttributesEditorView(String relationKind, String relationEntityUID, int relationEntityAttributesEditorHeightOffset){
         this.relationKind = relationKind;
         this.relationEntityUID = relationEntityUID;
@@ -38,8 +45,37 @@ public class RelationEntityAttributesEditorView extends VerticalLayout implement
         this.setMargin(false);
         this.setSpacing(false);
 
+        attributesFilterPopover = new Popover();
+        attributesFilterPopover.addThemeVariants(PopoverVariant.ARROW);
+        attributesFilterPopover.setModal(true, true);
+        attributesFilterPopover.setHeight("100px");
+        attributesFilterPopover.setWidth("425px");
+
+        EntityAttributesFilterView.EntityAttributesFilterSetListener entityAttributesFilterSetListener = new EntityAttributesFilterView.EntityAttributesFilterSetListener() {
+            @Override
+            public void entityAttributesFilterSetAction(String currentFilterText) {
+                if(currentFilterText != null){
+                    filterAttributesEditorItems(currentFilterText);
+                }else{
+                    cancelFilterAttributesEditorItems();
+                }
+            }
+        };
+        entityAttributesFilterView = new EntityAttributesFilterView(relationKind, relationEntityUID, EntityAttributesFilterView.KindType.RelationKind,entityAttributesFilterSetListener);
+        attributesFilterPopover.add(entityAttributesFilterView);
+        entityAttributesFilterView.setContainerPopover(attributesFilterPopover);
+
         HorizontalLayout actionButtonBarContainer = new HorizontalLayout();
         actionButtonBarContainer.setSpacing(false);
+
+        filterIcon = VaadinIcon.FILTER.create();
+        filterIcon.setColor("black");
+        filterIcon.setSize("10px");
+        filterIcon.setColor("var(--lumo-contrast-90pct)");
+        filterIcon.setTooltipText("实体属性过滤");
+        actionButtonBarContainer.add(filterIcon);
+        actionButtonBarContainer.setVerticalComponentAlignment(Alignment.CENTER,filterIcon);
+        attributesFilterPopover.setTarget(filterIcon);
 
         Button metaInfoButton= new Button("实体元数据");
         metaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
@@ -173,5 +209,31 @@ public class RelationEntityAttributesEditorView extends VerticalLayout implement
                 }
             }
         }
+    }
+
+    private void filterAttributesEditorItems(String filterText){
+        filterIcon.setColor("orange");
+        attributeEditorsContainer.getChildren().forEach(attributeEditorItemWidget -> {
+            if(attributeEditorItemWidget instanceof AttributeEditorItemWidget){
+                AttributeEditorItemWidget currentAttributeEditorItemWidget = (AttributeEditorItemWidget)attributeEditorItemWidget;
+                String attributeName = currentAttributeEditorItemWidget.getAttributeName();
+                if(attributeName != null) {
+                    if (attributeName.contains(filterText)) {
+                        currentAttributeEditorItemWidget.setVisible(true);
+                    } else {
+                        currentAttributeEditorItemWidget.setVisible(false);
+                    }
+                }
+            }
+        });
+    }
+
+    private void cancelFilterAttributesEditorItems(){
+        filterIcon.setColor("black");
+        attributeEditorsContainer.getChildren().forEach(attributeEditorItemWidget -> {
+            if(attributeEditorItemWidget instanceof AttributeEditorItemWidget){
+                attributeEditorItemWidget.setVisible(true);
+            }
+        });
     }
 }
