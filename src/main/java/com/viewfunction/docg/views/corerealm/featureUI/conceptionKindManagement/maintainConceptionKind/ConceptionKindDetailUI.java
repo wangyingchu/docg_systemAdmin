@@ -380,12 +380,6 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
             actionOptionsSubItems.addSeparator();
 
-
-
-
-
-
-
             HorizontalLayout action1_A_Layout = new HorizontalLayout();
             action1_A_Layout.setPadding(false);
             action1_A_Layout.setSpacing(false);
@@ -402,13 +396,9 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             action1_A_Item.addClickListener(new ComponentEventListener<ClickEvent<MenuItem>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<MenuItem> menuItemClickEvent) {
-                    renderAddAttributeKindView(attributeInfo);
+                    renderAddToNewConceptionKindsByAttributeValueGroup(attributeInfo);
                 }
             });
-
-
-
-
 
             actionOptionsSubItems.addSeparator();
 
@@ -1421,6 +1411,16 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.EYEDROPPER),"概念类型实体随机采样",actionComponentList,null,true);
         fullScreenWindow.setWindowContent(conceptionKindSampleUI);
         fullScreenWindow.show();
+    }
+
+    private void renderAddToNewConceptionKindsByAttributeValueGroup(KindEntityAttributeRuntimeStatistics attributeInfo){
+        JoinNewConceptionKindsByAttributeValueGroupView joinNewConceptionKindsByAttributeValueGroupView =
+                new JoinNewConceptionKindsByAttributeValueGroupView(this.conceptionKind,attributeInfo.getAttributeName());
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BUROMOBELEXPERTE.create(),"根据属性值分组加入新概念类型",null,true,1000,750,false);
+        fixSizeWindow.setWindowContent(joinNewConceptionKindsByAttributeValueGroupView);
+        joinNewConceptionKindsByAttributeValueGroupView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.setModel(true);
+        fixSizeWindow.show();
     }
 
     private MenuItem createIconItem(HasMenuItems menu, VaadinIcon iconName, String label, String ariaLabel) {
