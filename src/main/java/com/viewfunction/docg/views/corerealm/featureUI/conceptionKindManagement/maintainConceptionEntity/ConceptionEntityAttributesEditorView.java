@@ -8,6 +8,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
@@ -23,6 +25,7 @@ import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.classificationMaintain.ClassificationConfigView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AttributeEditorItemWidget;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.EntityAttributesFilterView;
 
 import java.util.List;
 
@@ -34,6 +37,9 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
     private VerticalLayout attributeEditorsContainer;
     private Registration listener;
     private int conceptionEntityAttributesEditorHeightOffset;
+    private Popover attributesFilterPopover;
+    private EntityAttributesFilterView entityAttributesFilterView;
+
     public ConceptionEntityAttributesEditorView(String conceptionKind,String conceptionEntityUID,int conceptionEntityAttributesEditorHeightOffset){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
@@ -42,8 +48,35 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
         this.setMargin(false);
         this.setSpacing(false);
 
+        attributesFilterPopover = new Popover();
+        attributesFilterPopover.addThemeVariants(PopoverVariant.ARROW);
+        attributesFilterPopover.setModal(true, true);
+        attributesFilterPopover.setHeight("100px");
+        attributesFilterPopover.setWidth("425px");
+
+        EntityAttributesFilterView.EntityAttributesFilterSetListener entityAttributesFilterSetListener = new EntityAttributesFilterView.EntityAttributesFilterSetListener() {
+            @Override
+            public void entityAttributesFilterSetAction(String currentFilterText) {
+                if(currentFilterText != null){
+
+                }else{
+
+                }
+            }
+        };
+        entityAttributesFilterView = new EntityAttributesFilterView(conceptionKind, conceptionEntityUID, EntityAttributesFilterView.KindType.ConceptionKind,entityAttributesFilterSetListener);
+        attributesFilterPopover.add(entityAttributesFilterView);
+
         HorizontalLayout actionButtonBarContainer = new HorizontalLayout();
         actionButtonBarContainer.setSpacing(false);
+
+        Icon filterIcon = VaadinIcon.FILTER.create();
+        filterIcon.setSize("10px");
+        filterIcon.setColor("var(--lumo-contrast-90pct)");
+        filterIcon.setTooltipText("实体属性过滤");
+        actionButtonBarContainer.add(filterIcon);
+        actionButtonBarContainer.setVerticalComponentAlignment(Alignment.CENTER,filterIcon);
+        attributesFilterPopover.setTarget(filterIcon);
 
         Button metaInfoButton= new Button("实体元数据");
         metaInfoButton.setIcon(VaadinIcon.INFO_CIRCLE_O.create());
