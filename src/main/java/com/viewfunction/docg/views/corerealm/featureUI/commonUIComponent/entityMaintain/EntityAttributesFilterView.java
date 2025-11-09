@@ -8,6 +8,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.textfield.TextField;
 
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
@@ -22,7 +23,8 @@ public class EntityAttributesFilterView extends VerticalLayout {
     }
 
     public enum KindType {ConceptionKind,RelationKind}
-    public EntityAttributesFilterSetListener entityAttributesFilterSetListener;
+    private EntityAttributesFilterSetListener entityAttributesFilterSetListener;
+    private Popover containerPopover;
 
     public EntityAttributesFilterView(String kindName,String entityUID,KindType kindType,EntityAttributesFilterSetListener entityAttributesFilterSetListener){
         this.setMargin(false);
@@ -70,18 +72,27 @@ public class EntityAttributesFilterView extends VerticalLayout {
         attributeValueFieldContainerLayout.add(confirmButton);
         confirmButton.addClickListener(buttonClickEvent -> {
             if(entityAttributesFilterSetListener != null){
-                entityAttributesFilterSetListener.entityAttributesFilterSetAction(attributeNameField.getValue());
+                if(!attributeNameField.getValue().equals("")){
+                    entityAttributesFilterSetListener.entityAttributesFilterSetAction(attributeNameField.getValue());
+                }
             }
         });
 
         Button cancelButton = new Button("取消",new Icon(VaadinIcon.CLOSE_CIRCLE_O));
         cancelButton.setWidth(80,Unit.PIXELS);
         attributeValueFieldContainerLayout.add(cancelButton);
-        confirmButton.addClickListener(buttonClickEvent -> {
+        cancelButton.addClickListener(buttonClickEvent -> {
             if(entityAttributesFilterSetListener != null){
-                attributeNameField.setValue(null);
+                attributeNameField.setValue("");
                 entityAttributesFilterSetListener.entityAttributesFilterSetAction(null);
+                if(this.containerPopover != null){
+                    this.containerPopover.close();
+                }
             }
         });
+    }
+
+    public void setContainerPopover(Popover containerPopover) {
+        this.containerPopover = containerPopover;
     }
 }
