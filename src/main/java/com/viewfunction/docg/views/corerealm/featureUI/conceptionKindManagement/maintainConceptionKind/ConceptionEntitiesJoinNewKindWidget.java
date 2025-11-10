@@ -1,17 +1,17 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.ItemLabelGenerator;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H6;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.LitRenderer;
@@ -24,7 +24,6 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOp
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -209,29 +208,67 @@ public class ConceptionEntitiesJoinNewKindWidget extends VerticalLayout {
                     CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
                     EntitiesOperationResult entitiesOperationResult =
                             crossKindDataOperator.joinEntitiesToConceptionKinds(targetEntityUIDsSet,joinedConceptionKindNameSet.toArray(new String[0]));
-                    entitiesOperationResult.getOperationStatistics().getSuccessItemsCount();
 
+                    Notification notification0 = new Notification();
+                    notification0.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                    Div text0 = new Div(new Text("将概念类型实体加入新概念类型操作成功"));
+                    Button closeButton0 = new Button(new Icon("lumo", "cross"));
+                    closeButton0.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+                    closeButton0.addClickListener(event -> {
+                        notification0.close();
+                    });
+                    HorizontalLayout layout0 = new HorizontalLayout(text0, closeButton0);
+                    layout0.setWidth(100, Unit.PERCENTAGE);
+                    layout0.setFlexGrow(1,text0);
+                    notification0.add(layout0);
 
+                    VerticalLayout notificationMessageContainer0 = new VerticalLayout();
+                    notificationMessageContainer0.add(new Div(new Text("操作成功实体数: "+entitiesOperationResult.getOperationStatistics().getSuccessItemsCount())));
+                    notificationMessageContainer0.add(new Div(new Text("执行开始时间: "+entitiesOperationResult.getOperationStatistics().getStartTime())));
+                    notificationMessageContainer0.add(new Div(new Text("执行结束时间: "+entitiesOperationResult.getOperationStatistics().getFinishTime())));
+                    notification0.add(notificationMessageContainer0);
+                    notification0.setDuration(5000);
+                    notification0.open();
+
+                    if(exitCurrentConceptionKindCheckbox.getValue()){
+                        entitiesOperationResult =
+                                crossKindDataOperator.retreatEntitiesFromConceptionKind(targetEntityUIDsSet,this.conceptionKind);
+                        Notification notification = new Notification();
+                        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                        Div text = new Div(new Text("将概念类型实体退出原有概念类型操作成功"));
+                        Button closeButton = new Button(new Icon("lumo", "cross"));
+                        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+                        closeButton.addClickListener(event -> {
+                            notification.close();
+                        });
+                        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+                        layout.setWidth(100, Unit.PERCENTAGE);
+                        layout.setFlexGrow(1,text);
+                        notification.add(layout);
+
+                        VerticalLayout notificationMessageContainer = new VerticalLayout();
+                        notificationMessageContainer.add(new Div(new Text("操作成功实体数: "+entitiesOperationResult.getOperationStatistics().getSuccessItemsCount())));
+                        notificationMessageContainer.add(new Div(new Text("执行开始时间: "+entitiesOperationResult.getOperationStatistics().getStartTime())));
+                        notificationMessageContainer.add(new Div(new Text("执行结束时间: "+entitiesOperationResult.getOperationStatistics().getFinishTime())));
+                        notification.add(notificationMessageContainer);
+                        notification.setDuration(5000);
+                        notification.open();
+                    }
+
+                    if(exitCurrentConceptionKindCheckbox.getValue()){
+                        conceptionKindFilterSelect.setEnabled(false);
+                        exitCurrentConceptionKindCheckbox.setEnabled(false);
+                        confirmButton.setEnabled(false);
+                    }
+                    exitCurrentConceptionKindCheckbox.setValue(false);
+                    conceptionKindsInfoList.removeIf(currentkindMetaInfo -> joinedConceptionKindNameSet.contains(currentkindMetaInfo.getKindName()));
+                    conceptionKindFilterSelect.setItems(this.conceptionKindsInfoList);
                 }
-
-
-
-
             }
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }finally {
             coreRealm.closeGlobalSession();
         }
-
-
-        if(exitCurrentConceptionKindCheckbox.getValue()){
-            conceptionKindFilterSelect.setEnabled(false);
-            exitCurrentConceptionKindCheckbox.setEnabled(false);
-            confirmButton.setEnabled(false);
-        }
-        exitCurrentConceptionKindCheckbox.setValue(false);
-        conceptionKindsInfoList.removeIf(currentkindMetaInfo -> joinedConceptionKindNameSet.contains(currentkindMetaInfo.getKindName()));
-        conceptionKindFilterSelect.setItems(this.conceptionKindsInfoList);
     }
 }
