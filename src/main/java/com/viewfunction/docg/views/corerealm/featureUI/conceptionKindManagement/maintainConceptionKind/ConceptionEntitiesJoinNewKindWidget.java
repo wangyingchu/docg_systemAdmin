@@ -17,7 +17,17 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.EqualFilteringItem;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesRetrieveResult;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 
 import java.util.ArrayList;
@@ -172,18 +182,55 @@ public class ConceptionEntitiesJoinNewKindWidget extends VerticalLayout {
     }
 
     private void doAddIntoNewConceptionKinds(){
-        if(exitCurrentConceptionKindCheckbox.getValue()){
-            conceptionKindFilterSelect.setEnabled(false);
-            exitCurrentConceptionKindCheckbox.setEnabled(false);
-            confirmButton.setEnabled(false);
-        }
-
-        exitCurrentConceptionKindCheckbox.setValue(false);
         Set<String> joinedConceptionKindNameSet = new HashSet<>();
         conceptionKindFilterSelect.getSelectedItems().forEach(kindMetaInfo -> {
             joinedConceptionKindNameSet.add(kindMetaInfo.getKindName());
         });
 
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        try {
+            coreRealm.openGlobalSession();
+            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+            if(targetConceptionKind != null){
+                QueryParameters queryParameters = new QueryParameters();
+                queryParameters.setResultNumber(1000000000);
+                queryParameters.setDefaultFilteringItem(new EqualFilteringItem(this.attributeName,this.entityAttributeValue));
+                ConceptionEntitiesRetrieveResult conceptionEntitiesRetrieveResult = targetConceptionKind.getEntities(queryParameters);
+
+                Set<String> targetEntityUIDsSet = new HashSet<>();
+                if(conceptionEntitiesRetrieveResult.getConceptionEntities() != null &&
+                        !conceptionEntitiesRetrieveResult.getConceptionEntities().isEmpty()){
+                    conceptionEntitiesRetrieveResult.getConceptionEntities().forEach(conceptionEntity -> {
+                        targetEntityUIDsSet.add(conceptionEntity.getConceptionEntityUID());
+                    });
+                }
+
+                if(!targetEntityUIDsSet.isEmpty()){
+                    CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
+                    EntitiesOperationResult entitiesOperationResult =
+                            crossKindDataOperator.joinEntitiesToConceptionKinds(targetEntityUIDsSet,joinedConceptionKindNameSet.toArray(new String[0]));
+                    entitiesOperationResult.getOperationStatistics().getSuccessItemsCount();
+
+
+                }
+
+
+
+
+            }
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }finally {
+            coreRealm.closeGlobalSession();
+        }
+
+
+        if(exitCurrentConceptionKindCheckbox.getValue()){
+            conceptionKindFilterSelect.setEnabled(false);
+            exitCurrentConceptionKindCheckbox.setEnabled(false);
+            confirmButton.setEnabled(false);
+        }
+        exitCurrentConceptionKindCheckbox.setValue(false);
         conceptionKindsInfoList.removeIf(currentkindMetaInfo -> joinedConceptionKindNameSet.contains(currentkindMetaInfo.getKindName()));
         conceptionKindFilterSelect.setItems(this.conceptionKindsInfoList);
     }
