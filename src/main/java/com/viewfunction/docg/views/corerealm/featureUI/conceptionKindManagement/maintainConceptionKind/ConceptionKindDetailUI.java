@@ -1416,7 +1416,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
     private void renderAddToNewConceptionKindsByAttributeValueGroup(KindEntityAttributeRuntimeStatistics attributeInfo){
         JoinNewConceptionKindsByAttributeValueGroupView joinNewConceptionKindsByAttributeValueGroupView =
                 new JoinNewConceptionKindsByAttributeValueGroupView(this.conceptionKind,attributeInfo.getAttributeName());
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BUROMOBELEXPERTE.create(),"根据属性值分组加入新概念类型",null,true,1000,750,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BUROMOBELEXPERTE.create(),"根据属性值分组加入新概念类型",null,true,900,700,false);
         fixSizeWindow.setWindowContent(joinNewConceptionKindsByAttributeValueGroupView);
         joinNewConceptionKindsByAttributeValueGroupView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
