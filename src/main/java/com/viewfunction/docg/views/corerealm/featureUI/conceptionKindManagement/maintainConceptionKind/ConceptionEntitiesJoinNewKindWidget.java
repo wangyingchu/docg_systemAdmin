@@ -1,5 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionKind;
 
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -16,9 +18,12 @@ import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.KindMetaInfo;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ConceptionEntitiesJoinNewKindWidget extends VerticalLayout {
 
@@ -26,10 +31,15 @@ public class ConceptionEntitiesJoinNewKindWidget extends VerticalLayout {
     private String conceptionKind;
     private String attributeName;
     private Checkbox exitCurrentConceptionKindCheckbox;
+    private Object entityAttributeValue;
+    private MultiSelectComboBox<KindMetaInfo> conceptionKindFilterSelect;
+    private Button confirmButton;
+
     public ConceptionEntitiesJoinNewKindWidget(String conceptionKind,String attributeName,Object entityAttributeValue,
                                                Number matchedEntitiesCount,List<KindMetaInfo> conceptionKindsMetaInfoList){
         this.conceptionKind = conceptionKind;
         this.attributeName = attributeName;
+        this.entityAttributeValue = entityAttributeValue;
         this.setWidthFull();
         this.setSpacing(true);
 
@@ -46,7 +56,7 @@ public class ConceptionEntitiesJoinNewKindWidget extends VerticalLayout {
         matchedEntitiesCountSpan.getElement().getThemeList().add("badge contrast");
         valueTitleContainer.add(matchedEntitiesCountSpan);
 
-        H6 valueContentHeader = new H6(entityAttributeValue.toString());
+        H6 valueContentHeader = new H6(this.entityAttributeValue.toString());
         valueTitleContainer.add(valueContentHeader);
 
         HorizontalLayout newConceptionKindsContainer = new HorizontalLayout();
@@ -59,7 +69,7 @@ public class ConceptionEntitiesJoinNewKindWidget extends VerticalLayout {
         conceptionKindIcon.setColor("var(--lumo-contrast-50pct)");
         newConceptionKindsContainer.add(conceptionKindIcon);
 
-        MultiSelectComboBox conceptionKindFilterSelect = new MultiSelectComboBox();
+        conceptionKindFilterSelect = new MultiSelectComboBox();
         conceptionKindFilterSelect.setAutoExpand(MultiSelectComboBox.AutoExpandMode.VERTICAL);
         conceptionKindFilterSelect.setSelectedItemsOnTop(true);
         conceptionKindFilterSelect.setPageSize(30);
@@ -88,8 +98,8 @@ public class ConceptionEntitiesJoinNewKindWidget extends VerticalLayout {
         }
         conceptionKindFilterSelect.setItems(this.conceptionKindsInfoList);
 
-        Button confirmButton = new Button("确认加入",new Icon(VaadinIcon.CHECK));
-        confirmButton.setWidth(90,Unit.PIXELS);
+        confirmButton = new Button("加入新类型",new Icon(VaadinIcon.CHECK));
+        confirmButton.setWidth(100,Unit.PIXELS);
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         newConceptionKindsContainer.add(confirmButton);
         confirmButton.addClickListener(buttonClickEvent -> {
@@ -118,9 +128,63 @@ public class ConceptionEntitiesJoinNewKindWidget extends VerticalLayout {
     }
 
     private void addInNewConceptionKinds(){
+        if(conceptionKindFilterSelect.getSelectedItems().size() ==0){
+            return;
+        }
 
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认加入",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
 
+        String currentAttributeValueFullStr = this.entityAttributeValue.toString();
+        String currentAttributeValueShortStr = "";
+        if(currentAttributeValueFullStr.length() > 20){
+            currentAttributeValueShortStr = currentAttributeValueFullStr.substring(0,20)+"...";
+        }else{
+            currentAttributeValueShortStr =currentAttributeValueFullStr;
+        }
 
+        String confirmMessage = "请确认将概念类型 "+conceptionKind+" 的全部属性 "+attributeName +" 值为 “"+currentAttributeValueShortStr +"” 的概念实体加入到选定的新概念类型中。";
+        if(exitCurrentConceptionKindCheckbox.getValue()){
+            confirmMessage = "请确认将概念类型 "+conceptionKind+" 的全部属性 "+attributeName +" 值为 “"+currentAttributeValueShortStr +"” 的概念实体加入到选定的新概念类型中，并从当前概念类型中退出。";
+        }
 
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作", confirmMessage,actionButtonList,600,200);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doAddIntoNewConceptionKinds();
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doAddIntoNewConceptionKinds(){
+        if(exitCurrentConceptionKindCheckbox.getValue()){
+            conceptionKindFilterSelect.setEnabled(false);
+            exitCurrentConceptionKindCheckbox.setEnabled(false);
+            confirmButton.setEnabled(false);
+        }
+
+        exitCurrentConceptionKindCheckbox.setValue(false);
+        Set<String> joinedConceptionKindNameSet = new HashSet<>();
+        conceptionKindFilterSelect.getSelectedItems().forEach(kindMetaInfo -> {
+            joinedConceptionKindNameSet.add(kindMetaInfo.getKindName());
+        });
+
+        conceptionKindsInfoList.removeIf(currentkindMetaInfo -> joinedConceptionKindNameSet.contains(currentkindMetaInfo.getKindName()));
+        conceptionKindFilterSelect.setItems(this.conceptionKindsInfoList);
     }
 }
