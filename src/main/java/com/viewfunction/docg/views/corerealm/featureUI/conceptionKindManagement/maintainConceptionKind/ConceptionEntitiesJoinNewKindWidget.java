@@ -20,6 +20,7 @@ import com.vaadin.flow.data.renderer.Renderer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.EqualFilteringItem;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionEntitiesRetrieveResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationResult;
@@ -28,6 +29,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntitiesCountRefreshEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -253,6 +256,12 @@ public class ConceptionEntitiesJoinNewKindWidget extends VerticalLayout {
                         notification.add(notificationMessageContainer);
                         notification.setDuration(5000);
                         notification.open();
+
+                        long conceptionEntitiesCount = targetConceptionKind.countConceptionEntities();
+                        ConceptionEntitiesCountRefreshEvent conceptionEntitiesCountRefreshEvent = new ConceptionEntitiesCountRefreshEvent();
+                        conceptionEntitiesCountRefreshEvent.setConceptionEntitiesCount(conceptionEntitiesCount);
+                        conceptionEntitiesCountRefreshEvent.setConceptionKindName(this.conceptionKind);
+                        ResourceHolder.getApplicationBlackboard().fire(conceptionEntitiesCountRefreshEvent);
                     }
 
                     if(exitCurrentConceptionKindCheckbox.getValue()){
@@ -265,7 +274,7 @@ public class ConceptionEntitiesJoinNewKindWidget extends VerticalLayout {
                     conceptionKindFilterSelect.setItems(this.conceptionKindsInfoList);
                 }
             }
-        } catch (CoreRealmServiceEntityExploreException e) {
+        } catch (CoreRealmServiceEntityExploreException | CoreRealmServiceRuntimeException e) {
             throw new RuntimeException(e);
         }finally {
             coreRealm.closeGlobalSession();
