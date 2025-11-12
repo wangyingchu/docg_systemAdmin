@@ -59,7 +59,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         AIDataAnalyisisButton.addClickListener((ClickEvent<Button> click) ->{
             renderIntelligentAnalysisView();
         });
-        AIDataAnalyisisButton.setVisible(false);
+
         Button refreshDataButton = new Button("刷新领域数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
