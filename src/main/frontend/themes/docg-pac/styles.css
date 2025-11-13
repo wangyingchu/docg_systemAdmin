@@ -25,10 +25,22 @@
     font-family: "Raleway";
     font-style: normal;
     src: url("./font/Raleway-Regular.ttf") format("TrueType");
-    */
+
     font-family: "Montserrat";
     font-style: normal;
     src: url("./font/Montserrat-Regular.ttf") format("TrueType");
+
+    font-family: "LXGWWenKai";
+    font-style: normal;
+    src: url("./font/LXGWWenKai-Medium.ttf") format("TrueType");
+    */
+
+
+    font-family: "LXGWNeoXiHei";
+    font-style: normal;
+    src: url("./font/LXGWNeoXiHei.ttf") format("TrueType");
+
+
 }
     html {
         /*hard code to set global font size to avoid vaadin framework change default font size during version update*/
@@ -64,7 +76,7 @@
       /*for add Google fonts Raleway font*/
       /*--lumo-font-family: "Raleway";*/
       /*for add Google fonts Montserrat font*/
-      --lumo-font-family: "Montserrat";
+      --lumo-font-family: "LXGWNeoXiHei";
     }
 
 /*—滚动条默认显示样式–*/
