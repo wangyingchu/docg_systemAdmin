@@ -55,6 +55,9 @@
 }
 
 @font-face {
+    /*https://github.com/lxgw/LxgwWenKai
+    LXGW WenKai / 霞鹜文楷
+    */
     font-family: "LXGWWenKai";
     font-style: normal;
     src: url("./font/LXGWWenKai-Regular.ttf") format("TrueType");
