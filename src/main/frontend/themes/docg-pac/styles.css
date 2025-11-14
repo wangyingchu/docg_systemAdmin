@@ -7,60 +7,28 @@
 @import url('./views/data-fabric-view.css');
 @import url('./views/about-view.css');
 @font-face {
-    /*
-        https://www.ibm.com/plex/
-        https://github.com/IBM/plex/releases/tag/v6.3.0
+    /* https://www.ibm.com/plex/ https://github.com/IBM/plex/releases/tag/v6.3.0 */
     font-family: "Plex";
     font-style: normal;
     src: url("./font/IBMPlexSans-Regular.ttf") format("TrueType");
-    */
-    /*
-    https://www.googlefonts.cn/
-    font-family: "Roboto";
+}
+@font-face {
+    /* https://www.googlefonts.cn/ */
+    font-family: "Montserrat";
     font-style: normal;
-    src: url("./font/Roboto-Regular.ttf") format("TrueType");
-    */
-    /*
-    https://www.googlefonts.cn/
+    src: url("./font/Montserrat-Regular.ttf") format("TrueType");
+}
+@font-face {
+    /* https://www.googlefonts.cn/ */
     font-family: "Raleway";
     font-style: normal;
     src: url("./font/Raleway-Regular.ttf") format("TrueType");
-
-    font-family: "Montserrat";
-    font-style: normal;
-    src: url("./font/Montserrat-Regular.ttf") format("TrueType");
-
+}
+@font-face {
+    /*https://github.com/lxgw/LxgwWenKai  LXGW WenKai / 霞鹜文楷 */
     font-family: "LXGWWenKai";
     font-style: normal;
-    src: url("./font/LXGWWenKai-Medium.ttf") format("TrueType");
-    */
-
-
-    font-family: "LXGWNeoXiHei";
-    font-style: normal;
-    font-weight: bold;
-    src: url("./font/LXGWNeoXiHeiPlus.ttf") format("TrueType");
-}
-
-@font-face {
-    font-family: "Montserrat";
-    font-style: normal;
-    src: url("./font/Montserrat-Regular.ttf") format("TrueType");
-}
-
-@font-face {
-    font-family: "Roboto";
-    font-style: normal;
-    src: url("./font/Roboto-Regular.ttf") format("TrueType");
-}
-
-@font-face {
-    /*https://github.com/lxgw/LxgwWenKai
-    LXGW WenKai / 霞鹜文楷
-    */
-    font-family: "LXGWWenKai";
-    font-style: normal;
-    src: url("./font/LXGWWenKai-Regular.ttf") format("TrueType");
+    src: url("./font/LXGWWenKaiMono-Regular.ttf") format("TrueType");
 }
 
     html {
@@ -90,13 +58,8 @@
       --lumo-space-m: 0.625rem;
       --lumo-space-s: 0.3125rem;
       --lumo-space-xs: 0.1875rem;
-      /*for add IBM Carbon Design Plex font family*/
-      /*--lumo-font-family: "Plex";*/
-      /*for add Google fonts Roboto font*/
-      /*--lumo-font-family: "Roboto";*/
-      /*for add Google fonts Raleway font*/
-      /*--lumo-font-family: "Raleway";*/
       /*for add Google fonts Montserrat font*/
+      /*--lumo-font-family: "Montserrat";*/
       --lumo-font-family: "Montserrat","LXGWWenKai";
     }
 
