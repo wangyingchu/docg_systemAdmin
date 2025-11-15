@@ -138,7 +138,6 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         coreRealmInfoContainerLayout.setWidth(100,Unit.PERCENTAGE);
 
         Icon icon = LineAwesomeIconsSvg.BROADCAST_TOWER_SOLID.create();
-        //leftSideContentContainerLayout.add(FontAwesome.Solid.ADDRESS_CARD.create());
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"数据概览信息",null);
         leftSideContentContainerLayout.add(sectionActionBar);
 

@@ -27,7 +27,7 @@ public class SectionActionBar extends HorizontalLayout {
         NativeLabel sectionTitleLabel = new NativeLabel(sectionTitle);
         sectionTitleLabel.addClassNames("text-s","font-semibold");
         sectionTitleLabel.getStyle()
-                .set("font-size","var(--lumo-font-size-s)")
+                .set("font-size","var(--lumo-font-size-m)")
                 .set("font-weight", "bold");
 
         titleElementsContainer.add(sectionTitleLabel);
