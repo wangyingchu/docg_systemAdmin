@@ -63,7 +63,7 @@ public class AttributeValueGroupInfoListView extends VerticalLayout {
         attributeValueGroupGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         attributeValueGroupGrid.addColumn(AttributeValueGroupVO::getGroupValue).setHeader("属性值").setKey("idx_0").setFlexGrow(1).setResizable(true).
                 setTooltipGenerator(attributeValueGroupVO->
-                        attributeValueGroupVO.getGroupValue() != null ? attributeValueGroupVO.getGroupValue().toString():"");
+                        attributeValueGroupVO.getGroupValue() != null ? attributeValueGroupVO.getGroupValue().toString():"NULL - 空值");
         attributeValueGroupGrid.addColumn(AttributeValueGroupVO::getGroupSize).setHeader("具有当前值实体数量").setKey("idx_1").setFlexGrow(0).setWidth("140px").setResizable(true);
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.EYE,"属性值");
         attributeValueGroupGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
@@ -83,7 +83,7 @@ public class AttributeValueGroupInfoListView extends VerticalLayout {
         private Number groupSize;
 
         public AttributeValueGroupVO(Object groupValue,Number groupSize){
-            this.groupValue = groupValue;
+            this.groupValue = groupValue != null ? groupValue : "NULL - 空值";
             this.groupSize = groupSize;
         }
 

@@ -19,6 +19,7 @@ import com.vaadin.flow.data.renderer.Renderer;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.EqualFilteringItem;
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.filteringItem.NullValueFilteringItem;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
@@ -68,7 +69,8 @@ public class ConceptionEntitiesJoinNewKindWidget extends VerticalLayout {
         matchedEntitiesCountSpan.getElement().getThemeList().add("badge contrast");
         valueTitleContainer.add(matchedEntitiesCountSpan);
 
-        H6 valueContentHeader = new H6(this.entityAttributeValue.toString());
+        String attributeValueStr = this.entityAttributeValue != null ? this.entityAttributeValue.toString():"NULL - 空值";
+        H6 valueContentHeader = new H6(attributeValueStr);
         valueTitleContainer.add(valueContentHeader);
 
         HorizontalLayout newConceptionKindsContainer = new HorizontalLayout();
@@ -152,7 +154,7 @@ public class ConceptionEntitiesJoinNewKindWidget extends VerticalLayout {
         actionButtonList.add(confirmButton);
         actionButtonList.add(cancelButton);
 
-        String currentAttributeValueFullStr = this.entityAttributeValue.toString();
+        String currentAttributeValueFullStr = this.entityAttributeValue != null ? this.entityAttributeValue.toString():"NULL - 空值";
         String currentAttributeValueShortStr = "";
         if(currentAttributeValueFullStr.length() > 20){
             currentAttributeValueShortStr = currentAttributeValueFullStr.substring(0,20)+"...";
@@ -196,7 +198,11 @@ public class ConceptionEntitiesJoinNewKindWidget extends VerticalLayout {
             if(targetConceptionKind != null){
                 QueryParameters queryParameters = new QueryParameters();
                 queryParameters.setResultNumber(1000000000);
-                queryParameters.setDefaultFilteringItem(new EqualFilteringItem(this.attributeName,this.entityAttributeValue));
+                if(this.entityAttributeValue != null){
+                    queryParameters.setDefaultFilteringItem(new EqualFilteringItem(this.attributeName,this.entityAttributeValue));
+                }else{
+                    queryParameters.setDefaultFilteringItem(new NullValueFilteringItem(this.attributeName));
+                }
                 ConceptionEntitiesRetrieveResult conceptionEntitiesRetrieveResult = targetConceptionKind.getEntities(queryParameters);
 
                 Set<String> targetEntityUIDsSet = new HashSet<>();
