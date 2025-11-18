@@ -142,6 +142,7 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
         /* use opencyclemap for most tile layer
           https://www.thunderforest.com/maps/opencyclemap/
         */
+        /* network connection always,so stop use mapbox
         const atlas = L.tileLayer('https://{s}.tile.thunderforest.com/atlas/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
             {maxZoom: 19}
         );
@@ -174,13 +175,6 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
         });
 
-        const map = L.map(c,{
-            attributionControl:false,
-            layers: [transport],
-            //crs: L.CRS.EPSG4326
-            crs: L.CRS.EPSG3857
-        });
-
         const baseLayers = {
             'Atlas': atlas,
             'Cycle': cycle,
@@ -192,6 +186,35 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
             'Mobile Atlas': mobile_atlas,
             'Pioneer': pioneer,
             'OpenStreetMap': osmHOT
+        };
+        L.control.layers(baseLayers).addTo(map);
+        */
+
+        /* Using open free map https://openfreemap.org */
+        const positron = L.maplibreGL({
+            style: 'https://tiles.openfreemap.org/styles/positron',
+        });
+        const bright = L.maplibreGL({
+            style: 'https://tiles.openfreemap.org/styles/bright',
+        });
+        const dark = L.maplibreGL({
+            style: 'https://tiles.openfreemap.org/styles/dark',
+        });
+        const liberty = L.maplibreGL({
+            style: 'https://tiles.openfreemap.org/styles/liberty',
+        });
+        const map = L.map(c,{
+            attributionControl:false,
+            layers: [positron],
+            //crs: L.CRS.EPSG4326
+            crs: L.CRS.EPSG3857
+        });
+
+        const baseLayers = {
+            'Positron': positron,
+            'Bright': bright,
+            'Dark': dark,
+            'Liberty': liberty
         };
         L.control.layers(baseLayers).addTo(map);
 
