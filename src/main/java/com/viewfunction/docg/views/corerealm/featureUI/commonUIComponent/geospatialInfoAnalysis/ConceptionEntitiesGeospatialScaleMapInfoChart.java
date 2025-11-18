@@ -42,6 +42,12 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
         //link to download latest leaflet build js: https://unpkg.com/leaflet
         UI.getCurrent().getPage().addStyleSheet("js/leaflet/1.9.3/dist/leaflet.css");
         UI.getCurrent().getPage().addJavaScript("js/leaflet/1.9.3/dist/leaflet.js");
+        //https://unpkg.com/maplibre-gl/dist/maplibre-gl.css
+        //https://unpkg.com/maplibre-gl/dist/maplibre-gl.js
+        UI.getCurrent().getPage().addJavaScript("js/maplibre-gl/5.13.0/dist/maplibre-gl.js");
+        UI.getCurrent().getPage().addStyleSheet("js/maplibre-gl/5.13.0/dist/maplibre-gl.css");
+        //https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js
+        UI.getCurrent().getPage().addJavaScript("js/maplibre-gl-leaflet/0.1.3/dist/leaflet-maplibre-gl.js");
 
         this.spatialScaleLevel = spatialScaleLevel;
         this.conceptionEntitiesAttributesRetrieveResult = conceptionEntitiesAttributesRetrieveResult;

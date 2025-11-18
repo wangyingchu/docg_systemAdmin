@@ -205,7 +205,7 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
         });
         const map = L.map(c,{
             attributionControl:false,
-            layers: [positron],
+            layers: [liberty],
             //crs: L.CRS.EPSG4326
             crs: L.CRS.EPSG3857
         });

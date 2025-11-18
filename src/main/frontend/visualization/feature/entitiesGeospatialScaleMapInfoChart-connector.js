@@ -169,6 +169,7 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
         /* use opencyclemap for most tile layer
           https://www.thunderforest.com/maps/opencyclemap/
         */
+        /* network connection always,so stop use mapbox
         const atlas = L.tileLayer('https://{s}.tile.thunderforest.com/atlas/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
             {maxZoom: 19}
         );
@@ -229,6 +230,35 @@ window.Vaadin.Flow.feature_EntitiesGeospatialScaleMapInfoChart = {
             'Pioneer': pioneer,
             'OpenStreetMap': osmHOT,
             'tdtu':tdtu
+        };
+        L.control.layers(baseLayers).addTo(map);
+        */
+
+        /* Using open free map https://openfreemap.org */
+        const positron = L.maplibreGL({
+            style: 'https://tiles.openfreemap.org/styles/positron',
+        });
+        const bright = L.maplibreGL({
+            style: 'https://tiles.openfreemap.org/styles/bright',
+        });
+        const dark = L.maplibreGL({
+            style: 'https://tiles.openfreemap.org/styles/dark',
+        });
+        const liberty = L.maplibreGL({
+            style: 'https://tiles.openfreemap.org/styles/liberty',
+        });
+        const map = L.map(c,{
+            attributionControl:false,
+            layers: [liberty],
+            //crs: L.CRS.EPSG4326
+            crs: L.CRS.EPSG3857
+        });
+
+        const baseLayers = {
+            'Positron': positron,
+            'Bright': bright,
+            'Dark': dark,
+            'Liberty': liberty
         };
         L.control.layers(baseLayers).addTo(map);
 
