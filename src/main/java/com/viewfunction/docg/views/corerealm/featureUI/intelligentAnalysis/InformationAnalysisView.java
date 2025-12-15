@@ -116,14 +116,19 @@ public class InformationAnalysisView extends VerticalLayout {
         if(question == null || question.trim().length() == 0){
             CommonUIOperationUtil.showPopupNotification("请输入问题", NotificationVariant.LUMO_ERROR,1500, Notification.Position.MIDDLE);
         }else{
-            IntelligentAnalysisView.InformationAnalysisMode informationAnalysisMode = this.informationAnalysisModeControllerWidget.getAnalysisMode();
-            switch(informationAnalysisMode){
-                case INSIGHT:break;
-                case EXPLORATION:
-                    String cql = Text2QueryUtil.generateQueryCypher(question);
-                    InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql);
-                    this.insightContentContainerLayout.add(informationExplorationWidget);
-                    break;
+            try{
+                IntelligentAnalysisView.InformationAnalysisMode informationAnalysisMode = this.informationAnalysisModeControllerWidget.getAnalysisMode();
+                switch(informationAnalysisMode){
+                    case INSIGHT:break;
+                    case EXPLORATION:
+                        String cql = Text2QueryUtil.generateQueryCypher(question);
+                        InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql);
+                        this.insightContentContainerLayout.add(informationExplorationWidget);
+                        break;
+                }
+            } catch (Exception e) {
+                CommonUIOperationUtil.showPopupNotification("问题查询语句生成失败:"+e.getMessage(), NotificationVariant.LUMO_WARNING,0, Notification.Position.BOTTOM_START);
+                throw new RuntimeException(e);
             }
         }
     }
