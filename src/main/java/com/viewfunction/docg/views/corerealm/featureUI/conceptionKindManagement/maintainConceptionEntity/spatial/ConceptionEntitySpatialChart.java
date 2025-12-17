@@ -29,8 +29,8 @@ public class ConceptionEntitySpatialChart extends VerticalLayout {
         UI.getCurrent().getPage().addJavaScript("js/leaflet/1.9.3/dist/leaflet.js");
         //https://unpkg.com/maplibre-gl/dist/maplibre-gl.css
         //https://unpkg.com/maplibre-gl/dist/maplibre-gl.js
-        UI.getCurrent().getPage().addJavaScript("js/maplibre-gl/5.13.0/dist/maplibre-gl.js");
-        UI.getCurrent().getPage().addStyleSheet("js/maplibre-gl/5.13.0/dist/maplibre-gl.css");
+        UI.getCurrent().getPage().addJavaScript("js/maplibre-gl/5.14.0/dist/maplibre-gl.js");
+        UI.getCurrent().getPage().addStyleSheet("js/maplibre-gl/5.14.0/dist/maplibre-gl.css");
         //https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js
         UI.getCurrent().getPage().addJavaScript("js/maplibre-gl-leaflet/0.1.3/dist/leaflet-maplibre-gl.js");
     }
