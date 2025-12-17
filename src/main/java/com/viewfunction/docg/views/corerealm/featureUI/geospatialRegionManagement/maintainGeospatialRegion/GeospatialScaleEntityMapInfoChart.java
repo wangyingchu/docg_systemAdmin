@@ -10,7 +10,7 @@ import com.vaadin.flow.function.SerializableConsumer;
 
 import java.io.Serializable;
 
-@JavaScript("./visualization/feature/geospatialScaleEntitySpatialChart-connector.js")
+@JavaScript("./visualization/feature/geospatialScaleEntitySpatialChart-connector_Leaflet.js")
 public class GeospatialScaleEntityMapInfoChart extends VerticalLayout {
     private String geospatialRegionName;
     private String centroidPointGeoJson;

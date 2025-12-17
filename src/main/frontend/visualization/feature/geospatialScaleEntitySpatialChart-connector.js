@@ -23,6 +23,8 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
             },
 
             renderEntityContent: function(geoJsonObject,entityChineseName,entityCode,entityType) {
+                /*
+
                 const geoStyle = {
                     "color": '#001F3F',
                     "weight": 2,
@@ -54,10 +56,53 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                     }
                     layer.bindPopup(popupContent,{closeButton:false});
                 }
+                */
+
+                if(isMapLoaded){
+                    map.addSource(entityCode, {
+                        'type': 'geojson',
+                        'data': geoJsonObject
+                    });
+                    map.addLayer({
+                        'id': entityCode+"Layer",
+                        'type': 'fill',
+                        'source': entityCode,
+                        'layout': {},
+                        'paint': {
+                            'fill-color': '#0079D4',
+                            'fill-opacity': 0.65
+                        }
+                    });
+                    layersIDArray.push(entityCode+"Layer");
+                    sourcesIDArray.push(entityCode);
+                }else{
+                    map.on('load', () => {
+                        map.addSource(entityCode, {
+                            'type': 'geojson',
+                            'data': geoJsonObject
+                        });
+                        map.addLayer({
+                            'id': entityCode+"Layer",
+                            'type': 'fill',
+                            'source': entityCode,
+                            'layout': {},
+                            'paint': {
+                                'fill-color': '#0079D4',
+                                'fill-opacity': 0.65
+                            }
+                        });
+                        layersIDArray.push(entityCode+"Layer");
+                        sourcesIDArray.push(entityCode);
+                        isMapLoaded = true;
+                    });
+                }
             },
 
             renderCentroidPoint : function(geoJsonStr,zoomLevel) {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
+                /*
+
+
                 let centroidPointLayer = L.geoJSON(geoJsonObject, {
                     pointToLayer: function (feature, latlng) {
                         return L.circleMarker(latlng, {
@@ -73,11 +118,20 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                 }).addTo(map);
                 assetsLayersArray.push(centroidPointLayer);
 
+
+
+                */
                 const pointLocation = geoJsonObject.features[0].geometry.coordinates;
-                map.setView([pointLocation[1],pointLocation[0]], zoomLevel);
+                map.flyTo({
+                    center: [pointLocation[0], pointLocation[1]],
+                    zoom: zoomLevel
+                    //,bearing: 90        // Optional: Bearing in degrees (rotation)
+                    //,pitch: 45           // Optional: Pitch in degrees (tilt)
+                });
             },
 
             renderInteriorPoint : function(geoJsonStr) {
+                /*
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
                 let interiorPointLayer = L.geoJSON(geoJsonObject, {
                     pointToLayer: function (feature, latlng) {
@@ -93,9 +147,12 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                     }
                 }).addTo(map);
                 assetsLayersArray.push(interiorPointLayer);
+                */
+
             },
 
             renderEnvelope: function(geoJsonStr) {
+                /*
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
                 const geoStyle = {
                     "dashArray": 5,
@@ -120,77 +177,68 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                     style:geoStyle
                 }).addTo(map);
                 assetsLayersArray.push(envelopeLayer);
+                */
             },
 
             clearMap:function(){
+                /*
                 assetsLayersArray.forEach(function(layer){
                     map.removeLayer(layer);
                 });
+
+                 */
+
+
+                if(isMapLoaded){
+
+                    /*
+
+                    // Get all layers from the current style
+                    const layers = map.getStyle().layers;
+
+                    // Loop through all layers in reverse order
+                    // (Reversing is not strictly necessary but can avoid some edge cases)
+                    for (let i = layers.length - 1; i >= 0; i--) {
+                        const layerId = layers[i].id;
+                        if (map.getLayer(layerId)) {
+                            map.removeLayer(layerId);
+                        }
+                    }
+
+
+                    // Get all sources from the current style
+                    const sources = map.getStyle().sources;
+
+                    // Loop through all sources
+                    for (const sourceId in sources) {
+                        if (map.getSource(sourceId)) {
+                            map.removeSource(sourceId);
+                        }
+                    }
+
+*/
+
+
+
+
+
+
+                    layersIDArray.forEach(function(layerID){
+                        map.removeLayer(layerID);
+                    });
+
+                    sourcesIDArray.forEach(function(sourceID){
+                        map.removeSource(sourceID);
+                    });
+
+
+                }
             }
         };
-        /* access_token doesn't work anymore,so stop use mapbox
-        const mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
-        const grayscale = L.tileLayer(mbUrl, {id: 'mapbox/light-v10'}), streets  = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11'});
-        const satellite = L.tileLayer(mbUrl, {id: 'mapbox/satellite-v9', tileSize: 512, zoomOffset: -1});
-         let baseLayers = {
-            "灰度模式": grayscale,
-            "道路模式": streets,
-            "卫星模式": satellite
-        };
-        */
 
-        /* use opencyclemap for most tile layer
-          https://www.thunderforest.com/maps/opencyclemap/
-        */
-        /* network connection always,so stop use mapbox
-        const atlas = L.tileLayer('https://{s}.tile.thunderforest.com/atlas/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
-            {maxZoom: 19}
-        );
-        const cycle = L.tileLayer('https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
-            {maxZoom: 19}
-        );
-        const transport = L.tileLayer('https://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
-            {maxZoom: 19}
-        );
-        const transport_dark = L.tileLayer('https://{s}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
-            {maxZoom: 19}
-        );
-        const landscape = L.tileLayer('https://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
-            {maxZoom: 19}
-        );
-        const outdoors = L.tileLayer('https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
-            {maxZoom: 19}
-        );
-        const neighbourhood = L.tileLayer('https://{s}.tile.thunderforest.com/neighbourhood/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
-            {maxZoom: 19}
-        );
-        const mobile_atlas = L.tileLayer('https://{s}.tile.thunderforest.com/mobile-atlas/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
-            {maxZoom: 19}
-        );
-        const pioneer = L.tileLayer('https://{s}.tile.thunderforest.com/pioneer/{z}/{x}/{y}@2x.jpg90?apikey=e011577877b94f269e42a09b6905fdb1',
-            {maxZoom: 19}
-        );
-        const osmHOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
-        });
-
-        const baseLayers = {
-            'Atlas': atlas,
-            'Cycle': cycle,
-            'Transport': transport,
-            'Transport Dark': transport_dark,
-            'Landscape': landscape,
-            'Outdoors': outdoors,
-            'Neighbourhood': neighbourhood,
-            'Mobile Atlas': mobile_atlas,
-            'Pioneer': pioneer,
-            'OpenStreetMap': osmHOT
-        };
-        L.control.layers(baseLayers).addTo(map);
-        */
 
         /* Using open free map https://openfreemap.org */
+      /*
         const positron = L.maplibreGL({
             style: 'https://tiles.openfreemap.org/styles/positron',
         });
@@ -219,5 +267,20 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
         L.control.layers(baseLayers).addTo(map);
 
         const assetsLayersArray = [];
+
+*/
+
+        const map = new maplibregl.Map({
+            container: c,
+            //style: 'https://demotiles.maplibre.org/style.json',
+            style: 'https://tiles.openfreemap.org/styles/liberty',
+           // center: [-68.13734351262877, 45.137451890638886],
+            zoom: 5
+        });
+
+        const layersIDArray = [];
+        const sourcesIDArray = [];
+
+        let isMapLoaded = false;
     }
 }

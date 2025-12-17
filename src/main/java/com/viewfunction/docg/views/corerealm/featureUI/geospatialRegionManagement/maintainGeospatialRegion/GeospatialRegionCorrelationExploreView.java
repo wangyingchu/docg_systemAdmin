@@ -68,7 +68,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     private Button _VILLAGEButton;
     private Icon divIcon6;
     private Map<String,GeospatialScaleEntity> navagationBarEntitieesMap;
-    private GeospatialScaleEntityMapInfoChart geospatialScaleEntityMapInfoChart;
+    private GeospatialScaleEntityMapInfoChart_Maplibre geospatialScaleEntityMapInfoChart;
     private HorizontalLayout doesNotContainsSpatialInfoMessage;
     public GeospatialRegionCorrelationExploreView(String geospatialRegionName){
         this.geospatialRegionName = geospatialRegionName;
@@ -329,7 +329,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
-        this.geospatialScaleEntityMapInfoChart = new GeospatialScaleEntityMapInfoChart();
+        this.geospatialScaleEntityMapInfoChart = new GeospatialScaleEntityMapInfoChart_Maplibre();
         //<theme-editor-local-classname> 添加属性防止地图遮盖其他界面元素
         addClassName("geospatial-region-correlation-explore-view-vertical-layout-1");
         this.geospatialScaleEntityMapInfoChart.setWidth(100,Unit.PERCENTAGE);
