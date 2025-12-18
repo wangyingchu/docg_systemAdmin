@@ -332,8 +332,8 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
         const map = new maplibregl.Map({
             container: c,
             //style: 'https://demotiles.maplibre.org/style.json',
-            style: 'https://tiles.openfreemap.org/styles/liberty',
-           // center: [-68.13734351262877, 45.137451890638886],
+            style:'https://tiles.openfreemap.org/styles/positron',
+            //style: 'https://tiles.openfreemap.org/styles/liberty',
             zoom: 5
         });
 
