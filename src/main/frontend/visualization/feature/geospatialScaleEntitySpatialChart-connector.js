@@ -109,11 +109,11 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                     while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                     }
-
-                    new maplibregl.Popup({closeButton: false,closeOnClick: true})
+                    const popup = new maplibregl.Popup({closeButton: false,closeOnClick: true})
                         .setLngLat(e.lngLat)
                         .setHTML('<p> '+ entityChineseName+' - '+entityCode+' ('+entityType +')</p>')
                         .addTo(map);
+                    popupsArray.push(popup);
                 });
 
                 // Change the cursor to a pointer when the mouse is over the places layer.
@@ -210,13 +210,14 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                     layersIDArray.forEach(function(layerID){
                         map.removeLayer(layerID);
                     });
-
                     sourcesIDArray.forEach(function(sourceID){
                         map.removeSource(sourceID);
                     });
+                    popupsArray.forEach(popup => popup.remove());
 
                     layersIDArray.splice(0, layersIDArray.length);
                     sourcesIDArray.splice(0, sourcesIDArray.length);
+                    popupsArray.splice(0, popupsArray.length);
                 }
             }
         };
@@ -265,6 +266,7 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
 
         const layersIDArray = [];
         const sourcesIDArray = [];
+        const popupsArray = [];
         let isMapLoaded = false;
     }
 }
