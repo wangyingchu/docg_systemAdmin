@@ -59,148 +59,72 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                 */
 
                 if(isMapLoaded){
-                    map.addSource(entityCode, {
-                        'type': 'geojson',
-                        'data': geoJsonObject
-                    });
-                    map.addLayer({
-                        'id': entityCode+"Layer",
-                        'type': 'fill',
-                        'source': entityCode,
-                        'layout': {},
-                        'paint': {
-                            'fill-color': '#0079D4',
-                            'fill-opacity': 0.65
-                        }
-                    });
-                    layersIDArray.push(entityCode+"Layer");
-                    sourcesIDArray.push(entityCode);
-
-                    // 添加边框图层
-                    map.addLayer({
-                        id: entityCode+'borderLayer',
-                        type: 'line',
-                        source: entityCode, // 使用相同的数据源
-                        paint: {
-                            'line-color': '#001F3F',
-                            'line-width': 2,
-                            'line-opacity': 0.8
-                        }
-                    });
-                    layersIDArray.push(entityCode+'borderLayer');
-
-
-                    // When a click event occurs on a feature in the places layer, open a popup at the
-                    // location of the feature, with description HTML from its properties.
-                    map.on('click', entityCode+"Layer", (e) => {
-                        const coordinates = e.features[0].geometry.coordinates.slice();
-                        // Ensure that if the map is zoomed out such that multiple
-                        // copies of the feature are visible, the popup appears
-                        // over the copy being pointed to.
-                        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-                        }
-
-                        new maplibregl.Popup({
-                            closeButton: false,
-                            closeOnClick: true
-                        })
-                            .setLngLat(e.lngLat)
-                            .setHTML('<p> '+ entityChineseName+' - '+entityCode+' ('+entityType +')</p>')
-                            .addTo(map);
-                    });
-
-                    // Change the cursor to a pointer when the mouse is over the places layer.
-                    map.on('mouseenter', entityCode+"Layer", () => {
-                        map.getCanvas().style.cursor = 'pointer';
-                    });
-
-                    // Change it back to a pointer when it leaves.
-                    map.on('mouseleave', entityCode+"Layer", () => {
-                        map.getCanvas().style.cursor = '';
-                    });
-
+                    c.$connector. innerRenderEntityContent(geoJsonObject,entityChineseName,entityCode,entityType);
                 }else{
                     map.on('load', () => {
-                        map.addSource(entityCode, {
-                            'type': 'geojson',
-                            'data': geoJsonObject
-                        });
-                        map.addLayer({
-                            'id': entityCode+"Layer",
-                            'type': 'fill',
-                            'source': entityCode,
-                            'layout': {},
-                            'paint': {
-                                'fill-color': '#0079D4',
-                                'fill-opacity': 0.65
-                            }
-                        });
-                        layersIDArray.push(entityCode+"Layer");
-                        sourcesIDArray.push(entityCode);
-                        isMapLoaded = true;
-
-                        // 添加边框图层
-                        map.addLayer({
-                            id: entityCode+'borderLayer',
-                            type: 'line',
-                            source: entityCode, // 使用相同的数据源
-                            paint: {
-                                'line-color': '#001F3F',
-                                'line-width': 2,
-                                'line-opacity': 0.8
-                            }
-                        });
-                        layersIDArray.push(entityCode+'borderLayer');
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        // When a click event occurs on a feature in the places layer, open a popup at the
-                        // location of the feature, with description HTML from its properties.
-                        map.on('click', entityCode+"Layer", (e) => {
-                            const coordinates = e.features[0].geometry.coordinates.slice();
-                            // Ensure that if the map is zoomed out such that multiple
-                            // copies of the feature are visible, the popup appears
-                            // over the copy being pointed to.
-                            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-                            }
-
-                            new maplibregl.Popup({
-                                closeButton: false,
-                                closeOnClick: true
-                            })
-                                .setLngLat(e.lngLat)
-                                .setHTML('<p> '+ entityChineseName+' - '+entityCode+' ('+entityType +')</p>')
-                                .addTo(map);
-                        });
-
-                        // Change the cursor to a pointer when the mouse is over the places layer.
-                        map.on('mouseenter', entityCode+"Layer", () => {
-                            map.getCanvas().style.cursor = 'pointer';
-                        });
-
-                        // Change it back to a pointer when it leaves.
-                        map.on('mouseleave', entityCode+"Layer", () => {
-                            map.getCanvas().style.cursor = '';
-                        });
-
+                        c.$connector. innerRenderEntityContent(geoJsonObject,entityChineseName,entityCode,entityType);
                     });
                 }
             },
 
             innerRenderEntityContent: function(geoJsonObject,entityChineseName,entityCode,entityType) {
+                map.addSource(entityCode, {
+                    'type': 'geojson',
+                    'data': geoJsonObject
+                });
+                map.addLayer({
+                    'id': entityCode+"Layer",
+                    'type': 'fill',
+                    'source': entityCode,
+                    'layout': {},
+                    'paint': {
+                        'fill-color': '#0079D4',
+                        'fill-opacity': 0.65
+                    }
+                });
+                layersIDArray.push(entityCode+"Layer");
+                sourcesIDArray.push(entityCode);
+                isMapLoaded = true;
 
+                // 添加边框图层
+                map.addLayer({
+                    id: entityCode+'borderLayer',
+                    type: 'line',
+                    source: entityCode, // 使用相同的数据源
+                    paint: {
+                        'line-color': '#001F3F',
+                        'line-width': 2,
+                        'line-opacity': 0.8
+                    }
+                });
+                layersIDArray.push(entityCode+'borderLayer');
+
+                // When a click event occurs on a feature in the places layer, open a popup at the
+                // location of the feature, with description HTML from its properties.
+                map.on('click', entityCode+"Layer", (e) => {
+                    const coordinates = e.features[0].geometry.coordinates.slice();
+                    // Ensure that if the map is zoomed out such that multiple
+                    // copies of the feature are visible, the popup appears
+                    // over the copy being pointed to.
+                    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                    }
+
+                    new maplibregl.Popup({closeButton: false,closeOnClick: true})
+                        .setLngLat(e.lngLat)
+                        .setHTML('<p> '+ entityChineseName+' - '+entityCode+' ('+entityType +')</p>')
+                        .addTo(map);
+                });
+
+                // Change the cursor to a pointer when the mouse is over the places layer.
+                map.on('mouseenter', entityCode+"Layer", () => {
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+
+                // Change it back to a pointer when it leaves.
+                map.on('mouseleave', entityCode+"Layer", () => {
+                    map.getCanvas().style.cursor = '';
+                });
             },
 
             renderCentroidPoint : function(geoJsonStr,zoomLevel) {
