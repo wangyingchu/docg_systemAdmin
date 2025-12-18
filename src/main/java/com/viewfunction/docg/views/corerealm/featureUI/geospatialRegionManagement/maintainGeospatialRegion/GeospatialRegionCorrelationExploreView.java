@@ -507,6 +507,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
             try {
                 String centroidPointWKT = targetConceptionEntity.getEntitySpatialCentroidPointWKTGeometryContent(GeospatialScaleCalculable.SpatialScaleLevel.Global);
                 String envelopeAreaWKT = targetConceptionEntity.getEntitySpatialEnvelopeWKTGeometryContent(GeospatialScaleCalculable.SpatialScaleLevel.Global);
+                String interiorPointWKT = targetConceptionEntity.getEntitySpatialInteriorPointWKTGeometryContent(GeospatialScaleCalculable.SpatialScaleLevel.Global);
                 String geometryCRSAID = targetConceptionEntity.getGlobalCRSAID();
                 String geometryContentWKT = targetConceptionEntity.getGLGeometryContent();
 
@@ -517,6 +518,9 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
                 this.geospatialScaleEntityMapInfoChart.renderEntityContent(getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT),geospatialScaleGrade.toString(),entityChineseName,entityGeospatialCode);
                 if(centroidPointWKT != null){
                     this.geospatialScaleEntityMapInfoChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT),zoomLevel);
+                }
+                if(interiorPointWKT != null){
+                    this.geospatialScaleEntityMapInfoChart.renderInteriorPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
                 }
             } catch (CoreRealmServiceRuntimeException e) {
                 throw new RuntimeException(e);

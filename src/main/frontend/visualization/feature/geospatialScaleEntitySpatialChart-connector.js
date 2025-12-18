@@ -23,43 +23,8 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
             },
 
             renderEntityContent: function(geoJsonObject,entityChineseName,entityCode,entityType) {
-                /*
-
-                const geoStyle = {
-                    "color": '#001F3F',
-                    "weight": 2,
-                    "opacity": 0.8,
-                    "fillColor": '#0079D4',
-                    "fillOpacity": 0.65
-                };
-
-                let contentLayer = L.geoJSON(geoJsonObject, {
-                    pointToLayer: function (feature, latlng) {
-                        return L.circleMarker(latlng, {
-                            radius: 6,
-                            fillColor: '#0079D4',
-                            color: "#001F3F",
-                            weight: 1,
-                            opacity: 0.8,
-                            fillOpacity: 0.5
-                        });
-                    },
-                    style:geoStyle,
-                    onEachFeature: onEachFeature
-                }).addTo(map);
-                assetsLayersArray.push(contentLayer);
-
-                function onEachFeature(feature, layer) {
-                    let popupContent = '<p> '+ entityChineseName+' - '+entityCode+' ('+entityType +')</p>';
-                    if (feature.properties && feature.properties.popupContent) {
-                        popupContent += feature.properties.popupContent;
-                    }
-                    layer.bindPopup(popupContent,{closeButton:false});
-                }
-                */
-
                 if(isMapLoaded){
-                    c.$connector. innerRenderEntityContent(geoJsonObject,entityChineseName,entityCode,entityType);
+                    c.$connector.innerRenderEntityContent(geoJsonObject,entityChineseName,entityCode,entityType);
                 }else{
                     map.on('load', () => {
                         c.$connector. innerRenderEntityContent(geoJsonObject,entityChineseName,entityCode,entityType);
@@ -129,80 +94,188 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
 
             renderCentroidPoint : function(geoJsonStr,zoomLevel) {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
-                /*
-                let centroidPointLayer = L.geoJSON(geoJsonObject, {
-                    pointToLayer: function (feature, latlng) {
-                        return L.circleMarker(latlng, {
-                            dashArray: 5,
-                            radius: 3,
-                            fillColor: '#CCCCCC',
-                            color: "#444444",
-                            weight: 1,
-                            opacity: 0.8,
-                            fillOpacity: 0.5
+                if(isMapLoaded){
+                    map.addSource('CentroidPointSource', {
+                        'type': 'geojson',
+                        'data':geoJsonObject
+                    });
+                    map.addLayer({
+                        'id': 'CentroidPoint',
+                        'type': 'circle',
+                        'source': 'CentroidPointSource',
+                        'paint': {
+                            'circle-radius': 4,
+                            'circle-color': '#CCCCCC',
+                            'circle-opacity': 0.5,
+                            'circle-stroke-color': '#444444',
+                            'circle-stroke-opacity': 0.8,
+                            'circle-stroke-width': 1
+                        }
+                    });
+                    layersIDArray.push("CentroidPoint");
+                    sourcesIDArray.push("CentroidPointSource");
+                }else{
+                    map.on('load', () => {
+                        map.addSource('CentroidPointSource', {
+                            'type': 'geojson',
+                            'data':geoJsonObject
                         });
-                    }
-                }).addTo(map);
-                assetsLayersArray.push(centroidPointLayer);
-                */
+                        map.addLayer({
+                            'id': 'CentroidPoint',
+                            'type': 'circle',
+                            'source': 'CentroidPointSource',
+                            'paint': {
+                                'circle-radius': 4,
+                                'circle-color': '#CCCCCC',
+                                'circle-opacity': 0.5,
+                                'circle-stroke-color': '#444444',
+                                'circle-stroke-opacity': 0.8,
+                                'circle-stroke-width': 1
+                            }
+                        });
+                        layersIDArray.push("CentroidPoint");
+                        sourcesIDArray.push("CentroidPointSource");
+                        isMapLoaded = true;
+                    });
+                }
 
                 const pointLocation = geoJsonObject.features[0].geometry.coordinates;
                 map.flyTo({
                     center: [pointLocation[0], pointLocation[1]],
                     zoom: zoomLevel
                     //,bearing: 90        // Optional: Bearing in degrees (rotation)
-                    //,pitch: 45           // Optional: Pitch in degrees (tilt)
+                    //,pitch: 45          // Optional: Pitch in degrees (tilt)
                 });
             },
 
             renderInteriorPoint : function(geoJsonStr) {
-                /*
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
-                let interiorPointLayer = L.geoJSON(geoJsonObject, {
-                    pointToLayer: function (feature, latlng) {
-                        return L.circleMarker(latlng, {
-                            dashArray: 5,
-                            radius: 3,
-                            fillColor: '#444444',
-                            color: "#000000",
-                            weight: 1,
-                            opacity: 0.8,
-                            fillOpacity: 0.5
+                if(isMapLoaded){
+                    // Add a data source for the X markers
+                    map.addSource('InteriorPointSource', {
+                        'type': 'geojson',
+                        'data': geoJsonObject
+                    });
+                    // Add the X text layer
+                    map.addLayer({
+                        'id': 'InteriorPoint',
+                        'type': 'symbol',
+                        'source': 'InteriorPointSource',
+                        'layout': {
+                            'text-field': '+',  // Unicode multiplication sign (+)
+                            'text-size': 10,
+                            'text-allow-overlap': true,
+                            'text-anchor': 'center',
+                            'text-justify': 'center'
+                        },
+                        'paint': {
+                            'text-color': '#CCCCCC',
+                            'text-halo-color': '#444444',
+                            'text-halo-width': 1,
+                            'text-opacity': 0.6
+                        }
+                    });
+                    layersIDArray.push("InteriorPoint");
+                    sourcesIDArray.push("InteriorPointSource");
+                }else{
+                    map.on('load', function() {
+                        // Add a data source for the X markers
+                        map.addSource('InteriorPointSource', {
+                            'type': 'geojson',
+                            'data': geoJsonObject
                         });
-                    }
-                }).addTo(map);
-                assetsLayersArray.push(interiorPointLayer);
-                */
-
+                        // Add the X text layer
+                        map.addLayer({
+                            'id': 'InteriorPoint',
+                            'type': 'symbol',
+                            'source': 'InteriorPointSource',
+                            'layout': {
+                                'text-field': '+',  // Unicode multiplication sign (X)
+                                'text-size': 10,
+                                'text-allow-overlap': true,
+                                'text-anchor': 'center',
+                                'text-justify': 'center'
+                            },
+                            'paint': {
+                                'text-color': '#CCCCCC',
+                                'text-halo-color': '#444444',
+                                'text-halo-width': 1,
+                                'text-opacity': 0.6
+                            }
+                        });
+                        layersIDArray.push("InteriorPoint");
+                        sourcesIDArray.push("InteriorPointSource");
+                        isMapLoaded = true;
+                    });
+                }
             },
 
             renderEnvelope: function(geoJsonStr) {
-                /*
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
-                const geoStyle = {
-                    "dashArray": 5,
-                    "color": '#666666',
-                    "weight": 1,
-                    "opacity": 0.4,
-                    "fillColor": '#AAAAAA',
-                    "fillOpacity": 0.2
-                };
-
-                let envelopeLayer = L.geoJSON(geoJsonObject, {
-                    pointToLayer: function (feature, latlng) {
-                        return L.circleMarker(latlng, {
-                            radius: 6,
-                            fillColor: '#0079D4',
-                            color: "#001F3F",
-                            weight: 1,
-                            opacity: 0.9,
-                            fillOpacity: 0.65
+                if(isMapLoaded){
+                    map.addSource("EnvelopeSource", {
+                        'type': 'geojson',
+                        'data': geoJsonObject
+                    });
+                    map.addLayer({
+                        'id': "Envelope-border",
+                        'type': 'line',
+                        'source': "EnvelopeSource",
+                        'layout': {},
+                        'paint': {
+                            'line-color': '#666666',
+                            'line-width': 1,
+                            'line-opacity': 0.4,
+                            'line-dasharray': [10, 5, 2, 5]
+                        }
+                    });
+                    map.addLayer({
+                        'id': "Envelope-fill",
+                        'type': 'fill',
+                        'source': "EnvelopeSource",
+                        'layout': {},
+                        'paint': {
+                            'fill-color': '#AAAAAA',
+                            'fill-opacity': 0.2
+                        }
+                    });
+                    layersIDArray.push("Envelope-border");
+                    layersIDArray.push("Envelope-fill");
+                    sourcesIDArray.push("EnvelopeSource");
+                }else{
+                    map.on('load', () => {
+                        map.addSource("EnvelopeSource", {
+                            'type': 'geojson',
+                            'data': geoJsonObject
                         });
-                    },
-                    style:geoStyle
-                }).addTo(map);
-                assetsLayersArray.push(envelopeLayer);
-                */
+                        map.addLayer({
+                            'id': "Envelope-border",
+                            'type': 'line',
+                            'source': "EnvelopeSource",
+                            'layout': {},
+                            'paint': {
+                                'line-color': '#666666',
+                                'line-width': 1,
+                                'line-opacity': 0.4,
+                                'line-dasharray': [10, 5, 2, 5]
+                            }
+                        });
+                        map.addLayer({
+                            'id': "Envelope-fill",
+                            'type': 'fill',
+                            'source': "EnvelopeSource",
+                            'layout': {},
+                            'paint': {
+                                'fill-color': '#AAAAAA',
+                                'fill-opacity': 0.2
+                            }
+                        });
+                        layersIDArray.push("Envelope-border");
+                        layersIDArray.push("Envelope-fill");
+                        sourcesIDArray.push("EnvelopeSource");
+                        isMapLoaded = true;
+                    });
+                }
             },
 
             clearMap:function(){
