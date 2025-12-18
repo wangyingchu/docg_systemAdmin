@@ -75,6 +75,51 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                     });
                     layersIDArray.push(entityCode+"Layer");
                     sourcesIDArray.push(entityCode);
+
+                    // 添加边框图层
+                    map.addLayer({
+                        id: entityCode+'borderLayer',
+                        type: 'line',
+                        source: entityCode, // 使用相同的数据源
+                        paint: {
+                            'line-color': '#001F3F',
+                            'line-width': 2,
+                            'line-opacity': 0.8
+                        }
+                    });
+                    layersIDArray.push(entityCode+'borderLayer');
+
+
+                    // When a click event occurs on a feature in the places layer, open a popup at the
+                    // location of the feature, with description HTML from its properties.
+                    map.on('click', entityCode+"Layer", (e) => {
+                        const coordinates = e.features[0].geometry.coordinates.slice();
+                        // Ensure that if the map is zoomed out such that multiple
+                        // copies of the feature are visible, the popup appears
+                        // over the copy being pointed to.
+                        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                        }
+
+                        new maplibregl.Popup({
+                            closeButton: false,
+                            closeOnClick: true
+                        })
+                            .setLngLat(e.lngLat)
+                            .setHTML('<p> '+ entityChineseName+' - '+entityCode+' ('+entityType +')</p>')
+                            .addTo(map);
+                    });
+
+                    // Change the cursor to a pointer when the mouse is over the places layer.
+                    map.on('mouseenter', entityCode+"Layer", () => {
+                        map.getCanvas().style.cursor = 'pointer';
+                    });
+
+                    // Change it back to a pointer when it leaves.
+                    map.on('mouseleave', entityCode+"Layer", () => {
+                        map.getCanvas().style.cursor = '';
+                    });
+
                 }else{
                     map.on('load', () => {
                         map.addSource(entityCode, {
@@ -94,15 +139,73 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                         layersIDArray.push(entityCode+"Layer");
                         sourcesIDArray.push(entityCode);
                         isMapLoaded = true;
+
+                        // 添加边框图层
+                        map.addLayer({
+                            id: entityCode+'borderLayer',
+                            type: 'line',
+                            source: entityCode, // 使用相同的数据源
+                            paint: {
+                                'line-color': '#001F3F',
+                                'line-width': 2,
+                                'line-opacity': 0.8
+                            }
+                        });
+                        layersIDArray.push(entityCode+'borderLayer');
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        // When a click event occurs on a feature in the places layer, open a popup at the
+                        // location of the feature, with description HTML from its properties.
+                        map.on('click', entityCode+"Layer", (e) => {
+                            const coordinates = e.features[0].geometry.coordinates.slice();
+                            // Ensure that if the map is zoomed out such that multiple
+                            // copies of the feature are visible, the popup appears
+                            // over the copy being pointed to.
+                            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                            }
+
+                            new maplibregl.Popup({
+                                closeButton: false,
+                                closeOnClick: true
+                            })
+                                .setLngLat(e.lngLat)
+                                .setHTML('<p> '+ entityChineseName+' - '+entityCode+' ('+entityType +')</p>')
+                                .addTo(map);
+                        });
+
+                        // Change the cursor to a pointer when the mouse is over the places layer.
+                        map.on('mouseenter', entityCode+"Layer", () => {
+                            map.getCanvas().style.cursor = 'pointer';
+                        });
+
+                        // Change it back to a pointer when it leaves.
+                        map.on('mouseleave', entityCode+"Layer", () => {
+                            map.getCanvas().style.cursor = '';
+                        });
+
                     });
                 }
+            },
+
+            innerRenderEntityContent: function(geoJsonObject,entityChineseName,entityCode,entityType) {
+
             },
 
             renderCentroidPoint : function(geoJsonStr,zoomLevel) {
                 const geoJsonObject = c.$connector.getGeoJsonObject(geoJsonStr);
                 /*
-
-
                 let centroidPointLayer = L.geoJSON(geoJsonObject, {
                     pointToLayer: function (feature, latlng) {
                         return L.circleMarker(latlng, {
@@ -117,10 +220,8 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                     }
                 }).addTo(map);
                 assetsLayersArray.push(centroidPointLayer);
-
-
-
                 */
+
                 const pointLocation = geoJsonObject.features[0].geometry.coordinates;
                 map.flyTo({
                     center: [pointLocation[0], pointLocation[1]],
@@ -181,48 +282,7 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
             },
 
             clearMap:function(){
-                /*
-                assetsLayersArray.forEach(function(layer){
-                    map.removeLayer(layer);
-                });
-
-                 */
-
-
                 if(isMapLoaded){
-
-                    /*
-
-                    // Get all layers from the current style
-                    const layers = map.getStyle().layers;
-
-                    // Loop through all layers in reverse order
-                    // (Reversing is not strictly necessary but can avoid some edge cases)
-                    for (let i = layers.length - 1; i >= 0; i--) {
-                        const layerId = layers[i].id;
-                        if (map.getLayer(layerId)) {
-                            map.removeLayer(layerId);
-                        }
-                    }
-
-
-                    // Get all sources from the current style
-                    const sources = map.getStyle().sources;
-
-                    // Loop through all sources
-                    for (const sourceId in sources) {
-                        if (map.getSource(sourceId)) {
-                            map.removeSource(sourceId);
-                        }
-                    }
-
-*/
-
-
-
-
-
-
                     layersIDArray.forEach(function(layerID){
                         map.removeLayer(layerID);
                     });
@@ -231,7 +291,8 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
                         map.removeSource(sourceID);
                     });
 
-
+                    layersIDArray.splice(0, layersIDArray.length);
+                    sourcesIDArray.splice(0, sourcesIDArray.length);
                 }
             }
         };
@@ -280,7 +341,6 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
 
         const layersIDArray = [];
         const sourcesIDArray = [];
-
         let isMapLoaded = false;
     }
 }
