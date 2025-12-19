@@ -337,6 +337,14 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
             zoom: 5
         });
 
+        // Add zoom and rotation controls to the map.
+        map.addControl(new maplibregl.NavigationControl({
+            visualizePitch: true,
+            visualizeRoll: true,
+            showZoom: true,
+            showCompass: true
+        }));
+
         const layersIDArray = [];
         const sourcesIDArray = [];
         const popupsArray = [];
