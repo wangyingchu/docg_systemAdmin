@@ -10,7 +10,7 @@ import com.vaadin.flow.function.SerializableConsumer;
 
 import java.io.Serializable;
 
-@NpmPackage(value = "@mapbox-controls/styles", version = "3.0.0")
+@NpmPackage(value = "maplibre-gl-style-flipper", version = "1.0.9")
 @JavaScript("./visualization/feature/geospatialScaleEntitySpatialChart-connector.js")
 public class GeospatialScaleEntityMapInfoChart_Maplibre extends VerticalLayout {
 

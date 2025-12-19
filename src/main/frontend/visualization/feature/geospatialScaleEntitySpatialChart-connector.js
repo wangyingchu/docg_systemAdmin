@@ -1,6 +1,4 @@
-
-import StylesControl from '@mapbox-controls/styles';
-import '@mapbox-controls/styles/src/index.css';
+import StyleFlipperControl from "maplibre-gl-style-flipper";
 
 window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
     initLazy: function (c) {
@@ -299,104 +297,39 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
             }
         };
 
-
-        /* Using open free map https://openfreemap.org */
-      /*
-        const positron = L.maplibreGL({
-            style: 'https://tiles.openfreemap.org/styles/positron',
-        });
-        const bright = L.maplibreGL({
-            style: 'https://tiles.openfreemap.org/styles/bright',
-        });
-        const dark = L.maplibreGL({
-            style: 'https://tiles.openfreemap.org/styles/dark',
-        });
-        const liberty = L.maplibreGL({
-            style: 'https://tiles.openfreemap.org/styles/liberty',
-        });
-        const map = L.map(c,{
-            attributionControl:false,
-            layers: [liberty],
-            //crs: L.CRS.EPSG4326
-            crs: L.CRS.EPSG3857
-        });
-
-        const baseLayers = {
-            'Positron': positron,
-            'Bright': bright,
-            'Dark': dark,
-            'Liberty': liberty
-        };
-        L.control.layers(baseLayers).addTo(map);
-
-        const assetsLayersArray = [];
-
-*/
-
-
-
-
-
         // Define map styles
+        /* Using open free map https://openfreemap.org */
         const mapStyles = {
             "liberty": {
                 code: "liberty",
                 url: "https://tiles.openfreemap.org/styles/liberty",
+                image: "https://carto.com/help/images/building-maps/basemaps/voyager_labels.png",
+            },
+            "positron": {
+                code: "positron",
+                url: "https://tiles.openfreemap.org/styles/positron",
                 image: "https://carto.com/help/images/building-maps/basemaps/positron_labels.png",
             },
-            "carto-positron": {
-                code: "carto-positron",
-                url: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
-                image: "https://carto.com/help/images/building-maps/basemaps/positron_labels.png",
-            },
-            "carto-dark": {
-                code: "carto-dark",
-                url: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+            "dark": {
+                code: "dark",
+                url: "https://tiles.openfreemap.org/styles/dark",
                 image: "https://carto.com/help/images/building-maps/basemaps/dark_labels.png",
             },
-            "carto-voyager": {
-                code: "carto-voyager",
-                url: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json",
+            "bright": {
+                code: "bright",
+                url: "https://tiles.openfreemap.org/styles/bright",
                 image: "https://carto.com/help/images/building-maps/basemaps/voyager_labels.png",
             },
         };
-
-
-
-
-
-
-        const styles = {
-            streets: {
-                name: 'streets',
-                url: 'https://api.maptiler.com/maps/streets/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL'
-            },
-            satellite: {
-                name: 'satellite',
-                url: 'https://api.maptiler.com/maps/satellite/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL'
-            },
-            dark: {
-                name: 'dark',
-                url: 'https://api.maptiler.com/maps/dark-matter/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL'
-            }
-        };
-
-
-
-
-
-
 
         const map = new maplibregl.Map({
             container: c,
             //style: 'https://demotiles.maplibre.org/style.json',
             //style:'https://tiles.openfreemap.org/styles/positron',
-            //style: 'https://tiles.openfreemap.org/styles/liberty',
-            style: 'https://api.maptiler.com/maps/streets/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL',
-
-            //style: mapStyles["liberty"].url,
-           // style: styles.dark.url,
-            zoom: 5
+            style: 'https://tiles.openfreemap.org/styles/liberty',
+            //style: 'https://api.maptiler.com/maps/streets/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL',
+            zoom: 5,
+            attributionControl: false // This disables the control on initialization
         });
 
         // Add zoom and rotation controls to the map.
@@ -412,69 +345,12 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
         const popupsArray = [];
         let isMapLoaded = false;
 
-
-/*
-
-        map.addControl(new StylesControl(styles: {
-            label: 'Streets',
-                styleName: 'Mapbox Streets',
-                styleUrl: 'mapbox://styles/mapbox/streets-v12',
-        }, {
-            label: 'Satellite',
-                styleName: 'Mapbox Satellite Streets',
-                styleUrl: 'mapbox://sprites/mapbox/satellite-streets-v12',
-        }), 'top-left');
-*/
-
-
-        const mapStyles2 = {
-            "liberty": {
-                code: "liberty",
-                url: "https://tiles.openfreemap.org/styles/liberty",
-                image: "https://carto.com/help/images/building-maps/basemaps/positron_labels.png",
-            },
-            "carto-positron": {
-                code: "carto-positron",
-                url: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
-                image: "https://carto.com/help/images/building-maps/basemaps/positron_labels.png",
-            },
-            "carto-dark": {
-                code: "carto-dark",
-                url: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
-                image: "https://carto.com/help/images/building-maps/basemaps/dark_labels.png",
-            },
-            "carto-voyager": {
-                code: "carto-voyager",
-                url: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json",
-                image: "https://carto.com/help/images/building-maps/basemaps/voyager_labels.png",
-            },
-        };
-
-
-    let stylesOption = [{
-        label: 'Streets',
-        name: 'Mapbox Streets',
-        styleUrl: 'mapbox://styles/mapbox/streets-v12'
-        }];
-
-   let controlOptions = {
-            styles: stylesOption,
-       compact: true
-        };
-
-
-
-
-
-
-
-        map.once('style.load', function() {
-            map.addControl(new StylesControl(controlOptions), 'top-left');
-        });
-
-
-
-
-
+        function onMapStylesChange(styleClass,styleCode){}
+        // Create an instance of StyleFlipperControl
+        const styleFlipperControl = new StyleFlipperControl(mapStyles,onMapStylesChange);
+        // Set the initial style code
+        styleFlipperControl.setCurrentStyleCode("liberty");
+        // Add the control to the map
+        map.addControl(styleFlipperControl, "bottom-right");
     }
 }
