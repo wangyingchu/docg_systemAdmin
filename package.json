@@ -4,6 +4,7 @@
   "type": "module",
   "dependencies": {
     "@flowingcode/font-awesome-iron-iconset": "5.1.0",
+    "@mapbox-controls/styles": "3.0.0",
     "@neo4j-nvl/react": "0.3.1",
     "@polymer/iron-icon": "3.0.1",
     "@polymer/polymer": "3.5.2",
@@ -57,6 +58,7 @@
   "vaadin": {
     "dependencies": {
       "@flowingcode/font-awesome-iron-iconset": "5.1.0",
+      "@mapbox-controls/styles": "3.0.0",
       "@neo4j-nvl/react": "0.3.1",
       "@polymer/iron-icon": "3.0.1",
       "@polymer/polymer": "3.5.2",
@@ -107,7 +109,7 @@
       "workbox-core": "7.3.0",
       "workbox-precaching": "7.3.0"
     },
-    "hash": "dcd3d47dcd64cb4007e9ce018492bb1a2cbef7abd9008fcbd34d1c8cd139c44c"
+    "hash": "9bf3e88be638bd0e5657d1c88498c0a797b54d94932dfbf419b9993d0f926a0c"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -205,6 +207,7 @@
     "@vaadin/dashboard": "24.9.6",
     "@vaadin/grid-pro": "24.9.6",
     "@vaadin/map": "24.9.6",
-    "@vaadin/rich-text-editor": "24.9.6"
+    "@vaadin/rich-text-editor": "24.9.6",
+    "@mapbox-controls/styles": "$@mapbox-controls/styles"
   }
 }

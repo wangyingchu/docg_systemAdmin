@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.JavaScript;
+import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
 import java.io.Serializable;
 
+@NpmPackage(value = "@mapbox-controls/styles", version = "3.0.0")
 @JavaScript("./visualization/feature/geospatialScaleEntitySpatialChart-connector.js")
 public class GeospatialScaleEntityMapInfoChart_Maplibre extends VerticalLayout {
 
