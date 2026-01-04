@@ -64,6 +64,8 @@ public class RelationKindManagementUI extends VerticalLayout implements
     private RelationKindCorrelationInfoChart relationKindCorrelationInfoChart;
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private int entityAttributesDistributionStatisticSampleRatio = 10000;
+    private int chartWidth = 1600;
+    private int chartHeight = 700;
 
     public RelationKindManagementUI(){
         Button refreshDataButton = new Button("刷新关系类型数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -440,6 +442,8 @@ public class RelationKindManagementUI extends VerticalLayout implements
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             relationKindMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
+            chartWidth = event.getWidth()-300;
+            chartHeight = event.getHeight()-300;
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -447,6 +451,8 @@ public class RelationKindManagementUI extends VerticalLayout implements
             relationKindMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
             relationKindCorrelationInfoChart = new RelationKindCorrelationInfoChart(browserHeight-520);
             singleRelationKindSummaryInfoContainerLayout.add(relationKindCorrelationInfoChart);
+            chartWidth = receiver.getBodyClientWidth()-300;
+            chartHeight = browserHeight-300;
         }));
     }
 
@@ -721,8 +727,8 @@ public class RelationKindManagementUI extends VerticalLayout implements
     }
 
     private void renderRelationKindsCorrelationInfoSummaryUI(Button relationKindRelationGuideButton){
-        RelationKindsCorrelationInfoSummaryChart relationKindsCorrelationInfoSummaryChart = new RelationKindsCorrelationInfoSummaryChart(1600,700);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"关系类型实体实时关联分布概览",null,true,1600,720,false);
+        RelationKindsCorrelationInfoSummaryChart relationKindsCorrelationInfoSummaryChart = new RelationKindsCorrelationInfoSummaryChart(chartWidth,chartHeight);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"关系类型实体实时关联分布概览",null,true,chartWidth,chartHeight+20,false);
         fixSizeWindow.setWindowContent(relationKindsCorrelationInfoSummaryChart);
         fixSizeWindow.show();
         fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
