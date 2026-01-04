@@ -34,6 +34,8 @@ import java.util.*;
 public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
     private Registration listener;
     private Grid<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoGrid;
+    private int chartWidth = 1850;
+    private int chartHeight = 800;
 
     public RelationAndConceptionKindAttachInfoWidget(){
         List<Component> actionComponentsList = new ArrayList<>();
@@ -118,11 +120,16 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             this.runtimeRelationAndConceptionKindAttachInfoGrid.setHeight(event.getHeight()-270,Unit.PIXELS);
+            chartWidth = event.getWidth() - 50;
+            chartHeight = event.getHeight() - 80;
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
+            int browserWeight = receiver.getBodyClientWidth();
             this.runtimeRelationAndConceptionKindAttachInfoGrid.setHeight(browserHeight-270,Unit.PIXELS);
+            chartWidth = browserWeight - 50;
+            chartHeight = browserHeight - 80;
         }));
         renderRelationAndConceptionKindAttachInfo();
     }
@@ -148,7 +155,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         fullSizeWindow.setModel(true);
         HorizontalLayout heatMapsContainerLayout = new HorizontalLayout();
 
-        CartesianHeatmapChart inDegreeCartesianHeatmapChart = new CartesianHeatmapChart(1850,800);
+        CartesianHeatmapChart inDegreeCartesianHeatmapChart = new CartesianHeatmapChart(chartWidth,chartHeight);
         inDegreeCartesianHeatmapChart.setColorRange("#ABDCFF","#0396FF");
         //inDegreeCartesianHeatmapChart.setName("领域概念与关系实体入度统计");
         inDegreeCartesianHeatmapChart.setTooltipPosition("left");
@@ -238,7 +245,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         fullSizeWindow.setModel(true);
         HorizontalLayout heatMapsContainerLayout = new HorizontalLayout();
 
-        CartesianHeatmapChart outDegreeCartesianHeatmapChart = new CartesianHeatmapChart(1850,800);
+        CartesianHeatmapChart outDegreeCartesianHeatmapChart = new CartesianHeatmapChart(chartWidth,chartHeight);
         outDegreeCartesianHeatmapChart.setColorRange("#FCCF31","#F55555");
         //outDegreeCartesianHeatmapChart.setName("领域概念与关系实体出度统计");
         outDegreeCartesianHeatmapChart.setTooltipPosition("left");
