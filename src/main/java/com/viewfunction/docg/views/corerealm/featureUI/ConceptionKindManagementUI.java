@@ -73,7 +73,8 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
     private Icon attachedToTimeScaleEventIcon;
     private VerticalLayout selectKindPromptInfoContainerLayout;
     private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
-
+    private int screenAreaWidth = 1200;
+    private int screenAreaHeight = 900;
     public ConceptionKindManagementUI(){
         Button refreshDataButton = new Button("刷新概念类型数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -489,13 +490,18 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             conceptionKindMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
+            screenAreaWidth = event.getWidth();
+            screenAreaHeight = event.getHeight();
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
+            int browserWidth = receiver.getBodyClientWidth();
             conceptionKindMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
             conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-600);
             singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
+            screenAreaWidth = browserWidth;
+            screenAreaHeight = browserHeight;
         }));
     }
 
@@ -670,13 +676,13 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         */
 
         // Method 2 direct use chart
-        ConceptionKindsCorrelationInfoSummaryChart conceptionKindsCorrelationInfoSummaryChart = new ConceptionKindsCorrelationInfoSummaryChart(1180,800);
+        ConceptionKindsCorrelationInfoSummaryChart conceptionKindsCorrelationInfoSummaryChart = new ConceptionKindsCorrelationInfoSummaryChart(screenAreaWidth-220,screenAreaHeight-120);
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         SystemMaintenanceOperator systemMaintenanceOperator = coreRealm.getSystemMaintenanceOperator();
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.
                 getSystemConceptionKindsRelationDistributionStatistics();
         conceptionKindsCorrelationInfoSummaryChart.setData(conceptionKindCorrelationInfoSet);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"概念类型实体实时关联分布概览",null,true,1200,900,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"概念类型实体实时关联分布概览",null,true,screenAreaWidth-200,screenAreaHeight-50,false);
         fixSizeWindow.setWindowContent(conceptionKindsCorrelationInfoSummaryChart);
         fixSizeWindow.show();
         fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
