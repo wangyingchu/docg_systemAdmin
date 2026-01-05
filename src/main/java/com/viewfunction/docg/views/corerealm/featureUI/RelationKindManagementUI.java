@@ -60,13 +60,13 @@ public class RelationKindManagementUI extends VerticalLayout implements
     private TextField relationKindDescFilterField;
     private EntityStatisticsInfo lastSelectedRelationKindMetaInfoGridEntityStatisticsInfo;
     private Grid<KindEntityAttributeRuntimeStatistics> relationKindAttributesInfoGrid;
-    private VerticalLayout singleRelationKindSummaryInfoContainerLayout;
     private RelationKindCorrelationInfoChart relationKindCorrelationInfoChart;
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private int entityAttributesDistributionStatisticSampleRatio = 10000;
     private int chartWidth = 1600;
     private int chartHeight = 700;
-
+    private VerticalLayout selectKindPromptInfoContainerLayout;
+    private VerticalLayout singleRelationKindSummaryInfoContainerLayout;
     public RelationKindManagementUI(){
         Button refreshDataButton = new Button("刷新关系类型数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -76,6 +76,8 @@ public class RelationKindManagementUI extends VerticalLayout implements
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
             loadRelationKindsInfo();
             resetSingleRelationKindSummaryInfoArea();
+            selectKindPromptInfoContainerLayout.setVisible(true);
+            singleRelationKindSummaryInfoContainerLayout.setVisible(false);
         });
 
         List<Component> buttonList = new ArrayList<>();
@@ -392,6 +394,25 @@ public class RelationKindManagementUI extends VerticalLayout implements
         relationKindsInfoContainerLayout.add(singleRelationKindSummaryInfoContainerLayout);
         relationKindsInfoContainerLayout.setFlexGrow(1, singleRelationKindSummaryInfoContainerLayout);
 
+        selectKindPromptInfoContainerLayout = new VerticalLayout();
+        selectKindPromptInfoContainerLayout.getStyle().set("padding-top", "50px");
+        relationKindsInfoContainerLayout.add(selectKindPromptInfoContainerLayout);
+
+        HorizontalLayout selectKindInfoMessage = new HorizontalLayout();
+        selectKindInfoMessage.setSpacing(true);
+        selectKindInfoMessage.setPadding(true);
+        selectKindInfoMessage.setMargin(true);
+        selectKindInfoMessage.setWidth(100,Unit.PERCENTAGE);
+        selectKindInfoMessage.setHeight(300,Unit.PIXELS);
+        Icon messageLogo = new Icon(VaadinIcon.MAILBOX);
+        messageLogo.getStyle()
+                .set("color","#2e4e7e").set("padding-right", "5px");
+        messageLogo.setSize("30px");
+        NativeLabel messageLabel = new NativeLabel(" 请从左侧列表选择关系类型定义显示详情");
+        messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
+        selectKindInfoMessage.add(messageLogo,messageLabel);
+        selectKindPromptInfoContainerLayout.add(selectKindInfoMessage);
+
         HorizontalLayout singleRelationKindInfoElementsContainerLayout = new HorizontalLayout();
         singleRelationKindInfoElementsContainerLayout.setSpacing(false);
         singleRelationKindInfoElementsContainerLayout.setMargin(false);
@@ -432,6 +453,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.RANDOM),"关系类型实体关联流向");
         singleRelationKindSummaryInfoContainerLayout.add(infoTitle2);
+        singleRelationKindSummaryInfoContainerLayout.setVisible(false);
     }
 
     @Override
@@ -505,6 +527,8 @@ public class RelationKindManagementUI extends VerticalLayout implements
     }
 
     private void renderRelationKindOverview(EntityStatisticsInfo relationKindStatisticsInfo){
+        selectKindPromptInfoContainerLayout.setVisible(false);
+        singleRelationKindSummaryInfoContainerLayout.setVisible(true);
         String relationKindName = relationKindStatisticsInfo.getEntityKindName();
         String relationKindDesc = relationKindStatisticsInfo.getEntityKindDesc() != null ?
                 relationKindStatisticsInfo.getEntityKindDesc():"未设置显示名称";

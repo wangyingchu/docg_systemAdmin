@@ -63,7 +63,6 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
     private int entityAttributesDistributionStatisticSampleRatio = 10000;
     private Grid<KindEntityAttributeRuntimeStatistics> conceptionKindAttributesInfoGrid;
     private ConceptionKindCorrelationInfoChart conceptionKindCorrelationInfoChart;
-    private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
     private EntityStatisticsInfo lastSelectedConceptionKindMetaInfoGridEntityStatisticsInfo;
     final ZoneId id = ZoneId.systemDefault();
     private TextField conceptionKindNameFilterField;
@@ -72,6 +71,8 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
     private Icon containsGeospatialAttributeIcon;
     private Icon attachedToGeospatialScaleEventIcon;
     private Icon attachedToTimeScaleEventIcon;
+    private VerticalLayout selectKindPromptInfoContainerLayout;
+    private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
 
     public ConceptionKindManagementUI(){
         Button refreshDataButton = new Button("刷新概念类型数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -82,6 +83,8 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
             loadConceptionKindsInfo();
             resetSingleConceptionKindSummaryInfoArea();
+            selectKindPromptInfoContainerLayout.setVisible(true);
+            singleConceptionKindSummaryInfoContainerLayout.setVisible(false);
         });
 
         List<Component> buttonList = new ArrayList<>();
@@ -398,6 +401,25 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         conceptionKindsInfoContainerLayout.add(singleConceptionKindSummaryInfoContainerLayout);
         conceptionKindsInfoContainerLayout.setFlexGrow(1,singleConceptionKindSummaryInfoContainerLayout);
 
+        selectKindPromptInfoContainerLayout = new VerticalLayout();
+        selectKindPromptInfoContainerLayout.getStyle().set("padding-top", "50px");
+        conceptionKindsInfoContainerLayout.add(selectKindPromptInfoContainerLayout);
+
+        HorizontalLayout selectKindInfoMessage = new HorizontalLayout();
+        selectKindInfoMessage.setSpacing(true);
+        selectKindInfoMessage.setPadding(true);
+        selectKindInfoMessage.setMargin(true);
+        selectKindInfoMessage.setWidth(100,Unit.PERCENTAGE);
+        selectKindInfoMessage.setHeight(300,Unit.PIXELS);
+        Icon messageLogo = new Icon(VaadinIcon.MAILBOX);
+        messageLogo.getStyle()
+                .set("color","#2e4e7e").set("padding-right", "5px");
+        messageLogo.setSize("30px");
+        NativeLabel messageLabel = new NativeLabel(" 请从左侧列表选择概念类型定义显示详情");
+        messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
+        selectKindInfoMessage.add(messageLogo,messageLabel);
+        selectKindPromptInfoContainerLayout.add(selectKindInfoMessage);
+
         HorizontalLayout singleConceptionKindInfoElementsContainerLayout = new HorizontalLayout();
         singleConceptionKindInfoElementsContainerLayout.setSpacing(false);
         singleConceptionKindInfoElementsContainerLayout.setMargin(false);
@@ -455,7 +477,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(new Icon(VaadinIcon.CONNECT),"概念类型实体关联分布");
         singleConceptionKindSummaryInfoContainerLayout.add(infoTitle2);
-        //singleConceptionKindSummaryInfoContainerLayout.setVisible(false);
+        singleConceptionKindSummaryInfoContainerLayout.setVisible(false);
         add(conceptionKindsInfoContainerLayout);
     }
 
@@ -530,6 +552,8 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
     }
 
     private void renderConceptionKindOverview(EntityStatisticsInfo conceptionKindStatisticsInfo){
+        selectKindPromptInfoContainerLayout.setVisible(false);
+        singleConceptionKindSummaryInfoContainerLayout.setVisible(true);
         String conceptionKindName = conceptionKindStatisticsInfo.getEntityKindName();
         String conceptionKindDesc = conceptionKindStatisticsInfo.getEntityKindDesc() != null ?
                 conceptionKindStatisticsInfo.getEntityKindDesc():"未设置显示名称";

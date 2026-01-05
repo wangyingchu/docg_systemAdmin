@@ -63,11 +63,12 @@ public class ClassificationManagementUI extends VerticalLayout implements
     private SecondaryKeyValueDisplayItem attributeKindCount;
     private SecondaryKeyValueDisplayItem attributesViewKindCount;
     private SecondaryKeyValueDisplayItem conceptionEntityCount;
-    private VerticalLayout singleClassificationSummaryInfoContainerLayout;
     private ClassificationMetaInfo lastSelectedClassificationMetaInfo;
     private Map<String,ClassificationMetaInfo> classificationMetaInfoMap;
     private String lastSelectedClassificationName;
     private ClassificationCorrelationInfoChart classificationCorrelationInfoChart;
+    private VerticalLayout selectKindPromptInfoContainerLayout;
+    private VerticalLayout singleClassificationSummaryInfoContainerLayout;
     public ClassificationManagementUI(){
 
         Button refreshDataButton = new Button("刷新分类数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -78,6 +79,8 @@ public class ClassificationManagementUI extends VerticalLayout implements
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
             refreshClassificationsData();
             resetSingleClassificationSummaryInfoArea();
+            selectKindPromptInfoContainerLayout.setVisible(true);
+            singleClassificationSummaryInfoContainerLayout.setVisible(false);
         });
 
         List<Component> buttonList = new ArrayList<>();
@@ -326,6 +329,25 @@ public class ClassificationManagementUI extends VerticalLayout implements
         classificationsInfoContainerLayout.add(singleClassificationSummaryInfoContainerLayout);
         classificationsInfoContainerLayout.setFlexGrow(1, singleClassificationSummaryInfoContainerLayout);
 
+        selectKindPromptInfoContainerLayout = new VerticalLayout();
+        selectKindPromptInfoContainerLayout.getStyle().set("padding-top", "50px");
+        classificationsInfoContainerLayout.add(selectKindPromptInfoContainerLayout);
+
+        HorizontalLayout selectKindInfoMessage = new HorizontalLayout();
+        selectKindInfoMessage.setSpacing(true);
+        selectKindInfoMessage.setPadding(true);
+        selectKindInfoMessage.setMargin(true);
+        selectKindInfoMessage.setWidth(100,Unit.PERCENTAGE);
+        selectKindInfoMessage.setHeight(300,Unit.PIXELS);
+        Icon messageLogo = new Icon(VaadinIcon.MAILBOX);
+        messageLogo.getStyle()
+                .set("color","#2e4e7e").set("padding-right", "5px");
+        messageLogo.setSize("30px");
+        NativeLabel messageLabel = new NativeLabel(" 请从左侧列表选择分类显示详情");
+        messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
+        selectKindInfoMessage.add(messageLogo,messageLabel);
+        selectKindPromptInfoContainerLayout.add(selectKindInfoMessage);
+
         HorizontalLayout singleClassificationInfoElementsContainerLayout = new HorizontalLayout();
         singleClassificationInfoElementsContainerLayout.setSpacing(false);
         singleClassificationInfoElementsContainerLayout.setMargin(false);
@@ -384,6 +406,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
         ThirdLevelIconTitle infoTitle2 = new ThirdLevelIconTitle(VaadinIcon.SITEMAP.create(),"分类及三代内后代分类分布");
         singleClassificationSummaryInfoContainerLayout.add(infoTitle2);
+        singleClassificationSummaryInfoContainerLayout.setVisible(false);
     }
 
     @Override
@@ -532,6 +555,8 @@ public class ClassificationManagementUI extends VerticalLayout implements
     }
 
     private void renderClassificationOverview(ClassificationMetaInfo classificationMetaInfo){
+        selectKindPromptInfoContainerLayout.setVisible(false);
+        singleClassificationSummaryInfoContainerLayout.setVisible(true);
         String classificationName = classificationMetaInfo.getClassificationName();
         String classificationDesc = classificationMetaInfo.getClassificationDesc() != null ?
                 classificationMetaInfo.getClassificationDesc():"未设置描述信息";

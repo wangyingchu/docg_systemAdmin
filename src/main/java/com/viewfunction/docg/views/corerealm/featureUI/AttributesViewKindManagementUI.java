@@ -64,10 +64,10 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
     private SecondaryTitleActionBar secondaryTitleActionBar2;
     private Grid<AttributeKind> attributeKindAttributesInfoGrid;
     private Grid<ConceptionKind> conceptionKindAttributesInfoGrid;
-    private VerticalLayout singleAttributesViewKindSummaryInfoContainerLayout;
     private Registration listener;
     private AttributesViewKindMetaInfo lastSelectedAttributesViewKindMetaInfoGridAttributeKindMetaInfo;
-
+    private VerticalLayout selectKindPromptInfoContainerLayout;
+    private VerticalLayout singleAttributesViewKindSummaryInfoContainerLayout;
     public AttributesViewKindManagementUI(){
         Button refreshDataButton = new Button("刷新属性视图类型数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -77,6 +77,8 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
             loadAttributesViewKindsInfo();
             resetSingleAttributeKindSummaryInfoArea();
+            selectKindPromptInfoContainerLayout.setVisible(true);
+            singleAttributesViewKindSummaryInfoContainerLayout.setVisible(false);
         });
 
         List<Component> buttonList = new ArrayList<>();
@@ -376,6 +378,25 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         attributeKindsInfoContainerLayout.add(singleAttributesViewKindSummaryInfoContainerLayout);
         attributeKindsInfoContainerLayout.setFlexGrow(1, singleAttributesViewKindSummaryInfoContainerLayout);
 
+        selectKindPromptInfoContainerLayout = new VerticalLayout();
+        selectKindPromptInfoContainerLayout.getStyle().set("padding-top", "50px");
+        attributeKindsInfoContainerLayout.add(selectKindPromptInfoContainerLayout);
+
+        HorizontalLayout selectKindInfoMessage = new HorizontalLayout();
+        selectKindInfoMessage.setSpacing(true);
+        selectKindInfoMessage.setPadding(true);
+        selectKindInfoMessage.setMargin(true);
+        selectKindInfoMessage.setWidth(100,Unit.PERCENTAGE);
+        selectKindInfoMessage.setHeight(300,Unit.PIXELS);
+        Icon messageLogo = new Icon(VaadinIcon.MAILBOX);
+        messageLogo.getStyle()
+                .set("color","#2e4e7e").set("padding-right", "5px");
+        messageLogo.setSize("30px");
+        NativeLabel messageLabel = new NativeLabel(" 请从左侧列表选择属性视图类型定义显示详情");
+        messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
+        selectKindInfoMessage.add(messageLogo,messageLabel);
+        selectKindPromptInfoContainerLayout.add(selectKindInfoMessage);
+
         HorizontalLayout singleAttributeKindInfoElementsContainerLayout = new HorizontalLayout();
         singleAttributeKindInfoElementsContainerLayout.setSpacing(false);
         singleAttributeKindInfoElementsContainerLayout.setMargin(false);
@@ -430,7 +451,7 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
         attributeKindAttributesInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
 
         singleAttributesViewKindSummaryInfoContainerLayout.add(attributeKindAttributesInfoGrid);
-
+        singleAttributesViewKindSummaryInfoContainerLayout.setVisible(false);
         add(attributeKindsInfoContainerLayout);
     }
 
@@ -571,6 +592,8 @@ public class AttributesViewKindManagementUI extends VerticalLayout implements
     }
 
     private void renderAttributesViewKindOverview(AttributesViewKindMetaInfo attributesViewKindMetaInfo){
+        selectKindPromptInfoContainerLayout.setVisible(false);
+        singleAttributesViewKindSummaryInfoContainerLayout.setVisible(true);
         String attributesViewKindName = attributesViewKindMetaInfo.getKindName();
         String attributesViewKindDataType = attributesViewKindMetaInfo.getViewKindDataForm();
         String attributesViewKindDesc = attributesViewKindMetaInfo.getKindDesc() != null ?

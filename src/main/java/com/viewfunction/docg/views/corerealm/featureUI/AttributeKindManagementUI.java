@@ -60,13 +60,14 @@ public class AttributeKindManagementUI extends VerticalLayout implements
     private SecondaryTitleActionBar secondaryTitleActionBar;
     private SecondaryTitleActionBar secondaryTitleActionBar2;
     private Grid<AttributesViewKind> attributeKindAttributesInfoGrid;
-    private VerticalLayout singleAttributeKindSummaryInfoContainerLayout;
     private AttributeKindMetaInfo lastSelectedAttributeKindMetaInfoGridAttributeKindMetaInfo;
     final ZoneId id = ZoneId.systemDefault();
     private TextField attributeKindNameFilterField;
     private TextField attributeKindDescFilterField;
     private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
     private AttributeInConceptionKindDistributionInfoChart attributeInConceptionKindDistributionInfoChart;
+    private VerticalLayout selectKindPromptInfoContainerLayout;
+    private VerticalLayout singleAttributeKindSummaryInfoContainerLayout;
     public AttributeKindManagementUI(){
 
         Button refreshDataButton = new Button("刷新属性类型数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -77,6 +78,8 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
             loadAttributeKindsInfo();
             resetSingleAttributeKindSummaryInfoArea();
+            selectKindPromptInfoContainerLayout.setVisible(true);
+            singleAttributeKindSummaryInfoContainerLayout.setVisible(false);
         });
 
         List<Component> buttonList = new ArrayList<>();
@@ -397,6 +400,25 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         attributeKindsInfoContainerLayout.add(singleAttributeKindSummaryInfoContainerLayout);
         attributeKindsInfoContainerLayout.setFlexGrow(1, singleAttributeKindSummaryInfoContainerLayout);
 
+        selectKindPromptInfoContainerLayout = new VerticalLayout();
+        selectKindPromptInfoContainerLayout.getStyle().set("padding-top", "50px");
+        attributeKindsInfoContainerLayout.add(selectKindPromptInfoContainerLayout);
+
+        HorizontalLayout selectKindInfoMessage = new HorizontalLayout();
+        selectKindInfoMessage.setSpacing(true);
+        selectKindInfoMessage.setPadding(true);
+        selectKindInfoMessage.setMargin(true);
+        selectKindInfoMessage.setWidth(100,Unit.PERCENTAGE);
+        selectKindInfoMessage.setHeight(300,Unit.PIXELS);
+        Icon messageLogo = new Icon(VaadinIcon.MAILBOX);
+        messageLogo.getStyle()
+                .set("color","#2e4e7e").set("padding-right", "5px");
+        messageLogo.setSize("30px");
+        NativeLabel messageLabel = new NativeLabel(" 请从左侧列表选择属性类型定义显示详情");
+        messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
+        selectKindInfoMessage.add(messageLogo,messageLabel);
+        selectKindPromptInfoContainerLayout.add(selectKindInfoMessage);
+
         HorizontalLayout singleAttributeKindInfoElementsContainerLayout = new HorizontalLayout();
         singleAttributeKindInfoElementsContainerLayout.setSpacing(false);
         singleAttributeKindInfoElementsContainerLayout.setMargin(false);
@@ -441,6 +463,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements
         attributeInConceptionKindDistributionInfoChart = new AttributeInConceptionKindDistributionInfoChart();
         attributeInConceptionKindDistributionInfoChart.setHeight(300,Unit.PIXELS);
         singleAttributeKindSummaryInfoContainerLayout.add(attributeInConceptionKindDistributionInfoChart);
+        singleAttributeKindSummaryInfoContainerLayout.setVisible(false);
         add(attributeKindsInfoContainerLayout);
     }
 
@@ -613,6 +636,8 @@ public class AttributeKindManagementUI extends VerticalLayout implements
     }
 
     private void renderAttributeKindOverview(AttributeKindMetaInfo attributeKindMetaInfo){
+        selectKindPromptInfoContainerLayout.setVisible(false);
+        singleAttributeKindSummaryInfoContainerLayout.setVisible(true);
         String attributeKindName = attributeKindMetaInfo.getKindName();
         String attributeDataType = attributeKindMetaInfo.getAttributeDataType();
         String attributeKindDesc = attributeKindMetaInfo.getKindDesc() != null ?
