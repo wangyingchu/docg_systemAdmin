@@ -464,8 +464,8 @@ public class RelationKindManagementUI extends VerticalLayout implements
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             relationKindMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
-            chartWidth = event.getWidth()-300;
-            chartHeight = event.getHeight()-300;
+            chartWidth = event.getWidth()-200;
+            chartHeight = event.getHeight()-50;
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -473,8 +473,8 @@ public class RelationKindManagementUI extends VerticalLayout implements
             relationKindMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
             relationKindCorrelationInfoChart = new RelationKindCorrelationInfoChart(browserHeight-520);
             singleRelationKindSummaryInfoContainerLayout.add(relationKindCorrelationInfoChart);
-            chartWidth = receiver.getBodyClientWidth()-300;
-            chartHeight = browserHeight-300;
+            chartWidth = receiver.getBodyClientWidth()-200;
+            chartHeight = browserHeight-50;
         }));
     }
 
