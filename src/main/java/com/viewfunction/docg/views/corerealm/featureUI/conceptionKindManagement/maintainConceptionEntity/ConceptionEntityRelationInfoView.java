@@ -135,7 +135,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         VerticalLayout relationEntitiesListContainerLayout = new VerticalLayout();
         relationEntitiesListContainerLayout.setPadding(false);
 
-        SecondaryIconTitle secondaryIconTitle2 = new SecondaryIconTitle(VaadinIcon.MENU.create(), "关系实体列表");
+        SecondaryIconTitle secondaryIconTitle2 = new SecondaryIconTitle(VaadinIcon.MENU.create(), "关联实体列表");
         relationEntitiesListContainerLayout.add(secondaryIconTitle2);
 
         relationEntitiesGrid = new Grid<>();
