@@ -237,7 +237,7 @@ public class InformationExplorationWidget extends VerticalLayout {
                 queryResultInsightWidget = new QueryResultInsightWidget(dynamicContentQueryResult);
                 queryResultInsightWidget.setHeight(400,Unit.PIXELS);
 
-                queryResultGraphWidget = new QueryResultGraphWidget(dynamicContentQueryResult);
+                queryResultGraphWidget = new QueryResultGraphWidget();
                 queryResultGraphWidget.setHeight(400,Unit.PIXELS);
 
                 doesNotContainsDataInfoMessage = new HorizontalLayout();
@@ -271,7 +271,7 @@ public class InformationExplorationWidget extends VerticalLayout {
                     if("数据".equals(selectedTab)){
 
                     }else if("图谱".equals(selectedTab)){
-                        queryResultGraphWidget.doDrawGraph();
+                        queryResultGraphWidget.doDrawGraph(dynamicContentQueryResult);
                     }else if("解读".equals(selectedTab)){
                         queryResultInsightWidget.doInsight();
                     }

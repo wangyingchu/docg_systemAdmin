@@ -7,20 +7,24 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentQueryResult;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentValue;
+
+import java.util.Collection;
+import java.util.Map;
 
 public class QueryResultGraphWidget extends VerticalLayout {
 
     private DynamicContentQueryResult dynamicContentQueryResult;
     private boolean alreadyInsighted = false;
     private HorizontalLayout doesNotContainsGraphInfoMessage;
+    private ExplorationResultGraphChart explorationResultGraphChart;
 
-    public QueryResultGraphWidget(DynamicContentQueryResult dynamicContentQueryResult){
+    public QueryResultGraphWidget(){
         this.setWidthFull();
         this.setHeightFull();
         this.setMargin(false);
         this.setPadding(false);
         this.setSpacing(false);
-        this.dynamicContentQueryResult = dynamicContentQueryResult;
 
         doesNotContainsGraphInfoMessage = new HorizontalLayout();
         doesNotContainsGraphInfoMessage.setSpacing(true);
@@ -36,13 +40,47 @@ public class QueryResultGraphWidget extends VerticalLayout {
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
         doesNotContainsGraphInfoMessage.add(messageLogo,messageLabel);
         add(doesNotContainsGraphInfoMessage);
+
+        //explorationResultGraphChart = new ExplorationResultGraphChart();
+        //add(explorationResultGraphChart);
+        //explorationResultGraphChart.setVisible(false);
     }
 
 
-    public void doDrawGraph(){
+    public void doDrawGraph(DynamicContentQueryResult dynamicContentQueryResult){
+        this.dynamicContentQueryResult = dynamicContentQueryResult;
         System.out.println("execute do graph");
         if(!alreadyInsighted){
             alreadyInsighted = true;
         }
+        boolean containsGraphInfo = false;
+        if(dynamicContentQueryResult != null){
+            Map<String, DynamicContentValue.ContentValueType> resultContentValueTypeMap = dynamicContentQueryResult.getDynamicContentAttributesValueTypeMap();
+            if(resultContentValueTypeMap != null && !resultContentValueTypeMap.isEmpty()){
+                Collection<DynamicContentValue.ContentValueType> contentValueTypes= resultContentValueTypeMap.values();
+                for(DynamicContentValue.ContentValueType contentValueType:contentValueTypes){
+                    if(DynamicContentValue.ContentValueType.CONCEPTION_ENTITY.equals(contentValueType)||
+                            DynamicContentValue.ContentValueType.RELATION_ENTITY.equals(contentValueType)||
+                            DynamicContentValue.ContentValueType.ENTITIES_PATH.equals(contentValueType)
+                    ){
+                        containsGraphInfo = true;
+                    }
+                }
+            }
+        }
+        /*
+        if(containsGraphInfo){
+            explorationResultGraphChart.setVisible(true);
+            doesNotContainsGraphInfoMessage.setVisible(false);
+        }else{
+            explorationResultGraphChart.setVisible(false);
+            doesNotContainsGraphInfoMessage.setVisible(true);
+        }
+        */
+        System.out.println("---------------------------");
+        System.out.println(containsGraphInfo);
+        System.out.println(containsGraphInfo);
+        System.out.println(containsGraphInfo);
+        System.out.println("---------------------------");
     }
 }
