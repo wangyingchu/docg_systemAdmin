@@ -24,6 +24,7 @@
     "echarts": "5.1.2",
     "lit": "3.3.2",
     "maplibre-gl-style-flipper": "1.0.9",
+    "neo4j-driver": "^6.0.1",
     "proj4": "2.15.0",
     "react": "18.3.1",
     "react-colorful": "5.6.1",
@@ -109,7 +110,7 @@
       "workbox-core": "7.3.0",
       "workbox-precaching": "7.3.0"
     },
-    "hash": "b0ea669b58a028cfd8e1cdae7e3c87419216b797826ec59b9ce8adbee3c96eba"
+    "hash": "51e3be5c0bf85324e21616f4964a2696261ba8fbde8cb61edf0f50d1295832ac"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -208,6 +209,7 @@
     "@vaadin/dashboard": "24.9.9",
     "@vaadin/grid-pro": "24.9.9",
     "@vaadin/map": "24.9.9",
-    "@vaadin/rich-text-editor": "24.9.9"
+    "@vaadin/rich-text-editor": "24.9.9",
+    "neo4j-driver": "$neo4j-driver"
   }
 }

@@ -41,8 +41,8 @@ public class QueryResultGraphWidget extends VerticalLayout {
         doesNotContainsGraphInfoMessage.add(messageLogo,messageLabel);
         add(doesNotContainsGraphInfoMessage);
 
-        //explorationResultGraphChart = new ExplorationResultGraphChart();
-        //add(explorationResultGraphChart);
+        explorationResultGraphChart = new ExplorationResultGraphChart();
+        add(explorationResultGraphChart);
         //explorationResultGraphChart.setVisible(false);
     }
 
