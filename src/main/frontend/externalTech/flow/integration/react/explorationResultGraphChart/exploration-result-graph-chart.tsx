@@ -362,7 +362,7 @@ class ExplorationResultGraphChartElement extends ReactAdapterElement {
         )
 
         return (
-            <div style={{ width: '100vw', height: '100vh', margin: 0, position: 'relative' }}>
+            <div style={{ width: '50vw', height: '50vh', margin: 0, position: 'relative' }}>
                 {loading && <div>Loading Neo4j data...</div>}
                 {error && <div style={{ color: 'red' }}>{error}</div>}
                 <div

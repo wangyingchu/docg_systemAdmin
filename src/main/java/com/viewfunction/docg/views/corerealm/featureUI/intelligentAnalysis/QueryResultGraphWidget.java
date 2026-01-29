@@ -43,7 +43,7 @@ public class QueryResultGraphWidget extends VerticalLayout {
 
         explorationResultGraphChart = new ExplorationResultGraphChart();
         add(explorationResultGraphChart);
-        //explorationResultGraphChart.setVisible(false);
+        explorationResultGraphChart.setVisible(false);
     }
 
 
@@ -68,7 +68,7 @@ public class QueryResultGraphWidget extends VerticalLayout {
                 }
             }
         }
-        /*
+
         if(containsGraphInfo){
             explorationResultGraphChart.setVisible(true);
             doesNotContainsGraphInfoMessage.setVisible(false);
@@ -76,7 +76,7 @@ public class QueryResultGraphWidget extends VerticalLayout {
             explorationResultGraphChart.setVisible(false);
             doesNotContainsGraphInfoMessage.setVisible(true);
         }
-        */
+
         System.out.println("---------------------------");
         System.out.println(containsGraphInfo);
         System.out.println(containsGraphInfo);
