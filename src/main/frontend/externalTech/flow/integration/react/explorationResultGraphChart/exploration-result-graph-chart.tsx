@@ -5,6 +5,9 @@ import {ReactAdapterElement, RenderHooks} from "Frontend/generated/flow/ReactAda
 
 class ExplorationResultGraphChartElement extends ReactAdapterElement {
     protected override render(hooks: RenderHooks): ReactElement | null {
+        const [chartWidth, setWidth] = hooks.useState<number>("chartWidth");
+        const [chartHeight, setHeight] = hooks.useState<number>("chartHeight");
+        const [chartData, setChartData] = hooks.useState<any>("chartData");
         type NvlNode = {
             id: string
             labels?: string[]
@@ -360,9 +363,10 @@ class ExplorationResultGraphChartElement extends ReactAdapterElement {
             },
             [expandFromNeo4j, fallbackExpand, neo4jAvailable]
         )
-
+        const chartRealWidth =''+chartWidth+'px';
+        const chartRealHeight =''+chartHeight+'px';
         return (
-            <div style={{ width: '50vw', height: '50vh', margin: 0, position: 'relative' }}>
+            <div style={{ width:chartRealWidth, height: chartRealHeight, margin: 0, position: 'relative' }}>
                 {loading && <div>Loading Neo4j data...</div>}
                 {error && <div style={{ color: 'red' }}>{error}</div>}
                 <div

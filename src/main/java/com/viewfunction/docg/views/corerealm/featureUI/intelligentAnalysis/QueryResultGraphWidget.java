@@ -6,6 +6,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.dom.Element;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentQueryResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentValue;
 
@@ -48,8 +49,15 @@ public class QueryResultGraphWidget extends VerticalLayout {
 
 
     public void doDrawGraph(DynamicContentQueryResult dynamicContentQueryResult){
+        Element element = this.getElement();
+        // 使用 executeJs 获取 offsetWidth
+        element.executeJs(
+                "return this.offsetWidth;"
+        ).then(Integer.class, width -> {
+            // 这里的回调会在浏览器返回结果后执行
+            explorationResultGraphChart.setChartWidth(width+20);
+        });
         this.dynamicContentQueryResult = dynamicContentQueryResult;
-        System.out.println("execute do graph");
         if(!alreadyInsighted){
             alreadyInsighted = true;
         }
@@ -76,11 +84,9 @@ public class QueryResultGraphWidget extends VerticalLayout {
             explorationResultGraphChart.setVisible(false);
             doesNotContainsGraphInfoMessage.setVisible(true);
         }
+    }
 
-        System.out.println("---------------------------");
-        System.out.println(containsGraphInfo);
-        System.out.println(containsGraphInfo);
-        System.out.println(containsGraphInfo);
-        System.out.println("---------------------------");
+    public void setGraphChartHeight(int height){
+        this.explorationResultGraphChart.setChartHeight(height);
     }
 }

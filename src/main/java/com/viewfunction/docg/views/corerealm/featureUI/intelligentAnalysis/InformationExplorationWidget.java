@@ -239,6 +239,7 @@ public class InformationExplorationWidget extends VerticalLayout {
 
                 queryResultGraphWidget = new QueryResultGraphWidget();
                 queryResultGraphWidget.setHeight(400,Unit.PIXELS);
+                queryResultGraphWidget.setGraphChartHeight(400);
 
                 doesNotContainsDataInfoMessage = new HorizontalLayout();
                 doesNotContainsDataInfoMessage.setSpacing(true);
