@@ -1381,7 +1381,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             }else if(currentContinentValue != null) {
                 geospatialScaleEntityList = geospatialRegion.listCountryRegionEntities(currentGeospatialProperty, currentContinentValue, null);
             } else{
-
+                geospatialScaleEntityList = geospatialRegion.listContinentEntities();
             }
         } catch (CoreRealmServiceRuntimeException e) {
                 throw new RuntimeException(e);
