@@ -7,14 +7,17 @@ import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 
-import elemental.json.Json;
-import elemental.json.JsonArray;
-import elemental.json.JsonObject;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
 import java.util.List;
 @JavaScript("./visualization/feature/attributesCorrelationInfoSummaryChart-connector.js")
 public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
+
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public AttributesCorrelationInfoSummaryChart(){
         //https://www.amcharts.com/demos/rectangular-voronoi-tree-map/
@@ -46,8 +49,8 @@ public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
         private List<VoronoiTreemapEntity> children;
 
         @Override
-        public JsonObject toJson() {
-            JsonObject obj = Json.createObject();
+        public ObjectNode toJson() {
+            ObjectNode obj = mapper.createObjectNode();
             if (getName() != null) {
                 obj.put("name", getName());
             }
@@ -58,19 +61,19 @@ public class AttributesCorrelationInfoSummaryChart extends VerticalLayout {
                 obj.put("population", getPopulation());
             }
             if(getChildren() != null && getChildren().size()>0){
-                JsonArray childrenArray = Json.createArray();
+                ArrayNode childrenArray = mapper.createArrayNode();
                 for(int i=0; i< getChildren().size();i++ ){
                     VoronoiTreemapEntity currentVoronoiTreemapNodeData = getChildren().get(i);
-                    JsonObject childJsonObject = currentVoronoiTreemapNodeData.toJson();
-                    childrenArray.set(i, childJsonObject);
+                    ObjectNode childJsonObject = currentVoronoiTreemapNodeData.toJson();
+                    childrenArray.insert(i, childJsonObject);
                 }
-                obj.put("children", childrenArray);
+                obj.set("children", childrenArray);
             }
             return obj;
         }
 
         @Override
-        public JsonSerializable readJson(JsonObject jsonObject) {
+        public JsonSerializable readJson(JsonNode jsonNode) {
             return null;
         }
 

@@ -26,6 +26,7 @@ class DataRelationDistributionChartElement extends ReactAdapterElement {
 
         const widthValueStr=''+chartWidth+'px';
         const heightValueStr=''+chartHeight+'px';
+        // @ts-ignore
         const fgRef = useRef();
 
         useEffect(() => {});

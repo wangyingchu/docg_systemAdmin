@@ -6,11 +6,13 @@ import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.function.SerializableConsumer;
-import elemental.json.Json;
-import elemental.json.JsonArray;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
 
 @JavaScript("./visualization/common/cartesianHeatmapChart_echarts-connector.js")
 public class CartesianHeatmapChart extends Div {
+
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public CartesianHeatmapChart(int chartWidth,int chartHeight){
         UI.getCurrent().getPage().addJavaScript("js/echarts/5.4.1/dist/echarts.min.js");
@@ -22,24 +24,24 @@ public class CartesianHeatmapChart extends Div {
     }
 
     public void setXAxisLabel(String[] xAxisLabel){
-        JsonArray dataArray = Json.createArray();
+        ArrayNode dataArray = mapper.createArrayNode();
         for(int i = 0; i < xAxisLabel.length; i++){
             String currentLabel = xAxisLabel[i];
-            dataArray.set(i,currentLabel);
+            dataArray.insert(i,currentLabel);
         }
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setXAxisLabel", dataArray));
     }
 
     public void setYAxisLabel(String[] yAxisLabel){
-        JsonArray dataArray = Json.createArray();
+        ArrayNode dataArray = mapper.createArrayNode();
         for(int i = 0; i < yAxisLabel.length; i++){
             String currentLabel = yAxisLabel[i];
-            dataArray.set(i,currentLabel);
+            dataArray.insert(i,currentLabel);
         }
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setYAxisLabel", dataArray));
     }
 
-    public  void setData(JsonArray dataArray){
+    public  void setData(ArrayNode dataArray){
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", dataArray));
     }
 
@@ -80,9 +82,9 @@ public class CartesianHeatmapChart extends Div {
     }
 
     public void setColorRange(String startColor,String endColor){
-        JsonArray dataArray = Json.createArray();
-        dataArray.set(0,startColor);
-        dataArray.set(1,endColor);
+        ArrayNode dataArray = mapper.createArrayNode();
+        dataArray.insert(0,startColor);
+        dataArray.insert(1,endColor);
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setColorRange", dataArray));
     }
 

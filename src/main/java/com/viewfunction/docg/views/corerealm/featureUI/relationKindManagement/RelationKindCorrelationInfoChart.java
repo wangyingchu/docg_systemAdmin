@@ -7,14 +7,17 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
-import elemental.json.Json;
-import elemental.json.JsonArray;
-import elemental.json.JsonObject;
+
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.util.*;
 
 @JavaScript("./visualization/feature/relationKindCorrelationInfoChart-connector.js")
 public class RelationKindCorrelationInfoChart extends VerticalLayout {
+
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public RelationKindCorrelationInfoChart(int chartHeight){
         UI.getCurrent().getPage().addJavaScript("js/echarts/5.4.1/dist/echarts.min.js");
@@ -44,9 +47,9 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
 
     public void setData(Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet){
         if(conceptionKindCorrelationInfoSet != null && conceptionKindCorrelationInfoSet.size() > 0){
-            JsonObject obj = Json.createObject();
-            JsonArray linkDataArray = Json.createArray();
-            JsonArray dataDataArray = Json.createArray();
+            ObjectNode obj = mapper.createObjectNode();
+            ArrayNode linkDataArray = mapper.createArrayNode();
+            ArrayNode dataDataArray = mapper.createArrayNode();
             int idx_link = 0;
             int idx_data = 0;
             List<String> conceptionKindList = new ArrayList<>();
@@ -88,9 +91,9 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
                     )
                     {
                         if(!conceptionKindList.contains(sourceKindName)){
-                            JsonObject jsonObject = Json.createObject();
+                            ObjectNode jsonObject = mapper.createObjectNode();
                             jsonObject.put("name",sourceKindName);
-                            dataDataArray.set(idx_data, jsonObject);
+                            dataDataArray.insert(idx_data, jsonObject);
                             idx_data ++;
                             conceptionKindList.add(sourceKindName);
                             sourceConceptionKindList.add(sourceKindName);
@@ -113,9 +116,9 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
                         if(target_SourceKindNameMappingList.contains(targetKindName+"<-"+sourceKindName)){
                             String targetConceptionKindRealName = sourceConceptionKindList.contains(targetKindName) ? targetKindName+"(1)":targetKindName;
                             if(!conceptionKindList.contains(targetConceptionKindRealName)){
-                                JsonObject jsonObject = Json.createObject();
+                                ObjectNode jsonObject = mapper.createObjectNode();
                                 jsonObject.put("name",targetConceptionKindRealName);
-                                dataDataArray.set(idx_data, jsonObject);
+                                dataDataArray.insert(idx_data, jsonObject);
                                 idx_data ++;
                                 conceptionKindList.add(targetConceptionKindRealName);
                             }
@@ -144,7 +147,7 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
                 {
                     long relationCount = currentConceptionKindCorrelationInfo.getRelationEntityCount();
                     String targetConceptionKindRealName = sourceConceptionKindList.contains(targetKindName) ? targetKindName+"(1)":targetKindName;
-                    JsonObject linkJsonObject = Json.createObject();
+                    ObjectNode linkJsonObject = mapper.createObjectNode();
                     linkJsonObject.put("source",sourceKindName);
                     if(sourceKindName.equals(targetKindName)){
                         linkJsonObject.put("target",sourceKindName+"(1)");
@@ -152,12 +155,12 @@ public class RelationKindCorrelationInfoChart extends VerticalLayout {
                         linkJsonObject.put("target",targetConceptionKindRealName);
                     }
                     linkJsonObject.put("value",relationCount);
-                    linkDataArray.set(idx_link, linkJsonObject);
+                    linkDataArray.insert(idx_link, linkJsonObject);
                     idx_link++;
                 }
             }
-            obj.put("links", linkDataArray);
-            obj.put("data", dataDataArray);
+            obj.set("links", linkDataArray);
+            obj.set("data", dataDataArray);
             runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setData", obj));
         }else{
             clearData();

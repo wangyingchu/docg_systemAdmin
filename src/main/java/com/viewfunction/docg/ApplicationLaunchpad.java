@@ -23,7 +23,7 @@ import org.vaadin.artur.helpers.LaunchUtil;
 @PWA(name = "DOCG Platform System Administrator Console", shortName = "DOCG-SAC")
 @Theme("docg-pac")
 @Push
-public class ApplicationLaunchpad implements AppShellConfigurator , VaadinServiceInitListener {
+public class ApplicationLaunchpad implements AppShellConfigurator, VaadinServiceInitListener {
 
     public static void main(String[] args) {
         LaunchUtil.launchBrowserInDevelopmentMode(SpringApplication.run(ApplicationLaunchpad.class, args));

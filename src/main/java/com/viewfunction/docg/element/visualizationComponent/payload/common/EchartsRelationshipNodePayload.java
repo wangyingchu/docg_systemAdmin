@@ -1,8 +1,9 @@
 package com.viewfunction.docg.element.visualizationComponent.payload.common;
 
 import com.vaadin.flow.component.JsonSerializable;
-import elemental.json.Json;
-import elemental.json.JsonObject;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ public class EchartsRelationshipNodePayload implements JsonSerializable {
     private String category;
     private String id;
     private HashMap<String, Object> data = new HashMap();
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public EchartsRelationshipNodePayload(){}
 
@@ -85,8 +87,8 @@ public class EchartsRelationshipNodePayload implements JsonSerializable {
     }
 
     @Override
-    public JsonObject toJson() {
-        JsonObject obj = Json.createObject();
+    public ObjectNode toJson() {
+        ObjectNode obj = mapper.createObjectNode();
         if (getName() != null) {
             obj.put("name", getName());
         }
@@ -101,7 +103,7 @@ public class EchartsRelationshipNodePayload implements JsonSerializable {
         }
         obj.put("weight", getWeight());
 
-        JsonObject dataObject = Json.createObject();
+        ObjectNode dataObject = mapper.createObjectNode();
         if(getData().size() >0) {
             for(Map.Entry<String,Object> entry:getData().entrySet()){
                 String propKey = entry.getKey();
@@ -122,12 +124,12 @@ public class EchartsRelationshipNodePayload implements JsonSerializable {
                 }
             }
         }
-        obj.put("data",dataObject);
-        return obj;
+        obj.set("data",dataObject);
+        return (ObjectNode) obj;
     }
 
     @Override
-    public JsonSerializable readJson(JsonObject jsonObject) {
+    public JsonSerializable readJson(JsonNode jsonNode) {
         return null;
     }
 }

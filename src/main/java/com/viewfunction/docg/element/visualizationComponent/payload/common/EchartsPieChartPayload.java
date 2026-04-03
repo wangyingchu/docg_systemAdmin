@@ -1,14 +1,15 @@
 package com.viewfunction.docg.element.visualizationComponent.payload.common;
 
 import com.vaadin.flow.component.JsonSerializable;
-import elemental.json.Json;
-import elemental.json.JsonObject;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 
 public class EchartsPieChartPayload implements JsonSerializable {
 
     private String name;
-
     private Double value;
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public EchartsPieChartPayload(){}
 
@@ -18,19 +19,19 @@ public class EchartsPieChartPayload implements JsonSerializable {
     }
 
     @Override
-    public JsonObject toJson() {
-        JsonObject obj = Json.createObject();
+    public ObjectNode toJson() {
+        ObjectNode objectNode = mapper.createObjectNode();
         if (getName() != null) {
-            obj.put("name", getName());
+            objectNode.put("name", getName());
         }
         if (getValue() != null) {
-            obj.put("value", getValue());
+            objectNode.put("value", getValue());
         }
-        return obj;
+        return objectNode;
     }
 
     @Override
-    public JsonSerializable readJson(JsonObject jsonObject) {
+    public JsonSerializable readJson(JsonNode jsonNode) {
         return null;
     }
 

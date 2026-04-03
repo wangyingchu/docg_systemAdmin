@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.github.wolfie.blackboard.Blackboard;
+
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -24,9 +25,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.component.avatar.Avatar;
+
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.*;
 import com.viewfunction.docg.util.ResourceHolder;
@@ -41,10 +46,33 @@ import com.vaadin.flow.component.avatar.Avatar;
 /**
  * The main view is a top-level placeholder for other views.
  */
-public class MainLayout extends AppLayout {
+public class MainLayout extends AppLayout implements AfterNavigationObserver {
     private final String SESSION_MAX_INACTIVE_INTERVAL_IN_SECOND =
             SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.SESSION_MAX_INACTIVE_INTERVAL_IN_SECOND);
     private final String ENABLE_USER_LOCK_APPLICATION = SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ENABLE_USER_LOCK_APPLICATION);
+
+    @Override
+    public void afterNavigation(AfterNavigationEvent afterNavigationEvent) {
+        getTabForComponent(getContent()).ifPresent(menu::setSelectedTab);
+        viewTitle.removeAll();
+        String currentPageTitle = getCurrentPageTitle();
+        if(currentPageTitle.equals("数海云图 - 核心领域模型 [ Core Realm ]")){
+            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.CONNECTDEVELOP.create(),"核心领域模型 [ Core Realm ]"));
+        }
+        if(currentPageTitle.equals("数海云图 - 计算网格 [ Compute Grid ]")){
+            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.NETWORK_WIRED_SOLID.create(),"计算网格 [ Compute Grid ]"));
+        }
+        if(currentPageTitle.equals("数海云图 - 数据分析 [ Data Analysis ]")){
+            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.FLASK_SOLID.create(),"数据分析 [ Data Analysis ]"));
+        }
+        if(currentPageTitle.equals("数海云图 - 数据编织 [ Data Fabric ]")){
+            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.COMPRESS_ARROWS_ALT_SOLID.create(),"数据编织 [ Data Fabric ]"));
+        }
+        if(currentPageTitle.equals("数海云图 - 关于 [ About ]")){
+            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.FINGERPRINT_SOLID.create(),"关于 [ About ]"));
+        }
+    }
+
 
     public static class MenuItemInfo {
 
@@ -82,7 +110,7 @@ public class MainLayout extends AppLayout {
 
         if(SESSION_MAX_INACTIVE_INTERVAL_IN_SECOND != null){
             int maxInactiveInterval = Integer.parseInt(SESSION_MAX_INACTIVE_INTERVAL_IN_SECOND);
-            //be default session MaxInactiveInterval is 1800s = 30min
+            //by default session MaxInactiveInterval is 1800s = 30min
             VaadinSession.getCurrent().getSession().setMaxInactiveInterval(maxInactiveInterval);
         }
     }
@@ -201,29 +229,6 @@ public class MainLayout extends AppLayout {
         tab.add(link);
         ComponentUtil.setData(tab, Class.class, menuItemInfo.getView());
         return tab;
-    }
-
-    @Override
-    protected void afterNavigation() {
-        super.afterNavigation();
-        getTabForComponent(getContent()).ifPresent(menu::setSelectedTab);
-        viewTitle.removeAll();
-        String currentPageTitle = getCurrentPageTitle();
-        if(currentPageTitle.equals("数海云图 - 核心领域模型 [ Core Realm ]")){
-            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.CONNECTDEVELOP.create(),"核心领域模型 [ Core Realm ]"));
-        }
-        if(currentPageTitle.equals("数海云图 - 计算网格 [ Compute Grid ]")){
-            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.NETWORK_WIRED_SOLID.create(),"计算网格 [ Compute Grid ]"));
-        }
-        if(currentPageTitle.equals("数海云图 - 数据分析 [ Data Analysis ]")){
-            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.FLASK_SOLID.create(),"数据分析 [ Data Analysis ]"));
-        }
-        if(currentPageTitle.equals("数海云图 - 数据编织 [ Data Fabric ]")){
-            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.COMPRESS_ARROWS_ALT_SOLID.create(),"数据编织 [ Data Fabric ]"));
-        }
-        if(currentPageTitle.equals("数海云图 - 关于 [ About ]")){
-            viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.FINGERPRINT_SOLID.create(),"关于 [ About ]"));
-        }
     }
 
     private HorizontalLayout getTitleViewComponent(Icon viewIcon,String viewName){

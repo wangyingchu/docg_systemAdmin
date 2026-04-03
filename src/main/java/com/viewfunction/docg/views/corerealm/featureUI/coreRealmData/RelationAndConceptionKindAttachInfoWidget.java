@@ -25,8 +25,8 @@ import com.viewfunction.docg.element.commonComponent.LightGridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryTitleActionBar;
 import com.viewfunction.docg.element.commonComponent.chart.CartesianHeatmapChart;
 
-import elemental.json.Json;
-import elemental.json.JsonArray;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
 
 import java.text.NumberFormat;
 import java.util.*;
@@ -36,7 +36,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
     private Grid<RuntimeRelationAndConceptionKindAttachInfo> runtimeRelationAndConceptionKindAttachInfoGrid;
     private int chartWidth = 1850;
     private int chartHeight = 800;
-
+    private static final ObjectMapper mapper = new ObjectMapper();
     public RelationAndConceptionKindAttachInfoWidget(){
         List<Component> actionComponentsList = new ArrayList<>();
         Button outDegreeInfoButton = new Button("出度统计",new Icon(VaadinIcon.EXPAND_SQUARE));
@@ -168,7 +168,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         Map<String,Integer> relationKindIndexMap = new HashMap<>();
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        JsonArray inDegreeDataArray = Json.createArray();
+        ArrayNode inDegreeDataArray = mapper.createArrayNode();
         List<Long> totalCountList = new ArrayList<>();
 
         long inDegreeMaxRelationCount = 0;
@@ -202,15 +202,15 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
                 long relationEntityCount = currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount();
 
                 if(conceptionKindIndexMap.get(conceptionKindName) != null && relationKindIndexMap.get(relationKindName) != null){
-                    JsonArray dataArray = Json.createArray();
-                    dataArray.set(0,relationKindIndexMap.get(relationKindName));
-                    dataArray.set(1,conceptionKindIndexMap.get(conceptionKindName));
-                    dataArray.set(2,relationEntityCount);
+                    ArrayNode dataArray = mapper.createArrayNode();
+                    dataArray.insert(0,relationKindIndexMap.get(relationKindName));
+                    dataArray.insert(1,conceptionKindIndexMap.get(conceptionKindName));
+                    dataArray.insert(2,relationEntityCount);
                     totalCountList.add(relationEntityCount);
 
                     switch (relationDirection){
                         case TO -> {
-                            inDegreeDataArray.set(inDegreeDataArrayIdx,dataArray);
+                            inDegreeDataArray.insert(inDegreeDataArrayIdx,dataArray);
                             inDegreeDataArrayIdx++;
                             if(relationEntityCount > inDegreeMaxRelationCount){
                                 inDegreeMaxRelationCount = relationEntityCount;
@@ -258,7 +258,7 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
         Map<String,Integer> relationKindIndexMap = new HashMap<>();
 
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        JsonArray outDegreeDataArray = Json.createArray();
+        ArrayNode outDegreeDataArray = mapper.createArrayNode();
         List<Long> totalCountList = new ArrayList<>();
 
         long outDegreeMaxRelationCount = 0;
@@ -292,14 +292,14 @@ public class RelationAndConceptionKindAttachInfoWidget extends VerticalLayout {
                 long relationEntityCount = currentRuntimeRelationAndConceptionKindAttachInfo.getRelationEntityCount();
 
                 if(conceptionKindIndexMap.get(conceptionKindName) != null && relationKindIndexMap.get(relationKindName) != null){
-                    JsonArray dataArray = Json.createArray();
-                    dataArray.set(0,relationKindIndexMap.get(relationKindName));
-                    dataArray.set(1,conceptionKindIndexMap.get(conceptionKindName));
-                    dataArray.set(2,relationEntityCount);
+                    ArrayNode dataArray = mapper.createArrayNode();
+                    dataArray.insert(0,relationKindIndexMap.get(relationKindName));
+                    dataArray.insert(1,conceptionKindIndexMap.get(conceptionKindName));
+                    dataArray.insert(2,relationEntityCount);
                     totalCountList.add(relationEntityCount);
                     switch (relationDirection){
                         case FROM -> {
-                            outDegreeDataArray.set(outDegreeDataArrayIdx,dataArray);
+                            outDegreeDataArray.insert(outDegreeDataArrayIdx,dataArray);
                             outDegreeDataArrayIdx++;
                             if(relationEntityCount > outDegreeMaxRelationCount){
                                 outDegreeMaxRelationCount = relationEntityCount;

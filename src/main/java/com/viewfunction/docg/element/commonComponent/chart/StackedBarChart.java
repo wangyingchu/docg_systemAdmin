@@ -7,12 +7,12 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.EchartsBarChartPayload;
-import elemental.json.Json;
-import elemental.json.JsonArray;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
 
 @JavaScript("./visualization/common/stackedBarChart_echarts-connector.js")
 public class StackedBarChart extends Div {
-
+    private static final ObjectMapper mapper = new ObjectMapper();
     public StackedBarChart(int windowWidth, int windowHeight){
         UI.getCurrent().getPage().addJavaScript("js/echarts/5.4.1/dist/echarts.min.js");
         UI.getCurrent().getPage().addJavaScript("js/echarts/5.4.1/dist/extension/dataTool.min.js");
@@ -33,10 +33,10 @@ public class StackedBarChart extends Div {
     }
 
     public void setColor(String[] colorArray){
-        JsonArray dataArray = Json.createArray();
+        ArrayNode dataArray = mapper.createArrayNode();
         for(int i = 0; i < colorArray.length; i++){
             String currentColor = colorArray[i];
-            dataArray.set(i,currentColor);
+            dataArray.insert(i,currentColor);
         }
         runBeforeClientResponse(ui -> getElement().callJsFunction("$connector.setColor", dataArray));
     }

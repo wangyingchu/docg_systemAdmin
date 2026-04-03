@@ -1,14 +1,16 @@
 package com.viewfunction.docg.element.visualizationComponent.payload.common;
 
 import com.vaadin.flow.component.JsonSerializable;
-import elemental.json.Json;
-import elemental.json.JsonArray;
-import elemental.json.JsonObject;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 public class EchartsBarChartPayload implements JsonSerializable {
 
     private String[] category;
     private Double[] value;
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public EchartsBarChartPayload(){}
 
@@ -18,27 +20,27 @@ public class EchartsBarChartPayload implements JsonSerializable {
     }
 
     @Override
-    public JsonObject toJson() {
-        JsonObject obj = Json.createObject();
+    public ObjectNode toJson() {
+        ObjectNode obj = mapper.createObjectNode();
         if (getCategory() != null) {
-            JsonArray categoryArray = Json.createArray();
-            obj.put("category", categoryArray);
+            ArrayNode categoryArray = mapper.createArrayNode();
+            obj.set("category", categoryArray);
             for(int i = 0; i < getCategory().length; i++) {
-                categoryArray.set(i,getCategory()[i]);
+                categoryArray.insert(i,getCategory()[i]);
             }
         }
         if (getValue() != null) {
-            JsonArray valueArray = Json.createArray();
-            obj.put("value", valueArray);
+            ArrayNode valueArray = mapper.createArrayNode();
+            obj.set("value", valueArray);
             for(int i = 0; i < getValue().length; i++) {
-                valueArray.set(i,getValue()[i]);
+                valueArray.insert(i,getValue()[i]);
             }
         }
         return obj;
     }
 
     @Override
-    public JsonSerializable readJson(JsonObject jsonObject) {
+    public JsonSerializable readJson(JsonNode jsonNode) {
         return null;
     }
 

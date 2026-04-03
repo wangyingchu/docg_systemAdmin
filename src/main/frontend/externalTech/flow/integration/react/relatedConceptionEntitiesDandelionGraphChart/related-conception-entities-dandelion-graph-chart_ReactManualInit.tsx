@@ -17,7 +17,7 @@ window.relatedConceptionEntitiesDandelionGraphChartConnectorInit = (element, wid
         // @ts-ignore
         //const [chartData, setChartData] = useState<any>({nodes:[],links:[]});
         const [chartData, setChartData] = useState<any>(JSON.parse(chartInitData));
-
+        // @ts-ignore
         const fgRef = useRef();
 
         useEffect(() => {
@@ -64,6 +64,7 @@ window.relatedConceptionEntitiesDandelionGraphChartConnectorInit = (element, wid
             graphData = {chartData}
             width = {chartWidth}
             height = {chartHeight}
+            // @ts-ignore
             ref={fgRef}
             backgroundColor={'#FFFFFF'}
             nodeRelSize={6}

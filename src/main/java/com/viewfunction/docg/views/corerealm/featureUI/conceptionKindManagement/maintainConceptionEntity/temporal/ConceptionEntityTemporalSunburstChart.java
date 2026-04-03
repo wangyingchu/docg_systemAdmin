@@ -12,9 +12,11 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.TimeScaleDataPai
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeFlow;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.TimeScaleEvent;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
-import elemental.json.Json;
-import elemental.json.JsonArray;
-import elemental.json.JsonObject;
+
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,6 +29,8 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
     private String conceptionKindName;
     private String conceptionEntityUID;
     private List<TimeScaleDataPair> timeScaleDataPairList;
+
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public ConceptionEntityTemporalSunburstChart(){
         this.setWidth(400,Unit.PIXELS);
@@ -87,8 +91,8 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
         }
 
         @Override
-        public JsonObject toJson() {
-            JsonObject obj = Json.createObject();
+        public ObjectNode toJson() {
+            ObjectNode obj = mapper.createObjectNode();
             if (getName() != null) {
                 obj.put("name", getName());
             }
@@ -99,19 +103,19 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
                 obj.put("value", getValue());
             }
             if(getChildren() != null && getChildren().size()>0){
-                JsonArray childrenArray = Json.createArray();
+                ArrayNode childrenArray = mapper.createArrayNode();
                 for(int i=0; i< getChildren().size();i++ ){
                     TemporalDataEntity currentSunburstNodeData = getChildren().get(i);
-                    JsonObject childJsonObject = currentSunburstNodeData.toJson();
-                    childrenArray.set(i, childJsonObject);
+                    ObjectNode childJsonObject = currentSunburstNodeData.toJson();
+                    childrenArray.insert(i, childJsonObject);
                 }
-                obj.put("children", childrenArray);
+                obj.set("children", childrenArray);
             }
-            return obj;
+            return (ObjectNode) obj;
         }
 
         @Override
-        public JsonSerializable readJson(JsonObject jsonObject) {
+        public JsonSerializable readJson(JsonNode jsonNode) {
             return null;
         }
 
@@ -151,8 +155,8 @@ public class ConceptionEntityTemporalSunburstChart extends VerticalLayout {
     private void renderSunburstEntities(TemporalDataEntity temporalDataEntity){
         runBeforeClientResponse(ui -> {
             try {
-                JsonArray array = Json.createArray();
-                array.set(0,temporalDataEntity.toJson());
+                ArrayNode array = mapper.createArrayNode();
+                array.insert(0,temporalDataEntity.toJson());
                 getElement().callJsFunction("$connector.renderSunburstEntities", array);
             } catch (Exception e) {
                 throw new RuntimeException(e);
