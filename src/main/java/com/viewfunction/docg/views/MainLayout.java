@@ -41,7 +41,6 @@ import com.viewfunction.docg.views.computegrid.ComputeGridView;
 import com.viewfunction.docg.views.dataAnalysis.DataAnalysisView;
 import com.viewfunction.docg.views.dataFabric.DataFabricView;
 import com.viewfunction.docg.views.about.AboutView;
-import com.vaadin.flow.component.avatar.Avatar;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -127,6 +126,7 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         layout.add(drawerToggle);
         viewTitle = new HorizontalLayout();
         layout.add(viewTitle);
+        layout.setFlexGrow(1,viewTitle);
 
         Avatar avatar = new Avatar("系统用户");
         avatar.setAbbreviation("USR");
@@ -163,6 +163,8 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         }
 
         layout.add(menuBar);
+
+
 
         return layout;
     }

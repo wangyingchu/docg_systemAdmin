@@ -174,7 +174,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         leftSideContainerLayout.setMargin(false);
 
         mainContainerLayout.add(leftSideContainerLayout);
-        leftSideContainerLayout.setWidth(410, Unit.PIXELS);
+        leftSideContainerLayout.setWidth(450, Unit.PIXELS);
         leftSideContainerLayout.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
 
         VerticalLayout geospatialRegionInformationLayout = new VerticalLayout();
@@ -449,7 +449,10 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         leftSideSectionContainerScrollLayout.add(continentValueContainer);
         NativeLabel continentFilterText = new NativeLabel("洲际 :");
         continentFilterText.setWidth(50,Unit.PIXELS);
-        continentFilterText.addClassNames("text-xs","font-semibold","text-secondary");
+        //continentFilterText.addClassNames("text-xs","font-semibold","text-secondary");
+        continentFilterText.getStyle().set("font-size","0.7rem");
+        //continentFilterText.getStyle().set("font-size","0.7rem").set("color","var(--lumo-contrast-80pct)");
+
         continentValueContainer.add(continentFilterText);
         continentValueContainer.setVerticalComponentAlignment(Alignment.CENTER,continentFilterText);
         Button listContinentEntitiesButton = new Button();
