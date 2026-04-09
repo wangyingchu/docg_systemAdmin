@@ -15,7 +15,10 @@ public class SecondaryIconTitle extends HorizontalLayout {
             add(titleIcon);
         }
         NativeLabel titleTextLabel = new NativeLabel(titleText+":");
-        titleTextLabel.addClassNames("text-xs","font-semibold","text-secondary");
+
+        //titleTextLabel.addClassNames("text-xs","font-semibold","text-secondary");
+
+        titleTextLabel.getStyle().set("font-size","0.75rem").set("font-weight", "700");
         add(titleTextLabel);
     }
 
