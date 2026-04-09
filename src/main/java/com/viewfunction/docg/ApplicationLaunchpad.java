@@ -1,5 +1,6 @@
 package com.viewfunction.docg;
 
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.LoadingIndicatorConfiguration;
 import com.vaadin.flow.component.page.Push;
@@ -8,6 +9,7 @@ import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 import com.vaadin.flow.theme.Theme;
 
+import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.vaadin.artur.helpers.LaunchUtil;
@@ -22,6 +24,8 @@ import org.vaadin.artur.helpers.LaunchUtil;
 @SpringBootApplication
 @PWA(name = "DOCG Platform System Administrator Console", shortName = "DOCG-SAC")
 @Theme("docg-pac")
+@StyleSheet(Lumo.STYLESHEET)
+@StyleSheet(Lumo.UTILITY_STYLESHEET)
 @Push
 public class ApplicationLaunchpad implements AppShellConfigurator, VaadinServiceInitListener {
 
