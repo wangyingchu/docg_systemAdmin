@@ -449,8 +449,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         leftSideSectionContainerScrollLayout.add(continentValueContainer);
         NativeLabel continentFilterText = new NativeLabel("洲际 :");
         continentFilterText.setWidth(50,Unit.PIXELS);
-        continentFilterText.getStyle().set("font-size","0.8rem").set("font-weight", "600");
-
+        continentFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         continentValueContainer.add(continentFilterText);
         continentValueContainer.setVerticalComponentAlignment(Alignment.CENTER,continentFilterText);
         Button listContinentEntitiesButton = new Button();
@@ -540,7 +539,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         leftSideSectionContainerScrollLayout.add(countryRegionValueContainer);
         NativeLabel countryRegionFilterText = new NativeLabel("国家地区 :");
         countryRegionFilterText.setWidth(50,Unit.PIXELS);
-        countryRegionFilterText.getStyle().set("font-size","0.75rem").set("font-weight", "600");
+        countryRegionFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         countryRegionValueContainer.add(countryRegionFilterText);
         countryRegionValueContainer.setVerticalComponentAlignment(Alignment.CENTER,countryRegionFilterText);
         Button listCountryRegionEntitiesButton = new Button();
@@ -626,7 +625,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         leftSideSectionContainerScrollLayout.add(provinceValueContainer);
         NativeLabel provinceFilterText = new NativeLabel("省级 :");
         provinceFilterText.setWidth(50,Unit.PIXELS);
-        provinceFilterText.getStyle().set("font-size","0.8rem").set("font-weight", "600");
+        provinceFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         provinceValueContainer.add(provinceFilterText);
         provinceValueContainer.setVerticalComponentAlignment(Alignment.CENTER,provinceFilterText);
         Button listProvinceEntitiesButton = new Button();
@@ -709,7 +708,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         leftSideSectionContainerScrollLayout.add(prefectureValueContainer);
         NativeLabel prefectureFilterText = new NativeLabel("地级 :");
         prefectureFilterText.setWidth(50,Unit.PIXELS);
-        prefectureFilterText.getStyle().set("font-size","0.8rem").set("font-weight", "600");
+        prefectureFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         prefectureValueContainer.add(prefectureFilterText);
         prefectureValueContainer.setVerticalComponentAlignment(Alignment.CENTER,prefectureFilterText);
 
@@ -789,7 +788,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         leftSideSectionContainerScrollLayout.add(countyValueContainer);
         NativeLabel countyFilterText = new NativeLabel("县级 :");
         countyFilterText.setWidth(50,Unit.PIXELS);
-        countyFilterText.getStyle().set("font-size","0.8rem").set("font-weight", "600");
+        countyFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         countyValueContainer.add(countyFilterText);
         countyValueContainer.setVerticalComponentAlignment(Alignment.CENTER,countyFilterText);
         Button listCountyEntitiesButton = new Button();
@@ -863,7 +862,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         leftSideSectionContainerScrollLayout.add(townshipValueContainer);
         NativeLabel townshipFilterText = new NativeLabel("乡级 :");
         townshipFilterText.setWidth(50,Unit.PIXELS);
-        townshipFilterText.getStyle().set("font-size","0.8rem").set("font-weight", "600");
+        townshipFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         townshipValueContainer.add(townshipFilterText);
         townshipValueContainer.setVerticalComponentAlignment(Alignment.CENTER,townshipFilterText);
         Button listTownshipEntitiesButton = new Button();
@@ -933,7 +932,7 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
         leftSideSectionContainerScrollLayout.add(villageValueContainer);
         NativeLabel villageFilterText = new NativeLabel("村级 :");
         villageFilterText.setWidth(50,Unit.PIXELS);
-        villageFilterText.getStyle().set("font-size","0.8rem").set("font-weight", "600");
+        villageFilterText.addClassNames("text-xs","font-semibold","text-secondary");
         villageValueContainer.add(villageFilterText);
         villageValueContainer.setVerticalComponentAlignment(Alignment.CENTER,villageFilterText);
         Button listVillageEntitiesButton = new Button();

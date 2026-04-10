@@ -6,7 +6,6 @@ import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.theme.lumo.LumoUtility;
 
 public class SecondaryIconTitle extends HorizontalLayout {
 
@@ -16,10 +15,7 @@ public class SecondaryIconTitle extends HorizontalLayout {
             add(titleIcon);
         }
         NativeLabel titleTextLabel = new NativeLabel(titleText+":");
-
-        //titleTextLabel.addClassNames(LumoUtility.TextColor.ERROR);
-
-        titleTextLabel.getStyle().set("font-size","0.75rem").set("font-weight", "700");
+        titleTextLabel.addClassNames("text-xs","font-semibold","text-secondary");
         add(titleTextLabel);
     }
 
