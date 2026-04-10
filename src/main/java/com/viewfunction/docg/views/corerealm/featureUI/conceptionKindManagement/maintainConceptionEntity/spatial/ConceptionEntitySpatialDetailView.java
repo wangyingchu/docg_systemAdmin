@@ -133,7 +133,21 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         messageLogo.setSize("30px");
         NativeLabel messageLabel = new NativeLabel(" 当前概念实体中不包含本类型地理空间信息");
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
-        doesNotContainsSpatialInfoMessage.add(messageLogo,messageLabel);
+
+        Button attachGeoWKTInfoButton = new Button();
+        attachGeoWKTInfoButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_LARGE);
+        Icon buttonIcon0 = VaadinIcon.PLUS_SQUARE_O.create();
+        buttonIcon0.setSize("20px");
+        attachGeoWKTInfoButton.setIcon(buttonIcon0);
+        attachGeoWKTInfoButton.setTooltipText("添加地理空间信息");
+        attachGeoWKTInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //renderAttachTimeScaleEventsOfConceptionEntityView();
+            }
+        });
+        attachGeoWKTInfoButton.getStyle().set("top","-10px").set("position","relative");
+        doesNotContainsSpatialInfoMessage.add(messageLogo,messageLabel,attachGeoWKTInfoButton);
         add(doesNotContainsSpatialInfoMessage);
     }
 
