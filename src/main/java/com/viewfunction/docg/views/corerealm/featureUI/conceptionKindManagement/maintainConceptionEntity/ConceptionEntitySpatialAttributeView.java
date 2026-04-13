@@ -91,6 +91,12 @@ public class ConceptionEntitySpatialAttributeView extends VerticalLayout {
         try {
             if(targetConceptionKind != null){
                 ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+                globalConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
+                globalConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Global);
+                countryConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
+                countryConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Country);
+                localConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
+                localConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Local);
                 if(targetEntity != null){
                     String _GLGeometryContent = targetEntity.getGLGeometryContent();
                     String _CLGeometryContent = targetEntity.getCLGeometryContent();
@@ -99,18 +105,12 @@ public class ConceptionEntitySpatialAttributeView extends VerticalLayout {
                         CommonUIOperationUtil.showPopupNotification("UID 为 "+conceptionEntityUID+" 的概念实体中不包含地理空间信息", NotificationVariant.LUMO_CONTRAST,5000, Notification.Position.BOTTOM_START);
                     }else{
                         if(_GLGeometryContent != null){
-                            globalConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
-                            globalConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Global);
                             globalConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();
                         }
                         if(_CLGeometryContent != null){
-                            countryConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
-                            countryConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Country);
                             countryConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();
                         }
                         if(_LLGeometryContent != null){
-                            localConceptionEntitySpatialDetailView.setConceptionEntity(targetEntity);
-                            localConceptionEntitySpatialDetailView.setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel.Local);
                             localConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();
                         }
                     }

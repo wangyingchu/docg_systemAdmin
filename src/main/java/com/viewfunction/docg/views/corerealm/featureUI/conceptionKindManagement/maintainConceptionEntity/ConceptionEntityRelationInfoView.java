@@ -601,7 +601,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
 
     private void renderRelateConceptionEntityInfoUI(){
         CreateRelationEntityView createRelationEntityView = new CreateRelationEntityView(this.conceptionKind,this.conceptionEntityUID);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.LINK),"新建实体关联",null,true,1140,670,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.LINK),"新建实体关联",null,true,1140,680,false);
         fixSizeWindow.setWindowContent(createRelationEntityView);
         fixSizeWindow.setModel(true);
         createRelationEntityView.setContainerDialog(fixSizeWindow);
@@ -620,7 +620,7 @@ public class ConceptionEntityRelationInfoView extends VerticalLayout implements
         ConceptionEntityValue conceptionEntityValue = new ConceptionEntityValue();
         conceptionEntityValue.setConceptionEntityUID(conceptionEntityUID);
         AddConceptionEntityToProcessingListView addConceptionEntityToProcessingListView = new AddConceptionEntityToProcessingListView(conceptionKind,conceptionEntityValue);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INBOX),"待处理数据列表添加概念实例",null,true,600,295,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INBOX),"待处理数据列表添加概念实例",null,true,600,310,false);
         fixSizeWindow.setWindowContent(addConceptionEntityToProcessingListView);
         fixSizeWindow.setModel(true);
         addConceptionEntityToProcessingListView.setContainerDialog(fixSizeWindow);

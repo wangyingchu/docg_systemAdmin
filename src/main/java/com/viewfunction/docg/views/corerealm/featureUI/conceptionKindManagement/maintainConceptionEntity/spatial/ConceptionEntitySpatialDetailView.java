@@ -42,6 +42,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
     private String envelopeAreaWKT;
     private String geometryContentWKT;
     private HorizontalLayout doesNotContainsSpatialInfoMessage;
+    private UpdateConceptionEntitySpatialInfoView updateConceptionEntitySpatialInfoView;
 
     public ConceptionEntitySpatialDetailView(int conceptionEntitySpatialInfoViewHeightOffset){
         this.setPadding(false);
@@ -143,12 +144,13 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         attachGeoWKTInfoButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderAttachTimeScaleEventsOfConceptionEntityView();
+                renderAddSpatialInfoView();
             }
         });
         attachGeoWKTInfoButton.getStyle().set("top","-10px").set("position","relative");
         doesNotContainsSpatialInfoMessage.add(messageLogo,messageLabel,attachGeoWKTInfoButton);
         add(doesNotContainsSpatialInfoMessage);
+        this.updateConceptionEntitySpatialInfoView = new UpdateConceptionEntitySpatialInfoView();
     }
 
     @Override
@@ -178,10 +180,12 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
 
     public void setConceptionEntity(ConceptionEntity conceptionEntity) {
         this.conceptionEntity = conceptionEntity;
+        this.updateConceptionEntitySpatialInfoView.setConceptionEntity(this.conceptionEntity);
     }
 
     public void setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel) {
         this.spatialScaleLevel = spatialScaleLevel;
+        this.updateConceptionEntitySpatialInfoView.setSpatialScaleLevel(this.spatialScaleLevel);
     }
 
     public void renderEntitySpatialDetailInfo() {
@@ -311,6 +315,14 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
                 }
             }
         }
+    }
+
+    private void renderAddSpatialInfoView(){
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加地理空间信息",null,true,1140,680,false);
+        fixSizeWindow.setWindowContent(updateConceptionEntitySpatialInfoView);
+        fixSizeWindow.setModel(true);
+        updateConceptionEntitySpatialInfoView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 
     private String getGeoJsonFromWKTContent(String geometryCRSAID,String wktContent){
