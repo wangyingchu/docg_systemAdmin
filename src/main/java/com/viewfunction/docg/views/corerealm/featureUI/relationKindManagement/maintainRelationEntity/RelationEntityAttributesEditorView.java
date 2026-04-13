@@ -149,7 +149,7 @@ public class RelationEntityAttributesEditorView extends VerticalLayout implement
 
     private void renderShowMetaInfoUI(){
         RelationEntityMetaInfoView relationEntityMetaInfoView = new RelationEntityMetaInfoView(this.relationKind,this.relationEntityUID);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"关系实体元数据信息",null,true,500,340,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.INFO_CIRCLE_O),"关系实体元数据信息",null,true,500,350,false);
         fixSizeWindow.setWindowContent(relationEntityMetaInfoView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
