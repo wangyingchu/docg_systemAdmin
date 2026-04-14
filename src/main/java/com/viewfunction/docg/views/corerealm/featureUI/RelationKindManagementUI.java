@@ -570,7 +570,7 @@ public class RelationKindManagementUI extends VerticalLayout implements
 
     private void renderCreateRelationKindUI(){
         CreateRelationKindView createRelationKindView = new CreateRelationKindView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建关系类型",null,true,630,290,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建关系类型",null,true,630,300,false);
         fixSizeWindow.setWindowContent(createRelationKindView);
         fixSizeWindow.setModel(true);
         createRelationKindView.setContainerDialog(fixSizeWindow);

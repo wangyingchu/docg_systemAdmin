@@ -121,7 +121,7 @@ public class TimeFlowManagementUI extends VerticalLayout implements TimeFlowCrea
 
     private void renderCreateTimeFlowUI(){
         CreateTimeFlowView createTimeFlowView = new CreateTimeFlowView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建时间流",null,true,530,220,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建时间流",null,true,530,230,false);
         fixSizeWindow.setWindowContent(createTimeFlowView);
         fixSizeWindow.setModel(true);
         createTimeFlowView.setContainerDialog(fixSizeWindow);

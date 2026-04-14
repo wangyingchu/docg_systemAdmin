@@ -111,7 +111,7 @@ public class GeospatialRegionManagementUI extends VerticalLayout implements
 
     private void renderCreateGeospatialRegionUI(){
         CreateGeospatialRegionView createGeospatialRegionView = new CreateGeospatialRegionView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建地理空间区域",null,true,530,220,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建地理空间区域",null,true,530,230,false);
         fixSizeWindow.setWindowContent(createGeospatialRegionView);
         fixSizeWindow.setModel(true);
         createGeospatialRegionView.setContainerDialog(fixSizeWindow);

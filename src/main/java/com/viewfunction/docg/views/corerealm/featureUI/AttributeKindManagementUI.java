@@ -502,7 +502,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements
 
     private void renderAddAttributeKindView(){
         CreateAttributeKindView createAttributeKindView = new CreateAttributeKindView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建属性类型",null,true,500,350,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建属性类型",null,true,500,360,false);
         fixSizeWindow.setWindowContent(createAttributeKindView);
         createAttributeKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
@@ -751,7 +751,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements
 
     private void renderRealtimeAttributesCorrelationInfoSummaryUI(Button launchButton){
         RealtimeAttributesCorrelationInfoSummaryView realtimeAttributesCorrelationInfoSummaryView = new RealtimeAttributesCorrelationInfoSummaryView(800);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"实时属性分布概览",null,true,1400,870,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"实时属性分布概览",null,true,1400,880,false);
         fixSizeWindow.setWindowContent(realtimeAttributesCorrelationInfoSummaryView);
         fixSizeWindow.show();
         fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
