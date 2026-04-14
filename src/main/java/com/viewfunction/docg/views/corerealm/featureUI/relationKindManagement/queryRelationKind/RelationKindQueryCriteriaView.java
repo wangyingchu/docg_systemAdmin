@@ -280,7 +280,7 @@ public class RelationKindQueryCriteriaView extends VerticalLayout implements Kin
 
     private void renderQueryResultSetConfigUI(){
         QueryResultSetConfigView queryResultSetConfigView = new QueryResultSetConfigView(this.queryParameters);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"查询结果集参数",null,true,350,500,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.COG),"查询结果集参数",null,true,350,510,false);
         fixSizeWindow.setWindowContent(queryResultSetConfigView);
         fixSizeWindow.setModel(true);
         queryResultSetConfigView.setContainerDialog(fixSizeWindow);

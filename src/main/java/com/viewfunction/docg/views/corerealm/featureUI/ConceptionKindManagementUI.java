@@ -682,7 +682,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         Set<ConceptionKindCorrelationInfo> conceptionKindCorrelationInfoSet = systemMaintenanceOperator.
                 getSystemConceptionKindsRelationDistributionStatistics();
         conceptionKindsCorrelationInfoSummaryChart.setData(conceptionKindCorrelationInfoSet);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"概念类型实体实时关联分布概览",null,true,screenAreaWidth-200,screenAreaHeight-50,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DASHBOARD),"概念类型实体实时关联分布概览",null,true,screenAreaWidth-200,screenAreaHeight-40,false);
         fixSizeWindow.setWindowContent(conceptionKindsCorrelationInfoSummaryChart);
         fixSizeWindow.show();
         fixSizeWindow.addDetachListener(new ComponentEventListener<DetachEvent>() {
@@ -695,7 +695,7 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
 
     private void renderCreateConceptionKindUI(){
         CreateConceptionKindView createConceptionKindView = new CreateConceptionKindView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建概念类型",null,true,630,290,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建概念类型",null,true,630,300,false);
         fixSizeWindow.setWindowContent(createConceptionKindView);
         fixSizeWindow.setModel(true);
         createConceptionKindView.setContainerDialog(fixSizeWindow);

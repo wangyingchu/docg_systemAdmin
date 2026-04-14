@@ -318,7 +318,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
     }
 
     private void renderAddSpatialInfoView(){
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加地理空间信息",null,true,1140,680,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加地理空间信息",null,true,610,630,false);
         fixSizeWindow.setWindowContent(updateConceptionEntitySpatialInfoView);
         fixSizeWindow.setModel(true);
         updateConceptionEntitySpatialInfoView.setContainerDialog(fixSizeWindow);
