@@ -16,6 +16,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServi
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.geospatial.GeospatialCalculateUtil;
 import com.viewfunction.docg.element.commonComponent.FixSizeWindow;
 import com.viewfunction.docg.element.commonComponent.SecondaryKeyValueDisplayItem;
@@ -315,6 +318,18 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
                 }
             }
         }
+    }
+
+    public void refreshEntitySpatialDetailInfo() {
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionEntity.getConceptionKindName());
+        if(targetConceptionKind != null){
+            ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(conceptionEntity.getConceptionEntityUID());
+            if(targetConceptionEntity != null){
+                this.conceptionEntity = targetConceptionEntity;
+            }
+        }
+        renderEntitySpatialDetailInfo();
     }
 
     private void renderAddSpatialInfoView(){

@@ -134,9 +134,15 @@ public class ConceptionEntitySpatialAttributeView extends VerticalLayout impleme
         if(this.conceptionEntityUID.equals(event.getConceptionEntityUID())){
             GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel = event.getSpatialScaleLevel();
             switch (spatialScaleLevel){
-                case Global:globalConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();break;
-                case Country:countryConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();break;
-                case Local:localConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();break;
+                case Global:
+                    globalConceptionEntitySpatialDetailView.refreshEntitySpatialDetailInfo();
+                    break;
+                case Country:
+                    countryConceptionEntitySpatialDetailView.refreshEntitySpatialDetailInfo();
+                    break;
+                case Local:
+                    localConceptionEntitySpatialDetailView.refreshEntitySpatialDetailInfo();
+                    break;
             }
         }
     }
