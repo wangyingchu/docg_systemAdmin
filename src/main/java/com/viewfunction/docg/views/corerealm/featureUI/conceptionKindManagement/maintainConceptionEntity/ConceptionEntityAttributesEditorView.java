@@ -259,4 +259,22 @@ public class ConceptionEntityAttributesEditorView extends VerticalLayout impleme
             }
         });
     }
+
+    public void refreshAttributesEditorItems(){
+        attributeEditorsContainer.removeAll();
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        if(targetConceptionKind != null){
+            ConceptionEntity targetEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+            if(targetEntity != null){
+                List<AttributeValue> allAttributesList = targetEntity.getAttributes();
+                if(allAttributesList != null){
+                    for(AttributeValue currentAttributeValue:allAttributesList){
+                        AttributeEditorItemWidget attributeEditorItemWidget = new AttributeEditorItemWidget(this.conceptionKind,this.conceptionEntityUID,currentAttributeValue, AttributeEditorItemWidget.KindType.ConceptionKind);
+                        attributeEditorsContainer.add(attributeEditorItemWidget);
+                    }
+                }
+            }
+        }
+    }
 }

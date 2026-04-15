@@ -373,6 +373,8 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
                 ConceptionEntityExpandTopologyEvent.class);
         _BLACKBOARD.register(AnalysisProviderRefreshEvent.AnalysisProviderRefreshEventListener.class,
                 AnalysisProviderRefreshEvent.class);
+        _BLACKBOARD.register(ConceptionEntitySpatialInfoUpdatedEvent.ConceptionEntitySpatialInfoUpdatedListener.class,
+                ConceptionEntitySpatialInfoUpdatedEvent.class);
 
         ResourceHolder.setApplicationBlackboard(_BLACKBOARD);
     }

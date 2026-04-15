@@ -1,6 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
 
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -9,16 +10,18 @@ import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntitySpatialInfoUpdatedEvent;
+import com.viewfunction.docg.util.ResourceHolder;
 
 @Route("conceptionEntityDetailInfo/:conceptionKind/:conceptionEntityUID")
-public class ConceptionEntityDetailUI extends VerticalLayout implements BeforeEnterObserver {
-
+public class ConceptionEntityDetailUI extends VerticalLayout implements BeforeEnterObserver, ConceptionEntitySpatialInfoUpdatedEvent.ConceptionEntitySpatialInfoUpdatedListener {
     private Dialog containerDialog;
     private VerticalLayout entityFieldsContainer;
     private VerticalLayout entityDetailContainer;
     private String conceptionKind;
     private String conceptionEntityUID;
     private int conceptionEntityAttributesEditorHeightOffset = 135;
+    private ConceptionEntityAttributesEditorView conceptionEntityAttributesEditorView;
 
     public ConceptionEntityDetailUI(){}
 
@@ -37,7 +40,14 @@ public class ConceptionEntityDetailUI extends VerticalLayout implements BeforeEn
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         renderView();
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     private void renderView(){
@@ -49,7 +59,7 @@ public class ConceptionEntityDetailUI extends VerticalLayout implements BeforeEn
         this.entityFieldsContainer.setMaxWidth(500, Unit.PIXELS);
         this.entityDetailContainer = new VerticalLayout();
 
-        ConceptionEntityAttributesEditorView conceptionEntityAttributesEditorView =
+        conceptionEntityAttributesEditorView =
                 new ConceptionEntityAttributesEditorView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityAttributesEditorHeightOffset);
 
         ConceptionEntityIntegratedInfoView conceptionEntityIntegratedInfoView =
@@ -73,5 +83,12 @@ public class ConceptionEntityDetailUI extends VerticalLayout implements BeforeEn
 
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
+    }
+
+    @Override
+    public void receivedConceptionEntitySpatialInfoUpdatedEvent(ConceptionEntitySpatialInfoUpdatedEvent event) {
+        if(this.conceptionEntityUID.equals(event.getConceptionEntityUID())){
+            conceptionEntityAttributesEditorView.refreshAttributesEditorItems();
+        }
     }
 }

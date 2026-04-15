@@ -16,11 +16,13 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntitySpatialInfoUpdatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.spatial.ConceptionEntitySpatialDetailView;
 import org.vaadin.tabs.PagedTabs;
 
-public class ConceptionEntitySpatialAttributeView extends VerticalLayout {
+public class ConceptionEntitySpatialAttributeView extends VerticalLayout implements ConceptionEntitySpatialInfoUpdatedEvent.ConceptionEntitySpatialInfoUpdatedListener {
     private String conceptionKind;
     private String conceptionEntityUID;
     private int conceptionEntitySpatialInfoViewHeightOffset;
@@ -77,11 +79,13 @@ public class ConceptionEntitySpatialAttributeView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        ResourceHolder.getApplicationBlackboard().addListener(this);
     }
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
         super.onDetach(detachEvent);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
     public void renderEntitySpatialInfo(){
@@ -123,5 +127,10 @@ public class ConceptionEntitySpatialAttributeView extends VerticalLayout {
         }   finally {
             coreRealm.closeGlobalSession();
         }
+    }
+
+    @Override
+    public void receivedConceptionEntitySpatialInfoUpdatedEvent(ConceptionEntitySpatialInfoUpdatedEvent event) {
+System.out.println("ConceptionEntitySpatialInfoUpdatedEvent received2");
     }
 }

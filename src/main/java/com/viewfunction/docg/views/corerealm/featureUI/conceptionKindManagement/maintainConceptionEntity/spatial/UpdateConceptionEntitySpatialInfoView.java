@@ -27,9 +27,11 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
+import com.viewfunction.docg.element.eventHandling.ConceptionEntitySpatialInfoUpdatedEvent;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable.WKTGeometryType;
+import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -228,6 +230,13 @@ public class UpdateConceptionEntitySpatialInfoView extends VerticalLayout {
                         targetConceptionEntity.addOrUpdateLLGeometryContent(_WKTGeometryTextArea.getValue());
                         break;
                 }
+
+                ConceptionEntitySpatialInfoUpdatedEvent conceptionEntitySpatialInfoUpdatedEvent = new ConceptionEntitySpatialInfoUpdatedEvent();
+                conceptionEntitySpatialInfoUpdatedEvent.setConceptionEntityUID(this.conceptionEntity.getConceptionEntityUID());
+                conceptionEntitySpatialInfoUpdatedEvent.setConceptionKindName(this.conceptionEntity.getConceptionKindName());
+                conceptionEntitySpatialInfoUpdatedEvent.setSpatialScaleLevel(this.spatialScaleLevel);
+                ResourceHolder.getApplicationBlackboard().fire(conceptionEntitySpatialInfoUpdatedEvent);
+
                 if(containerDialog != null){
                     containerDialog.close();
                 }
