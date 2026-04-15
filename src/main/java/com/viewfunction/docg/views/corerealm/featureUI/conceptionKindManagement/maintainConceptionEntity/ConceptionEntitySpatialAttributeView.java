@@ -131,6 +131,13 @@ public class ConceptionEntitySpatialAttributeView extends VerticalLayout impleme
 
     @Override
     public void receivedConceptionEntitySpatialInfoUpdatedEvent(ConceptionEntitySpatialInfoUpdatedEvent event) {
-System.out.println("ConceptionEntitySpatialInfoUpdatedEvent received2");
+        if(this.conceptionEntityUID.equals(event.getConceptionEntityUID())){
+            GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel = event.getSpatialScaleLevel();
+            switch (spatialScaleLevel){
+                case Global:globalConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();break;
+                case Country:countryConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();break;
+                case Local:localConceptionEntitySpatialDetailView.renderEntitySpatialDetailInfo();break;
+            }
+        }
     }
 }
