@@ -46,6 +46,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
     private String geometryContentWKT;
     private HorizontalLayout doesNotContainsSpatialInfoMessage;
     private UpdateConceptionEntitySpatialInfoView updateConceptionEntitySpatialInfoView;
+    private Button updateWKTButton;
 
     public ConceptionEntitySpatialDetailView(int conceptionEntitySpatialInfoViewHeightOffset){
         this.setPadding(false);
@@ -119,6 +120,19 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         interiorPointWKTButton.setEnabled(false);
         centroidPointWKTButton.setEnabled(false);
         envelopeWKTButton.setEnabled(false);
+
+        updateWKTButton = new Button();
+        updateWKTButton.setIcon(VaadinIcon.EDIT.create());
+        updateWKTButton.setTooltipText("更新地理空间信息");
+        updateWKTButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderUpdateSpatialInfoView();
+            }
+        });
+        updateWKTButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        updateWKTButton.setEnabled(false);
+        actionComponentsList.add(updateWKTButton);
 
         Icon spatialInfoIcon = VaadinIcon.LOCATION_ARROW_CIRCLE_O.create();
         SecondaryTitleActionBar secondaryTitleActionBar = new SecondaryTitleActionBar(spatialInfoIcon, "地理空间信息概要: ", secondaryTitleComponentsList, actionComponentsList);
@@ -197,6 +211,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
             conceptionEntitySpatialChart.setVisible(true);
             GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = this.conceptionEntity.getGeometryType();
             if(_WKTGeometryType != null) {
+                updateWKTButton.setEnabled(true);
                 try {
                     centroidPointWKT = conceptionEntity.getEntitySpatialCentroidPointWKTGeometryContent(this.spatialScaleLevel);
                     interiorPointWKT = conceptionEntity.getEntitySpatialInteriorPointWKTGeometryContent(this.spatialScaleLevel);
@@ -316,6 +331,8 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
                 } catch (CoreRealmServiceRuntimeException e) {
                     throw new RuntimeException(e);
                 }
+            }else{
+                updateWKTButton.setEnabled(false);
             }
         }
     }
@@ -334,6 +351,14 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
 
     private void renderAddSpatialInfoView(){
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加地理空间信息",null,true,610,630,false);
+        fixSizeWindow.setWindowContent(updateConceptionEntitySpatialInfoView);
+        fixSizeWindow.setModel(true);
+        updateConceptionEntitySpatialInfoView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
+
+    private void renderUpdateSpatialInfoView(){
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.EDIT),"更新地理空间信息",null,true,610,630,false);
         fixSizeWindow.setWindowContent(updateConceptionEntitySpatialInfoView);
         fixSizeWindow.setModel(true);
         updateConceptionEntitySpatialInfoView.setContainerDialog(fixSizeWindow);
