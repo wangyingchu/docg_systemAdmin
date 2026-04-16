@@ -755,7 +755,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
 
     private void renderSampleRandomAttributesView(String attributeName){
         AttributesValueListView attributesValueListView = new AttributesValueListView(AttributesValueListView.AttributeKindType.RelationKind,this.relationKind,attributeName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create(),"属性值随机采样 (100项)",null,true,500,510,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create(),"属性值随机采样 (100项)",null,true,500,520,false);
         fixSizeWindow.setWindowContent(attributesValueListView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();

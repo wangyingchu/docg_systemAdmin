@@ -502,7 +502,7 @@ public class AttributeKindManagementUI extends VerticalLayout implements
 
     private void renderAddAttributeKindView(){
         CreateAttributeKindView createAttributeKindView = new CreateAttributeKindView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建属性类型",null,true,500,360,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建属性类型",null,true,500,370,false);
         fixSizeWindow.setWindowContent(createAttributeKindView);
         createAttributeKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);

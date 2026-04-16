@@ -257,7 +257,7 @@ public class RelatedAttributesViewKindsConfigView extends VerticalLayout impleme
                 attachNewAttributesViewKindView = new AttachNewAttributesViewKindView(AttachNewAttributesViewKindView.RelatedKindType.ConceptionKind);
                 attachNewAttributesViewKindView.setConceptionKindName(this.pairKindIdentify);
         }
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加属性视图类型",null,true,490,200,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加属性视图类型",null,true,490,220,false);
         fixSizeWindow.setWindowContent(attachNewAttributesViewKindView);
         fixSizeWindow.setModel(true);
         attachNewAttributesViewKindView.setContainerDialog(fixSizeWindow);

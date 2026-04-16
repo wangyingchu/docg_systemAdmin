@@ -948,7 +948,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
     private void renderSampleRandomAttributesView(String attributeName){
         AttributesValueListView attributesValueListView = new AttributesValueListView(AttributesValueListView.AttributeKindType.ConceptionKind,this.conceptionKind,attributeName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create(),"属性值随机采样 (100项)",null,true,500,520,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create(),"属性值随机采样 (100项)",null,true,500,530,false);
         fixSizeWindow.setWindowContent(attributesValueListView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
@@ -956,7 +956,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
 
     private void renderGroupByAttributeValueView(String attributeName){
         AttributeValueGroupInfoListView attributeValueGroupInfoListView = new AttributeValueGroupInfoListView(AttributeValueGroupInfoListView.AttributeKindType.ConceptionKind,this.conceptionKind,attributeName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.LIST_OL.create(),"属性值分组统计(100,000项)",null,true,500,520,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.LIST_OL.create(),"属性值分组统计(100,000项)",null,true,500,540,false);
         fixSizeWindow.setWindowContent(attributeValueGroupInfoListView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
@@ -967,7 +967,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         createAttributeKindView.setAndLockAttributeKindName(attributeInfo.getAttributeName());
         createAttributeKindView.setAndLockAttributeKindDataType(attributeInfo.getAttributeDataType());
 
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建属性类型",null,true,500,350,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建属性类型",null,true,500,360,false);
         fixSizeWindow.setWindowContent(createAttributeKindView);
         createAttributeKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
@@ -984,7 +984,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行删除属性操作，该操作将从概念类型 "+this.conceptionKind+" 的所有实体中删除属性 "+attributeName,actionButtonList,500,180);
+                "请确认执行删除属性操作，该操作将从概念类型 "+this.conceptionKind+" 的所有实体中删除属性 "+attributeName,actionButtonList,500,200);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -1050,7 +1050,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 LONG 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 LONG 类型,类型无法转换的属性将被删除",actionButtonList,550,200);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -1086,7 +1086,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 DOUBLE 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 DOUBLE 类型,类型无法转换的属性将被删除",actionButtonList,550,200);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -1122,7 +1122,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 BOOLEAN 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 BOOLEAN 类型,类型无法转换的属性将被删除",actionButtonList,550,200);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -1158,7 +1158,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
-                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 STRING 类型,类型无法转换的属性将被删除",actionButtonList,550,180);
+                "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 STRING 类型,类型无法转换的属性将被删除",actionButtonList,550,200);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -1352,7 +1352,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         };
         duplicateAttributeView.setDuplicateAttributeCallback(duplicateAttributeCallback);
 
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"复制概念类型实体属性",null,true,550,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"复制概念类型实体属性",null,true,550,230,false);
         fixSizeWindow.setWindowContent(duplicateAttributeView);
         duplicateAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
@@ -1416,7 +1416,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
     private void renderAddToNewConceptionKindsByAttributeValueGroup(KindEntityAttributeRuntimeStatistics attributeInfo){
         JoinNewConceptionKindsByAttributeValueGroupView joinNewConceptionKindsByAttributeValueGroupView =
                 new JoinNewConceptionKindsByAttributeValueGroupView(this.conceptionKind,attributeInfo.getAttributeName());
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BUROMOBELEXPERTE.create(),"根据属性值分组加入新概念类型",null,true,900,700,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BUROMOBELEXPERTE.create(),"根据属性值分组加入新概念类型",null,true,900,710,false);
         fixSizeWindow.setWindowContent(joinNewConceptionKindsByAttributeValueGroupView);
         joinNewConceptionKindsByAttributeValueGroupView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
