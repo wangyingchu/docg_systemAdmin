@@ -36,6 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable.SpatialScaleLevel.*;
+
 public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
 
     private String geospatialRegionName;
@@ -500,14 +502,14 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
             case TOWNSHIP -> zoomLevel = 11;
             case VILLAGE -> zoomLevel = 13;
         }
-        GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = targetConceptionEntity.getGeometryType();
+        GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = targetConceptionEntity.getGlobalGeometryType();
         if(_WKTGeometryType != null){
             this.doesNotContainsSpatialInfoMessage.setVisible(false);
             this.geospatialScaleEntityMapInfoChart.setVisible(true);
             try {
-                String centroidPointWKT = targetConceptionEntity.getEntitySpatialCentroidPointWKTGeometryContent(GeospatialScaleCalculable.SpatialScaleLevel.Global);
-                String envelopeAreaWKT = targetConceptionEntity.getEntitySpatialEnvelopeWKTGeometryContent(GeospatialScaleCalculable.SpatialScaleLevel.Global);
-                String interiorPointWKT = targetConceptionEntity.getEntitySpatialInteriorPointWKTGeometryContent(GeospatialScaleCalculable.SpatialScaleLevel.Global);
+                String centroidPointWKT = targetConceptionEntity.getEntitySpatialCentroidPointWKTGeometryContent(Global);
+                String envelopeAreaWKT = targetConceptionEntity.getEntitySpatialEnvelopeWKTGeometryContent(Global);
+                String interiorPointWKT = targetConceptionEntity.getEntitySpatialInteriorPointWKTGeometryContent(Global);
                 String geometryCRSAID = targetConceptionEntity.getGlobalCRSAID();
                 String geometryContentWKT = targetConceptionEntity.getGLGeometryContent();
 

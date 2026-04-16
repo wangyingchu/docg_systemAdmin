@@ -215,19 +215,21 @@ public class UpdateConceptionEntitySpatialInfoView extends VerticalLayout {
         if(targetConceptionKind != null){
             ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(conceptionEntity.getConceptionEntityUID());
             if(targetConceptionEntity != null){
-                targetConceptionEntity.addOrUpdateGeometryType(_WKTGeometryTypeComboBox.getValue());
                 switch (this.spatialScaleLevel) {
                     case Global :
                         targetConceptionEntity.addOrUpdateGlobalCRSAID(_CRSAID);
                         targetConceptionEntity.addOrUpdateGLGeometryContent(_WKTGeometryTextArea.getValue());
+                        targetConceptionEntity.addOrUpdateGlobalGeometryType(_WKTGeometryTypeComboBox.getValue());
                         break;
                     case Country:
                         targetConceptionEntity.addOrUpdateCountryCRSAID(_CRSAID);
                         targetConceptionEntity.addOrUpdateCLGeometryContent(_WKTGeometryTextArea.getValue());
+                        targetConceptionEntity.addOrUpdateCountryGeometryType(_WKTGeometryTypeComboBox.getValue());
                         break;
                     case Local:
                         targetConceptionEntity.addOrUpdateLocalCRSAID(_CRSAID);
                         targetConceptionEntity.addOrUpdateLLGeometryContent(_WKTGeometryTextArea.getValue());
+                        targetConceptionEntity.addOrUpdateLocalGeometryType(_WKTGeometryTypeComboBox.getValue());
                         break;
                 }
 

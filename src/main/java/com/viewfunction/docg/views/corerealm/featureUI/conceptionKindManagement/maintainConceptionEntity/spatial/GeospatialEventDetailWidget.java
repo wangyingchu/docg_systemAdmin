@@ -92,7 +92,7 @@ public class GeospatialEventDetailWidget extends VerticalLayout {
                 case TOWNSHIP -> zoomLevel = 11;
                 case VILLAGE -> zoomLevel = 13;
             }
-            GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = targetConceptionEntity.getGeometryType();
+            GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = targetConceptionEntity.getGlobalGeometryType();
             if(_WKTGeometryType != null){
                 this.doesNotContainsSpatialInfoMessage.setVisible(false);
                 this.geospatialScaleEntityMapInfoChart.setVisible(true);

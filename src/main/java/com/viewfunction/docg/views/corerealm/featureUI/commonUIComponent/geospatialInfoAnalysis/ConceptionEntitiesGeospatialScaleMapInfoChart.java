@@ -90,7 +90,17 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
                     String conceptionEntityUID = null;
 
                     for(ConceptionEntity conceptionEntity:targetConceptionEntities){
-                        GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = conceptionEntity.getGeometryType();
+                        GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = null;
+                        switch (this.spatialScaleLevel) {
+                            case Local:
+                                _WKTGeometryType = conceptionEntity.getLocalGeometryType();
+                                break;
+                            case Global:
+                                _WKTGeometryType = conceptionEntity.getGlobalGeometryType();
+                                break;
+                            case Country:
+                                _WKTGeometryType = conceptionEntity.getCountryGeometryType();
+                        }
                         conceptionKindName = conceptionEntity.getConceptionKindName();
                         conceptionEntityUID = conceptionEntity.getConceptionEntityUID();
 
@@ -357,7 +367,18 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
                     String interiorPointWKT = null;
                     String geometryContentWKT = null;
 
-                    GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = conceptionEntity.getGeometryType();
+                    GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = null;
+                    switch (this.spatialScaleLevel) {
+                        case Local:
+                            _WKTGeometryType = conceptionEntity.getLocalGeometryType();
+                            break;
+                        case Global:
+                            _WKTGeometryType = conceptionEntity.getGlobalGeometryType();
+                            break;
+                        case Country:
+                            _WKTGeometryType = conceptionEntity.getCountryGeometryType();
+                    }
+
                     if(_WKTGeometryType != null) {
                         try {
                             centroidPointWKT = conceptionEntity.getEntitySpatialCentroidPointWKTGeometryContent(this.spatialScaleLevel);

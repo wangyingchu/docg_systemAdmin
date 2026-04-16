@@ -209,7 +209,17 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         if (this.conceptionEntity != null && this.spatialScaleLevel != null) {
             doesNotContainsSpatialInfoMessage.setVisible(false);
             conceptionEntitySpatialChart.setVisible(true);
-            GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = this.conceptionEntity.getGeometryType();
+            GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = null;
+            switch (this.spatialScaleLevel) {
+                case Local:
+                    _WKTGeometryType = conceptionEntity.getLocalGeometryType();
+                    break;
+                case Global:
+                    _WKTGeometryType = conceptionEntity.getGlobalGeometryType();
+                    break;
+                case Country:
+                    _WKTGeometryType = conceptionEntity.getCountryGeometryType();
+            }
             if(_WKTGeometryType != null) {
                 updateWKTButton.setEnabled(true);
                 try {
