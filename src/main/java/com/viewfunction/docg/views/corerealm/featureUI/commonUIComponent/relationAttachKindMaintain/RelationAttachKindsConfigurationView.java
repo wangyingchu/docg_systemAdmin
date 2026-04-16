@@ -366,7 +366,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
 
     private void renderCreateRelationAttachKindViewUI(){
         CreateRelationAttachKindView createRelationAttachKindView = new CreateRelationAttachKindView(this.relatedKindType,this.relatedKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建关系附着规则类型",null,true,490,520,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建关系附着规则类型",null,true,490,530,false);
         fixSizeWindow.setWindowContent(createRelationAttachKindView);
         fixSizeWindow.setModel(true);
         createRelationAttachKindView.setContainerDialog(fixSizeWindow);

@@ -218,7 +218,7 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
 
     private void renderLoadCSVFormatConceptionEntitiesView(){
         LoadCSVFormatConceptionEntitiesView loadCSVFormatConceptionEntitiesView = new LoadCSVFormatConceptionEntitiesView(this.conceptionKindName,500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 CSV 格式概念实体数据",null,true,550,540,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 CSV 格式概念实体数据",null,true,550,550,false);
         fixSizeWindow.setWindowContent(loadCSVFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
         loadCSVFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
@@ -227,7 +227,7 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
 
     private void renderLoadSHPFormatConceptionEntitiesView(){
         LoadSHPFormatConceptionEntitiesView loadShpFormatConceptionEntitiesView = new LoadSHPFormatConceptionEntitiesView(this.conceptionKindName,500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 SHP 格式概念实体数据",null,true,550,540,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 SHP 格式概念实体数据",null,true,550,550,false);
         fixSizeWindow.setWindowContent(loadShpFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
         loadShpFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
@@ -236,7 +236,7 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
 
     private void renderLoadARROWFormatConceptionEntitiesView(){
         LoadARROWFormatConceptionEntitiesView loadARROWFormatConceptionEntitiesView = new LoadARROWFormatConceptionEntitiesView(this.conceptionKindName,500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 ARROW 格式概念实体数据",null,true,550,540,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 ARROW 格式概念实体数据",null,true,550,550,false);
         fixSizeWindow.setWindowContent(loadARROWFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
         loadARROWFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
@@ -245,7 +245,7 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
 
     private void renderDownloadARROWFormatConceptionEntitiesView(){
         DownloadARROWFormatConceptionEntitiesView downloadARROWFormatConceptionEntitiesView = new DownloadARROWFormatConceptionEntitiesView(this.conceptionKindName,500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 ARROW 格式概念实体数据",null,true,550,270,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 ARROW 格式概念实体数据",null,true,550,280,false);
         fixSizeWindow.disableCloseButton();
         fixSizeWindow.setWindowContent(downloadARROWFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
@@ -255,7 +255,7 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
 
     private void renderDownloadCSVFormatConceptionEntitiesView(){
         DownloadCSVFormatConceptionEntitiesView downloadCSVFormatConceptionEntitiesView = new DownloadCSVFormatConceptionEntitiesView(this.conceptionKindName,500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 CSV 格式概念实体数据",null,true,550,270,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 CSV 格式概念实体数据",null,true,550,280,false);
         fixSizeWindow.disableCloseButton();
         fixSizeWindow.setWindowContent(downloadCSVFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);

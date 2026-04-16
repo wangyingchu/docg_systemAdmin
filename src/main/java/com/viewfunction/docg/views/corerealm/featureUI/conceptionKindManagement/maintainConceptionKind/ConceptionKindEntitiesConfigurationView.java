@@ -426,8 +426,8 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     }
 
     private void renderAddConceptionEntityView(){
-        AddConceptionEntityView addConceptionEntityView = new AddConceptionEntityView(this.conceptionKindName,410,650);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加概念类型实体",null,true,500,670,false);
+        AddConceptionEntityView addConceptionEntityView = new AddConceptionEntityView(this.conceptionKindName,410,660);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加概念类型实体",null,true,500,690,false);
         fixSizeWindow.setWindowContent(addConceptionEntityView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
@@ -436,7 +436,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     private void renderAddConceptionKindGlobalAttributeView(){
         AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.conceptionKindName,null,ConceptionKind);
         addEntityAttributeView.setKindScopeAttribute(true);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TEXT_INPUT),"添加概念类型全局属性",null,true,480,200,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TEXT_INPUT),"添加概念类型全局属性",null,true,480,210,false);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
@@ -445,7 +445,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
     private void renderCleanConceptionKindEntitiesUI(){
         CleanConceptionKindEntitiesView cleanConceptionKindEntitiesView = new CleanConceptionKindEntitiesView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"清除概念类型所有实例",null,true,600,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"清除概念类型所有实例",null,true,600,220,false);
         fixSizeWindow.setWindowContent(cleanConceptionKindEntitiesView);
         fixSizeWindow.setModel(true);
         cleanConceptionKindEntitiesView.setContainerDialog(fixSizeWindow);
@@ -463,7 +463,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
     private void renderLoadCSVFormatConceptionEntitiesView(){
         LoadCSVFormatConceptionEntitiesView loadCSVFormatConceptionEntitiesView = new LoadCSVFormatConceptionEntitiesView(this.conceptionKindName,500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 CSV 格式概念实体数据",null,true,550,540,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 CSV 格式概念实体数据",null,true,550,550,false);
         fixSizeWindow.setWindowContent(loadCSVFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
         loadCSVFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
@@ -472,7 +472,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
     private void renderLoadSHPFormatConceptionEntitiesView(){
         LoadSHPFormatConceptionEntitiesView loadShpFormatConceptionEntitiesView = new LoadSHPFormatConceptionEntitiesView(this.conceptionKindName,500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 SHP 格式概念实体数据",null,true,550,540,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 SHP 格式概念实体数据",null,true,550,550,false);
         fixSizeWindow.setWindowContent(loadShpFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
         loadShpFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
@@ -481,7 +481,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
     private void renderLoadARROWFormatConceptionEntitiesView(){
         LoadARROWFormatConceptionEntitiesView loadARROWFormatConceptionEntitiesView = new LoadARROWFormatConceptionEntitiesView(this.conceptionKindName,500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 ARROW 格式概念实体数据",null,true,550,540,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.UPLOAD),"导入 ARROW 格式概念实体数据",null,true,550,550,false);
         fixSizeWindow.setWindowContent(loadARROWFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
         loadARROWFormatConceptionEntitiesView.setContainerDialog(fixSizeWindow);
@@ -490,7 +490,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
     private void renderDownloadARROWFormatConceptionEntitiesView(){
         DownloadARROWFormatConceptionEntitiesView downloadARROWFormatConceptionEntitiesView = new DownloadARROWFormatConceptionEntitiesView(this.conceptionKindName,500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 ARROW 格式概念实体数据",null,true,550,270,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 ARROW 格式概念实体数据",null,true,550,280,false);
         fixSizeWindow.disableCloseButton();
         fixSizeWindow.setWindowContent(downloadARROWFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
@@ -500,7 +500,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
 
     private void renderDownloadCSVFormatConceptionEntitiesView(){
         DownloadCSVFormatConceptionEntitiesView downloadCSVFormatConceptionEntitiesView = new DownloadCSVFormatConceptionEntitiesView(this.conceptionKindName,500);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 CSV 格式概念实体数据",null,true,550,270,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.DOWNLOAD),"导出 CSV 格式概念实体数据",null,true,550,280,false);
         fixSizeWindow.disableCloseButton();
         fixSizeWindow.setWindowContent(downloadCSVFormatConceptionEntitiesView);
         fixSizeWindow.setModel(true);
@@ -586,7 +586,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     private void renderAttachToGeospatialRegionByGeoPropertyView(){
         AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView attachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView =
                 new AttachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.GLOBE_WIRE.create(),"链接概念类型实体至地理空间区域",null,true,500,695,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.GLOBE_WIRE.create(),"链接概念类型实体至地理空间区域",null,true,500,715,false);
         fixSizeWindow.setWindowContent(attachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView);
         attachConceptionKindEntitiesToGeospatialRegionByGeoPropertyView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
@@ -596,7 +596,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     private void renderAttachToGeospatialRegionByGeoComputeView(){
         AttachConceptionKindEntitiesToGeospatialRegionByGeoComputeView attachConceptionKindEntitiesToGeospatialRegionByGeoComputeView =
                 new AttachConceptionKindEntitiesToGeospatialRegionByGeoComputeView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.GLOBE_WIRE.create(),"链接概念类型实体至地理空间区域",null,true,500,695,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.GLOBE_WIRE.create(),"链接概念类型实体至地理空间区域",null,true,500,715,false);
         fixSizeWindow.setWindowContent(attachConceptionKindEntitiesToGeospatialRegionByGeoComputeView);
         attachConceptionKindEntitiesToGeospatialRegionByGeoComputeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
@@ -606,7 +606,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     private void renderAttachToTimeFlowBySingleTimePropertyView(){
         AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView attachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView =
                 new AttachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.TIMER.create(),"链接概念类型实体至时间流",null,true,500,695,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.TIMER.create(),"链接概念类型实体至时间流",null,true,500,715,false);
         fixSizeWindow.setWindowContent(attachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView);
         attachConceptionKindEntitiesToTimeFlowBySingleTimePropertyView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
@@ -616,7 +616,7 @@ public class ConceptionKindEntitiesConfigurationView extends VerticalLayout impl
     private void renderAttachToTimeFlowByMultiTimePropertyView(){
         AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView attachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView =
                 new AttachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.TIMER.create(),"链接概念类型实体至时间流",null,true,500,860,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.TIMER.create(),"链接概念类型实体至时间流",null,true,500,880,false);
         fixSizeWindow.setWindowContent(attachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView);
         attachConceptionKindEntitiesToTimeFlowByMultiTimePropertyView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
