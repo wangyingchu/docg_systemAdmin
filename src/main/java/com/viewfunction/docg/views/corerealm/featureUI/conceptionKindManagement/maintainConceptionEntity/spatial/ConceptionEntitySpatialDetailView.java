@@ -354,6 +354,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         fixSizeWindow.setWindowContent(updateConceptionEntitySpatialInfoView);
         fixSizeWindow.setModel(true);
         updateConceptionEntitySpatialInfoView.setContainerDialog(fixSizeWindow);
+        updateConceptionEntitySpatialInfoView.clearSpatialInfo();
         fixSizeWindow.show();
     }
 
@@ -362,6 +363,7 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
         fixSizeWindow.setWindowContent(updateConceptionEntitySpatialInfoView);
         fixSizeWindow.setModel(true);
         updateConceptionEntitySpatialInfoView.setContainerDialog(fixSizeWindow);
+        updateConceptionEntitySpatialInfoView.clearSpatialInfo();
         fixSizeWindow.show();
     }
 

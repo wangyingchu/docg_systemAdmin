@@ -274,4 +274,14 @@ public class UpdateConceptionEntitySpatialInfoView extends VerticalLayout {
     public void setSpatialScaleLevel(GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel) {
         this.spatialScaleLevel = spatialScaleLevel;
     }
+
+    public void clearSpatialInfo(){
+        switch (this.spatialScaleLevel) {
+            case Local:
+                if(this._CRSAIDField != null)  this._CRSAIDField.setValue("");
+                break;
+        }
+        if(this._WKTGeometryTypeComboBox != null) this._WKTGeometryTypeComboBox.setValue(null);
+        if(this._WKTGeometryTextArea != null) this._WKTGeometryTextArea.setValue("");
+    }
 }
