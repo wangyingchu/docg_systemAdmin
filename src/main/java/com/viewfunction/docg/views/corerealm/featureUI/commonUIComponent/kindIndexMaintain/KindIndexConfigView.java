@@ -165,7 +165,7 @@ public class KindIndexConfigView extends VerticalLayout {
     private void renderAddNewKindIndexUI(){
         CreateKindIndexView createKindIndexView = new CreateKindIndexView(this.kindIndexType,this.kindName);
         createKindIndexView.setContainerKindIndexConfigView(this);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建类型索引",null,true,550,320,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建类型索引",null,true,550,330,false);
         fixSizeWindow.setWindowContent(createKindIndexView);
         fixSizeWindow.setModel(true);
         createKindIndexView.setContainerDialog(fixSizeWindow);
@@ -181,7 +181,7 @@ public class KindIndexConfigView extends VerticalLayout {
         actionButtonList.add(confirmButton);
         actionButtonList.add(cancelButton);
 
-        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行删除类型索引 "+searchIndexInfo.getIndexName()+" ("+searchIndexInfo.getSearchKindName()+") 的操作",actionButtonList,650,190);
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","请确认执行删除类型索引 "+searchIndexInfo.getIndexName()+" ("+searchIndexInfo.getSearchKindName()+") 的操作",actionButtonList,650,200);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {

@@ -200,7 +200,7 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
     private void renderAddRelationKindGlobalAttributeView(){
         AddEntityAttributeView addEntityAttributeView = new AddEntityAttributeView(this.conceptionKindName,null,RelationKind);
         addEntityAttributeView.setKindScopeAttribute(true);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TEXT_INPUT),"添加关系类型全局属性",null,true,480,200,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TEXT_INPUT),"添加关系类型全局属性",null,true,480,210,false);
         addEntityAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setWindowContent(addEntityAttributeView);
         fixSizeWindow.setModel(true);
@@ -209,7 +209,7 @@ public class RelationKindEntitiesConfigurationView extends VerticalLayout {
 
     private void renderCleanConceptionKindEntitiesUI(){
         CleanRelationKindEntitiesView cleanRelationKindEntitiesView = new CleanRelationKindEntitiesView(this.conceptionKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"清除关系类型所有实例",null,true,600,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.RECYCLE),"清除关系类型所有实例",null,true,600,220,false);
         fixSizeWindow.setWindowContent(cleanRelationKindEntitiesView);
         fixSizeWindow.setModel(true);
         cleanRelationKindEntitiesView.setContainerDialog(fixSizeWindow);

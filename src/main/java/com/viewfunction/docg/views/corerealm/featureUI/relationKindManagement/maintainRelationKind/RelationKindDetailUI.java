@@ -755,7 +755,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
 
     private void renderSampleRandomAttributesView(String attributeName){
         AttributesValueListView attributesValueListView = new AttributesValueListView(AttributesValueListView.AttributeKindType.RelationKind,this.relationKind,attributeName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create(),"属性值随机采样 (100项)",null,true,500,520,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.EYE_DROPPER_SOLID.create(),"属性值随机采样 (100项)",null,true,500,530,false);
         fixSizeWindow.setWindowContent(attributesValueListView);
         fixSizeWindow.setModel(true);
         fixSizeWindow.show();
@@ -944,7 +944,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
         actionButtonList.add(confirmButton);
         actionButtonList.add(cancelButton);
 
-        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"删除关系类型实体属性",
                 "请确认执行转换属性数据类型操作，该操作将关系类型 "+this.relationKind+" 所有实体的属性 "+attributeName +" 转换为 STRING 类型,类型无法转换的属性将被删除",actionButtonList,550,200);
         confirmWindow.open();
 
@@ -1070,7 +1070,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
         };
         duplicateAttributeView.setDuplicateAttributeCallback(duplicateAttributeCallback);
 
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"复制关系类型实体属性",null,true,550,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"复制关系类型实体属性",null,true,550,230,false);
         fixSizeWindow.setWindowContent(duplicateAttributeView);
         duplicateAttributeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
