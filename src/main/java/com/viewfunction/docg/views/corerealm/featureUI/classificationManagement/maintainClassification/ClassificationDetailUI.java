@@ -566,7 +566,7 @@ public class ClassificationDetailUI extends VerticalLayout implements
     private void renderCreateClassificationUI(){
         CreateClassificationView createClassificationView = new CreateClassificationView();
         createClassificationView.setParentClassification(this.classificationName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建分类",null,true,500,350,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.PLUS_SQUARE_O.create(),"创建分类",null,true,500,360,false);
         fixSizeWindow.setWindowContent(createClassificationView);
         createClassificationView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);

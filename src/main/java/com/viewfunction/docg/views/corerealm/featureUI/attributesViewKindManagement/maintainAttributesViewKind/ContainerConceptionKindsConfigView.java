@@ -263,7 +263,7 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout implement
 
     private void renderAttachNewConceptionKindUI(){
         AttachNewConceptionKindView attachNewConceptionKindView = new AttachNewConceptionKindView(this.attributesViewKindUID);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加概念类型",null,true,490,200,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加概念类型",null,true,490,220,false);
         fixSizeWindow.setWindowContent(attachNewConceptionKindView);
         fixSizeWindow.setModel(true);
         attachNewConceptionKindView.setContainerDialog(fixSizeWindow);
@@ -272,7 +272,7 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout implement
 
     private void renderDetachConceptionKindUI(ConceptionKind attributeKind){
         DetachConceptionKindView detachConceptionKindView = new DetachConceptionKindView(this.attributesViewKindUID,attributeKind);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"移除概念类型",null,true,600,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"移除概念类型",null,true,600,220,false);
         fixSizeWindow.setWindowContent(detachConceptionKindView);
         fixSizeWindow.setModel(true);
         detachConceptionKindView.setContainerDialog(fixSizeWindow);

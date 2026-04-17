@@ -259,7 +259,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
 
     private void renderAttachNewAttributeKindUI(){
         AttachNewAttributeKindView attachNewAttributeKindView = new AttachNewAttributeKindView(this.attributesViewKindUID);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加属性类型",null,true,490,200,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加属性类型",null,true,490,220,false);
         fixSizeWindow.setWindowContent(attachNewAttributeKindView);
         fixSizeWindow.setModel(true);
         attachNewAttributeKindView.setContainerDialog(fixSizeWindow);
@@ -268,7 +268,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
 
     private void renderDetachAttributeKindUI(AttributeKind attributeKind){
         DetachAttributeKindView detachAttributeKindView = new DetachAttributeKindView(this.attributesViewKindUID,attributeKind);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"移除属性类型",null,true,600,210,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.TRASH),"移除属性类型",null,true,600,220,false);
         fixSizeWindow.setWindowContent(detachAttributeKindView);
         fixSizeWindow.setModel(true);
         detachAttributeKindView.setContainerDialog(fixSizeWindow);
