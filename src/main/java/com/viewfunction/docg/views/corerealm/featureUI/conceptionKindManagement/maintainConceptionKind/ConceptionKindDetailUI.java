@@ -983,7 +983,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(confirmButton);
         actionButtonList.add(cancelButton);
 
-        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"删除概念类型实体属性",
                 "请确认执行删除属性操作，该操作将从概念类型 "+this.conceptionKind+" 的所有实体中删除属性 "+attributeName,actionButtonList,500,200);
         confirmWindow.open();
 
@@ -1049,7 +1049,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(confirmButton);
         actionButtonList.add(cancelButton);
 
-        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"概念类型实体属性类型转换 -> Long",
                 "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 LONG 类型,类型无法转换的属性将被删除",actionButtonList,550,200);
         confirmWindow.open();
 
@@ -1085,7 +1085,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(confirmButton);
         actionButtonList.add(cancelButton);
 
-        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"概念类型实体属性类型转换 -> Double",
                 "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 DOUBLE 类型,类型无法转换的属性将被删除",actionButtonList,550,200);
         confirmWindow.open();
 
@@ -1121,7 +1121,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(confirmButton);
         actionButtonList.add(cancelButton);
 
-        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"概念类型实体属性类型转换 -> Boolean",
                 "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 BOOLEAN 类型,类型无法转换的属性将被删除",actionButtonList,550,200);
         confirmWindow.open();
 
@@ -1157,7 +1157,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         actionButtonList.add(confirmButton);
         actionButtonList.add(cancelButton);
 
-        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作",
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"概念类型实体属性类型转换 -> String",
                 "请确认执行转换属性数据类型操作，该操作将概念类型 "+this.conceptionKind+" 所有实体的属性 "+attributeName +" 转换为 STRING 类型,类型无法转换的属性将被删除",actionButtonList,550,200);
         confirmWindow.open();
 
@@ -1199,7 +1199,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
             }
         };
         convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> DATE",null,true,500,255,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> DATE",null,true,500,270,false);
         fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
         convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
@@ -1220,7 +1220,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                     }
                 };
         convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> TIME",null,true,500,255,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> TIME",null,true,500,270,false);
         fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
         convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
@@ -1241,7 +1241,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                     }
                 };
         convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> DATETIME",null,true,500,255,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> DATETIME",null,true,500,270,false);
         fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
         convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
@@ -1262,7 +1262,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
                     }
                 };
         convertEntityAttributeToTemporalTypeView.setConvertEntityAttributeToTemporalTypeCallback(convertEntityAttributeToTemporalTypeCallback);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> TIMESTAMP",null,true,500,255,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.FIRSTDRAFT.create(),"概念类型实体属性类型转换 String -> TIMESTAMP",null,true,500,270,false);
         fixSizeWindow.setWindowContent(convertEntityAttributeToTemporalTypeView);
         convertEntityAttributeToTemporalTypeView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);
