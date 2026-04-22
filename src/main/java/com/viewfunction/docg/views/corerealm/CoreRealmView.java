@@ -41,6 +41,7 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
     private CoreRealmDataUI coreRealmDataUI;
     private ConceptionKindManagementUI conceptionKindManagementUI;
     private RelationKindManagementUI relationKindManagementUI;
+    private RelationAttachKindManagementUI relationAttachKindManagementUI;
     private AttributeKindManagementUI attributeKindManagementUI;
     private AttributesViewKindManagementUI attributesViewKindManagementUI;
     private ClassificationManagementUI classificationManagementUI;
@@ -81,6 +82,15 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
         relationKindSpan.add(relationKindLogo,relationKindLabel);
         Tab relationKindTab = new Tab(relationKindSpan);
         relationKindTab.setId("relationKindTab");
+
+        Span relationAttachKindSpan =new Span();
+        Icon relationAttachKindLogo = new Icon(VaadinIcon.FLIP_H);
+        relationAttachKindLogo.setSize("18px");
+        NativeLabel relationAttachKindLabel = new NativeLabel(" RelationAttachKind-关系附着规则类型");
+        relationAttachKindLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
+        relationAttachKindSpan.add(relationAttachKindLogo,relationAttachKindLabel);
+        Tab relationAttachKindTab = new Tab(relationAttachKindSpan);
+        relationAttachKindTab.setId("relationAttachKindTab");
 
         Span attributeKindSpan =new Span();
         Icon attributeKindLogo = new Icon(VaadinIcon.INPUT);
@@ -127,7 +137,7 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
         Tab timeFlowTab = new Tab(timeFlowSpan);
         timeFlowTab.setId("timeFlowTab");
 
-        Tabs tabs = new Tabs(coreRealmTab, conceptionKindTab, relationKindTab, attributeKindTab, attributesViewKindTab,
+        Tabs tabs = new Tabs(coreRealmTab, conceptionKindTab, relationKindTab, relationAttachKindTab, attributeKindTab, attributesViewKindTab,
                 classificationTab, geospatialRegionTab, timeFlowTab);
         add(tabs);
         tabs.addSelectedChangeListener(event -> switchFeatureUI(event.getSelectedTab().getId().get()));
@@ -175,6 +185,9 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
         if(this.relationKindManagementUI != null){
             this.relationKindManagementUI.setVisible(false);
         }
+        if(this.relationAttachKindManagementUI != null){
+            this.relationAttachKindManagementUI.setVisible(false);
+        }
         if(this.attributeKindManagementUI != null){
             this.attributeKindManagementUI.setVisible(false);
         }
@@ -212,6 +225,14 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
                 this.featureContainerLayout.add(this.relationKindManagementUI);
             }else{
                 this.relationKindManagementUI.setVisible(true);
+            }
+        }
+        if(activeFeatureID.equals("relationAttachKindTab")){
+            if(this.relationAttachKindManagementUI == null){
+                this.relationAttachKindManagementUI = new RelationAttachKindManagementUI();
+                this.featureContainerLayout.add(this.relationAttachKindManagementUI);
+            }else{
+                this.relationAttachKindManagementUI.setVisible(true);
             }
         }
         if(activeFeatureID.equals("attributeKindTab")){
