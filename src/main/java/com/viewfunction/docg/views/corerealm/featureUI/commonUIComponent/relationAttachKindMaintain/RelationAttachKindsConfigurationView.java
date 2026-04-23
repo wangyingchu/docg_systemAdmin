@@ -366,7 +366,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
 
     private void renderCreateRelationAttachKindViewUI(){
         CreateRelationAttachKindView createRelationAttachKindView = new CreateRelationAttachKindView(this.relatedKindType,this.relatedKindName);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建关系附着规则类型",null,true,490,530,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建关系附着规则类型",null,true,490,540,false);
         fixSizeWindow.setWindowContent(createRelationAttachKindView);
         fixSizeWindow.setModel(true);
         createRelationAttachKindView.setContainerDialog(fixSizeWindow);
@@ -581,6 +581,8 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
                     EntitiesOperationResult entitiesOperationResult = targetRelationAttachKind.newUniversalRelationEntities(null);
                     showPopupNotification(targetRelationAttachKind.getRelationAttachKindName(),entitiesOperationResult,NotificationVariant.LUMO_SUCCESS);
                     confirmWindow.closeConfirmWindow();
+                }catch(CoreRealmServiceRuntimeException e){
+                    e.printStackTrace();
                 } finally {
                     coreRealm.closeGlobalSession();
                 }

@@ -83,15 +83,6 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
         Tab relationKindTab = new Tab(relationKindSpan);
         relationKindTab.setId("relationKindTab");
 
-        Span relationAttachKindSpan =new Span();
-        Icon relationAttachKindLogo = new Icon(VaadinIcon.FLIP_H);
-        relationAttachKindLogo.setSize("18px");
-        NativeLabel relationAttachKindLabel = new NativeLabel(" RelationAttachKind-关系附着规则类型");
-        relationAttachKindLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
-        relationAttachKindSpan.add(relationAttachKindLogo,relationAttachKindLabel);
-        Tab relationAttachKindTab = new Tab(relationAttachKindSpan);
-        relationAttachKindTab.setId("relationAttachKindTab");
-
         Span attributeKindSpan =new Span();
         Icon attributeKindLogo = new Icon(VaadinIcon.INPUT);
         attributeKindLogo.setSize("20px");
@@ -137,8 +128,17 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
         Tab timeFlowTab = new Tab(timeFlowSpan);
         timeFlowTab.setId("timeFlowTab");
 
-        Tabs tabs = new Tabs(coreRealmTab, conceptionKindTab, relationKindTab, relationAttachKindTab, attributeKindTab, attributesViewKindTab,
-                classificationTab, geospatialRegionTab, timeFlowTab);
+        Span relationAttachKindSpan =new Span();
+        Icon relationAttachKindLogo = new Icon(VaadinIcon.FLIP_H);
+        relationAttachKindLogo.setSize("18px");
+        NativeLabel relationAttachKindLabel = new NativeLabel(" RelationAttachKind-关系附着规则类型");
+        relationAttachKindLabel.getStyle().set("font-size","var(--lumo-font-size-l)");
+        relationAttachKindSpan.add(relationAttachKindLogo,relationAttachKindLabel);
+        Tab relationAttachKindTab = new Tab(relationAttachKindSpan);
+        relationAttachKindTab.setId("relationAttachKindTab");
+
+        Tabs tabs = new Tabs(coreRealmTab, conceptionKindTab, relationKindTab, attributeKindTab, attributesViewKindTab,
+                classificationTab, geospatialRegionTab, timeFlowTab, relationAttachKindTab);
         add(tabs);
         tabs.addSelectedChangeListener(event -> switchFeatureUI(event.getSelectedTab().getId().get()));
 
