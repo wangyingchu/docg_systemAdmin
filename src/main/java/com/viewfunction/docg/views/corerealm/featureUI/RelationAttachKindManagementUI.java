@@ -24,7 +24,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFa
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.util.ResourceHolder;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.CreateRelationAttachKindView;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.RelationAttachKindsConfigurationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,10 +57,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
         refreshDataButton.addClickListener((ClickEvent<Button> click) ->{
-            //loadConceptionKindsInfo();
-            //resetSingleConceptionKindSummaryInfoArea();
-            //selectKindPromptInfoContainerLayout.setVisible(true);
-            //singleConceptionKindSummaryInfoContainerLayout.setVisible(false);
+            refreshRelationAttachKindsInfo();
         });
 
         List<Component> buttonList = new ArrayList<>();
@@ -89,7 +87,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
         createRelationAttachKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderCreateConceptionKindUI();
+                renderCreateRelationAttachKindViewUI();
             }
         });
 
@@ -233,7 +231,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
                 }else{
                     RelationAttachKind selectedRelationAttachKind = selectedItemSet.iterator().next();
                     lastSelectedRelationAttachKind = selectedRelationAttachKind;
-                    //renderRelationAttachKindDetailInfo(selectedRelationAttachKind);
+                    renderRelationAttachKindDetailInfo(selectedRelationAttachKind);
                 }
             }
         });
@@ -465,15 +463,51 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
 
     public void refreshRelationAttachKindsInfo(){
         renderRelationAttachKindsInfo();
-        //clearRelationAttachKindDetailInfo();
+        clearRelationAttachKindDetailInfo();
     }
 
+    private void renderRelationAttachKindDetailInfo(RelationAttachKind selectedRelationAttachKind){
+        singleConceptionKindSummaryInfoContainerLayout.setVisible(true);
+        selectKindPromptInfoContainerLayout.setVisible(false);
 
+        selectedRelationAttachKindTitleActionBar.updateTitleContent(
+                selectedRelationAttachKind.getRelationAttachKindName()+"("+selectedRelationAttachKind.getRelationAttachKindDesc()+")");
+        selectedRelationAttachKindUIDActionBar.updateTitleContent(selectedRelationAttachKind.getRelationAttachKindUID());
+        String allowRepeatRelationMessage = selectedRelationAttachKind.isRepeatableRelationKindAllow() ? "允许重复创建相同类型的关系":"不允许重复创建相同类型的关系";
+        allowRepeatLabel.setText(allowRepeatRelationMessage);
+        relationKindActionBar.updateTitleContent(selectedRelationAttachKind.getRelationKindName());
+        sourceConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getSourceConceptionKindName());
+        targetConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getTargetConceptionKindName());
+        List<RelationAttachLinkLogic> relationAttachLinkLogicList = selectedRelationAttachKind.getRelationAttachLinkLogic();
+        relationAttachLinkLogicGrid.setItems(relationAttachLinkLogicList);
+        addRelationAttachLinkLogicButton.setEnabled(true);
+        executeRelationAttachKindButton.setEnabled(true);
+    }
 
+    private void clearRelationAttachKindDetailInfo(){
+        selectedRelationAttachKindTitleActionBar.updateTitleContent("-");
+        selectedRelationAttachKindUIDActionBar.updateTitleContent("-");
+        allowRepeatLabel.setText("-");
+        relationKindActionBar.updateTitleContent("-");
+        sourceConceptionKindActionBar.updateTitleContent("-");
+        targetConceptionKindActionBar.updateTitleContent("-");
+        List<RelationAttachLinkLogic> relationAttachLinkLogicList = new ArrayList<>();
+        relationAttachLinkLogicGrid.setItems(relationAttachLinkLogicList);
+        addRelationAttachLinkLogicButton.setEnabled(false);
+        executeRelationAttachKindButton.setEnabled(false);
 
+        singleConceptionKindSummaryInfoContainerLayout.setVisible(false);
+        selectKindPromptInfoContainerLayout.setVisible(true);
+    }
 
-
-
+    private void renderCreateRelationAttachKindViewUI(){
+        CreateRelationAttachKindView createRelationAttachKindView = new CreateRelationAttachKindView(RelationAttachKindsConfigurationView.RelatedKindType.ConceptionKind,null);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建关系附着规则类型",null,true,490,540,false);
+        fixSizeWindow.setWindowContent(createRelationAttachKindView);
+        fixSizeWindow.setModel(true);
+        createRelationAttachKindView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
+    }
 
 
 }
