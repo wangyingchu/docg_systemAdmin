@@ -17,13 +17,12 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachLinkLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationAttachKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
-import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
-import com.viewfunction.docg.element.commonComponent.SectionActionBar;
-import com.viewfunction.docg.element.commonComponent.TitleActionBar;
+import com.viewfunction.docg.element.commonComponent.*;
+import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 
@@ -38,9 +37,15 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
     private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
     private VerticalLayout selectKindPromptInfoContainerLayout;
     private Registration listener;
-
-
-
+    private SecondaryTitleActionBar selectedRelationAttachKindTitleActionBar;
+    private SecondaryTitleActionBar selectedRelationAttachKindUIDActionBar;
+    private SecondaryTitleActionBar relationKindActionBar;
+    private NativeLabel allowRepeatLabel;
+    private SecondaryTitleActionBar sourceConceptionKindActionBar;
+    private SecondaryTitleActionBar targetConceptionKindActionBar;
+    private Grid<RelationAttachLinkLogic> relationAttachLinkLogicGrid;
+    private Button addRelationAttachLinkLogicButton;
+    private Button executeRelationAttachKindButton;
     private int screenAreaWidth = 1200;
     private int screenAreaHeight = 900;
 
@@ -91,13 +96,6 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
         Icon icon = new Icon(VaadinIcon.LIST);
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"关系附着规则类型:",relationAttachKindManagementOperationButtonList);
         add(sectionActionBar);
-
-
-
-
-
-
-
 
         HorizontalLayout conceptionKindsInfoContainerLayout = new HorizontalLayout();
         conceptionKindsInfoContainerLayout.setSpacing(false);
@@ -170,13 +168,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
             }
         });
 
-        //conceptionKindMetaInfoGridContainerLayout.add(conceptionKindMetaInfoGrid);
-
         conceptionKindsInfoContainerLayout.add(conceptionKindMetaInfoGridContainerLayout);
-
-
-
-
 
         ComponentRenderer _toolBarComponentRenderer1 = new ComponentRenderer<>(relationAttachKind -> {
             Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
@@ -204,7 +196,6 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
         });
 
         relationAttachKindGrid = new Grid<>();
-
         relationAttachKindGrid.setWidth(1300,Unit.PIXELS);
         relationAttachKindGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         relationAttachKindGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
@@ -229,12 +220,8 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
         relationAttachKindGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
         GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
         relationAttachKindGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4);
-
-
-
         relationAttachKindGrid.appendFooterRow();
         conceptionKindMetaInfoGridContainerLayout.add(relationAttachKindGrid);
-
 
         relationAttachKindGrid.addSelectionListener(new SelectionListener<Grid<RelationAttachKind>, RelationAttachKind>() {
             @Override
@@ -259,7 +246,147 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
         conceptionKindsInfoContainerLayout.add(singleConceptionKindSummaryInfoContainerLayout);
         conceptionKindsInfoContainerLayout.setFlexGrow(1,singleConceptionKindSummaryInfoContainerLayout);
 
+        HorizontalLayout singleConceptionKindInfoElementsContainerLayout = new HorizontalLayout();
+        singleConceptionKindInfoElementsContainerLayout.setSpacing(false);
+        singleConceptionKindInfoElementsContainerLayout.setMargin(false);
+        singleConceptionKindInfoElementsContainerLayout.setHeight("30px");
+        singleConceptionKindSummaryInfoContainerLayout.add(singleConceptionKindInfoElementsContainerLayout);
 
+        SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"概念类型概览");
+        singleConceptionKindInfoElementsContainerLayout.add(filterTitle2);
+        singleConceptionKindInfoElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle2);
+
+        List<Component> actionComponentsList = new ArrayList<>();
+        executeRelationAttachKindButton = new Button("执行关系附着规则",VaadinIcon.PLAY.create());
+        executeRelationAttachKindButton.addThemeVariants(ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
+        actionComponentsList.add(executeRelationAttachKindButton);
+        executeRelationAttachKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                //renderExecuteRelationAttachKindUI();
+            }
+        });
+
+        selectedRelationAttachKindTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TREE_TABLE),"-",null,actionComponentsList,false);
+        selectedRelationAttachKindTitleActionBar.setWidth(100,Unit.PERCENTAGE);
+        singleConceptionKindSummaryInfoContainerLayout.add(selectedRelationAttachKindTitleActionBar);
+
+        HorizontalLayout horizontalContainer01 = new HorizontalLayout();
+        horizontalContainer01.setSpacing(false);
+        horizontalContainer01.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        singleConceptionKindSummaryInfoContainerLayout.add(horizontalContainer01);
+
+        selectedRelationAttachKindUIDActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.KEY_O),"-",null,null,false);
+        selectedRelationAttachKindUIDActionBar.setWidth(90,Unit.PIXELS);
+        horizontalContainer01.add(selectedRelationAttachKindUIDActionBar);
+
+        Icon allowRepeatIcon = new Icon(VaadinIcon.RANDOM);
+        allowRepeatIcon.setSize("14px");
+        allowRepeatIcon.getStyle().set("color","#2e4e7e").set("padding-right", "5px");
+        horizontalContainer01.add(allowRepeatIcon);
+        allowRepeatLabel = new NativeLabel("-");
+        allowRepeatLabel.getStyle().set("color","#2e4e7e");
+        allowRepeatLabel.addClassNames("text-xs");
+        horizontalContainer01.add(allowRepeatLabel);
+
+        HorizontalLayout horizontalContainer02 = new HorizontalLayout();
+        horizontalContainer02.setSpacing(false);
+        horizontalContainer02.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        singleConceptionKindSummaryInfoContainerLayout.add(horizontalContainer02);
+
+        Icon sourceConceptionKindIcon = new Icon(VaadinIcon.LEVEL_LEFT);
+        sourceConceptionKindIcon.setSize("16px");
+        sourceConceptionKindIcon.getStyle().set("color","#2e4e7e").set("padding-right", "5px");
+        horizontalContainer02.add(sourceConceptionKindIcon);
+        sourceConceptionKindActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null,false);
+        horizontalContainer02.add(sourceConceptionKindActionBar);
+
+        HorizontalLayout horizontalContainer03 = new HorizontalLayout();
+        horizontalContainer03.setSpacing(false);
+        horizontalContainer03.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        singleConceptionKindSummaryInfoContainerLayout.add(horizontalContainer03);
+
+        Icon targetConceptionKindIcon = new Icon(VaadinIcon.LEVEL_RIGHT);
+        targetConceptionKindIcon.setSize("16px");
+        targetConceptionKindIcon.getStyle().set("color","#2e4e7e").set("padding-right", "5px");
+        horizontalContainer03.add(targetConceptionKindIcon);
+        targetConceptionKindActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CUBE),"-",null,null,false);
+        horizontalContainer03.add(targetConceptionKindActionBar);
+
+        relationKindActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONNECT_O),"-",null,null);
+        singleConceptionKindSummaryInfoContainerLayout.add(relationKindActionBar);
+
+        List<Component> actionComponentsList2 = new ArrayList<>();
+        addRelationAttachLinkLogicButton = new Button("添加关系附着逻辑规则");
+        addRelationAttachLinkLogicButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
+        addRelationAttachLinkLogicButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        addRelationAttachLinkLogicButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addRelationAttachLinkLogicButton.addClickListener((ClickEvent<Button> click) ->{
+        //    renderAddNewRelationAttachLinkLogic();
+        });
+        actionComponentsList2.add(addRelationAttachLinkLogicButton);
+
+        Icon relationAttachLinkLogicInfoIcon = new Icon(VaadinIcon.WRENCH);
+        SecondaryTitleActionBar relationAttachLinkLogicInfoSectionActionBar = new SecondaryTitleActionBar(relationAttachLinkLogicInfoIcon,"关系附着逻辑规则",null,actionComponentsList2,false);
+        singleConceptionKindSummaryInfoContainerLayout.add(relationAttachLinkLogicInfoSectionActionBar);
+
+        ComponentRenderer _toolBarComponentRenderer2 = new ComponentRenderer<>(relationAttachLinkLogic -> {
+            Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
+            deleteKindIcon.setSize("21px");
+            Button removeRelationAttachLogicButton = new Button(deleteKindIcon, event -> {});
+            removeRelationAttachLogicButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            removeRelationAttachLogicButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            removeRelationAttachLogicButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            removeRelationAttachLogicButton.setTooltipText("删除关系附着逻辑规则");
+            removeRelationAttachLogicButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    //renderDeleteRelationAttachLinkLogicUI((RelationAttachLinkLogic)relationAttachLinkLogic);
+                }
+            });
+
+            HorizontalLayout buttons = new HorizontalLayout(removeRelationAttachLogicButton);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(15,Unit.PIXELS);
+            buttons.setWidth(80,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
+
+        relationAttachLinkLogicGrid = new Grid<>();
+        relationAttachLinkLogicGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER);
+        relationAttachLinkLogicGrid.addColumn(RelationAttachLinkLogic::getLinkLogicType).setHeader("逻辑类别").setKey("idx_0").setFlexGrow(1)
+                .setTooltipGenerator(relationAttachLinkLogic -> relationAttachLinkLogic.getLinkLogicType().toString());
+        relationAttachLinkLogicGrid.addColumn(RelationAttachLinkLogic::getSourceEntityLinkAttributeName).setHeader("源属性名称").setKey("idx_1").setFlexGrow(1)
+                .setTooltipGenerator(RelationAttachLinkLogic::getSourceEntityLinkAttributeName);
+        relationAttachLinkLogicGrid.addColumn(RelationAttachLinkLogic::getLinkLogicCondition).setHeader("逻辑条件").setKey("idx_2").setFlexGrow(1)
+                .setTooltipGenerator(relationAttachLinkLogic -> relationAttachLinkLogic.getLinkLogicCondition().toString());
+        relationAttachLinkLogicGrid.addColumn(RelationAttachLinkLogic::getTargetEntitiesLinkAttributeName).setHeader("目标属性名称").setKey("idx_3").setFlexGrow(1)
+                .setTooltipGenerator(RelationAttachLinkLogic::getTargetEntitiesLinkAttributeName);
+        relationAttachLinkLogicGrid.addColumn(_toolBarComponentRenderer2).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("70px").setResizable(false);
+
+        LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.CALC,"逻辑类别");
+        relationAttachLinkLogicGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx1 = new LightGridColumnHeader(VaadinIcon.LEVEL_LEFT,"源属性名称");
+        relationAttachLinkLogicGrid.getColumnByKey("idx_1").setHeader(gridColumnHeader_1_idx1).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx2 = new LightGridColumnHeader(LineAwesomeIconsSvg.CREATIVE_COMMONS_ND.create(),"逻辑条件");
+        relationAttachLinkLogicGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_1_idx2).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx3 = new LightGridColumnHeader(VaadinIcon.LEVEL_RIGHT.create(),"目标属性名称");
+        relationAttachLinkLogicGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_1_idx3).setSortable(true);
+        LightGridColumnHeader gridColumnHeader_1_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
+        relationAttachLinkLogicGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_1_idx4);
+
+        singleConceptionKindSummaryInfoContainerLayout.add(relationAttachLinkLogicGrid);
+
+        HorizontalLayout horizontalContainer04 = new HorizontalLayout();
+        horizontalContainer04.setSpacing(false);
+        horizontalContainer04.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        singleConceptionKindSummaryInfoContainerLayout.add(horizontalContainer04);
+
+        addRelationAttachLinkLogicButton.setEnabled(false);
+        executeRelationAttachKindButton.setEnabled(false);
 
         selectKindPromptInfoContainerLayout = new VerticalLayout();
         selectKindPromptInfoContainerLayout.getStyle().set("padding-top", "50px");
@@ -280,24 +407,9 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
         selectKindInfoMessage.add(messageLogo,messageLabel);
         selectKindPromptInfoContainerLayout.add(selectKindInfoMessage);
 
-        HorizontalLayout singleConceptionKindInfoElementsContainerLayout = new HorizontalLayout();
-        singleConceptionKindInfoElementsContainerLayout.setSpacing(false);
-        singleConceptionKindInfoElementsContainerLayout.setMargin(false);
-        singleConceptionKindInfoElementsContainerLayout.setHeight("30px");
-        singleConceptionKindSummaryInfoContainerLayout.add(singleConceptionKindInfoElementsContainerLayout);
-
-
-
+        singleConceptionKindSummaryInfoContainerLayout.setVisible(false);
+        selectKindPromptInfoContainerLayout.setVisible(true);
     }
-
-
-
-
-
-
-
-
-
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
