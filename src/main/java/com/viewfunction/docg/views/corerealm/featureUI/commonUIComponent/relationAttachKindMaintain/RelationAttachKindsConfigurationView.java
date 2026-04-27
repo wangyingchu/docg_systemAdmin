@@ -438,7 +438,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
                 }
             });
 
-            FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加关系附着逻辑规则",null,true,350,450,false);
+            FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加关系附着逻辑规则",null,true,350,470,false);
             fixSizeWindow.setWindowContent(createNewRelationAttachLinkLogicView);
             fixSizeWindow.setModel(true);
             createNewRelationAttachLinkLogicView.setContainerDialog(fixSizeWindow);
@@ -456,7 +456,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"删除关系附着逻辑规则",
-                "请确认删除关系附着逻辑规则 "+ relationAttachLinkLogic.getRelationAttachLinkLogicUID(),actionButtonList,450,175);
+                "请确认删除关系附着逻辑规则 "+ relationAttachLinkLogic.getRelationAttachLinkLogicUID(),actionButtonList,450,185);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
