@@ -567,7 +567,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"删除关系附着规则",
-                "请确认执行关系附着规则 "+ lastSelectedRelationAttachKind.getRelationAttachKindName()+" 创建新的关系实体",actionButtonList,500,175);
+                "请确认执行关系附着规则 "+ lastSelectedRelationAttachKind.getRelationAttachKindName()+" 创建新的关系实体",actionButtonList,500,185);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {

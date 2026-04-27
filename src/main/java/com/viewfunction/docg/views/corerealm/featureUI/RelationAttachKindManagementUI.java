@@ -5,10 +5,12 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -20,6 +22,7 @@ import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachLinkLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationAttachKind;
@@ -53,6 +56,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
     private Grid<RelationAttachLinkLogic> relationAttachLinkLogicGrid;
     private Button addRelationAttachLinkLogicButton;
     private Button executeRelationAttachKindButton;
+    private NativeLabel isActiveLabel;
 
     public RelationAttachKindManagementUI() {
         Button refreshDataButton = new Button("刷新关系附着规则类型数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -265,7 +269,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         executeRelationAttachKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                //renderExecuteRelationAttachKindUI();
+                renderExecuteRelationAttachKindUI();
             }
         });
 
@@ -290,6 +294,48 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         allowRepeatLabel.getStyle().set("color","#2e4e7e");
         allowRepeatLabel.addClassNames("text-xs");
         horizontalContainer01.add(allowRepeatLabel);
+
+        Button updateAllowRepeatAttributeValueButton = new Button();
+        updateAllowRepeatAttributeValueButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
+        Icon plusIcon2 = VaadinIcon.EDIT.create();
+        plusIcon2.setSize("16px");
+        updateAllowRepeatAttributeValueButton.setIcon(plusIcon2);
+        updateAllowRepeatAttributeValueButton.setTooltipText("更新 AllowRepeat 属性值");
+        updateAllowRepeatAttributeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+               // enableEditAttributeValue();
+            }
+        });
+        horizontalContainer01.add(updateAllowRepeatAttributeValueButton);
+
+        HorizontalLayout horizontalContainer04 = new HorizontalLayout();
+        horizontalContainer04.setSpacing(false);
+        horizontalContainer04.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        singleConceptionKindSummaryInfoContainerLayout.add(horizontalContainer04);
+
+        Icon isActiveIcon = new Icon(VaadinIcon.BOLT);
+        isActiveIcon.setSize("14px");
+        isActiveIcon.getStyle().set("color","#2e4e7e").set("padding-right", "5px");
+        horizontalContainer04.add(isActiveIcon);
+        isActiveLabel = new NativeLabel("-");
+        isActiveLabel.getStyle().set("color","#2e4e7e");
+        isActiveLabel.addClassNames("text-xs");
+        horizontalContainer04.add(isActiveLabel);
+
+        Button updateActiveAttributeValueButton = new Button();
+        updateActiveAttributeValueButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
+        Icon plusIcon3 = VaadinIcon.EDIT.create();
+        plusIcon3.setSize("16px");
+        updateActiveAttributeValueButton.setIcon(plusIcon3);
+        updateActiveAttributeValueButton.setTooltipText("更新 Active 属性值");
+        updateActiveAttributeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                // enableEditAttributeValue();
+            }
+        });
+        horizontalContainer04.add(updateActiveAttributeValueButton);
 
         HorizontalLayout horizontalContainer02 = new HorizontalLayout();
         horizontalContainer02.setSpacing(false);
@@ -382,10 +428,10 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
 
         singleConceptionKindSummaryInfoContainerLayout.add(relationAttachLinkLogicGrid);
 
-        HorizontalLayout horizontalContainer04 = new HorizontalLayout();
-        horizontalContainer04.setSpacing(false);
-        horizontalContainer04.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        singleConceptionKindSummaryInfoContainerLayout.add(horizontalContainer04);
+        HorizontalLayout horizontalContainer05 = new HorizontalLayout();
+        horizontalContainer05.setSpacing(false);
+        horizontalContainer05.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        singleConceptionKindSummaryInfoContainerLayout.add(horizontalContainer05);
 
         addRelationAttachLinkLogicButton.setEnabled(false);
         executeRelationAttachKindButton.setEnabled(false);
@@ -462,6 +508,8 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         selectedRelationAttachKindUIDActionBar.updateTitleContent(selectedRelationAttachKind.getRelationAttachKindUID());
         String allowRepeatRelationMessage = selectedRelationAttachKind.isRepeatableRelationKindAllow() ? "允许重复创建相同类型的关系":"不允许重复创建相同类型的关系";
         allowRepeatLabel.setText(allowRepeatRelationMessage);
+        String isActiveMessage = selectedRelationAttachKind.isActive() ? "启用中":"未启用";
+        isActiveLabel.setText(isActiveMessage);
         relationKindActionBar.updateTitleContent(selectedRelationAttachKind.getRelationKindName());
         sourceConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getSourceConceptionKindName());
         targetConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getTargetConceptionKindName());
@@ -617,5 +665,83 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
                 confirmWindow.closeConfirmWindow();
             }
         });
+    }
+
+    private void renderExecuteRelationAttachKindUI(){
+        boolean hasDefaultLogic = false;
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        RelationAttachKind targetRelationAttachKind = coreRealm.getRelationAttachKind(lastSelectedRelationAttachKind.getRelationAttachKindUID());
+        List<RelationAttachLinkLogic> relationAttachLinkLogicList = targetRelationAttachKind.getRelationAttachLinkLogic();
+        if(relationAttachLinkLogicList != null){
+            for(RelationAttachLinkLogic currentRelationAttachLinkLogic : relationAttachLinkLogicList){
+                RelationAttachKind.LinkLogicType currentLogicLinkLogicType =currentRelationAttachLinkLogic.getLinkLogicType();
+                if(currentLogicLinkLogicType.equals(RelationAttachKind.LinkLogicType.DEFAULT)){
+                    hasDefaultLogic = true;
+                    break;
+                }
+            }
+        }
+        if(!hasDefaultLogic){
+            CommonUIOperationUtil.showPopupNotification("执行关系附着规则要求必须包含 "+RelationAttachKind.LinkLogicType.DEFAULT +" 类型的关系实体匹配逻辑", NotificationVariant.LUMO_ERROR,5000, Notification.Position.MIDDLE);
+            return;
+        }
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认执行关系附着规则",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"删除关系附着规则",
+                "请确认执行关系附着规则 "+ lastSelectedRelationAttachKind.getRelationAttachKindName()+" 创建新的关系实体",actionButtonList,500,185);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                coreRealm.openGlobalSession();
+                try {
+                    RelationAttachKind targetRelationAttachKind = coreRealm.getRelationAttachKind(lastSelectedRelationAttachKind.getRelationAttachKindUID());
+                    EntitiesOperationResult entitiesOperationResult = targetRelationAttachKind.newUniversalRelationEntities(null);
+                    showPopupNotification(targetRelationAttachKind.getRelationAttachKindName(),entitiesOperationResult,NotificationVariant.LUMO_SUCCESS);
+                    confirmWindow.closeConfirmWindow();
+                }catch(CoreRealmServiceRuntimeException e){
+                    e.printStackTrace();
+                } finally {
+                    coreRealm.closeGlobalSession();
+                }
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void showPopupNotification(String relationAttachKindName,EntitiesOperationResult entitiesOperationResult, NotificationVariant notificationVariant){
+        Notification notification = new Notification();
+        notification.addThemeVariants(notificationVariant);
+        Div text = new Div(new Text("关系附着规则 "+relationAttachKindName+" 执行操作成功"));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setWidth(100, Unit.PERCENTAGE);
+        layout.setFlexGrow(1,text);
+        notification.add(layout);
+
+        VerticalLayout notificationMessageContainer = new VerticalLayout();
+        notificationMessageContainer.add(new Div(new Text("执行创建实体数: "+entitiesOperationResult.getOperationStatistics().getSuccessItemsCount())));
+        notificationMessageContainer.add(new Div(new Text("执行开始时间: "+entitiesOperationResult.getOperationStatistics().getStartTime())));
+        notificationMessageContainer.add(new Div(new Text("执行结束时间: "+entitiesOperationResult.getOperationStatistics().getFinishTime())));
+        notification.add(notificationMessageContainer);
+        notification.setDuration(3000);
+        notification.open();
     }
 }
