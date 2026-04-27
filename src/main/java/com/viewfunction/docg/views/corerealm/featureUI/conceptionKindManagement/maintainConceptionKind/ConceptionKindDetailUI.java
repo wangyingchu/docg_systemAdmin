@@ -61,6 +61,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attribu
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeMaintain.AttributesValueListView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.CreateRelationAttachKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.RelationAttachKindsConfigurationView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.ConceptionKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
@@ -725,7 +726,7 @@ public class ConceptionKindDetailUI extends VerticalLayout implements
         conceptionKindEntitiesConfigurationView = new ConceptionKindEntitiesConfigurationView(this.conceptionKind);
         relatedAttributesViewKindRuntimeConfigurationInfoView = new RelatedAttributesViewKindRuntimeConfigurationInfoView(
                 RelatedAttributesViewKindRuntimeConfigurationInfoView.KindTypeOfRelatedPair.ConceptionKind,this.conceptionKind);
-        relationAttachKindsConfigurationView = new RelationAttachKindsConfigurationView(RelationAttachKindsConfigurationView.RelatedKindType.ConceptionKind,this.conceptionKind);
+        relationAttachKindsConfigurationView = new RelationAttachKindsConfigurationView(CreateRelationAttachKindView.RelatedKindType.ConceptionKind,this.conceptionKind);
         int conceptionEntityExternalAttributesAccessViewHeightOffset = this.conceptionKindDetailViewHeightOffset + 60;
         conceptionEntityExternalAttributesAccessView = new ConceptionEntityExternalAttributesAccessView(this.conceptionKind,null,conceptionEntityExternalAttributesAccessViewHeightOffset);
         conceptionKindActionsConfigurationView = new ConceptionKindActionsConfigurationView(this.conceptionKind,conceptionEntityExternalAttributesAccessViewHeightOffset);

@@ -9,20 +9,25 @@ import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachLinkLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationAttachKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.eventHandling.RelationAttachKindCreatedEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.CreateRelationAttachKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.RelationAttachKindsConfigurationView;
@@ -31,7 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class RelationAttachKindManagementUI extends VerticalLayout {
+public class RelationAttachKindManagementUI extends VerticalLayout implements
+        RelationAttachKindCreatedEvent.RelationAttachKindCreatedListener{
 
     private Grid<RelationAttachKind> relationAttachKindGrid;
     private RelationAttachKind lastSelectedRelationAttachKind;
@@ -47,8 +53,6 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
     private Grid<RelationAttachLinkLogic> relationAttachLinkLogicGrid;
     private Button addRelationAttachLinkLogicButton;
     private Button executeRelationAttachKindButton;
-    private int screenAreaWidth = 1200;
-    private int screenAreaHeight = 900;
 
     public RelationAttachKindManagementUI() {
         Button refreshDataButton = new Button("刷新关系附着规则类型数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -179,7 +183,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
             removeRelationAttachKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
                 @Override
                 public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                    //renderDeleteRelationAttachKindUI((RelationAttachKind)relationAttachKind);
+                    renderDeleteRelationAttachKindUI((RelationAttachKind)relationAttachKind);
                 }
             });
 
@@ -412,23 +416,16 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-       // ResourceHolder.getApplicationBlackboard().addListener(this);
-        //loadConceptionKindsInfo();
+        ResourceHolder.getApplicationBlackboard().addListener(this);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             relationAttachKindGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
-            screenAreaWidth = event.getWidth();
-            screenAreaHeight = event.getHeight();
+
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            int browserWidth = receiver.getBodyClientWidth();
             relationAttachKindGrid.setHeight(browserHeight-250,Unit.PIXELS);
-            //conceptionKindCorrelationInfoChart = new ConceptionKindCorrelationInfoChart(browserHeight-600);
-            //singleConceptionKindSummaryInfoContainerLayout.add(conceptionKindCorrelationInfoChart);
-            screenAreaWidth = browserWidth;
-            screenAreaHeight = browserHeight;
         }));
         renderRelationAttachKindsInfo();
     }
@@ -438,7 +435,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
         super.onDetach(detachEvent);
-        //ResourceHolder.getApplicationBlackboard().removeListener(this);
+        ResourceHolder.getApplicationBlackboard().removeListener(this);
     }
 
 
@@ -501,7 +498,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
     }
 
     private void renderCreateRelationAttachKindViewUI(){
-        CreateRelationAttachKindView createRelationAttachKindView = new CreateRelationAttachKindView(RelationAttachKindsConfigurationView.RelatedKindType.ConceptionKind,null);
+        CreateRelationAttachKindView createRelationAttachKindView = new CreateRelationAttachKindView(CreateRelationAttachKindView.RelatedKindType.FromBlank,null);
         FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建关系附着规则类型",null,true,490,540,false);
         fixSizeWindow.setWindowContent(createRelationAttachKindView);
         fixSizeWindow.setModel(true);
@@ -509,5 +506,61 @@ public class RelationAttachKindManagementUI extends VerticalLayout {
         fixSizeWindow.show();
     }
 
+    @Override
+    public void receivedRelationAttachKindCreatedEvent(RelationAttachKindCreatedEvent event) {
+        if(event.getRelationAttachKind() != null){
+            ListDataProvider dataProvider=(ListDataProvider)relationAttachKindGrid.getDataProvider();
+            dataProvider.getItems().add(event.getRelationAttachKind());
+            dataProvider.refreshAll();
+        }
+    }
+
+    private void renderDeleteRelationAttachKindUI(RelationAttachKind relationAttachKind){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认删除关系附着规则",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"删除关系附着规则",
+                "请确认删除关系附着规则 "+ relationAttachKind.getRelationAttachKindName(),actionButtonList,500,185);
+        confirmWindow.open();
+
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                coreRealm.openGlobalSession();
+                try {
+                    boolean removeResult = coreRealm.removeRelationAttachKind(relationAttachKind.getRelationAttachKindUID());
+                    if(removeResult){
+                        ListDataProvider<RelationAttachKind> dataProvider=(ListDataProvider<RelationAttachKind>)relationAttachKindGrid.getDataProvider();
+                        dataProvider.getItems().remove(relationAttachKind);
+                        dataProvider.refreshAll();
+                        CommonUIOperationUtil.showPopupNotification("删除关系附着规则成功", NotificationVariant.LUMO_SUCCESS);
+                        confirmWindow.closeConfirmWindow();
+                        if(lastSelectedRelationAttachKind != null &&
+                                lastSelectedRelationAttachKind.getRelationAttachKindUID().equals(relationAttachKind.getRelationAttachKindUID())){
+                            clearRelationAttachKindDetailInfo();
+                        }
+                    }else{
+                        CommonUIOperationUtil.showPopupNotification("删除关系附着规则失败", NotificationVariant.LUMO_ERROR);
+                    }
+                } catch (CoreRealmServiceRuntimeException e) {
+                    throw new RuntimeException(e);
+                }finally {
+                    coreRealm.closeGlobalSession();
+                }
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
 
 }

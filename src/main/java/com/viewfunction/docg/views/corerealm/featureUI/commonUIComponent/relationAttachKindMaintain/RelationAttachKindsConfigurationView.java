@@ -35,12 +35,11 @@ import java.util.Set;
 
 public class RelationAttachKindsConfigurationView extends VerticalLayout implements
         RelationAttachKindCreatedEvent.RelationAttachKindCreatedListener {
-    public enum RelatedKindType { ConceptionKind, RelationKind }
     private VerticalLayout leftSideContainerLayout;
     private VerticalLayout rightSideContainerLayout;
     private Grid<RelationAttachKind> relationAttachKindGrid;
     private RelationAttachKind lastSelectedRelationAttachKind;
-    private RelatedKindType relatedKindType;
+    private CreateRelationAttachKindView.RelatedKindType relatedKindType;
     private String relatedKindName;
     private SecondaryTitleActionBar selectedRelationAttachKindTitleActionBar;
     private SecondaryTitleActionBar selectedRelationAttachKindUIDActionBar;
@@ -52,7 +51,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
     private Button addRelationAttachLinkLogicButton;
     private Button executeRelationAttachKindButton;
 
-    public RelationAttachKindsConfigurationView(RelatedKindType relatedKindType,String relatedKindName){
+    public RelationAttachKindsConfigurationView(CreateRelationAttachKindView.RelatedKindType relatedKindType, String relatedKindName){
         this.relatedKindName = relatedKindName;
         this.relatedKindType = relatedKindType;
         this.setWidth(100, Unit.PERCENTAGE);
@@ -503,7 +502,7 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         actionButtonList.add(cancelButton);
 
         ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"删除关系附着规则",
-                "请确认删除关系附着规则 "+ relationAttachKind.getRelationAttachKindName(),actionButtonList,500,175);
+                "请确认删除关系附着规则 "+ relationAttachKind.getRelationAttachKindName(),actionButtonList,500,185);
         confirmWindow.open();
 
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {

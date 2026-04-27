@@ -51,6 +51,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attribu
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeTypeConvert.ConvertEntityAttributeToTemporalTypeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindMaintain.KindDescriptionEditorItemWidget;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.CreateRelationAttachKindView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.RelationAttachKindsConfigurationView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.RelationKindCorrelationInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
@@ -589,7 +590,7 @@ public class RelationKindDetailUI extends VerticalLayout implements
         rightSideContainerLayout.setFlexGrow(1,kindConfigurationTabSheet);
 
         RelationKindEntitiesConfigurationView relationKindEntitiesConfigurationView = new RelationKindEntitiesConfigurationView(this.relationKind);
-        relationAttachKindsConfigurationView = new RelationAttachKindsConfigurationView(RelationAttachKindsConfigurationView.RelatedKindType.RelationKind,this.relationKind);
+        relationAttachKindsConfigurationView = new RelationAttachKindsConfigurationView(CreateRelationAttachKindView.RelatedKindType.RelationKind,this.relationKind);
         relationKindActionsConfigurationView = new RelationKindActionsConfigurationView(this.relationKind,relationKindDetailViewHeightOffset);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.SPARK_LINE,"关系类型运行时配置"),relationKindEntitiesConfigurationView);
         kindConfigurationTabSheet.add(generateKindConfigurationTabTitle(VaadinIcon.TREE_TABLE,"关联关系规则配置"),relationAttachKindsConfigurationView);
