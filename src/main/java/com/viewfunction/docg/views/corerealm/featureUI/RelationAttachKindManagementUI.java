@@ -516,7 +516,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         List<RelationAttachLinkLogic> relationAttachLinkLogicList = selectedRelationAttachKind.getRelationAttachLinkLogic();
         relationAttachLinkLogicGrid.setItems(relationAttachLinkLogicList);
         addRelationAttachLinkLogicButton.setEnabled(true);
-        executeRelationAttachKindButton.setEnabled(true);
+        executeRelationAttachKindButton.setEnabled(selectedRelationAttachKind.isActive());
     }
 
     private void clearRelationAttachKindDetailInfo(){
