@@ -44,7 +44,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
 
     private Grid<RelationAttachKind> relationAttachKindGrid;
     private RelationAttachKind lastSelectedRelationAttachKind;
-    private VerticalLayout singleConceptionKindSummaryInfoContainerLayout;
+    private VerticalLayout singleRelationAttachKindSummaryInfoContainerLayout;
     private VerticalLayout selectKindPromptInfoContainerLayout;
     private Registration listener;
     private SecondaryTitleActionBar selectedRelationAttachKindTitleActionBar;
@@ -103,53 +103,81 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         SectionActionBar sectionActionBar = new SectionActionBar(icon,"关系附着规则类型:",relationAttachKindManagementOperationButtonList);
         add(sectionActionBar);
 
-        HorizontalLayout conceptionKindsInfoContainerLayout = new HorizontalLayout();
-        conceptionKindsInfoContainerLayout.setSpacing(false);
-        conceptionKindsInfoContainerLayout.setMargin(false);
-        conceptionKindsInfoContainerLayout.setWidth(100, Unit.PERCENTAGE);
-        add(conceptionKindsInfoContainerLayout);
+        HorizontalLayout relationAttachKindsInfoContainerLayout = new HorizontalLayout();
+        relationAttachKindsInfoContainerLayout.setSpacing(false);
+        relationAttachKindsInfoContainerLayout.setMargin(false);
+        relationAttachKindsInfoContainerLayout.setWidth(100, Unit.PERCENTAGE);
+        add(relationAttachKindsInfoContainerLayout);
 
-        VerticalLayout conceptionKindMetaInfoGridContainerLayout = new VerticalLayout();
-        conceptionKindMetaInfoGridContainerLayout.setSpacing(true);
-        conceptionKindMetaInfoGridContainerLayout.setMargin(false);
-        conceptionKindMetaInfoGridContainerLayout.setPadding(false);
+        VerticalLayout relationAttachKindMetaInfoGridContainerLayout = new VerticalLayout();
+        relationAttachKindMetaInfoGridContainerLayout.setSpacing(true);
+        relationAttachKindMetaInfoGridContainerLayout.setMargin(false);
+        relationAttachKindMetaInfoGridContainerLayout.setPadding(false);
 
-        HorizontalLayout conceptionKindsSearchElementsContainerLayout = new HorizontalLayout();
-        conceptionKindsSearchElementsContainerLayout.setSpacing(false);
-        conceptionKindsSearchElementsContainerLayout.setMargin(false);
-        conceptionKindMetaInfoGridContainerLayout.add(conceptionKindsSearchElementsContainerLayout);
+        HorizontalLayout relationAttachKindsSearchElementsContainerLayout = new HorizontalLayout();
+        relationAttachKindsSearchElementsContainerLayout.setSpacing(false);
+        relationAttachKindsSearchElementsContainerLayout.setMargin(false);
+        relationAttachKindMetaInfoGridContainerLayout.add(relationAttachKindsSearchElementsContainerLayout);
 
         SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
-        conceptionKindsSearchElementsContainerLayout.add(filterTitle);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
+        relationAttachKindsSearchElementsContainerLayout.add(filterTitle);
+        relationAttachKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
         filterTitle.setWidth(80,Unit.PIXELS);
 
-        TextField conceptionKindNameFilterField = new TextField();
-        conceptionKindNameFilterField.setPlaceholder("概念类型名称");
-        conceptionKindNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        conceptionKindNameFilterField.setWidth(250,Unit.PIXELS);
-        conceptionKindsSearchElementsContainerLayout.add(conceptionKindNameFilterField);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindNameFilterField);
+        TextField relationAttachKindNameFilterField = new TextField();
+        relationAttachKindNameFilterField.setPlaceholder("关系附着规则类型名称");
+        relationAttachKindNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        relationAttachKindNameFilterField.setWidth(150,Unit.PIXELS);
+        relationAttachKindsSearchElementsContainerLayout.add(relationAttachKindNameFilterField);
+        relationAttachKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,relationAttachKindNameFilterField);
 
         Icon plusIcon = new Icon(VaadinIcon.PLUS);
         plusIcon.setSize("12px");
-        conceptionKindsSearchElementsContainerLayout.add(plusIcon);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
+        relationAttachKindsSearchElementsContainerLayout.add(plusIcon);
+        relationAttachKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
 
-        TextField conceptionKindDescFilterField = new TextField();
-        conceptionKindDescFilterField.setPlaceholder("概念类型显示名称");
-        conceptionKindDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        conceptionKindDescFilterField.setWidth(250,Unit.PIXELS);
-        conceptionKindsSearchElementsContainerLayout.add(conceptionKindDescFilterField);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,conceptionKindDescFilterField);
+        TextField relationAttachKindDescFilterField = new TextField();
+        relationAttachKindDescFilterField.setPlaceholder("关系附着规则类型显示名称");
+        relationAttachKindDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        relationAttachKindDescFilterField.setWidth(150,Unit.PIXELS);
+        relationAttachKindsSearchElementsContainerLayout.add(relationAttachKindDescFilterField);
+        relationAttachKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,relationAttachKindDescFilterField);
 
-        Button searchConceptionKindsButton = new Button("查找概念类型",new Icon(VaadinIcon.SEARCH));
-        searchConceptionKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        searchConceptionKindsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        conceptionKindsSearchElementsContainerLayout.add(searchConceptionKindsButton);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchConceptionKindsButton);
-        searchConceptionKindsButton.setWidth(115,Unit.PIXELS);
-        searchConceptionKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+
+
+        TextField relationAttachKindDescFilterField1 = new TextField();
+        relationAttachKindDescFilterField1.setPlaceholder("源概念类型名称");
+        relationAttachKindDescFilterField1.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        relationAttachKindDescFilterField1.setWidth(150,Unit.PIXELS);
+        relationAttachKindsSearchElementsContainerLayout.add(relationAttachKindDescFilterField1);
+        relationAttachKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,relationAttachKindDescFilterField1);
+
+
+
+        TextField relationAttachKindDescFilterField2 = new TextField();
+        relationAttachKindDescFilterField2.setPlaceholder("目标概念类型名称");
+        relationAttachKindDescFilterField2.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        relationAttachKindDescFilterField2.setWidth(150,Unit.PIXELS);
+        relationAttachKindsSearchElementsContainerLayout.add(relationAttachKindDescFilterField2);
+        relationAttachKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,relationAttachKindDescFilterField2);
+
+
+        TextField relationAttachKindDescFilterField3 = new TextField();
+        relationAttachKindDescFilterField3.setPlaceholder("关系类型名称");
+        relationAttachKindDescFilterField3.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        relationAttachKindDescFilterField3.setWidth(150,Unit.PIXELS);
+        relationAttachKindsSearchElementsContainerLayout.add(relationAttachKindDescFilterField3);
+        relationAttachKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,relationAttachKindDescFilterField3);
+
+
+
+        Button searchRelationAttachKindsButton = new Button("查找关系附着规则类型",new Icon(VaadinIcon.SEARCH));
+        searchRelationAttachKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        searchRelationAttachKindsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        relationAttachKindsSearchElementsContainerLayout.add(searchRelationAttachKindsButton);
+        relationAttachKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchRelationAttachKindsButton);
+        searchRelationAttachKindsButton.setWidth(115,Unit.PIXELS);
+        searchRelationAttachKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 //filterConceptionKinds();
@@ -158,14 +186,14 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
 
         Icon divIcon = new Icon(VaadinIcon.LINE_V);
         divIcon.setSize("8px");
-        conceptionKindsSearchElementsContainerLayout.add(divIcon);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+        relationAttachKindsSearchElementsContainerLayout.add(divIcon);
+        relationAttachKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
 
         Button clearSearchCriteriaButton = new Button("清除查询条件",new Icon(VaadinIcon.ERASER));
         clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        conceptionKindsSearchElementsContainerLayout.add(clearSearchCriteriaButton);
-        conceptionKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
+        relationAttachKindsSearchElementsContainerLayout.add(clearSearchCriteriaButton);
+        relationAttachKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
         clearSearchCriteriaButton.setWidth(120,Unit.PIXELS);
         clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -174,7 +202,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
             }
         });
 
-        conceptionKindsInfoContainerLayout.add(conceptionKindMetaInfoGridContainerLayout);
+        relationAttachKindsInfoContainerLayout.add(relationAttachKindMetaInfoGridContainerLayout);
 
         ComponentRenderer _toolBarComponentRenderer1 = new ComponentRenderer<>(relationAttachKind -> {
             Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
@@ -214,7 +242,12 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
                 .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getRelationKindName());
         relationAttachKindGrid.addColumn(RelationAttachKind::getTargetConceptionKindName).setHeader("目标概念类型名称").setKey("idx_3").setFlexGrow(1)
                 .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getTargetConceptionKindName());
-        relationAttachKindGrid.addColumn(_toolBarComponentRenderer1).setHeader("操作").setKey("idx_4").setFlexGrow(0).setWidth("70px").setResizable(false);
+
+        relationAttachKindGrid.addColumn(RelationAttachKind::isRepeatableRelationKindAllow).setHeader("允许重复创建").setKey("idx_4").setFlexGrow(0).setWidth("110px").setResizable(false)
+                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getTargetConceptionKindName());
+        relationAttachKindGrid.addColumn(RelationAttachKind::isActive).setHeader("启用状态").setKey("idx_5").setFlexGrow(0).setWidth("110px").setResizable(false)
+                .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getTargetConceptionKindName());
+        relationAttachKindGrid.addColumn(_toolBarComponentRenderer1).setHeader("操作").setKey("idx_6").setFlexGrow(0).setWidth("70px").setResizable(false);
 
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"规则类型名称");
         relationAttachKindGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
@@ -224,10 +257,14 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         relationAttachKindGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
         GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.LEVEL_RIGHT,"目标概念类型名称");
         relationAttachKindGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
-        relationAttachKindGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4);
+        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.RANDOM,"可重复创建");
+        relationAttachKindGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.BOLT,"启用状态");
+        relationAttachKindGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx6 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
+        relationAttachKindGrid.getColumnByKey("idx_6").setHeader(gridColumnHeader_idx6);
         relationAttachKindGrid.appendFooterRow();
-        conceptionKindMetaInfoGridContainerLayout.add(relationAttachKindGrid);
+        relationAttachKindMetaInfoGridContainerLayout.add(relationAttachKindGrid);
 
         relationAttachKindGrid.addSelectionListener(new SelectionListener<Grid<RelationAttachKind>, RelationAttachKind>() {
             @Override
@@ -244,19 +281,18 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
             }
         });
 
-
-        singleConceptionKindSummaryInfoContainerLayout = new VerticalLayout();
-        singleConceptionKindSummaryInfoContainerLayout.setSpacing(true);
-        singleConceptionKindSummaryInfoContainerLayout.setMargin(true);
-        singleConceptionKindSummaryInfoContainerLayout.setPadding(false);
-        conceptionKindsInfoContainerLayout.add(singleConceptionKindSummaryInfoContainerLayout);
-        conceptionKindsInfoContainerLayout.setFlexGrow(1,singleConceptionKindSummaryInfoContainerLayout);
+        singleRelationAttachKindSummaryInfoContainerLayout = new VerticalLayout();
+        singleRelationAttachKindSummaryInfoContainerLayout.setSpacing(true);
+        singleRelationAttachKindSummaryInfoContainerLayout.setMargin(true);
+        singleRelationAttachKindSummaryInfoContainerLayout.setPadding(false);
+        relationAttachKindsInfoContainerLayout.add(singleRelationAttachKindSummaryInfoContainerLayout);
+        relationAttachKindsInfoContainerLayout.setFlexGrow(1, singleRelationAttachKindSummaryInfoContainerLayout);
 
         HorizontalLayout singleConceptionKindInfoElementsContainerLayout = new HorizontalLayout();
         singleConceptionKindInfoElementsContainerLayout.setSpacing(false);
         singleConceptionKindInfoElementsContainerLayout.setMargin(false);
         singleConceptionKindInfoElementsContainerLayout.setHeight("30px");
-        singleConceptionKindSummaryInfoContainerLayout.add(singleConceptionKindInfoElementsContainerLayout);
+        singleRelationAttachKindSummaryInfoContainerLayout.add(singleConceptionKindInfoElementsContainerLayout);
 
         SecondaryIconTitle filterTitle2 = new SecondaryIconTitle(new Icon(VaadinIcon.LAPTOP),"概念类型概览");
         singleConceptionKindInfoElementsContainerLayout.add(filterTitle2);
@@ -275,12 +311,12 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
 
         selectedRelationAttachKindTitleActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.TREE_TABLE),"-",null,actionComponentsList,false);
         selectedRelationAttachKindTitleActionBar.setWidth(100,Unit.PERCENTAGE);
-        singleConceptionKindSummaryInfoContainerLayout.add(selectedRelationAttachKindTitleActionBar);
+        singleRelationAttachKindSummaryInfoContainerLayout.add(selectedRelationAttachKindTitleActionBar);
 
         HorizontalLayout horizontalContainer01 = new HorizontalLayout();
         horizontalContainer01.setSpacing(false);
         horizontalContainer01.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        singleConceptionKindSummaryInfoContainerLayout.add(horizontalContainer01);
+        singleRelationAttachKindSummaryInfoContainerLayout.add(horizontalContainer01);
 
         selectedRelationAttachKindUIDActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.KEY_O),"-",null,null,false);
         selectedRelationAttachKindUIDActionBar.setWidth(90,Unit.PIXELS);
@@ -312,7 +348,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         HorizontalLayout horizontalContainer04 = new HorizontalLayout();
         horizontalContainer04.setSpacing(false);
         horizontalContainer04.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        singleConceptionKindSummaryInfoContainerLayout.add(horizontalContainer04);
+        singleRelationAttachKindSummaryInfoContainerLayout.add(horizontalContainer04);
 
         Icon isActiveIcon = new Icon(VaadinIcon.BOLT);
         isActiveIcon.setSize("14px");
@@ -340,7 +376,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         HorizontalLayout horizontalContainer02 = new HorizontalLayout();
         horizontalContainer02.setSpacing(false);
         horizontalContainer02.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        singleConceptionKindSummaryInfoContainerLayout.add(horizontalContainer02);
+        singleRelationAttachKindSummaryInfoContainerLayout.add(horizontalContainer02);
 
         Icon sourceConceptionKindIcon = new Icon(VaadinIcon.LEVEL_LEFT);
         sourceConceptionKindIcon.setSize("16px");
@@ -352,7 +388,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         HorizontalLayout horizontalContainer03 = new HorizontalLayout();
         horizontalContainer03.setSpacing(false);
         horizontalContainer03.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        singleConceptionKindSummaryInfoContainerLayout.add(horizontalContainer03);
+        singleRelationAttachKindSummaryInfoContainerLayout.add(horizontalContainer03);
 
         Icon targetConceptionKindIcon = new Icon(VaadinIcon.LEVEL_RIGHT);
         targetConceptionKindIcon.setSize("16px");
@@ -362,7 +398,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         horizontalContainer03.add(targetConceptionKindActionBar);
 
         relationKindActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.CONNECT_O),"-",null,null);
-        singleConceptionKindSummaryInfoContainerLayout.add(relationKindActionBar);
+        singleRelationAttachKindSummaryInfoContainerLayout.add(relationKindActionBar);
 
         List<Component> actionComponentsList2 = new ArrayList<>();
         addRelationAttachLinkLogicButton = new Button("添加关系附着逻辑规则");
@@ -376,7 +412,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
 
         Icon relationAttachLinkLogicInfoIcon = new Icon(VaadinIcon.WRENCH);
         SecondaryTitleActionBar relationAttachLinkLogicInfoSectionActionBar = new SecondaryTitleActionBar(relationAttachLinkLogicInfoIcon,"关系附着逻辑规则",null,actionComponentsList2,false);
-        singleConceptionKindSummaryInfoContainerLayout.add(relationAttachLinkLogicInfoSectionActionBar);
+        singleRelationAttachKindSummaryInfoContainerLayout.add(relationAttachLinkLogicInfoSectionActionBar);
 
         ComponentRenderer _toolBarComponentRenderer2 = new ComponentRenderer<>(relationAttachLinkLogic -> {
             Icon deleteKindIcon = new Icon(VaadinIcon.TRASH);
@@ -426,19 +462,19 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         LightGridColumnHeader gridColumnHeader_1_idx4 = new LightGridColumnHeader(VaadinIcon.TOOLS,"操作");
         relationAttachLinkLogicGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_1_idx4);
 
-        singleConceptionKindSummaryInfoContainerLayout.add(relationAttachLinkLogicGrid);
+        singleRelationAttachKindSummaryInfoContainerLayout.add(relationAttachLinkLogicGrid);
 
         HorizontalLayout horizontalContainer05 = new HorizontalLayout();
         horizontalContainer05.setSpacing(false);
         horizontalContainer05.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        singleConceptionKindSummaryInfoContainerLayout.add(horizontalContainer05);
+        singleRelationAttachKindSummaryInfoContainerLayout.add(horizontalContainer05);
 
         addRelationAttachLinkLogicButton.setEnabled(false);
         executeRelationAttachKindButton.setEnabled(false);
 
         selectKindPromptInfoContainerLayout = new VerticalLayout();
         selectKindPromptInfoContainerLayout.getStyle().set("padding-top", "50px");
-        conceptionKindsInfoContainerLayout.add(selectKindPromptInfoContainerLayout);
+        relationAttachKindsInfoContainerLayout.add(selectKindPromptInfoContainerLayout);
 
         HorizontalLayout selectKindInfoMessage = new HorizontalLayout();
         selectKindInfoMessage.setSpacing(true);
@@ -455,7 +491,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         selectKindInfoMessage.add(messageLogo,messageLabel);
         selectKindPromptInfoContainerLayout.add(selectKindInfoMessage);
 
-        singleConceptionKindSummaryInfoContainerLayout.setVisible(false);
+        singleRelationAttachKindSummaryInfoContainerLayout.setVisible(false);
         selectKindPromptInfoContainerLayout.setVisible(true);
     }
 
@@ -500,7 +536,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
     }
 
     private void renderRelationAttachKindDetailInfo(RelationAttachKind selectedRelationAttachKind){
-        singleConceptionKindSummaryInfoContainerLayout.setVisible(true);
+        singleRelationAttachKindSummaryInfoContainerLayout.setVisible(true);
         selectKindPromptInfoContainerLayout.setVisible(false);
 
         selectedRelationAttachKindTitleActionBar.updateTitleContent(
@@ -531,7 +567,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         addRelationAttachLinkLogicButton.setEnabled(false);
         executeRelationAttachKindButton.setEnabled(false);
 
-        singleConceptionKindSummaryInfoContainerLayout.setVisible(false);
+        singleRelationAttachKindSummaryInfoContainerLayout.setVisible(false);
         selectKindPromptInfoContainerLayout.setVisible(true);
     }
 
