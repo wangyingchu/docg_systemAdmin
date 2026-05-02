@@ -15,6 +15,9 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverPosition;
+import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.provider.ListDataProvider;
@@ -35,6 +38,8 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.CreateNewRelationAttachLinkLogicView;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.relationAttachKindMaintain.CreateRelationAttachKindView;
+import com.viewfunction.docg.views.corerealm.featureUI.relationAttachKindManagement.ActiveAttributeEditorView;
+import com.viewfunction.docg.views.corerealm.featureUI.relationAttachKindManagement.AllowRepeatAttributeEditorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +69,11 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
     private TextField sourceConceptionKindNameFilterField;
     private TextField targetConceptionKindNameFilterField;
     private TextField relationKindNameFilterField;
+
+    private Button updateAllowRepeatAttributeValueButton;
+    private Button updateActiveAttributeValueButton;
+    private Popover registerActionViewPopover;
+    private Popover registerActionViewPopover2;
 
     public RelationAttachKindManagementUI() {
         Button refreshDataButton = new Button("刷新关系附着规则类型数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -349,7 +359,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         allowRepeatLabel.addClassNames("text-xs");
         horizontalContainer01.add(allowRepeatLabel);
 
-        Button updateAllowRepeatAttributeValueButton = new Button();
+        updateAllowRepeatAttributeValueButton = new Button();
         updateAllowRepeatAttributeValueButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
         Icon plusIconA = VaadinIcon.EDIT.create();
         plusIconA.setSize("16px");
@@ -358,7 +368,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         updateAllowRepeatAttributeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-               // enableEditAttributeValue();
+                renderRegisterActionUI();
             }
         });
         horizontalContainer01.add(updateAllowRepeatAttributeValueButton);
@@ -377,7 +387,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         isActiveLabel.addClassNames("text-xs");
         horizontalContainer04.add(isActiveLabel);
 
-        Button updateActiveAttributeValueButton = new Button();
+        updateActiveAttributeValueButton = new Button();
         updateActiveAttributeValueButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY_INLINE);
         Icon plusIconB = VaadinIcon.EDIT.create();
         plusIconB.setSize("16px");
@@ -386,7 +396,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         updateActiveAttributeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                // enableEditAttributeValue();
+                renderRegisterActionUI2();
             }
         });
         horizontalContainer04.add(updateActiveAttributeValueButton);
@@ -875,5 +885,41 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         targetConceptionKindNameFilterField.setValue("");
         relationKindNameFilterField.setValue("");
         this.relationAttachKindInfoView.refreshAll();
+    }
+
+    private void renderRegisterActionUI(){
+        if(registerActionViewPopover == null){
+            registerActionViewPopover = new Popover();
+            AllowRepeatAttributeEditorView allowRepeatAttributeEditorView = new AllowRepeatAttributeEditorView(this.lastSelectedRelationAttachKind.getRelationAttachKindName());
+            //registerKindActionView.setParentKindActionsDateView(this);
+            allowRepeatAttributeEditorView.setContainerPopover(registerActionViewPopover);
+            registerActionViewPopover.setTarget(updateAllowRepeatAttributeValueButton);
+            registerActionViewPopover.setWidth("700px");
+            registerActionViewPopover.setHeight("325px");
+            registerActionViewPopover.addThemeVariants(PopoverVariant.ARROW);
+            registerActionViewPopover.setPosition(PopoverPosition.BOTTOM);
+            registerActionViewPopover.add(allowRepeatAttributeEditorView);
+            registerActionViewPopover.setAutofocus(true);
+            registerActionViewPopover.setModal(true,true);
+        }
+        registerActionViewPopover.open();
+    }
+
+    private void renderRegisterActionUI2(){
+        if(registerActionViewPopover2 == null){
+            registerActionViewPopover2 = new Popover();
+            ActiveAttributeEditorView activeAttributeEditorView = new ActiveAttributeEditorView();
+            //registerKindActionView.setParentKindActionsDateView(this);
+            activeAttributeEditorView.setContainerPopover(registerActionViewPopover2);
+            registerActionViewPopover2.setTarget(updateActiveAttributeValueButton);
+            registerActionViewPopover2.setWidth("700px");
+            registerActionViewPopover2.setHeight("325px");
+            registerActionViewPopover2.addThemeVariants(PopoverVariant.ARROW);
+            registerActionViewPopover2.setPosition(PopoverPosition.BOTTOM);
+            registerActionViewPopover2.add(activeAttributeEditorView);
+            registerActionViewPopover2.setAutofocus(true);
+            registerActionViewPopover2.setModal(true,true);
+        }
+        registerActionViewPopover2.open();
     }
 }
