@@ -42,6 +42,7 @@ import com.viewfunction.docg.views.corerealm.featureUI.relationAttachKindManagem
 import com.viewfunction.docg.views.corerealm.featureUI.relationAttachKindManagement.AllowRepeatAttributeEditorView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -69,11 +70,12 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
     private TextField sourceConceptionKindNameFilterField;
     private TextField targetConceptionKindNameFilterField;
     private TextField relationKindNameFilterField;
-
     private Button updateAllowRepeatAttributeValueButton;
     private Button updateActiveAttributeValueButton;
-    private Popover registerActionViewPopover;
-    private Popover registerActionViewPopover2;
+    private Popover allowRepeatAttributeEditorViewPopover;
+    private Popover activeAttributeEditorViewPopover;
+    private AllowRepeatAttributeEditorView allowRepeatAttributeEditorView;
+    private ActiveAttributeEditorView activeAttributeEditorView;
 
     public RelationAttachKindManagementUI() {
         Button refreshDataButton = new Button("刷新关系附着规则类型数据统计信息",new Icon(VaadinIcon.REFRESH));
@@ -368,7 +370,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         updateAllowRepeatAttributeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderRegisterActionUI();
+                renderAllowRepeatAttributeEditorViewUI();
             }
         });
         horizontalContainer01.add(updateAllowRepeatAttributeValueButton);
@@ -396,7 +398,7 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         updateActiveAttributeValueButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                renderRegisterActionUI2();
+                renderActiveAttributeEditorViewUI();
             }
         });
         horizontalContainer04.add(updateActiveAttributeValueButton);
@@ -635,6 +637,13 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         relationAttachLinkLogicGrid.setItems(relationAttachLinkLogicList);
         addRelationAttachLinkLogicButton.setEnabled(true);
         executeRelationAttachKindButton.setEnabled(selectedRelationAttachKind.isActive());
+
+        if(allowRepeatAttributeEditorView != null){
+            allowRepeatAttributeEditorView.updateRelationAttachKind(selectedRelationAttachKind);
+        }
+        if(activeAttributeEditorView != null){
+            activeAttributeEditorView.updateRelationAttachKind(selectedRelationAttachKind);
+        }
     }
 
     private void clearRelationAttachKindDetailInfo(){
@@ -887,39 +896,70 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         this.relationAttachKindInfoView.refreshAll();
     }
 
-    private void renderRegisterActionUI(){
-        if(registerActionViewPopover == null){
-            registerActionViewPopover = new Popover();
-            AllowRepeatAttributeEditorView allowRepeatAttributeEditorView = new AllowRepeatAttributeEditorView(this.lastSelectedRelationAttachKind.getRelationAttachKindName());
-            //registerKindActionView.setParentKindActionsDateView(this);
-            allowRepeatAttributeEditorView.setContainerPopover(registerActionViewPopover);
-            registerActionViewPopover.setTarget(updateAllowRepeatAttributeValueButton);
-            registerActionViewPopover.setWidth("700px");
-            registerActionViewPopover.setHeight("325px");
-            registerActionViewPopover.addThemeVariants(PopoverVariant.ARROW);
-            registerActionViewPopover.setPosition(PopoverPosition.BOTTOM);
-            registerActionViewPopover.add(allowRepeatAttributeEditorView);
-            registerActionViewPopover.setAutofocus(true);
-            registerActionViewPopover.setModal(true,true);
+    private void renderAllowRepeatAttributeEditorViewUI(){
+        if(allowRepeatAttributeEditorViewPopover == null){
+            allowRepeatAttributeEditorViewPopover = new Popover();
+            allowRepeatAttributeEditorView = new AllowRepeatAttributeEditorView(this.lastSelectedRelationAttachKind);
+            allowRepeatAttributeEditorView.setParentRelationAttachKindManagementUI(this);
+            allowRepeatAttributeEditorView.setContainerPopover(allowRepeatAttributeEditorViewPopover);
+            allowRepeatAttributeEditorViewPopover.setTarget(updateAllowRepeatAttributeValueButton);
+            allowRepeatAttributeEditorViewPopover.setWidth("450px");
+            allowRepeatAttributeEditorViewPopover.setHeight("105px");
+            allowRepeatAttributeEditorViewPopover.addThemeVariants(PopoverVariant.ARROW);
+            allowRepeatAttributeEditorViewPopover.setPosition(PopoverPosition.BOTTOM);
+            allowRepeatAttributeEditorViewPopover.add(allowRepeatAttributeEditorView);
+            allowRepeatAttributeEditorViewPopover.setAutofocus(true);
+            allowRepeatAttributeEditorViewPopover.setModal(true,true);
         }
-        registerActionViewPopover.open();
+        allowRepeatAttributeEditorViewPopover.open();
     }
 
-    private void renderRegisterActionUI2(){
-        if(registerActionViewPopover2 == null){
-            registerActionViewPopover2 = new Popover();
-            ActiveAttributeEditorView activeAttributeEditorView = new ActiveAttributeEditorView();
-            //registerKindActionView.setParentKindActionsDateView(this);
-            activeAttributeEditorView.setContainerPopover(registerActionViewPopover2);
-            registerActionViewPopover2.setTarget(updateActiveAttributeValueButton);
-            registerActionViewPopover2.setWidth("700px");
-            registerActionViewPopover2.setHeight("325px");
-            registerActionViewPopover2.addThemeVariants(PopoverVariant.ARROW);
-            registerActionViewPopover2.setPosition(PopoverPosition.BOTTOM);
-            registerActionViewPopover2.add(activeAttributeEditorView);
-            registerActionViewPopover2.setAutofocus(true);
-            registerActionViewPopover2.setModal(true,true);
+    public void updateAllowRepeatAttribute(RelationAttachKind relationAttachKind){
+        String allowRepeatRelationMessage = relationAttachKind.isRepeatableRelationKindAllow() ? "允许重复创建相同类型的关系":"不允许重复创建相同类型的关系";
+        allowRepeatLabel.setText(allowRepeatRelationMessage);
+        if(relationAttachKind != null && relationAttachKind.getRelationAttachKindUID() != null){
+            ListDataProvider dtaProvider=(ListDataProvider)relationAttachKindGrid.getDataProvider();
+            Collection<RelationAttachKind> entityStatisticsInfoList = dtaProvider.getItems();
+            for(RelationAttachKind currentEntityStatisticsInfo:entityStatisticsInfoList){
+                if(currentEntityStatisticsInfo.getRelationAttachKindUID().equals(relationAttachKind.getRelationAttachKindUID())){
+                    currentEntityStatisticsInfo.setAllowRepeatableRelationKind(relationAttachKind.isRepeatableRelationKindAllow());
+                }
+            }
+            dtaProvider.refreshAll();
         }
-        registerActionViewPopover2.open();
+    }
+
+    private void renderActiveAttributeEditorViewUI(){
+        if(activeAttributeEditorViewPopover == null){
+            activeAttributeEditorViewPopover = new Popover();
+            activeAttributeEditorView = new ActiveAttributeEditorView(this.lastSelectedRelationAttachKind);
+            activeAttributeEditorView.setParentRelationAttachKindManagementUI(this);
+            activeAttributeEditorView.setContainerPopover(activeAttributeEditorViewPopover);
+            activeAttributeEditorViewPopover.setTarget(updateActiveAttributeValueButton);
+            activeAttributeEditorViewPopover.setWidth("420");
+            activeAttributeEditorViewPopover.setHeight("105");
+            activeAttributeEditorViewPopover.addThemeVariants(PopoverVariant.ARROW);
+            activeAttributeEditorViewPopover.setPosition(PopoverPosition.BOTTOM);
+            activeAttributeEditorViewPopover.add(activeAttributeEditorView);
+            activeAttributeEditorViewPopover.setAutofocus(true);
+            activeAttributeEditorViewPopover.setModal(true,true);
+        }
+        activeAttributeEditorViewPopover.open();
+    }
+
+    public void updateActiveAttribute(RelationAttachKind relationAttachKind){
+        String allowRepeatRelationMessage = relationAttachKind.isActive() ? "启用中":"未启用";
+        isActiveLabel.setText(allowRepeatRelationMessage);
+        if(relationAttachKind != null && relationAttachKind.getRelationAttachKindUID() != null){
+            ListDataProvider dtaProvider=(ListDataProvider)relationAttachKindGrid.getDataProvider();
+            Collection<RelationAttachKind> entityStatisticsInfoList = dtaProvider.getItems();
+            for(RelationAttachKind currentEntityStatisticsInfo:entityStatisticsInfoList){
+                if(currentEntityStatisticsInfo.getRelationAttachKindUID().equals(relationAttachKind.getRelationAttachKindUID())){
+                    currentEntityStatisticsInfo.setActiveStatus(relationAttachKind.isActive());
+                }
+            }
+            dtaProvider.refreshAll();
+        }
+        executeRelationAttachKindButton.setEnabled(relationAttachKind.isActive());
     }
 }
