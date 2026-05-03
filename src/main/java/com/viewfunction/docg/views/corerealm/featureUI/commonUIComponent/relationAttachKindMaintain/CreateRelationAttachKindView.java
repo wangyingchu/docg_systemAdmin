@@ -236,6 +236,11 @@ public class CreateRelationAttachKindView extends VerticalLayout {
 
             CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
             try {
+                List<RelationAttachKind> alreadyHasWithSameNameList = coreRealm.getRelationAttachKinds(relationAttachKindName,null,null,null,null,null);
+                if(alreadyHasWithSameNameList!=null && !alreadyHasWithSameNameList.isEmpty()){
+                    CommonUIOperationUtil.showPopupNotification("关系附着规则类型 "+relationAttachKindName+ " 已经存在", NotificationVariant.LUMO_ERROR);
+                    return;
+                }
                 RelationAttachKind targetRelationAttachKind = coreRealm.createRelationAttachKind(relationAttachKindName,
                         relationAttachKindDesc,sourceConceptionKind,targetConceptionName,relationKind,allowRepeatRelationKind);
                 if(targetRelationAttachKind != null){
