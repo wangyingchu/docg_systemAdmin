@@ -25,8 +25,10 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntitiesOperationResult;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.EntityStatisticsInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.RelationAttachLinkLogic;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationAttachKind;
@@ -630,9 +632,27 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         allowRepeatLabel.setText(allowRepeatRelationMessage);
         String isActiveMessage = selectedRelationAttachKind.isActive() ? "启用中":"未启用";
         isActiveLabel.setText(isActiveMessage);
-        relationKindActionBar.updateTitleContent(selectedRelationAttachKind.getRelationKindName());
-        sourceConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getSourceConceptionKindName());
-        targetConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getTargetConceptionKindName());
+        CoreRealm targetCoreRealm = RealmTermFactory.getDefaultCoreRealm();
+        try {
+            List<EntityStatisticsInfo> entityStatisticsInfoList = targetCoreRealm.getConceptionEntitiesStatistics();
+            for(EntityStatisticsInfo entityStatisticsInfo : entityStatisticsInfoList){
+                if(entityStatisticsInfo.getEntityKindName().equals(selectedRelationAttachKind.getSourceConceptionKindName())){
+                    sourceConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getSourceConceptionKindName()+" / 概念实体数: "+entityStatisticsInfo.getEntitiesCount());
+                }
+                if(entityStatisticsInfo.getEntityKindName().equals(selectedRelationAttachKind.getTargetConceptionKindName())){
+                    targetConceptionKindActionBar.updateTitleContent(selectedRelationAttachKind.getTargetConceptionKindName()+" / 概念实体数: "+entityStatisticsInfo.getEntitiesCount());
+                }
+            }
+            entityStatisticsInfoList = targetCoreRealm.getRelationEntitiesStatistics();
+            for(EntityStatisticsInfo entityStatisticsInfo : entityStatisticsInfoList){
+                if(entityStatisticsInfo.getEntityKindName().equals(selectedRelationAttachKind.getRelationKindName())){
+                    relationKindActionBar.updateTitleContent(selectedRelationAttachKind.getRelationKindName()+" / 关系实体数: "+entityStatisticsInfo.getEntitiesCount());
+                }
+
+            }
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
         List<RelationAttachLinkLogic> relationAttachLinkLogicList = selectedRelationAttachKind.getRelationAttachLinkLogic();
         relationAttachLinkLogicGrid.setItems(relationAttachLinkLogicList);
         addRelationAttachLinkLogicButton.setEnabled(true);
@@ -814,13 +834,13 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
         }
         List<Button> actionButtonList = new ArrayList<>();
         Button confirmButton = new Button("确认执行关系附着规则",new Icon(VaadinIcon.CHECK_CIRCLE));
-        confirmButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        confirmButton.addThemeVariants(ButtonVariant.PRIMARY);
         Button cancelButton = new Button("取消操作");
         cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
         actionButtonList.add(confirmButton);
         actionButtonList.add(cancelButton);
 
-        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"删除关系附着规则",
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"执行关系附着规则",
                 "请确认执行关系附着规则 "+ lastSelectedRelationAttachKind.getRelationAttachKindName()+" 创建新的关系实体",actionButtonList,500,185);
         confirmWindow.open();
 
@@ -833,6 +853,12 @@ public class RelationAttachKindManagementUI extends VerticalLayout implements
                     RelationAttachKind targetRelationAttachKind = coreRealm.getRelationAttachKind(lastSelectedRelationAttachKind.getRelationAttachKindUID());
                     EntitiesOperationResult entitiesOperationResult = targetRelationAttachKind.newUniversalRelationEntities(null);
                     showPopupNotification(targetRelationAttachKind.getRelationAttachKindName(),entitiesOperationResult,NotificationVariant.LUMO_SUCCESS);
+                    List<EntityStatisticsInfo> entityStatisticsInfoList = coreRealm.getRelationEntitiesStatistics();
+                    for(EntityStatisticsInfo entityStatisticsInfo : entityStatisticsInfoList){
+                        if(entityStatisticsInfo.getEntityKindName().equals(targetRelationAttachKind.getRelationKindName())){
+                            relationKindActionBar.updateTitleContent(targetRelationAttachKind.getRelationKindName()+" / 关系实体数: "+entityStatisticsInfo.getEntitiesCount());
+                        }
+                    }
                     confirmWindow.closeConfirmWindow();
                 }catch(CoreRealmServiceRuntimeException e){
                     e.printStackTrace();
