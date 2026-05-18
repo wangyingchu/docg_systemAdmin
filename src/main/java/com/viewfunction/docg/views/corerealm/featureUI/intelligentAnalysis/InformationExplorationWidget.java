@@ -234,7 +234,7 @@ public class InformationExplorationWidget extends VerticalLayout {
                 queryResultGrid.setPageSize(20);
                 queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COLUMN_BORDERS,GridVariant.LUMO_COMPACT,GridVariant.LUMO_WRAP_CELL_CONTENT);
 
-                queryResultInsightWidget = new QueryResultInsightWidget(dynamicContentQueryResult);
+                queryResultInsightWidget = new QueryResultInsightWidget(question,dynamicContentQueryResult);
                 queryResultInsightWidget.setHeight(400,Unit.PIXELS);
 
                 queryResultGraphWidget = new QueryResultGraphWidget();

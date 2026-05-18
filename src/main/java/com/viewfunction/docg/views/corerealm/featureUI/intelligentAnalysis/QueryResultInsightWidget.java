@@ -17,17 +17,19 @@ import java.util.*;
 
 public class QueryResultInsightWidget extends VerticalLayout {
 
+    private String question;
     private DynamicContentQueryResult dynamicContentQueryResult;
     private boolean alreadyInsighted = false;
     private HorizontalLayout doesNotContainsInsightInfoMessage;
     private Markdown insightResultMarkdown;
 
-    public QueryResultInsightWidget(DynamicContentQueryResult dynamicContentQueryResult){
+    public QueryResultInsightWidget(String question,DynamicContentQueryResult dynamicContentQueryResult){
         this.setWidthFull();
         this.setHeightFull();
         this.setMargin(false);
         this.setPadding(false);
         this.setSpacing(false);
+        this.question = question;
         this.dynamicContentQueryResult = dynamicContentQueryResult;
 
         doesNotContainsInsightInfoMessage = new HorizontalLayout();
@@ -66,7 +68,7 @@ public class QueryResultInsightWidget extends VerticalLayout {
 
     private void doInsightLogic(){
         insightResultMarkdown.setVisible(true);
-        String insightResult = DynamicContentInsightUtil.insightToDynamicContent(dynamicContentQueryResult);
+        String insightResult = DynamicContentInsightUtil.insightToDynamicContent(this.question,this.dynamicContentQueryResult);
         insightResultMarkdown.setContent(insightResult);
     }
 }
