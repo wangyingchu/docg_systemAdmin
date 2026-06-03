@@ -121,8 +121,7 @@ public class InformationAnalysisView extends VerticalLayout {
                 switch(informationAnalysisMode){
                     case INSIGHT:break;
                     case EXPLORATION:
-                        //String cql = Text2QueryUtil.generateQueryCypher(question);
-                        String cql = "MATCH p=()-[r:CanAccessSubWayLine]->() RETURN p LIMIT 250";
+                        String cql = Text2QueryUtil.generateQueryCypher(question);
                         InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql);
                         this.insightContentContainerLayout.add(informationExplorationWidget);
                         break;

@@ -26,6 +26,7 @@ import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.CheckSystemRuntimeInfoEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.*;
 import com.viewfunction.docg.views.corerealm.featureUI.coreRealmData.exchangeCoreRealmEntities.DownloadARROWFormatCoreRealmEntitiesView;
 import com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis.IntelligentAnalysisView;
@@ -51,6 +52,7 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
     private AttributeKindInfoWidget attributeKindInfoWidget;
     private Button show3DChartButton;
     private Button show2DChartButton;
+    private static String enableAIDataAnalyisisStr = SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ENABLE_AI_DATA_ANALYSIS);
     public CoreRealmDataUI(){
 
         Button AIDataAnalyisisButton = new Button("领域模型智能分析",LineAwesomeIconsSvg.BRAIN_SOLID.create());
@@ -59,6 +61,11 @@ public class CoreRealmDataUI extends VerticalLayout implements CheckSystemRuntim
         AIDataAnalyisisButton.addClickListener((ClickEvent<Button> click) ->{
             renderIntelligentAnalysisView();
         });
+        if(enableAIDataAnalyisisStr != null & Boolean.parseBoolean(enableAIDataAnalyisisStr)){
+            AIDataAnalyisisButton.setVisible(true);
+        }else{
+            AIDataAnalyisisButton.setVisible(false);
+        }
 
         Button refreshDataButton = new Button("刷新领域数据统计信息",new Icon(VaadinIcon.REFRESH));
         refreshDataButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
