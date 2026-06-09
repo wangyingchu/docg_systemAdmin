@@ -207,7 +207,6 @@ public class DataComputeGridManagementUI extends VerticalLayout implements
             this.leftSideContentContainerLayout.setHeight(browserHeight-170,Unit.PIXELS);
             this.rightSideContentContainerLayout.setWidth(browserWidth-580,Unit.PIXELS);
         }));
-        //ResourceHolder.getApplicationBlackboard().addListener(this);
         checkComputeGridStatusInfo();
     }
 
@@ -237,11 +236,17 @@ public class DataComputeGridManagementUI extends VerticalLayout implements
         try {
             Set<DataComputeUnitMetaInfo> dataComputeUnitMetaInfoSet = targetComputeGrid.listDataComputeUnit();
             this.computeUnitGrid.setItems(dataComputeUnitMetaInfoSet);
-
             ComputeGridRealtimeStatisticsInfo computeGridRealtimeStatisticsInfo = targetComputeGrid.getGridRealtimeStatisticsInfo();
             this.gridRuntimeInfoWidget.refreshRuntimeInfo(computeGridRealtimeStatisticsInfo);
         } catch (ComputeGridException e) {
+            e.printStackTrace();
             CommonUIOperationUtil.showPopupNotification("未检测到运行中的数据计算网格", NotificationVariant.LUMO_ERROR,-1, Notification.Position.MIDDLE);
+
+
+            this.computeUnitGrid.setItems(new ArrayList<>());
+            this.gridRuntimeInfoWidget.reInitWidget();
+
+
         }
     }
 

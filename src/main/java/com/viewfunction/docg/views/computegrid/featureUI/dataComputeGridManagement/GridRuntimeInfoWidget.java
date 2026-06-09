@@ -225,4 +225,21 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
         //fullScreenWindow.setWindowContent(conceptionKindQueryUI);
         fullScreenWindow.show();
     }
+
+    public void reInitWidget(){
+        gridStartDatetimeDisplayItem.updateDisplayValue("-");
+        infoSampleDateDisplayItem.updateDisplayValue("-");
+        gridUpTimeInSecondDisplayItem.updateDisplayValue("-");
+        totalAvailableCPUCoresDisplayItem.updateDisplayValue("-");
+        totalComputeUnitCountDisplayItem.updateDisplayValue("-");
+        totalBusyTimeInMinuteDisplayItem.updateDisplayValue("-");
+        totalIdelTimeInMinuteDisplayItem.updateDisplayValue("-");
+        firstComputeUnitDisplayItem.updateDisplayValue("-");
+        lastComputeUnitDisplayItem.updateDisplayValue("-");
+        totalAllocatedMemoryCountDisplayItem.updateDisplayValue("-");
+        totalUsedMemoryCountDisplayItemDisplayItem.updateDisplayValue("-");
+        maxAvailableMemoryCountDisplayItem.updateDisplayValue("-");
+        freeMemoryPercentDisplayItem.updateDisplayValue("-");
+        bulletChart.setData("Mem Consumption",Double.valueOf(0),Double.valueOf(0));
+    }
 }
