@@ -42,6 +42,8 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
     private BulletChart bulletChart;
     private HorizontalLayout bulletChartContainer;
     private ComputeGridRealtimeStatisticsInfo currentComputeGridRealtimeStatisticsInfo;
+    private Button showFirstStartedUnitInfoButton;
+    private Button showLastStartedUnitInfoButton;
 
     public GridRuntimeInfoWidget(){
         this.setWidthFull();
@@ -107,7 +109,7 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
                 "-");
 
         Icon configIcon1 = new Icon(VaadinIcon.EYE);
-        Button showFirstStartedUnitInfoButton = new Button(configIcon1, event -> {
+        showFirstStartedUnitInfoButton = new Button(configIcon1, event -> {
             if(currentComputeGridRealtimeStatisticsInfo != null){
                 renderComputeUnitDetailUI(currentComputeGridRealtimeStatisticsInfo.getYoungestUnitId());
             }
@@ -123,9 +125,8 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
         lastComputeUnitDisplayItem = new SecondaryKeyValueDisplayItem(statusInfoContainer4,VaadinIcon.SERVER.create(),"最后启动计算单元:",
                 "-");
 
-
         Icon configIcon2 = new Icon(VaadinIcon.EYE);
-        Button showLastStartedUnitInfoButton = new Button(configIcon2, event -> {
+        showLastStartedUnitInfoButton = new Button(configIcon2, event -> {
             if(currentComputeGridRealtimeStatisticsInfo != null){
                 renderComputeUnitDetailUI(currentComputeGridRealtimeStatisticsInfo.getOldestUnitId());
             }
@@ -182,6 +183,9 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
     public void refreshRuntimeInfo(ComputeGridRealtimeStatisticsInfo computeGridRealtimeStatisticsInfo){
         if(computeGridRealtimeStatisticsInfo != null) {
             if(computeGridRealtimeStatisticsInfo.getGridStartTime() != null){
+                showFirstStartedUnitInfoButton.setEnabled(true);
+                showLastStartedUnitInfoButton.setEnabled(true);
+
                 this.currentComputeGridRealtimeStatisticsInfo = computeGridRealtimeStatisticsInfo;
                 gridStartDatetimeDisplayItem.updateDisplayValue(computeGridRealtimeStatisticsInfo.getGridStartTime().format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
                 gridUpTimeInSecondDisplayItem.updateDisplayValue(""+computeGridRealtimeStatisticsInfo.getGridUpTimeInMinute());
@@ -240,6 +244,10 @@ public class GridRuntimeInfoWidget extends VerticalLayout {
         totalUsedMemoryCountDisplayItemDisplayItem.updateDisplayValue("-");
         maxAvailableMemoryCountDisplayItem.updateDisplayValue("-");
         freeMemoryPercentDisplayItem.updateDisplayValue("-");
-        bulletChart.setData("Mem Consumption",Double.valueOf(0),Double.valueOf(0));
+        if(bulletChart != null){
+            bulletChart.setData("Mem Consumption",Double.valueOf(0),Double.valueOf(0));
+        }
+        showFirstStartedUnitInfoButton.setEnabled(false);
+        showLastStartedUnitInfoButton.setEnabled(false);
     }
 }
