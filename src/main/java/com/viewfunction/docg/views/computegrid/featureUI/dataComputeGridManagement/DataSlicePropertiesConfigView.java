@@ -120,7 +120,7 @@ public class DataSlicePropertiesConfigView extends VerticalLayout {
                 }
             }
         });
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加属性",null,true,480,180,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"添加属性",null,true,480,190,false);
         fixSizeWindow.setWindowContent(addDataSlicePropertyView);
         fixSizeWindow.setModel(true);
         addDataSlicePropertyView.setContainerDialog(fixSizeWindow);

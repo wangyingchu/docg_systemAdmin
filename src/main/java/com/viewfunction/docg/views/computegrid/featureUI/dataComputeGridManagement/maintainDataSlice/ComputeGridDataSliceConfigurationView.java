@@ -500,7 +500,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
 
     private void renderCreateDataSliceView(){
         CreateDataSliceView createDataSliceView = new CreateDataSliceView();
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建网格数据切片",null,true,630,610,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"创建网格数据切片",null,true,630,625,false);
         fixSizeWindow.setWindowContent(createDataSliceView);
         fixSizeWindow.setModel(true);
         createDataSliceView.setContainerDialog(fixSizeWindow);
