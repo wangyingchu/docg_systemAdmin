@@ -65,6 +65,7 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
     private TextField dataSliceNameFilterField;
     private TextField dataSliceGroupFilterField;
     private int currentDataSliceCount;
+    private VerticalLayout rightSideLayout;
 
     private class DataSlicePropertyDefinitionVO{
         private String propertyName;
@@ -296,9 +297,8 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
             }
         });
 
-        VerticalLayout rightSideLayout = new VerticalLayout();
+        rightSideLayout = new VerticalLayout();
         rightSideLayout.setMargin(false);
-        rightSideLayout.setWidth(590,Unit.PIXELS);
         dataSlicesInfoContainerLayout.add(rightSideLayout);
         rightSideLayout.getStyle().set("left","0px").set("top","-2px").set("position","relative");
 
@@ -356,8 +356,8 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
         dataSlicePropertyDefinitionsGrid.setSelectionMode(Grid.SelectionMode.NONE);
         dataSlicePropertyDefinitionsGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         dataSlicePropertyDefinitionsGrid.addColumn(DataSlicePropertyDefinitionVO::getPropertyName).setHeader("属性名称").setKey("idx_0");
-        dataSlicePropertyDefinitionsGrid.addColumn(DataSlicePropertyDefinitionVO::getDataSlicePropertyType).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("100px").setResizable(false);
-        dataSlicePropertyDefinitionsGrid.addColumn(DataSlicePropertyDefinitionVO::isPrimaryKey).setHeader("切片主键").setKey("idx_2").setFlexGrow(0).setWidth("80px").setResizable(false);
+        dataSlicePropertyDefinitionsGrid.addColumn(DataSlicePropertyDefinitionVO::getDataSlicePropertyType).setHeader("属性数据类型").setKey("idx_1").setFlexGrow(0).setWidth("110px").setResizable(false);
+        dataSlicePropertyDefinitionsGrid.addColumn(DataSlicePropertyDefinitionVO::isPrimaryKey).setHeader("切片主键").setKey("idx_2").setFlexGrow(0).setWidth("90px").setResizable(false);
 
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.BULLETS,"属性名称");
         dataSlicePropertyDefinitionsGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(true);
@@ -379,12 +379,14 @@ public class ComputeGridDataSliceConfigurationView extends VerticalLayout implem
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             dataSliceMetaInfoGrid.setHeight(event.getHeight()-385,Unit.PIXELS);
             dataSlicePropertyDefinitionsGrid.setHeight(event.getHeight()-650,Unit.PIXELS);
+            rightSideLayout.setWidth(event.getWidth()-1350,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             dataSliceMetaInfoGrid.setHeight(browserHeight-385,Unit.PIXELS);
             dataSlicePropertyDefinitionsGrid.setHeight(browserHeight-650,Unit.PIXELS);
+            rightSideLayout.setWidth(receiver.getBodyClientWidth()-1350,Unit.PIXELS);
         }));
         renderGridDateSlicesInfo();
     }
