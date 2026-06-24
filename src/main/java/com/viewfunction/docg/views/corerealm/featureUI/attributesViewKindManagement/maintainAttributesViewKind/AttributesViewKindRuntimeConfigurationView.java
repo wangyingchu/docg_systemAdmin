@@ -222,7 +222,7 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
 
     private void renderRelationDBDataSourceConfigView(){
         RelationDBDataSourceConfigView relationDBDataSourceConfigView = new RelationDBDataSourceConfigView(targetAttributesViewKind);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.DATABASE.create(),"配置 RelationDB 数据源",null,true,400,670,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.DATABASE.create(),"配置 RelationDB 数据源",null,true,400,690,false);
         fixSizeWindow.setWindowContent(relationDBDataSourceConfigView);
         relationDBDataSourceConfigView.setContainerDialog(fixSizeWindow);
         relationDBDataSourceConfigView.setRelatedMetaConfigItemsConfigView(metaConfigItemsConfigView);
@@ -232,7 +232,7 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
 
     private void renderObjectStoreDataSourceConfigView(){
         ObjectStoreDataSourceConfigView ObjectStoreDataSourceConfigView = new ObjectStoreDataSourceConfigView(targetAttributesViewKind);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BOX_SOLID.create(),"配置 ObjectStore 数据源",null,true,400,670,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.BOX_SOLID.create(),"配置 ObjectStore 数据源",null,true,400,690,false);
         fixSizeWindow.setWindowContent(ObjectStoreDataSourceConfigView);
         ObjectStoreDataSourceConfigView.setContainerDialog(fixSizeWindow);
         ObjectStoreDataSourceConfigView.setRelatedMetaConfigItemsConfigView(metaConfigItemsConfigView);
@@ -242,7 +242,7 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
 
     private void renderTimeSeriesDBDataSourceConfigView(){
         TimeSeriesDBDataSourceConfigView timeSeriesDBDataSourceConfigView = new TimeSeriesDBDataSourceConfigView(targetAttributesViewKind);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.ALARM.create(),"配置 TimeSeries 数据源",null,true,400,670,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.ALARM.create(),"配置 TimeSeries 数据源",null,true,400,690,false);
         fixSizeWindow.setWindowContent(timeSeriesDBDataSourceConfigView);
         timeSeriesDBDataSourceConfigView.setContainerDialog(fixSizeWindow);
         timeSeriesDBDataSourceConfigView.setRelatedMetaConfigItemsConfigView(metaConfigItemsConfigView);
@@ -252,7 +252,7 @@ public class AttributesViewKindRuntimeConfigurationView extends VerticalLayout i
 
     private void renderCustomizedDataSourceConfigView(){
         CustomizedDataSourceConfigView customizedDataSourceConfigView = new CustomizedDataSourceConfigView(targetAttributesViewKind);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.JAVA.create(),"配置 自定义实现类",null,true,600,270,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(LineAwesomeIconsSvg.JAVA.create(),"配置 自定义实现类",null,true,600,280,false);
         fixSizeWindow.setWindowContent(customizedDataSourceConfigView);
         customizedDataSourceConfigView.setContainerDialog(fixSizeWindow);
         customizedDataSourceConfigView.setRelatedMetaConfigItemsConfigView(metaConfigItemsConfigView);
