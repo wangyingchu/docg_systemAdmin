@@ -78,7 +78,7 @@ public class RegisterKindActionView extends VerticalLayout {
         this.actionDescField.setTitle("请输入自定义动作名称");
         add(actionDescField);
 
-        this.actionFullClassNameField = new TextField("自定义动作类全名 - Action Implementation Class Full Name");
+        this.actionFullClassNameField = new TextField("自定义动作执行类全名 - Action Logic Executor Implementation Class Full Name");
         this.actionFullClassNameField.setWidthFull();
         this.actionFullClassNameField.setRequired(true);
         this.actionFullClassNameField.setRequiredIndicatorVisible(true);
