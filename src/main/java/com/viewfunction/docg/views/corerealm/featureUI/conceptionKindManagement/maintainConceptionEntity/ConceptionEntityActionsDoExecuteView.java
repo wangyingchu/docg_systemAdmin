@@ -59,7 +59,6 @@ public class ConceptionEntityActionsDoExecuteView extends VerticalLayout {
     private HorizontalLayout generateTabTitle(Icon tabIcon, String tabTitleTxt,String tabTooltipTxt){
         HorizontalLayout  tabTitleLayout = new HorizontalLayout();
         tabTitleLayout.setDefaultVerticalComponentAlignment(Alignment.START);
-        //Icon tabTitleIcon = tabIcon;
         tabIcon.setTooltipText(tabTooltipTxt);
         tabIcon.setSize("12px");
         NativeLabel tabTitleLabel = new NativeLabel(" "+tabTitleTxt);
