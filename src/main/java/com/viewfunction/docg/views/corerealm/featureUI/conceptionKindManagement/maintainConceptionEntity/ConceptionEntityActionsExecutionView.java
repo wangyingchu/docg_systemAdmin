@@ -10,7 +10,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionAction;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -81,16 +81,16 @@ public class ConceptionEntityActionsExecutionView extends VerticalLayout {
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
         try {
             if(targetConceptionKind != null){
-                Set<AttributesViewKind> attributesViewKindSet = targetConceptionKind.getAvailableExternalValueAttributesViewKinds();
-                List<AttributesViewKind> conceptionKindExternalAttributeViewList = new ArrayList<>();
-                conceptionKindExternalAttributeViewList.addAll(attributesViewKindSet);
-                if(conceptionKindExternalAttributeViewList.size() == 0){
+                Set<ConceptionAction> conceptionActionSet = targetConceptionKind.getActions();
+                List<ConceptionAction> conceptionActionsList = new ArrayList<>();
+                conceptionActionsList.addAll(conceptionActionSet);
+                if(conceptionActionsList.size() == 0){
                     conceptionEntityActionsDoExecuteView.setVisible(false);
                     doesNotContainsConceptionActionsMessage.setVisible(true);
                 }else{
                     doesNotContainsConceptionActionsMessage.setVisible(false);
                     conceptionEntityActionsDoExecuteView.setVisible(true);
-                    conceptionEntityActionsDoExecuteView.renderConceptionEntityActionsUI(conceptionKindExternalAttributeViewList);
+                    conceptionEntityActionsDoExecuteView.renderConceptionEntityActionsUI(conceptionActionsList);
                 }
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);
