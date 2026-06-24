@@ -15,21 +15,20 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.externalData.ConceptionEntityExternalDataView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ConceptionEntityExternalAttributesAccessView extends VerticalLayout {
+public class ConceptionEntityActionsExecutionView extends VerticalLayout {
 
     private String conceptionKind;
     private String conceptionEntityUID;
-    private int conceptionEntityExternalDataViewHeightOffset;
-    private HorizontalLayout doesNotContainsExternalAttributesViewsMessage;
-    private ConceptionEntityExternalDataView conceptionEntityExternalDataView;
+    private int conceptionEntityActionsExecutionViewHeightOffset;
+    private HorizontalLayout doesNotContainsConceptionActionsMessage;
+    private ConceptionEntityActionsDoExecuteView conceptionEntityActionsDoExecuteView;
 
-    public ConceptionEntityExternalAttributesAccessView(String conceptionKind, String conceptionEntityUID, int conceptionEntityIntegratedInfoViewHeightOffset){
+    public ConceptionEntityActionsExecutionView(String conceptionKind, String conceptionEntityUID, int conceptionEntityIntegratedInfoViewHeightOffset){
         this.setPadding(false);
         this.setSpacing(false);
         this.setMargin(false);
@@ -38,37 +37,37 @@ public class ConceptionEntityExternalAttributesAccessView extends VerticalLayout
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
 
-        String emptyMessage = " 当前概念实体所属概念类型中未配置 External Value 类型属性视图";
+        String emptyMessage = " 当前概念实体所属概念类型中未配置自定义动作";
         if(this.conceptionEntityUID == null) {
             //conceptionEntityUID 为空，表示当前操作对象为概念类型的外部属性视图对象
-            emptyMessage = " 当前概念类型中未配置 External Value 类型属性视图";
+            emptyMessage = " 当前概念类型中未配置自定义动作";
         }
-        this.conceptionEntityExternalDataViewHeightOffset = conceptionEntityIntegratedInfoViewHeightOffset +106;
+        this.conceptionEntityActionsExecutionViewHeightOffset = conceptionEntityIntegratedInfoViewHeightOffset +106;
 
-        doesNotContainsExternalAttributesViewsMessage = new HorizontalLayout();
-        doesNotContainsExternalAttributesViewsMessage.setSpacing(true);
-        doesNotContainsExternalAttributesViewsMessage.setPadding(true);
-        doesNotContainsExternalAttributesViewsMessage.setMargin(true);
-        doesNotContainsExternalAttributesViewsMessage.setWidth(100, Unit.PERCENTAGE);
-        doesNotContainsExternalAttributesViewsMessage.setHeight(300,Unit.PIXELS);
+        doesNotContainsConceptionActionsMessage = new HorizontalLayout();
+        doesNotContainsConceptionActionsMessage.setSpacing(true);
+        doesNotContainsConceptionActionsMessage.setPadding(true);
+        doesNotContainsConceptionActionsMessage.setMargin(true);
+        doesNotContainsConceptionActionsMessage.setWidth(100, Unit.PERCENTAGE);
+        doesNotContainsConceptionActionsMessage.setHeight(300,Unit.PIXELS);
         Icon messageLogo = new Icon(VaadinIcon.MAILBOX);
         messageLogo.getStyle()
                 .set("color","#2e4e7e").set("padding-right", "5px");
         messageLogo.setSize("30px");
         NativeLabel messageLabel = new NativeLabel(emptyMessage);
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
-        doesNotContainsExternalAttributesViewsMessage.add(messageLogo,messageLabel);
-        add(doesNotContainsExternalAttributesViewsMessage);
+        doesNotContainsConceptionActionsMessage.add(messageLogo,messageLabel);
+        add(doesNotContainsConceptionActionsMessage);
 
-        conceptionEntityExternalDataView = new ConceptionEntityExternalDataView(this.conceptionKind,this.conceptionEntityUID,this.conceptionEntityExternalDataViewHeightOffset);
-        conceptionEntityExternalDataView.setContainerExternalAttributesAccessView(this);
-        add(conceptionEntityExternalDataView);
+        conceptionEntityActionsDoExecuteView = new ConceptionEntityActionsDoExecuteView(this.conceptionKind,this.conceptionEntityUID,this.conceptionEntityActionsExecutionViewHeightOffset);
+        conceptionEntityActionsDoExecuteView.setContainerExternalAttributesAccessView(this);
+        add(conceptionEntityActionsDoExecuteView);
     }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        renderExternalDataAccessUI();
+        renderConceptionEntityExecuteActionsUI();
     }
 
     @Override
@@ -76,7 +75,7 @@ public class ConceptionEntityExternalAttributesAccessView extends VerticalLayout
         super.onDetach(detachEvent);
     }
 
-    private void renderExternalDataAccessUI(){
+    private void renderConceptionEntityExecuteActionsUI(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         coreRealm.openGlobalSession();
         ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
@@ -86,12 +85,12 @@ public class ConceptionEntityExternalAttributesAccessView extends VerticalLayout
                 List<AttributesViewKind> conceptionKindExternalAttributeViewList = new ArrayList<>();
                 conceptionKindExternalAttributeViewList.addAll(attributesViewKindSet);
                 if(conceptionKindExternalAttributeViewList.size() == 0){
-                    conceptionEntityExternalDataView.setVisible(false);
-                    doesNotContainsExternalAttributesViewsMessage.setVisible(true);
+                    conceptionEntityActionsDoExecuteView.setVisible(false);
+                    doesNotContainsConceptionActionsMessage.setVisible(true);
                 }else{
-                    doesNotContainsExternalAttributesViewsMessage.setVisible(false);
-                    conceptionEntityExternalDataView.setVisible(true);
-                    conceptionEntityExternalDataView.renderExternalAttributesAccessDataUI(conceptionKindExternalAttributeViewList);
+                    doesNotContainsConceptionActionsMessage.setVisible(false);
+                    conceptionEntityActionsDoExecuteView.setVisible(true);
+                    conceptionEntityActionsDoExecuteView.renderConceptionEntityActionsUI(conceptionKindExternalAttributeViewList);
                 }
             }else{
                 CommonUIOperationUtil.showPopupNotification("概念类型 "+conceptionKind+" 不存在", NotificationVariant.LUMO_ERROR);

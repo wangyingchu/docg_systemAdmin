@@ -21,6 +21,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
     private ConceptionEntityTemporalInfoView conceptionEntityTemporalInfoView;
     private ConceptionEntitySpatialInfoView conceptionEntitySpatialInfoView;
     private ConceptionEntityExternalAttributesAccessView conceptionEntityExternalAttributesAccessView;
+    private ConceptionEntityActionsExecutionView conceptionEntityActionsExecutionView;
     private boolean conceptionEntityRelationTopologyViewFirstRendered = false;
     private boolean conceptionEntitySpatialAttributeViewFirstRendered = false;
     private boolean conceptionEntityTemporalInfoViewFirstRendered = false;
@@ -42,6 +43,7 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         this.conceptionEntityTemporalInfoView = new ConceptionEntityTemporalInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
         this.conceptionEntitySpatialInfoView = new ConceptionEntitySpatialInfoView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
         this.conceptionEntityExternalAttributesAccessView = new ConceptionEntityExternalAttributesAccessView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
+        this.conceptionEntityActionsExecutionView = new ConceptionEntityActionsExecutionView(this.conceptionKind,this.conceptionEntityUID,conceptionEntityIntegratedInfoViewHeightOffset);
 
         Tab tab0 = tabs.add("", conceptionEntityRelationInfoView,false);
         Span relationInfoSpan =new Span();
@@ -90,6 +92,14 @@ public class ConceptionEntityIntegratedInfoView extends VerticalLayout {
         NativeLabel externalDataLabel = new NativeLabel(" 外部属性视图数据");
         externalDataSpan.add(externalDataIcon,externalDataLabel);
         tab5.add(externalDataSpan);
+
+        Tab tab6 = tabs.add("", conceptionEntityActionsExecutionView,false);
+        Span executeActionsSpan =new Span();
+        Icon executeActionsIcon = LineAwesomeIconsSvg.ROCKET_SOLID.create();
+        executeActionsIcon.setSize("20px");
+        NativeLabel executeActionsLabel = new NativeLabel(" 概念实体自定义动作");
+        executeActionsSpan.add(executeActionsIcon,executeActionsLabel);
+        tab6.add(executeActionsSpan);
 
         add(tabs,container);
 
