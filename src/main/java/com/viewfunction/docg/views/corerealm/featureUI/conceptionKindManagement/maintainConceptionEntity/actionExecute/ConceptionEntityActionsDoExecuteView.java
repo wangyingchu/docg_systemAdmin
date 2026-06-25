@@ -1,8 +1,7 @@
-package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity;
+package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.actionExecute;
 
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
@@ -10,6 +9,7 @@ import com.vaadin.flow.component.tabs.TabSheetVariant;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionAction;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityActionsExecutionView;
 
 import java.util.List;
 
@@ -19,12 +19,12 @@ public class ConceptionEntityActionsDoExecuteView extends VerticalLayout {
     private String conceptionEntityUID;
     private ConceptionEntityActionsExecutionView containerConceptionEntityActionsExecutionView;
     private TabSheet conceptionActionExecuteViewTabSheet;
-    private int conceptionEntityExternalDataViewHeightOffset;
+    private int conceptionEntityActionsExecutionViewHeightOffset;
 
-    public ConceptionEntityActionsDoExecuteView(String conceptionKind,String conceptionEntityUID,int conceptionEntityExternalDataViewHeightOffset){
+    public ConceptionEntityActionsDoExecuteView(String conceptionKind,String conceptionEntityUID,int conceptionEntityActionsExecutionViewHeightOffset){
         this.conceptionKind = conceptionKind;
         this.conceptionEntityUID = conceptionEntityUID;
-        this.conceptionEntityExternalDataViewHeightOffset = conceptionEntityExternalDataViewHeightOffset;
+        this.conceptionEntityActionsExecutionViewHeightOffset = conceptionEntityActionsExecutionViewHeightOffset;
         this.setPadding(false);
         this.setSpacing(false);
         this.setMargin(false);
@@ -45,14 +45,9 @@ public class ConceptionEntityActionsDoExecuteView extends VerticalLayout {
         add(conceptionActionExecuteViewTabSheet);
 
         for (ConceptionAction conceptionAction : conceptionActionsList) {
-            //Object processorID = attributesViewKind.getMetaConfigItem(RealmConstant.ExternalAttributesValueAccessProcessorID);
-            //String externalProcessorIDStr = processorID != null ? processorID.toString() : null;
-            //String externalDataType = processorID != null ? getExternalDataType(processorID.toString()):null;
-            //ExternalValueAttributeDataAccessView currentExternalValueAttributeDataAccessView =
-            //      new ExternalValueAttributeDataAccessView(this.conceptionKind,this.conceptionEntityUID,attributesViewKind.getAttributesViewKindUID(),externalProcessorIDStr,this.conceptionEntityExternalDataViewHeightOffset);
-            NativeLabel nativeLabel = new NativeLabel(conceptionAction.getActionName());
+            ActionExecutionControlView actionExecutionControlView = new ActionExecutionControlView(this.conceptionKind,this.conceptionEntityUID,conceptionAction,this.conceptionEntityActionsExecutionViewHeightOffset);
             conceptionActionExecuteViewTabSheet.
-                    add(generateTabTitle(LineAwesomeIconsSvg.FIRE_SOLID.create(),conceptionAction.getActionName(), conceptionAction.getActionDesc()), nativeLabel);
+                    add(generateTabTitle(LineAwesomeIconsSvg.FIRE_SOLID.create(),conceptionAction.getActionName(), conceptionAction.getActionDesc()), actionExecutionControlView);
         }
     }
 
