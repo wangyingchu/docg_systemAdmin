@@ -9,14 +9,21 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverPosition;
+import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
+import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.server.WebBrowser;
 import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionAction;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelTitleActionBar;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.externalData.ConceptionEntityExternalDataQueryCriteriaView;
+
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.externalData.ConceptionEntityExternalDataQueryResultsView;
+import com.viewfunction.docg.views.corerealm.featureUI.relationAttachKindManagement.AllowRepeatAttributeEditorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +43,9 @@ public class ActionExecutionControlView extends VerticalLayout {
     private String externalAttributesValueAccessProcessorID;
 
     private ConceptionAction conceptionAction;
+
+    private Popover addActionExecuteAttributePopover;
+    private Button addActionExecuteAttributeButton;
 
     public ActionExecutionControlView(String conceptionKind,String conceptionEntityUID,ConceptionAction conceptionAction,int conceptionEntityActionsExecutionViewHeightOffset){
         this.conceptionEntityActionsExecutionViewHeightOffset = conceptionEntityActionsExecutionViewHeightOffset;
@@ -57,26 +67,34 @@ public class ActionExecutionControlView extends VerticalLayout {
 
         queryFieldsContainer.add(attributesViewKindInfoContainer);
 
-        String attributeNameText = conceptionAction.getActionName() +" ( "+conceptionAction.getActionDesc()+" )";
-        String attributeKindIdText = conceptionAction.getActionUID();
+        String attributeNameText = conceptionAction.getActionName() +" ( "+conceptionAction.getActionUID()+" )";
+        String attributeKindIdText = conceptionAction.getActionDesc();
 
         ThirdLevelTitleActionBar secondaryTitleActionBar = new ThirdLevelTitleActionBar(new Icon(VaadinIcon.TASKS),attributeNameText,null,null);
         secondaryTitleActionBar.setWidth(100,Unit.PERCENTAGE);
         attributesViewKindInfoContainer.add(secondaryTitleActionBar);
 
-        Icon configIcon = new Icon(VaadinIcon.COG);
-        configIcon.setSize("16px");
-        Button configAttributeKind = new Button(configIcon, event -> {
-            //renderAttributesViewKindConfigurationUI(attributesViewKind);
-        });
-        configAttributeKind.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        configAttributeKind.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        configAttributeKind.setTooltipText("配置属性视图类型定义");
         List<Component> actionComponentList = new ArrayList<>();
 
-        actionComponentList.add(configAttributeKind);
 
-        ThirdLevelTitleActionBar secondaryTitleActionBar2 = new ThirdLevelTitleActionBar(new Icon(VaadinIcon.KEY_O),attributeKindIdText,null,actionComponentList);
+
+
+        Icon addPropertyIcon = new Icon(VaadinIcon.PLUS);
+        addPropertyIcon.setSize("16px");
+        addActionExecuteAttributeButton = new Button(addPropertyIcon, event -> {
+            renderAddActionExecuteAttributeUI();
+        });
+        addActionExecuteAttributeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        addActionExecuteAttributeButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addActionExecuteAttributeButton.setTooltipText("添加自定义动作执行属性");
+
+        actionComponentList.add(addActionExecuteAttributeButton);
+
+
+        Icon configIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
+        configIcon.setTooltipText(conceptionAction.getActionImplementationClass());
+
+        ThirdLevelTitleActionBar secondaryTitleActionBar2 = new ThirdLevelTitleActionBar(configIcon,attributeKindIdText,null,actionComponentList);
         secondaryTitleActionBar2.setWidth(100,Unit.PERCENTAGE);
         attributesViewKindInfoContainer.add(secondaryTitleActionBar2);
 
@@ -84,7 +102,14 @@ public class ActionExecutionControlView extends VerticalLayout {
        // queryFieldsContainer.add(conceptionEntityExternalDataQueryCriteriaView);
        // conceptionEntityExternalDataQueryCriteriaView.setContainerExternalValueAttributeDataAccessView(this);
 
-
+        WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
+        if(webBrowser.isChrome()){
+            queryFieldsContainer.setMinWidth(360, Unit.PIXELS);
+            queryFieldsContainer.setMaxWidth(360,Unit.PIXELS);
+        }else{
+            queryFieldsContainer.setMinWidth(350,Unit.PIXELS);
+            queryFieldsContainer.setMaxWidth(350,Unit.PIXELS);
+        }
 
 
         queryResultContainer= new VerticalLayout();
@@ -129,5 +154,22 @@ public class ActionExecutionControlView extends VerticalLayout {
         super.onDetach(detachEvent);
     }
 
-
+    private void renderAddActionExecuteAttributeUI(){
+        if(addActionExecuteAttributePopover == null){
+            addActionExecuteAttributePopover = new Popover();
+            addActionExecuteAttributePopover.setTarget(addActionExecuteAttributeButton);
+            addActionExecuteAttributePopover.setWidth("460px");
+            addActionExecuteAttributePopover.setHeight("120px");
+            addActionExecuteAttributePopover.addThemeVariants(PopoverVariant.ARROW);
+            addActionExecuteAttributePopover.setPosition(PopoverPosition.BOTTOM);
+            addActionExecuteAttributePopover.setAutofocus(true);
+            addActionExecuteAttributePopover.setModal(true,true);
+        }
+        addActionExecuteAttributePopover.removeAll();
+        AddEntityActionExecuteAttributeView addEntityActionExecuteAttributeView = new AddEntityActionExecuteAttributeView();
+        addActionExecuteAttributePopover.add(addEntityActionExecuteAttributeView);
+        addEntityActionExecuteAttributeView.setContainerPopover(addActionExecuteAttributePopover);
+        addEntityActionExecuteAttributeView.setParentActionExecutionControlView(this);
+        addActionExecuteAttributePopover.open();
+    }
 }
