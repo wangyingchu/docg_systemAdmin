@@ -3,6 +3,7 @@ package com.viewfunction.docg.element.commonComponent.chart;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
+import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.function.SerializableConsumer;
@@ -10,6 +11,7 @@ import com.viewfunction.docg.element.visualizationComponent.payload.common.Echar
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ArrayNode;
 
+@NpmPackage(value = "echarts", version = "5.4.1")
 @JavaScript("./visualization/common/stackedBarChart_echarts-connector.js")
 public class StackedBarChart extends Div {
     private static final ObjectMapper mapper = new ObjectMapper();

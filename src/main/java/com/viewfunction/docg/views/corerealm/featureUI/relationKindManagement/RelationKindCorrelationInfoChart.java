@@ -3,6 +3,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
+import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
@@ -14,6 +15,7 @@ import tools.jackson.databind.node.ObjectNode;
 
 import java.util.*;
 
+@NpmPackage(value = "echarts", version = "5.4.1")
 @JavaScript("./visualization/feature/relationKindCorrelationInfoChart-connector.js")
 public class RelationKindCorrelationInfoChart extends VerticalLayout {
 

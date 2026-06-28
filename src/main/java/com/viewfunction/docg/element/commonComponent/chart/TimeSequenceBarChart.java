@@ -4,6 +4,7 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JavaScript;
+import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.function.SerializableConsumer;
@@ -12,6 +13,7 @@ import com.viewfunction.docg.element.visualizationComponent.payload.common.Echar
 import java.time.LocalDateTime;
 import java.util.Map;
 
+@NpmPackage(value = "echarts", version = "5.4.1")
 @JavaScript("./visualization/common/timeSequenceBarChart_echarts-connector.js")
 public class TimeSequenceBarChart extends Div {
 
