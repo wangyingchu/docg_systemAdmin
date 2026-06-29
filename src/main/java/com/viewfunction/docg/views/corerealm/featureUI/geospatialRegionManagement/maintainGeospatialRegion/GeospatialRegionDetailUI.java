@@ -135,8 +135,9 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             leftSideContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset, Unit.PIXELS);
             middleContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset,Unit.PIXELS);
             rightSideContainerLayout.setHeight(event.getHeight() - contentContainerHeightOffset,Unit.PIXELS);
-            geospatialRegionCorrelationExploreView.setViewWidth(event.getWidth() - 855);
+            geospatialRegionCorrelationExploreView.setWidth(event.getWidth() - 850,Unit.PIXELS);
             geospatialRegionCorrelationExploreView.setViewHeight(event.getHeight() - contentContainerHeightOffset);
+            geospatialRegionCorrelationExploreView.setViewWidth(event.getWidth() - 850);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -145,8 +146,9 @@ public class GeospatialRegionDetailUI extends VerticalLayout implements
             leftSideContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
             middleContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
             rightSideContainerLayout.setHeight(browserHeight - contentContainerHeightOffset,Unit.PIXELS);
-            geospatialRegionCorrelationExploreView.setViewWidth(browserWidth - 855);
+            geospatialRegionCorrelationExploreView.setWidth(browserWidth - 850,Unit.PIXELS);
             geospatialRegionCorrelationExploreView.setViewHeight(browserHeight - contentContainerHeightOffset);
+            geospatialRegionCorrelationExploreView.setViewWidth(browserWidth - 850);
         }));
         renderGeospatialRegionBasicInfo();
         ResourceHolder.getApplicationBlackboard().addListener(this);

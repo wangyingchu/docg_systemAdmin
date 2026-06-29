@@ -19,7 +19,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
-import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleCalculable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.feature.GeospatialScaleFeatureSupportable;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
@@ -72,6 +71,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     private Map<String,GeospatialScaleEntity> navagationBarEntitieesMap;
     private GeospatialScaleEntityMapInfoChart_Maplibre geospatialScaleEntityMapInfoChart;
     private HorizontalLayout doesNotContainsSpatialInfoMessage;
+
     public GeospatialRegionCorrelationExploreView(String geospatialRegionName){
         this.geospatialRegionName = geospatialRegionName;
         this.numberFormat = NumberFormat.getInstance();
@@ -231,7 +231,6 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         entityInfoContainerLayout.setSpacing(false);
         entityInfoContainerLayout.setMargin(false);
         entityInfoContainerLayout.setPadding(false);
-        entityInfoContainerLayout.setWidth(500,Unit.PIXELS);
         geospatialScaleEntityInfoContainerLayout.add(entityInfoContainerLayout);
         entityInfoContainerLayout.getStyle()
                 .set("border-right", "1px solid var(--lumo-contrast-20pct)");
@@ -333,8 +332,8 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         // Add browser window listener to observe size change
         this.geospatialScaleEntityMapInfoChart = new GeospatialScaleEntityMapInfoChart_Maplibre();
         //<theme-editor-local-classname> 添加属性防止地图遮盖其他界面元素
-        addClassName("geospatial-region-correlation-explore-view-vertical-layout-1");
-        this.geospatialScaleEntityMapInfoChart.setWidth(100,Unit.PERCENTAGE);
+        //addClassName("geospatial-region-correlation-explore-view-vertical-layout-1");
+
         this.entityInfoContainerLayout.add(this.geospatialScaleEntityMapInfoChart);
         this.geospatialScaleEntityMapInfoChart.renderMapAndSpatialInfo();
 
@@ -342,8 +341,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         this.doesNotContainsSpatialInfoMessage.setSpacing(true);
         this.doesNotContainsSpatialInfoMessage.setPadding(true);
         this.doesNotContainsSpatialInfoMessage.setMargin(true);
-        this.doesNotContainsSpatialInfoMessage.setWidth(100,Unit.PERCENTAGE);
-        this.doesNotContainsSpatialInfoMessage.setHeight(300,Unit.PIXELS);
+
         Icon messageLogo = new Icon(VaadinIcon.MAILBOX);
         messageLogo.getStyle()
                 .set("color","#2e4e7e").set("padding-right", "5px");
@@ -585,6 +583,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
 
     public void setViewWidth(int value){
         this.viewWidth = value;
+        this.geospatialScaleEntityMapInfoChart.setWidth(this.viewWidth-310, Unit.PIXELS);
         this.entityInfoContainerLayout.setWidth(this.viewWidth-310, Unit.PIXELS);
     }
 
