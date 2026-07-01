@@ -6,7 +6,6 @@ import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -18,34 +17,24 @@ import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.WebBrowser;
 import com.vaadin.flow.shared.Registration;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionAction;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelTitleActionBar;
-
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
-import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
-import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.externalData.ConceptionEntityExternalDataQueryResultsView;
-import com.viewfunction.docg.views.corerealm.featureUI.relationAttachKindManagement.AllowRepeatAttributeEditorView;
 
 import java.util.*;
 
 public class ActionExecutionControlView extends VerticalLayout implements AttributeValueOperateHandler {
-
-
     private String conceptionKind;
     private String conceptionEntityUID;
-    private AttributesViewKind attributesViewKind;
-    private String attributesViewKindUID;
+    private ConceptionAction conceptionAction;
+
     private VerticalLayout queryFieldsContainer;
     private VerticalLayout queryResultContainer;
     private Registration listener;
     private int conceptionEntityActionsExecutionViewHeightOffset;
-    private ConceptionEntityExternalDataQueryResultsView conceptionEntityExternalDataQueryResultsView;
-    private String externalAttributesValueAccessProcessorID;
-
-    private ConceptionAction conceptionAction;
-
     private Popover addActionExecuteAttributePopover;
     private Button addActionExecuteAttributeButton;
     private Set<String> existingAttributeNames;
@@ -53,19 +42,19 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
 
     public ActionExecutionControlView(String conceptionKind,String conceptionEntityUID,ConceptionAction conceptionAction,int conceptionEntityActionsExecutionViewHeightOffset){
         this.conceptionEntityActionsExecutionViewHeightOffset = conceptionEntityActionsExecutionViewHeightOffset;
-
+        this.conceptionKind = conceptionKind;
+        this.conceptionEntityUID = conceptionEntityUID;
+        this.conceptionAction = conceptionAction;
         this.existingAttributeNames = new HashSet<>();
 
         setPadding(false);
         setSpacing(false);
         setMargin(false);
 
-
         queryFieldsContainer = new VerticalLayout();
         queryFieldsContainer.setPadding(false);
         queryFieldsContainer.setSpacing(false);
         queryFieldsContainer.setMargin(false);
-
 
         VerticalLayout attributesViewKindInfoContainer = new VerticalLayout();
         attributesViewKindInfoContainer.setSpacing(false);
@@ -82,19 +71,30 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
 
         List<Component> actionComponentList = new ArrayList<>();
 
-
-
-
         Icon addPropertyIcon = new Icon(VaadinIcon.PLUS);
         addPropertyIcon.setSize("16px");
         addActionExecuteAttributeButton = new Button(addPropertyIcon, event -> {
-            renderAddActionExecuteAttributeUI();
+            //renderAddActionExecuteAttributeUI();
+            executeAction();
         });
         addActionExecuteAttributeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         addActionExecuteAttributeButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addActionExecuteAttributeButton.setTooltipText("添加自定义动作执行属性");
 
+
+/*
+        Button launchExecutionButton = new Button("执行动作");
+        launchExecutionButton = new Button(addPropertyIcon, event -> {
+            executeAction();
+        });
+        launchExecutionButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        launchExecutionButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        launchExecutionButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        launchExecutionButton.setTooltipText("执行自定义动作");
+*/
+
         actionComponentList.add(addActionExecuteAttributeButton);
+        //actionComponentList.add(launchExecutionButton);
 
 
         Icon configIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
@@ -120,7 +120,6 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
             queryFieldsContainer.setMaxWidth(350,Unit.PIXELS);
         }
 
-
         queryResultContainer= new VerticalLayout();
         queryResultContainer.setPadding(false);
         queryResultContainer.setSpacing(false);
@@ -134,11 +133,7 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
         splitLayout.setSizeFull();
         splitLayout.addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
         add(splitLayout);
-
-
     }
-
-
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
@@ -197,7 +192,24 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
         this.actionAttributesValueContainer.remove(actionExecutionAttributeEditorItemWidget);
     }
 
-    public void executeAction(String actionName, Map<String,Object> actionParameters){
+    public void executeAction() {
+        //CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        //ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+        //ConceptionAction conceptionAction = targetConceptionKind.getAction(this.conceptionAction.getActionName());
 
+        if(this.conceptionAction != null){
+            try {
+                Map <String,Object> executionAttributesMap = new HashMap<>();
+                this.actionAttributesValueContainer.getChildren().forEach(actionExecutionAttributeEditorItemWidget -> {
+                    ActionExecutionAttributeEditorItemWidget targetActionExecutionAttributeEditorItemWidget =
+                            (ActionExecutionAttributeEditorItemWidget)actionExecutionAttributeEditorItemWidget;
+                    AttributeValue targetAttributeValue = targetActionExecutionAttributeEditorItemWidget.getAttributeValue();
+                    executionAttributesMap.put(targetAttributeValue.getAttributeName(),targetAttributeValue.getAttributeValue());
+                });
+                this.conceptionAction.executeActionSync(executionAttributesMap);
+            } catch (CoreRealmServiceRuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
