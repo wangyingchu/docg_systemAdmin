@@ -6,6 +6,7 @@ import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -17,18 +18,19 @@ import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.WebBrowser;
 import com.vaadin.flow.shared.Registration;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionAction;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelTitleActionBar;
 
+import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
 import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.entityMaintain.AddEntityAttributeView;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.externalData.ConceptionEntityExternalDataQueryResultsView;
 import com.viewfunction.docg.views.corerealm.featureUI.relationAttachKindManagement.AllowRepeatAttributeEditorView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class ActionExecutionControlView extends VerticalLayout {
+public class ActionExecutionControlView extends VerticalLayout implements AttributeValueOperateHandler {
 
 
     private String conceptionKind;
@@ -46,9 +48,13 @@ public class ActionExecutionControlView extends VerticalLayout {
 
     private Popover addActionExecuteAttributePopover;
     private Button addActionExecuteAttributeButton;
+    private Set<String> existingAttributeNames;
+    private VerticalLayout actionAttributesValueContainer;
 
     public ActionExecutionControlView(String conceptionKind,String conceptionEntityUID,ConceptionAction conceptionAction,int conceptionEntityActionsExecutionViewHeightOffset){
         this.conceptionEntityActionsExecutionViewHeightOffset = conceptionEntityActionsExecutionViewHeightOffset;
+
+        this.existingAttributeNames = new HashSet<>();
 
         setPadding(false);
         setSpacing(false);
@@ -101,6 +107,9 @@ public class ActionExecutionControlView extends VerticalLayout {
         //ConceptionEntityExternalDataQueryCriteriaView conceptionEntityExternalDataQueryCriteriaView = new ConceptionEntityExternalDataQueryCriteriaView(this.conceptionKind,this.attributesViewKind,this.externalAttributesValueAccessProcessorID,this.conceptionEntityExternalDataViewHeightOffset);
        // queryFieldsContainer.add(conceptionEntityExternalDataQueryCriteriaView);
        // conceptionEntityExternalDataQueryCriteriaView.setContainerExternalValueAttributeDataAccessView(this);
+
+        actionAttributesValueContainer = new VerticalLayout();
+        queryFieldsContainer.add(actionAttributesValueContainer);
 
         WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
         if(webBrowser.isChrome()){
@@ -166,10 +175,29 @@ public class ActionExecutionControlView extends VerticalLayout {
             addActionExecuteAttributePopover.setModal(true,true);
         }
         addActionExecuteAttributePopover.removeAll();
-        AddEntityActionExecuteAttributeView addEntityActionExecuteAttributeView = new AddEntityActionExecuteAttributeView();
+        AddEntityActionExecuteAttributeView addEntityActionExecuteAttributeView = new AddEntityActionExecuteAttributeView(this.existingAttributeNames);
+        addEntityActionExecuteAttributeView.setAttributeValueOperateHandler(this);
         addActionExecuteAttributePopover.add(addEntityActionExecuteAttributeView);
         addEntityActionExecuteAttributeView.setContainerPopover(addActionExecuteAttributePopover);
         addEntityActionExecuteAttributeView.setParentActionExecutionControlView(this);
         addActionExecuteAttributePopover.open();
+    }
+
+    @Override
+    public void handleAttributeValue(AttributeValue attributeValue) {
+        this.existingAttributeNames.add(attributeValue.getAttributeName());
+        this.addActionExecuteAttributePopover.close();
+        ActionExecutionAttributeEditorItemWidget actionExecutionAttributeEditorItemWidget = new ActionExecutionAttributeEditorItemWidget(attributeValue);
+        actionExecutionAttributeEditorItemWidget.setContainerActionExecutionControlView(this);
+        this.actionAttributesValueContainer.add(actionExecutionAttributeEditorItemWidget);
+    }
+
+    public void deleteActionAttribute(String attributeName,ActionExecutionAttributeEditorItemWidget actionExecutionAttributeEditorItemWidget){
+        this.existingAttributeNames.remove(attributeName);
+        this.actionAttributesValueContainer.remove(actionExecutionAttributeEditorItemWidget);
+    }
+
+    public void executeAction(String actionName, Map<String,Object> actionParameters){
+
     }
 }
