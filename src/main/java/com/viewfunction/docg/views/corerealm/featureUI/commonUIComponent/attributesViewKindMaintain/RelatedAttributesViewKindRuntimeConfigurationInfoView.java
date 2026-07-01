@@ -60,7 +60,6 @@ public class RelatedAttributesViewKindRuntimeConfigurationInfoView extends Verti
         add(mainContainerLayout);
 
         leftSideContainerLayout = new VerticalLayout();
-        leftSideContainerLayout.setWidth(800,Unit.PIXELS);
         leftSideContainerLayout.setSpacing(false);
         leftSideContainerLayout.setMargin(false);
         leftSideContainerLayout.setPadding(false);
