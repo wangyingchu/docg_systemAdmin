@@ -42,6 +42,7 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
     private Button addActionExecuteAttributeButton;
     private Set<String> existingAttributeNames;
     private VerticalLayout actionAttributesValueContainer;
+    private ConceptionEntityActionExecuteResultsView conceptionEntityActionExecuteResultsView;
 
     public ActionExecutionControlView(String conceptionKind,String conceptionEntityUID,ConceptionAction conceptionAction,int conceptionEntityActionsExecutionViewHeightOffset){
         this.conceptionEntityActionsExecutionViewHeightOffset = conceptionEntityActionsExecutionViewHeightOffset;
@@ -119,8 +120,8 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
         queryResultContainer.setSpacing(false);
         queryResultContainer.setMargin(false);
 
-        //conceptionEntityExternalDataQueryResultsView = new ConceptionEntityExternalDataQueryResultsView(this.conceptionKind,this.conceptionEntityUID,this.attributesViewKind,this.externalAttributesValueAccessProcessorID,this.conceptionEntityExternalDataViewHeightOffset);
-        //queryResultContainer.add(conceptionEntityExternalDataQueryResultsView);
+        conceptionEntityActionExecuteResultsView = new ConceptionEntityActionExecuteResultsView(this.conceptionKind,this.conceptionEntityUID,null,null,this.conceptionEntityActionsExecutionViewHeightOffset);
+        queryResultContainer.add(conceptionEntityActionExecuteResultsView);
 
         SplitLayout splitLayout = new SplitLayout(queryFieldsContainer, queryResultContainer);
         splitLayout.setSplitterPosition(0);
@@ -196,7 +197,10 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
                     AttributeValue targetAttributeValue = targetActionExecutionAttributeEditorItemWidget.getAttributeValue();
                     executionAttributesMap.put(targetAttributeValue.getAttributeName(),targetAttributeValue.getAttributeValue());
                 });
-                this.conceptionAction.executeActionSync(executionAttributesMap);
+                Object actionResult = this.conceptionAction.executeActionSync(executionAttributesMap);
+                if(actionResult != null ){
+                    conceptionEntityActionExecuteResultsView.renderActionExecutionResult(actionResult);
+                }
             } catch (CoreRealmServiceRuntimeException e) {
                 throw new RuntimeException(e);
             } catch (Exception e) {

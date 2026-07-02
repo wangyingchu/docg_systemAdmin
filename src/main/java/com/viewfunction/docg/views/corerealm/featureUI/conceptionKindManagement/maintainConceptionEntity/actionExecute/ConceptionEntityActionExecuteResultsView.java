@@ -257,6 +257,12 @@ public class ConceptionEntityActionExecuteResultsView extends VerticalLayout {
         coreRealm.closeGlobalSession();
     }
 
+    public void renderActionExecutionResult(Object actionResult){
+        if(actionResult != null){
+            //queryResultGrid.setItems(externalDataRecords);
+        }
+    }
+
     private class MapValueProvider implements ValueProvider<Map<String,Object>,Object> {
         private String valueKey;
 
