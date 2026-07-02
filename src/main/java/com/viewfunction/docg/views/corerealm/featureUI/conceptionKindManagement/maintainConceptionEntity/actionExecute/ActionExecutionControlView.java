@@ -8,6 +8,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
@@ -23,6 +25,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionAction;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelTitleActionBar;
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.util.*;
 
@@ -72,30 +75,25 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
         List<Component> actionComponentList = new ArrayList<>();
 
         Icon addPropertyIcon = new Icon(VaadinIcon.PLUS);
-        addPropertyIcon.setSize("16px");
+        addPropertyIcon.setSize("18px");
         addActionExecuteAttributeButton = new Button(addPropertyIcon, event -> {
-            //renderAddActionExecuteAttributeUI();
-            executeAction();
+            renderAddActionExecuteAttributeUI();
         });
         addActionExecuteAttributeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         addActionExecuteAttributeButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addActionExecuteAttributeButton.setTooltipText("添加自定义动作执行属性");
 
-
-/*
-        Button launchExecutionButton = new Button("执行动作");
-        launchExecutionButton = new Button(addPropertyIcon, event -> {
+        Icon executeActionIcon = new Icon(VaadinIcon.CARET_RIGHT);
+        executeActionIcon.setSize("26px");
+        Button executeActionButton = new Button(executeActionIcon, event -> {
             executeAction();
         });
-        launchExecutionButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        launchExecutionButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        launchExecutionButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        launchExecutionButton.setTooltipText("执行自定义动作");
-*/
+        executeActionButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        executeActionButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        executeActionButton.setTooltipText("执行自定义动作");
 
         actionComponentList.add(addActionExecuteAttributeButton);
-        //actionComponentList.add(launchExecutionButton);
-
+        actionComponentList.add(executeActionButton);
 
         Icon configIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
         configIcon.setTooltipText(conceptionAction.getActionImplementationClass());
@@ -103,10 +101,6 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
         ThirdLevelTitleActionBar secondaryTitleActionBar2 = new ThirdLevelTitleActionBar(configIcon,attributeKindIdText,null,actionComponentList);
         secondaryTitleActionBar2.setWidth(100,Unit.PERCENTAGE);
         attributesViewKindInfoContainer.add(secondaryTitleActionBar2);
-
-        //ConceptionEntityExternalDataQueryCriteriaView conceptionEntityExternalDataQueryCriteriaView = new ConceptionEntityExternalDataQueryCriteriaView(this.conceptionKind,this.attributesViewKind,this.externalAttributesValueAccessProcessorID,this.conceptionEntityExternalDataViewHeightOffset);
-       // queryFieldsContainer.add(conceptionEntityExternalDataQueryCriteriaView);
-       // conceptionEntityExternalDataQueryCriteriaView.setContainerExternalValueAttributeDataAccessView(this);
 
         actionAttributesValueContainer = new VerticalLayout();
         queryFieldsContainer.add(actionAttributesValueContainer);
@@ -193,10 +187,6 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
     }
 
     public void executeAction() {
-        //CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-        //ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
-        //ConceptionAction conceptionAction = targetConceptionKind.getAction(this.conceptionAction.getActionName());
-
         if(this.conceptionAction != null){
             try {
                 Map <String,Object> executionAttributesMap = new HashMap<>();
@@ -209,6 +199,8 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
                 this.conceptionAction.executeActionSync(executionAttributesMap);
             } catch (CoreRealmServiceRuntimeException e) {
                 throw new RuntimeException(e);
+            } catch (Exception e) {
+                CommonUIOperationUtil.showPopupNotification(e.getMessage(), NotificationVariant.LUMO_ERROR,0, Notification.Position.MIDDLE);
             }
         }
     }
