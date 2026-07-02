@@ -8,8 +8,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
@@ -23,9 +21,12 @@ import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionAction;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelTitleActionBar;
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
-import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.util.*;
 
@@ -33,9 +34,8 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
     private String conceptionKind;
     private String conceptionEntityUID;
     private ConceptionAction conceptionAction;
-
-    private VerticalLayout queryFieldsContainer;
-    private VerticalLayout queryResultContainer;
+    private VerticalLayout exectionAttributeFieldsContainer;
+    private VerticalLayout exectionResultContainer;
     private Registration listener;
     private int conceptionEntityActionsExecutionViewHeightOffset;
     private Popover addActionExecuteAttributePopover;
@@ -55,16 +55,16 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
         setSpacing(false);
         setMargin(false);
 
-        queryFieldsContainer = new VerticalLayout();
-        queryFieldsContainer.setPadding(false);
-        queryFieldsContainer.setSpacing(false);
-        queryFieldsContainer.setMargin(false);
+        exectionAttributeFieldsContainer = new VerticalLayout();
+        exectionAttributeFieldsContainer.setPadding(false);
+        exectionAttributeFieldsContainer.setSpacing(false);
+        exectionAttributeFieldsContainer.setMargin(false);
 
         VerticalLayout attributesViewKindInfoContainer = new VerticalLayout();
         attributesViewKindInfoContainer.setSpacing(false);
         attributesViewKindInfoContainer.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-10pct)");
 
-        queryFieldsContainer.add(attributesViewKindInfoContainer);
+        exectionAttributeFieldsContainer.add(attributesViewKindInfoContainer);
 
         String attributeNameText = conceptionAction.getActionName() +" ( "+conceptionAction.getActionUID()+" )";
         String attributeKindIdText = conceptionAction.getActionDesc();
@@ -104,26 +104,26 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
         attributesViewKindInfoContainer.add(secondaryTitleActionBar2);
 
         actionAttributesValueContainer = new VerticalLayout();
-        queryFieldsContainer.add(actionAttributesValueContainer);
+        exectionAttributeFieldsContainer.add(actionAttributesValueContainer);
 
         WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
         if(webBrowser.isChrome()){
-            queryFieldsContainer.setMinWidth(360, Unit.PIXELS);
-            queryFieldsContainer.setMaxWidth(360,Unit.PIXELS);
+            exectionAttributeFieldsContainer.setMinWidth(360, Unit.PIXELS);
+            exectionAttributeFieldsContainer.setMaxWidth(360,Unit.PIXELS);
         }else{
-            queryFieldsContainer.setMinWidth(350,Unit.PIXELS);
-            queryFieldsContainer.setMaxWidth(350,Unit.PIXELS);
+            exectionAttributeFieldsContainer.setMinWidth(350,Unit.PIXELS);
+            exectionAttributeFieldsContainer.setMaxWidth(350,Unit.PIXELS);
         }
 
-        queryResultContainer= new VerticalLayout();
-        queryResultContainer.setPadding(false);
-        queryResultContainer.setSpacing(false);
-        queryResultContainer.setMargin(false);
+        exectionResultContainer = new VerticalLayout();
+        exectionResultContainer.setPadding(false);
+        exectionResultContainer.setSpacing(false);
+        exectionResultContainer.setMargin(false);
 
-        conceptionEntityActionExecuteResultsView = new ConceptionEntityActionExecuteResultsView(this.conceptionKind,this.conceptionEntityUID,null,null,this.conceptionEntityActionsExecutionViewHeightOffset);
-        queryResultContainer.add(conceptionEntityActionExecuteResultsView);
+        conceptionEntityActionExecuteResultsView = new ConceptionEntityActionExecuteResultsView(this.conceptionKind,this.conceptionEntityUID);
+        exectionResultContainer.add(conceptionEntityActionExecuteResultsView);
 
-        SplitLayout splitLayout = new SplitLayout(queryFieldsContainer, queryResultContainer);
+        SplitLayout splitLayout = new SplitLayout(exectionAttributeFieldsContainer, exectionResultContainer);
         splitLayout.setSplitterPosition(0);
         splitLayout.setSizeFull();
         splitLayout.addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
@@ -135,14 +135,12 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
         super.onAttach(attachEvent);
         // Add browser window listener to observe size change
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            queryFieldsContainer.setHeight(event.getHeight() - conceptionEntityActionsExecutionViewHeightOffset + 50, Unit.PIXELS);
-            //queryResultContainer.setHeight(event.getHeight() - conceptionEntityActionsExecutionViewHeightOffset + 60,Unit.PIXELS);
+            exectionAttributeFieldsContainer.setHeight(event.getHeight() - conceptionEntityActionsExecutionViewHeightOffset + 50, Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
-            queryFieldsContainer.setHeight(browserHeight - conceptionEntityActionsExecutionViewHeightOffset + 50,Unit.PIXELS);
-            //queryResultContainer.setHeight(browserHeight - conceptionEntityActionsExecutionViewHeightOffset + 60,Unit.PIXELS);
+            exectionAttributeFieldsContainer.setHeight(browserHeight - conceptionEntityActionsExecutionViewHeightOffset + 50,Unit.PIXELS);
         }));
     }
 
@@ -197,14 +195,26 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
                     AttributeValue targetAttributeValue = targetActionExecutionAttributeEditorItemWidget.getAttributeValue();
                     executionAttributesMap.put(targetAttributeValue.getAttributeName(),targetAttributeValue.getAttributeValue());
                 });
-                Object actionResult = this.conceptionAction.executeActionSync(executionAttributesMap);
-                if(actionResult != null ){
-                    conceptionEntityActionExecuteResultsView.renderActionExecutionResult(actionResult);
+
+                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                try{
+                    coreRealm.openGlobalSession();
+                    ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
+                    ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
+                    ConceptionAction targetConceptionAction = targetConceptionKind.getAction(this.conceptionAction.getActionName());
+                    Object actionResult = targetConceptionAction.executeActionSync(executionAttributesMap,targetConceptionEntity);
+                    if(actionResult != null ){
+                        conceptionEntityActionExecuteResultsView.renderActionExecutionResult(actionResult);
+                    }
+                }finally{
+                    coreRealm.closeGlobalSession();
                 }
             } catch (CoreRealmServiceRuntimeException e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             } catch (Exception e) {
-                CommonUIOperationUtil.showPopupNotification(e.getMessage(), NotificationVariant.LUMO_ERROR,0, Notification.Position.MIDDLE);
+                e.printStackTrace();
+                conceptionEntityActionExecuteResultsView.renderActionExecutionErrorMessage(e.getMessage());
             }
         }
     }
