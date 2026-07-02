@@ -69,7 +69,6 @@ public class RelationAttachKindsConfigurationView extends VerticalLayout impleme
         add(mainContainerLayout);
 
         leftSideContainerLayout = new VerticalLayout();
-        leftSideContainerLayout.setWidth(800,Unit.PIXELS);
         mainContainerLayout.add(leftSideContainerLayout);
 
         List<Component> secTitleElementsList = new ArrayList<>();
