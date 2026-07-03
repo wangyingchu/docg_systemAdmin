@@ -544,7 +544,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             functionalFeatureInfoGrid.setHeight(event.getHeight()-360,Unit.PIXELS);
             analysisFeatureRunningInfoGrid.setHeight(event.getHeight()-590,Unit.PIXELS);
-            functionalFeaturesInfoContainerLayout.setWidth(event.getWidth()-350,Unit.PIXELS);
+            functionalFeaturesInfoContainerLayout.setWidth(event.getWidth()-359,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
@@ -552,7 +552,7 @@ public class ProviderAnalysisFeatureConfigurationView extends VerticalLayout {
             int browserWidth = receiver.getBodyClientWidth();
             functionalFeatureInfoGrid.setHeight(browserHeight-360,Unit.PIXELS);
             analysisFeatureRunningInfoGrid.setHeight(browserHeight-590,Unit.PIXELS);
-            functionalFeaturesInfoContainerLayout.setWidth(browserWidth-350,Unit.PIXELS);
+            functionalFeaturesInfoContainerLayout.setWidth(browserWidth-359,Unit.PIXELS);
         }));
         renderFunctionalFeatureInfo();
     }

@@ -74,8 +74,8 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
 
         leftSideContentContainerLayout = new VerticalLayout();
         leftSideContentContainerLayout.setSpacing(false);
-        leftSideContentContainerLayout.setMaxWidth(297, Unit.PIXELS);
-        leftSideContentContainerLayout.setMinWidth(297, Unit.PIXELS);
+        leftSideContentContainerLayout.setMaxWidth(306, Unit.PIXELS);
+        leftSideContentContainerLayout.setMinWidth(306, Unit.PIXELS);
         leftSideContentContainerLayout.getStyle()
                 .set("border-right", "1px solid var(--lumo-contrast-20pct)");
         contentContainerLayout.add(leftSideContentContainerLayout);
@@ -155,7 +155,7 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         });
 
         providerRunningInfoGrid = new Grid<>();
-        providerRunningInfoGrid.setWidth(276,Unit.PIXELS);
+        providerRunningInfoGrid.setWidth(285,Unit.PIXELS);
         providerRunningInfoGrid.setSelectionMode(Grid.SelectionMode.NONE);
         providerRunningInfoGrid.addThemeVariants(GridVariant.LUMO_COMPACT,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStartTime,"yyyy-MM-dd HH:mm")).setHeader("开始时间").setKey("idx_0").setResizable(true)
@@ -163,7 +163,7 @@ public class DataAnalysisCapacityManagementUI extends VerticalLayout implements
         providerRunningInfoGrid.addColumn(new LocalDateTimeRenderer<>(ProviderRunningInfo::getProviderStopTime,"yyyy-MM-dd HH:mm")).setHeader("结束时间").setKey("idx_1").setResizable(true)
                 .setTooltipGenerator(runtimeRelationAndConceptionKindAttachInfo -> runtimeRelationAndConceptionKindAttachInfo.getProviderStopTime() != null ? runtimeRelationAndConceptionKindAttachInfo.getProviderStopTime().toString(): null);
         providerRunningInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_2")
-                .setFlexGrow(0).setWidth("41px").setResizable(false);
+                .setFlexGrow(0).setWidth("50px").setResizable(false);
 
         LightGridColumnHeader gridColumnHeader_1_idx0 = new LightGridColumnHeader(VaadinIcon.SUN_RISE,"开始时间");
         providerRunningInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_1_idx0).setSortable(false);

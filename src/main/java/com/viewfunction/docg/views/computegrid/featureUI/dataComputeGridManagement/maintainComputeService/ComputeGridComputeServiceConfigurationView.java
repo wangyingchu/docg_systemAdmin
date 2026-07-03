@@ -49,6 +49,7 @@ public class ComputeGridComputeServiceConfigurationView extends VerticalLayout {
     private SecondaryKeyValueDisplayItem backupNumberDisplayItem;
     private SecondaryKeyValueDisplayItem sliceStorageModeDisplayItem;
     private int currentDataSliceCount;
+    private VerticalLayout rightSideLayout;
 
     private class ComputeFunctionPropertyDefinitionVO{
 
@@ -284,7 +285,7 @@ public class ComputeGridComputeServiceConfigurationView extends VerticalLayout {
             }
         });
 
-        VerticalLayout rightSideLayout = new VerticalLayout();
+        rightSideLayout = new VerticalLayout();
         rightSideLayout.setMargin(false);
         rightSideLayout.setWidth(590,Unit.PIXELS);
         dataSlicesInfoContainerLayout.add(rightSideLayout);
@@ -367,12 +368,14 @@ public class ComputeGridComputeServiceConfigurationView extends VerticalLayout {
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
             computeFunctionMetaInfoGrid.setHeight(event.getHeight()-385,Unit.PIXELS);
             dataSlicePropertyDefinitionsGrid.setHeight(event.getHeight()-650,Unit.PIXELS);
+            rightSideLayout.setWidth(event.getWidth()-1350,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
             int browserHeight = receiver.getBodyClientHeight();
             computeFunctionMetaInfoGrid.setHeight(browserHeight-385,Unit.PIXELS);
             dataSlicePropertyDefinitionsGrid.setHeight(browserHeight-650,Unit.PIXELS);
+            rightSideLayout.setWidth(receiver.getBodyClientWidth()-1350,Unit.PIXELS);
         }));
         renderGridComputeFunctionsInfo();
     }
