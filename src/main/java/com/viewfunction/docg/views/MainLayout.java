@@ -25,10 +25,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
-import com.vaadin.flow.router.AfterNavigationEvent;
-import com.vaadin.flow.router.AfterNavigationObserver;
-import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.component.avatar.Avatar;
 
@@ -54,20 +51,23 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
     public void afterNavigation(AfterNavigationEvent afterNavigationEvent) {
         getTabForComponent(getContent()).ifPresent(menu::setSelectedTab);
         viewTitle.removeAll();
-        String currentPageTitle = getCurrentPageTitle();
-        if(currentPageTitle.equals("数海云图 - 核心领域模型 [ Core Realm ]")){
+
+        Location location = afterNavigationEvent.getLocation();
+        String path = location.getPath();
+
+        if(path.equals("") || path.equals("core-realm")){
             viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.CONNECTDEVELOP.create(),"核心领域模型 [ Core Realm ]"));
         }
-        if(currentPageTitle.equals("数海云图 - 计算网格 [ Compute Grid ]")){
+        if(path.equals("compute-grid")){
             viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.NETWORK_WIRED_SOLID.create(),"计算网格 [ Compute Grid ]"));
         }
-        if(currentPageTitle.equals("数海云图 - 数据分析 [ Data Analysis ]")){
+        if(path.equals("data-analysis")){
             viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.FLASK_SOLID.create(),"数据分析 [ Data Analysis ]"));
         }
-        if(currentPageTitle.equals("数海云图 - 数据编织 [ Data Fabric ]")){
+        if(path.equals("data-fabric")){
             viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.COMPRESS_ARROWS_ALT_SOLID.create(),"数据编织 [ Data Fabric ]"));
         }
-        if(currentPageTitle.equals("数海云图 - 关于 [ About ]")){
+        if(path.equals("about")){
             viewTitle.add(getTitleViewComponent(LineAwesomeIconsSvg.FINGERPRINT_SOLID.create(),"关于 [ About ]"));
         }
     }
@@ -163,9 +163,6 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         }
 
         layout.add(menuBar);
-
-
-
         return layout;
     }
 
@@ -247,11 +244,6 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
     private Optional<Tab> getTabForComponent(Component component) {
         return menu.getChildren().filter(tab -> ComponentUtil.getData(tab, Class.class).equals(component.getClass()))
                 .findFirst().map(Tab.class::cast);
-    }
-
-    private String getCurrentPageTitle() {
-        PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
-        return title == null ? "" : title.value();
     }
 
     @Override

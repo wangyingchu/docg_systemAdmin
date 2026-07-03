@@ -11,6 +11,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.shared.Registration;
@@ -22,9 +23,9 @@ import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 import com.viewfunction.docg.views.MainLayout;
 import com.viewfunction.docg.views.dataAnalysis.featureUI.DataAnalysisCapacityManagementUI;
 
-@PageTitle("数海云图 - 数据分析 [ Data Analysis ]")
+//@PageTitle("数海云图 - 数据分析 [ Data Analysis ]")
 @Route(value = "data-analysis", layout = MainLayout.class)
-public class DataAnalysisView extends Div implements UserLockApplicationEvent.UserApplicationLogoutListener{
+public class DataAnalysisView extends Div implements UserLockApplicationEvent.UserApplicationLogoutListener, HasDynamicTitle {
 
     private LoginOverlay loginOverlay;
     private Registration listener;
@@ -162,4 +163,13 @@ public class DataAnalysisView extends Div implements UserLockApplicationEvent.Us
         loginOverlay.setOpened(true);
     }
 
+    private final String SYSTEM_TITLE_PREFIX = SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.SYSTEM_TITLE_PREFIX);
+    @Override
+    public String getPageTitle() {
+        if(SYSTEM_TITLE_PREFIX != null){
+            return SYSTEM_TITLE_PREFIX+" - 数据分析 [ Data Analysis ]";
+        }else{
+            return "数海云图 - 数据分析 [ Data Analysis ]";
+        }
+    }
 }

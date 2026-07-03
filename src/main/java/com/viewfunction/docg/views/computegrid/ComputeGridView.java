@@ -12,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.shared.Registration;
@@ -24,9 +25,9 @@ import com.viewfunction.docg.views.MainLayout;
 import com.viewfunction.docg.views.computegrid.featureUI.DataComputeGridManagementUI;
 import com.viewfunction.docg.views.corerealm.featureUI.*;
 
-@PageTitle("数海云图 - 计算网格 [ Compute Grid ]")
+//@PageTitle("数海云图 - 计算网格 [ Compute Grid ]")
 @Route(value = "compute-grid", layout = MainLayout.class)
-public class ComputeGridView extends Div implements UserLockApplicationEvent.UserApplicationLogoutListener{
+public class ComputeGridView extends Div implements UserLockApplicationEvent.UserApplicationLogoutListener, HasDynamicTitle {
 
     private LoginOverlay loginOverlay;
     private Tab dataComputeGridTab;
@@ -159,5 +160,15 @@ public class ComputeGridView extends Div implements UserLockApplicationEvent.Use
     @Override
     public void receivedUserLockApplicationEvent(UserLockApplicationEvent event) {
         loginOverlay.setOpened(true);
+    }
+
+    private final String SYSTEM_TITLE_PREFIX = SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.SYSTEM_TITLE_PREFIX);
+    @Override
+    public String getPageTitle() {
+        if(SYSTEM_TITLE_PREFIX != null){
+            return SYSTEM_TITLE_PREFIX+" - 计算网格 [ Compute Grid ]";
+        }else{
+            return "数海云图 - 计算网格 [ Compute Grid ]";
+        }
     }
 }

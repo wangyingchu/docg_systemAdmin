@@ -16,6 +16,7 @@ public class SystemAdminCfgPropertiesHandler {
     public static String ANALYSIS_CLIENT_HOST_NAME = "ANALYSIS_CLIENT_HOST_NAME";
     public static String ANALYSIS_CLIENT_HOST_PORT = "ANALYSIS_CLIENT_HOST_PORT";
     public static String ENABLE_AI_DATA_ANALYSIS = "ENABLE_AI_DATA_ANALYSIS";
+    public static String SYSTEM_TITLE_PREFIX = "SYSTEM_TITLE_PREFIX";
     private static Properties _properties;
 
     public static String getPropertyValue(String propertyName) {

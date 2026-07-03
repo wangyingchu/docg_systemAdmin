@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouteAlias;
@@ -27,10 +28,10 @@ import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 import com.viewfunction.docg.views.MainLayout;
 import com.viewfunction.docg.views.corerealm.featureUI.*;
 
-@PageTitle("数海云图 - 核心领域模型 [ Core Realm ]")
+//@PageTitle("数海云图 - 核心领域模型 [ Core Realm ]")
 @Route(value = "core-realm", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
-public class CoreRealmView extends Div implements UserLockApplicationEvent.UserApplicationLogoutListener{
+public class CoreRealmView extends Div implements UserLockApplicationEvent.UserApplicationLogoutListener, HasDynamicTitle {
 
     //https://vaadin.com/directory/component/scrolllayout
     //https://vaadin.com/forum/thread/17192835/scrollable-layout
@@ -48,6 +49,8 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
     private GeospatialRegionManagementUI geospatialRegionManagementUI;
     private TimeFlowManagementUI timeFlowManagementUI;
     private LoginOverlay loginOverlay;
+
+
     public CoreRealmView(){
         String enableUserLockApplicationStr = SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.ENABLE_USER_LOCK_APPLICATION);
         if(enableUserLockApplicationStr != null & Boolean.parseBoolean(enableUserLockApplicationStr)){
@@ -333,5 +336,15 @@ public class CoreRealmView extends Div implements UserLockApplicationEvent.UserA
     @Override
     public void receivedUserLockApplicationEvent(UserLockApplicationEvent event) {
         loginOverlay.setOpened(true);
+    }
+
+    private final String SYSTEM_TITLE_PREFIX = SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.SYSTEM_TITLE_PREFIX);
+    @Override
+    public String getPageTitle() {
+        if(SYSTEM_TITLE_PREFIX != null){
+            return SYSTEM_TITLE_PREFIX+" - 核心领域模型 [ Core Realm ]";
+        }else{
+            return "数海云图 - 核心领域模型 [ Core Realm ]";
+        }
     }
 }
