@@ -1,9 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.actionExecute;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
@@ -20,11 +17,9 @@ import com.vaadin.flow.shared.Registration;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionAction;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.ThirdLevelTitleActionBar;
 import com.viewfunction.docg.element.userInterfaceUtil.AttributeValueOperateHandler;
 
@@ -187,35 +182,59 @@ public class ActionExecutionControlView extends VerticalLayout implements Attrib
 
     public void executeAction() {
         if(this.conceptionAction != null){
-            try {
-                Map <String,Object> executionAttributesMap = new HashMap<>();
-                this.actionAttributesValueContainer.getChildren().forEach(actionExecutionAttributeEditorItemWidget -> {
-                    ActionExecutionAttributeEditorItemWidget targetActionExecutionAttributeEditorItemWidget =
-                            (ActionExecutionAttributeEditorItemWidget)actionExecutionAttributeEditorItemWidget;
-                    AttributeValue targetAttributeValue = targetActionExecutionAttributeEditorItemWidget.getAttributeValue();
-                    executionAttributesMap.put(targetAttributeValue.getAttributeName(),targetAttributeValue.getAttributeValue());
-                });
+            List<Button> actionButtonList = new ArrayList<>();
+            Button confirmButton = new Button("确认执行自定义动作",new Icon(VaadinIcon.CHECK_CIRCLE));
+            confirmButton.addThemeVariants(ButtonVariant.PRIMARY);
+            Button cancelButton = new Button("取消操作");
+            cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+            actionButtonList.add(confirmButton);
+            actionButtonList.add(cancelButton);
 
-                CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
-                try{
-                    coreRealm.openGlobalSession();
-                    ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(this.conceptionKind);
-                    ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(this.conceptionEntityUID);
-                    ConceptionAction targetConceptionAction = targetConceptionKind.getAction(this.conceptionAction.getActionName());
-                    Object actionResult = targetConceptionAction.executeActionSync(executionAttributesMap,targetConceptionEntity);
-                    if(actionResult != null ){
-                        conceptionEntityActionExecuteResultsView.renderActionExecutionResult(actionResult);
+            ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"执行自定义动作",
+                    "请确认执行自定义动作 "+ conceptionAction.getActionName(),actionButtonList,500,185);
+            confirmWindow.open();
+
+            confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    try {
+                        Map <String,Object> executionAttributesMap = new HashMap<>();
+                        actionAttributesValueContainer.getChildren().forEach(actionExecutionAttributeEditorItemWidget -> {
+                            ActionExecutionAttributeEditorItemWidget targetActionExecutionAttributeEditorItemWidget =
+                                    (ActionExecutionAttributeEditorItemWidget)actionExecutionAttributeEditorItemWidget;
+                            AttributeValue targetAttributeValue = targetActionExecutionAttributeEditorItemWidget.getAttributeValue();
+                            executionAttributesMap.put(targetAttributeValue.getAttributeName(),targetAttributeValue.getAttributeValue());
+                        });
+
+                        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                        try{
+                            coreRealm.openGlobalSession();
+                            ConceptionKind targetConceptionKind = coreRealm.getConceptionKind(conceptionKind);
+                            ConceptionEntity targetConceptionEntity = targetConceptionKind.getEntityByUID(conceptionEntityUID);
+                            ConceptionAction targetConceptionAction = targetConceptionKind.getAction(conceptionAction.getActionName());
+                            Object actionResult = targetConceptionAction.executeActionSync(executionAttributesMap,targetConceptionEntity);
+                            if(actionResult != null ){
+                                conceptionEntityActionExecuteResultsView.renderActionExecutionResult(actionResult);
+                            }
+                        }finally{
+                            coreRealm.closeGlobalSession();
+                        }
+                    } catch (CoreRealmServiceRuntimeException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        conceptionEntityActionExecuteResultsView.renderActionExecutionErrorMessage(e.getMessage());
                     }
-                }finally{
-                    coreRealm.closeGlobalSession();
+                    confirmWindow.closeConfirmWindow();
                 }
-            } catch (CoreRealmServiceRuntimeException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            } catch (Exception e) {
-                e.printStackTrace();
-                conceptionEntityActionExecuteResultsView.renderActionExecutionErrorMessage(e.getMessage());
-            }
+            });
+            cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                    confirmWindow.closeConfirmWindow();
+                }
+            });
         }
     }
 }
