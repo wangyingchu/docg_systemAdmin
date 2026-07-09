@@ -22,7 +22,7 @@ import org.vaadin.artur.helpers.LaunchUtil;
  *
  */
 @SpringBootApplication
-@PWA(name = "DOCG Platform System Administrator Console", shortName = "DOCG-SAC")
+@PWA(name = "DOCG Platform System Administrator Console", shortName = "DOCG-SAC",iconPath = "images/icon.png")
 @Theme("docg-pac")
 @StyleSheet(Lumo.STYLESHEET)
 @StyleSheet(Lumo.UTILITY_STYLESHEET)
