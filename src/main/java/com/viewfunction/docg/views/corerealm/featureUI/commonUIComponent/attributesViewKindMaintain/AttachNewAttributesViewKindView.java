@@ -50,7 +50,7 @@ public class AttachNewAttributesViewKindView extends VerticalLayout {
         errorMessageContainer.setMargin(false);
         errorMessageContainer.getStyle().set("padding-top","3px").set("padding-bottom","3px");
 
-        NativeLabel viewTitle = new NativeLabel("新附加属性类型信息:");
+        NativeLabel viewTitle = new NativeLabel("新附加属性视图类型信息:");
         viewTitle.getStyle().set("color","var(--lumo-contrast-50pct)").set("font-size","0.8rem");
         errorMessageContainer.add(viewTitle);
         errorMessage = new NativeLabel("-");
@@ -61,7 +61,7 @@ public class AttachNewAttributesViewKindView extends VerticalLayout {
 
         attributeKindFilterSelect = new ComboBox();
         attributeKindFilterSelect.setPageSize(30);
-        attributeKindFilterSelect.setPlaceholder("选择要附加的属性类型");
+        attributeKindFilterSelect.setPlaceholder("选择要附加的属性视图类型");
         attributeKindFilterSelect.setWidth(100, Unit.PERCENTAGE);
         attributeKindFilterSelect.setItemLabelGenerator(new ItemLabelGenerator<AttributesViewKindMetaInfo>() {
             @Override
@@ -82,7 +82,7 @@ public class AttachNewAttributesViewKindView extends VerticalLayout {
                 .set("padding-bottom", "var(--lumo-space-m)");
         add(spaceDivLayout);
 
-        Button confirmButton = new Button("确定附加属性类型",new Icon(VaadinIcon.CHECK));
+        Button confirmButton = new Button("确定附加属性视图类型",new Icon(VaadinIcon.CHECK));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
@@ -90,7 +90,7 @@ public class AttachNewAttributesViewKindView extends VerticalLayout {
 
                 errorMessage.setVisible(false);
                 if(attributeKindFilterSelect.getValue()==null){
-                    errorMessage.setText("请选择属性类型");
+                    errorMessage.setText("请选择属性视图类型");
                     errorMessage.setVisible(true);
                 }else{
                     doAttachAttributesViewKind(attributeKindFilterSelect.getValue());

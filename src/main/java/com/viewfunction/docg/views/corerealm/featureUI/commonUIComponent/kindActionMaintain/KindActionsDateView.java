@@ -327,7 +327,7 @@ public class KindActionsDateView extends VerticalLayout {
     private void renderEditActionUI(String actionName){
         EditKindActionView editKindActionView = new EditKindActionView(actionName,this.kindType,kindName);
         editKindActionView.setParentKindActionsDateView(this);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.EDIT.create(),"更新自定义活动信息",null,true,700,380,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(VaadinIcon.EDIT.create(),"更新自定义活动信息",null,true,700,450,false);
         fixSizeWindow.setWindowContent(editKindActionView);
         editKindActionView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.setModel(true);

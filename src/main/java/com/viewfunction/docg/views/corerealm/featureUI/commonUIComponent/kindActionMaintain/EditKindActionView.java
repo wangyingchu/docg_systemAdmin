@@ -1,10 +1,9 @@
 package com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.kindActionMaintain;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H6;
 import com.vaadin.flow.component.icon.Icon;
@@ -14,12 +13,19 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.renderer.LitRenderer;
+import com.vaadin.flow.data.renderer.Renderer;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributesViewKindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.FootprintMessageBar;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class EditKindActionView extends VerticalLayout {
@@ -28,6 +34,7 @@ public class EditKindActionView extends VerticalLayout {
     private TextField actionNameField;
     private TextField actionDescField;
     private TextField actionFullClassNameField;
+    private ComboBox<AttributesViewKindMetaInfo> attributeKindFilterSelect;
     private KindActionsDateView parentKindActionsDateView;
     private String actionName;
     private Dialog containerDialog;
@@ -90,6 +97,22 @@ public class EditKindActionView extends VerticalLayout {
         this.actionFullClassNameField.setTitle("请输入自定义动作类全名");
         add(actionFullClassNameField);
 
+        this.attributeKindFilterSelect = new ComboBox("引用属性视图类型 - Referenced AttributesViewKind");
+        this.attributeKindFilterSelect.setPageSize(30);
+        this.attributeKindFilterSelect.setPlaceholder("请选择要引用的属性视图类型");
+        this.attributeKindFilterSelect.setWidth(100, Unit.PERCENTAGE);
+        this.attributeKindFilterSelect.setItemLabelGenerator(new ItemLabelGenerator<AttributesViewKindMetaInfo>() {
+            @Override
+            public String apply(AttributesViewKindMetaInfo attributeKindMetaInfo) {
+
+                String itemLabelValue = attributeKindMetaInfo.getKindName()+ " ("+
+                        attributeKindMetaInfo.getKindDesc()+") - "+attributeKindMetaInfo.getKindUID();
+                return itemLabelValue;
+            }
+        });
+        this.attributeKindFilterSelect.setRenderer(createRenderer());
+        add(this.attributeKindFilterSelect);
+
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setWidthFull();
         spaceDivLayout.getStyle()
@@ -107,6 +130,14 @@ public class EditKindActionView extends VerticalLayout {
                 doUpdateKindAction();
             }
         });
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        try {
+            List<AttributesViewKindMetaInfo> runtimeAttributesViewKindMetaInfoList = coreRealm.getAttributesViewKindsMetaInfo();
+            attributeKindFilterSelect.setItems(runtimeAttributesViewKindMetaInfoList);
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void setContainerDialog(Dialog containerDialog) {
@@ -126,6 +157,16 @@ public class EditKindActionView extends VerticalLayout {
                     actionNameField.setValue(targetAction.getActionName());
                     actionDescField.setValue(targetAction.getActionDesc());
                     actionFullClassNameField.setValue(targetAction.getActionImplementationClass());
+                    AttributesViewKind referencedAttributesViewKind = targetAction.getReferencedAttributesViewKind();
+                    if(referencedAttributesViewKind != null){
+                        ListDataProvider dtaProvider=(ListDataProvider)attributeKindFilterSelect.getDataProvider();
+                        Collection<AttributesViewKindMetaInfo> attributesViewKindMetaInfoList = dtaProvider.getItems();
+                        for(AttributesViewKindMetaInfo attributesViewKindMetaInfo : attributesViewKindMetaInfoList){
+                            if(attributesViewKindMetaInfo.getKindUID().equals(referencedAttributesViewKind.getAttributesViewKindUID())){
+                                attributeKindFilterSelect.setValue(attributesViewKindMetaInfo);
+                            }
+                        }
+                    }
                 }
                 break;
             case RelationKind :
@@ -173,7 +214,17 @@ public class EditKindActionView extends VerticalLayout {
                     }else{
                         boolean updateResult1 = targetAction.updateActionDesc(actionDesc);
                         boolean updateResult2 = targetAction.updateActionImplementationClass(actionFullClassName);
-                        if(updateResult1 & updateResult2){
+                        boolean updateResult3 = true;
+                        if(this.attributeKindFilterSelect.getValue() != null){
+                            AttributesViewKindMetaInfo attributesViewKindMetaInfo = this.attributeKindFilterSelect.getValue();
+                            AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(attributesViewKindMetaInfo.getKindUID());
+                            try {
+                                updateResult3 = targetAction.setReferencedAttributesViewKind(targetAttributesViewKind);
+                            } catch (CoreRealmServiceRuntimeException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        if(updateResult1 & updateResult2 & updateResult3){
                             CommonUIOperationUtil.showPopupNotification("自定义动作 "+actionName+" 信息更新成功", NotificationVariant.LUMO_SUCCESS);
                             if(this.parentKindActionsDateView != null){
                                 this.parentKindActionsDateView.refreshKindActionsInfo();
@@ -227,5 +278,22 @@ public class EditKindActionView extends VerticalLayout {
 
     public void setParentKindActionsDateView(KindActionsDateView parentKindActionsDateView) {
         this.parentKindActionsDateView = parentKindActionsDateView;
+    }
+
+    private Renderer<AttributesViewKindMetaInfo> createRenderer() {
+        StringBuilder tpl = new StringBuilder();
+        tpl.append("<div style=\"display: flex;\">");
+        tpl.append("  <div>");
+        tpl.append("    <span style=\"font-size: var(--lumo-font-size-xl); color: var(--lumo-primary-text-color);\">${item.attributeKindName}</span>");
+        tpl.append("    <span style=\"font-size: var(--lumo-font-size-m);\">[${item.attributeKindDataType}]</span>");
+        tpl.append("    <span style=\"font-size: var(--lumo-font-size-m); color: var(--lumo-secondary-text-color);\"> ${item.attributeKindUID}<span>");
+        tpl.append("    <div style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">${item.attributeKindDesc}</div>");
+        tpl.append("  </div>");
+        tpl.append("</div>");
+        return LitRenderer.<AttributesViewKindMetaInfo>of(tpl.toString())
+                .withProperty("attributeKindName", AttributesViewKindMetaInfo::getKindName)
+                .withProperty("attributeKindDesc", AttributesViewKindMetaInfo::getKindDesc)
+                .withProperty("attributeKindDataType",AttributesViewKindMetaInfo::getViewKindDataForm)
+                .withProperty("attributeKindUID",AttributesViewKindMetaInfo::getKindUID);
     }
 }
