@@ -176,6 +176,16 @@ public class EditKindActionView extends VerticalLayout {
                     actionNameField.setValue(targetAction1.getActionName());
                     actionDescField.setValue(targetAction1.getActionDesc());
                     actionFullClassNameField.setValue(targetAction1.getActionImplementationClass());
+                    AttributesViewKind referencedAttributesViewKind = targetAction1.getReferencedAttributesViewKind();
+                    if(referencedAttributesViewKind != null){
+                        ListDataProvider dtaProvider=(ListDataProvider)attributeKindFilterSelect.getDataProvider();
+                        Collection<AttributesViewKindMetaInfo> attributesViewKindMetaInfoList = dtaProvider.getItems();
+                        for(AttributesViewKindMetaInfo attributesViewKindMetaInfo : attributesViewKindMetaInfoList){
+                            if(attributesViewKindMetaInfo.getKindUID().equals(referencedAttributesViewKind.getAttributesViewKindUID())){
+                                attributeKindFilterSelect.setValue(attributesViewKindMetaInfo);
+                            }
+                        }
+                    }
                 }
                 break;
         }
@@ -223,6 +233,8 @@ public class EditKindActionView extends VerticalLayout {
                             } catch (CoreRealmServiceRuntimeException e) {
                                 throw new RuntimeException(e);
                             }
+                        }else{
+                            targetAction.clearReferencedAttributesViewKind();
                         }
                         if(updateResult1 & updateResult2 & updateResult3){
                             CommonUIOperationUtil.showPopupNotification("自定义动作 "+actionName+" 信息更新成功", NotificationVariant.LUMO_SUCCESS);
@@ -246,7 +258,19 @@ public class EditKindActionView extends VerticalLayout {
                     }else{
                         boolean updateResult1 = targetAction1.updateActionDesc(actionDesc);
                         boolean updateResult2 = targetAction1.updateActionImplementationClass(actionFullClassName);
-                        if(updateResult1 & updateResult2){
+                        boolean updateResult3 = true;
+                        if(this.attributeKindFilterSelect.getValue() != null){
+                            AttributesViewKindMetaInfo attributesViewKindMetaInfo = this.attributeKindFilterSelect.getValue();
+                            AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(attributesViewKindMetaInfo.getKindUID());
+                            try {
+                                updateResult3 = targetAction1.setReferencedAttributesViewKind(targetAttributesViewKind);
+                            } catch (CoreRealmServiceRuntimeException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }else{
+                            targetAction1.clearReferencedAttributesViewKind();
+                        }
+                        if(updateResult1 & updateResult2 & updateResult3){
                             CommonUIOperationUtil.showPopupNotification("自定义动作 "+actionName+" 信息更新成功", NotificationVariant.LUMO_SUCCESS);
                             if(this.parentKindActionsDateView != null){
                                 this.parentKindActionsDateView.refreshKindActionsInfo();
