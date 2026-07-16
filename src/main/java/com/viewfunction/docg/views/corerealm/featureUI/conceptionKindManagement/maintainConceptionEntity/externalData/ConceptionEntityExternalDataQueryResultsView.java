@@ -246,6 +246,22 @@ public class ConceptionEntityExternalDataQueryResultsView extends VerticalLayout
                     notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
                     notification.open();
                     throw new RuntimeException(e);
+                } catch (Exception e){
+                    Notification notification = new Notification();
+                    Div text = new Div(new Text("概念类型 "+this.conceptionKindName+" 外部属性视图数据查询操作错误: " + e.getCause().getMessage()));
+                    Button closeButton = new Button(new Icon("lumo", "cross"));
+                    closeButton.addClickListener(event -> {
+                        notification.close();
+                    });
+
+                    HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+                    layout.setWidth(100, Unit.PERCENTAGE);
+                    layout.setFlexGrow(1,text);
+                    notification.add(layout);
+                    notification.setPosition(Notification.Position.BOTTOM_START);
+                    notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    notification.open();
+                    throw new RuntimeException(e);
                 }
             }
         }
