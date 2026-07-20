@@ -79,7 +79,18 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         List<Component> secTitleElementsList = new ArrayList<>();
         List<Component> buttonList = new ArrayList<>();
 
-        Button createMetaConfigItemButton= new Button("附加新的属性类型");
+        Button createMetaConfigItemButton0= new Button("批量附加属性类型");
+        createMetaConfigItemButton0.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
+        createMetaConfigItemButton0.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        createMetaConfigItemButton0.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderBatchAttachNewAttributeKindsUI();
+            }
+        });
+        buttonList.add(createMetaConfigItemButton0);
+
+        Button createMetaConfigItemButton= new Button("选择附加单项属性类型");
         createMetaConfigItemButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
         createMetaConfigItemButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         createMetaConfigItemButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -255,6 +266,15 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         listener.remove();
         super.onDetach(detachEvent);
         ResourceHolder.getApplicationBlackboard().removeListener(this);
+    }
+
+    private void renderBatchAttachNewAttributeKindsUI() {
+        BatchAttachNewAttributeKindsView batchAttachNewAttributeKindsView = new BatchAttachNewAttributeKindsView(this.attributesViewKindUID);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加属性类型",null,true,1000,700,false);
+        fixSizeWindow.setWindowContent(batchAttachNewAttributeKindsView);
+        fixSizeWindow.setModel(true);
+        batchAttachNewAttributeKindsView.setContainerDialog(fixSizeWindow);
+        fixSizeWindow.show();
     }
 
     private void renderAttachNewAttributeKindUI(){
