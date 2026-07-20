@@ -1,21 +1,36 @@
 package com.viewfunction.docg.views.corerealm.featureUI.attributesViewKindManagement.maintainAttributesViewKind;
 
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeKindMetaInfo;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
+import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 
 import java.time.ZonedDateTime;
@@ -29,12 +44,143 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
 
     private String attributesViewKindUID;
     private Dialog containerDialog;
-    private ComboBox<AttributeKindMetaInfo> attributeKindFilterSelect;
     private NativeLabel errorMessage;
     private Grid<AttributeKindMetaInfo> attributeKindMetaInfoGrid;
+    private GridListDataView<AttributeKindMetaInfo> attributeKindsMetaInfoView;
+    private TextField attributeKindNameFilterField;
+    private TextField attributeKindDescFilterField;
+    private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
 
     public BatchAttachNewAttributeKindsView(String attributesViewKindUID){
         this.attributesViewKindUID = attributesViewKindUID;
+
+        HorizontalLayout attributeKindsSearchElementsContainerLayout = new HorizontalLayout();
+        attributeKindsSearchElementsContainerLayout.setSpacing(false);
+        attributeKindsSearchElementsContainerLayout.setMargin(false);
+        add(attributeKindsSearchElementsContainerLayout);
+
+        SecondaryIconTitle filterTitle = new SecondaryIconTitle(new Icon(VaadinIcon.FILTER),"过滤条件");
+        attributeKindsSearchElementsContainerLayout.add(filterTitle);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,filterTitle);
+        filterTitle.setWidth(80,Unit.PIXELS);
+
+        attributeKindNameFilterField = new TextField();
+        attributeKindNameFilterField.setPlaceholder("属性类型名称");
+        attributeKindNameFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        attributeKindNameFilterField.setWidth(170,Unit.PIXELS);
+        attributeKindsSearchElementsContainerLayout.add(attributeKindNameFilterField);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, attributeKindNameFilterField);
+
+        Icon plusIcon = new Icon(VaadinIcon.PLUS);
+        plusIcon.setSize("12px");
+        attributeKindsSearchElementsContainerLayout.add(plusIcon);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon);
+
+        attributeKindDescFilterField = new TextField();
+        attributeKindDescFilterField.setPlaceholder("属性类型描述");
+        attributeKindDescFilterField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        attributeKindDescFilterField.setWidth(170,Unit.PIXELS);
+        attributeKindsSearchElementsContainerLayout.add(attributeKindDescFilterField);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER, attributeKindDescFilterField);
+
+        Icon plusIcon2 = new Icon(VaadinIcon.PLUS);
+        plusIcon2.setSize("12px");
+        attributeKindsSearchElementsContainerLayout.add(plusIcon2);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,plusIcon2);
+
+        attributeDataTypeFilterSelect = new ComboBox();
+        attributeDataTypeFilterSelect.setPlaceholder("属性类型数据类型");
+        attributeDataTypeFilterSelect.addThemeVariants(ComboBoxVariant.LUMO_SMALL);
+        attributeKindDescFilterField.setWidth(170,Unit.PIXELS);
+        attributeDataTypeFilterSelect.setPageSize(30);
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        String coreRealmName = coreRealm.getCoreRealmName();
+        AttributeDataType[] attributeDataTypesArray = coreRealm.getStorageImplTech().equals(CoreRealmStorageImplTech.NEO4J) ?
+                new AttributeDataType[]{
+                        AttributeDataType.BOOLEAN,
+                        AttributeDataType.LONG,
+                        AttributeDataType.DOUBLE,
+                        AttributeDataType.TIMESTAMP,
+                        AttributeDataType.DATE,
+                        AttributeDataType.DATETIME,
+                        AttributeDataType.TIME,
+                        AttributeDataType.STRING
+                }
+                :
+                new AttributeDataType[]{
+                        AttributeDataType.BOOLEAN,
+                        AttributeDataType.INT,
+                        AttributeDataType.SHORT,
+                        AttributeDataType.LONG,
+                        AttributeDataType.FLOAT,
+                        AttributeDataType.DOUBLE,
+                        AttributeDataType.TIMESTAMP,
+                        AttributeDataType.DATE,
+                        AttributeDataType.DATETIME,
+                        AttributeDataType.TIME,
+                        AttributeDataType.STRING,
+                        AttributeDataType.BYTE,
+                        AttributeDataType.DECIMAL
+                };
+        this.attributeDataTypeFilterSelect.setItems(attributeDataTypesArray);
+
+        attributeKindsSearchElementsContainerLayout.add(attributeDataTypeFilterSelect);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,attributeDataTypeFilterSelect);
+
+        Button searchAttributeKindsButton = new Button("查找属性类型",new Icon(VaadinIcon.SEARCH));
+        searchAttributeKindsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        searchAttributeKindsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        attributeKindsSearchElementsContainerLayout.add(searchAttributeKindsButton);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,searchAttributeKindsButton);
+        searchAttributeKindsButton.setWidth(115,Unit.PIXELS);
+        searchAttributeKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                filterAttributeKinds();
+            }
+        });
+
+        Icon divIcon = new Icon(VaadinIcon.LINE_V);
+        divIcon.setSize("8px");
+        attributeKindsSearchElementsContainerLayout.add(divIcon);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,divIcon);
+
+        Button clearSearchCriteriaButton = new Button("清除查询条件",new Icon(VaadinIcon.ERASER));
+        clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        clearSearchCriteriaButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        attributeKindsSearchElementsContainerLayout.add(clearSearchCriteriaButton);
+        attributeKindsSearchElementsContainerLayout.setVerticalComponentAlignment(Alignment.CENTER,clearSearchCriteriaButton);
+        clearSearchCriteriaButton.setWidth(120,Unit.PIXELS);
+        clearSearchCriteriaButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                cancelFilterAttributeKinds();
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         ComponentRenderer _createDateComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
             if(entityStatisticsInfo instanceof AttributeKindMetaInfo && ((AttributeKindMetaInfo)entityStatisticsInfo).getCreateDate() != null){
@@ -96,9 +242,10 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
         };
 
         attributeKindMetaInfoGrid = new Grid<>();
-        attributeKindMetaInfoGrid.setWidth(1300, Unit.PIXELS);
+        attributeKindMetaInfoGrid.setWidth(100, Unit.PERCENTAGE);
+        attributeKindMetaInfoGrid.setHeight(500,Unit.PIXELS);
         attributeKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-        attributeKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        attributeKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
         attributeKindMetaInfoGrid.addColumn(AttributeKindMetaInfo::getKindName).setHeader("属性类型名称").setKey("idx_0").setFlexGrow(1);
         attributeKindMetaInfoGrid.addColumn(AttributeKindMetaInfo::getKindDesc).setHeader("属性类型描述").setKey("idx_1").setFlexGrow(1)
                 .setTooltipGenerator(attributeKindMetaInfoData -> attributeKindMetaInfoData.getKindDesc());
@@ -106,12 +253,6 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
                 .setFlexGrow(0).setWidth("130px").setResizable(false);
         attributeKindMetaInfoGrid.addColumn(AttributeKindMetaInfo::getKindUID).setHeader("属性类型 UID").setKey("idx_3")
                 .setFlexGrow(0).setWidth("150px").setResizable(false);
-        attributeKindMetaInfoGrid.addColumn(_createDateComponentRenderer).setHeader("类型创建时间").setKey("idx_4")
-                .setComparator(createDateComparator)
-                .setFlexGrow(0).setWidth("210px").setResizable(false);
-        attributeKindMetaInfoGrid.addColumn(_lastUpdateDateComponentRenderer).setHeader("类型最后更新时间").setKey("idx_5")
-                .setComparator(lastUpdateDateComparator)
-                .setFlexGrow(0).setWidth("210px").setResizable(false);
 
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"属性类型名称");
         attributeKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
@@ -121,12 +262,37 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
         attributeKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
         GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.KEY_O,"属性类型 UID");
         attributeKindMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx4 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"类型创建时间");
-        attributeKindMetaInfoGrid.getColumnByKey("idx_4").setHeader(gridColumnHeader_idx4).setSortable(true);
-        GridColumnHeader gridColumnHeader_idx5 = new GridColumnHeader(VaadinIcon.CALENDAR_CLOCK,"类型最后更新时间");
-        attributeKindMetaInfoGrid.getColumnByKey("idx_5").setHeader(gridColumnHeader_idx5).setSortable(true);
+
         attributeKindMetaInfoGrid.appendFooterRow();
         add(attributeKindMetaInfoGrid);
+
+
+        HorizontalLayout spaceDivLayout = new HorizontalLayout();
+        spaceDivLayout.setWidthFull();
+        spaceDivLayout.getStyle()
+                .set("border-bottom", "1px solid var(--lumo-contrast-20pct)")
+                .set("padding-bottom", "var(--lumo-space-m)");
+        add(spaceDivLayout);
+
+        Button confirmButton = new Button("确定附加属性类型",new Icon(VaadinIcon.CHECK));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                /*
+                errorMessage.setVisible(false);
+                if(attributeKindFilterSelect.getValue()==null){
+                    errorMessage.setText("请选择属性类型");
+                    errorMessage.setVisible(true);
+                }else{
+                    doAttachAttributeType(attributeKindFilterSelect.getValue());
+                }
+
+                */
+            }
+        });
+        add(confirmButton);
+        setHorizontalComponentAlignment(Alignment.END,confirmButton);
     }
 
     @Override
@@ -167,12 +333,12 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
         try {
             List<AttributeKindMetaInfo> runtimeAttributeKindMetaInfoList = coreRealm.getAttributeKindsMetaInfo();
             gridAttributeKindMetaInfoList.addAll(runtimeAttributeKindMetaInfoList);
-            //this.attributeKindNameFilterField.setValue("");
-            //this.attributeKindDescFilterField.setValue("");
-           // this.attributeDataTypeFilterSelect.setValue(null);
-           // this.attributeKindsMetaInfoView =
+            this.attributeKindNameFilterField.setValue("");
+            this.attributeKindDescFilterField.setValue("");
+           this.attributeDataTypeFilterSelect.setValue(null);
+           this.attributeKindsMetaInfoView =
             attributeKindMetaInfoGrid.setItems(gridAttributeKindMetaInfoList);
-            /*
+
             //logic to filter AttributeKinds already loaded from server
             this.attributeKindsMetaInfoView.addFilter(item->{
                 String entityKindName = item.getKindName().toUpperCase();
@@ -207,13 +373,29 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
                 return attributeKindNameFilterResult & attributeKindDescFilterResult & attributeDataTypeFilterResult;
             });
 
-            */
+
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
         }
     }
 
+    private void filterAttributeKinds(){
+        String attributeKindFilterValue = attributeKindNameFilterField.getValue().trim();
+        String attributeKindDescFilterValue = attributeKindDescFilterField.getValue().trim();
+        AttributeDataType dataType= attributeDataTypeFilterSelect.getValue();
+        if(attributeKindFilterValue.equals("")&attributeKindDescFilterValue.equals("")&dataType == null){
+            CommonUIOperationUtil.showPopupNotification("请输入属性类型名称 和/或 属性类型描述 和/或 属性数据类型", NotificationVariant.LUMO_ERROR);
+        }else{
+            this.attributeKindsMetaInfoView.refreshAll();
+        }
+    }
 
+    private void cancelFilterAttributeKinds(){
+        attributeKindNameFilterField.setValue("");
+        attributeKindDescFilterField.setValue("");
+        attributeDataTypeFilterSelect.setValue(null);
+        this.attributeKindsMetaInfoView.refreshAll();
+    }
 
 
     public void setContainerDialog(Dialog containerDialog) {
