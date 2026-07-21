@@ -35,6 +35,11 @@ public class AttachNewAttributeKindView extends VerticalLayout {
     private Dialog containerDialog;
     private ComboBox<AttributeKindMetaInfo> attributeKindFilterSelect;
     private NativeLabel errorMessage;
+    private AttachAttributeKindCallback attachAttributeKindCallback;
+
+    public interface AttachAttributeKindCallback{
+        public void onSuccess(AttributeKind newAttributeKind);
+    }
 
     public AttachNewAttributeKindView(String attributesViewKindUID){
         this.attributesViewKindUID = attributesViewKindUID;
@@ -157,6 +162,10 @@ public class AttachNewAttributeKindView extends VerticalLayout {
                 attributeKindAttachedToAttributesViewKindEvent.setAttributesViewKind(targetAttributesViewKind);
                 attributeKindAttachedToAttributesViewKindEvent.setAttributeKind(targetAttributeKind);
                 ResourceHolder.getApplicationBlackboard().fire(attributeKindAttachedToAttributesViewKindEvent);
+
+                if(attachAttributeKindCallback != null){
+                    attachAttributeKindCallback.onSuccess(targetAttributeKind);
+                }
             }else{
                 CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+this.attributesViewKindUID+ " 附加属性类型 "+ attributeKindMetaInfo.getKindName() +" : "+attributeKindMetaInfo.getKindUID() +" 失败", NotificationVariant.LUMO_ERROR);
             }
@@ -164,5 +173,13 @@ public class AttachNewAttributeKindView extends VerticalLayout {
             throw new RuntimeException(e);
         }
         coreRealm.closeGlobalSession();
+    }
+
+    public void clearInputInfo(){
+        attributeKindFilterSelect.clear();
+    }
+
+    public void setAttachAttributeKindCallback(AttachAttributeKindCallback attachAttributeKindCallback) {
+        this.attachAttributeKindCallback = attachAttributeKindCallback;
     }
 }

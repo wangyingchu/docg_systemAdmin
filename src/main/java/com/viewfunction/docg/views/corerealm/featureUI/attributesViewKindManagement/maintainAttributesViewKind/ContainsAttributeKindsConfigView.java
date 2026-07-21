@@ -7,6 +7,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.popover.Popover;
@@ -27,6 +28,7 @@ import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
 import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttributesViewKindEvent;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
 
@@ -49,9 +51,12 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
     private Registration listener;
     private Grid<ConceptionKind> conceptionKindAttributesInfoGrid;
     private AttributeKind lastSelectedAttributeKind;
-    private Popover createAndAttachAttributeTypeUIContainerPopover;
-    private Button createAndAttachAttributeTypeButton;
+    private Popover createAndAttachAttributeKindUIContainerPopover;
+    private Button createAndAttachAttributeKindButton;
     private CreateAttributeKindView createAttributeKindView;
+    private Popover selectAndAttachAttributeKindUIContainerPopover;
+    private Button selectAndAttachAttributeKindButton;
+    private AttachNewAttributeKindView attachNewAttributeKindView;
 
     public ContainsAttributeKindsConfigView(String attributesViewKindUID){
         this.attributesViewKindUID = attributesViewKindUID;
@@ -86,16 +91,16 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         List<Component> secTitleElementsList = new ArrayList<>();
         List<Component> buttonList = new ArrayList<>();
 
-        createAndAttachAttributeTypeButton = new Button("创建并附加属性类型");
-        createAndAttachAttributeTypeButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
-        createAndAttachAttributeTypeButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        createAndAttachAttributeTypeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        createAndAttachAttributeKindButton = new Button("创建并附加属性类型");
+        createAndAttachAttributeKindButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
+        createAndAttachAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        createAndAttachAttributeKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 renderCreateAndAttachAttributeTypeUI();
             }
         });
-        buttonList.add(createAndAttachAttributeTypeButton);
+        buttonList.add(createAndAttachAttributeKindButton);
 
         Button batchConfigAttachedAttributeKindsButton = new Button("批量设置附加属性类型");
         batchConfigAttachedAttributeKindsButton.setIcon(VaadinIcon.FILE_TREE.create());
@@ -108,7 +113,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         });
         buttonList.add(batchConfigAttachedAttributeKindsButton);
 
-        Button selectAndAttachAttributeKindButton = new Button("选择附加单项属性类型");
+        selectAndAttachAttributeKindButton = new Button("选择附加单项属性类型");
         selectAndAttachAttributeKindButton.setIcon(VaadinIcon.LIST_SELECT.create());
         selectAndAttachAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
         selectAndAttachAttributeKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
@@ -296,12 +301,26 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
     }
 
     private void renderAttachNewAttributeKindUI(){
-        AttachNewAttributeKindView attachNewAttributeKindView = new AttachNewAttributeKindView(this.attributesViewKindUID);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加属性类型",null,true,490,220,false);
-        fixSizeWindow.setWindowContent(attachNewAttributeKindView);
-        fixSizeWindow.setModel(true);
-        attachNewAttributeKindView.setContainerDialog(fixSizeWindow);
-        fixSizeWindow.show();
+        if(selectAndAttachAttributeKindUIContainerPopover == null){
+            AttachNewAttributeKindView.AttachAttributeKindCallback attachAttributeKindCallback = new AttachNewAttributeKindView.AttachAttributeKindCallback() {
+                @Override
+                public void onSuccess(AttributeKind newAttributeKind) {
+                    selectAndAttachAttributeKindUIContainerPopover.close();
+                }
+            };
+            selectAndAttachAttributeKindUIContainerPopover = new Popover();
+            selectAndAttachAttributeKindUIContainerPopover.setModal(true,true);
+            selectAndAttachAttributeKindUIContainerPopover.addThemeVariants(PopoverVariant.ARROW);
+            selectAndAttachAttributeKindUIContainerPopover.setModal(true, true);
+            selectAndAttachAttributeKindUIContainerPopover.setHeight("160px");
+            selectAndAttachAttributeKindUIContainerPopover.setWidth("490px");
+            attachNewAttributeKindView = new AttachNewAttributeKindView(this.attributesViewKindUID);
+            attachNewAttributeKindView.setAttachAttributeKindCallback(attachAttributeKindCallback);
+            selectAndAttachAttributeKindUIContainerPopover.add(attachNewAttributeKindView);
+            selectAndAttachAttributeKindUIContainerPopover.setTarget(selectAndAttachAttributeKindButton);
+        }
+        attachNewAttributeKindView.clearInputInfo();
+        selectAndAttachAttributeKindUIContainerPopover.open();
     }
 
     private void renderDetachAttributeKindUI(AttributeKind attributeKind){
@@ -314,7 +333,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
     }
 
     private void renderCreateAndAttachAttributeTypeUI(){
-        if(createAndAttachAttributeTypeUIContainerPopover == null){
+        if(createAndAttachAttributeKindUIContainerPopover == null){
             CreateAttributeKindView.CreateAttributeKindCallback createAttributeKindCallback = new CreateAttributeKindView.CreateAttributeKindCallback() {
                 @Override
                 public void onSuccess(AttributeKind newAttributeKind) {
@@ -322,7 +341,10 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
                     coreRealm.openGlobalSession();
                     try {
                         AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(attributesViewKindUID);
-                        targetAttributesViewKind.attachAttributeKind(newAttributeKind.getAttributeKindUID());
+                        boolean result = targetAttributesViewKind.attachAttributeKind(newAttributeKind.getAttributeKindUID());
+                        if(result){
+                            CommonUIOperationUtil.showPopupNotification("向属性视图类型 "+targetAttributesViewKind.getAttributesViewKindUID()+ " 附加属性类型 "+ newAttributeKind.getAttributeKindName() +" : "+newAttributeKind.getAttributeKindDesc() +" 成功", NotificationVariant.LUMO_SUCCESS);
+                        }
                     } catch (CoreRealmServiceRuntimeException e) {
                         throw new RuntimeException(e);
                     }
@@ -333,23 +355,23 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
                     attributeKindAttachedToAttributesViewKindEvent.setAttributesViewKindUID(attributesViewKindUID);
                     attributeKindAttachedToAttributesViewKindEvent.setAttributeKind(newAttributeKind);
                     ResourceHolder.getApplicationBlackboard().fire(attributeKindAttachedToAttributesViewKindEvent);
-                    createAndAttachAttributeTypeUIContainerPopover.close();
+                    createAndAttachAttributeKindUIContainerPopover.close();
                 }
             };
-            createAndAttachAttributeTypeUIContainerPopover = new Popover();
-            createAndAttachAttributeTypeUIContainerPopover.setModal(true,true);
-            createAndAttachAttributeTypeUIContainerPopover.addThemeVariants(PopoverVariant.ARROW);
-            createAndAttachAttributeTypeUIContainerPopover.setModal(true, true);
-            createAndAttachAttributeTypeUIContainerPopover.setHeight("300px");
-            createAndAttachAttributeTypeUIContainerPopover.setWidth("425px");
+            createAndAttachAttributeKindUIContainerPopover = new Popover();
+            createAndAttachAttributeKindUIContainerPopover.setModal(true,true);
+            createAndAttachAttributeKindUIContainerPopover.addThemeVariants(PopoverVariant.ARROW);
+            createAndAttachAttributeKindUIContainerPopover.setModal(true, true);
+            createAndAttachAttributeKindUIContainerPopover.setHeight("300px");
+            createAndAttachAttributeKindUIContainerPopover.setWidth("425px");
             createAttributeKindView = new CreateAttributeKindView();
             createAttributeKindView.setCreateAttributeKindCallback(createAttributeKindCallback);
             createAttributeKindView.setConfirmButtonText("创建并附加属性类型");
-            createAndAttachAttributeTypeUIContainerPopover.add(createAttributeKindView);
-            createAndAttachAttributeTypeUIContainerPopover.setTarget(createAndAttachAttributeTypeButton);
+            createAndAttachAttributeKindUIContainerPopover.add(createAttributeKindView);
+            createAndAttachAttributeKindUIContainerPopover.setTarget(createAndAttachAttributeKindButton);
         }
         createAttributeKindView.clearInputInfo();
-        createAndAttachAttributeTypeUIContainerPopover.open();
+        createAndAttachAttributeKindUIContainerPopover.open();
     }
 
     public void refreshAttributeTypesInfo(){
