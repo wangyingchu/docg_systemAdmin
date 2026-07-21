@@ -9,12 +9,15 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.shared.Registration;
 
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionKind;
@@ -25,6 +28,7 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.element.eventHandling.AttributeKindAttachedToAttributesViewKindEvent;
 import com.viewfunction.docg.element.eventHandling.AttributeKindDetachedFromAttributesViewKindEvent;
 import com.viewfunction.docg.util.ResourceHolder;
+import com.viewfunction.docg.views.corerealm.featureUI.attributeKindManagement.CreateAttributeKindView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,6 +49,9 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
     private Registration listener;
     private Grid<ConceptionKind> conceptionKindAttributesInfoGrid;
     private AttributeKind lastSelectedAttributeKind;
+    private Popover createAndAttachAttributeTypeUIContainerPopover;
+    private Button createAndAttachAttributeTypeButton;
+    private CreateAttributeKindView createAttributeKindView;
 
     public ContainsAttributeKindsConfigView(String attributesViewKindUID){
         this.attributesViewKindUID = attributesViewKindUID;
@@ -79,34 +86,45 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         List<Component> secTitleElementsList = new ArrayList<>();
         List<Component> buttonList = new ArrayList<>();
 
-        Button createMetaConfigItemButton0= new Button("批量附加属性类型");
-        createMetaConfigItemButton0.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
-        createMetaConfigItemButton0.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        createMetaConfigItemButton0.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        createAndAttachAttributeTypeButton = new Button("创建并附加属性类型");
+        createAndAttachAttributeTypeButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
+        createAndAttachAttributeTypeButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        createAndAttachAttributeTypeButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                renderCreateAndAttachAttributeTypeUI();
+            }
+        });
+        buttonList.add(createAndAttachAttributeTypeButton);
+
+        Button batchConfigAttachedAttributeKindsButton = new Button("批量设置附加属性类型");
+        batchConfigAttachedAttributeKindsButton.setIcon(VaadinIcon.FILE_TREE.create());
+        batchConfigAttachedAttributeKindsButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        batchConfigAttachedAttributeKindsButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 renderBatchAttachNewAttributeKindsUI();
             }
         });
-        buttonList.add(createMetaConfigItemButton0);
+        buttonList.add(batchConfigAttachedAttributeKindsButton);
 
-        Button createMetaConfigItemButton= new Button("选择附加单项属性类型");
-        createMetaConfigItemButton.setIcon(VaadinIcon.PLUS_SQUARE_O.create());
-        createMetaConfigItemButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        createMetaConfigItemButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+        Button selectAndAttachAttributeKindButton = new Button("选择附加单项属性类型");
+        selectAndAttachAttributeKindButton.setIcon(VaadinIcon.LIST_SELECT.create());
+        selectAndAttachAttributeKindButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        selectAndAttachAttributeKindButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
                 renderAttachNewAttributeKindUI();
             }
         });
-        buttonList.add(createMetaConfigItemButton);
+        buttonList.add(selectAndAttachAttributeKindButton);
 
-        Button refreshMetaConfigItemsInfoButton = new Button("刷新包含的属性类型信息",new Icon(VaadinIcon.REFRESH));
-        refreshMetaConfigItemsInfoButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
-        refreshMetaConfigItemsInfoButton.addClickListener((ClickEvent<Button> click) ->{
+        Button refreshAttachedAttributeKindsButton = new Button("刷新包含的属性类型信息",new Icon(VaadinIcon.REFRESH));
+        refreshAttachedAttributeKindsButton.addThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_TERTIARY);
+        refreshAttachedAttributeKindsButton.addClickListener((ClickEvent<Button> click) ->{
             refreshAttributeTypesInfo();
         });
-        buttonList.add(refreshMetaConfigItemsInfoButton);
+        buttonList.add(refreshAttachedAttributeKindsButton);
 
         SecondaryTitleActionBar metaConfigItemConfigActionBar = new SecondaryTitleActionBar(new Icon(VaadinIcon.INPUT),"属性类型配置管理 ",secTitleElementsList,buttonList);
         leftSideContainerLayout.add(metaConfigItemConfigActionBar);
@@ -293,6 +311,45 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         fixSizeWindow.setModel(true);
         detachAttributeKindView.setContainerDialog(fixSizeWindow);
         fixSizeWindow.show();
+    }
+
+    private void renderCreateAndAttachAttributeTypeUI(){
+        if(createAndAttachAttributeTypeUIContainerPopover == null){
+            CreateAttributeKindView.CreateAttributeKindCallback createAttributeKindCallback = new CreateAttributeKindView.CreateAttributeKindCallback() {
+                @Override
+                public void onSuccess(AttributeKind newAttributeKind) {
+                    CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+                    coreRealm.openGlobalSession();
+                    try {
+                        AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(attributesViewKindUID);
+                        targetAttributesViewKind.attachAttributeKind(newAttributeKind.getAttributeKindUID());
+                    } catch (CoreRealmServiceRuntimeException e) {
+                        throw new RuntimeException(e);
+                    }
+                    coreRealm.closeGlobalSession();
+
+                    AttributeKindAttachedToAttributesViewKindEvent attributeKindAttachedToAttributesViewKindEvent = new AttributeKindAttachedToAttributesViewKindEvent();
+                    attributeKindAttachedToAttributesViewKindEvent.setAttributeKindUID(newAttributeKind.getAttributeKindUID());
+                    attributeKindAttachedToAttributesViewKindEvent.setAttributesViewKindUID(attributesViewKindUID);
+                    attributeKindAttachedToAttributesViewKindEvent.setAttributeKind(newAttributeKind);
+                    ResourceHolder.getApplicationBlackboard().fire(attributeKindAttachedToAttributesViewKindEvent);
+                    createAndAttachAttributeTypeUIContainerPopover.close();
+                }
+            };
+            createAndAttachAttributeTypeUIContainerPopover = new Popover();
+            createAndAttachAttributeTypeUIContainerPopover.setModal(true,true);
+            createAndAttachAttributeTypeUIContainerPopover.addThemeVariants(PopoverVariant.ARROW);
+            createAndAttachAttributeTypeUIContainerPopover.setModal(true, true);
+            createAndAttachAttributeTypeUIContainerPopover.setHeight("300px");
+            createAndAttachAttributeTypeUIContainerPopover.setWidth("425px");
+            createAttributeKindView = new CreateAttributeKindView();
+            createAttributeKindView.setCreateAttributeKindCallback(createAttributeKindCallback);
+            createAttributeKindView.setConfirmButtonText("创建并附加属性类型");
+            createAndAttachAttributeTypeUIContainerPopover.add(createAttributeKindView);
+            createAndAttachAttributeTypeUIContainerPopover.setTarget(createAndAttachAttributeTypeButton);
+        }
+        createAttributeKindView.clearInputInfo();
+        createAndAttachAttributeTypeUIContainerPopover.open();
     }
 
     public void refreshAttributeTypesInfo(){

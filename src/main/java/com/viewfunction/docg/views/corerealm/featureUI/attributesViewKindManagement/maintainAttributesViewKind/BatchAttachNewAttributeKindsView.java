@@ -241,6 +241,24 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
             }
         };
 
+
+
+
+        ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKindMetaInfo -> {
+            Icon attributeKindInfoIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
+            attributeKindInfoIcon.setSize("10px");
+            attributeKindInfoIcon.setTooltipText("属性类型定义概览");
+
+            HorizontalLayout buttons = new HorizontalLayout(attributeKindInfoIcon);
+            buttons.setPadding(false);
+            buttons.setSpacing(false);
+            buttons.setMargin(false);
+            buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+            buttons.setHeight(15,Unit.PIXELS);
+            buttons.setWidth(80,Unit.PIXELS);
+            return new VerticalLayout(buttons);
+        });
+
         attributeKindMetaInfoGrid = new Grid<>();
         attributeKindMetaInfoGrid.setWidth(100, Unit.PERCENTAGE);
         attributeKindMetaInfoGrid.setHeight(500,Unit.PIXELS);
@@ -253,6 +271,7 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
                 .setFlexGrow(0).setWidth("130px").setResizable(false);
         attributeKindMetaInfoGrid.addColumn(AttributeKindMetaInfo::getKindUID).setHeader("属性类型 UID").setKey("idx_3")
                 .setFlexGrow(0).setWidth("150px").setResizable(false);
+        attributeKindMetaInfoGrid.addColumn(_toolBarComponentRenderer).setHeader("操作").setKey("idx_6").setFlexGrow(0).setWidth("60px").setResizable(false);
 
         GridColumnHeader gridColumnHeader_idx0 = new GridColumnHeader(VaadinIcon.INFO_CIRCLE_O,"属性类型名称");
         attributeKindMetaInfoGrid.getColumnByKey("idx_0").setHeader(gridColumnHeader_idx0).setSortable(true);
@@ -262,6 +281,8 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
         attributeKindMetaInfoGrid.getColumnByKey("idx_2").setHeader(gridColumnHeader_idx2).setSortable(true);
         GridColumnHeader gridColumnHeader_idx3 = new GridColumnHeader(VaadinIcon.KEY_O,"属性类型 UID");
         attributeKindMetaInfoGrid.getColumnByKey("idx_3").setHeader(gridColumnHeader_idx3).setSortable(true);
+        GridColumnHeader gridColumnHeader_idx6 = new GridColumnHeader(VaadinIcon.TOOLS,"操作");
+        attributeKindMetaInfoGrid.getColumnByKey("idx_6").setHeader(gridColumnHeader_idx6);
 
         attributeKindMetaInfoGrid.appendFooterRow();
         add(attributeKindMetaInfoGrid);
@@ -274,7 +295,7 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
                 .set("padding-bottom", "var(--lumo-space-m)");
         add(spaceDivLayout);
 
-        Button confirmButton = new Button("确定附加属性类型",new Icon(VaadinIcon.CHECK));
+        Button confirmButton = new Button("确定设置附加属性类型",new Icon(VaadinIcon.CHECK));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override

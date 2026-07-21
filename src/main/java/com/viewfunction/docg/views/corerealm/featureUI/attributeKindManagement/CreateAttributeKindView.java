@@ -33,6 +33,12 @@ public class CreateAttributeKindView extends VerticalLayout {
     private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
     private H6 errorMessage;
     private Dialog containerDialog;
+    private CreateAttributeKindCallback createAttributeKindCallback;
+    private Button confirmButton;
+
+    public interface CreateAttributeKindCallback {
+        public void onSuccess(AttributeKind newAttributeKind);
+    }
 
     public CreateAttributeKindView(){
         renderAttributeKindViewUI();
@@ -143,7 +149,7 @@ public class CreateAttributeKindView extends VerticalLayout {
                 .set("padding-bottom", "var(--lumo-space-m)");
         add(spaceDivLayout);
 
-        Button confirmButton = new Button("确认创建属性类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton = new Button("确认创建属性类型",new Icon(VaadinIcon.CHECK_CIRCLE));
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         add(confirmButton);
         setHorizontalComponentAlignment(Alignment.END,confirmButton);
@@ -235,8 +241,25 @@ public class CreateAttributeKindView extends VerticalLayout {
             if(this.containerDialog != null){
                 this.containerDialog.close();
             }
+            if(createAttributeKindCallback != null){
+                createAttributeKindCallback.onSuccess(targetAttributeKind);
+            }
         }else{
             CommonUIOperationUtil.showPopupNotification("属性类型 "+attributeKindName+"["+attributeDataType+"]"+"("+attributeKindDesc+") 创建失败", NotificationVariant.LUMO_ERROR);
         }
+    }
+
+    public void setCreateAttributeKindCallback(CreateAttributeKindCallback createAttributeKindCallback) {
+        this.createAttributeKindCallback = createAttributeKindCallback;
+    }
+
+    public void setConfirmButtonText(String confirmButtonText) {
+        this.confirmButton.setText(confirmButtonText);
+    }
+
+    public void clearInputInfo(){
+        this.attributeKindNameField.setValue("");
+        this.attributeKindDescField.setValue("");
+        this.attributeDataTypeFilterSelect.setValue(null);
     }
 }
