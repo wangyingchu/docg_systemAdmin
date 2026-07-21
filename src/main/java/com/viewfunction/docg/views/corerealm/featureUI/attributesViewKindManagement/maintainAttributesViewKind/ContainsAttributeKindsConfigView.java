@@ -275,11 +275,11 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         coreRealm.closeGlobalSession();
         attributeKindGrid.setItems(attributeKindsList);
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            this.rightSideContainerLayout.setWidth(event.getWidth()-1500,Unit.PIXELS);
+            this.rightSideContainerLayout.setWidth(event.getWidth()-1450,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            this.rightSideContainerLayout.setWidth(receiver.getBodyClientWidth()-1500,Unit.PIXELS);
+            this.rightSideContainerLayout.setWidth(receiver.getBodyClientWidth()-1450,Unit.PIXELS);
         }));
     }
 
