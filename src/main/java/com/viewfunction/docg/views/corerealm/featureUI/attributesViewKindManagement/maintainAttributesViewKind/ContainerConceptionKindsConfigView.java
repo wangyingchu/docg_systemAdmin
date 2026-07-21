@@ -244,13 +244,14 @@ public class ContainerConceptionKindsConfigView extends VerticalLayout implement
         List<ConceptionKind> conceptionKindsList = targetAttributesViewKind.getContainerConceptionKinds();
         conceptionKindGrid.setItems(conceptionKindsList);
         coreRealm.closeGlobalSession();
-
         getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            this.rightSideContainerLayout.setWidth(event.getWidth()-1450,Unit.PIXELS);
+            int cutoffWidth = event.getWidth()>1880 ? 1500:1450;
+            this.rightSideContainerLayout.setWidth(event.getWidth()-cutoffWidth,Unit.PIXELS);
         }));
         // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            this.rightSideContainerLayout.setWidth(receiver.getBodyClientWidth()-1450,Unit.PIXELS);
+            int cutoffWidth = receiver.getBodyClientWidth()>1880 ? 1500:1450;
+            this.rightSideContainerLayout.setWidth(receiver.getBodyClientWidth()-cutoffWidth,Unit.PIXELS);
         }));
     }
 
