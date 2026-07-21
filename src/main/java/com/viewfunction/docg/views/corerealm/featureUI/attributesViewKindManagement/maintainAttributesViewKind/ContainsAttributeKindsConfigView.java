@@ -297,6 +297,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
         fixSizeWindow.setWindowContent(batchAttachNewAttributeKindsView);
         fixSizeWindow.setModel(true);
         batchAttachNewAttributeKindsView.setContainerDialog(fixSizeWindow);
+        batchAttachNewAttributeKindsView.setContainerContainsAttributeKindsConfigView(this);
         fixSizeWindow.show();
     }
 

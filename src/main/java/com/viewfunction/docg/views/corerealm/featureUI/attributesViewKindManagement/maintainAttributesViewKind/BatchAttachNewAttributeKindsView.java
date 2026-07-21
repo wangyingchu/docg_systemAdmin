@@ -12,7 +12,6 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
-import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -23,6 +22,7 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeKindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
@@ -30,11 +30,11 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
 import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
-import com.viewfunction.docg.util.ResourceHolder;
 
 import java.util.*;
 
@@ -42,12 +42,13 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
 
     private String attributesViewKindUID;
     private Dialog containerDialog;
-    private NativeLabel errorMessage;
     private Grid<AttributeKindMetaInfo> attributeKindMetaInfoGrid;
     private GridListDataView<AttributeKindMetaInfo> attributeKindsMetaInfoView;
     private TextField attributeKindNameFilterField;
     private TextField attributeKindDescFilterField;
     private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
+    private AttributesViewKind containerAttributesViewKind;
+    private ContainsAttributeKindsConfigView containerContainsAttributeKindsConfigView;
 
     public BatchAttachNewAttributeKindsView(String attributesViewKindUID){
         this.attributesViewKindUID = attributesViewKindUID;
@@ -212,16 +213,7 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
         confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
             @Override
             public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-                /*
-                errorMessage.setVisible(false);
-                if(attributeKindFilterSelect.getValue()==null){
-                    errorMessage.setText("请选择属性类型");
-                    errorMessage.setVisible(true);
-                }else{
-                    doAttachAttributeType(attributeKindFilterSelect.getValue());
-                }
-
-                */
+                attachAttributeKinds(attributeKindMetaInfoGrid.getSelectedItems());
             }
         });
         add(confirmButton);
@@ -244,17 +236,16 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
             this.attributeKindDescFilterField.setValue("");
             this.attributeDataTypeFilterSelect.setValue(null);
             this.attributeKindsMetaInfoView = attributeKindMetaInfoGrid.setItems(gridAttributeKindMetaInfoList);
-
-            AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
-            if(targetAttributesViewKind != null){
-                List<AttributeKind> containsAttributeKinds = targetAttributesViewKind.getContainsAttributeKinds();
+            this.containerAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
+            if(this.containerAttributesViewKind != null){
+                List<AttributeKind> containsAttributeKinds = this.containerAttributesViewKind.getContainsAttributeKinds();
                 if(containsAttributeKinds != null && !containsAttributeKinds.isEmpty()){
                     Set<String> attributeKindUIDsSet= new HashSet<>();
                     containsAttributeKinds.forEach( attributeKind -> {
                         String attributeKindUID = attributeKind.getAttributeKindUID();
                         attributeKindUIDsSet.add(attributeKindUID);
                     });
-                    ListDataProvider<AttributeKindMetaInfo> dtaProvider=(ListDataProvider)attributeKindMetaInfoGrid.getDataProvider();
+                    ListDataProvider<AttributeKindMetaInfo> dtaProvider=(ListDataProvider)this.attributeKindMetaInfoGrid.getDataProvider();
                     dtaProvider.getItems().forEach( item ->{
                         if(attributeKindUIDsSet.contains(item.getKindUID())){
                             attributeKindMetaInfoGrid.select(item);
@@ -321,8 +312,84 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
         this.attributeKindsMetaInfoView.refreshAll();
     }
 
-
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
+    }
+
+    private void attachAttributeKinds(Set<AttributeKindMetaInfo> selectedAttributeKindMetaInfos){
+        List<Button> actionButtonList = new ArrayList<>();
+        Button confirmButton = new Button("确认设置附加属性类型",new Icon(VaadinIcon.CHECK_CIRCLE));
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        Button cancelButton = new Button("取消操作");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL);
+        actionButtonList.add(confirmButton);
+        actionButtonList.add(cancelButton);
+
+        ConfirmWindow confirmWindow = new ConfirmWindow(new Icon(VaadinIcon.INFO),"确认操作","确定为属性视图类型 "+ containerAttributesViewKind.getAttributesViewKindName()+" 批量设置 "+selectedAttributeKindMetaInfos.size()+" 项附加属性类型",actionButtonList,650,190);
+        confirmWindow.open();
+        confirmButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                doAttachAttributeType(selectedAttributeKindMetaInfos,confirmWindow);
+            }
+        });
+        cancelButton.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+            @Override
+            public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+                confirmWindow.closeConfirmWindow();
+            }
+        });
+    }
+
+    private void doAttachAttributeType(Set<AttributeKindMetaInfo> selectedAttributeKindMetaInfos,ConfirmWindow confirmWindow){
+        confirmWindow.closeConfirmWindow();
+        Set<String> newAttachedAttributeKindIDs = new HashSet<>();
+        selectedAttributeKindMetaInfos.forEach(attributeKindMetaInfo -> {
+            newAttachedAttributeKindIDs.add(attributeKindMetaInfo.getKindUID());
+        });
+
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        this.containerAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
+        if(this.containerAttributesViewKind != null) {
+            List<AttributeKind> containsAttributeKinds = this.containerAttributesViewKind.getContainsAttributeKinds();
+            Set<String> remainAttributeKindsUIDs = new HashSet<>();
+
+            containsAttributeKinds.forEach(attributeKind -> {
+                String currentAttributeKindID = attributeKind.getAttributeKindUID();
+                if (newAttachedAttributeKindIDs.contains(currentAttributeKindID)) {
+                    remainAttributeKindsUIDs.add(currentAttributeKindID);
+                } else {
+                    try {
+                        containerAttributesViewKind.detachAttributeKind(currentAttributeKindID);
+                    } catch (CoreRealmServiceRuntimeException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
+            newAttachedAttributeKindIDs.forEach(newAttachedAttributeKindID -> {
+                if(!remainAttributeKindsUIDs.contains(newAttachedAttributeKindID)){
+                    try {
+                        this.containerAttributesViewKind.attachAttributeKind(newAttachedAttributeKindID);
+                    } catch (CoreRealmServiceRuntimeException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+        }
+        coreRealm.closeGlobalSession();
+
+        if(this.containerContainsAttributeKindsConfigView != null){
+            this.containerContainsAttributeKindsConfigView.refreshAttributeTypesInfo();
+        }
+        if(containerDialog != null){
+            containerDialog.close();
+        }
+        CommonUIOperationUtil.showPopupNotification("为属性视图类型 "+ containerAttributesViewKind.getAttributesViewKindName()+" 批量设置 "+selectedAttributeKindMetaInfos.size()+" 项附加属性类型操作成功", NotificationVariant.LUMO_SUCCESS);
+    }
+
+    public void setContainerContainsAttributeKindsConfigView(ContainsAttributeKindsConfigView containerContainsAttributeKindsConfigView) {
+        this.containerContainsAttributeKindsConfigView = containerContainsAttributeKindsConfigView;
     }
 }
