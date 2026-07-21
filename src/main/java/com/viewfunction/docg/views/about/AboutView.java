@@ -1,14 +1,10 @@
 package com.viewfunction.docg.views.about;
 
 import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.PageTitle;
 
-import com.viewfunction.docg.element.externalTechFeature.conceptionEntitiesRelationsChart.ConceptionEntitiesRelationsChart;
-import com.viewfunction.docg.element.externalTechFeature.rgbColorPicker.RgbaColorPicker;
 import com.viewfunction.docg.util.config.SystemAdminCfgPropertiesHandler;
 import com.viewfunction.docg.views.MainLayout;
 
@@ -19,15 +15,6 @@ public class AboutView extends Div implements HasDynamicTitle {
     public AboutView() {
         addClassName("about-view");
         add(new Text("Content placeholder"));
-
-
-        //RgbaColorPicker rgbaColorPicker = new RgbaColorPicker();
-        //add(rgbaColorPicker);
-
-        //add(new Button("DIV"));
-
-        //ConceptionEntitiesRelationsChart conceptionEntitiesRelationsChart = new ConceptionEntitiesRelationsChart();
-        //add(conceptionEntitiesRelationsChart);
     }
 
     private final String SYSTEM_TITLE_PREFIX = SystemAdminCfgPropertiesHandler.getPropertyValue(SystemAdminCfgPropertiesHandler.SYSTEM_TITLE_PREFIX);

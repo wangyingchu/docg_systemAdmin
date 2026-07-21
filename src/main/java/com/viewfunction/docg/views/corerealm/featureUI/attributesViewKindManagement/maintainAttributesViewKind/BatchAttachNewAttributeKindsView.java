@@ -17,6 +17,9 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverPosition;
+import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.provider.ListDataProvider;
@@ -24,10 +27,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeKindMetaInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.element.commonComponent.ConfirmWindow;
@@ -49,6 +49,7 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
     private ComboBox<AttributeDataType> attributeDataTypeFilterSelect;
     private AttributesViewKind containerAttributesViewKind;
     private ContainsAttributeKindsConfigView containerContainsAttributeKindsConfigView;
+    private Popover attributeKindUIContainerPopover;
 
     public BatchAttachNewAttributeKindsView(String attributesViewKindUID){
         this.attributesViewKindUID = attributesViewKindUID;
@@ -160,10 +161,33 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
 
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKindMetaInfo -> {
             Icon attributeKindInfoIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
-            attributeKindInfoIcon.setSize("10px");
-            attributeKindInfoIcon.setTooltipText("属性类型定义概览");
+            attributeKindInfoIcon.setSize("14px");
 
-            HorizontalLayout buttons = new HorizontalLayout(attributeKindInfoIcon);
+
+
+            Button showAttributeKindInfo = new Button(attributeKindInfoIcon, event -> {
+                Button sourceButton = event.getSource();
+                AttributeKindMetaInfo targetAttributeKindMetaInfo = (AttributeKindMetaInfo)attributeKindMetaInfo;
+                showAttributeKindInfo(sourceButton,targetAttributeKindMetaInfo);
+
+            });
+            showAttributeKindInfo.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            showAttributeKindInfo.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
+            showAttributeKindInfo.setTooltipText("属性类型定义概览");
+
+            /*
+            showAttributeKindInfo.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
+                @Override
+                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
+
+                }
+            });
+            */
+
+
+
+            HorizontalLayout buttons = new HorizontalLayout(showAttributeKindInfo);
             buttons.setPadding(false);
             buttons.setSpacing(false);
             buttons.setMargin(false);
@@ -391,5 +415,23 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
 
     public void setContainerContainsAttributeKindsConfigView(ContainsAttributeKindsConfigView containerContainsAttributeKindsConfigView) {
         this.containerContainsAttributeKindsConfigView = containerContainsAttributeKindsConfigView;
+    }
+
+    public void showAttributeKindInfo(Button sourceButton,AttributeKindMetaInfo targetAttributeKindMetaInfo){
+
+        System.out.println(sourceButton);
+        System.out.println(targetAttributeKindMetaInfo);
+
+        if(attributeKindUIContainerPopover == null){
+            attributeKindUIContainerPopover = new Popover();
+            attributeKindUIContainerPopover.setModal(true,true);
+            //attributeKindUIContainerPopover.addThemeVariants(PopoverVariant.ARROW);
+            attributeKindUIContainerPopover.setModal(true, true);
+            attributeKindUIContainerPopover.setHeight("600px");
+            attributeKindUIContainerPopover.setWidth("900px");
+            attributeKindUIContainerPopover.setPosition(PopoverPosition.START);
+            attributeKindUIContainerPopover.setTarget(sourceButton);
+        }
+        attributeKindUIContainerPopover.open();
     }
 }
