@@ -293,7 +293,7 @@ public class ContainsAttributeKindsConfigView extends VerticalLayout implements
 
     private void renderBatchAttachNewAttributeKindsUI() {
         BatchAttachNewAttributeKindsView batchAttachNewAttributeKindsView = new BatchAttachNewAttributeKindsView(this.attributesViewKindUID);
-        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.PLUS_SQUARE_O),"附加属性类型",null,true,1000,700,false);
+        FixSizeWindow fixSizeWindow = new FixSizeWindow(new Icon(VaadinIcon.FILE_TREE),"批量设置附加属性类型",null,true,1000,700,false);
         fixSizeWindow.setWindowContent(batchAttachNewAttributeKindsView);
         fixSizeWindow.setModel(true);
         batchAttachNewAttributeKindsView.setContainerDialog(fixSizeWindow);

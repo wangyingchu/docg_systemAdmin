@@ -20,10 +20,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeKindMetaInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeDataType;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributeKind;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.AttributesViewKind;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.CoreRealmStorageImplTech;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
@@ -33,12 +36,7 @@ import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesome
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 import com.viewfunction.docg.util.ResourceHolder;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class BatchAttachNewAttributeKindsView extends VerticalLayout {
 
@@ -159,91 +157,6 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
             }
         });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        ComponentRenderer _createDateComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
-            if(entityStatisticsInfo instanceof AttributeKindMetaInfo && ((AttributeKindMetaInfo)entityStatisticsInfo).getCreateDate() != null){
-                ZonedDateTime createZonedDateTime = ((AttributeKindMetaInfo)entityStatisticsInfo).getCreateDate();
-                return new NativeLabel(createZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
-            }else{
-                return new NativeLabel("-");
-            }
-        });
-
-        Comparator createDateComparator = new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                if(((AttributeKindMetaInfo)o1).getCreateDate()!= null && ((AttributeKindMetaInfo)o2).getCreateDate()!= null &&
-                        ((AttributeKindMetaInfo)o1).getCreateDate() instanceof ZonedDateTime &&
-                        ((AttributeKindMetaInfo)o2).getCreateDate() instanceof ZonedDateTime){
-                    if(((AttributeKindMetaInfo)o1).getCreateDate().isBefore(((AttributeKindMetaInfo)o2).getCreateDate())){
-                        return -1;
-                    }if(((AttributeKindMetaInfo)o1).getCreateDate().isAfter(((AttributeKindMetaInfo)o2).getCreateDate())){
-                        return 1;
-                    }
-                }
-                return 0;
-            }
-            @Override
-            public boolean equals(Object obj) {
-                return false;
-            }
-        };
-
-        ComponentRenderer _lastUpdateDateComponentRenderer = new ComponentRenderer<>(entityStatisticsInfo -> {
-            if(entityStatisticsInfo instanceof AttributeKindMetaInfo && ((AttributeKindMetaInfo)entityStatisticsInfo).getLastModifyDate() != null){
-                ZonedDateTime createZonedDateTime = ((AttributeKindMetaInfo)entityStatisticsInfo).getLastModifyDate();
-                return new NativeLabel(createZonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime((FormatStyle.MEDIUM))));
-            }else{
-                return new NativeLabel("-");
-            }
-        });
-
-        Comparator lastUpdateDateComparator = new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                if(((AttributeKindMetaInfo)o1).getLastModifyDate()!= null && ((AttributeKindMetaInfo)o2).getLastModifyDate()!= null &&
-                        ((AttributeKindMetaInfo)o1).getLastModifyDate() instanceof ZonedDateTime &&
-                        ((AttributeKindMetaInfo)o2).getLastModifyDate() instanceof ZonedDateTime){
-                    if(((AttributeKindMetaInfo)o1).getLastModifyDate().isBefore(((AttributeKindMetaInfo)o2).getLastModifyDate())){
-                        return -1;
-                    }if(((AttributeKindMetaInfo)o1).getLastModifyDate().isAfter(((AttributeKindMetaInfo)o2).getLastModifyDate())){
-                        return 1;
-                    }
-                }
-                return 0;
-            }
-
-            @Override
-            public boolean equals(Object obj) {
-                return false;
-            }
-        };
-
-
-
-
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKindMetaInfo -> {
             Icon attributeKindInfoIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
             attributeKindInfoIcon.setSize("10px");
@@ -255,7 +168,7 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
             buttons.setMargin(false);
             buttons.setDefaultVerticalComponentAlignment(Alignment.CENTER);
             buttons.setHeight(15,Unit.PIXELS);
-            buttons.setWidth(80,Unit.PIXELS);
+            buttons.setWidth(60,Unit.PIXELS);
             return new VerticalLayout(buttons);
         });
 
@@ -286,7 +199,6 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
 
         attributeKindMetaInfoGrid.appendFooterRow();
         add(attributeKindMetaInfoGrid);
-
 
         HorizontalLayout spaceDivLayout = new HorizontalLayout();
         spaceDivLayout.setWidthFull();
@@ -320,33 +232,7 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         loadAttributeKindsInfo();
-        // Add browser window listener to observe size change
-
-
-        /*
-        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            int browserHeight = event.getHeight();
-            int browserWidth = event.getWidth();
-            int chartWidth = browserWidth-1300-80;
-            int chartHeight = browserHeight-590;
-            attributeKindMetaInfoGrid.setHeight(event.getHeight()-250,Unit.PIXELS);
-            attributeInConceptionKindDistributionInfoChart.setChartSize(chartWidth,chartHeight);
-        }));
-        // Adjust size according to initial width of the screen
-        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            int browserHeight = receiver.getBodyClientHeight();
-            int browserWidth = receiver.getBodyClientWidth();
-            int chartWidth = browserWidth-1300-80;
-            int chartHeight = browserHeight-590;
-            attributeKindMetaInfoGrid.setHeight(browserHeight-250,Unit.PIXELS);
-            attributeInConceptionKindDistributionInfoChart.setChartSize(chartWidth,chartHeight);
-        }));
-        */
-
-
     }
-
-
 
     private void loadAttributeKindsInfo(){
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
@@ -356,9 +242,26 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
             gridAttributeKindMetaInfoList.addAll(runtimeAttributeKindMetaInfoList);
             this.attributeKindNameFilterField.setValue("");
             this.attributeKindDescFilterField.setValue("");
-           this.attributeDataTypeFilterSelect.setValue(null);
-           this.attributeKindsMetaInfoView =
-            attributeKindMetaInfoGrid.setItems(gridAttributeKindMetaInfoList);
+            this.attributeDataTypeFilterSelect.setValue(null);
+            this.attributeKindsMetaInfoView = attributeKindMetaInfoGrid.setItems(gridAttributeKindMetaInfoList);
+
+            AttributesViewKind targetAttributesViewKind = coreRealm.getAttributesViewKind(this.attributesViewKindUID);
+            if(targetAttributesViewKind != null){
+                List<AttributeKind> containsAttributeKinds = targetAttributesViewKind.getContainsAttributeKinds();
+                if(containsAttributeKinds != null && !containsAttributeKinds.isEmpty()){
+                    Set<String> attributeKindUIDsSet= new HashSet<>();
+                    containsAttributeKinds.forEach( attributeKind -> {
+                        String attributeKindUID = attributeKind.getAttributeKindUID();
+                        attributeKindUIDsSet.add(attributeKindUID);
+                    });
+                    ListDataProvider<AttributeKindMetaInfo> dtaProvider=(ListDataProvider)attributeKindMetaInfoGrid.getDataProvider();
+                    dtaProvider.getItems().forEach( item ->{
+                        if(attributeKindUIDsSet.contains(item.getKindUID())){
+                            attributeKindMetaInfoGrid.select(item);
+                        }
+                    });
+                }
+            }
 
             //logic to filter AttributeKinds already loaded from server
             this.attributeKindsMetaInfoView.addFilter(item->{
@@ -422,7 +325,4 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
     public void setContainerDialog(Dialog containerDialog) {
         this.containerDialog = containerDialog;
     }
-
-
-
 }
