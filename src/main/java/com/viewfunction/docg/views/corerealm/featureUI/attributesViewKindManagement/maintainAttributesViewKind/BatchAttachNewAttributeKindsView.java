@@ -12,18 +12,19 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
+
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.popover.Popover;
-import com.vaadin.flow.component.popover.PopoverPosition;
 import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeKindMetaInfo;
@@ -35,6 +36,7 @@ import com.viewfunction.docg.element.commonComponent.GridColumnHeader;
 import com.viewfunction.docg.element.commonComponent.SecondaryIconTitle;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.attributeKindMaintain.AttributeKindSummaryInfoView;
 
 import java.util.*;
 
@@ -162,9 +164,6 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
         ComponentRenderer _toolBarComponentRenderer = new ComponentRenderer<>(attributeKindMetaInfo -> {
             Icon attributeKindInfoIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
             attributeKindInfoIcon.setSize("14px");
-
-
-
             Button showAttributeKindInfo = new Button(attributeKindInfoIcon, event -> {
                 Button sourceButton = event.getSource();
                 AttributeKindMetaInfo targetAttributeKindMetaInfo = (AttributeKindMetaInfo)attributeKindMetaInfo;
@@ -173,20 +172,7 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
             });
             showAttributeKindInfo.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             showAttributeKindInfo.addThemeVariants(ButtonVariant.LUMO_SMALL);
-
             showAttributeKindInfo.setTooltipText("属性类型定义概览");
-
-            /*
-            showAttributeKindInfo.addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
-                @Override
-                public void onComponentEvent(ClickEvent<Button> buttonClickEvent) {
-
-                }
-            });
-            */
-
-
-
             HorizontalLayout buttons = new HorizontalLayout(showAttributeKindInfo);
             buttons.setPadding(false);
             buttons.setSpacing(false);
@@ -418,20 +404,18 @@ public class BatchAttachNewAttributeKindsView extends VerticalLayout {
     }
 
     public void showAttributeKindInfo(Button sourceButton,AttributeKindMetaInfo targetAttributeKindMetaInfo){
-
-        System.out.println(sourceButton);
-        System.out.println(targetAttributeKindMetaInfo);
-
         if(attributeKindUIContainerPopover == null){
             attributeKindUIContainerPopover = new Popover();
             attributeKindUIContainerPopover.setModal(true,true);
-            //attributeKindUIContainerPopover.addThemeVariants(PopoverVariant.ARROW);
+            attributeKindUIContainerPopover.addThemeVariants(PopoverVariant.ARROW);
             attributeKindUIContainerPopover.setModal(true, true);
-            attributeKindUIContainerPopover.setHeight("600px");
-            attributeKindUIContainerPopover.setWidth("900px");
-            attributeKindUIContainerPopover.setPosition(PopoverPosition.START);
-            attributeKindUIContainerPopover.setTarget(sourceButton);
+            attributeKindUIContainerPopover.setHeight("700px");
+            attributeKindUIContainerPopover.setWidth("620px");
         }
+        attributeKindUIContainerPopover.setTarget(sourceButton);
+        attributeKindUIContainerPopover.removeAll();
+        AttributeKindSummaryInfoView attributeKindSummaryInfoView = new AttributeKindSummaryInfoView(targetAttributeKindMetaInfo);
+        attributeKindUIContainerPopover.add(attributeKindSummaryInfoView);
         attributeKindUIContainerPopover.open();
     }
 }
