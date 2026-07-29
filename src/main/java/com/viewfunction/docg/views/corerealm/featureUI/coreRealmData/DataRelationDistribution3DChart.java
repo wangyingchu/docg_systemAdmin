@@ -126,6 +126,7 @@ public class DataRelationDistribution3DChart extends VerticalLayout {
                         && !relationKindName.equals(RealmConstant.Classification_ClassificationRelationClass)
                         && !relationKindName.equals(RealmConstant.RelationAttachKind_RelationAttachLinkLogicRelationClass)
                         && !relationKindName.equals(RealmConstant.ConceptionKind_ActionRelationClass)
+                        && !relationKindName.equals(RealmConstant.Action_AttributesViewKindRelationClass)
                         && !relationKindName.equals(RealmConstant.RelationKind_ActionRelationClass)
                 ){
                     boolean linkToTGOrClassification = false;
