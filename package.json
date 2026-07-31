@@ -4,6 +4,7 @@
   "type": "module",
   "dependencies": {
     "@flowingcode/font-awesome-iron-iconset": "5.1.0",
+    "@neo4j-nvl/base": "1.2.1",
     "@neo4j-nvl/react": "0.3.1",
     "@polymer/iron-icon": "3.0.1",
     "@vaadin/aura": "25.2.0",
@@ -160,11 +161,13 @@
     "@vaadin/react-components": "$@vaadin/react-components",
     "ol": "$ol",
     "@neo4j-nvl/react": "$@neo4j-nvl/react",
-    "@polymer/iron-icon": "$@polymer/iron-icon"
+    "@polymer/iron-icon": "$@polymer/iron-icon",
+    "@neo4j-nvl/base": "$@neo4j-nvl/base"
   },
   "vaadin": {
     "dependencies": {
       "@flowingcode/font-awesome-iron-iconset": "5.1.0",
+      "@neo4j-nvl/base": "1.2.1",
       "@neo4j-nvl/react": "0.3.1",
       "@polymer/iron-icon": "3.0.1",
       "@vaadin/aura": "25.2.0",
@@ -219,9 +222,10 @@
       "workbox-routing": "7.4.1",
       "workbox-strategies": "7.4.1"
     },
-    "hash": "4cb8e3ecf4fbfb8f85425f6eb63e71fe6762a8b8b05c00886ccc8d4b8e765e9a",
+    "hash": "2af57ff099193115cdd0ac88550f6bd8f93df2930c2a458860e7514f140873b5",
     "overrides": {
       "@flowingcode/font-awesome-iron-iconset": "$@flowingcode/font-awesome-iron-iconset",
+      "@neo4j-nvl/base": "$@neo4j-nvl/base",
       "@neo4j-nvl/react": "$@neo4j-nvl/react",
       "@polymer/iron-icon": "$@polymer/iron-icon",
       "@vaadin/a11y-base": "25.2.0",

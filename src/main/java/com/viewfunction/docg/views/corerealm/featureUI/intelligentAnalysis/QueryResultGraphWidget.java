@@ -43,9 +43,15 @@ public class QueryResultGraphWidget extends VerticalLayout {
         doesNotContainsGraphInfoMessage.add(messageLogo,messageLabel);
         add(doesNotContainsGraphInfoMessage);
 
+
+        //TEMP CHANGE
         explorationResultGraphChart = new ExplorationResultGraphChart();
-        add(explorationResultGraphChart);
-        explorationResultGraphChart.setVisible(false);
+        //add(explorationResultGraphChart);
+        //explorationResultGraphChart.setVisible(false);
+
+
+        ExplorationResultGraphExploreChart explorationResultGraphExploreChart = new ExplorationResultGraphExploreChart();
+        add(explorationResultGraphExploreChart);
     }
 
     public void doDrawGraph(DynamicContentQueryResult dynamicContentQueryResult){
@@ -78,15 +84,19 @@ public class QueryResultGraphWidget extends VerticalLayout {
         }
 
         if(containsGraphInfo){
-            explorationResultGraphChart.setVisible(true);
+
+            //TEMP CHANGE
+            //explorationResultGraphChart.setVisible(true);
             doesNotContainsGraphInfoMessage.setVisible(false);
         }else{
-            explorationResultGraphChart.setVisible(false);
+            //explorationResultGraphChart.setVisible(false);
             doesNotContainsGraphInfoMessage.setVisible(true);
         }
     }
 
     public void setGraphChartHeight(int height){
-        this.explorationResultGraphChart.setChartHeight(height);
+
+        //TEMP CHANGE
+        //this.explorationResultGraphChart.setChartHeight(height);
     }
 }
