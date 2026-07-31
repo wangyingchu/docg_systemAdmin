@@ -7,7 +7,7 @@ import com.vaadin.flow.component.react.ReactAdapterComponent;
 
 import java.util.Map;
 
-@NpmPackage(value = "@neo4j-nvl/react", version = "0.3.1")
+@NpmPackage(value = "@neo4j-nvl/react", version = "1.2.1")
 @JsModule("./externalTech/flow/integration/react/explorationResultGraphChart/exploration-result-graph-chart.tsx")
 @Tag("exploration-result-graph-chart")
 public class ExplorationResultGraphChart extends ReactAdapterComponent {
