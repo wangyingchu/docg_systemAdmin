@@ -20,6 +20,7 @@ public class QueryResultGraphWidget extends VerticalLayout {
     private boolean alreadyInsighted = false;
     private HorizontalLayout doesNotContainsGraphInfoMessage;
     private ExplorationResultGraphChart explorationResultGraphChart;
+    private ExplorationResultGraphExploreChart explorationResultGraphExploreChart;
 
     public QueryResultGraphWidget(){
         this.setWidthFull();
@@ -43,15 +44,13 @@ public class QueryResultGraphWidget extends VerticalLayout {
         doesNotContainsGraphInfoMessage.add(messageLogo,messageLabel);
         add(doesNotContainsGraphInfoMessage);
 
-
-        //TEMP CHANGE
-        explorationResultGraphChart = new ExplorationResultGraphChart();
+        //explorationResultGraphChart = new ExplorationResultGraphChart();
         //add(explorationResultGraphChart);
         //explorationResultGraphChart.setVisible(false);
 
-
-        ExplorationResultGraphExploreChart explorationResultGraphExploreChart = new ExplorationResultGraphExploreChart();
+        explorationResultGraphExploreChart = new ExplorationResultGraphExploreChart();
         add(explorationResultGraphExploreChart);
+        explorationResultGraphExploreChart.setVisible(false);
     }
 
     public void doDrawGraph(DynamicContentQueryResult dynamicContentQueryResult){
@@ -61,8 +60,9 @@ public class QueryResultGraphWidget extends VerticalLayout {
                 "return this.offsetWidth;"
         ).then(Integer.class, width -> {
             // 这里的回调会在浏览器返回结果后执行
-            explorationResultGraphChart.setChartWidth(width);
+            //explorationResultGraphChart.setChartWidth(width);
         });
+
         this.dynamicContentQueryResult = dynamicContentQueryResult;
         if(!alreadyInsighted){
             alreadyInsighted = true;
@@ -84,18 +84,19 @@ public class QueryResultGraphWidget extends VerticalLayout {
         }
 
         if(containsGraphInfo){
-
-            //TEMP CHANGE
             //explorationResultGraphChart.setVisible(true);
             doesNotContainsGraphInfoMessage.setVisible(false);
+            explorationResultGraphExploreChart.setVisible(true);
+            explorationResultGraphExploreChart.setGraphExploreData(dynamicContentQueryResult);
+
         }else{
             //explorationResultGraphChart.setVisible(false);
             doesNotContainsGraphInfoMessage.setVisible(true);
+            explorationResultGraphExploreChart.setVisible(false);
         }
     }
 
     public void setGraphChartHeight(int height){
-
         //TEMP CHANGE
         //this.explorationResultGraphChart.setChartHeight(height);
     }

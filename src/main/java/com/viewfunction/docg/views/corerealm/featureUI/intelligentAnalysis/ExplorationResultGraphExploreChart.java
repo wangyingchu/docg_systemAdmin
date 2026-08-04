@@ -4,6 +4,17 @@ import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.react.ReactAdapterComponent;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentQueryResult;
+import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentValue;
+import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesPath;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
+import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
+
+import java.util.*;
 
 /**
  * Vaadin 25.2 标准的 React 组件封装 —— 将 nvl-graphExplore 的 React 图可视化
@@ -12,7 +23,7 @@ import com.vaadin.flow.component.react.ReactAdapterComponent;
  * <h3>架构链路</h3>
  * <pre>
  *   Java (VerticalLayout)
- *     └── NvlGraphComponent  (@Tag + @JsModule)
+ *     └── ExplorationResultGraphExploreChart  (@Tag + @JsModule)
  *           └── nvl-graph-adapter.tsx  (ReactAdapterElement)
  *                 └── NvlGraphView.tsx  (React: InteractiveNvlWrapper)
  * </pre>
@@ -41,4 +52,79 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                 .set("width", "100%")
                 .set("height", "100%");
     }
+
+    public void setGraphExploreData(DynamicContentQueryResult dynamicContentQueryResult){
+        if(dynamicContentQueryResult != null){
+            Map<String, DynamicContentValue.ContentValueType>  attributesValueTypeMap = dynamicContentQueryResult.getDynamicContentAttributesValueTypeMap();
+            boolean containsGraphExploreData = false;
+            Set<String> graphExploreDataAttributeNames = new HashSet<>();
+            Set<String> keySet = attributesValueTypeMap.keySet();
+            for(String currentAttribute:keySet){
+                DynamicContentValue.ContentValueType attributeValueType = attributesValueTypeMap.get(currentAttribute);
+                if(DynamicContentValue.ContentValueType.CONCEPTION_ENTITY.equals(attributeValueType) ||
+                        DynamicContentValue.ContentValueType.RELATION_ENTITY.equals(attributeValueType) ||
+                        DynamicContentValue.ContentValueType.ENTITIES_PATH.equals(attributeValueType)
+                ){
+                    containsGraphExploreData = true;
+                    graphExploreDataAttributeNames.add(currentAttribute);
+                }
+            }
+            if(containsGraphExploreData){
+                List<Map<String, DynamicContentValue>>  dynamicContentResultValueList = dynamicContentQueryResult.getDynamicContentResultValueList();
+                if(dynamicContentResultValueList != null && !dynamicContentResultValueList.isEmpty()){
+                    processGraphExploreData(graphExploreDataAttributeNames,attributesValueTypeMap,dynamicContentResultValueList);
+                }
+            }
+        }
+    }
+
+    private void processGraphExploreData(Set<String> attributeNames,
+                                         Map<String, DynamicContentValue.ContentValueType> attributesValueTypeMap,
+                                         List<Map<String, DynamicContentValue>>  dynamicContentResultValueList){
+        System.out.println("=======================");
+        System.out.println("=======================");
+
+        Map<String,String> conceptionEntitiesInfoMap = new HashMap<>();
+        List<String> conceptionEntitiesUIDList = new ArrayList<>();
+
+        for(Map<String, DynamicContentValue> currentContentValue:dynamicContentResultValueList){
+            for(String currentAttributeName:attributeNames){
+                Object valueObject = currentContentValue.get(currentAttributeName).getValueObject();
+                System.out.println(valueObject);
+                if(DynamicContentValue.ContentValueType.CONCEPTION_ENTITY.equals(attributesValueTypeMap.get(currentAttributeName))){
+                    ConceptionEntity conceptionEntity = (ConceptionEntity) valueObject;
+                    conceptionEntitiesInfoMap.put(conceptionEntity.getConceptionEntityUID(),conceptionEntity.getConceptionKindName());
+                    conceptionEntitiesUIDList.add(conceptionEntity.getConceptionEntityUID());
+                }
+                if(DynamicContentValue.ContentValueType.RELATION_ENTITY.equals(attributesValueTypeMap.get(currentAttributeName))){
+                    RelationEntity relationEntity = (RelationEntity) valueObject;
+                }
+                if(DynamicContentValue.ContentValueType.ENTITIES_PATH.equals(attributesValueTypeMap.get(currentAttributeName))){
+                    EntitiesPath entitiesPath = (EntitiesPath) valueObject;
+                }
+
+            }
+        }
+
+        System.out.println(conceptionEntitiesInfoMap);
+
+        CoreRealm targetCoreRealm = RealmTermFactory.getDefaultCoreRealm();
+        List<RelationEntity> additionalConceptionEntitiesRelations = null;
+        CrossKindDataOperator crossKindDataOperator = targetCoreRealm.getCrossKindDataOperator();
+        try {
+            additionalConceptionEntitiesRelations = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionEntitiesUIDList);
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println(additionalConceptionEntitiesRelations);
+
+        //System.out.println("GraphExploreDataAttributeNames:"+graphExploreDataAttributeNames);
+        //System.out.println("GraphExploreDataAttributeNames:"+graphExploreDataAttributeNames);
+        //System.out.println("GraphExploreDataAttributeNames:"+graphExploreDataAttributeNames);
+        System.out.println("=======================");
+        System.out.println("=======================");
+
+    }
+
 }
