@@ -140,6 +140,11 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
         System.out.println("=======================");
         System.out.println("=======================");
 
+        Map<String,Object>  graphExploreData= new HashMap<>();
+        graphExploreData.put("nodes",_NVLNodePayloadList);
+        graphExploreData.put("rels",_NVLEdgePayloadList);
+        //setState("chartData",graphExploreData);
+
     }
 
 }
