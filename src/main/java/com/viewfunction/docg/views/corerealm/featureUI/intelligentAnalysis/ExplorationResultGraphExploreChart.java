@@ -13,6 +13,8 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.NVLEdgePayload;
+import com.viewfunction.docg.element.visualizationComponent.payload.common.NVLNodePayload;
 
 import java.util.*;
 
@@ -86,6 +88,8 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
 
         Map<String,String> conceptionEntitiesInfoMap = new HashMap<>();
         List<String> conceptionEntitiesUIDList = new ArrayList<>();
+        List<NVLNodePayload> _NVLNodePayloadList = new ArrayList<>();
+        List<NVLEdgePayload> _NVLEdgePayloadList = new ArrayList<>();
 
         for(Map<String, DynamicContentValue> currentContentValue:dynamicContentResultValueList){
             for(String currentAttributeName:attributeNames){
@@ -95,6 +99,9 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                     ConceptionEntity conceptionEntity = (ConceptionEntity) valueObject;
                     conceptionEntitiesInfoMap.put(conceptionEntity.getConceptionEntityUID(),conceptionEntity.getConceptionKindName());
                     conceptionEntitiesUIDList.add(conceptionEntity.getConceptionEntityUID());
+                    List<String> entityLabels = new ArrayList<>();
+                    entityLabels.add(conceptionEntity.getConceptionKindName());
+                    _NVLNodePayloadList.add(new NVLNodePayload(conceptionEntity.getConceptionEntityUID(),conceptionEntity.getConceptionKindName(),entityLabels));
                 }
                 if(DynamicContentValue.ContentValueType.RELATION_ENTITY.equals(attributesValueTypeMap.get(currentAttributeName))){
                     RelationEntity relationEntity = (RelationEntity) valueObject;
@@ -115,6 +122,14 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
             additionalConceptionEntitiesRelations = crossKindDataOperator.getRelationsOfConceptionEntityPair(conceptionEntitiesUIDList);
         } catch (CoreRealmServiceEntityExploreException e) {
             throw new RuntimeException(e);
+        }
+        if(additionalConceptionEntitiesRelations != null){
+            for(RelationEntity relationEntity:additionalConceptionEntitiesRelations){
+                _NVLEdgePayloadList.add(new NVLEdgePayload(
+                        relationEntity.getRelationEntityUID(),relationEntity.getRelationKindName(),
+                        relationEntity.getFromConceptionEntityUID(),relationEntity.getToConceptionEntityUID()));
+
+            }
         }
 
         System.out.println(additionalConceptionEntitiesRelations);
