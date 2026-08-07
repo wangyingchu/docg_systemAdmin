@@ -1,0 +1,394 @@
+/* ---- Layout ---- */
+.app-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+.style-info {
+  padding: 12px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #166534;
+}
+
+/* ---- View state ---- */
+.view-state h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.view-state dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  font-size: 0.85rem;
+}
+
+.view-state dt {
+  color: #64748b;
+}
+
+.view-state dd {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+/* ---- Map area ---- */
+.map-area {
+  flex: 1;
+  position: relative;
+}
+
+/* ---- Popup ---- */
+.popup-content {
+  padding: 4px 2px;
+  font-size: 0.88rem;
+}
+
+.popup-content strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #0f172a;
+}
+
+.popup-content p {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+/* ---- StyleSwitcher (bottom-right floating pill) ---- */
+.maplibre-style-switcher {
+  position: absolute;
+  top: 12px;
+  right: 53px;
+  z-index: 10;
+  font-family: inherit;
+}
+
+/* ---- ResetViewButton (bottom-left, above ScaleControl) ---- */
+.maplibre-reset-view {
+  position: absolute;
+  bottom: 52px;
+  left: 10px;
+  z-index: 10;
+}
+
+/* ---- Shared control button base (extends .maplibre-ctrl-btn) ---- */
+.maplibre-ctrl-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  color: #374151;
+  transition: background 150ms, color 150ms;
+}
+.maplibre-ctrl-btn:hover {
+  background: #f1f5f9;
+}
+.maplibre-ctrl-btn--active {
+  color: #2563eb;
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+/* ---- ToggleUIButton (bottom-left, above ResetView) ---- */
+.maplibre-toggle-ui {
+  position: absolute;
+  bottom: 130px;
+  left: 10px;
+  z-index: 10;
+}
+
+/* ---- ResetViewButton (bottom-left, above ScaleControl) ---- */
+.maplibre-reset-view {
+  position: absolute;
+  bottom: 52px;
+  left: 10px;
+  z-index: 10;
+}
+
+.maplibre-terrain-control {
+  position: absolute;
+  bottom: 92px;
+  left: 10px;
+  z-index: 10;
+}
+
+.maplibre-style-switcher__btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #1e293b;
+  transition: box-shadow 150ms, background 150ms;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.maplibre-style-switcher__btn:hover {
+  background: #f8fafc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+}
+
+.maplibre-style-switcher__icon {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.maplibre-style-switcher__label {
+  font-size: 0.78rem;
+  max-width: 68px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.maplibre-style-switcher__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 140px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  list-style: none;
+  padding: 4px;
+  margin: 0;
+  animation: style-menu-in 120ms ease-out;
+}
+
+@keyframes style-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.maplibre-style-switcher__item {
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.84rem;
+  color: #374151;
+  transition: background 120ms;
+}
+
+.maplibre-style-switcher__item:hover {
+  background: #f1f5f9;
+}
+
+.maplibre-style-switcher__item--active {
+  color: #2563eb;
+  font-weight: 600;
+  background: #eff6ff;
+}
+
+/* ---- ExportControl (top-right, below StyleSwitcher) ---- */
+.maplibre-export-control {
+  position: absolute;
+  top: 12px;
+  right: 9px;
+  z-index: 10;
+  font-family: inherit;
+}
+
+.maplibre-export-control__btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #374151;
+  transition: box-shadow 150ms, background 150ms;
+}
+
+.maplibre-export-control__btn:hover {
+  background: #f8fafc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+}
+
+.maplibre-export-control__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 150px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  list-style: none;
+  padding: 4px;
+  margin: 0;
+  animation: style-menu-in 120ms ease-out;
+}
+
+.maplibre-export-control__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.84rem;
+  color: #374151;
+  transition: background 120ms;
+}
+
+.maplibre-export-control__item:hover {
+  background: #f1f5f9;
+}
+
+.maplibre-export-control__icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* ---- WktInput (top-right, below ExportControl) ---- */
+.maplibre-wkt-control {
+  position: absolute;
+  top: 104px;
+  right: 9px;
+  z-index: 10;
+  font-family: inherit;
+}
+
+.maplibre-wkt-control__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  color: #374151;
+  transition: box-shadow 150ms, background 150ms;
+}
+
+.maplibre-wkt-control__btn:hover {
+  background: #f8fafc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+}
+
+.maplibre-wkt-control__panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 260px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 12px;
+  animation: style-menu-in 120ms ease-out;
+}
+
+.maplibre-wkt-control__title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.maplibre-wkt-control__input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-family: "Courier New", monospace;
+  color: #1e293b;
+  resize: vertical;
+  outline: none;
+  transition: border-color 150ms;
+}
+
+.maplibre-wkt-control__input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.maplibre-wkt-control__error {
+  font-size: 0.78rem;
+  color: #ef4444;
+  margin-top: 6px;
+  padding: 4px 8px;
+  background: #fef2f2;
+  border-radius: 4px;
+}
+
+.maplibre-wkt-control__info {
+  font-size: 0.82rem;
+  color: #166534;
+  margin-top: 6px;
+  padding: 4px 8px;
+  background: #f0fdf4;
+  border-radius: 4px;
+}
+
+.maplibre-wkt-control__footer {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.maplibre-wkt-control__show,
+.maplibre-wkt-control__clear {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  text-align: center;
+  transition: background 120ms;
+  border: 1px solid #d1d5db;
+}
+
+.maplibre-wkt-control__show {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+.maplibre-wkt-control__show:hover {
+  background: #1d4ed8;
+}
+
+.maplibre-wkt-control__clear {
+  background: #ffffff;
+  color: #64748b;
+}
+
+.maplibre-wkt-control__clear:hover {
+  background: #f1f5f9;
+}

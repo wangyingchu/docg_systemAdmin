@@ -24,9 +24,9 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.payload.AttributeValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.RealmConstant;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
-import com.viewfunction.docg.coreRealm.realmServiceCore.util.geospatial.GeospatialCalculateUtil;
 import com.viewfunction.docg.element.commonComponent.*;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.views.corerealm.featureUI.commonUIComponent.geospatialInfoAnalysis.GeospatialMapInfoChart;
 import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
 
 import java.text.NumberFormat;
@@ -69,7 +69,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     private Button _VILLAGEButton;
     private Icon divIcon6;
     private Map<String,GeospatialScaleEntity> navagationBarEntitieesMap;
-    private GeospatialScaleEntityMapInfoChart_Maplibre geospatialScaleEntityMapInfoChart;
+    private GeospatialMapInfoChart geospatialMapInfoChart;
     private HorizontalLayout doesNotContainsSpatialInfoMessage;
 
     public GeospatialRegionCorrelationExploreView(String geospatialRegionName){
@@ -329,13 +329,11 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        // Add browser window listener to observe size change
-        this.geospatialScaleEntityMapInfoChart = new GeospatialScaleEntityMapInfoChart_Maplibre();
+        this.geospatialMapInfoChart = new GeospatialMapInfoChart();
+        this.entityInfoContainerLayout.add(this.geospatialMapInfoChart);
+
         //<theme-editor-local-classname> 添加属性防止地图遮盖其他界面元素
         //addClassName("geospatial-region-correlation-explore-view-vertical-layout-1");
-
-        this.entityInfoContainerLayout.add(this.geospatialScaleEntityMapInfoChart);
-        this.geospatialScaleEntityMapInfoChart.renderMapAndSpatialInfo();
 
         this.doesNotContainsSpatialInfoMessage = new HorizontalLayout();
         this.doesNotContainsSpatialInfoMessage.setSpacing(true);
@@ -350,8 +348,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
         this.doesNotContainsSpatialInfoMessage.add(messageLogo,messageLabel);
         this.entityInfoContainerLayout.add(this.doesNotContainsSpatialInfoMessage);
-
-        this.geospatialScaleEntityMapInfoChart.setVisible(false);
+        this.geospatialMapInfoChart.setVisible(false);
     }
 
     private void hideEntityNavigationBarElements(){
@@ -503,31 +500,32 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         GeospatialScaleFeatureSupportable.WKTGeometryType _WKTGeometryType = targetConceptionEntity.getGlobalGeometryType();
         if(_WKTGeometryType != null){
             this.doesNotContainsSpatialInfoMessage.setVisible(false);
-            this.geospatialScaleEntityMapInfoChart.setVisible(true);
+            this.geospatialMapInfoChart.setVisible(true);
             try {
                 String centroidPointWKT = targetConceptionEntity.getEntitySpatialCentroidPointWKTGeometryContent(Global);
                 String envelopeAreaWKT = targetConceptionEntity.getEntitySpatialEnvelopeWKTGeometryContent(Global);
                 String interiorPointWKT = targetConceptionEntity.getEntitySpatialInteriorPointWKTGeometryContent(Global);
-                String geometryCRSAID = targetConceptionEntity.getGlobalCRSAID();
+                //String geometryCRSAID = targetConceptionEntity.getGlobalCRSAID();
                 String geometryContentWKT = targetConceptionEntity.getGLGeometryContent();
-
-                this.geospatialScaleEntityMapInfoChart.clearMap();
+                String itemMessage = entityChineseName+"("+entityGeospatialCode+")";
+                this.geospatialMapInfoChart.clearMap();
                 if(envelopeAreaWKT != null){
-                    this.geospatialScaleEntityMapInfoChart.renderEnvelope(getGeoJsonFromWKTContent(geometryCRSAID, envelopeAreaWKT));
+                    this.geospatialMapInfoChart.renderEnvelope(envelopeAreaWKT,null);
                 }
-                this.geospatialScaleEntityMapInfoChart.renderEntityContent(getGeoJsonFromWKTContent(geometryCRSAID, geometryContentWKT),geospatialScaleGrade.toString(),entityChineseName,entityGeospatialCode);
+
                 if(centroidPointWKT != null){
-                    this.geospatialScaleEntityMapInfoChart.renderCentroidPoint(getGeoJsonFromWKTContent(geometryCRSAID, centroidPointWKT),zoomLevel);
+                    this.geospatialMapInfoChart.renderCentroidPoint(centroidPointWKT,"centroidPoint");
                 }
                 if(interiorPointWKT != null){
-                    this.geospatialScaleEntityMapInfoChart.renderInteriorPoint(getGeoJsonFromWKTContent(geometryCRSAID, interiorPointWKT));
+                    this.geospatialMapInfoChart.renderInteriorPoint(interiorPointWKT,"interiorPoint");
                 }
+                this.geospatialMapInfoChart.renderEntityContent(geometryContentWKT,itemMessage);
             } catch (CoreRealmServiceRuntimeException e) {
                 throw new RuntimeException(e);
             }
         }else{
             this.doesNotContainsSpatialInfoMessage.setVisible(true);
-            this.geospatialScaleEntityMapInfoChart.setVisible(false);
+            this.geospatialMapInfoChart.setVisible(false);
         }
     }
 
@@ -583,7 +581,6 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
 
     public void setViewWidth(int value){
         this.viewWidth = value;
-        this.geospatialScaleEntityMapInfoChart.setWidth(this.viewWidth-310, Unit.PIXELS);
         this.entityInfoContainerLayout.setWidth(this.viewWidth-310, Unit.PIXELS);
     }
 
@@ -594,7 +591,6 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
     public void setViewHeight(int value){
         this.viewHeight = value;
         this.entityAttributesInfoGrid.setHeight(this.viewHeight-100,Unit.PIXELS);
-        this.geospatialScaleEntityMapInfoChart.setHeight(this.viewHeight-128,Unit.PIXELS);
     }
 
     private void renderGeospatialScaleEntityDetailUI(GeospatialScaleEntity geospatialScaleEntity){
@@ -686,6 +682,7 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         return item;
     }
 
+    /*
     private String getGeoJsonFromWKTContent(String geometryCRSAID,String wktContent){
         String geoJsonContent = GeospatialCalculateUtil.getGeoJsonFromWTK(wktContent);
         if(geoJsonContent != null){
@@ -694,4 +691,5 @@ public class GeospatialRegionCorrelationExploreView extends VerticalLayout {
         }
         return null;
     }
+    */
 }
