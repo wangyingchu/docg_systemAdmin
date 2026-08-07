@@ -16,6 +16,10 @@ import type { ReactElement } from 'react';
 class NvlGraphReactElement extends ReactAdapterElement {
 
   protected override render(_hooks: RenderHooks): ReactElement | null {
+
+    //const [chartData, setChartData] = _hooks.useState<any>("chartData");
+
+
     return <NvlGraphView />;
   }
 }
