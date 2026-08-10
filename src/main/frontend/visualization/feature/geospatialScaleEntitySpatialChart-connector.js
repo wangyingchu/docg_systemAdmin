@@ -345,6 +345,7 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
         const popupsArray = [];
         let isMapLoaded = false;
 
+        /*
         function onMapStylesChange(styleClass,styleCode){}
         // Create an instance of StyleFlipperControl
         const styleFlipperControl = new StyleFlipperControl(mapStyles,onMapStylesChange);
@@ -352,5 +353,6 @@ window.Vaadin.Flow.feature_GeospatialScaleEntitySpatialChart = {
         styleFlipperControl.setCurrentStyleCode("liberty");
         // Add the control to the map
         map.addControl(styleFlipperControl, "bottom-right");
+        */
     }
 }
