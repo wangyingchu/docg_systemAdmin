@@ -719,7 +719,7 @@ function ensureWktLayers(map: import("maplibre-gl").Map) {
         filter: ["any", ["==", "$type", "LineString"], ["==", "$type", "Polygon"]] });
   add({ id: WKT_LAYER_POINT, type: "circle", source: WKT_SOURCE,
         paint: { "circle-radius": 6, "circle-color": "#1685a9", "circle-opacity": 0.9,
-                 "circle-stroke-color": "#003472", "circle-stroke-width": 2,
+                 "circle-stroke-color": "#003472", "circle-stroke-width": 0.6,
                  "circle-stroke-opacity": 0.9 },
         filter: ["==", "$type", "Point"] });
 }
@@ -874,7 +874,7 @@ function ensureEnvelopeLayers(map: import("maplibre-gl").Map) {
         paint: { "fill-color": "#AAAAAA", "fill-opacity": 0.2 },
         filter: ["==", "$type", "Polygon"] });
   add({ id: ENVELOPE_LAYER_LINE, type: "line", source: ENVELOPE_SOURCE,
-        paint: { "line-color": "#666666", "line-width": 2, "line-opacity": 0.4,
+        paint: { "line-color": "#666666", "line-width": 1, "line-opacity": 0.4,
                  "line-dasharray": [6, 4] },
         filter: ["any", ["==", "$type", "LineString"], ["==", "$type", "Polygon"]] });
   add({ id: ENVELOPE_LAYER_POINT, type: "circle", source: ENVELOPE_SOURCE,
@@ -947,9 +947,9 @@ function ensureInteriorLayers(map: import("maplibre-gl").Map) {
                  "line-dasharray": [6, 4] },
         filter: ["any", ["==", "$type", "LineString"], ["==", "$type", "Polygon"]] });
   add({ id: INTERIOR_LAYER_POINT, type: "circle", source: INTERIOR_SOURCE,
-        paint: { "circle-radius": 2.5, "circle-color": "#444444", "circle-opacity": 0.05,
-                 "circle-stroke-color": "#000000", "circle-stroke-width": 2,
-                 "circle-stroke-opacity": 0.2 },
+        paint: { "circle-radius": 3, "circle-color": "#444444", "circle-opacity": 0.1,
+                 "circle-stroke-color": "#000000", "circle-stroke-width": 1,
+                 "circle-stroke-opacity": 0.4 },
         filter: ["==", "$type", "Point"] });
 }
 
@@ -1035,7 +1035,7 @@ function ensureCentroidLayers(map: import("maplibre-gl").Map) {
         paint: { "fill-color": "#AAAAAA", "fill-opacity": 0.5 },
         filter: ["==", "$type", "Polygon"] });
   add({ id: CENTROID_LAYER_LINE, type: "line", source: CENTROID_SOURCE,
-        paint: { "line-color": "#666666", "line-width": 2, "line-opacity": 0.2,
+        paint: { "line-color": "#666666", "line-width": 2, "line-opacity": 0.6,
                  "line-dasharray": [6, 4] },
         filter: ["any", ["==", "$type", "LineString"], ["==", "$type", "Polygon"]] });
   // Point as X symbol instead of circle
