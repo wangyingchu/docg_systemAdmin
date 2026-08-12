@@ -40,14 +40,25 @@ public class GeospatialMapInfoChart extends ReactAdapterComponent {
 
     public void clearMap() {
         getElement().executeJs(
-            "window.__mapInstances && window.__mapInstances['map-main'] &&" +
-            " window.__mapInstances['map-main'].clearMap()");
+                "window.__mapInstances && window.__mapInstances['map-main'] &&" +
+                        " window.__mapInstances['map-main'].clearMap()");
     }
 
     private void callJs(String method, String wkt, String label) {
+        //添加500毫秒延时，确保在添加图层要素之前map已经加载完毕
+        int waitTime = 500;
+        String commandContentStr = "window.__mapInstances && window.__mapInstances['map-main'] &&" +
+        " window.__mapInstances['map-main']." + method + "($0, $1)";
         getElement().executeJs(
-            "window.__mapInstances && window.__mapInstances['map-main'] &&" +
-            " window.__mapInstances['map-main']." + method + "($0, $1)",
-            wkt, label != null ? label : "");
+                "setTimeout(() => {\n"+
+                        commandContentStr +
+                "}, $2);"
+                , wkt, label != null ? label : "", waitTime);
+        /*
+        getElement().executeJs(
+                "window.__mapInstances && window.__mapInstances['map-main'] &&" +
+                        " window.__mapInstances['map-main']." + method + "($0, $1)",
+                wkt, label != null ? label : "");
+        */
     }
 }
