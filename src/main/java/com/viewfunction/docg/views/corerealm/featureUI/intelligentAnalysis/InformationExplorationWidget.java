@@ -67,10 +67,14 @@ public class InformationExplorationWidget extends VerticalLayout {
     private QueryResultInsightWidget queryResultInsightWidget;
     private QueryResultGraphWidget queryResultGraphWidget;
     private HorizontalLayout doesNotContainsDataInfoMessage;
-    public InformationExplorationWidget(String question,String explorationQuery){
+    private Button fullScreenDisplayButton;
+    private Button resetScreenDisplayButton;
+    private int browserPageHeight;
+    public InformationExplorationWidget(String question,String explorationQuery,int browserPageHeight){
         this.setWidthFull();
         this.question = question;
         this.explorationQuery = explorationQuery;
+        this.browserPageHeight = browserPageHeight;
 
         Icon operationIcon = VaadinIcon.TABS.create();
         operationIcon.setSize("16px");
@@ -135,21 +139,31 @@ public class InformationExplorationWidget extends VerticalLayout {
         reRunButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
         reRunButton.setTooltipText("重新执行探索");
 
-
-        Icon fullScreenDisplayIcon = new Icon(VaadinIcon.CLOSE_BIG);
+        Icon fullScreenDisplayIcon = new Icon(VaadinIcon.EXPAND_FULL);
         fullScreenDisplayIcon.setSize("14px");
-        Button fullScreenDisplayButton = new Button(fullScreenDisplayIcon);
+        fullScreenDisplayButton = new Button(fullScreenDisplayIcon);
         fullScreenDisplayButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
         fullScreenDisplayButton.setTooltipText("全屏显示");
-
         fullScreenDisplayButton.addClickListener((event -> {
-
             informationExplorationResultDetails.setOpened(true);
-
+            queryResultInsightWidget.setHeight(browserPageHeight-150,Unit.PIXELS);
+            resetScreenDisplayButton.setVisible(true);
+            fullScreenDisplayButton.setVisible(false);
         }));
-
         Fullscreen.onClick(fullScreenDisplayButton).enter(this);
 
+        Icon resetScreenDisplayIcon = new Icon(VaadinIcon.COMPRESS_SQUARE);
+        resetScreenDisplayIcon.setSize("14px");
+        resetScreenDisplayButton = new Button(resetScreenDisplayIcon);
+        resetScreenDisplayButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
+        resetScreenDisplayButton.setTooltipText("退出全屏显示");
+        resetScreenDisplayButton.addClickListener((event -> {
+            queryResultInsightWidget.setHeight(400,Unit.PIXELS);
+            Fullscreen.exit();
+            resetScreenDisplayButton.setVisible(false);
+            fullScreenDisplayButton.setVisible(true);
+        }));
+        resetScreenDisplayButton.setVisible(false);
 
         Icon closeIcon = new Icon(VaadinIcon.CLOSE_BIG);
         closeIcon.setSize("14px");
@@ -169,7 +183,7 @@ public class InformationExplorationWidget extends VerticalLayout {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setWidthFull();
         horizontalLayout.setAlignItems(Alignment.CENTER);
-        horizontalLayout.add(spaceDivLayout1,operationIcon,timeSpan,explorationQuestionSpan,fullScreenDisplayButton,closeButton,spaceDivLayout2);
+        horizontalLayout.add(spaceDivLayout1,operationIcon,timeSpan,explorationQuestionSpan,fullScreenDisplayButton,resetScreenDisplayButton,closeButton,spaceDivLayout2);
         this.setFlexGrow(1,explorationQuestionSpan);
 
         informationExplorationResultDetails = new Details(horizontalLayout);

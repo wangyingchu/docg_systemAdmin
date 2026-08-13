@@ -1,6 +1,8 @@
 package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 
 import com.docg.ai.llm.naturalLanguageAnalysis.util.Text2QueryUtil;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -11,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 
+import com.vaadin.flow.shared.Registration;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
 import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
@@ -27,6 +30,8 @@ public class InformationAnalysisView extends VerticalLayout {
     private List<String> insightScopeConceptionKindList;
     private List<String> insightScopeRelationKindList;
     private List<ConceptionKindCorrelationInfo> insightScopeConceptionKindCorrelationList;
+    private Registration listener;
+    private int browserPageHeight;
 
     public InformationAnalysisView() {
         this.setWidthFull();
@@ -79,6 +84,29 @@ public class InformationAnalysisView extends VerticalLayout {
         buttonsControllerLayout.add(askButton);
     }
 
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        // Add browser window listener to observe size change
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            this.browserPageHeight = event.getHeight();
+
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            int browserWidth = receiver.getBodyClientWidth();
+            int browserHeight = receiver.getBodyClientHeight();
+            this.browserPageHeight = browserHeight;
+        }));
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource leak
+        listener.remove();
+        super.onDetach(detachEvent);
+    }
+
     public void setInsightContentHeight(int heightValue){
         this.insightContentScroller.setHeight(heightValue, Unit.PIXELS);
     }
@@ -122,7 +150,7 @@ public class InformationAnalysisView extends VerticalLayout {
                     case INSIGHT:break;
                     case EXPLORATION:
                         String cql = Text2QueryUtil.generateQueryCypher(question);
-                        InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql);
+                        InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql,browserPageHeight);
                         this.insightContentContainerLayout.add(informationExplorationWidget);
                         break;
                 }
