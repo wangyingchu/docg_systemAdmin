@@ -7,7 +7,6 @@ import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -217,7 +216,6 @@ public class ConceptionEntitySpatialDetailView extends VerticalLayout {
     }
 
     private void doRenderEntitySpatialDetailInfo(){
-        Notification.show("doRenderEntitySpatialDetailInfo0");
         if (this.conceptionEntity != null && this.spatialScaleLevel != null) {
             doesNotContainsSpatialInfoMessage.setVisible(false);
             mapContainerLayout.setVisible(true);
