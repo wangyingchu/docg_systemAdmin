@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.details.DetailsVariant;
+import com.vaadin.flow.component.fullscreen.Fullscreen;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
@@ -134,6 +135,22 @@ public class InformationExplorationWidget extends VerticalLayout {
         reRunButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
         reRunButton.setTooltipText("重新执行探索");
 
+
+        Icon fullScreenDisplayIcon = new Icon(VaadinIcon.CLOSE_BIG);
+        fullScreenDisplayIcon.setSize("14px");
+        Button fullScreenDisplayButton = new Button(fullScreenDisplayIcon);
+        fullScreenDisplayButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
+        fullScreenDisplayButton.setTooltipText("全屏显示");
+
+        fullScreenDisplayButton.addClickListener((event -> {
+
+            informationExplorationResultDetails.setOpened(true);
+
+        }));
+
+        Fullscreen.onClick(fullScreenDisplayButton).enter(this);
+
+
         Icon closeIcon = new Icon(VaadinIcon.CLOSE_BIG);
         closeIcon.setSize("14px");
         Button closeButton = new Button(closeIcon, event -> {
@@ -152,7 +169,7 @@ public class InformationExplorationWidget extends VerticalLayout {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setWidthFull();
         horizontalLayout.setAlignItems(Alignment.CENTER);
-        horizontalLayout.add(spaceDivLayout1,operationIcon,timeSpan,explorationQuestionSpan,closeButton,spaceDivLayout2);
+        horizontalLayout.add(spaceDivLayout1,operationIcon,timeSpan,explorationQuestionSpan,fullScreenDisplayButton,closeButton,spaceDivLayout2);
         this.setFlexGrow(1,explorationQuestionSpan);
 
         informationExplorationResultDetails = new Details(horizontalLayout);
