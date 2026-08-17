@@ -7,7 +7,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.details.DetailsVariant;
-import com.vaadin.flow.component.fullscreen.Fullscreen;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.NativeLabel;
@@ -69,13 +68,14 @@ public class InformationExplorationWidget extends VerticalLayout {
     private HorizontalLayout doesNotContainsDataInfoMessage;
     private Button fullScreenDisplayButton;
     private Button resetScreenDisplayButton;
-    private int browserPageHeight;
-    public InformationExplorationWidget(String question,String explorationQuery,int browserPageHeight){
+    private int insightContentHeight;
+    private int explorationContentHeight = 100;
+    public InformationExplorationWidget(String question,String explorationQuery,int insightContentHeight){
         this.setWidthFull();
+        this.insightContentHeight = insightContentHeight;
+        this.explorationContentHeight = this.insightContentHeight-30;
         this.question = question;
         this.explorationQuery = explorationQuery;
-        this.browserPageHeight = browserPageHeight;
-
         Icon operationIcon = VaadinIcon.TABS.create();
         operationIcon.setSize("16px");
         operationIcon.getStyle().set("padding-right","1px");
@@ -139,6 +139,7 @@ public class InformationExplorationWidget extends VerticalLayout {
         reRunButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
         reRunButton.setTooltipText("重新执行探索");
 
+        /*
         Icon fullScreenDisplayIcon = new Icon(VaadinIcon.EXPAND_FULL);
         fullScreenDisplayIcon.setSize("14px");
         fullScreenDisplayButton = new Button(fullScreenDisplayIcon);
@@ -149,8 +150,12 @@ public class InformationExplorationWidget extends VerticalLayout {
             queryResultInsightWidget.setHeight(browserPageHeight-150,Unit.PIXELS);
             resetScreenDisplayButton.setVisible(true);
             fullScreenDisplayButton.setVisible(false);
+            this.getElement().removeFromParent();
+            FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.RECORDS),"概念实体详情",null,null,true);
+            fullScreenWindow.setWindowContent(this);
+            fullScreenWindow.show();
         }));
-        Fullscreen.onClick(fullScreenDisplayButton).enter(this);
+       // Fullscreen.onClick(fullScreenDisplayButton).enter(this);
 
         Icon resetScreenDisplayIcon = new Icon(VaadinIcon.COMPRESS_SQUARE);
         resetScreenDisplayIcon.setSize("14px");
@@ -164,6 +169,7 @@ public class InformationExplorationWidget extends VerticalLayout {
             fullScreenDisplayButton.setVisible(true);
         }));
         resetScreenDisplayButton.setVisible(false);
+        */
 
         Icon closeIcon = new Icon(VaadinIcon.CLOSE_BIG);
         closeIcon.setSize("14px");
@@ -183,13 +189,13 @@ public class InformationExplorationWidget extends VerticalLayout {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setWidthFull();
         horizontalLayout.setAlignItems(Alignment.CENTER);
-        horizontalLayout.add(spaceDivLayout1,operationIcon,timeSpan,explorationQuestionSpan,fullScreenDisplayButton,resetScreenDisplayButton,closeButton,spaceDivLayout2);
+        //horizontalLayout.add(spaceDivLayout1,operationIcon,timeSpan,explorationQuestionSpan,fullScreenDisplayButton,resetScreenDisplayButton,closeButton,spaceDivLayout2);
+        horizontalLayout.add(spaceDivLayout1,operationIcon,timeSpan,explorationQuestionSpan,closeButton,spaceDivLayout2);
         this.setFlexGrow(1,explorationQuestionSpan);
 
         informationExplorationResultDetails = new Details(horizontalLayout);
         informationExplorationResultDetails.addThemeVariants(DetailsVariant.REVERSE);
         informationExplorationResultDetails.setWidthFull();
-
         informationExplorationResultDetails.setOpened(true);
         add(informationExplorationResultDetails);
         informationExplorationResultDetails.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
@@ -201,7 +207,6 @@ public class InformationExplorationWidget extends VerticalLayout {
         explorationQueryControlLayout.setHeight(20, Unit.PIXELS);
         explorationQueryControlLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         explorationQueryControlLayout.getStyle().set("background-color", "var(--lumo-contrast-5pct)");
-
         informationExplorationResultDetails.add(explorationQueryControlLayout);
 
         Icon explorationQueryIcon = LineAwesomeIconsSvg.DIGITAL_TACHOGRAPH_SOLID.create();
@@ -266,11 +271,10 @@ public class InformationExplorationWidget extends VerticalLayout {
                 queryResultGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES,GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_COLUMN_BORDERS,GridVariant.LUMO_COMPACT,GridVariant.LUMO_WRAP_CELL_CONTENT);
 
                 queryResultInsightWidget = new QueryResultInsightWidget(question,dynamicContentQueryResult);
-                queryResultInsightWidget.setHeight(400,Unit.PIXELS);
+                queryResultInsightWidget.setHeight(this.explorationContentHeight-110,Unit.PIXELS);
 
                 queryResultGraphWidget = new QueryResultGraphWidget();
-                queryResultGraphWidget.setHeight(400,Unit.PIXELS);
-                queryResultGraphWidget.setGraphChartHeight(400);
+                queryResultGraphWidget.setHeight(this.explorationContentHeight-110,Unit.PIXELS);
 
                 doesNotContainsDataInfoMessage = new HorizontalLayout();
                 doesNotContainsDataInfoMessage.setSpacing(true);
@@ -288,6 +292,7 @@ public class InformationExplorationWidget extends VerticalLayout {
                 doesNotContainsDataInfoMessage.setVisible(false);
 
                 VerticalLayout dataResultContainerLayout = new VerticalLayout();
+                dataResultContainerLayout.setHeight(this.explorationContentHeight-110,Unit.PIXELS);
                 dataResultContainerLayout.setMargin(false);
                 dataResultContainerLayout.setPadding(false);
                 dataResultContainerLayout.setSpacing(false);
