@@ -31,7 +31,7 @@ public class InformationAnalysisView extends VerticalLayout {
     private List<String> insightScopeRelationKindList;
     private List<ConceptionKindCorrelationInfo> insightScopeConceptionKindCorrelationList;
     private Registration listener;
-    private int browserPageHeight;
+    private int insightContentHeight;
 
     public InformationAnalysisView() {
         this.setWidthFull();
@@ -85,22 +85,6 @@ public class InformationAnalysisView extends VerticalLayout {
     }
 
     @Override
-    protected void onAttach(AttachEvent attachEvent) {
-        super.onAttach(attachEvent);
-        // Add browser window listener to observe size change
-        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
-            this.browserPageHeight = event.getHeight();
-
-        }));
-        // Adjust size according to initial width of the screen
-        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            int browserWidth = receiver.getBodyClientWidth();
-            int browserHeight = receiver.getBodyClientHeight();
-            this.browserPageHeight = browserHeight;
-        }));
-    }
-
-    @Override
     protected void onDetach(DetachEvent detachEvent) {
         // Listener needs to be eventually removed in order to avoid resource leak
         listener.remove();
@@ -108,6 +92,7 @@ public class InformationAnalysisView extends VerticalLayout {
     }
 
     public void setInsightContentHeight(int heightValue){
+        this.insightContentHeight = heightValue;
         this.insightContentScroller.setHeight(heightValue, Unit.PIXELS);
     }
 
@@ -150,7 +135,7 @@ public class InformationAnalysisView extends VerticalLayout {
                     case INSIGHT:break;
                     case EXPLORATION:
                         String cql = Text2QueryUtil.generateQueryCypher(question);
-                        InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql,browserPageHeight);
+                        InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql,insightContentHeight);
                         this.insightContentContainerLayout.add(informationExplorationWidget);
                         break;
                 }
