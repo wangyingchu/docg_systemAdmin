@@ -43,11 +43,6 @@ public class QueryResultGraphWidget extends VerticalLayout {
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
         doesNotContainsGraphInfoMessage.add(messageLogo,messageLabel);
         add(doesNotContainsGraphInfoMessage);
-
-        //explorationResultGraphChart = new ExplorationResultGraphChart();
-        //add(explorationResultGraphChart);
-        //explorationResultGraphChart.setVisible(false);
-
         explorationResultGraphExploreChart = new ExplorationResultGraphExploreChart();
         add(explorationResultGraphExploreChart);
         explorationResultGraphExploreChart.setVisible(false);
@@ -69,7 +64,7 @@ public class QueryResultGraphWidget extends VerticalLayout {
         }
         boolean containsGraphInfo = false;
         if(dynamicContentQueryResult != null){
-            Map<String, DynamicContentValue.ContentValueType> resultContentValueTypeMap = dynamicContentQueryResult.getDynamicContentAttributesValueTypeMap();
+            Map<String, DynamicContentValue.ContentValueType> resultContentValueTypeMap = this.dynamicContentQueryResult.getDynamicContentAttributesValueTypeMap();
             if(resultContentValueTypeMap != null && !resultContentValueTypeMap.isEmpty()){
                 Collection<DynamicContentValue.ContentValueType> contentValueTypes= resultContentValueTypeMap.values();
                 for(DynamicContentValue.ContentValueType contentValueType:contentValueTypes){
@@ -84,20 +79,12 @@ public class QueryResultGraphWidget extends VerticalLayout {
         }
 
         if(containsGraphInfo){
-            //explorationResultGraphChart.setVisible(true);
             doesNotContainsGraphInfoMessage.setVisible(false);
             explorationResultGraphExploreChart.setVisible(true);
-            explorationResultGraphExploreChart.setGraphExploreData(dynamicContentQueryResult);
-
+            explorationResultGraphExploreChart.setGraphExploreData(this.dynamicContentQueryResult);
         }else{
-            //explorationResultGraphChart.setVisible(false);
             doesNotContainsGraphInfoMessage.setVisible(true);
             explorationResultGraphExploreChart.setVisible(false);
         }
-    }
-
-    public void setGraphChartHeight(int height){
-        //TEMP CHANGE
-        //this.explorationResultGraphChart.setChartHeight(height);
     }
 }

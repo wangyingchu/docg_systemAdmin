@@ -441,7 +441,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
         try {
             List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
             TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
-            TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getTreeData();
+            TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getHierarchicalData();
 
             classificationMetaInfoMap = new HashMap<>();
             for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
@@ -453,7 +453,9 @@ public class ClassificationManagementUI extends VerticalLayout implements
             for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
                 if(!currentClassificationMetaInfo.isRootClassification()){
                     String parentClassificationName = currentClassificationMetaInfo.getParentClassificationName();
-                    gridTreeData.setParent(currentClassificationMetaInfo,classificationMetaInfoMap.get(parentClassificationName));
+                    if(parentClassificationName!= null){
+                        gridTreeData.setParent(currentClassificationMetaInfo,classificationMetaInfoMap.get(parentClassificationName));
+                    }
                 }
             }
             dataProvider.refreshAll();
@@ -496,7 +498,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
         try {
             List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
             TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
-            TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getTreeData();
+            TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getHierarchicalData();
             gridTreeData.clear();
 
             classificationMetaInfoMap.clear();

@@ -84,6 +84,12 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                                          Map<String, DynamicContentValue.ContentValueType> attributesValueTypeMap,
                                          List<Map<String, DynamicContentValue>>  dynamicContentResultValueList){
         System.out.println("=======================");
+
+
+        System.out.println("=========processGraphExploreData==============");
+
+
+
         System.out.println("=======================");
 
         Map<String,String> conceptionEntitiesInfoMap = new HashMap<>();
@@ -138,12 +144,18 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
         //System.out.println("GraphExploreDataAttributeNames:"+graphExploreDataAttributeNames);
         //System.out.println("GraphExploreDataAttributeNames:"+graphExploreDataAttributeNames);
         System.out.println("=======================");
-        System.out.println("=======================");
+        System.out.println("==========before setstate=============");
 
         Map<String,Object>  graphExploreData= new HashMap<>();
         graphExploreData.put("nodes",_NVLNodePayloadList);
         graphExploreData.put("rels",_NVLEdgePayloadList);
-        //setState("chartData",graphExploreData);
+        setState("chartData",graphExploreData);
+
+        System.out.println(graphExploreData);
+
+        System.out.println("=======================");
+        System.out.println("=========after setstate==============");
+
 
     }
 

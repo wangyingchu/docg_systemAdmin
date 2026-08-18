@@ -134,7 +134,8 @@ public class InformationAnalysisView extends VerticalLayout {
                 switch(informationAnalysisMode){
                     case INSIGHT:break;
                     case EXPLORATION:
-                        String cql = Text2QueryUtil.generateQueryCypher(question);
+                        //String cql = Text2QueryUtil.generateQueryCypher(question);
+                        String cql = "MATCH (n:BaggageReclaim) RETURN n LIMIT 25";
                         InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql,insightContentHeight);
                         this.insightContentContainerLayout.add(informationExplorationWidget);
                         break;
