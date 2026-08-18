@@ -440,25 +440,35 @@ public class ClassificationManagementUI extends VerticalLayout implements
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
             List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
-            TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
-            TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getHierarchicalData();
 
-            classificationMetaInfoMap = new HashMap<>();
-            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
-                classificationMetaInfoMap.put(currentClassificationMetaInfo.getClassificationName(),currentClassificationMetaInfo);
-            }
-            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
-                gridTreeData.addItem(null,currentClassificationMetaInfo);
-            }
-            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
-                if(!currentClassificationMetaInfo.isRootClassification()){
-                    String parentClassificationName = currentClassificationMetaInfo.getParentClassificationName();
-                    if(parentClassificationName!= null){
-                        gridTreeData.setParent(currentClassificationMetaInfo,classificationMetaInfoMap.get(parentClassificationName));
-                    }
+            List<ClassificationMetaInfo> rootClassificationMetaInfoList = new ArrayList<>();
+            Map<String,ClassificationMetaInfo> nameAndClassificationMetaInfoMapping = new HashMap<>();
+            Map<String,String> child_ParentClassificationNameMapping = new HashMap<>();
+            classificationsMetaInfoList.forEach(classificationMetaInfo -> {
+                boolean isRootClassification = classificationMetaInfo.isRootClassification();
+                String parentClassificationName = classificationMetaInfo.getParentClassificationName();
+                String currentName = classificationMetaInfo.getClassificationName();
+                nameAndClassificationMetaInfoMapping.put(currentName,classificationMetaInfo);
+                if(parentClassificationName != null){
+                    child_ParentClassificationNameMapping.put(currentName,parentClassificationName);
                 }
-            }
-            dataProvider.refreshAll();
+                if(isRootClassification){
+                    rootClassificationMetaInfoList.add(classificationMetaInfo);
+                }
+            });
+            TreeData<ClassificationMetaInfo> treeData = new TreeData<>();
+            treeData.addRootItems(rootClassificationMetaInfoList);
+            Set<String> childrenClassificationNameSet = child_ParentClassificationNameMapping.keySet();
+            childrenClassificationNameSet.forEach(childClassificationName -> {
+                ClassificationMetaInfo childClassification = nameAndClassificationMetaInfoMapping.get(childClassificationName);
+                String parentClassificationName = child_ParentClassificationNameMapping.get(childClassificationName);
+                ClassificationMetaInfo parentClassification = nameAndClassificationMetaInfoMapping.get(parentClassificationName);
+                treeData.addItem(parentClassification,childClassification);
+            });
+            TreeDataProvider<ClassificationMetaInfo> dataProvider = new TreeDataProvider<>(treeData);
+            this.classificationsMetaInfoTreeGrid.setDataProvider(dataProvider);
+            this.classificationsMetaInfoTreeGrid.scrollToEnd();
+
             this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
             this.classificationMetaInfosMetaInfoFilterView = classificationsMetaInfoFilterGrid.setItems(classificationsMetaInfoList);
             //logic to filter AttributeKinds already loaded from server
@@ -497,27 +507,39 @@ public class ClassificationManagementUI extends VerticalLayout implements
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
             List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
-            TreeDataProvider<ClassificationMetaInfo> dataProvider = (TreeDataProvider<ClassificationMetaInfo>)classificationsMetaInfoTreeGrid.getDataProvider();
-            TreeData<ClassificationMetaInfo> gridTreeData = dataProvider.getHierarchicalData();
-            gridTreeData.clear();
+            List<ClassificationMetaInfo> rootClassificationMetaInfoList = new ArrayList<>();
+            Map<String,ClassificationMetaInfo> nameAndClassificationMetaInfoMapping = new HashMap<>();
+            Map<String,String> child_ParentClassificationNameMapping = new HashMap<>();
+            classificationsMetaInfoList.forEach(classificationMetaInfo -> {
+                boolean isRootClassification = classificationMetaInfo.isRootClassification();
+                String parentClassificationName = classificationMetaInfo.getParentClassificationName();
+                String currentName = classificationMetaInfo.getClassificationName();
+                nameAndClassificationMetaInfoMapping.put(currentName,classificationMetaInfo);
+                if(parentClassificationName != null){
+                    child_ParentClassificationNameMapping.put(currentName,parentClassificationName);
+                }
+                if(isRootClassification){
+                    rootClassificationMetaInfoList.add(classificationMetaInfo);
+                }
+            });
+            TreeData<ClassificationMetaInfo> treeData = new TreeData<>();
+            treeData.addRootItems(rootClassificationMetaInfoList);
+            Set<String> childrenClassificationNameSet = child_ParentClassificationNameMapping.keySet();
+            childrenClassificationNameSet.forEach(childClassificationName -> {
+                ClassificationMetaInfo childClassification = nameAndClassificationMetaInfoMapping.get(childClassificationName);
+                String parentClassificationName = child_ParentClassificationNameMapping.get(childClassificationName);
+                ClassificationMetaInfo parentClassification = nameAndClassificationMetaInfoMapping.get(parentClassificationName);
+                treeData.addItem(parentClassification,childClassification);
+            });
+            TreeDataProvider<ClassificationMetaInfo> dataProvider = new TreeDataProvider<>(treeData);
+            this.classificationsMetaInfoTreeGrid.setDataProvider(dataProvider);
+            this.classificationsMetaInfoTreeGrid.scrollToEnd();
+            this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
 
             classificationMetaInfoMap.clear();
             for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
                 classificationMetaInfoMap.put(currentClassificationMetaInfo.getClassificationName(),currentClassificationMetaInfo);
             }
-            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
-                gridTreeData.addItem(null,currentClassificationMetaInfo);
-            }
-            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
-                if(!currentClassificationMetaInfo.isRootClassification()){
-                    String parentClassificationName = currentClassificationMetaInfo.getParentClassificationName();
-                    gridTreeData.setParent(currentClassificationMetaInfo,classificationMetaInfoMap.get(parentClassificationName));
-                }
-            }
-
-            dataProvider.refreshAll();
-            this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
-
             ListDataProvider listDataProvider = (ListDataProvider)classificationsMetaInfoFilterGrid.getDataProvider();
             listDataProvider.getItems().clear();
             listDataProvider.getItems().addAll(classificationsMetaInfoList);
