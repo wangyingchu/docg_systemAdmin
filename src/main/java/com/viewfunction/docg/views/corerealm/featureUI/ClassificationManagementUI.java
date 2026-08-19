@@ -441,6 +441,9 @@ public class ClassificationManagementUI extends VerticalLayout implements
         try {
             List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
 
+            //set page size matching ClassificationMetaInfo entities count to avoid page switch error in Windows OS client browser
+            classificationsMetaInfoTreeGrid.setPageSize(classificationsMetaInfoList.size()+10);
+
             List<ClassificationMetaInfo> rootClassificationMetaInfoList = new ArrayList<>();
             List<ClassificationMetaInfo> otherClassificationMetaInfoList = new ArrayList<>();
             Set<String> alreadyAddedClassificationNameSet = new HashSet<>();
@@ -523,6 +526,10 @@ public class ClassificationManagementUI extends VerticalLayout implements
         CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
         try {
             List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
+
+            //set page size matching ClassificationMetaInfo entities count to avoid page switch error in Windows OS client browser
+            classificationsMetaInfoTreeGrid.setPageSize(classificationsMetaInfoList.size()+10);
+
             List<ClassificationMetaInfo> rootClassificationMetaInfoList = new ArrayList<>();
             List<ClassificationMetaInfo> otherClassificationMetaInfoList = new ArrayList<>();
             Set<String> alreadyAddedClassificationNameSet = new HashSet<>();
