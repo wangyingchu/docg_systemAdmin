@@ -442,29 +442,26 @@ public class ClassificationManagementUI extends VerticalLayout implements
             List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
 
             List<ClassificationMetaInfo> rootClassificationMetaInfoList = new ArrayList<>();
+            List<ClassificationMetaInfo> otherClassificationMetaInfoList = new ArrayList<>();
+            Set<String> alreadyAddedClassificationNameSet = new HashSet<>();
             Map<String,ClassificationMetaInfo> nameAndClassificationMetaInfoMapping = new HashMap<>();
-            Map<String,String> child_ParentClassificationNameMapping = new HashMap<>();
             classificationsMetaInfoList.forEach(classificationMetaInfo -> {
                 boolean isRootClassification = classificationMetaInfo.isRootClassification();
-                String parentClassificationName = classificationMetaInfo.getParentClassificationName();
                 String currentName = classificationMetaInfo.getClassificationName();
                 nameAndClassificationMetaInfoMapping.put(currentName,classificationMetaInfo);
-                if(parentClassificationName != null){
-                    child_ParentClassificationNameMapping.put(currentName,parentClassificationName);
-                }
                 if(isRootClassification){
                     rootClassificationMetaInfoList.add(classificationMetaInfo);
+                    alreadyAddedClassificationNameSet.add(currentName);
+                }else{
+                    otherClassificationMetaInfoList.add(classificationMetaInfo);
                 }
             });
             TreeData<ClassificationMetaInfo> treeData = new TreeData<>();
             treeData.addRootItems(rootClassificationMetaInfoList);
-            Set<String> childrenClassificationNameSet = child_ParentClassificationNameMapping.keySet();
-            childrenClassificationNameSet.forEach(childClassificationName -> {
-                ClassificationMetaInfo childClassification = nameAndClassificationMetaInfoMapping.get(childClassificationName);
-                String parentClassificationName = child_ParentClassificationNameMapping.get(childClassificationName);
-                ClassificationMetaInfo parentClassification = nameAndClassificationMetaInfoMapping.get(parentClassificationName);
-                treeData.addItem(parentClassification,childClassification);
+            otherClassificationMetaInfoList.forEach(classificationMetaInfo -> {
+                recursionAddClassification(classificationMetaInfo,alreadyAddedClassificationNameSet,nameAndClassificationMetaInfoMapping,treeData);
             });
+
             TreeDataProvider<ClassificationMetaInfo> dataProvider = new TreeDataProvider<>(treeData);
             this.classificationsMetaInfoTreeGrid.setDataProvider(dataProvider);
             this.classificationsMetaInfoTreeGrid.scrollToEnd();
@@ -499,6 +496,25 @@ public class ClassificationManagementUI extends VerticalLayout implements
         }
     }
 
+    private void recursionAddClassification(ClassificationMetaInfo currentClassificationMetaInfo,
+                                            Set<String> alreadyAddedClassificationNameSet,
+                                            Map<String,ClassificationMetaInfo> nameAndClassificationMetaInfoMapping,
+                                            TreeData<ClassificationMetaInfo> treeData){
+        String parentClassificationName = currentClassificationMetaInfo.getParentClassificationName();
+        if(parentClassificationName != null){
+            ClassificationMetaInfo parentClassificationMetaInfo = nameAndClassificationMetaInfoMapping.get(parentClassificationName);
+            if(!alreadyAddedClassificationNameSet.contains(parentClassificationName)){
+                recursionAddClassification(parentClassificationMetaInfo,alreadyAddedClassificationNameSet,nameAndClassificationMetaInfoMapping,treeData);
+            }
+            if(alreadyAddedClassificationNameSet.contains(parentClassificationName)){
+                if(!alreadyAddedClassificationNameSet.contains(currentClassificationMetaInfo.getClassificationName())){
+                    treeData.addItem(parentClassificationMetaInfo,currentClassificationMetaInfo);
+                    alreadyAddedClassificationNameSet.add(currentClassificationMetaInfo.getClassificationName());
+                }
+            }
+        }
+    }
+
     private void refreshClassificationsData(){
         if(this.lastSelectedClassificationMetaInfo != null){
             this.lastSelectedClassificationName = this.lastSelectedClassificationMetaInfo.getClassificationName();
@@ -508,37 +524,36 @@ public class ClassificationManagementUI extends VerticalLayout implements
         try {
             List<ClassificationMetaInfo> classificationsMetaInfoList = coreRealm.getClassificationsMetaInfo();
             List<ClassificationMetaInfo> rootClassificationMetaInfoList = new ArrayList<>();
+            List<ClassificationMetaInfo> otherClassificationMetaInfoList = new ArrayList<>();
+            Set<String> alreadyAddedClassificationNameSet = new HashSet<>();
             Map<String,ClassificationMetaInfo> nameAndClassificationMetaInfoMapping = new HashMap<>();
-            Map<String,String> child_ParentClassificationNameMapping = new HashMap<>();
             classificationsMetaInfoList.forEach(classificationMetaInfo -> {
                 boolean isRootClassification = classificationMetaInfo.isRootClassification();
-                String parentClassificationName = classificationMetaInfo.getParentClassificationName();
                 String currentName = classificationMetaInfo.getClassificationName();
                 nameAndClassificationMetaInfoMapping.put(currentName,classificationMetaInfo);
-                if(parentClassificationName != null){
-                    child_ParentClassificationNameMapping.put(currentName,parentClassificationName);
-                }
                 if(isRootClassification){
                     rootClassificationMetaInfoList.add(classificationMetaInfo);
+                    alreadyAddedClassificationNameSet.add(currentName);
+                }else{
+                    otherClassificationMetaInfoList.add(classificationMetaInfo);
                 }
             });
             TreeData<ClassificationMetaInfo> treeData = new TreeData<>();
             treeData.addRootItems(rootClassificationMetaInfoList);
-            Set<String> childrenClassificationNameSet = child_ParentClassificationNameMapping.keySet();
-            childrenClassificationNameSet.forEach(childClassificationName -> {
-                ClassificationMetaInfo childClassification = nameAndClassificationMetaInfoMapping.get(childClassificationName);
-                String parentClassificationName = child_ParentClassificationNameMapping.get(childClassificationName);
-                ClassificationMetaInfo parentClassification = nameAndClassificationMetaInfoMapping.get(parentClassificationName);
-                treeData.addItem(parentClassification,childClassification);
+            otherClassificationMetaInfoList.forEach(classificationMetaInfo -> {
+                recursionAddClassification(classificationMetaInfo,alreadyAddedClassificationNameSet,nameAndClassificationMetaInfoMapping,treeData);
             });
+
             TreeDataProvider<ClassificationMetaInfo> dataProvider = new TreeDataProvider<>(treeData);
             this.classificationsMetaInfoTreeGrid.setDataProvider(dataProvider);
             this.classificationsMetaInfoTreeGrid.scrollToEnd();
             this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
 
-            classificationMetaInfoMap.clear();
-            for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
-                classificationMetaInfoMap.put(currentClassificationMetaInfo.getClassificationName(),currentClassificationMetaInfo);
+            if(classificationMetaInfoMap != null){
+                classificationMetaInfoMap.clear();
+                for(ClassificationMetaInfo currentClassificationMetaInfo:classificationsMetaInfoList){
+                    classificationMetaInfoMap.put(currentClassificationMetaInfo.getClassificationName(),currentClassificationMetaInfo);
+                }
             }
             ListDataProvider listDataProvider = (ListDataProvider)classificationsMetaInfoFilterGrid.getDataProvider();
             listDataProvider.getItems().clear();
