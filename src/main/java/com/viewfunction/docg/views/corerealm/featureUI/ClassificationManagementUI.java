@@ -467,7 +467,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
             TreeDataProvider<ClassificationMetaInfo> dataProvider = new TreeDataProvider<>(treeData);
             this.classificationsMetaInfoTreeGrid.setDataProvider(dataProvider);
-            this.classificationsMetaInfoTreeGrid.scrollToEnd();
+            //this.classificationsMetaInfoTreeGrid.scrollToEnd();
 
             this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
             this.classificationMetaInfosMetaInfoFilterView = classificationsMetaInfoFilterGrid.setItems(classificationsMetaInfoList);
@@ -553,7 +553,7 @@ public class ClassificationManagementUI extends VerticalLayout implements
 
             TreeDataProvider<ClassificationMetaInfo> dataProvider = new TreeDataProvider<>(treeData);
             this.classificationsMetaInfoTreeGrid.setDataProvider(dataProvider);
-            this.classificationsMetaInfoTreeGrid.scrollToEnd();
+            //this.classificationsMetaInfoTreeGrid.scrollToEnd();
             this.classificationsMetaInfoTreeGrid.expand(classificationsMetaInfoList);
 
             if(classificationMetaInfoMap != null){
