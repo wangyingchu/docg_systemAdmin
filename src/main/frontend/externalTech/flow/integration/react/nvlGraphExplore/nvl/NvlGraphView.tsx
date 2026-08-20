@@ -47,11 +47,12 @@ function buildDefaultExample(): string {
 /* ================================================================
    NvlGraphView — 核心 React 组件
    ================================================================ */
-export function NvlGraphView() {
+// @ts-ignore
+export function NvlGraphView(props) {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [rels, setRels] = useState<Relationship[]>([]);
   const [loading, setLoading] = useState(true);
-  const [dataSource, setDataSource] = useState<'mock' | 'custom'>('mock');
+  const [dataSource, setDataSource] = useState<'mock' | 'custom'>('custom');
   const [expandingId, setExpandingId] = useState<string | null>(null);
   const [initErr, setInitErr] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
@@ -82,12 +83,16 @@ export function NvlGraphView() {
     expandingRef.current = null;
     setExpandingId(null);
 
-    const result = await fetchInitialGraph();
+    //using generateMockData from api.ts
+    //const result = await fetchInitialGraph();
+    //Using real data from server side query result
+    const result = props.graphData;
+
     const nvlNodes: Node[] = result.nodes.map((n: NvlNode) => ({
-      id: n.id, caption: n.caption, color: n.color, size: BASE_SIZE,
+      id: n.id, caption: n.caption+": "+n.id, color: n.color, size: BASE_SIZE,
     }));
     const nvlRels: Relationship[] = result.rels.map((r: NvlRel) => ({
-      id: r.id, from: r.from, to: r.to, caption: r.caption,
+      id: r.id, from: r.from, to: r.to, caption: r.caption+": "+r.id,
     }));
 
     existingIdsRef.current.clear();
@@ -95,7 +100,7 @@ export function NvlGraphView() {
 
     setNodes(nvlNodes);
     setRels(nvlRels);
-    setDataSource('mock');
+    //setDataSource('mock');
     setGraphKey((k) => k + 1);
     setLoading(false);
   }, []);
@@ -176,7 +181,7 @@ export function NvlGraphView() {
     if (minimapEl && !minimapWasReady.current) { minimapWasReady.current = true; setGraphKey((k) => k + 1); }
   }, [minimapEl]);
 
-  useEffect(() => { loadInitialGraph(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {loadInitialGraph();}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* ---- 双击展开 ---- */
   const handleNodeDoubleClick = useCallback(async (node: Node, _hit: HitTargets, _evt: MouseEvent) => {
@@ -291,6 +296,7 @@ export function NvlGraphView() {
       const nvl = nvlRef.current;
       if (!nvl) return;
       const allNodes = nvl.getNodes();
+      if (!allNodes) return;
       if (allNodes.length === 0) return;
       hasFitRef.current = true;
       // @ts-ignore
@@ -304,11 +310,13 @@ export function NvlGraphView() {
 
   const dataSourceLabel = dataSource === 'custom' ? '自定义数据' : '模拟数据';
 
+  /* {dataSourceLabel} | 节点: {nodes.length} | 关系: {rels.length} */
+  /* <button className="nvl-btn" onClick={handleOpenCustomInput} disabled={loading} title="加载自定义图数据">✎ 自定义</button> */
   return (
     <div className="nvl-container">
       {/* 状态栏 */}
       <div className="nvl-status-bar">
-        {dataSourceLabel} | 节点: {nodes.length} | 关系: {rels.length}
+        节点: {nodes.length} | 关系: {rels.length}
         {selectedNodeId && ` | 已选中: ${selectedNodeId}`}
         {dragging && ' | 拖拽中'}{expandingId && ' | 展开中...'}
         <span className="nvl-hint">单击选中 · 双击展开 · 空白取消</span>
@@ -319,8 +327,7 @@ export function NvlGraphView() {
 
       {/* 工具栏 */}
       <div className="nvl-toolbar">
-        <button className="nvl-btn" onClick={handleRefresh} disabled={loading} title="刷新图数据">⟳ 刷新</button>
-        <button className="nvl-btn" onClick={handleOpenCustomInput} disabled={loading} title="加载自定义图数据">✎ 自定义</button>
+        <button className="nvl-btn" onClick={handleRefresh} disabled={loading} title="刷新图谱数据">⟳ </button>
       </div>
 
       {/* NVL 画布 */}
