@@ -83,15 +83,6 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
     private void processGraphExploreData(Set<String> attributeNames,
                                          Map<String, DynamicContentValue.ContentValueType> attributesValueTypeMap,
                                          List<Map<String, DynamicContentValue>>  dynamicContentResultValueList){
-        System.out.println("=======================");
-
-
-        System.out.println("=========processGraphExploreData==============");
-
-
-
-        System.out.println("=======================");
-
         Map<String,String> conceptionEntitiesInfoMap = new HashMap<>();
         List<String> conceptionEntitiesUIDList = new ArrayList<>();
         List<NVLNodePayload> _NVLNodePayloadList = new ArrayList<>();
@@ -115,11 +106,8 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                 if(DynamicContentValue.ContentValueType.ENTITIES_PATH.equals(attributesValueTypeMap.get(currentAttributeName))){
                     EntitiesPath entitiesPath = (EntitiesPath) valueObject;
                 }
-
             }
         }
-
-        System.out.println(conceptionEntitiesInfoMap);
 
         CoreRealm targetCoreRealm = RealmTermFactory.getDefaultCoreRealm();
         List<RelationEntity> additionalConceptionEntitiesRelations = null;
@@ -134,29 +122,14 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                 _NVLEdgePayloadList.add(new NVLEdgePayload(
                         relationEntity.getRelationEntityUID(),relationEntity.getRelationKindName(),
                         relationEntity.getFromConceptionEntityUID(),relationEntity.getToConceptionEntityUID()));
-
             }
         }
-
-        System.out.println(additionalConceptionEntitiesRelations);
-
-        //System.out.println("GraphExploreDataAttributeNames:"+graphExploreDataAttributeNames);
-        //System.out.println("GraphExploreDataAttributeNames:"+graphExploreDataAttributeNames);
-        //System.out.println("GraphExploreDataAttributeNames:"+graphExploreDataAttributeNames);
-        System.out.println("=======================");
-        System.out.println("==========before setstate=============");
 
         Map<String,Object>  graphExploreData= new HashMap<>();
         graphExploreData.put("nodes",_NVLNodePayloadList);
         graphExploreData.put("rels",_NVLEdgePayloadList);
         setState("chartData",graphExploreData);
-
-        System.out.println(graphExploreData);
-
-        System.out.println("=======================");
-        System.out.println("=========after setstate==============");
-
-
     }
+
 
 }

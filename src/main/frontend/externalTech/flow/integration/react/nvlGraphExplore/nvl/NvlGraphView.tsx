@@ -190,6 +190,9 @@ export function NvlGraphView(props) {
     if (expandingRef.current === nodeId) return;
     expandingRef.current = nodeId;
     setExpandingId(nodeId);
+
+    props.nodeDoubleClickAction(node);
+
     try {
       const result = await expandNode(nodeId, existingIdsRef.current, 10);
       if (result.nodes.length === 0) { expandingRef.current = null; setExpandingId(null); return; }
@@ -213,6 +216,7 @@ export function NvlGraphView(props) {
   const handleNodeClick = useCallback((node: Node) => {
     setSelectedNodeId((prev) => prev === node.id ? null : node.id);
     setSelectedRelId(null);
+    props.nodeSelectAction(node);
   }, []);
 
   const handleRelationshipClick = useCallback((rel: Relationship) => {
