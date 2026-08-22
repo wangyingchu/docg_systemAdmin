@@ -3,9 +3,10 @@ import { InteractiveNvlWrapper } from '@neo4j-nvl/react';
 import type { MouseEventCallbacks } from '@neo4j-nvl/react';
 import type { Node, Relationship, HitTargets } from '@neo4j-nvl/base';
 import NVL from '@neo4j-nvl/base';
-import { fetchInitialGraph, expandNode } from './api';
-import type { NvlNode, NvlRel } from './api';
+import { fetchInitialGraph } from './api';
+import type { NvlNode, NvlRel, ExpandRequest, ExpandResult } from './api';
 import { randomHslColor } from './api';
+import type { RenderHooks } from 'Frontend/generated/flow/ReactAdapter';
 // @ts-ignore
 import './NvlGraphView.css';
 
@@ -47,6 +48,12 @@ function buildDefaultExample(): string {
 /* ================================================================
    NvlGraphView — 核心 React 组件
    ================================================================ */
+/** 由 ReactAdapterElement 注入的 hooks，用于与 Java 侧双向通信
+export interface NvlGraphViewProps {
+  adapterHooks: RenderHooks;
+}
+*/
+
 // @ts-ignore
 export function NvlGraphView(props) {
   const [nodes, setNodes] = useState<Node[]>([]);
@@ -56,6 +63,18 @@ export function NvlGraphView(props) {
   const [expandingId, setExpandingId] = useState<string | null>(null);
   const [initErr, setInitErr] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
+
+  const adapterHooks = props.adapterHooks
+  /* ---- Vaadin ReactAdapter 双向通信状态 ----
+     - expandRequest:  React → Java，双击节点时请求 Java 生成扩展数据
+     - expandResult:   Java → React，Java 返回的节点/边数据
+     - selectedNodeId: React → Java，单击选中节点时通知 Java 打印日志 */
+  // @ts-ignore
+  const [expandResult] = adapterHooks.useState<ExpandResult | null>('expandResult', null);
+  // @ts-ignore
+  const [, setExpandRequest] = adapterHooks.useState<ExpandRequest | null>('expandRequest', null);
+  // @ts-ignore
+  const [, setSelectedNodeIdState] = adapterHooks.useState<string | null>('selectedNodeId', null);
 
   // 单击选中
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
@@ -68,10 +87,9 @@ export function NvlGraphView(props) {
 
   const existingIdsRef = useRef<Set<string>>(new Set());
   const expandingRef = useRef<string | null>(null);
+  const latestExpandRequestRef = useRef<string | null>(null);
   const [minimapEl, setMinimapEl] = useState<HTMLDivElement | null>(null);
-
   const nvlRef = useRef<NVL | null>(null);
-
   const [graphKey, setGraphKey] = useState(0);
 
   /* ---- 加载初始图 ---- */
@@ -183,41 +201,59 @@ export function NvlGraphView(props) {
 
   useEffect(() => {loadInitialGraph();}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /* ---- 双击展开 ---- */
-  const handleNodeDoubleClick = useCallback(async (node: Node, _hit: HitTargets, _evt: MouseEvent) => {
+  /* ---- 双击展开：请求 Java 侧生成扩展数据 ---- */
+  const handleNodeDoubleClick = useCallback((node: Node, _hit: HitTargets, _evt: MouseEvent) => {
     if (dragging) return;
     const nodeId = node.id;
     if (expandingRef.current === nodeId) return;
     expandingRef.current = nodeId;
     setExpandingId(nodeId);
 
-    props.nodeDoubleClickAction(node);
+    // 生成唯一 requestId，便于将 Java 的响应与本次双击请求关联
+    const requestId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    latestExpandRequestRef.current = requestId;
 
-    try {
-      const result = await expandNode(nodeId, existingIdsRef.current, 10);
-      if (result.nodes.length === 0) { expandingRef.current = null; setExpandingId(null); return; }
-      setNodes((prev) => {
-        const newColor = randomHslColor();
-        const newNodes: Node[] = result.nodes.map((n) => {
-          existingIdsRef.current.add(n.id);
-          return { id: n.id, caption: n.caption, color: newColor, size: BASE_SIZE };
-        });
-        return [...prev, ...newNodes];
-      });
-      setRels((prev) => [
-        ...prev,
-        ...result.rels.map((r) => ({ id: r.id, from: r.from, to: r.to, caption: r.caption })),
-      ]);
-    } catch (e) { console.error(e); }
-    finally { expandingRef.current = null; setExpandingId(null); }
-  }, [dragging]);
+    // 通过 ReactAdapter 状态通道向 Java 发送 expandRequest，
+    // Java 侧 generateExpandData() 生成数据后通过 expandResult 回传。
+    // 注意：字段名必须用 clickedNodeId，不能用 nodeId，
+    // 否则 Flow 的 MapSyncRpcHandler 会把 nodeId 当作 StateNode 的数字引用。
+    setExpandRequest({ clickedNodeId: nodeId, requestId });
+  }, [dragging, setExpandRequest]);
 
-  /* ---- 单击选中 ---- */
+  /* ---- 接收 Java 返回的扩展数据并合并到图中 ---- */
+  useEffect(() => {
+    if (!expandResult) return;
+    // 只处理与最近一次双击请求匹配的响应
+    if (expandResult.requestId !== latestExpandRequestRef.current) return;
+
+    const newNodes: Node[] = [];
+    const newRels: Relationship[] = [];
+
+    for (const n of expandResult.nodes) {
+      if (existingIdsRef.current.has(n.id)) continue;
+      existingIdsRef.current.add(n.id);
+      newNodes.push({ id: n.id, caption: n.caption, color: n.color, size: BASE_SIZE });
+    }
+    for (const r of expandResult.rels) {
+      if (!existingIdsRef.current.has(r.from) || !existingIdsRef.current.has(r.to)) continue;
+      newRels.push({ id: r.id, from: r.from, to: r.to, caption: r.caption });
+    }
+
+    if (newNodes.length > 0) setNodes((prev) => [...prev, ...newNodes]);
+    if (newRels.length > 0) setRels((prev) => [...prev, ...newRels]);
+
+    expandingRef.current = null;
+    setExpandingId(null);
+  }, [expandResult]);
+
+  /* ---- 单击选中：同步到 Java 侧打印日志 ---- */
   const handleNodeClick = useCallback((node: Node) => {
-    setSelectedNodeId((prev) => prev === node.id ? null : node.id);
+    const next = selectedNodeId === node.id ? null : node.id;
+    setSelectedNodeId(next);
     setSelectedRelId(null);
-    props.nodeSelectAction(node);
-  }, []);
+    // 通过 selectedNodeId 状态通道向 Java 发送节点选中事件
+    setSelectedNodeIdState(next);
+  }, [selectedNodeId, setSelectedNodeIdState]);
 
   const handleRelationshipClick = useCallback((rel: Relationship) => {
     setSelectedRelId((prev) => prev === rel.id ? null : rel.id);

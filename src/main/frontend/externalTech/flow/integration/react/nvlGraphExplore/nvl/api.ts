@@ -31,6 +31,34 @@ export interface QueryResult {
   rels: NvlRel[];
 }
 
+/** Java 侧生成的扩展节点（与 NvlGraphComponent.GraphNode 对应） */
+export interface JavaGraphNode {
+  id: string;
+  caption: string;
+  color: string;
+}
+
+/** Java 侧生成的扩展关系（与 NvlGraphComponent.GraphRel 对应） */
+export interface JavaGraphRel {
+  id: string;
+  from: string;
+  to: string;
+  caption: string;
+}
+
+/** React → Java：双击节点扩展请求（字段名避免使用 nodeId，Flow 会将其误判为 StateNode 引用） */
+export interface ExpandRequest {
+  clickedNodeId: string;
+  requestId: string;
+}
+
+/** Java → React：双击节点扩展结果 */
+export interface ExpandResult {
+  requestId: string;
+  nodes: JavaGraphNode[];
+  rels: JavaGraphRel[];
+}
+
 // ============================================================
 // 工具函数
 // ============================================================
@@ -112,35 +140,6 @@ function generateMockData(): QueryResult {
   return { nodes, rels };
 }
 
-function generateMockExpand(clickedNodeId: string): QueryResult {
-  const mockLabels = ['Person', 'Company', 'Project', 'Skill', 'City'];
-  const mockRelTypes = ['KNOWS', 'WORKS_AT', 'LIVES_IN', 'HAS_SKILL', 'MANAGES', 'OWNS'];
-
-  const newNodes: NvlNode[] = [];
-  const newRels: NvlRel[] = [];
-
-  const count = Math.min(10, 6 + Math.floor(Math.random() * 5));
-
-  for (let i = 0; i < count; i++) {
-    const newNodeId = `mock-expand-${Date.now()}-${i}`;
-    const label = mockLabels[Math.floor(Math.random() * mockLabels.length)];
-    newNodes.push({
-      id: newNodeId,
-      caption: `${label}_exp${i}`,
-      color: randomHslColor(),
-      labels: [label],
-    });
-    newRels.push({
-      id: `mock-rel-expand-${Date.now()}-${i}`,
-      from: clickedNodeId,
-      to: newNodeId,
-      caption: mockRelTypes[Math.floor(Math.random() * mockRelTypes.length)],
-    });
-  }
-
-  return { nodes: newNodes, rels: newRels };
-}
-
 // ============================================================
 // 公开 API
 // ============================================================
@@ -148,18 +147,4 @@ function generateMockExpand(clickedNodeId: string): QueryResult {
 /** 获取初始图数据（模拟数据） */
 export async function fetchInitialGraph(): Promise<QueryResult> {
   return generateMockData();
-}
-
-/**
- * 展开节点的 1 度邻居（模拟数据）
- * @param nodeId  被点击节点的 id
- * @param _existingIds 当前图中已有的所有节点 ID 集合
- * @param _limit   返回上限
- */
-export async function expandNode(
-  nodeId: string,
-  _existingIds: Set<string>,
-  _limit: number = 10
-): Promise<QueryResult> {
-  return generateMockExpand(nodeId);
 }

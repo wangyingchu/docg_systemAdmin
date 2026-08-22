@@ -27,14 +27,14 @@ class NvlGraphReactElement extends ReactAdapterElement {
 
     // @ts-ignore
     const handleNodeSelectAction = (data) => {
-      console.log('handleNodeSelectAction 子组件调用了这个方法，数据：', data);
       // 执行父组件逻辑
+      //console.log('handleNodeSelectAction 子组件调用了这个方法，数据：', data);
     };
 
     // @ts-ignore
     const handleNodeDoubleClickedAction = (data) => {
-      console.log('handleNodeDoubleClickedAction 子组件调用了这个方法，数据：', data);
       // 执行父组件逻辑
+      //console.log('handleNodeDoubleClickedAction 子组件调用了这个方法，数据：', data);
     };
 
     return <NvlGraphView
@@ -42,6 +42,7 @@ class NvlGraphReactElement extends ReactAdapterElement {
         graphData = {getChartGraphData()}
         nodeSelectAction = {handleNodeSelectAction}
         nodeDoubleClickAction = {handleNodeDoubleClickedAction}
+        adapterHooks={hooks}
     />;
   }
 }

@@ -41,19 +41,107 @@ import java.util.*;
 @Tag("nvl-graph-react")
 @JsModule("./externalTech/flow/integration/react/nvlGraphExplore/nvl-graph-adapter.tsx")
 public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
-
     /**
      * 创建一个全尺寸的 NVL 图可视化组件。
      * 默认高度 100%，宽度自动撑满父容器。
      */
     public ExplorationResultGraphExploreChart() {
-        // ReactAdapterComponent 内置 setState/getState 双向同步能力，
-        // 此处暂不需要与 React 侧状态同步，故构造函数为空。
         getElement().getStyle()
                 .set("display", "block")
                 .set("width", "100%")
                 .set("height", "100%");
+        // 步骤 1/2：React 双击节点 -> expandRequest 状态变化 -> generateExpandData 生成数据并回传
+        addStateChangeListener("expandRequest", ExpandRequest.class, this::handleExpandRequest);
+        // ReactAdapterComponent 内置 setState/getState 双向同步能力
+        // 步骤 3/4：React 单击选中节点 -> selectedNodeId 状态变化 -> onNodeSelected 打印日志
+        addStateChangeListener("selectedNodeId", String.class, this::onNodeSelected);
     }
+
+    private static final String[] EXPAND_LABELS = {
+            "Person_A", "Company_A", "Project_A", "Skill_A", "City_A"
+    };
+    private static final String[] EXPAND_REL_TYPES = {
+            "KNOWS", "WORKS_AT", "LIVES_IN", "HAS_SKILL", "MANAGES", "OWNS"
+    };
+    /**
+     * 步骤 1：模拟数据生成方法。
+     * <p>
+     * 随机创建小批量（3~6 个）新节点，并从被双击的 {@code nodeId} 节点连出
+     * 对应数量的关系，供 React NVL 组件双击展开时使用。
+     *
+     * @param nodeId 被双击的节点 id，新关系的 from 端
+     * @return 新生成的节点和边数据
+     */
+    public ExpandData generateExpandData(String nodeId) {
+        if (nodeId == null || nodeId.isBlank()) {
+            throw new IllegalArgumentException("nodeId 不能为空");
+        }
+
+        Random random = new Random();
+        int count = 3 + random.nextInt(4);
+        String batchId = "java-expand-" + UUID.randomUUID().toString().substring(0, 8);
+
+        List<GraphNode> nodes = new ArrayList<>();
+        List<GraphRel> rels = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            String id = batchId + "-" + i;
+            String label = EXPAND_LABELS[random.nextInt(EXPAND_LABELS.length)];
+            nodes.add(new GraphNode(id, label + "_" + i, randomHslColor(random)));
+            rels.add(new GraphRel(batchId + "-rel-" + i, nodeId, id,
+                    EXPAND_REL_TYPES[random.nextInt(EXPAND_REL_TYPES.length)]));
+        }
+        return new ExpandData(nodes, rels);
+    }
+
+    /**
+     * React 双击事件触发的状态监听回调：生成数据并通过 {@code expandResult}
+     * 状态回传给 React。
+     */
+    private void handleExpandRequest(ExpandRequest request) {
+        if (request == null || request.clickedNodeId() == null
+                || request.clickedNodeId().isBlank()) {
+            return;
+        }
+        ExpandData data = generateExpandData(request.clickedNodeId());
+        setState("expandResult",
+                new ExpandResult(request.requestId(), data.nodes(), data.rels()));
+    }
+
+    /**
+     * 步骤 3：节点单击事件监听方法。
+     * <p>
+     * React 侧单击选中节点时，会通过 {@code selectedNodeId} 状态通道
+     * 触发本方法，这里用 {@code System.out.println} 输出节点选中日志。
+     *
+     * @param nodeId 被选中的节点 id；再次单击同一节点取消选中时为 {@code null}
+     */
+    public void onNodeSelected(String nodeId) {
+        System.out.println("[NvlGraphComponent] 节点选中事件: "
+                + (nodeId == null || nodeId.isBlank() ? "(取消选中)" : nodeId));
+    }
+
+    // ============================================================
+    // 通信数据结构（Jackson 序列化/反序列化）
+    // ============================================================
+
+    /** Java 生成并返回给 React 的节点 */
+    public record GraphNode(String id, String caption, String color) {}
+
+    /** Java 生成并返回给 React 的边 */
+    public record GraphRel(String id, String from, String to, String caption) {}
+
+    /** {@link #generateExpandData(String)} 的返回结果 */
+    public record ExpandData(List<GraphNode> nodes, List<GraphRel> rels) {}
+
+    /**
+     * React → Java：双击节点扩展请求。
+     * 字段名使用 clickedNodeId 而不是 nodeId，避免 Flow 的
+     * MapSyncRpcHandler 把 nodeId 当作 StateNode 的数字引用。
+     */
+    public record ExpandRequest(String clickedNodeId, String requestId) {}
+
+    /** Java → React：双击节点扩展结果（带 requestId 便于 React 关联请求） */
+    public record ExpandResult(String requestId, List<GraphNode> nodes, List<GraphRel> rels) {}
 
     public void setGraphExploreData(DynamicContentQueryResult dynamicContentQueryResult){
         if(dynamicContentQueryResult != null){
@@ -131,5 +219,34 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
         setState("chartData",graphExploreData);
     }
 
+    private static String randomHslColor(Random random) {
+        double h = random.nextInt(360) / 360.0;
+        double s = (55 + random.nextInt(25)) / 100.0;
+        double l = (42 + random.nextInt(16)) / 100.0;
+        return hslToHex(h, s, l);
+    }
 
+    private static String hslToHex(double h, double s, double l) {
+        double r, g, b;
+        if (s == 0) {
+            r = g = b = l;
+        } else {
+            double q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            double p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1.0 / 3.0);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1.0 / 3.0);
+        }
+        return String.format("#%02x%02x%02x",
+                Math.round(r * 255), Math.round(g * 255), Math.round(b * 255));
+    }
+
+    private static double hue2rgb(double p, double q, double t) {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1.0 / 6.0) return p + (q - p) * 6 * t;
+        if (t < 1.0 / 2.0) return q;
+        if (t < 2.0 / 3.0) return p + (q - p) * (2.0 / 3.0 - t) * 6;
+        return p;
+    }
 }
