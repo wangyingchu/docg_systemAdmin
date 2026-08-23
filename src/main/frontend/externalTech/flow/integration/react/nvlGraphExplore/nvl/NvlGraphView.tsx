@@ -12,7 +12,7 @@ import './NvlGraphView.css';
 
 /* ---- 常量 ---- */
 const BASE_SIZE = 28;
-const SELECTED_SIZE = 36;
+const SELECTED_SIZE = 28;
 const BASE_REL_WIDTH = 1;
 const SELECTED_REL_WIDTH = 3;
 const BASE_CAPTION_SIZE = 1;

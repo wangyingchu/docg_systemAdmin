@@ -4,13 +4,14 @@ import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.react.ReactAdapterComponent;
+
+import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
 import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceEntityExploreException;
+import com.viewfunction.docg.coreRealm.realmServiceCore.exception.CoreRealmServiceRuntimeException;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentQueryResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentValue;
 import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesPath;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.ConceptionEntity;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.CoreRealm;
-import com.viewfunction.docg.coreRealm.realmServiceCore.term.RelationEntity;
+import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.NVLEdgePayload;
@@ -41,6 +42,10 @@ import java.util.*;
 @Tag("nvl-graph-react")
 @JsModule("./externalTech/flow/integration/react/nvlGraphExplore/nvl-graph-adapter.tsx")
 public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
+
+    private Map<String,Integer> targetConceptionEntityRelationCurrentQueryPageMap;
+    private int currentQueryPageSize = 5;
+
     /**
      * 创建一个全尺寸的 NVL 图可视化组件。
      * 默认高度 100%，宽度自动撑满父容器。
@@ -55,14 +60,18 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
         // ReactAdapterComponent 内置 setState/getState 双向同步能力
         // 步骤 3/4：React 单击选中节点 -> selectedNodeId 状态变化 -> onNodeSelected 打印日志
         addStateChangeListener("selectedNodeId", String.class, this::onNodeSelected);
+
+        this.targetConceptionEntityRelationCurrentQueryPageMap = new HashMap<>();
     }
 
+    /*
     private static final String[] EXPAND_LABELS = {
             "Person_A", "Company_A", "Project_A", "Skill_A", "City_A"
     };
     private static final String[] EXPAND_REL_TYPES = {
             "KNOWS", "WORKS_AT", "LIVES_IN", "HAS_SKILL", "MANAGES", "OWNS"
     };
+    */
     /**
      * 步骤 1：模拟数据生成方法。
      * <p>
@@ -74,21 +83,39 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
      */
     public ExpandData generateExpandData(String nodeId) {
         if (nodeId == null || nodeId.isBlank()) {
-            throw new IllegalArgumentException("nodeId 不能为空");
+            throw new IllegalArgumentException("onceptionEntity UID 不能为空");
         }
-
-        Random random = new Random();
-        int count = 3 + random.nextInt(4);
-        String batchId = "java-expand-" + UUID.randomUUID().toString().substring(0, 8);
 
         List<GraphNode> nodes = new ArrayList<>();
         List<GraphRel> rels = new ArrayList<>();
+
+        Random random = new Random();
+        /*
+        // generate mock data
+        int count = 3 + random.nextInt(4);
+        String batchId = "java-expand-" + UUID.randomUUID().toString().substring(0, 8);
         for (int i = 0; i < count; i++) {
             String id = batchId + "-" + i;
             String label = EXPAND_LABELS[random.nextInt(EXPAND_LABELS.length)];
             nodes.add(new GraphNode(id, label + "_" + i, randomHslColor(random)));
             rels.add(new GraphRel(batchId + "-rel-" + i, nodeId, id,
                     EXPAND_REL_TYPES[random.nextInt(EXPAND_REL_TYPES.length)]));
+        }
+        */
+
+        List<RelationEntity> resultRelations = loadAdditionalTargetConceptionEntityRelationData(nodeId);
+        if(resultRelations != null){
+            resultRelations.forEach(currentRelation ->{
+                String relationName = currentRelation.getRelationKindName();
+                String relationUID = currentRelation.getRelationEntityUID();
+                String fromConceptionEntityUID = currentRelation.getFromConceptionEntityUID();
+                String fromConceptionEntityKind = currentRelation.getFromConceptionEntityKinds().get(0);
+                String toConceptionEntityUID = currentRelation.getToConceptionEntityUID();
+                String toConceptionEntityKind = currentRelation.getToConceptionEntityKinds().get(0);
+                nodes.add(new GraphNode(fromConceptionEntityUID, fromConceptionEntityKind+":"+fromConceptionEntityUID, randomHslColor(random)));
+                nodes.add(new GraphNode(toConceptionEntityUID, toConceptionEntityKind+":"+toConceptionEntityUID, randomHslColor(random)));
+                rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+":"+relationUID));
+            });
         }
         return new ExpandData(nodes, rels);
     }
@@ -217,6 +244,46 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
         graphExploreData.put("nodes",_NVLNodePayloadList);
         graphExploreData.put("rels",_NVLEdgePayloadList);
         setState("chartData",graphExploreData);
+    }
+
+    private List<RelationEntity> loadAdditionalTargetConceptionEntityRelationData(String conceptionEntityUID){
+        List<RelationEntity> totalKindsRelationEntitiesList = new ArrayList<>();
+        CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+        coreRealm.openGlobalSession();
+        try{
+            CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
+            List<String> conceptionEntityUIDsList = new ArrayList<>();
+            conceptionEntityUIDsList.add(conceptionEntityUID);
+            List<ConceptionEntity> resltEntitiesList = crossKindDataOperator.getConceptionEntitiesByUIDs(conceptionEntityUIDsList);
+            if(resltEntitiesList != null && !resltEntitiesList.isEmpty()){
+                ConceptionEntity targetEntity = resltEntitiesList.get(0);
+                int currentEntityQueryPage = 1;
+                if(targetConceptionEntityRelationCurrentQueryPageMap.containsKey(conceptionEntityUID)){
+                    currentEntityQueryPage = targetConceptionEntityRelationCurrentQueryPageMap.get(conceptionEntityUID);
+                }
+                totalKindsRelationEntitiesList = new ArrayList<>();
+                List<String> attachedRelationKinds = targetEntity.listAttachedRelationKinds();
+                //List<String> attachedConceptionKinds = targetEntity.listAttachedConceptionKinds();
+                QueryParameters relationshipQueryParameters = new QueryParameters();
+                relationshipQueryParameters.setStartPage(currentEntityQueryPage);
+                relationshipQueryParameters.setEndPage(currentEntityQueryPage+1);
+                relationshipQueryParameters.setPageSize(currentQueryPageSize);
+                for (String currentRelationKind : attachedRelationKinds) {
+                    relationshipQueryParameters.setEntityKind(currentRelationKind);
+                    List<RelationEntity> currentKindTargetRelationEntityList = targetEntity.getSpecifiedRelations(relationshipQueryParameters, RelationDirection.TWO_WAY);
+                    totalKindsRelationEntitiesList.addAll(currentKindTargetRelationEntityList);
+                }
+                currentEntityQueryPage++;
+                targetConceptionEntityRelationCurrentQueryPageMap.put(conceptionEntityUID,currentEntityQueryPage);
+            }
+        } catch (CoreRealmServiceEntityExploreException e) {
+            throw new RuntimeException(e);
+        } catch (CoreRealmServiceRuntimeException e) {
+            throw new RuntimeException(e);
+        } finally{
+            coreRealm.closeGlobalSession();
+        }
+        return totalKindsRelationEntitiesList;
     }
 
     private static String randomHslColor(Random random) {
