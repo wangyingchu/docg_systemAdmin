@@ -89,9 +89,10 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
         List<GraphNode> nodes = new ArrayList<>();
         List<GraphRel> rels = new ArrayList<>();
 
-        Random random = new Random();
+
         /*
         // generate mock data
+        Random random = new Random();
         int count = 3 + random.nextInt(4);
         String batchId = "java-expand-" + UUID.randomUUID().toString().substring(0, 8);
         for (int i = 0; i < count; i++) {
@@ -105,6 +106,8 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
 
         List<RelationEntity> resultRelations = loadAdditionalTargetConceptionEntityRelationData(nodeId);
         if(resultRelations != null){
+            Random random = new Random();
+            String currentColor = randomHslColor(random);
             resultRelations.forEach(currentRelation ->{
                 String relationName = currentRelation.getRelationKindName();
                 String relationUID = currentRelation.getRelationEntityUID();
@@ -112,8 +115,8 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                 String fromConceptionEntityKind = currentRelation.getFromConceptionEntityKinds().get(0);
                 String toConceptionEntityUID = currentRelation.getToConceptionEntityUID();
                 String toConceptionEntityKind = currentRelation.getToConceptionEntityKinds().get(0);
-                nodes.add(new GraphNode(fromConceptionEntityUID, fromConceptionEntityKind+":"+fromConceptionEntityUID, randomHslColor(random)));
-                nodes.add(new GraphNode(toConceptionEntityUID, toConceptionEntityKind+":"+toConceptionEntityUID, randomHslColor(random)));
+                nodes.add(new GraphNode(fromConceptionEntityUID, fromConceptionEntityKind+":"+fromConceptionEntityUID, currentColor));
+                nodes.add(new GraphNode(toConceptionEntityUID, toConceptionEntityKind+":"+toConceptionEntityUID, currentColor));
                 rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+":"+relationUID));
             });
         }
@@ -206,7 +209,6 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
         for(Map<String, DynamicContentValue> currentContentValue:dynamicContentResultValueList){
             for(String currentAttributeName:attributeNames){
                 Object valueObject = currentContentValue.get(currentAttributeName).getValueObject();
-                System.out.println(valueObject);
                 if(DynamicContentValue.ContentValueType.CONCEPTION_ENTITY.equals(attributesValueTypeMap.get(currentAttributeName))){
                     ConceptionEntity conceptionEntity = (ConceptionEntity) valueObject;
                     conceptionEntitiesInfoMap.put(conceptionEntity.getConceptionEntityUID(),conceptionEntity.getConceptionKindName());

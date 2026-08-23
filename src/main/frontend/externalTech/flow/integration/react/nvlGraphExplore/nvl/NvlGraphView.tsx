@@ -17,6 +17,7 @@ const BASE_REL_WIDTH = 1;
 const SELECTED_REL_WIDTH = 3;
 const BASE_CAPTION_SIZE = 1;
 const SELECTED_CAPTION_SIZE = 3;
+const EXPAND_SIZE = 20;
 
 /* ---- 示例模板 ---- */
 function buildDefaultExample(): string {
@@ -105,9 +106,9 @@ export function NvlGraphView(props) {
     //const result = await fetchInitialGraph();
     //Using real data from server side query result
     const result = props.graphData;
-
+    const currentColor = randomHslColor();
     const nvlNodes: Node[] = result.nodes.map((n: NvlNode) => ({
-      id: n.id, caption: n.caption+": "+n.id, color: n.color, size: BASE_SIZE,
+      id: n.id, caption: n.caption+": "+n.id, color: currentColor, size: BASE_SIZE,
     }));
     const nvlRels: Relationship[] = result.rels.map((r: NvlRel) => ({
       id: r.id, from: r.from, to: r.to, caption: r.caption+": "+r.id,
@@ -232,7 +233,7 @@ export function NvlGraphView(props) {
     for (const n of expandResult.nodes) {
       if (existingIdsRef.current.has(n.id)) continue;
       existingIdsRef.current.add(n.id);
-      newNodes.push({ id: n.id, caption: n.caption, color: n.color, size: BASE_SIZE });
+      newNodes.push({ id: n.id, caption: n.caption, color: n.color, size: EXPAND_SIZE});
     }
     for (const r of expandResult.rels) {
       if (!existingIdsRef.current.has(r.from) || !existingIdsRef.current.has(r.to)) continue;
@@ -286,7 +287,8 @@ export function NvlGraphView(props) {
     return nodes.map((n) => {
       if (n.id === selectedNodeId) return { ...n, selected: true, size: SELECTED_SIZE };
       if (activatedNodeIds.has(n.id)) return { ...n, selected: false, activated: true, size: BASE_SIZE };
-      return { ...n, selected: false, activated: false, size: BASE_SIZE };
+      //return { ...n, selected: false, activated: false, size: BASE_SIZE};
+      return { ...n, selected: false, activated: false};
     });
   }, [nodes, selectedNodeId, activatedNodeIds]);
 
