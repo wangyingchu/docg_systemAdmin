@@ -76,6 +76,8 @@ export function NvlGraphView(props) {
   const [, setExpandRequest] = adapterHooks.useState<ExpandRequest | null>('expandRequest', null);
   // @ts-ignore
   const [, setSelectedNodeIdState] = adapterHooks.useState<string | null>('selectedNodeId', null);
+  // @ts-ignore
+  const [, setRefreshGraphState] = adapterHooks.useState<string | null>('refreshGraph', null);
 
   // 单击选中
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
@@ -127,7 +129,10 @@ export function NvlGraphView(props) {
   }, []);
 
   /* ---- 刷新 ---- */
-  const handleRefresh = useCallback(() => { loadInitialGraph(); }, [loadInitialGraph]);
+  const handleRefresh = useCallback(() => {
+    loadInitialGraph();
+    setRefreshGraphState("FRESH");
+    }, [loadInitialGraph]);
 
   /* ---- 自定义数据 ---- */
   const handleOpenCustomInput = useCallback(() => {

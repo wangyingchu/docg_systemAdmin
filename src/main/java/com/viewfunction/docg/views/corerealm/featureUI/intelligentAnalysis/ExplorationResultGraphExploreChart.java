@@ -64,6 +64,8 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
         // 步骤 3/4：React 单击选中节点 -> selectedNodeId 状态变化 -> onNodeSelected 打印日志
         addStateChangeListener("selectedNodeId", String.class, this::onNodeSelected);
 
+        addStateChangeListener("refreshGraph", String.class, this::handleRefreshGraph);
+
         this.targetConceptionEntityRelationCurrentQueryPageMap = new HashMap<>();
         this.expandedConceptionEntityUIDsMap = new HashMap<>();
         this.initialConceptionEntityUIDsSet = new HashSet<>();
@@ -88,12 +90,10 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
      */
     public ExpandData generateExpandData(String nodeId) {
         if (nodeId == null || nodeId.isBlank()) {
-            throw new IllegalArgumentException("onceptionEntity UID 不能为空");
+            throw new IllegalArgumentException("conceptionEntity UID 不能为空");
         }
-
         List<GraphNode> nodes = new ArrayList<>();
         List<GraphRel> rels = new ArrayList<>();
-
         /*
         // generate mock data
         Random random = new Random();
@@ -107,7 +107,6 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                     EXPAND_REL_TYPES[random.nextInt(EXPAND_REL_TYPES.length)]));
         }
         */
-
         List<RelationEntity> resultRelations = loadAdditionalTargetConceptionEntityRelationData(nodeId);
 
         if(!expandedConceptionEntityUIDsMap.containsKey(nodeId)){
@@ -185,6 +184,12 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
     public void onNodeSelected(String nodeId) {
         System.out.println("[NvlGraphComponent] 节点选中事件: "
                 + (nodeId == null || nodeId.isBlank() ? "(取消选中)" : nodeId));
+    }
+
+    private void handleRefreshGraph(String refreshFlag){
+        //System.out.println("Refresh Graph");
+        this.targetConceptionEntityRelationCurrentQueryPageMap.clear();
+        this.expandedConceptionEntityUIDsMap.clear();
     }
 
     // ============================================================
