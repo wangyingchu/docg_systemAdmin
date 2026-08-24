@@ -14,6 +14,7 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.structure.EntitiesPath;
 import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
+
 import com.viewfunction.docg.element.visualizationComponent.payload.common.NVLEdgePayload;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.NVLNodePayload;
 
@@ -45,6 +46,7 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
 
     private Map<String,Integer> targetConceptionEntityRelationCurrentQueryPageMap;
     private int currentQueryPageSize = 5;
+    private Map<String,List<String>> expandedConceptionEntityUIDsMap;
 
     /**
      * 创建一个全尺寸的 NVL 图可视化组件。
@@ -62,6 +64,7 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
         addStateChangeListener("selectedNodeId", String.class, this::onNodeSelected);
 
         this.targetConceptionEntityRelationCurrentQueryPageMap = new HashMap<>();
+        this.expandedConceptionEntityUIDsMap = new HashMap<>();
     }
 
     /*
@@ -89,7 +92,6 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
         List<GraphNode> nodes = new ArrayList<>();
         List<GraphRel> rels = new ArrayList<>();
 
-
         /*
         // generate mock data
         Random random = new Random();
@@ -105,6 +107,12 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
         */
 
         List<RelationEntity> resultRelations = loadAdditionalTargetConceptionEntityRelationData(nodeId);
+
+        if(!expandedConceptionEntityUIDsMap.containsKey(nodeId)){
+            expandedConceptionEntityUIDsMap.put(nodeId,new ArrayList<>());
+        }
+        List<String> expandedConceptionEntityUIDs = expandedConceptionEntityUIDsMap.get(nodeId);
+
         if(resultRelations != null){
             Random random = new Random();
             String currentColor = randomHslColor(random);
@@ -115,10 +123,34 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                 String fromConceptionEntityKind = currentRelation.getFromConceptionEntityKinds().get(0);
                 String toConceptionEntityUID = currentRelation.getToConceptionEntityUID();
                 String toConceptionEntityKind = currentRelation.getToConceptionEntityKinds().get(0);
-                nodes.add(new GraphNode(fromConceptionEntityUID, fromConceptionEntityKind+":"+fromConceptionEntityUID, currentColor));
-                nodes.add(new GraphNode(toConceptionEntityUID, toConceptionEntityKind+":"+toConceptionEntityUID, currentColor));
-                rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+":"+relationUID));
+                nodes.add(new GraphNode(fromConceptionEntityUID, fromConceptionEntityKind+":"+fromConceptionEntityUID, currentColor,true));
+                nodes.add(new GraphNode(toConceptionEntityUID, toConceptionEntityKind+":"+toConceptionEntityUID, currentColor,true));
+                rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+":"+relationUID,true));
+                if(nodeId.equals(fromConceptionEntityUID)){
+                    expandedConceptionEntityUIDs.add(toConceptionEntityUID);
+                }else{
+                    expandedConceptionEntityUIDs.add(fromConceptionEntityUID);
+                }
             });
+        }
+
+        if(!expandedConceptionEntityUIDs.isEmpty()){
+            CoreRealm coreRealm = RealmTermFactory.getDefaultCoreRealm();
+            CrossKindDataOperator crossKindDataOperator = coreRealm.getCrossKindDataOperator();
+            try {
+                List<RelationEntity> resultRelationsOfExpandedEntities =crossKindDataOperator.getRelationsOfConceptionEntityPair(expandedConceptionEntityUIDs);
+                if(resultRelationsOfExpandedEntities != null){
+                    resultRelationsOfExpandedEntities.forEach(currentRelation ->{
+                        String relationName = currentRelation.getRelationKindName();
+                        String relationUID = currentRelation.getRelationEntityUID();
+                        String fromConceptionEntityUID = currentRelation.getFromConceptionEntityUID();
+                        String toConceptionEntityUID = currentRelation.getToConceptionEntityUID();
+                        rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+":"+relationUID,false));
+                    });
+                }
+            } catch (CoreRealmServiceEntityExploreException e) {
+                throw new RuntimeException(e);
+            }
         }
         return new ExpandData(nodes, rels);
     }
@@ -155,10 +187,10 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
     // ============================================================
 
     /** Java 生成并返回给 React 的节点 */
-    public record GraphNode(String id, String caption, String color) {}
+    public record GraphNode(String id, String caption, String color,boolean initialNode) {}
 
     /** Java 生成并返回给 React 的边 */
-    public record GraphRel(String id, String from, String to, String caption) {}
+    public record GraphRel(String id, String from, String to, String caption,boolean initialRel) {}
 
     /** {@link #generateExpandData(String)} 的返回结果 */
     public record ExpandData(List<GraphNode> nodes, List<GraphRel> rels) {}
@@ -215,7 +247,7 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                     conceptionEntitiesUIDList.add(conceptionEntity.getConceptionEntityUID());
                     List<String> entityLabels = new ArrayList<>();
                     entityLabels.add(conceptionEntity.getConceptionKindName());
-                    _NVLNodePayloadList.add(new NVLNodePayload(conceptionEntity.getConceptionEntityUID(),conceptionEntity.getConceptionKindName(),entityLabels));
+                    _NVLNodePayloadList.add(new NVLNodePayload(conceptionEntity.getConceptionEntityUID(),conceptionEntity.getConceptionKindName(),entityLabels,true));
                 }
                 if(DynamicContentValue.ContentValueType.RELATION_ENTITY.equals(attributesValueTypeMap.get(currentAttributeName))){
                     RelationEntity relationEntity = (RelationEntity) valueObject;
@@ -238,7 +270,7 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
             for(RelationEntity relationEntity:additionalConceptionEntitiesRelations){
                 _NVLEdgePayloadList.add(new NVLEdgePayload(
                         relationEntity.getRelationEntityUID(),relationEntity.getRelationKindName(),
-                        relationEntity.getFromConceptionEntityUID(),relationEntity.getToConceptionEntityUID()));
+                        relationEntity.getFromConceptionEntityUID(),relationEntity.getToConceptionEntityUID(),true));
             }
         }
 

@@ -17,7 +17,7 @@ const BASE_REL_WIDTH = 1;
 const SELECTED_REL_WIDTH = 3;
 const BASE_CAPTION_SIZE = 1;
 const SELECTED_CAPTION_SIZE = 3;
-const EXPAND_SIZE = 20;
+const EXPAND_SIZE = 18;
 
 /* ---- 示例模板 ---- */
 function buildDefaultExample(): string {
@@ -108,10 +108,12 @@ export function NvlGraphView(props) {
     const result = props.graphData;
     const currentColor = randomHslColor();
     const nvlNodes: Node[] = result.nodes.map((n: NvlNode) => ({
-      id: n.id, caption: n.caption+": "+n.id, color: currentColor, size: BASE_SIZE,
+      id: n.id, caption: n.caption+": "+n.id, color: currentColor, size: BASE_SIZE
     }));
     const nvlRels: Relationship[] = result.rels.map((r: NvlRel) => ({
-      id: r.id, from: r.from, to: r.to, caption: r.caption+": "+r.id,
+      //id: r.id, from: r.from, to: r.to, caption: r.caption+": "+r.id,
+      // @ts-ignore
+      id: r.id, from: r.from, to: r.to, caption: r.caption+": "+r.id, initialRel: r.initialRel,
     }));
 
     existingIdsRef.current.clear();
@@ -237,7 +239,9 @@ export function NvlGraphView(props) {
     }
     for (const r of expandResult.rels) {
       if (!existingIdsRef.current.has(r.from) || !existingIdsRef.current.has(r.to)) continue;
-      newRels.push({ id: r.id, from: r.from, to: r.to, caption: r.caption });
+      //newRels.push({ id: r.id, from: r.from, to: r.to, caption: r.caption});
+      // @ts-ignore
+      newRels.push({ id: r.id, from: r.from, to: r.to, caption: r.caption,initialRel: r.initialRel});
     }
 
     if (newNodes.length > 0) setNodes((prev) => [...prev, ...newNodes]);
@@ -296,12 +300,15 @@ export function NvlGraphView(props) {
     return rels.map((r) => {
       const isSelected = r.id === selectedRelId;
       const isNeighbor = selectedNodeId !== null && (r.from === selectedNodeId || r.to === selectedNodeId);
+      // @ts-ignore
+      let currentColor = r.initialRel ? (r as any).color ?? undefined : '#ABABAB';
       return {
         ...r,
         selected: isSelected,
         width: isSelected ? SELECTED_REL_WIDTH : isNeighbor ? BASE_REL_WIDTH + 1 : BASE_REL_WIDTH,
         captionSize: isSelected ? SELECTED_CAPTION_SIZE : BASE_CAPTION_SIZE,
-        color: isNeighbor ? '#88aacc' : (r as any).color ?? undefined,
+        //color: isNeighbor ? '#88aacc' : (r as any).color ?? undefined,
+        color: isNeighbor ? '#88aacc' : currentColor,
       };
     });
   }, [rels, selectedRelId, selectedNodeId]);

@@ -6,12 +6,14 @@ public class NVLEdgePayload {
     private String from;
     private String to;
     private String caption;
+    private boolean initialRel;
 
-    public NVLEdgePayload(String id,String caption,String from,String to) {
+    public NVLEdgePayload(String id,String caption,String from,String to,boolean initialRel) {
         this.id = id;
         this.from = from;
         this.to = to;
         this.caption = caption;
+        this.initialRel = initialRel;
     }
 
     public String getId() {
@@ -44,5 +46,13 @@ public class NVLEdgePayload {
 
     public void setCaption(String caption) {
         this.caption = caption;
+    }
+
+    public boolean isInitialRel() {
+        return initialRel;
+    }
+
+    public void setInitialRel(boolean initialRel) {
+        this.initialRel = initialRel;
     }
 }
