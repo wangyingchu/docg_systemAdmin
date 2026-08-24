@@ -47,6 +47,7 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
     private Map<String,Integer> targetConceptionEntityRelationCurrentQueryPageMap;
     private int currentQueryPageSize = 5;
     private Map<String,List<String>> expandedConceptionEntityUIDsMap;
+    private Set<String> initialConceptionEntityUIDsSet;
 
     /**
      * 创建一个全尺寸的 NVL 图可视化组件。
@@ -65,6 +66,7 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
 
         this.targetConceptionEntityRelationCurrentQueryPageMap = new HashMap<>();
         this.expandedConceptionEntityUIDsMap = new HashMap<>();
+        this.initialConceptionEntityUIDsSet = new HashSet<>();
     }
 
     /*
@@ -123,9 +125,12 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                 String fromConceptionEntityKind = currentRelation.getFromConceptionEntityKinds().get(0);
                 String toConceptionEntityUID = currentRelation.getToConceptionEntityUID();
                 String toConceptionEntityKind = currentRelation.getToConceptionEntityKinds().get(0);
-                nodes.add(new GraphNode(fromConceptionEntityUID, fromConceptionEntityKind+":"+fromConceptionEntityUID, currentColor,true));
-                nodes.add(new GraphNode(toConceptionEntityUID, toConceptionEntityKind+":"+toConceptionEntityUID, currentColor,true));
-                rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+":"+relationUID,true));
+                boolean isInitialRel = initialConceptionEntityUIDsSet.contains(nodeId) ? true : false;
+                boolean isFromInitialNode = initialConceptionEntityUIDsSet.contains(fromConceptionEntityUID) ? true : false;
+                boolean isToInitialNode = initialConceptionEntityUIDsSet.contains(toConceptionEntityUID) ? true : false;
+                nodes.add(new GraphNode(fromConceptionEntityUID, fromConceptionEntityKind+":"+fromConceptionEntityUID, currentColor,isFromInitialNode));
+                nodes.add(new GraphNode(toConceptionEntityUID, toConceptionEntityKind+":"+toConceptionEntityUID, currentColor,isToInitialNode));
+                rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+":"+relationUID,isInitialRel));
                 if(nodeId.equals(fromConceptionEntityUID)){
                     expandedConceptionEntityUIDs.add(toConceptionEntityUID);
                 }else{
@@ -248,6 +253,7 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                     List<String> entityLabels = new ArrayList<>();
                     entityLabels.add(conceptionEntity.getConceptionKindName());
                     _NVLNodePayloadList.add(new NVLNodePayload(conceptionEntity.getConceptionEntityUID(),conceptionEntity.getConceptionKindName(),entityLabels,true));
+                    this.initialConceptionEntityUIDsSet.add(conceptionEntity.getConceptionEntityUID());
                 }
                 if(DynamicContentValue.ContentValueType.RELATION_ENTITY.equals(attributesValueTypeMap.get(currentAttributeName))){
                     RelationEntity relationEntity = (RelationEntity) valueObject;
