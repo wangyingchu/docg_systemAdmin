@@ -138,9 +138,9 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                 boolean isInitialRel = initialConceptionEntityUIDsSet.contains(nodeId) ? true : false;
                 boolean isFromInitialNode = initialConceptionEntityUIDsSet.contains(fromConceptionEntityUID) ? true : false;
                 boolean isToInitialNode = initialConceptionEntityUIDsSet.contains(toConceptionEntityUID) ? true : false;
-                nodes.add(new GraphNode(fromConceptionEntityUID, fromConceptionEntityKind+":"+fromConceptionEntityUID, currentColor,isFromInitialNode));
-                nodes.add(new GraphNode(toConceptionEntityUID, toConceptionEntityKind+":"+toConceptionEntityUID, currentColor,isToInitialNode));
-                rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+":"+relationUID,isInitialRel));
+                nodes.add(new GraphNode(fromConceptionEntityUID, fromConceptionEntityKind+": "+fromConceptionEntityUID, currentColor,isFromInitialNode));
+                nodes.add(new GraphNode(toConceptionEntityUID, toConceptionEntityKind+": "+toConceptionEntityUID, currentColor,isToInitialNode));
+                rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+": "+relationUID,isInitialRel));
                 if(nodeId.equals(fromConceptionEntityUID)){
                     expandedConceptionEntityUIDs.add(toConceptionEntityUID);
                 }else{
@@ -160,7 +160,7 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                         String relationUID = currentRelation.getRelationEntityUID();
                         String fromConceptionEntityUID = currentRelation.getFromConceptionEntityUID();
                         String toConceptionEntityUID = currentRelation.getToConceptionEntityUID();
-                        rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+":"+relationUID,false));
+                        rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+": "+relationUID,false));
                     });
                 }
             } catch (CoreRealmServiceEntityExploreException e) {
