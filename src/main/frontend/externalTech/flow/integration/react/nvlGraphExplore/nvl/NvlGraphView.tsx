@@ -244,8 +244,10 @@ export function NvlGraphView(props) {
   /* ---- 接收 Java 返回的扩展数据并合并到图中 ---- */
   useEffect(() => {
     if (!expandResult) return;
-    // 只处理与最近一次双击请求匹配的响应
-    if (expandResult.requestId !== latestExpandRequestRef.current) return;
+    // 只处理与最近一次双击请求匹配的响应。从 Java 端发起 expandRequest 时 requestId 值为空，忽略双击请求匹配检查
+    if(expandResult.requestId){
+      if (expandResult.requestId !== latestExpandRequestRef.current) return;
+    }
 
     const newNodes: Node[] = [];
     const newRels: Relationship[] = [];
