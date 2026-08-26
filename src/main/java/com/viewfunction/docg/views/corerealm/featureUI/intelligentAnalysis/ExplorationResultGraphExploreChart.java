@@ -1,8 +1,15 @@
 package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
+import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.react.ReactAdapterComponent;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.analysis.query.QueryParameters;
@@ -15,8 +22,11 @@ import com.viewfunction.docg.coreRealm.realmServiceCore.term.*;
 import com.viewfunction.docg.coreRealm.realmServiceCore.util.factory.RealmTermFactory;
 import com.viewfunction.docg.coreRealm.realmServiceCore.operator.CrossKindDataOperator;
 
+import com.viewfunction.docg.element.commonComponent.FullScreenWindow;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.NVLEdgePayload;
 import com.viewfunction.docg.element.visualizationComponent.payload.common.NVLNodePayload;
+import com.viewfunction.docg.views.corerealm.featureUI.conceptionKindManagement.maintainConceptionEntity.ConceptionEntityDetailUI;
+import com.viewfunction.docg.views.corerealm.featureUI.relationKindManagement.maintainRelationEntity.RelationEntityDetailUI;
 
 import java.util.*;
 
@@ -65,6 +75,7 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
         addStateChangeListener("selectedNodeId", String.class, this::onNodeSelected);
 
         addStateChangeListener("refreshGraph", String.class, this::handleRefreshGraph);
+        addStateChangeListener("clickGraphContextMenu", ContextMenuClickGraphElement.class, this::handleRightClickGraphElement);
 
         this.targetConceptionEntityRelationCurrentQueryPageMap = new HashMap<>();
         this.expandedConceptionEntityUIDsMap = new HashMap<>();
@@ -192,6 +203,26 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
         this.expandedConceptionEntityUIDsMap.clear();
     }
 
+    private void handleRightClickGraphElement(ContextMenuClickGraphElement contextMenuClickGraphElement){
+        if(contextMenuClickGraphElement != null){
+            String entityUID = contextMenuClickGraphElement.clickedElementId;
+            String optionName = contextMenuClickGraphElement.menuOptionName();
+            String entityCaption = contextMenuClickGraphElement.clickedElementCaption;
+            String entityKind = entityCaption.replace(": "+entityUID,"");
+            if("拓展子图".equals(optionName)){
+                ExpandRequest expandRequest = new ExpandRequest(entityUID,null);
+                handleExpandRequest(expandRequest);
+            }else if("显示详情".equals(optionName)){
+                String elementType = contextMenuClickGraphElement.graphElementType();
+                if("relationship".equals(elementType)){
+                    renderRelationEntityUI(entityKind,entityUID);
+                }else if("node".equals(elementType)){
+                    renderConceptionEntityUI(entityKind,entityUID);
+                }
+            }
+        }
+    }
+
     // ============================================================
     // 通信数据结构（Jackson 序列化/反序列化）
     // ============================================================
@@ -214,6 +245,11 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
 
     /** Java → React：双击节点扩展结果（带 requestId 便于 React 关联请求） */
     public record ExpandResult(String requestId, List<GraphNode> nodes, List<GraphRel> rels) {}
+
+    /**
+     * React → Java：点击右键弹出Context menu 选项 时间处理
+     */
+    public record ContextMenuClickGraphElement(String menuOptionName,String graphElementType,String clickedElementCaption,String clickedElementId) {}
 
     public void setGraphExploreData(DynamicContentQueryResult dynamicContentQueryResult){
         if(dynamicContentQueryResult != null){
@@ -360,5 +396,117 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
         if (t < 1.0 / 2.0) return q;
         if (t < 2.0 / 3.0) return p + (q - p) * (2.0 / 3.0 - t) * 6;
         return p;
+    }
+
+    private void renderConceptionEntityUI(String conceptionKind,String conceptionEntityUID){
+        ConceptionEntityDetailUI conceptionEntityDetailUI = new ConceptionEntityDetailUI(conceptionKind,conceptionEntityUID);
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8, Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon conceptionKindIcon = VaadinIcon.CUBE.create();
+        conceptionKindIcon.setSize("10px");
+        titleDetailLayout.add(conceptionKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(conceptionKind);
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon conceptionEntityIcon = VaadinIcon.KEY_O.create();
+        conceptionEntityIcon.setSize("10px");
+        titleDetailLayout.add(conceptionEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel conceptionEntityUIDLabel = new NativeLabel(conceptionEntityUID);
+        titleDetailLayout.add(conceptionEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.CUBE),"概念实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(conceptionEntityDetailUI);
+        conceptionEntityDetailUI.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
+    }
+
+    private void renderRelationEntityUI(String relationKind,String relationEntityUID){
+        RelationEntityDetailUI relationEntityDetailUI = new RelationEntityDetailUI(relationKind,relationEntityUID);
+
+        List<Component> actionComponentList = new ArrayList<>();
+
+        HorizontalLayout titleDetailLayout = new HorizontalLayout();
+        titleDetailLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        titleDetailLayout.setSpacing(false);
+
+        Icon footPrintStartIcon = VaadinIcon.TERMINAL.create();
+        footPrintStartIcon.setSize("14px");
+        footPrintStartIcon.getStyle().set("color","var(--lumo-contrast-50pct)");
+        titleDetailLayout.add(footPrintStartIcon);
+        HorizontalLayout spaceDivLayout1 = new HorizontalLayout();
+        spaceDivLayout1.setWidth(8,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout1);
+
+        Icon relationKindIcon = VaadinIcon.CONNECT_O.create();
+        relationKindIcon.setSize("10px");
+        titleDetailLayout.add(relationKindIcon);
+        HorizontalLayout spaceDivLayout2 = new HorizontalLayout();
+        spaceDivLayout2.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout2);
+        NativeLabel conceptionKindNameLabel = new NativeLabel(relationKind);
+        titleDetailLayout.add(conceptionKindNameLabel);
+
+        HorizontalLayout spaceDivLayout3 = new HorizontalLayout();
+        spaceDivLayout3.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout3);
+
+        Icon divIcon = VaadinIcon.ITALIC.create();
+        divIcon.setSize("8px");
+        titleDetailLayout.add(divIcon);
+
+        HorizontalLayout spaceDivLayout4 = new HorizontalLayout();
+        spaceDivLayout4.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout4);
+
+        Icon relationEntityIcon = VaadinIcon.KEY_O.create();
+        relationEntityIcon.setSize("10px");
+        titleDetailLayout.add(relationEntityIcon);
+
+        HorizontalLayout spaceDivLayout5 = new HorizontalLayout();
+        spaceDivLayout5.setWidth(5,Unit.PIXELS);
+        titleDetailLayout.add(spaceDivLayout5);
+        NativeLabel relationEntityUIDLabel = new NativeLabel(relationEntityUID);
+        titleDetailLayout.add(relationEntityUIDLabel);
+
+        actionComponentList.add(titleDetailLayout);
+
+        FullScreenWindow fullScreenWindow = new FullScreenWindow(new Icon(VaadinIcon.CONNECT_O),"关系实体详情",actionComponentList,null,true);
+        fullScreenWindow.setWindowContent(relationEntityDetailUI);
+        relationEntityDetailUI.setContainerDialog(fullScreenWindow);
+        fullScreenWindow.show();
     }
 }

@@ -87,6 +87,8 @@ export function NvlGraphView(props) {
   const [, setSelectedNodeIdState] = adapterHooks.useState<string | null>('selectedNodeId', null);
   // @ts-ignore
   const [, setRefreshGraphState] = adapterHooks.useState<string | null>('refreshGraph', null);
+  // @ts-ignore
+  const [, setClickGraphContextMenuState] = adapterHooks.useState<string | null>('clickGraphContextMenu', null);
 
   // 单击选中
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
@@ -371,6 +373,12 @@ export function NvlGraphView(props) {
         `菜单选项: ${actionName} | 对象类型: ${contextMenu.kind === 'node' ? '节点' : '边'} | caption: ${contextMenu.caption} | id: ${contextMenu.id}`
     );
     setContextMenu(null);
+    setClickGraphContextMenuState({
+      menuOptionName:actionName,
+      graphElementType:contextMenu.kind,
+      clickedElementCaption:contextMenu.caption,
+      clickedElementId:contextMenu.id
+    });
   }, [contextMenu]);
 
   /* ---- NVL 配置 ---- */
