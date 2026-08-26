@@ -19,6 +19,14 @@ const BASE_CAPTION_SIZE = 1;
 const SELECTED_CAPTION_SIZE = 3;
 const EXPAND_SIZE = 18;
 
+type ContextMenuState = {
+  x: number;
+  y: number;
+  kind: 'node' | 'relationship';
+  id: string;
+  caption: string;
+};
+
 /* ---- 示例模板 ---- */
 function buildDefaultExample(): string {
   const example = {
@@ -64,6 +72,7 @@ export function NvlGraphView(props) {
   const [expandingId, setExpandingId] = useState<string | null>(null);
   const [initErr, setInitErr] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
+  const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
 
   const adapterHooks = props.adapterHooks
   /* ---- Vaadin ReactAdapter 双向通信状态 ----
@@ -103,6 +112,7 @@ export function NvlGraphView(props) {
     setSelectedRelId(null);
     expandingRef.current = null;
     setExpandingId(null);
+    setContextMenu(null);
 
     //using generateMockData from api.ts
     //const result = await fetchInitialGraph();
@@ -191,6 +201,7 @@ export function NvlGraphView(props) {
     expandingRef.current = null;
     setExpandingId(null);
     setDataSource('custom');
+    setContextMenu(null);
     existingIdsRef.current = new Set(existingIds);
     setNodes(nvlNodes);
     setRels(nvlRels);
@@ -216,7 +227,7 @@ export function NvlGraphView(props) {
     if (expandingRef.current === nodeId) return;
     expandingRef.current = nodeId;
     setExpandingId(nodeId);
-
+    setContextMenu(null);
     // 生成唯一 requestId，便于将 Java 的响应与本次双击请求关联
     const requestId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     latestExpandRequestRef.current = requestId;
@@ -261,6 +272,7 @@ export function NvlGraphView(props) {
     const next = selectedNodeId === node.id ? null : node.id;
     setSelectedNodeId(next);
     setSelectedRelId(null);
+    setContextMenu(null);
     // 通过 selectedNodeId 状态通道向 Java 发送节点选中事件
     setSelectedNodeIdState(next);
   }, [selectedNodeId, setSelectedNodeIdState]);
@@ -268,11 +280,13 @@ export function NvlGraphView(props) {
   const handleRelationshipClick = useCallback((rel: Relationship) => {
     setSelectedRelId((prev) => prev === rel.id ? null : rel.id);
     setSelectedNodeId(null);
+    setContextMenu(null);
   }, []);
 
   const handleCanvasClick = useCallback(() => {
     setSelectedNodeId(null);
     setSelectedRelId(null);
+    setContextMenu(null);
   }, []);
 
   /* ---- 激活节点（选中节点的邻居 + 选中边的两端） ---- */
@@ -318,12 +332,56 @@ export function NvlGraphView(props) {
     });
   }, [rels, selectedRelId, selectedNodeId]);
 
+  // 右键节点：弹出上下文菜单
+  const handleNodeRightClick = useCallback((node: Node, _hit: HitTargets, event: MouseEvent) => {
+
+    setContextMenu({
+      x: Math.max(0, Math.min(event.layerX, window.innerWidth - 160)),
+      y: Math.max(0, Math.min(event.layerY, window.innerHeight - 100)),
+      //x:event.layerX,
+      //y:event.layerY,
+      kind: 'node',
+      id: node.id,
+      caption: node.caption ?? '',
+    });
+  }, []);
+
+  // 右键边：弹出上下文菜单
+  const handleRelationshipRightClick = useCallback((rel: Relationship, _hit: HitTargets, event: MouseEvent) => {
+
+    setContextMenu({
+      x: Math.max(0, Math.min(event.layerX, window.innerWidth - 160)),
+      y: Math.max(0, Math.min(event.layerY, window.innerHeight - 100)),
+      kind: 'relationship',
+      id: rel.id,
+      caption: rel.caption ?? '',
+    });
+  }, []);
+
+  // 右键空白：关闭上下文菜单
+  const handleCanvasRightClick = useCallback(() => {
+    setContextMenu(null);
+  }, []);
+
+  // 承接 context menu 菜单项的点击事件：
+  // 打印菜单选项名称、右键点击对象类型（节点/边）、caption 和 id
+  const handleContextMenuAction = useCallback((actionName: string) => {
+    if (!contextMenu) return;
+    console.log(
+        `菜单选项: ${actionName} | 对象类型: ${contextMenu.kind === 'node' ? '节点' : '边'} | caption: ${contextMenu.caption} | id: ${contextMenu.id}`
+    );
+    setContextMenu(null);
+  }, [contextMenu]);
+
   /* ---- NVL 配置 ---- */
   const mouseCallbacks: MouseEventCallbacks = {
     onNodeClick: handleNodeClick,
     onNodeDoubleClick: handleNodeDoubleClick,
     onRelationshipClick: handleRelationshipClick,
     onCanvasClick: handleCanvasClick,
+    onNodeRightClick: handleNodeRightClick,
+    onRelationshipRightClick: handleRelationshipRightClick,
+    onCanvasRightClick: handleCanvasRightClick,
     onDragStart: () => setDragging(true),
     onDragEnd: () => setDragging(false),
     onZoom: true,
@@ -395,6 +453,24 @@ export function NvlGraphView(props) {
         mouseEventCallbacks={mouseCallbacks}
         onInitializationError={(e) => setInitErr(String(e))}
       />
+
+      {/* 右键上下文菜单 */}
+      {contextMenu && (
+          <div
+              className="nvl-context-menu"
+              style={{ left: contextMenu.x, top: contextMenu.y }}
+              onContextMenu={(e) => e.preventDefault()}
+          >
+            <button type="button" className="nvl-context-menu-item" onClick={() => handleContextMenuAction('显示详情')}>
+              显示详情
+            </button>
+            {contextMenu.kind === 'node' && (
+                <button type="button" className="nvl-context-menu-item" onClick={() => handleContextMenuAction('拓展子图')}>
+                  拓展子图
+                </button>
+            )}
+          </div>
+      )}
 
       {/* 自定义数据模态框 */}
       {showCustomInput && (
