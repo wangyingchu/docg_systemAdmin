@@ -375,12 +375,17 @@ export function NvlGraphView(props) {
         `菜单选项: ${actionName} | 对象类型: ${contextMenu.kind === 'node' ? '节点' : '边'} | caption: ${contextMenu.caption} | id: ${contextMenu.id}`
     );
     setContextMenu(null);
-    setClickGraphContextMenuState({
-      menuOptionName:actionName,
-      graphElementType:contextMenu.kind,
-      clickedElementCaption:contextMenu.caption,
-      clickedElementId:contextMenu.id
-    });
+    if('拓展子图' == actionName){
+      // @ts-ignore
+      handleNodeDoubleClick({id:contextMenu.id});
+    }else{
+      setClickGraphContextMenuState({
+        menuOptionName:actionName,
+        graphElementType:contextMenu.kind,
+        clickedElementCaption:contextMenu.caption,
+        clickedElementId:contextMenu.id
+      });
+    }
   }, [contextMenu]);
 
   /* ---- NVL 配置 ---- */
