@@ -298,6 +298,27 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                 }
                 if(DynamicContentValue.ContentValueType.RELATION_ENTITY.equals(attributesValueTypeMap.get(currentAttributeName))){
                     RelationEntity relationEntity = (RelationEntity) valueObject;
+                    relationEntity.getFromConceptionEntityUID();
+                    relationEntity.getFromConceptionEntityKinds();
+
+                    //conceptionEntitiesInfoMap.put(relationEntity.getFromConceptionEntityUID(),relationEntity.getFromConceptionEntityKinds().get(0));
+                    conceptionEntitiesInfoMap.put(relationEntity.getFromConceptionEntityUID(),"??");
+                    conceptionEntitiesUIDList.add(relationEntity.getFromConceptionEntityUID());
+                    List<String> fromEntityLabels = new ArrayList<>();
+                    fromEntityLabels.add("??");
+                    _NVLNodePayloadList.add(new NVLNodePayload(relationEntity.getFromConceptionEntityUID(),"??",fromEntityLabels,true));
+
+                    //conceptionEntitiesInfoMap.put(relationEntity.getToConceptionEntityUID(),relationEntity.getToConceptionEntityKinds().get(0));
+                    conceptionEntitiesInfoMap.put(relationEntity.getToConceptionEntityUID(),"?");
+                    conceptionEntitiesUIDList.add(relationEntity.getToConceptionEntityUID());
+
+                    List<String> toEntityLabels = new ArrayList<>();
+                    toEntityLabels.add("?");
+                    _NVLNodePayloadList.add(new NVLNodePayload(relationEntity.getToConceptionEntityUID(),"?",toEntityLabels,true));
+
+                    _NVLEdgePayloadList.add(new NVLEdgePayload(
+                            relationEntity.getRelationEntityUID(),relationEntity.getRelationKindName(),
+                            relationEntity.getFromConceptionEntityUID(),relationEntity.getToConceptionEntityUID(),true));
                 }
                 if(DynamicContentValue.ContentValueType.ENTITIES_PATH.equals(attributesValueTypeMap.get(currentAttributeName))){
                     EntitiesPath entitiesPath = (EntitiesPath) valueObject;
