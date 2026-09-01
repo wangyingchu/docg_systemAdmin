@@ -329,7 +329,7 @@ export function NvlGraphView(props) {
       const isSelected = r.id === selectedRelId;
       const isNeighbor = selectedNodeId !== null && (r.from === selectedNodeId || r.to === selectedNodeId);
       // @ts-ignore
-      let currentColor = r.initialRel ? (r as any).color ?? undefined : '#ABABAB';
+      let currentColor = r.initialRel ? (r as any).color ?? undefined : '#556677';
       let currentRELWidth = BASE_REL_WIDTH;
       // @ts-ignore
       if (r.mainRel === true){
@@ -343,10 +343,11 @@ export function NvlGraphView(props) {
       return {
         ...r,
         selected: isSelected,
-        width: isSelected ? SELECTED_REL_WIDTH : isNeighbor ? currentRELWidth + 1 : currentRELWidth,
+        width: isSelected ? SELECTED_REL_WIDTH : isNeighbor ? currentRELWidth + 2 : currentRELWidth,
         captionSize: isSelected ? SELECTED_CAPTION_SIZE : BASE_CAPTION_SIZE,
         //color: isNeighbor ? '#88aacc' : (r as any).color ?? undefined,
-        color: isNeighbor ? '#88aacc' : currentColor,
+        //color: isNeighbor ? '#88aacc' : currentColor,
+        color: currentColor,
       };
     });
   }, [rels, selectedRelId, selectedNodeId]);
