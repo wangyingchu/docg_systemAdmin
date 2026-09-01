@@ -330,6 +330,7 @@ export function NvlGraphView(props) {
       const isNeighbor = selectedNodeId !== null && (r.from === selectedNodeId || r.to === selectedNodeId);
       // @ts-ignore
       let currentColor = r.initialRel ? (r as any).color ?? undefined : '#ABABAB';
+      let currentRELWidth = BASE_REL_WIDTH;
       // @ts-ignore
       if (r.mainRel === true){
         currentColor = '#85144B';
@@ -337,11 +338,12 @@ export function NvlGraphView(props) {
       // @ts-ignore
       if (r.pathRel === true){
         currentColor = '#0074D9';
+        currentRELWidth = currentRELWidth + 2;
       }
       return {
         ...r,
         selected: isSelected,
-        width: isSelected ? SELECTED_REL_WIDTH : isNeighbor ? BASE_REL_WIDTH + 1 : BASE_REL_WIDTH,
+        width: isSelected ? SELECTED_REL_WIDTH : isNeighbor ? currentRELWidth + 1 : currentRELWidth,
         captionSize: isSelected ? SELECTED_CAPTION_SIZE : BASE_CAPTION_SIZE,
         //color: isNeighbor ? '#88aacc' : (r as any).color ?? undefined,
         color: isNeighbor ? '#88aacc' : currentColor,
