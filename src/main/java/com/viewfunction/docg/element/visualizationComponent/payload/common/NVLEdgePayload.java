@@ -7,6 +7,8 @@ public class NVLEdgePayload {
     private String to;
     private String caption;
     private boolean initialRel;
+    private boolean mainRel;
+    private boolean pathRel;
 
     public NVLEdgePayload(String id,String caption,String from,String to,boolean initialRel) {
         this.id = id;
@@ -54,5 +56,21 @@ public class NVLEdgePayload {
 
     public void setInitialRel(boolean initialRel) {
         this.initialRel = initialRel;
+    }
+
+    public boolean isMainRel() {
+        return mainRel;
+    }
+
+    public void setMainRel(boolean mainRel) {
+        this.mainRel = mainRel;
+    }
+
+    public boolean isPathRel() {
+        return pathRel;
+    }
+
+    public void setPathRel(boolean pathRel) {
+        this.pathRel = pathRel;
     }
 }

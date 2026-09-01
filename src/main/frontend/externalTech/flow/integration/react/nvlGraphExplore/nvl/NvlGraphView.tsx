@@ -127,7 +127,7 @@ export function NvlGraphView(props) {
     const nvlRels: Relationship[] = result.rels.map((r: NvlRel) => ({
       //id: r.id, from: r.from, to: r.to, caption: r.caption+": "+r.id,
       // @ts-ignore
-      id: r.id, from: r.from, to: r.to, caption: r.caption+": "+r.id, initialRel: r.initialRel,
+      id: r.id, from: r.from, to: r.to, caption: r.caption+": "+r.id, initialRel: r.initialRel, mainRel:r.mainRel, pathRel:r.pathRel,
     }));
 
     existingIdsRef.current.clear();
@@ -291,6 +291,11 @@ export function NvlGraphView(props) {
     setSelectedNodeId(null);
     setSelectedRelId(null);
     setContextMenu(null);
+
+    //make sure edge color will recover for all clicked node or relation
+    // @ts-ignore
+    setRels(nvlRef.current?.getRelationships());
+    //console.log("--Redraw Relations Completed--");
   }, []);
 
   /* ---- 激活节点（选中节点的邻居 + 选中边的两端） ---- */
@@ -325,6 +330,14 @@ export function NvlGraphView(props) {
       const isNeighbor = selectedNodeId !== null && (r.from === selectedNodeId || r.to === selectedNodeId);
       // @ts-ignore
       let currentColor = r.initialRel ? (r as any).color ?? undefined : '#ABABAB';
+      // @ts-ignore
+      if (r.mainRel === true){
+        currentColor = '#85144B';
+      }
+      // @ts-ignore
+      if (r.pathRel === true){
+        currentColor = '#0074D9';
+      }
       return {
         ...r,
         selected: isSelected,
@@ -428,6 +441,10 @@ export function NvlGraphView(props) {
       hasFitRef.current = true;
       // @ts-ignore
       nvl.fit(allNodes.map((n) => n.id));
+
+      //make sure edge color will recover for the first clicked node or relation
+      // @ts-ignore
+      setRels(nvlRef.current?.getRelationships());
     },
   }), []);
 

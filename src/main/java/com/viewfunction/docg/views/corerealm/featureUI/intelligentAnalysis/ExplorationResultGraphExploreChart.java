@@ -140,7 +140,7 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                 boolean isToInitialNode = initialConceptionEntityUIDsSet.contains(toConceptionEntityUID) ? true : false;
                 nodes.add(new GraphNode(fromConceptionEntityUID, fromConceptionEntityKind+": "+fromConceptionEntityUID, currentColor,isFromInitialNode));
                 nodes.add(new GraphNode(toConceptionEntityUID, toConceptionEntityKind+": "+toConceptionEntityUID, currentColor,isToInitialNode));
-                rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+": "+relationUID,isInitialRel));
+                rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+": "+relationUID,isInitialRel,false,false));
                 if(nodeId.equals(fromConceptionEntityUID)){
                     expandedConceptionEntityUIDs.add(toConceptionEntityUID);
                 }else{
@@ -160,7 +160,7 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                         String relationUID = currentRelation.getRelationEntityUID();
                         String fromConceptionEntityUID = currentRelation.getFromConceptionEntityUID();
                         String toConceptionEntityUID = currentRelation.getToConceptionEntityUID();
-                        rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+": "+relationUID,false));
+                        rels.add(new GraphRel(relationUID, fromConceptionEntityUID,toConceptionEntityUID,relationName+": "+relationUID,false,false,false));
                     });
                 }
             } catch (CoreRealmServiceEntityExploreException e) {
@@ -231,7 +231,7 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
     public record GraphNode(String id, String caption, String color,boolean initialNode) {}
 
     /** Java 生成并返回给 React 的边 */
-    public record GraphRel(String id, String from, String to, String caption,boolean initialRel) {}
+    public record GraphRel(String id, String from, String to, String caption,boolean initialRel,boolean mainRel,boolean pathRel) {}
 
     /** {@link #generateExpandData(String)} 的返回结果 */
     public record ExpandData(List<GraphNode> nodes, List<GraphRel> rels) {}
@@ -316,9 +316,12 @@ public class ExplorationResultGraphExploreChart extends ReactAdapterComponent {
                     toEntityLabels.add("?");
                     _NVLNodePayloadList.add(new NVLNodePayload(relationEntity.getToConceptionEntityUID(),"?",toEntityLabels,true));
 
-                    _NVLEdgePayloadList.add(new NVLEdgePayload(
+                    NVLEdgePayload currentNVLEdgePayload = new NVLEdgePayload(
                             relationEntity.getRelationEntityUID(),relationEntity.getRelationKindName(),
-                            relationEntity.getFromConceptionEntityUID(),relationEntity.getToConceptionEntityUID(),true));
+                            relationEntity.getFromConceptionEntityUID(),relationEntity.getToConceptionEntityUID(),true);
+                    currentNVLEdgePayload.setMainRel(true);
+                    currentNVLEdgePayload.setPathRel(false);
+                    _NVLEdgePayloadList.add(currentNVLEdgePayload);
                 }
                 if(DynamicContentValue.ContentValueType.ENTITIES_PATH.equals(attributesValueTypeMap.get(currentAttributeName))){
                     EntitiesPath entitiesPath = (EntitiesPath) valueObject;
