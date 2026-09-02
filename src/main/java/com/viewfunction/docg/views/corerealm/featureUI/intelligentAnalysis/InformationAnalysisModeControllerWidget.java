@@ -96,4 +96,16 @@ public class InformationAnalysisModeControllerWidget extends HorizontalLayout{
             return IntelligentAnalysisView.InformationAnalysisMode.INSIGHT;
         }
     }
+
+    public List<String> getInsightScopeConceptionKindList() {
+        return insightScopeConceptionKindList;
+    }
+
+    public List<String> getInsightScopeRelationKindList() {
+        return insightScopeRelationKindList;
+    }
+
+    public List<ConceptionKindCorrelationInfo> getInsightScopeConceptionKindCorrelationList() {
+        return insightScopeConceptionKindCorrelationList;
+    }
 }

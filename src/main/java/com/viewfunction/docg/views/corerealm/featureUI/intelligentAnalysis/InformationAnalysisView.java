@@ -1,7 +1,7 @@
 package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 
 import com.docg.ai.llm.naturalLanguageAnalysis.util.Text2QueryUtil;
-import com.vaadin.flow.component.AttachEvent;
+
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -132,11 +132,11 @@ public class InformationAnalysisView extends VerticalLayout {
             try{
                 IntelligentAnalysisView.InformationAnalysisMode informationAnalysisMode = this.informationAnalysisModeControllerWidget.getAnalysisMode();
                 switch(informationAnalysisMode){
-                    case INSIGHT:break;
+                    case INSIGHT:
+                        doInsight(question);
+                        break;
                     case EXPLORATION:
-                        String cql = Text2QueryUtil.generateQueryCypher(question);
-                        InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql,insightContentHeight);
-                        this.insightContentContainerLayout.add(informationExplorationWidget);
+                        doExploration(question);
                         break;
                 }
             } catch (Exception e) {
@@ -144,5 +144,19 @@ public class InformationAnalysisView extends VerticalLayout {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private void doExploration(String question){
+        String cql = Text2QueryUtil.generateQueryCypher(question);
+        InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql,insightContentHeight);
+        this.insightContentContainerLayout.add(informationExplorationWidget);
+    }
+
+    private void doInsight(String question){
+        InformationInsightWidget informationInsightWidget = new InformationInsightWidget(question,
+                this.informationAnalysisModeControllerWidget.getInsightScopeConceptionKindList(),
+                this.informationAnalysisModeControllerWidget.getInsightScopeRelationKindList(),
+                this.informationAnalysisModeControllerWidget.getInsightScopeConceptionKindCorrelationList(),insightContentHeight);
+        this.insightContentContainerLayout.add(informationInsightWidget);
     }
 }

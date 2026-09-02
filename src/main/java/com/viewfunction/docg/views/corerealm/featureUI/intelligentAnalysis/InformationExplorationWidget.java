@@ -80,6 +80,8 @@ public class InformationExplorationWidget extends VerticalLayout {
         operationIcon.setSize("16px");
         operationIcon.getStyle().set("padding-right","1px");
 
+        NativeLabel operationLabel = new NativeLabel("探索");
+
         questionEditField = new TextField();
         questionEditField.setWidth(80,Unit.PERCENTAGE);
         questionEditField.setValue(question);
@@ -190,7 +192,7 @@ public class InformationExplorationWidget extends VerticalLayout {
         horizontalLayout.setWidthFull();
         horizontalLayout.setAlignItems(Alignment.CENTER);
         //horizontalLayout.add(spaceDivLayout1,operationIcon,timeSpan,explorationQuestionSpan,fullScreenDisplayButton,resetScreenDisplayButton,closeButton,spaceDivLayout2);
-        horizontalLayout.add(spaceDivLayout1,operationIcon,timeSpan,explorationQuestionSpan,closeButton,spaceDivLayout2);
+        horizontalLayout.add(spaceDivLayout1,operationIcon,operationLabel,timeSpan,explorationQuestionSpan,closeButton,spaceDivLayout2);
         this.setFlexGrow(1,explorationQuestionSpan);
 
         informationExplorationResultDetails = new Details(horizontalLayout);
