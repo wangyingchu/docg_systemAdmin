@@ -68,12 +68,12 @@ public class InformationExplorationWidget extends VerticalLayout {
     private HorizontalLayout doesNotContainsDataInfoMessage;
     private Button fullScreenDisplayButton;
     private Button resetScreenDisplayButton;
-    private int insightContentHeight;
+    private int widgetContentHeight;
     private int explorationContentHeight = 100;
-    public InformationExplorationWidget(String question,String explorationQuery,int insightContentHeight){
+    public InformationExplorationWidget(String question,String explorationQuery,int widgetContentHeight){
         this.setWidthFull();
-        this.insightContentHeight = insightContentHeight;
-        this.explorationContentHeight = this.insightContentHeight-30;
+        this.widgetContentHeight = widgetContentHeight;
+        this.explorationContentHeight = this.widgetContentHeight -30;
         this.question = question;
         this.explorationQuery = explorationQuery;
         Icon operationIcon = VaadinIcon.TABS.create();
