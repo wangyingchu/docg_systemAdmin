@@ -125,34 +125,37 @@ public class InformationAnalysisView extends VerticalLayout {
     }
 
     private void doAITalk(){
+        try{
+            IntelligentAnalysisView.InformationAnalysisMode informationAnalysisMode = this.informationAnalysisModeControllerWidget.getAnalysisMode();
+            switch(informationAnalysisMode){
+                case INSIGHT:
+                    doInsight();
+                    break;
+                case EXPLORATION:
+                    doExploration();
+                    break;
+            }
+        } catch (Exception e) {
+            CommonUIOperationUtil.showPopupNotification("问题查询语句生成失败:"+e.getMessage(), NotificationVariant.LUMO_WARNING,0, Notification.Position.BOTTOM_START);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void doExploration(){
         String question = this.questionTextArea.getValue();
         if(question == null || question.trim().length() == 0){
             CommonUIOperationUtil.showPopupNotification("请输入问题", NotificationVariant.LUMO_ERROR,1500, Notification.Position.MIDDLE);
         }else{
-            try{
-                IntelligentAnalysisView.InformationAnalysisMode informationAnalysisMode = this.informationAnalysisModeControllerWidget.getAnalysisMode();
-                switch(informationAnalysisMode){
-                    case INSIGHT:
-                        doInsight(question);
-                        break;
-                    case EXPLORATION:
-                        doExploration(question);
-                        break;
-                }
-            } catch (Exception e) {
-                CommonUIOperationUtil.showPopupNotification("问题查询语句生成失败:"+e.getMessage(), NotificationVariant.LUMO_WARNING,0, Notification.Position.BOTTOM_START);
-                throw new RuntimeException(e);
-            }
+            // String cql = "MATCH p=()-[r:ConnectedByWaterArea*2]->() RETURN p LIMIT 5";
+            String cql = "MATCH p=()-[r:ConnectedBySubWayLine]->() RETURN r LIMIT 25";
+            //String cql = Text2QueryUtil.generateQueryCypher(question);
+            InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql,insightContentHeight);
+            this.insightContentContainerLayout.add(informationExplorationWidget);
         }
     }
 
-    private void doExploration(String question){
-        String cql = Text2QueryUtil.generateQueryCypher(question);
-        InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql,insightContentHeight);
-        this.insightContentContainerLayout.add(informationExplorationWidget);
-    }
-
-    private void doInsight(String question){
+    private void doInsight(){
+        String question = this.questionTextArea.getValue();
         InformationInsightWidget informationInsightWidget = new InformationInsightWidget(question,
                 this.informationAnalysisModeControllerWidget.getInsightScopeConceptionKindList(),
                 this.informationAnalysisModeControllerWidget.getInsightScopeRelationKindList(),
