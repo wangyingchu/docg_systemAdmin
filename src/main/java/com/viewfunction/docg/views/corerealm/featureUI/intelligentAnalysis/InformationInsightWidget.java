@@ -17,6 +17,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.textfield.TextArea;
+
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentQueryResult;
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentValue;
@@ -49,10 +50,14 @@ public class InformationInsightWidget extends VerticalLayout {
     private Button fullScreenDisplayButton;
     private Button resetScreenDisplayButton;
     private int widgetContentHeight;
-    private int explorationContentHeight = 100;
+    private int insightContentHeight = 100;
 
     private TextArea questionTextArea;
     private VerticalLayout insightContentDisplayContainerLayout;
+
+    private List<String> insightScopeConceptionKindList;
+    private List<String> insightScopeRelationKindList;
+    private List<ConceptionKindCorrelationInfo> insightScopeConceptionKindCorrelationList;
 
     public InformationInsightWidget(String question,
                                     List<String> insightScopeConceptionKindList,
@@ -61,21 +66,17 @@ public class InformationInsightWidget extends VerticalLayout {
                                     int widgetContentHeight){
         this.setWidthFull();
         this.widgetContentHeight = widgetContentHeight;
-        this.explorationContentHeight = this.widgetContentHeight -30;
+        this.insightContentHeight = widgetContentHeight -30;
         this.question = question;
+        this.insightScopeConceptionKindList = insightScopeConceptionKindList;
+        this.insightScopeRelationKindList = insightScopeRelationKindList;
+        this.insightScopeConceptionKindCorrelationList = insightScopeConceptionKindCorrelationList;
 
-        this.setWidthFull();
-        this.widgetContentHeight = widgetContentHeight;
-        this.explorationContentHeight = this.widgetContentHeight -30;
-        this.question = question;
-        this.explorationQuery = explorationQuery;
         Icon operationIcon = LineAwesomeIconsSvg.BINOCULARS_SOLID.create();
         operationIcon.setSize("16px");
         operationIcon.getStyle().set("padding-right","1px");
 
         NativeLabel operationLabel = new NativeLabel("洞察");
-
-
         Icon editIcon = LineAwesomeIconsSvg.BUROMOBELEXPERTE.create();
         editIcon.setSize("14px");
         editAndReQueryButton = new Button(editIcon);
@@ -85,11 +86,7 @@ public class InformationInsightWidget extends VerticalLayout {
             //doEdit();
         });
 
-
-
-
-
-        question = "这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。";
+        //question = "这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。";
         String questionDisplayContent = question.length() > 50 ? question.substring(0,50)+"..." : question;
 
         questionSpan = new Span(questionDisplayContent);
@@ -129,11 +126,11 @@ public class InformationInsightWidget extends VerticalLayout {
         informationExplorationResultDetails.addThemeVariants(DetailsVariant.REVERSE);
         informationExplorationResultDetails.setWidthFull();
         informationExplorationResultDetails.setOpened(true);
-        add(informationExplorationResultDetails);
         informationExplorationResultDetails.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
         informationExplorationResultDetails.getStyle().set("border-top", "1px solid var(--lumo-contrast-20pct)");
         informationExplorationResultDetails.getStyle().set("border-left", "1px solid var(--lumo-contrast-20pct)");
         informationExplorationResultDetails.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
+        add(informationExplorationResultDetails);
 
         insightContentDisplayContainerLayout = new VerticalLayout();
         informationExplorationResultDetails.add(insightContentDisplayContainerLayout);
@@ -141,19 +138,15 @@ public class InformationInsightWidget extends VerticalLayout {
         HorizontalLayout inputElementContainerLayout = new HorizontalLayout();
         inputElementContainerLayout.setPadding(true);
         inputElementContainerLayout.setWidthFull();
-
         inputElementContainerLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         informationExplorationResultDetails.add(inputElementContainerLayout);
 
         this.questionTextArea = new TextArea();
         this.questionTextArea.setWidthFull();
         this.questionTextArea.setHeight(50, Unit.PIXELS);
-        //questionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
         this.questionTextArea.addValueChangeListener(e -> {
             //e.getSource().setHelperText(e.getValue().length() + "/" + charLimit);
         });
-        //this.questionTextArea.setHelperComponent(this.informationAnalysisModeControllerWidget);
-       // this.questionTextArea.setPlaceholder("Message for the bot");
 
         inputElementContainerLayout.add(this.questionTextArea);
         inputElementContainerLayout.setFlexGrow(1, this.questionTextArea);
@@ -162,11 +155,11 @@ public class InformationInsightWidget extends VerticalLayout {
 
         Button askButton = new Button(" 输入");
         askButton.setIcon(LineAwesomeIconsSvg.PAPER_PLANE.create());
-        askButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        askButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,ButtonVariant.LUMO_SMALL);
         askButton.setWidth(30,Unit.PIXELS);
         askButton.setHeight(50,Unit.PIXELS);
         askButton.addClickListener(e -> {
-            //doAITalk();
+            executeInsightLogic();
         });
         buttonsControllerLayout.add(askButton);
     }
@@ -182,6 +175,10 @@ public class InformationInsightWidget extends VerticalLayout {
     }
 
     private void renderInsightResult(){
-        insightContentDisplayContainerLayout.setHeight(this.explorationContentHeight - 115,Unit.PIXELS);
+        insightContentDisplayContainerLayout.setHeight(this.insightContentHeight - 115,Unit.PIXELS);
+    }
+
+    private void executeInsightLogic(){
+        this.questionTextArea.clear();
     }
 }
