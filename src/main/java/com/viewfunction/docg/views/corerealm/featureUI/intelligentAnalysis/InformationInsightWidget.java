@@ -7,67 +7,54 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.details.DetailsVariant;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.popover.Popover;
-import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.textfield.TextArea;
 
 import com.viewfunction.docg.coreRealm.realmServiceCore.payload.ConceptionKindCorrelationInfo;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentQueryResult;
-import com.viewfunction.docg.coreRealm.realmServiceCore.payload.DynamicContentValue;
 import com.viewfunction.docg.element.commonComponent.lineAwesomeIcon.LineAwesomeIconsSvg;
+import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class InformationInsightWidget extends VerticalLayout {
 
-    private String explorationQuery;
-    private Grid<Map<String, DynamicContentValue>> queryResultGrid;
     private Details informationExplorationResultDetails;
-    private Popover popover2;
-    private Popover popover3;
-    private TabSheet contentTabSheet;
-    private String question;
-    private ExplorationQueryInfoWidget explorationQueryInfoWidget;
+    private String inputInitMessage;
     private Span questionSpan;
-    private Button editAndReQueryButton;
-    private Button cancelEditAndReQueryButton;
-    private Button confirmEditAndReQueryButton;
-    //private TextField questionEditField;
-    private DynamicContentQueryResult dynamicContentQueryResult;
-    private QueryResultInsightWidget queryResultInsightWidget;
-    private QueryResultGraphWidget queryResultGraphWidget;
-    private HorizontalLayout doesNotContainsDataInfoMessage;
-    private Button fullScreenDisplayButton;
-    private Button resetScreenDisplayButton;
+    private Button showInsightConfigButton;
     private int widgetContentHeight;
     private int insightContentHeight = 100;
-
     private TextArea questionTextArea;
     private VerticalLayout insightContentDisplayContainerLayout;
-
     private List<String> insightScopeConceptionKindList;
     private List<String> insightScopeRelationKindList;
     private List<ConceptionKindCorrelationInfo> insightScopeConceptionKindCorrelationList;
 
-    public InformationInsightWidget(String question,
+    private List<String> insightInputeMessageList;
+    private Scroller scroller;
+    private int browserWidth;
+
+    public InformationInsightWidget(String inputInitMessage,
                                     List<String> insightScopeConceptionKindList,
                                     List<String> insightScopeRelationKindList,
                                     List<ConceptionKindCorrelationInfo> insightScopeConceptionKindCorrelationList,
-                                    int widgetContentHeight){
+                                    int widgetContentHeight,int browserWidth){
         this.setWidthFull();
         this.widgetContentHeight = widgetContentHeight;
+        this.browserWidth = browserWidth;
         this.insightContentHeight = widgetContentHeight -30;
-        this.question = question;
+        this.inputInitMessage = inputInitMessage;
         this.insightScopeConceptionKindList = insightScopeConceptionKindList;
         this.insightScopeRelationKindList = insightScopeRelationKindList;
         this.insightScopeConceptionKindCorrelationList = insightScopeConceptionKindCorrelationList;
@@ -79,23 +66,22 @@ public class InformationInsightWidget extends VerticalLayout {
         NativeLabel operationLabel = new NativeLabel("洞察");
         Icon editIcon = LineAwesomeIconsSvg.BUROMOBELEXPERTE.create();
         editIcon.setSize("14px");
-        editAndReQueryButton = new Button(editIcon);
-        editAndReQueryButton.setTooltipText("编辑探查问题并重新探索");
-        editAndReQueryButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
-        editAndReQueryButton.addClickListener((ClickEvent<Button> click) ->{
+        this.showInsightConfigButton = new Button(editIcon);
+        this.showInsightConfigButton.setTooltipText("显示洞察范围");
+        this.showInsightConfigButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON);
+        this.showInsightConfigButton.addClickListener((ClickEvent<Button> click) ->{
             //doEdit();
         });
 
-        //question = "这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。这是一段很长的标签文本，它会在超出宽度时被截断并显示省略号。";
-        String questionDisplayContent = question.length() > 50 ? question.substring(0,50)+"..." : question;
+        String questionDisplayContent = this.inputInitMessage.length() > 50 ? this.inputInitMessage.substring(0,50)+"..." : this.inputInitMessage;
 
-        questionSpan = new Span(questionDisplayContent);
-        questionSpan.getStyle()
+        this.questionSpan = new Span(questionDisplayContent);
+        this.questionSpan.getStyle()
                 .set("font-size","var(--lumo-font-size-m)")
                 .set("font-weight","bolder")
                 .set("font-style","oblique")
                 .set("padding-right","5px");
-        Span explorationQuestionSpan = new Span(questionSpan);
+        Span explorationQuestionSpan = new Span(this.questionSpan);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now =LocalDateTime.now();
@@ -104,7 +90,7 @@ public class InformationInsightWidget extends VerticalLayout {
         Icon closeIcon = new Icon(VaadinIcon.CLOSE_BIG);
         closeIcon.setSize("14px");
         Button closeButton = new Button(closeIcon, event -> {
-            informationExplorationResultDetails.setOpened(false);
+            this.informationExplorationResultDetails.setOpened(false);
             removeSelf();
         });
         closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,ButtonVariant.LUMO_SMALL,ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_ERROR);
@@ -119,27 +105,30 @@ public class InformationInsightWidget extends VerticalLayout {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setWidthFull();
         horizontalLayout.setAlignItems(Alignment.CENTER);
-        horizontalLayout.add(spaceDivLayout1,operationIcon,operationLabel,timeSpan,explorationQuestionSpan,editAndReQueryButton,closeButton,spaceDivLayout2);
+        horizontalLayout.add(spaceDivLayout1,operationIcon,operationLabel,timeSpan,explorationQuestionSpan, showInsightConfigButton,closeButton,spaceDivLayout2);
         this.setFlexGrow(1,explorationQuestionSpan);
 
-        informationExplorationResultDetails = new Details(horizontalLayout);
-        informationExplorationResultDetails.addThemeVariants(DetailsVariant.REVERSE);
-        informationExplorationResultDetails.setWidthFull();
-        informationExplorationResultDetails.setOpened(true);
-        informationExplorationResultDetails.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
-        informationExplorationResultDetails.getStyle().set("border-top", "1px solid var(--lumo-contrast-20pct)");
-        informationExplorationResultDetails.getStyle().set("border-left", "1px solid var(--lumo-contrast-20pct)");
-        informationExplorationResultDetails.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
-        add(informationExplorationResultDetails);
+        this.informationExplorationResultDetails = new Details(horizontalLayout);
+        this.informationExplorationResultDetails.addThemeVariants(DetailsVariant.REVERSE);
+        this.informationExplorationResultDetails.setWidthFull();
+        this.informationExplorationResultDetails.setOpened(true);
+        this.informationExplorationResultDetails.getStyle().set("border-bottom", "1px solid var(--lumo-contrast-20pct)");
+        this.informationExplorationResultDetails.getStyle().set("border-top", "1px solid var(--lumo-contrast-20pct)");
+        this.informationExplorationResultDetails.getStyle().set("border-left", "1px solid var(--lumo-contrast-20pct)");
+        this.informationExplorationResultDetails.getStyle().set("border-right", "1px solid var(--lumo-contrast-20pct)");
+        add(this.informationExplorationResultDetails);
 
-        insightContentDisplayContainerLayout = new VerticalLayout();
-        informationExplorationResultDetails.add(insightContentDisplayContainerLayout);
+        this.insightContentDisplayContainerLayout = new VerticalLayout();
+
+        this.scroller = new Scroller(this.insightContentDisplayContainerLayout);
+        this.scroller.addThemeName("overflow-indicators");
+        this.informationExplorationResultDetails.add(this.scroller);
 
         HorizontalLayout inputElementContainerLayout = new HorizontalLayout();
         inputElementContainerLayout.setPadding(true);
         inputElementContainerLayout.setWidthFull();
         inputElementContainerLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        informationExplorationResultDetails.add(inputElementContainerLayout);
+        this.informationExplorationResultDetails.add(inputElementContainerLayout);
 
         this.questionTextArea = new TextArea();
         this.questionTextArea.setWidthFull();
@@ -162,6 +151,12 @@ public class InformationInsightWidget extends VerticalLayout {
             executeInsightLogic();
         });
         buttonsControllerLayout.add(askButton);
+
+        this.insightInputeMessageList = new ArrayList<>();
+        if(!this.inputInitMessage.isEmpty()){
+            this.insightInputeMessageList.add(this.inputInitMessage);
+            displayInsightInputMessage(this.inputInitMessage);
+        }
     }
 
     @Override
@@ -175,10 +170,30 @@ public class InformationInsightWidget extends VerticalLayout {
     }
 
     private void renderInsightResult(){
-        insightContentDisplayContainerLayout.setHeight(this.insightContentHeight - 115,Unit.PIXELS);
+        this.scroller.setMaxHeight(this.insightContentHeight - 115, Unit.PIXELS);
+        scroller.setHeight(this.insightContentHeight - 115, Unit.PIXELS);
     }
 
     private void executeInsightLogic(){
+        String inputMessage = this.questionTextArea.getValue();
+        if(inputMessage.isBlank()){
+            CommonUIOperationUtil.showPopupNotification("请输入问题", NotificationVariant.LUMO_ERROR,1500, Notification.Position.MIDDLE);
+        }else{
+            displayInsightInputMessage(inputMessage);
+        }
         this.questionTextArea.clear();
+    }
+
+    private void displayInsightInputMessage(String messageTxt){
+        Span spaceHolderSpan = new Span();
+        NativeLabel messageLabel = new NativeLabel(messageTxt);
+        messageLabel.getStyle().set("font-size","var(--lumo-font-size-xxs)");
+        messageLabel.getElement().getThemeList().add("badge contrast");
+        messageLabel.setMaxWidth(browserWidth -1000,Unit.PIXELS);
+        HorizontalLayout contentContainerLayout = new HorizontalLayout();
+        contentContainerLayout.setWidthFull();
+        contentContainerLayout.add(spaceHolderSpan,messageLabel);
+        contentContainerLayout.setFlexGrow(1,spaceHolderSpan);
+        this.insightContentDisplayContainerLayout.add(contentContainerLayout);
     }
 }

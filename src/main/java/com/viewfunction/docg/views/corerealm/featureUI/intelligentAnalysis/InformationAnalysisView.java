@@ -2,6 +2,7 @@ package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 
 import com.docg.ai.llm.naturalLanguageAnalysis.util.Text2QueryUtil;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -32,6 +33,7 @@ public class InformationAnalysisView extends VerticalLayout {
     private List<ConceptionKindCorrelationInfo> insightScopeConceptionKindCorrelationList;
     private Registration listener;
     private int insightContentHeight;
+    private int browserWidth;
 
     public InformationAnalysisView() {
         this.setWidthFull();
@@ -82,6 +84,18 @@ public class InformationAnalysisView extends VerticalLayout {
             doAITalk();
         });
         buttonsControllerLayout.add(askButton);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            browserWidth = event.getWidth();
+        }));
+        // Adjust size according to initial width of the screen
+        getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+            browserWidth = receiver.getBodyClientWidth();
+        }));
     }
 
     @Override
@@ -159,7 +173,7 @@ public class InformationAnalysisView extends VerticalLayout {
         InformationInsightWidget informationInsightWidget = new InformationInsightWidget(question,
                 this.informationAnalysisModeControllerWidget.getInsightScopeConceptionKindList(),
                 this.informationAnalysisModeControllerWidget.getInsightScopeRelationKindList(),
-                this.informationAnalysisModeControllerWidget.getInsightScopeConceptionKindCorrelationList(),insightContentHeight);
+                this.informationAnalysisModeControllerWidget.getInsightScopeConceptionKindCorrelationList(),insightContentHeight,browserWidth);
         this.insightContentContainerLayout.add(informationInsightWidget);
     }
 }
