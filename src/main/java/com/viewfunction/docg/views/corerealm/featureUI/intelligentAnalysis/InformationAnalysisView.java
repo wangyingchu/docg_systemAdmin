@@ -161,8 +161,8 @@ public class InformationAnalysisView extends VerticalLayout {
             CommonUIOperationUtil.showPopupNotification("请输入问题", NotificationVariant.LUMO_ERROR,1500, Notification.Position.MIDDLE);
         }else{
             // String cql = "MATCH p=()-[r:ConnectedByWaterArea*2]->() RETURN p LIMIT 5";
-            String cql = "MATCH p=()-[r:ConnectedBySubWayLine]->() RETURN r LIMIT 25";
-            //String cql = Text2QueryUtil.generateQueryCypher(question);
+            //String cql = "MATCH p=()-[r:ConnectedBySubWayLine]->() RETURN r LIMIT 25";
+            String cql = Text2QueryUtil.generateQueryCypher(question);
             InformationExplorationWidget informationExplorationWidget = new InformationExplorationWidget(question,cql,insightContentHeight);
             this.insightContentContainerLayout.add(informationExplorationWidget);
         }
