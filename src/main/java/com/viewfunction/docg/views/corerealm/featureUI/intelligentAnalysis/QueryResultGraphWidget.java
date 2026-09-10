@@ -19,7 +19,6 @@ public class QueryResultGraphWidget extends VerticalLayout {
     private DynamicContentQueryResult dynamicContentQueryResult;
     private boolean alreadyInsighted = false;
     private HorizontalLayout doesNotContainsGraphInfoMessage;
-    private ExplorationResultGraphChart explorationResultGraphChart;
     private ExplorationResultGraphExploreChart explorationResultGraphExploreChart;
 
     public QueryResultGraphWidget(){
@@ -43,9 +42,6 @@ public class QueryResultGraphWidget extends VerticalLayout {
         messageLabel.getStyle().set("font-size","var(--lumo-font-size-xl)").set("color","#2e4e7e");
         doesNotContainsGraphInfoMessage.add(messageLogo,messageLabel);
         add(doesNotContainsGraphInfoMessage);
-        explorationResultGraphExploreChart = new ExplorationResultGraphExploreChart();
-        add(explorationResultGraphExploreChart);
-        explorationResultGraphExploreChart.setVisible(false);
     }
 
     public void doDrawGraph(DynamicContentQueryResult dynamicContentQueryResult){
@@ -80,11 +76,17 @@ public class QueryResultGraphWidget extends VerticalLayout {
 
         if(containsGraphInfo){
             doesNotContainsGraphInfoMessage.setVisible(false);
-            explorationResultGraphExploreChart.setVisible(true);
-            explorationResultGraphExploreChart.setGraphExploreData(this.dynamicContentQueryResult);
+            if(explorationResultGraphExploreChart == null){
+                explorationResultGraphExploreChart = new ExplorationResultGraphExploreChart();
+                add(explorationResultGraphExploreChart);
+                explorationResultGraphExploreChart.setVisible(true);
+                explorationResultGraphExploreChart.setGraphExploreData(this.dynamicContentQueryResult);
+            }
         }else{
             doesNotContainsGraphInfoMessage.setVisible(true);
-            explorationResultGraphExploreChart.setVisible(false);
+            if(explorationResultGraphExploreChart != null){
+                explorationResultGraphExploreChart.setVisible(false);
+            }
         }
     }
 }
