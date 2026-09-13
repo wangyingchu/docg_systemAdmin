@@ -1,5 +1,6 @@
 package com.viewfunction.docg.views.corerealm.featureUI.intelligentAnalysis;
 
+import com.docg.ai.llm.rag.graphRAG.util.GraphRAGUtil;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Unit;
@@ -11,6 +12,7 @@ import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.markdown.Markdown;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -44,14 +46,17 @@ public class InformationInsightWidget extends VerticalLayout {
     private List<String> insightInputeMessageList;
     private Scroller scroller;
     private int browserWidth;
+    private String insightSessionId;
 
     public InformationInsightWidget(String inputInitMessage,
+                                    String insightSessionId,
                                     List<String> insightScopeConceptionKindList,
                                     List<String> insightScopeRelationKindList,
                                     List<ConceptionKindCorrelationInfo> insightScopeConceptionKindCorrelationList,
                                     int widgetContentHeight,int browserWidth){
         this.setWidthFull();
         this.widgetContentHeight = widgetContentHeight;
+        this.insightSessionId = insightSessionId;
         this.browserWidth = browserWidth;
         this.insightContentHeight = widgetContentHeight -30;
         this.inputInitMessage = inputInitMessage;
@@ -171,7 +176,10 @@ public class InformationInsightWidget extends VerticalLayout {
 
     private void renderInsightResult(){
         this.scroller.setMaxHeight(this.insightContentHeight - 115, Unit.PIXELS);
-        scroller.setHeight(this.insightContentHeight - 115, Unit.PIXELS);
+        this.scroller.setHeight(this.insightContentHeight - 115, Unit.PIXELS);
+        if(this.inputInitMessage != null && !this.inputInitMessage.equals("")){
+            doInsight(this.inputInitMessage);
+        }
     }
 
     private void executeInsightLogic(){
@@ -180,6 +188,7 @@ public class InformationInsightWidget extends VerticalLayout {
             CommonUIOperationUtil.showPopupNotification("请输入问题", NotificationVariant.LUMO_ERROR,1500, Notification.Position.MIDDLE);
         }else{
             displayInsightInputMessage(inputMessage);
+            doInsight(inputMessage);
         }
         this.questionTextArea.clear();
     }
@@ -195,5 +204,16 @@ public class InformationInsightWidget extends VerticalLayout {
         contentContainerLayout.add(spaceHolderSpan,messageLabel);
         contentContainerLayout.setFlexGrow(1,spaceHolderSpan);
         this.insightContentDisplayContainerLayout.add(contentContainerLayout);
+    }
+
+    private void displayInsightOutMessage(String messageTxt){
+        Markdown resultContentMarkDown = new Markdown(messageTxt);
+        resultContentMarkDown.getElement().getThemeList().add("badge");
+        this.insightContentDisplayContainerLayout.add(resultContentMarkDown);
+    }
+
+    private void doInsight(String messageTxt){
+        String insightResultContent = GraphRAGUtil.chatWithKnowledge(insightSessionId,messageTxt);
+        displayInsightOutMessage(insightResultContent);
     }
 }

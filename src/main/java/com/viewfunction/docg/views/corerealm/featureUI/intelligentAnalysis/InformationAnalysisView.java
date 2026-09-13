@@ -21,6 +21,7 @@ import com.viewfunction.docg.element.userInterfaceUtil.CommonUIOperationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class InformationAnalysisView extends VerticalLayout {
 
@@ -170,10 +171,24 @@ public class InformationAnalysisView extends VerticalLayout {
 
     private void doInsight(){
         String question = this.questionTextArea.getValue();
-        InformationInsightWidget informationInsightWidget = new InformationInsightWidget(question,
+        String insightSessionId = generateRandomContent(10);
+        InformationInsightWidget informationInsightWidget = new InformationInsightWidget(question,insightSessionId,
                 this.informationAnalysisModeControllerWidget.getInsightScopeConceptionKindList(),
                 this.informationAnalysisModeControllerWidget.getInsightScopeRelationKindList(),
                 this.informationAnalysisModeControllerWidget.getInsightScopeConceptionKindCorrelationList(),insightContentHeight,browserWidth);
         this.insightContentContainerLayout.add(informationInsightWidget);
+    }
+
+    private static final String CHARACTERS =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    private static String generateRandomContent(int length) {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            sb.append(CHARACTERS.charAt(index));
+        }
+        return sb.toString();
     }
 }
