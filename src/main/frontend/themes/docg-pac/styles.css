@@ -89,35 +89,13 @@
       -webkit-border-radius:0;
 }
 
-/*此 CSS 用来控制 vaadin loading 状态时的 UI 显示样式*/
-.v-loading-indicator {
-    position: fixed; /* Occupy whole screen even if scrolled */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    /* Eat mouse events when visible, doesn't prevent scrolling */
-    pointer-events: auto;
-    /* Animated with delay to prevent flashing */
-    animation: fadein 0.3s ease-out 0.2s normal 1 both;
-    z-index: 2147483647;
-}
-@keyframes fadein {
-    0% {
-        background: rgba(0,0,0,0);
-    }
-    100% {
-        background: rgba(0,0,0,.2); /* Darkens the UI */
-    }
-}
-
 .v-loading-indicator:before {
-    width: 76px;
-    height: 76px;
+    width: 50px;
+    height: 50px;
     position: absolute;
     top: 50%;
     left: 50%;
-    margin: -38px 0 0 -38px;
+    margin: 20px 0 0 20px;
     border-radius: 100%;
     animation: bouncedelay 1.2s infinite 0.4s ease-in-out both;
     content: "";
@@ -141,13 +119,4 @@
     } 40% {
           transform: scale(1.0);
       }
-}
-
-/*此 CSS 用来控制 vaadin 连接状态文本的显示样式*/
-.v-status-message {
-    position: fixed;
-    bottom: 3px;
-    right: 5px;
-    font-size: 0.75em;
-    color: #3e8f3e;
 }

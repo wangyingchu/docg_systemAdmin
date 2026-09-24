@@ -216,4 +216,18 @@ public class InformationInsightWidget extends VerticalLayout {
         String insightResultContent = GraphRAGUtil.chatWithKnowledge(insightSessionId,messageTxt);
         displayInsightOutMessage(insightResultContent);
     }
+
+    private void generateInsightRAGData(){
+
+
+
+
+        //this.insightScopeConceptionKindList;
+        //this.insightScopeRelationKindList;
+        //this.insightScopeConceptionKindCorrelationList;
+
+
+
+
+    }
 }
