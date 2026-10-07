@@ -374,7 +374,6 @@ public class AttachConceptionKindEntitiesToGeospatialRegionByGeoComputeView exte
         notificationMessageContainer.add(new Div(new Text("操作开始时间: "+conceptionEntitiesAttributesRetrieveResult.getStartTime())));
         notificationMessageContainer.add(new Div(new Text("操作结束时间: "+conceptionEntitiesAttributesRetrieveResult.getFinishTime())));
         notification.add(notificationMessageContainer);
-        notification.setDuration(3000);
         notification.open();
     }
 }

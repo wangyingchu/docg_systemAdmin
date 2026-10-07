@@ -274,8 +274,10 @@ public class ConceptionKindManagementUI extends VerticalLayout implements
         conceptionKindMetaInfoGrid.setWidth(1300,Unit.PIXELS);
         conceptionKindMetaInfoGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         conceptionKindMetaInfoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindName).setHeader("概念类型名称").setKey("idx_0");
-        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindDesc).setHeader("概念类型显示名称").setKey("idx_1");
+        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindName).setHeader("概念类型名称").setKey("idx_0")
+                .setTooltipGenerator(EntityStatisticsInfo::getEntityKindName);
+        conceptionKindMetaInfoGrid.addColumn(EntityStatisticsInfo::getEntityKindDesc).setHeader("概念类型显示名称").setKey("idx_1")
+                .setTooltipGenerator(EntityStatisticsInfo::getEntityKindDesc);
         conceptionKindMetaInfoGrid.addColumn(_createDateComponentRenderer).setHeader("类型创建时间").setKey("idx_2")
                 .setComparator(createDateComparator)
                 .setFlexGrow(0).setWidth("210px").setResizable(false);

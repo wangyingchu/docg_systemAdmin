@@ -34,6 +34,7 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
     private String kindName;
     private int randomEntityCount = 100;
     private ConceptionEntitiesGeospatialInfoAnalysisView containerConceptionEntitiesGeospatialInfoAnalysisView;
+    private int mapWidth;
 
     public ConceptionEntitiesGeospatialScaleMapInfoChart(String kindName, GeospatialScaleCalculable.SpatialScaleLevel spatialScaleLevel, ConceptionEntitiesAttributesRetrieveResult conceptionEntitiesAttributesRetrieveResult){
         this.setPadding(false);
@@ -463,5 +464,14 @@ public class ConceptionEntitiesGeospatialScaleMapInfoChart extends VerticalLayou
 
     public void setContainerConceptionEntitiesGeospatialInfoAnalysisView(ConceptionEntitiesGeospatialInfoAnalysisView containerConceptionEntitiesGeospatialInfoAnalysisView) {
         this.containerConceptionEntitiesGeospatialInfoAnalysisView = containerConceptionEntitiesGeospatialInfoAnalysisView;
+    }
+
+    public int getMapWidth() {
+        return mapWidth;
+    }
+
+    public void setMapWidth(int mapWidth) {
+        this.mapWidth = mapWidth;
+        this.setWidth(this.mapWidth,Unit.PIXELS);
     }
 }

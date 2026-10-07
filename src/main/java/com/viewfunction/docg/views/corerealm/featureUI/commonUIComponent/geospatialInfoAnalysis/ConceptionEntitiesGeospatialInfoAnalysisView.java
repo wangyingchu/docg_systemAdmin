@@ -231,8 +231,19 @@ public class ConceptionEntitiesGeospatialInfoAnalysisView extends VerticalLayout
 
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        // Add browser window listener to observe size change
+        getUI().ifPresent(ui -> listener = ui.getPage().addBrowserWindowResizeListener(event -> {
+            int browserHeight = event.getHeight();
+            int browserWidth = event.getWidth();
+            this.conceptionEntitiesGeospatialScaleMapInfoChart.setHeight(browserHeight-120, Unit.PIXELS);
+            this.conceptionEntitiesGeospatialScaleMapInfoChart.setMapWidth(browserWidth-300);
+        }));
+        // Adjust size according to initial width of the screen
         getUI().ifPresent(ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
-            this.conceptionEntitiesGeospatialScaleMapInfoChart.setHeight(receiver.getBodyClientHeight()-120, Unit.PIXELS);
+            int browserHeight = receiver.getBodyClientHeight();
+            int browserWidth = receiver.getBodyClientWidth();
+            this.conceptionEntitiesGeospatialScaleMapInfoChart.setHeight(browserHeight-120, Unit.PIXELS);
+            this.conceptionEntitiesGeospatialScaleMapInfoChart.setMapWidth(browserWidth-300);
         }));
     }
 
